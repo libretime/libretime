@@ -2,7 +2,7 @@
 // /* vim: set expandtab tabstop=4 shiftwidth=4: */
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: RPC.php,v 1.1 2004/12/15 17:25:50 tomas Exp $
+// $Id: RPC.php,v 1.2 2005/02/25 01:42:40 tomas Exp $
 
 // License is granted to use or modify this software ("XML-RPC for PHP")
 // for commercial or non-commercial use provided the copyright of the author
@@ -1128,8 +1128,8 @@ function XML_RPC_encode($php_val) {
    case "array":
        $keys = array_keys($php_val);
        $count = count($php_val);
-       $firstkey = $keys[0];
-       $lastkey = $keys[$count - 1];
+       $firstkey = ($count>0 ? $keys[0] : -1);
+       $lastkey = ($count>0 ? $keys[$count - 1] : -1);
        if ($firstkey === 0 && is_int($lastkey) && ($lastkey + 1) == $count) {
            $is_continuous = true;
            $expected = 0;
