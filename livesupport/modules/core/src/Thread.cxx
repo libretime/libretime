@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Thread.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,7 +75,7 @@ Thread :: posixThreadFunction(void * thread)                    throw ()
 
     pThread->runnable->run();
 
-    pthread_exit(0);
+    return 0;
 }
 
 
