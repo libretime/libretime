@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -230,11 +230,6 @@ static const std::string    getAudioClipMethodUrlParamName = "url";
  *  The name of the token parameter returned (for open) or input (for close)
  *----------------------------------------------------------------------------*/
 static const std::string    getAudioClipMethodTokenParamName = "token";
-
-/*------------------------------------------------------------------------------
- *  The name of the status parameter returned by the close method
- *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipMethodStatusParamName = "status";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: storeAudioClip */
@@ -605,10 +600,11 @@ std::cout << xmlAudioClip.at(offset+20) << "\n";
     }
 
     if (xmlRpcClient.isFault() 
-                || ! result.hasMember(getAudioClipMethodStatusParamName)
-                || result[getAudioClipMethodStatusParamName].getType() 
-                                                != XmlRpcValue::TypeBoolean
-                || ! bool(result[getAudioClipMethodStatusParamName])) {
+                || ! result.hasMember(getAudioClipMethodAudioClipIdParamName)
+                || result[getAudioClipMethodAudioClipIdParamName].getType() 
+                                                    != XmlRpcValue::TypeString
+                || std::string(result[getAudioClipMethodAudioClipIdParamName])
+                                                    != std::string(*id)) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
              << getAudioClipCloseMethodName
