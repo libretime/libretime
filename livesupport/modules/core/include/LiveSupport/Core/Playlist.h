@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -535,6 +535,15 @@ class Playlist : public Configurable,
                                                 throw ()
         {
             return elementList->find(*relativeOffset);
+        }
+
+        /**
+         *  Return the number of playlist elements in the playlist.
+         */
+        int
+        size() const                            throw ()
+        {
+            return elementList->size();
         }
 
         /**
