@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -146,11 +146,5 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         return;
     }
 
-    if (!playlist->setLockedForEditing(true)) {    // this should never happen
-        XmlRpcTools :: markError(errorId+3,
-                                 "could not open new playlist for editing",
-                                 returnValue);
-        return;
-    }
     XmlRpcTools :: playlistToXmlRpcValue(playlist, returnValue);
 }

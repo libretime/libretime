@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,11 +94,10 @@ using namespace LiveSupport::Core;
  *     <li>101 - invalid argument format </li>
  *     <li>102 - argument is not a playlist ID </li>
  *     <li>104 - could not open playlist for editing </li>
- *     <li>105 - could not lock playlist </li>
  *     <li>120 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class OpenPlaylistForEditingMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -351,12 +351,6 @@ static const std::string    editPlaylistTokenParamName = "token";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: savePlaylist */
-
-/*------------------------------------------------------------------------------
- *  XML header string
- *----------------------------------------------------------------------------*/
-static const Glib::ustring  xmlHeaderString 
-                            = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
 
 /*------------------------------------------------------------------------------
  *  The name of the 'save playlist' method on the storage server
@@ -1054,7 +1048,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     parameters[savePlaylistTokenParamName] 
             = *playlist->getToken();
     parameters[savePlaylistNewPlaylistParamName] 
-            = std::string(xmlHeaderString + *playlist->getXmlString());
+            = std::string(*playlist->getXmlDocumentString());
 
     result.clear();
     if (!xmlRpcClient.execute(savePlaylistMethodName.c_str(),
@@ -1505,7 +1499,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
             = std::string(*audioClip->getId());
     }
     parameters[storeAudioClipMetadataParamName] 
-            = std::string(*audioClip->getMetadataString());
+            = std::string(*audioClip->getXmlDocumentString());
     parameters[storeAudioClipFileNameParamName] 
             = std::string(*audioClip->getUri());
     parameters[storeAudioClipChecksumParamName] 

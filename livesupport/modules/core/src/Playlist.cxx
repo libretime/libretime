@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,9 +46,9 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
-/*------------------------------------------------------------------------------
+/**
  *  The name of the config element for this class
- *----------------------------------------------------------------------------*/
+ */
 const std::string Playlist::configElementNameStr = "playlist";
 
 /**
@@ -71,11 +71,146 @@ static const std::string    titleAttrName = "title";
  */
 static const std::string    elementListAttrName = "playlistElement";
 
+/**
+ *  The name of the metadata child element.
+ */
+static const std::string    metadataElementName = "metadata";
+
+/**
+ *  The prefix of the extent (length) metadata element.
+ */
+static const std::string    extentElementPrefix = "dcterms";
+
+/**
+ *  The name of the extent (length) metadata element.
+ */
+static const std::string    extentElementName = "extent";
+
+/**
+ *  The URI identifier for the "dcterms" prefix
+ */
+static const std::string    extentElementUri = "http://purl.org/dc/terms/";
+
+/**
+ *  The prefix of the title metadata element.
+ */
+static const std::string    titleElementPrefix = "dc";
+
+/**
+ *  The name of the title metadata element.
+ */
+static const std::string    titleElementName = "title";
+
+/**
+ *  The URI identifier for the "dc" prefix
+ */
+static const std::string    titleElementUri ="http://purl.org/dc/elements/1.1/";
+
+/**
+ *  The URI identifier for the default XML namespace
+ */
+static const std::string    defaultPrefixUri ="http://www.streamonthefly.org/";
+
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  Copy constructor.
+ *----------------------------------------------------------------------------*/
+Playlist :: Playlist(const Playlist & otherPlaylist)
+                                            throw ()
+                        : Playable(PlaylistType)
+{
+    id          = otherPlaylist.id;
+    title       = otherPlaylist.title;
+    playlength  = otherPlaylist.playlength;
+    uri         = otherPlaylist.uri;
+    token       = otherPlaylist.token;
+
+    elementList.reset(new PlaylistElementListType(*otherPlaylist.elementList));
+    
+    if (otherPlaylist.savedCopy) {
+        savedCopy.reset(new Playlist(*otherPlaylist.savedCopy));
+    }
+    
+    if (otherPlaylist.xmlPlaylist) {
+        xmlPlaylist.reset(new xmlpp::Document);
+        xmlPlaylist->create_root_node_by_import(
+                        otherPlaylist.xmlPlaylist->get_root_node(),
+                        true);     // true == recursive
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test constructor without title.
+ *----------------------------------------------------------------------------*/
+Playlist :: Playlist(Ptr<UniqueId>::Ref            id,
+                     Ptr<time_duration>::Ref       playlength,
+                     Ptr<const std::string>::Ref   uri)
+                                                           throw ()
+                        : Playable(PlaylistType)
+{
+    this->id         = id;
+    this->title.reset(new Glib::ustring(""));
+    this->playlength = playlength;
+    this->uri        = uri;
+    
+    elementList.reset(new PlaylistElementListType);
+
+    setTitle(title);
+    setPlaylength(playlength);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test constructor with title.
+ *----------------------------------------------------------------------------*/
+Playlist :: Playlist(Ptr<UniqueId>::Ref               id,
+                     Ptr<const Glib::ustring>::Ref    title,
+                     Ptr<time_duration>::Ref          playlength,
+                     Ptr<const std::string>::Ref      uri)
+                                                           throw ()
+                        : Playable(PlaylistType)
+{
+    this->id         = id;
+    this->title      = title;
+    this->playlength = playlength;
+    this->uri        = uri;
+    
+    elementList.reset(new PlaylistElementListType);
+
+    setTitle(title);
+    setPlaylength(playlength);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of the title field.
+ *----------------------------------------------------------------------------*/
+void
+Playlist :: setTitle(Ptr<const Glib::ustring>::Ref title)
+                                                throw ()
+{
+    setMetadata(title, titleElementName, titleElementPrefix);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of the playlength field (private).
+ *----------------------------------------------------------------------------*/
+void
+Playlist :: setPlaylength(Ptr<time_duration>::Ref playlength)
+                                                throw ()
+{
+    Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
+                                        to_simple_string(*playlength) ));
+    setMetadata(playlengthString, extentElementName, extentElementPrefix);
+}
+
 
 /*------------------------------------------------------------------------------
  *  Create a playlist object based on an XML element.
@@ -92,30 +227,29 @@ Playlist :: configure(const xmlpp::Element    & element)
 
     const xmlpp::Attribute    * attribute;
 
-    if (!(attribute = element.get_attribute(idAttrName))) {
-        std::string eMsg = "missing attribute ";
-        eMsg += idAttrName;
-        throw std::invalid_argument(eMsg);
+    if (!id) {
+        if (!(attribute = element.get_attribute(idAttrName))) {
+            std::string eMsg = "missing attribute ";
+            eMsg += idAttrName;
+            throw std::invalid_argument(eMsg);
+        }
+        id.reset(new UniqueId(attribute->get_value()));
     }
-    id.reset(new UniqueId(attribute->get_value()));
-
-    if (!(attribute = element.get_attribute(playlengthAttrName))) {
-        std::string eMsg = "missing attribute ";
-        eMsg += playlengthAttrName;
-        throw std::invalid_argument(eMsg);
-    }
-    playlength.reset(new time_duration(
-                            duration_from_string(attribute->get_value())));
-    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
-                                                 attribute->get_value() ));
-    metadata["dcterms:extent"] = playlengthString;
     
-    if ((attribute = element.get_attribute(titleAttrName))) {
-        title.reset(new const Glib::ustring(attribute->get_value()));
-    } else {
-        title.reset(new const Glib::ustring(""));
+    if (!playlength
+            && (attribute = element.get_attribute(playlengthAttrName))) {
+        playlength.reset(new time_duration(
+                                duration_from_string(attribute->get_value())));
+        Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+                                                     attribute->get_value() ));
+        setMetadata(playlengthString, extentElementName, extentElementPrefix);
     }
-    metadata["dc:title"] = title;
+    
+    if (!title
+            && (attribute = element.get_attribute(titleAttrName))) {
+        title.reset(new const Glib::ustring(attribute->get_value()));
+        setMetadata(title, titleElementName, titleElementPrefix);
+    }
 
     xmlpp::Node::NodeList  childNodes 
                            = element.get_children(elementListAttrName);
@@ -129,35 +263,82 @@ Playlist :: configure(const xmlpp::Element    & element)
         addPlaylistElement(newPlaylistElement);
         ++it;
     }
-    
-    isLockedForPlaying = false;
-    isLockedForEditing = false;
-}
 
+    childNodes  = element.get_children(metadataElementName);
+    it          = childNodes.begin();
 
-/*------------------------------------------------------------------------------
- *  Copy constructor.
- *----------------------------------------------------------------------------*/
-Playlist :: Playlist(const Playlist & otherPlaylist)
-                                            throw ()
-                        : Playable(PlaylistType)
-{
-    id          = otherPlaylist.id;
-    title       = otherPlaylist.title;
-    playlength  = otherPlaylist.playlength;
-    uri         = otherPlaylist.uri;
-    token       = otherPlaylist.token;
+    if (it != childNodes.end()) {
+        const xmlpp::Element    * metadataElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
 
-    isLockedForPlaying = otherPlaylist.isLockedForPlaying;
-    isLockedForEditing = otherPlaylist.isLockedForEditing;
+        xmlPlaylist.reset(new xmlpp::Document);
+        xmlpp::Element*     root = xmlPlaylist->create_root_node(
+                                                        configElementNameStr);
+        root->set_attribute(idAttrName, std::string(*id));
+        root->import_node(metadataElement, true);    // true = recursive
 
-    elementList.reset(new PlaylistElementListType(*otherPlaylist.elementList));
-    
-    if (otherPlaylist.savedCopy) {
-        savedCopy.reset(new Playlist(*otherPlaylist.savedCopy));
+        const xmlpp::Node::NodeList dataFieldList
+                                    = metadataElement->get_children();
+        xmlpp::Node::NodeList::const_iterator listIt = dataFieldList.begin();
+
+        while (listIt != dataFieldList.end()) {
+            const xmlpp::Node*  dataNode = *listIt;
+            std::string         prefix   = dataNode->get_namespace_prefix();
+            std::string         name     = dataNode->get_name();
+            const xmlpp::Element*
+                                dataElement 
+                              = dynamic_cast<const xmlpp::Element*> (dataNode);
+            if (!dataElement) {
+                ++listIt;
+                continue;
+            }
+
+            if (!playlength && prefix  == extentElementPrefix
+                            && name    == extentElementName) {
+                if (dataElement->has_child_text()) {
+                    playlength.reset(new time_duration(duration_from_string(
+                            dataElement->get_child_text()->get_content() )));
+                } else {              // or just leave blank?  bad either way
+                    playlength.reset(new time_duration(0,0,0,0));
+                }
+            }
+
+            if (!title && prefix  == titleElementPrefix
+                       && name    == titleElementName) {
+                Glib::ustring       value;
+                if (dataElement->has_child_text()) {
+                    value = dataElement->get_child_text()->get_content();
+                } else {
+                    value = "";
+                }
+                Ptr<const Glib::ustring>::Ref ptrToValue(
+                                                new const Glib::ustring(value));
+                title = ptrToValue;
+            }
+
+            ++listIt;
+        }
+        
+        ++it;
+        if (it != childNodes.end()) {
+            std::string eMsg = "more than one ";
+            eMsg += metadataElementName;
+            eMsg += " XML element";
+            throw std::invalid_argument(eMsg);
+        }
+    }
+
+    if (!playlength) {
+        std::string eMsg = "missing attribute ";
+        eMsg += playlengthAttrName;
+        eMsg += " or metadata element ";
+        eMsg += extentElementPrefix + ":" + extentElementName;
+        throw std::invalid_argument(eMsg);
     }
     
-    metadata = otherPlaylist.metadata;
+    if (!title) {
+        title.reset(new const Glib::ustring(""));
+    }
 }
 
 
@@ -202,7 +383,7 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                                                 *relativeOffset 
                                               + *audioClip->getPlaylength()));
     if (*endOffset > *playlength) {
-        playlength = endOffset;
+        setPlaylength(endOffset);
     }
 }
 
@@ -229,7 +410,7 @@ Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
                                                 *relativeOffset 
                                               + *playlist->getPlaylength()));
     if (*endOffset > *playlength) {
-        playlength = endOffset;
+        setPlaylength(endOffset);
     }
 }
 
@@ -270,52 +451,6 @@ Playlist::removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
 
 
 /*------------------------------------------------------------------------------
- *  Lock or unlock the playlist for editing.
- *----------------------------------------------------------------------------*/
-bool
-Playlist::setLockedForEditing(const bool lockStatus)
-                                            throw ()
-{
-    if (lockStatus == true) {
-        if (isLockedForPlaying || isLockedForEditing) {
-            return false;
-        } else {
-            isLockedForEditing = true;
-            return true;
-        }
-    } else {
-        if (isLockedForPlaying) {
-            return false;
-        } else {
-            isLockedForEditing = false;
-            return true;                    // returns true also if playlist
-        }                                   // was already unlocked!
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Lock or unlock the playlist for playing.
- *----------------------------------------------------------------------------*/
-bool
-Playlist::setLockedForPlaying(const bool lockStatus)
-                                            throw ()
-{
-    if (lockStatus == true) {
-        if (isLockedForPlaying) {
-            return false;
-        } else {
-            isLockedForPlaying = true;      // preserve LockedForEditing state
-            return true;
-        }
-    } else {
-        isLockedForPlaying = false;         // restore LockedForEditing state;
-        return true;                        // returns true also if playlist
-    }                                       // was already unlocked!
-}
-
-
-/*------------------------------------------------------------------------------
  *  Validate the playlist.
  *----------------------------------------------------------------------------*/
 bool
@@ -342,12 +477,12 @@ Playlist::valid(void)                    throw ()
                 return false;
             }
             *runningTime += *(playlist->getPlaylength());
-        } else {                  // this should never happen
+        } else {                    // this should never happen
             return false;
         }
         ++it;
     }
-    playlength = runningTime;   // fix playlength, if everything else is OK
+    setPlaylength(runningTime);     // fix playlength, if everything else is OK
     return true;
 }
 
@@ -358,18 +493,7 @@ Playlist::valid(void)                    throw ()
 void
 Playlist::createSavedCopy(void)          throw ()
 {
-    savedCopy = Ptr<Playlist>::Ref(new Playlist);
-
-    savedCopy->id                 = this->id;
-    savedCopy->playlength         = this->playlength;
-    savedCopy->isLockedForPlaying = this->isLockedForPlaying;
-    savedCopy->isLockedForEditing = this->isLockedForEditing;
-
-    // note: we create a new copy of the playlist element map, but not of the
-    //   individual playlist elements, which (i think) are immutable
-    savedCopy->elementList.reset(new PlaylistElementListType(*elementList));
-
-    savedCopy->savedCopy.reset();
+    savedCopy = Ptr<Playlist>::Ref(new Playlist(*this));
 }
 
 
@@ -383,11 +507,13 @@ Playlist::revertToSavedCopy(void)        throw (std::invalid_argument)
         throw (std::invalid_argument("playlist has no saved copy"));
     }
 
-    this->id                      = savedCopy->id;
-    this->playlength              = savedCopy->playlength;
-    this->isLockedForPlaying      = savedCopy->isLockedForPlaying;
-    this->isLockedForEditing      = savedCopy->isLockedForEditing;
-    this->elementList             = savedCopy->elementList;
+    this->id            = savedCopy->id;
+    this->title         = savedCopy->title;
+    this->playlength    = savedCopy->playlength;
+    this->uri           = savedCopy->uri;
+    this->token         = savedCopy->token;
+    this->elementList   = savedCopy->elementList;
+    this->xmlPlaylist   = savedCopy->xmlPlaylist;
 
     savedCopy.reset();
 }
@@ -400,35 +526,125 @@ Ptr<Glib::ustring>::Ref
 Playlist :: getMetadata(const string &key) const
                                                 throw ()
 {
-    metadataType::const_iterator  it = metadata.find(key);
+    std::string name, prefix;
+    separateNameAndNameSpace(key, name, prefix);
 
-    if (it != metadata.end()) {
-        Ptr<Glib::ustring>::Ref data(new Glib::ustring(*it->second));
-        return data;
-    } else {
-        Ptr<Glib::ustring>::Ref nullPointer;
-        return nullPointer;
+    Ptr<Glib::ustring>::Ref value;
+
+    if (! xmlPlaylist) {
+        return value;
     }
+    xmlpp::Element*         rootNode = xmlPlaylist->get_root_node();
+    if (! rootNode) {
+        return value;
+    }
+    xmlpp::Node::NodeList   rootList = rootNode->get_children(
+                                                        metadataElementName);
+    if (rootList.size() == 0) {
+        return value;
+    }
+    
+    xmlpp::Node*            metadata = rootList.front();
+    xmlpp::Node::NodeList   nodeList = metadata->get_children(name);
+    xmlpp::Node::NodeList::iterator it = nodeList.begin();
+    
+    while (it != nodeList.end()) {
+        xmlpp::Node*        node = *it;
+        if (node->get_namespace_prefix() == prefix) {
+            xmlpp::Element* element = dynamic_cast<xmlpp::Element*> (node);
+            value.reset(new Glib::ustring(element->get_child_text()
+                                                 ->get_content()));
+            return value;
+        }
+        ++it;
+    }
+
+    return value;
 }
 
 
 /*------------------------------------------------------------------------------
- *  Set the value of a metadata field.
+ *  Set the value of a metadata field (public).
  *----------------------------------------------------------------------------*/
 void
 Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
-                        const string &key)
+                        const std::string &key)
                                                 throw ()
 {
-    metadata[key] = value;
-    
-    if (key == "dcterms:extent") {
-        playlength.reset(new time_duration(duration_from_string(*value)));
+    std::string name, prefix;
+    separateNameAndNameSpace(key, name, prefix);
+    setMetadata(value, name, prefix);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of a metadata field (private).
+ *----------------------------------------------------------------------------*/
+void
+Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                        const std::string &name, const std::string &prefix)
+                                                throw ()
+{
+    if (prefix == extentElementPrefix && name == extentElementName) {
+        playlength.reset(new time_duration(
+                                duration_from_string(*value) ));
     }
     
-    if (key == "dc:title") {
+    if (prefix == titleElementPrefix && name == titleElementName) {
         title = value;
-    }        
+    }
+
+    // create a new xmlpp::Document for the metadata if necessary
+    if (! xmlPlaylist) {
+        xmlPlaylist.reset(new xmlpp::Document);
+    }
+    xmlpp::Element*         rootNode = xmlPlaylist->get_root_node();
+    if (! rootNode) {
+        rootNode = xmlPlaylist->create_root_node(configElementNameStr);
+        if (id) {
+            rootNode->set_attribute(idAttrName, std::string(*id));
+        }
+    }
+    xmlpp::Node::NodeList   rootList = rootNode->get_children(
+                                                        metadataElementName);
+    xmlpp::Element*         metadata;
+    if (rootList.size() > 0) {
+        metadata = dynamic_cast<xmlpp::Element*> (rootList.front());
+    } else {
+        metadata = rootNode->add_child(metadataElementName);
+        metadata->set_namespace_declaration(defaultPrefixUri);
+        metadata->set_namespace_declaration(titleElementUri, 
+                                            titleElementPrefix);
+        metadata->set_namespace_declaration(extentElementUri, 
+                                            extentElementPrefix);
+    }
+
+    // find the element to be modified
+    xmlpp::Node::NodeList   nodeList    = metadata->get_children(name);
+    xmlpp::Node::NodeList::iterator it  = nodeList.begin();
+    xmlpp::Element*         element     = 0;
+
+    while (it != nodeList.end()) {
+        xmlpp::Node*        node = *it;
+        if (node->get_namespace_prefix() == prefix) {
+            element = dynamic_cast<xmlpp::Element*> (nodeList.front());
+            break;
+        }
+        ++it;
+    }
+    
+    // or add it if it did not exist before
+    if (it == nodeList.end()) {
+        element = metadata->add_child(name);
+        try {
+            element->set_namespace(prefix);
+        }
+        catch (xmlpp::exception &e) {
+        // this namespace has not been declared; well OK, do nothing then
+        }
+    }
+    
+    element->set_child_text(*value);
 }
 
 
@@ -436,7 +652,7 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
  *  Return a string containing the essential fields of this object, in XML.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-Playlist :: getXmlString(void)                                  throw ()
+Playlist :: getXmlElementString(void)           throw ()
 {
     Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
     
@@ -451,10 +667,10 @@ Playlist :: getXmlString(void)                                  throw ()
     xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
                                                    + *getTitle()
                                                    + "\">\n");
-
+    
     PlaylistElementListType::const_iterator  it = elementList->begin();
     while (it != elementList->end()) {
-        xmlString->append(*it->second->getXmlString() + "\n");
+        xmlString->append(*it->second->getXmlElementString() + "\n");
         ++it;
     }
 
@@ -462,5 +678,42 @@ Playlist :: getXmlString(void)                                  throw ()
     xmlString->append(configElementNameStr + ">");
 
     return xmlString;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a string containing an XML representation of this playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+Playlist :: getXmlDocumentString()              throw ()
+{
+    Ptr<xmlpp::Document>::Ref   localDocument;
+
+    if (xmlPlaylist) {
+        localDocument = xmlPlaylist;
+    } else {
+        localDocument.reset(new xmlpp::Document());
+        xmlpp::Element* rootNode = localDocument->create_root_node(
+                                                        configElementNameStr);
+        if (id) {
+            rootNode->set_attribute(idAttrName, std::string(*id));
+        }
+    }
+
+    Glib::ustring               playlistElementsXmlString("\n");
+    Playlist::const_iterator    it = this->begin();
+    while (it != this->end()) {
+        playlistElementsXmlString += *(it->second->getXmlElementString());
+        playlistElementsXmlString += '\n';
+        ++it;
+    }
+
+    Ptr<Glib::ustring>::Ref metadataString(new Glib::ustring(
+                                            localDocument->write_to_string() ));
+    unsigned int    insertPosition = metadataString->find(metadataElementName);
+    insertPosition = metadataString->rfind('<', insertPosition);
+    metadataString->insert(insertPosition, playlistElementsXmlString);
+
+    return metadataString;
 }
 

@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
  *  Return a string containing the essential fields of this object, in XML.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-PlaylistElement :: getXmlString(void)                                  throw ()
+PlaylistElement :: getXmlElementString(void)    throw ()
 {
     Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
     
@@ -201,9 +201,9 @@ PlaylistElement :: getXmlString(void)                                  throw ()
     xmlString->append(relativeOffsetAttrName + "=\"" 
                                              + to_simple_string(*relativeOffset)
                                              + "\">\n");
-    xmlString->append(*getPlayable()->getXmlString() + "\n");
+    xmlString->append(*getPlayable()->getXmlElementString() + "\n");
     if (fadeInfo) {
-        xmlString->append(*fadeInfo->getXmlString() + "\n");
+        xmlString->append(*fadeInfo->getXmlElementString() + "\n");
     }
     xmlString->append("</");
     xmlString->append(configElementNameStr + ">");

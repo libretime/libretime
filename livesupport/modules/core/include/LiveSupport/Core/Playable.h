@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {
@@ -213,13 +213,50 @@ class Playable : public boost::enable_shared_from_this<Playable>
                                                 throw () = 0;
 
         /**
-         *  Return an XML representation of this audio clip or playlist.
-         *  This consists of minimal information only, without any metadata.
+         *  Return a partial XML representation of this audio clip or playlist.
+         *  
+         *  This is a string containing a single <audioClip> or <playlist>
+         *  XML element, with minimal information (ID, title, playlength)
+         *  only, without an XML header or any other metadata.
          *
-         *  @return a string representation of the audio clip in XML
+         *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
+         *  time durations have the format "hh:mm:ss.ssssss".
+         *
+         *  @return a string representation of the audio clip as an XML element
          */
-       virtual Ptr<Glib::ustring>::Ref
-       getXmlString(void)                       throw () = 0;
+        virtual Ptr<Glib::ustring>::Ref
+        getXmlElementString(void)               throw () = 0;
+
+
+        /**
+         *  Return a complete XML representation of this audio clip or playlist.
+         *  
+         *  This is a string containing a an XML document with an <audioClip> 
+         *  or <playlist> root node, together with an XML header and a 
+         *  <metadata> element (in the case of playlists, for the outermost 
+         *  playlist only).
+         *  
+         *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
+         *  time durations have the format "hh:mm:ss.ssssss".
+         *  
+         *  The audio clip or playlist can be reconstructed from 
+         *  the string returned by this method:
+         *  <pre><code>
+         *  Ptr<AudioClip>::Ref         audioClip1 = ... something ...;
+         *  Ptr<xmlpp::DomParser>::Ref  parser;
+         *  parser->parse_memory(*audioClip1->getXmlDocumentString());
+         *  const xmlpp::Document*      document = parser->get_document();
+         *  const xmlpp::Element*       root     = document->get_root_node();
+         *  Ptr<AudioClip>::Ref         audioClip2(new AudioClip());
+         *  audioClip2->configure(*root);
+         *  </code></pre>
+         *  results in two identical audio clips (this works for playlists, 
+         *  too, but see the note at Playlist::getXmlDocumentString()).
+         *  
+         *  @return a string representation of the audio clip as an XML document
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        getXmlDocumentString(void)              throw () = 0;
 
 
         /**

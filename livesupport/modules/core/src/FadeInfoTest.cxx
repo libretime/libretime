@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfoTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,7 +117,7 @@ FadeInfoTest :: firstTest(void)
         CPPUNIT_ASSERT(fadeOut->seconds() == 1);
         CPPUNIT_ASSERT(fadeOut->fractional_seconds() == 500);
 
-        CPPUNIT_ASSERT(*fadeInfo->getXmlString() == 
+        CPPUNIT_ASSERT(*fadeInfo->getXmlElementString() == 
                                     "<fadeInfo id=\"0000000000009901\" "
                                     "fadeIn=\"00:00:02\" "
                                     "fadeOut=\"00:00:01.000500\"/>");

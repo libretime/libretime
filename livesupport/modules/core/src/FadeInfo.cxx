@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfo.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -77,7 +77,7 @@ static const std::string    fadeOutAttrName = "fadeOut";
  *----------------------------------------------------------------------------*/
 void
 FadeInfo :: configure(const xmlpp::Element  & element)
-                                               throw (std::invalid_argument)
+                                                throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "bad configuration element ";
@@ -116,7 +116,7 @@ FadeInfo :: configure(const xmlpp::Element  & element)
  *  Return a string containing the essential fields of this object, in XML.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-FadeInfo :: getXmlString(void)                                  throw ()
+FadeInfo :: getXmlElementString(void)           throw ()
 {
     Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
     

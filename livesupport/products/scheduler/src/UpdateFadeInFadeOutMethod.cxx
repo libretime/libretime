@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ UpdateFadeInFadeOutMethod :: execute(
         return;
     }
 
-    if (!playlist->canBeEdited()) {
+    if (!playlist->isLocked()) {
         XmlRpcTools::markError(errorId+7, 
                                "playlist has not been opened for editing", 
                                returnValue);

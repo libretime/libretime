@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -130,16 +130,6 @@ class Playlist : public Configurable,
         Ptr<const std::string>::Ref     token;
 
         /**
-         *  Flag set if playlist is currently playing.
-         */
-        bool                        isLockedForPlaying;
-
-        /**
-         *  Flag set if playlist is currently being edited.
-         */
-        bool                        isLockedForEditing;
-
-        /**
          *  A map type for storing the playlist elements associated with 
          *  this playlist, indexed by their relative offsets.
          */
@@ -169,15 +159,30 @@ class Playlist : public Configurable,
 
 
         /**
-         *  The type for storing the metadata.
+         *  This playlist in XML format.
          */
-        typedef std::map<const std::string, Ptr<const Glib::ustring>::Ref>
-                                    metadataType;
+        Ptr<xmlpp::Document>::Ref       xmlPlaylist;
 
         /**
-         *  The metadata for this playlist.
+         *  Set the value of a metadata field in this playlist.
+         *
+         *  @param value the new value of the metadata field.
+         *  @param name    the name of the metadata field (without prefix)
+         *  @param prefix  the prefix of the metadata field
          */
-        metadataType                metadata;
+        void
+        setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                    const std::string &name, const std::string &prefix)
+                                                throw ();
+
+        /**
+         *  Set the total playing length of this playlist.
+         *
+         *  @param the playing length in microseconds precision.
+         */
+        void
+        setPlaylength(Ptr<time_duration>::Ref playlength) 
+                                                throw ();
 
 
     public:
@@ -221,8 +226,6 @@ class Playlist : public Configurable,
                         : Playable(PlaylistType)
         {
             elementList.reset(new PlaylistElementListType);
-            this->isLockedForPlaying = false;
-            this->isLockedForEditing = false;
         }
 
         /**
@@ -236,8 +239,6 @@ class Playlist : public Configurable,
             this->id         = id;
             
             elementList.reset(new PlaylistElementListType);
-            this->isLockedForPlaying = false;
-            this->isLockedForEditing = false;
         }
 
         /**
@@ -254,18 +255,7 @@ class Playlist : public Configurable,
         Playlist(Ptr<UniqueId>::Ref             id,
                  Ptr<time_duration>::Ref        playlength,
                  Ptr<const std::string>::Ref    uri = Ptr<std::string>::Ref())
-                                                throw ()
-                        : Playable(PlaylistType)
-        {
-            this->id         = id;
-            this->title.reset(new Glib::ustring(""));
-            this->playlength = playlength;
-            this->uri        = uri;
-            
-            elementList.reset(new PlaylistElementListType);
-            this->isLockedForPlaying = false;
-            this->isLockedForEditing = false;
-        }
+                                                throw ();
 
         /**
          *  Create a playlist by specifying all details.
@@ -282,18 +272,7 @@ class Playlist : public Configurable,
                  Ptr<const Glib::ustring>::Ref  title,
                  Ptr<time_duration>::Ref        playlength,
                  Ptr<const std::string>::Ref    uri = Ptr<std::string>::Ref())
-                                                throw ()
-                        : Playable(PlaylistType)
-        {
-            this->id         = id;
-            this->title      = title;
-            this->playlength = playlength;
-            this->uri        = uri;
-            
-            elementList.reset(new PlaylistElementListType);
-            this->isLockedForPlaying = false;
-            this->isLockedForEditing = false;
-        }
+                                                throw ();
 
         /**
          *  A virtual destructor, as this class has virtual functions.
@@ -339,10 +318,32 @@ class Playlist : public Configurable,
             return id;
         }
 
+
+        /**
+         *  Return the title of this playlist.
+         *
+         *  @return the title.
+         */
+        virtual Ptr<const Glib::ustring>::Ref
+        getTitle(void) const                    throw ()
+        {
+            return title;
+        }
+
+        /**
+         *  Set the title of this playlist.
+         *
+         *  @param title a new title.
+         */
+        virtual void
+        setTitle(Ptr<const Glib::ustring>::Ref title)
+                                                throw ();
+
+
         /**
          *  Return the total playing length for this playlist.
          *
-         *  @return the playing length in microseconds.
+         *  @return the playing length in microseconds precision.
          */
         virtual Ptr<time_duration>::Ref
         getPlaylength(void) const               throw ()
@@ -400,47 +401,16 @@ class Playlist : public Configurable,
         }
 
         /**
-         *  Test whether the playlist is locked for editing or playing.
+         *  Test whether the playlist is locked for editing.
          *
-         *  @return true if the playlist is currently being edited or
-         *      played; false otherwise
+         *  @return true if the playlist is currently being edited
          */
         bool
         isLocked() const                         throw ()
         {
-            return isLockedForEditing || isLockedForPlaying;
+            return (token.get() != 0);
         }
 
-        /**
-         *  Test whether the playlist is currently available for editing.
-         *
-         *  @return true if the playlist is available, false otherwise
-         */
-        bool
-        canBeEdited() const                      throw ()
-        {
-            return isLockedForEditing && !isLockedForPlaying;
-        }
-
-        /**
-         *  Lock or unlock the playlist for editing.
-         *
-         *  @return true if successfully obtained or released lock;
-         *          false otherwise.
-         */
-        bool
-        setLockedForEditing(const bool lockStatus)
-                                                throw ();
-
-        /**
-         *  Lock or unlock the playlist for playing.
-         *
-         *  @return true if successfully obtained or released lock;
-         *          false otherwise.
-         */
-        bool
-        setLockedForPlaying(const bool lockStatus)
-                                                throw ();
 
         /**
          *  The iterator type for this class.  A Playlist::const_iterator
@@ -503,11 +473,11 @@ class Playlist : public Configurable,
          *  @exception std::invalid_argument if the playlist already contains
          *             a playlist element with the same relative offset
          */
-         void
-         addAudioClip(Ptr<AudioClip>::Ref      audioClip,
-                      Ptr<time_duration>::Ref  relativeOffset,
-                      Ptr<FadeInfo>::Ref       fadeInfo
-                                               = Ptr<FadeInfo>::Ref())
+        void
+        addAudioClip(Ptr<AudioClip>::Ref      audioClip,
+                     Ptr<time_duration>::Ref  relativeOffset,
+                     Ptr<FadeInfo>::Ref       fadeInfo
+                                              = Ptr<FadeInfo>::Ref())
                                                 throw (std::invalid_argument);
 
         /**
@@ -524,11 +494,11 @@ class Playlist : public Configurable,
          *  @exception std::invalid_argument if the playlist already contains
          *             a playlist element with the same relative offset
          */
-         void
-         addPlaylist(Ptr<Playlist>::Ref       playlist,
-                     Ptr<time_duration>::Ref  relativeOffset,
-                     Ptr<FadeInfo>::Ref       fadeInfo
-                                               = Ptr<FadeInfo>::Ref())
+        void
+        addPlaylist(Ptr<Playlist>::Ref       playlist,
+                    Ptr<time_duration>::Ref  relativeOffset,
+                    Ptr<FadeInfo>::Ref       fadeInfo
+                                              = Ptr<FadeInfo>::Ref())
                                                 throw (std::invalid_argument);
 
         /**
@@ -540,9 +510,9 @@ class Playlist : public Configurable,
          *  @exception std::invalid_argument if there is no playlist element
          *             at the given relative offset
          */
-         void
-         setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
-                     Ptr<FadeInfo>::Ref       fadeInfo)
+        void
+        setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
+                    Ptr<FadeInfo>::Ref       fadeInfo)
                                                 throw (std::invalid_argument);
 
         /**
@@ -553,8 +523,8 @@ class Playlist : public Configurable,
          *  @exception std::invalid_argument if the playlist does not contain
          *             a playlist element at the specified relative offset
          */
-         void
-         removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
+        void
+        removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
                                                 throw (std::invalid_argument);
 
         /**
@@ -562,56 +532,32 @@ class Playlist : public Configurable,
          *  If the playlength is the only thing amiss, playlist is considered
          *  valid, and the playlength is fixed.  (Hence no 'const'.)
          */
-         bool
-         valid(void)                            throw ();
+        bool
+        valid(void)                             throw ();
 
 
         /**
          *  Create a saved copy of this playlist.  If a saved copy exists
          *  already, it is replaced by the current state.
          */
-         void
-         createSavedCopy(void)                  throw ();
+        void
+        createSavedCopy(void)                   throw ();
 
         /**
          *  Delete the saved copy of the playlist, if exists (or do nothing).
          */
-         void
-         deleteSavedCopy(void)                  throw ()
-         {
-             savedCopy.reset();
-         }
+        void
+        deleteSavedCopy(void)                   throw ()
+        {
+            savedCopy.reset();
+        }
 
         /**
          *  Revert to the saved copy of this playlist.  If there is no
          *  saved copy, do nothing and throw an exception.
          */
-         void
-         revertToSavedCopy(void)                throw (std::invalid_argument);
-
-
-        /**
-         *  Return the title of this playlist.
-         *
-         *  @return the title.
-         */
-        virtual Ptr<const Glib::ustring>::Ref
-        getTitle(void) const                    throw ()
-        {
-            return title;
-        }
-
-        /**
-         *  Set the title of this playlist.
-         *
-         *  @param title a new title.
-         */
-        virtual void
-        setTitle(Ptr<const Glib::ustring>::Ref title)
-                                                throw ()
-        {
-            this->title = title;
-        }
+        void
+        revertToSavedCopy(void)                 throw (std::invalid_argument);
 
 
         /**
@@ -638,16 +584,55 @@ class Playlist : public Configurable,
 
 
         /**
-         *  Return an XML representation of this audio clip.
-         *  This consists of minimal information (ID and playlength for
-         *  playlists; ID, playlength and title
-         *  for the audio clips, plus fade in / fade out info)
-         *  only, without any metadata.
+         *  Return a partial XML representation of this audio clip or playlist.
+         *  
+         *  This is a string containing a single <playlist>
+         *  XML element, with minimal information (ID, title, playlength)
+         *  only, without an XML header or any other metadata.
          *
-         *  @return a string representation of the audio clip in XML
+         *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
+         *  time durations have the format "hh:mm:ss.ssssss".
+         *
+         *  @return a string representation of the playlist as an XML element
          */
-       virtual Ptr<Glib::ustring>::Ref
-       getXmlString(void)                       throw ();
+        virtual Ptr<Glib::ustring>::Ref
+        getXmlElementString(void)               throw ();
+
+
+        /**
+         *  Return a complete XML representation of this playlist.
+         *  
+         *  This is a string containing a an XML document with a 
+         *  <playlist> root node, together with an XML header and a 
+         *  <metadata> element (for the outermost playlist only).
+         *  
+         *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
+         *  time durations have the format "hh:mm:ss.ssssss".
+         *  
+         *  The playlist can be almost completely reconstructed from 
+         *  the string returned by this method:
+         *  <pre><code>
+         *  Ptr<Playlist>::Ref          playlist1 = ... something ...;
+         *  Ptr<xmlpp::DomParser>::Ref  parser;
+         *  parser->parse_memory(*playlist1->getXmlDocumentString());
+         *  const xmlpp::Document*      document = parser->get_document();
+         *  const xmlpp::Element*       root     = document->get_root_node();
+         *  Ptr<Playlist>::Ref          playlist2(new Playlist());
+         *  playlist2->configure(*root);
+         *  </code></pre>
+         *  results in two identical playlists if the audio clips
+         *  and sub-playlists inside <i>playlist1</i> do not contain any 
+         *  metadata other than title and playlength. 
+         *  All other metadata fields in the audio clips and sub-playlists 
+         *  will be lost.
+         *  
+         *  The <i>uri</i> and <i>token</i> fields are currently not part
+         *  of the XML document string returned.
+         *  
+         *  @return a string representation of the playlist as an XML document
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        getXmlDocumentString(void)              throw ();
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,12 +90,11 @@ using namespace LiveSupport::Core;
  *  <ul>
  *     <li>201 - invalid argument format</li>
  *     <li>202 - could not create playlist</li>
- *     <li>203 - could not open new playlist for editing</li>
  *     <li>220 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

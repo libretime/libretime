@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,9 +52,9 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
-/*------------------------------------------------------------------------------
+/**
  *  The name of the config element for this class
- *----------------------------------------------------------------------------*/
+ */
 const std::string AudioClip::configElementNameStr = "audioClip";
 
 /**
@@ -273,8 +273,9 @@ AudioClip :: configure(const xmlpp::Element  & element)
                                 = dynamic_cast<const xmlpp::Element*> (*it);
 
         xmlAudioClip.reset(new xmlpp::Document);
-        xmlpp::Element*     root = xmlAudioClip->create_root_node("audioClip");
-        root->set_attribute("id", std::string(*id));
+        xmlpp::Element*     root = xmlAudioClip->create_root_node(
+                                                        configElementNameStr);
+        root->set_attribute(idAttrName, std::string(*id));
         root->import_node(metadataElement, true);    // true = recursive
 
         const xmlpp::Node::NodeList dataFieldList
@@ -365,7 +366,8 @@ AudioClip :: getMetadata(const string &key) const
     if (! rootNode) {
         return value;
     }
-    xmlpp::Node::NodeList   rootList = rootNode->get_children("metadata");
+    xmlpp::Node::NodeList   rootList = rootNode->get_children(
+                                                        metadataElementName);
     if (rootList.size() == 0) {
         return value;
     }
@@ -420,19 +422,24 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
         title = value;
     }
 
+    // create a new xmlpp::Document for the metadata if necessary
     if (! xmlAudioClip) {
         xmlAudioClip.reset(new xmlpp::Document);
     }
     xmlpp::Element*         rootNode = xmlAudioClip->get_root_node();
     if (! rootNode) {
-        rootNode = xmlAudioClip->create_root_node("audioClip");
+        rootNode = xmlAudioClip->create_root_node(configElementNameStr);
+        if (id) {
+            rootNode->set_attribute(idAttrName, std::string(*id));
+        }
     }
-    xmlpp::Node::NodeList   rootList = rootNode->get_children("metadata");
+    xmlpp::Node::NodeList   rootList = rootNode->get_children(
+                                                        metadataElementName);
     xmlpp::Element*         metadata;
     if (rootList.size() > 0) {
         metadata = dynamic_cast<xmlpp::Element*> (rootList.front());
     } else {
-        metadata = rootNode->add_child("metadata");
+        metadata = rootNode->add_child(metadataElementName);
         metadata->set_namespace_declaration(defaultPrefixUri);
         metadata->set_namespace_declaration(titleElementUri, 
                                             titleElementPrefix);
@@ -440,6 +447,7 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                                             extentElementPrefix);
     }
 
+    // find the element to be modified
     xmlpp::Node::NodeList   nodeList    = metadata->get_children(name);
     xmlpp::Node::NodeList::iterator it  = nodeList.begin();
     xmlpp::Element*         element     = 0;
@@ -453,6 +461,7 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
         ++it;
     }
     
+    // or add it if it did not exist before
     if (it == nodeList.end()) {
         element = metadata->add_child(name);
         try {
@@ -471,7 +480,7 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
  *  Return a string containing the essential fields of this object, in XML.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-AudioClip :: getXmlString(void)                 throw ()
+AudioClip :: getXmlElementString(void)          throw ()
 {
     Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
     
@@ -491,19 +500,26 @@ AudioClip :: getXmlString(void)                 throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Return a string containing the metadata of the audio clip, in XML.
+ *  Return a string containing an XML representation of this audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-AudioClip :: getMetadataString()                throw ()
+AudioClip :: getXmlDocumentString()             throw ()
 {
-    Ptr<Glib::ustring>::Ref metadataString;
+    Ptr<xmlpp::Document>::Ref   localDocument;
 
-    if (!xmlAudioClip) {
-        return metadataString;
+    if (xmlAudioClip) {
+        localDocument = xmlAudioClip;
+    } else {
+        localDocument.reset(new xmlpp::Document());
+        xmlpp::Element* rootNode = localDocument->create_root_node(
+                                                        configElementNameStr);
+        if (id) {
+            rootNode->set_attribute(idAttrName, std::string(*id));
+        }
     }
     
-    metadataString.reset(new Glib::ustring(xmlAudioClip->write_to_string() ));
-
+    Ptr<Glib::ustring>::Ref     metadataString(new Glib::ustring(
+                                            localDocument->write_to_string() ));
     return metadataString;
 }
 

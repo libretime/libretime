@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -139,13 +139,6 @@ OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         std::string eMsg = "could not open playlist for editing:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);
-        return;
-    }
-
-    if (!playlist->setLockedForEditing(true)) {
-        XmlRpcTools::markError(errorId+5, 
-                               "could not lock playlist", 
-                               returnValue);
         return;
     }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -209,7 +209,7 @@ class AudioClip : public Configurable,
          *  Create an audio clip by specifying its unique ID.
          *  The other fields will be filled in by configure().
          *
-         *  This constructor creates a Playlist with a null pointer 
+         *  This constructor creates an AudioClip with a null pointer 
          *  for all fields except the ID!  It is meant for internal use only.
          *  If you want to upload a new audio clip to the storage, 
          *  use the constructor with (title, playlength, uri) arguments.
@@ -457,20 +457,45 @@ class AudioClip : public Configurable,
 
 
         /**
-         *  Return an XML representation of this audio clip
-         *  (in UTF-8 encoding).
-         *  This consists of minimal information (ID, playlength, title)
-         *  only, without any metadata.
+         *  Return a partial XML representation of this audio clip or playlist.
+         *  
+         *  This is a string containing a single <audioClip> or <playlist>
+         *  XML element, with minimal information (ID, title, playlength)
+         *  only, without an XML header or any other metadata.
          *
-         *  @return a string representation of the audio clip in XML
+         *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
+         *  time durations have the format "hh:mm:ss.ssssss".
+         *
+         *  @return a string representation of the audio clip as an XML element
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlString(void)                      throw ();
+        getXmlElementString(void)                throw ();
 
 
         /**
-         *  Return an XML representation of the metadata of the audio clip
-         *  (in UTF-8 encoding).  This has the (pseudo-) DTD
+         *  Return a complete XML representation of this audio clip.
+         *  
+         *  This is a string containing a an XML document with an <audioClip> 
+         *  root node, together with an XML header.
+         *
+         *  The encoding is UTF-8.  IDs are 16-digit hexadecimal numbers,
+         *  time durations have the format "hh:mm:ss.ssssss".
+         *
+         *  The audio clip or playlist can be completely reconstructed from 
+         *  the string returned by this method:
+         *  <pre><code>
+         *  Ptr<AudioClip>::Ref         audioClip1 = ... something ...;
+         *  Ptr<xmlpp::DomParser>::Ref  parser;
+         *  parser->parse_memory(*audioClip1->getXmlDocumentString());
+         *  const xmlpp::Document*      document = parser->get_document();
+         *  const xmlpp::Element*       root     = document->get_root_node();
+         *  Ptr<AudioClip>::Ref         audioClip2(new AudioClip());
+         *  audioClip2->configure(*root);
+         *  </code></pre>
+         *  results in two identical audio clips (and the same works for
+         *  playlists, too).
+         *  
+         *  The XML document has the (pseudo-) DTD
          *  <pre><code>
          *  &lt;!ELEMENT audioClip (metadata) &gt;
          *  &lt;!ATTLIST audioClip  id           NMTOKEN     #REQUIRED  &gt;
@@ -484,10 +509,10 @@ class AudioClip : public Configurable,
          *  it was created by the default constructor or the constructor
          *  which takes a unique ID only), a null pointer is returned.
          *
-         *  @return a string representation of the metadata in XML
+         *  @return a string representation of the audio clip as an XML document
          */
-        Ptr<Glib::ustring>::Ref
-        getMetadataString()                     throw ();
+        virtual Ptr<Glib::ustring>::Ref
+        getXmlDocumentString(void)               throw ();
 
 
         /**

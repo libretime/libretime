@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -131,13 +131,10 @@ AudioClipTest :: firstTest(void)
         CPPUNIT_ASSERT(*alternativeTitle ==
                             "Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ");
 
-        CPPUNIT_ASSERT(*audioClip->getXmlString() ==
+        CPPUNIT_ASSERT(*audioClip->getXmlElementString() ==
                                             "<audioClip id=\"0000000000000001\" "
                                             "playlength=\"00:18:30\" "
                                             "title=\"File Title txt\"/>");
-
-//std::cerr << "\nxml: '" << *audioClip->getXmlString() << "'" << std::endl;
-//std::cerr << "\nmetadata: " << *audioClip->getMetadataString() << std::endl;
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");

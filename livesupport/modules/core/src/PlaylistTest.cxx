@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,8 +114,9 @@ PlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(duration->total_seconds() == 34);
 
     CPPUNIT_ASSERT(playlist->valid());
-    CPPUNIT_ASSERT(*playlist->getXmlString() ==
-"<playlist id=\"0000000000000001\" playlength=\"00:00:34\" title=\"\">\n"
+    CPPUNIT_ASSERT(*playlist->getXmlElementString() ==
+"<playlist id=\"0000000000000001\" playlength=\"00:00:34\" "
+                                  "title=\"My First Playlist\">\n"
 "<playlistElement id=\"0000000000000101\" relativeOffset=\"00:00:00\">\n"
 "<audioClip id=\"0000000000010001\" playlength=\"00:00:11\" title=\"one\"/>\n"
 "</playlistElement>\n"
@@ -144,7 +145,6 @@ PlaylistTest :: firstTest(void)
                                     == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
                                                      == 0x10001);
-
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
     playlistElement  = it->second;
@@ -157,36 +157,8 @@ PlaylistTest :: firstTest(void)
                                                      == 0x10002);
     
     ++it;
-//    CPPUNIT_ASSERT(it == playlist->end());
-}
-
-
-/*------------------------------------------------------------------------------
- *  Test to see if locking works
- *----------------------------------------------------------------------------*/
-void
-PlaylistTest :: lockTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    CPPUNIT_ASSERT(!playlist->isLocked());
-    CPPUNIT_ASSERT(!playlist->canBeEdited());
-
-    CPPUNIT_ASSERT(playlist->setLockedForEditing(true));
-    CPPUNIT_ASSERT(playlist->isLocked());
-    CPPUNIT_ASSERT(playlist->canBeEdited());
-    CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
-
-    CPPUNIT_ASSERT(playlist->setLockedForPlaying(true));
-    CPPUNIT_ASSERT(playlist->isLocked());
-    CPPUNIT_ASSERT(!playlist->canBeEdited());
-    CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
-    CPPUNIT_ASSERT(!playlist->setLockedForEditing(false));
-    CPPUNIT_ASSERT(!playlist->setLockedForPlaying(true));
-
-    CPPUNIT_ASSERT(playlist->setLockedForPlaying(false));
-    CPPUNIT_ASSERT(playlist->isLocked());
-    CPPUNIT_ASSERT(playlist->canBeEdited());
-    CPPUNIT_ASSERT(playlist->setLockedForEditing(false));
+    ++it;
+    CPPUNIT_ASSERT(it == playlist->end());
 }
 
 

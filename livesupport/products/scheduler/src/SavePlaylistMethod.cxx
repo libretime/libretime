@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -134,13 +134,6 @@ SavePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);
-        return;
-    }
-
-    if (!playlist->setLockedForEditing(false)) {
-        XmlRpcTools::markError(errorId+4, 
-                               "could not unlock playlist", 
-                               returnValue);
         return;
     }
 
