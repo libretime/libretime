@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/include/LiveSupport/SchedulerClient/SchedulerClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,38 +64,35 @@ using namespace LiveSupport::Core;
  *  The factory to create SchedulerClientInterface objects.
  *
  *  This object has to be configured with an XML configuration element
- *  called authenticationClientFactory. This element contains a child element
- *  specifying and configuring the kind of AuthenticationClient that the
- *  factory builds. This client is either a TestAuthenticationClient or
- *  a WebAuthenticationClient, and the child element name is either
- *  testAuthentication or webAuthentication, correspondingly.
+ *  called schedulerClientFactory. This element contains a child element
+ *  specifying and configuring the kind of SchedulerClient that the
+ *  factory builds.
+ *  Currently only one kind of client, SchedulerDaemonXmlRpcClient is
+ *  supported by this factory.
  *
- *  An authenticationClientFactory configuration element may look like 
+ *  An schedulerClientFactory configuration element may look like 
  *  the following:
  *
  *  <pre><code>
- *  &lt;authenticationClientFactory&gt;
- *      &lt;webAuthentication&gt;
+ *  &lt;schedulerClientFactory&gt;
+ *      &lt;schedulerDaemonXmlRpcClient&gt;
  *          ...
- *      &lt;/webAuthentication&gt;
- *  &lt;/authenticationClientFactory&gt;
+ *      &lt;/schedulerDaemonXmlRpcClient&gt;
+ *  &lt;/schedulerClientFactory&gt;
  *  </code></pre>
  *
- *  For detais of the testAuthentication and webAuthentication elements, see the 
- *  documentation for the TestAuthenticationClient and WebAuthenticationClient
- *  classes.
+ *  For detais of the schedulerDaemonXmlRpcClient element, see the
+ *  documentation for the SchedulerDaemonXmlRpcClient class.
  *
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT authenticationClientFactory (testAuthentication|
- *                                         webAuthentication) &gt;
+ *  <!ELEMENT schedulerClientFactory        (schedulerDaemonXmlRpcClient) >
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
- *  @see TestAuthenticationClient
- *  @see WebAuthenticationClient
+ *  @version $Revision: 1.2 $
+ *  @see SchedulerDaemonXmlRpcClient
  */
 class SchedulerClientFactory : virtual public Configurable
 {
