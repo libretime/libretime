@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -362,7 +362,7 @@ class BasicStor extends Alib{
         $fname = "{$this->accessDir}/$token";
         touch($fname);      // is it needed?
         $url = $this->getUrlPart()."xmlrpc/put.php?token=$token";
-        return array('url'=>$url, 'token'=>$token, 'gunid'=>$gunid);
+        return array('url'=>$url, 'token'=>$token);
     }
 
     /**
