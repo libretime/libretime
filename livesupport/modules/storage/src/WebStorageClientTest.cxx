@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -181,14 +181,13 @@ void
 WebStorageClientTest :: playlistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
     try {
-        uniqueIdVector = wsc->reset();
+        wsc->reset();
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(uniqueIdVector->size() >= 3);
-    Ptr<UniqueId>::Ref  audioClipId = uniqueIdVector->at(0);
+    CPPUNIT_ASSERT(wsc->testAudioClipIds->size() >= 3);
+    Ptr<UniqueId>::Ref  audioClipId = wsc->testAudioClipIds->at(0);
 
     Ptr<SessionId>::Ref sessionId;
     try {
@@ -361,18 +360,18 @@ void
 WebStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
     try {
-        uniqueIdVector = wsc->reset();
+        wsc->reset();
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(uniqueIdVector->size() >= 2);
-    Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(1);
+    CPPUNIT_ASSERT(wsc->testAudioClipIds->size() >= 2);
+    Ptr<UniqueId>::Ref  id01 = wsc->testAudioClipIds->at(1);
     
 //    std::cout << "\nReset storage result:\n";
-//    for (unsigned i=0; i<uniqueIdVector->size(); i++) {
-//        std::cout << std::hex << std::string(*uniqueIdVector->at(i)) << std::endl;
+//    for (unsigned i=0; i < wsc->testAudioClipIds->size(); i++) {
+//        std::cout << std::hex << std::string(*wsc->testAudioClipIds->at(i))
+//                  << std::endl;
 //    } 
 
     Ptr<SessionId>::Ref sessionId;
@@ -500,14 +499,13 @@ void
 WebStorageClientTest :: simplePlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
     try {
-        uniqueIdVector = wsc->reset();
+        wsc->reset();
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(uniqueIdVector->size() >= 3);
-    Ptr<UniqueId>::Ref  audioClipId = uniqueIdVector->at(0);
+    CPPUNIT_ASSERT(wsc->testAudioClipIds->size() >= 3);
+    Ptr<UniqueId>::Ref  audioClipId = wsc->testAudioClipIds->at(0);
 
     Ptr<SessionId>::Ref sessionId;
     try {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -506,13 +506,25 @@ class WebStorageClient :
 
 
         /**
-         *  Reset the storage to its initial state.  Used for testing.
+         *  A vector containing the unique IDs of the audio clips in the 
+         *  storage.  Set by reset().  Used for testing.
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  testAudioClipIds;
+
+        /**
+         *  A vector containing the unique IDs of the playlists in the 
+         *  storage.  Set by reset().  Used for testing.
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  testPlaylistIds;
+
+        /**
+         *  Reset the storage to its initial state.  
+         *  Calls locstor.resetStorage, and puts the unique IDs returned
+         *  into testAudioClipIds and testPlaylistIds.  Used for testing.
          *
-         *  @return a vector containing the UniqueId's of the audio clips 
-         *          in the storage after the reset.
          *  @exception XmlRpcException if the server returns an error.
          */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        void
         reset(void)
                                                 throw (XmlRpcException);
 };
