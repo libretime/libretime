@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -506,4 +506,89 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Simple playlist saving test.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: simplePlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
+    try {
+        uniqueIdVector = wsc->reset();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(uniqueIdVector->size() >= 3);
+    Ptr<UniqueId>::Ref  audioClipId = uniqueIdVector->at(0);
+
+    Ptr<SessionId>::Ref sessionId;
+    try {
+        sessionId = authentication->login("root", "q");
+    } catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(sessionId);
+
+
+    // test createPlaylist()
+    Ptr<Playlist>::Ref  playlist;
+    try{
+        playlist = wsc->createPlaylist(sessionId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(playlist);
+    Ptr<UniqueId>::Ref  playlistId = playlist->getId();
+    
+    // test editPlaylist()
+    try {
+        playlist = wsc->editPlaylist(sessionId, playlistId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(playlist);
+    
+    Ptr<AudioClip>::Ref     audioClip;
+    try {
+        audioClip = wsc->getAudioClip(sessionId, audioClipId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<Glib::ustring>::Ref     title(new Glib::ustring("simple playlist"));
+
+    playlist->addAudioClip(audioClip, playlist->getPlaylength());
+    playlist->setTitle(title);
+
+    try {
+        wsc->savePlaylist(sessionId, playlist);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    // test getPlaylist()
+    Ptr<Playlist>::Ref      newPlaylist;
+    try {
+        newPlaylist = wsc->getPlaylist(sessionId, playlistId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(newPlaylist);
+    CPPUNIT_ASSERT(newPlaylist->getPlaylength()->total_seconds() 
+                   == playlist->getPlaylength()->total_seconds());
+    CPPUNIT_ASSERT(newPlaylist->getTitle().get());
+    CPPUNIT_ASSERT(*newPlaylist->getTitle() == *title);
+
+
+    try {
+        wsc->releasePlaylist(sessionId, newPlaylist);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!newPlaylist->getUri());
+}
+
 

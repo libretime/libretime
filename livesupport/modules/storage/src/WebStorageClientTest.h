@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,14 +62,15 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the UploadPlaylistMetohd class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.6 $
  *  @see WebStorageClient
  */
 class WebStorageClientTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(WebStorageClientTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(simplePlaylistTest);
     CPPUNIT_TEST(playlistTest);
     CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST_SUITE_END();
@@ -102,6 +103,14 @@ class WebStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         audioClipTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the playlist operations.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        simplePlaylistTest(void)                throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the playlist operations.
