@@ -2,6 +2,18 @@
         $sampleData = array(
             array(
                 'type'  => 'audioclip',
+                'media' => '../tests/test10001.mp3',
+                'xml'   => '../tests/mdata10001.xml',
+                'gunid' => '0000000000010001'
+            ),
+            array(
+                'type'  => 'audioclip',
+                'media' => '../tests/test10002.mp3',
+                'xml'   => '../tests/mdata10002.xml',
+                'gunid' => '0000000000010002'
+            ),
+            array(
+                'type'  => 'audioclip',
                 'media' => '../tests/ex1.mp3',
                 'xml'   => '../tests/mdata1.xml',
                 'gunid' => '123456789abcdef1'
@@ -20,7 +32,7 @@
             array(
                 'type'  => 'playlist',
                 'xml'   => '../tests/plist1.xml',
-                'gunid' => '123456789abcdef3'
+                'gunid' => '0000000000000001'
             )
         );
 ?>

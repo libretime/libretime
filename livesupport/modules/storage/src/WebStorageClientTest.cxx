@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -187,7 +187,7 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() >= 3);
-    Ptr<UniqueId>::Ref  audioClipId = wsc->getAudioClipIds()->at(0);
+    Ptr<UniqueId>::Ref  audioClipId = wsc->getAudioClipIds()->at(2);
 
     Ptr<SessionId>::Ref sessionId;
     try {
@@ -504,7 +504,7 @@ WebStorageClientTest :: simplePlaylistTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() >= 3);
+    CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() >= 1);
     Ptr<UniqueId>::Ref  audioClipId = wsc->getAudioClipIds()->at(0);
 
     Ptr<SessionId>::Ref sessionId;
@@ -596,10 +596,12 @@ WebStorageClientTest :: searchTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() >= 3);
+    CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() >= 5);
     Ptr<UniqueId>::Ref  audioClip0 = wsc->getAudioClipIds()->at(0);
     Ptr<UniqueId>::Ref  audioClip1 = wsc->getAudioClipIds()->at(1);
     Ptr<UniqueId>::Ref  audioClip2 = wsc->getAudioClipIds()->at(2);
+    Ptr<UniqueId>::Ref  audioClip3 = wsc->getAudioClipIds()->at(3);
+    Ptr<UniqueId>::Ref  audioClip4 = wsc->getAudioClipIds()->at(4);
     CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() >= 1);
     Ptr<UniqueId>::Ref  playlist0  = wsc->getPlaylistIds()->at(0);
 
@@ -618,8 +620,8 @@ WebStorageClientTest :: searchTest(void)
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 2);
         CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip0);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip4);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
@@ -652,7 +654,7 @@ WebStorageClientTest :: searchTest(void)
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 1);
         CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 1);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip1);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip3);
         CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 0);
 
     } catch (std::invalid_argument &e) {
@@ -663,12 +665,13 @@ WebStorageClientTest :: searchTest(void)
 
     try {
         Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "or"));
-        criteria->addCondition("dcterms:extent", ">",  "00:00:11.000000");
-        criteria->addCondition("dc:title", "prefix", "File2");
+        criteria->addCondition("dcterms:extent", "<",  "00:00:03.000000");
+        criteria->addCondition("dc:title", "prefix", "My");
         int numberFound = wsc->search(sessionId, criteria);
-        CPPUNIT_ASSERT(numberFound == 2);
-        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 1);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip1);
+        CPPUNIT_ASSERT(numberFound == 3);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip3);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip4);
         CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 1);
         CPPUNIT_ASSERT(*wsc->getPlaylistIds()->at(0)  == *playlist0);
 
@@ -683,12 +686,12 @@ WebStorageClientTest :: searchTest(void)
         criteria->setType("all");
         criteria->addCondition("dc:title", "partial",  "t");
         criteria->setLimit(2);
-        criteria->setOffset(1);
+        criteria->setOffset(2);
         int numberFound = wsc->search(sessionId, criteria);
-        CPPUNIT_ASSERT(numberFound == 4);
+        CPPUNIT_ASSERT(numberFound == 5);
         CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0)  == *audioClip1);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1)  == *audioClip2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0)  == *audioClip3);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1)  == *audioClip4);
         CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 0);
 
     } catch (std::invalid_argument &e) {

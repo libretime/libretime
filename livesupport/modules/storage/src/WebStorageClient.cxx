@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -708,7 +708,7 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
              << createPlaylistMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(createPlaylistResultParamName)
@@ -780,7 +780,7 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
              << existsPlaylistMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(existsPlaylistResultParamName) 
@@ -842,7 +842,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
              << getPlaylistOpenMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(getPlaylistUrlParamName)
@@ -901,7 +901,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
              << getPlaylistCloseMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
 
     if (! result.hasMember(getPlaylistPlaylistIdParamName)
@@ -998,7 +998,7 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
              << editPlaylistMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(editPlaylistUrlParamName)
@@ -1073,7 +1073,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
              << savePlaylistMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(savePlaylistResultParamName)
@@ -1271,7 +1271,7 @@ WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
              << deletePlaylistMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(deletePlaylistResultParamName) 
@@ -1345,7 +1345,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
              << existsAudioClipMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(existsAudioClipResultParamName) 
@@ -1399,7 +1399,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
              << getAudioClipOpenMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(getAudioClipUrlParamName)
@@ -1460,7 +1460,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
              << getAudioClipCloseMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
 
     if (! result.hasMember(getAudioClipAudioClipIdParamName)
@@ -1540,7 +1540,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
              << storeAudioClipOpenMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(storeAudioClipUrlParamName)
@@ -1618,7 +1618,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
              << storeAudioClipCloseMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(storeAudioClipAudioClipIdParamName)
@@ -1683,7 +1683,7 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
              << acquireAudioClipMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(acquireAudioClipUrlParamName)
@@ -1749,7 +1749,7 @@ WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
              << releaseAudioClipMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(releaseAudioClipResultParamName)
@@ -1814,7 +1814,7 @@ WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
              << deleteAudioClipMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(deleteAudioClipResultParamName) 
@@ -1885,7 +1885,7 @@ WebStorageClient :: reset(void)
              << resetStorageMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(resetStorageAudioClipResultParamName)
@@ -1975,7 +1975,7 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
              << searchMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(searchAudioClipResultParamName)

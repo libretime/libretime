@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.45 $
+#   Version  : $Revision: 1.46 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -242,6 +242,7 @@ TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 .PHONY: all dir_setup doc clean docclean depclean distclean
 .PHONY: install start status run_tests stop uninstall
 .PHONY: install_web start_web status_web run_web stop_web uninstall_web
+.PHONY: check check_web
 
 all: dir_setup ${SCHEDULER_EXE}
 
@@ -271,7 +272,9 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER} storage_server_init start run_tests stop
+check: all ${TEST_RUNNER} start run_tests stop
+
+check_web: all ${TEST_RUNNER} storage_server_init start_web run_tests stop_web
 
 run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
@@ -319,7 +322,7 @@ uninstall_web: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} uninstall
 
 storage_server_init:
-#	${MAKE} -C ${STORAGE_SERVER_DIR}
+	${MAKE} -C ${STORAGE_SERVER_DIR}
 
 kill:
 	${KILLALL} scheduler

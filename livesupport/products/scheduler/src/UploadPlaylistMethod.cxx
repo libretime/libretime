@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -143,7 +143,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref  playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    } catch (XmlRpcException &e)  {
+    } catch (Core::XmlRpcException &e)  {
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);
