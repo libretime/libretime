@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -130,6 +130,18 @@ class WebStorageClient :
          *  The path to the storage server php page.
          */
         std::string                 storageServerPath;
+
+        /**
+         *  The type for the list of playlists which are currently being edited
+         */
+        typedef std::map<const UniqueId::IdType, 
+                         std::pair<Ptr<SessionId>::Ref, Ptr<Playlist>::Ref> >
+                                                            EditedPlaylistsType;
+
+        /**
+         *  The list of playlists which are currently being edited
+         */
+        EditedPlaylistsType         editedPlaylists;
 
         /**
          *  Auxilliary method used by editPlaylist() and createPlaylist().
@@ -215,7 +227,12 @@ class WebStorageClient :
 
         /**
          *  Return a playlist with the specified id to be displayed.
-         *  If the playlist is being edited, its last saved state is returned.
+         *  If the playlist is being edited, and this method is called
+         *  by the same user who is editing the playlist,
+         *  (i.e., the method is called with the same sessionId and playlistId
+         *  that editPlaylist() was), then the working copy of the playlist
+         *  is returned.
+         *  Any other user gets the old (pre-editPlaylist()) copy from storage.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -235,6 +252,10 @@ class WebStorageClient :
          *  This puts a lock on the playlist, and nobody else can edit it
          *  until we release it using savePlaylist().
          *
+         *  This method creates a working copy of the playlist, which will
+         *  be returned by getPlaylist() if it is called with the same
+         *  sessionId and playlistId, until we call savePlaylist().
+         *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
@@ -251,6 +272,8 @@ class WebStorageClient :
          *  Save the playlist after editing.
          *  Can only be called after we obtained a lock on the playlist using
          *  editPlaylist(); this method releases the lock.
+         *
+         *  This method destroys the working copy created by editPlaylist().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to save.

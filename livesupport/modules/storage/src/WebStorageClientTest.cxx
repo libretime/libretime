@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -239,7 +239,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         playlist = wsc->editPlaylist(sessionId, playlistIdxx);
         CPPUNIT_FAIL("allowed to open playlist for editing twice");
-    } catch (Core::XmlRpcMethodFaultException &e) {
+    } catch (Core::XmlRpcInvalidArgumentException &e) {
     } catch (XmlRpcException &e) {
         std::string eMsg = "editPlaylist() threw unexpected exception:\n";
         CPPUNIT_FAIL(eMsg + e.what());
@@ -265,9 +265,21 @@ WebStorageClientTest :: playlistTest(void)
     try {
         Ptr<Playlist>::Ref  throwAwayPlaylist
                             = wsc->getPlaylist(sessionId, playlistIdxx);
-        // this should be OK, get old copy
+        // we are editing it, get another working copy
+        CPPUNIT_ASSERT(throwAwayPlaylist->getPlaylength()
+                                        ->total_seconds() == 9);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        Ptr<SessionId>::Ref newSessionId = authentication->login("root", "q");
+        Ptr<Playlist>::Ref  throwAwayPlaylist
+                            = wsc->getPlaylist(newSessionId, playlistIdxx);
+        // somebody else is editing it, get the old copy
         CPPUNIT_ASSERT(throwAwayPlaylist->getPlaylength()
                                         ->total_seconds() == 0);
+        authentication->logout(newSessionId);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }

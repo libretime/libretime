@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -693,6 +693,14 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                 Ptr<UniqueId>::Ref  id) const
                                                 throw (Core::XmlRpcException)
 {
+    EditedPlaylistsType::const_iterator
+                    editIt = editedPlaylists.find(id->getId());
+
+    if (editIt != editedPlaylists.end()                     // is being edited
+            && (*editIt->second.first == *sessionId)) {        // by us
+         return editIt->second.second;
+    }
+
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
@@ -808,11 +816,16 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id)
                                                 throw (Core::XmlRpcException)
 {
-    Ptr<Playlist>::Ref              playlist(new Playlist(id));
+    if (editedPlaylists.find(id->getId()) != editedPlaylists.end()) {
+        throw XmlRpcInvalidArgumentException("playlist is already"
+                                             " being edited");
+    }
+    
     Ptr<const std::string>::Ref     url, token;
 
     editPlaylistGetUrl(sessionId, id, url, token);
 
+    Ptr<Playlist>::Ref              playlist(new Playlist(id));
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
         parser->parse_file(*url);
@@ -830,6 +843,7 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
     }
 
     playlist->setToken(token);
+    editedPlaylists[id->getId()] = std::make_pair(sessionId, playlist);
 
     return playlist;
 }
@@ -905,6 +919,16 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcInvalidArgumentException("playlist has no token field");
     }
     
+    EditedPlaylistsType::iterator
+                    editIt = editedPlaylists.find(playlist->getId()->getId());
+    
+    if ((editIt == editedPlaylists.end()) 
+            || *editIt->second.first != *sessionId) {
+        throw XmlRpcInvalidArgumentException("savePlaylist() called without "
+                                             "editPlaylist()");
+    }
+    editedPlaylists.erase(editIt);
+
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
@@ -1238,6 +1262,7 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     Ptr<Playlist>::Ref          playlist(new Playlist(newId, playlength));
     playlist->setToken(token);
     
+    editedPlaylists[newId->getId()] = std::make_pair(sessionId, playlist);
     savePlaylist(sessionId, playlist);
     
     token.reset();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -300,9 +300,12 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                     editIt = editedPlaylists.find(playlist->getId()->getId());
     
     if ((editIt == editedPlaylists.end()) 
-        || (*playlist->getToken() != *editIt->second->getToken())) {
+            || (*playlist->getToken() != *editIt->second->getToken())) {
         throw XmlRpcException("savePlaylist() called without editPlaylist()");
     }
+
+    Ptr<std::string>::Ref   nullPointer;
+    playlist->setToken(nullPointer);
 
     PlaylistMapType::iterator
                     storeIt = playlistMap.find(playlist->getId()->getId());
@@ -310,7 +313,6 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     if (storeIt == playlistMap.end()) {
         throw XmlRpcException("playlist deleted while it was being edited???");
     }
-
     storeIt->second = playlist;
 
     editedPlaylists.erase(editIt);
