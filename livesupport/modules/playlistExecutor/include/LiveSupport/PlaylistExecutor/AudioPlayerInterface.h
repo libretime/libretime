@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,14 +41,10 @@
 #endif
 
 
-#include "LiveSupport/Core/Configurable.h"
-
-
 namespace LiveSupport {
 namespace PlaylistExecutor {
 
 using namespace LiveSupport;
-using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -62,9 +58,9 @@ using namespace LiveSupport::Core;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class AudioPlayerInterface : virtual public Configurable
+class AudioPlayerInterface
 {
     public:
         /**
@@ -74,20 +70,6 @@ class AudioPlayerInterface : virtual public Configurable
         ~AudioPlayerInterface(void)                        throw ()
         {
         }
-
-        /**
-         *  Configure the object based on the XML element supplied.
-         *
-         *  @param element the XML element to configure the object from.
-         *  @exception std::invalid_argument if the supplied XML element
-         *             contains bad configuraiton information
-         *  @exception std::logic_error if the scheduler daemon has already
-         *             been configured, and can not be reconfigured.
-         */
-        virtual void
-        configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error)  = 0;
 
         /**
          *  Initialize the Player object, so that it is ready to

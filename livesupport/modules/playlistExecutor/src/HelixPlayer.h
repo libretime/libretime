@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include <dllacces.h>
 #include <dllpath.h>
 
+#include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 
 #include "AdviseSink.h"
@@ -89,9 +90,10 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
-class HelixPlayer : virtual public AudioPlayerInterface
+class HelixPlayer : virtual public Configurable,
+                    virtual public AudioPlayerInterface
 {
     friend void * eventHandlerThread(void *)      throw();
 
