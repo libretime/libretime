@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -181,6 +181,8 @@ AudioClip :: getMetadata()
                                                throw ()
 {
     Ptr<xmlpp::Document>::Ref   metadata(new xmlpp::Document);
+    metadata->create_root_node("metadata");
+    metadata->add_comment("some data will come here");
     return metadata;
 }
 
