@@ -22,59 +22,58 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/gen_coverage_data.sh,v $
+#   Version  : $Revision: 1.1 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/gen_coverage_data.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-# This script generates code coverage data for the module
+# This script generates code coverage data for all modules
 #-------------------------------------------------------------------------------
-module="LiveSupport Scheduler"
+module="LiveSupport"
 
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd; cd -`
 bindir=$basedir/bin
 docdir=$basedir/doc
 tmpdir=$basedir/tmp
+modules_dir=$basedir/modules
+products_dir=$basedir/products
 
-usrdir=`cd $basedir/../../usr; pwd; cd -`
+usrdir=`cd $basedir/usr; pwd; cd -`
 
 coverage_report_dir=$docdir/coverage
 
-raw_coverage_file=$tmpdir/raw_coverage.info
+core_coverage_file=$modules_dir/core/tmp/coverage.info
+db_coverage_file=$modules_dir/db/tmp/coverage.info
+storage_coverage_file=$modules_dir/storage/tmp/coverage.info
+scheduler_coverage_file=$products_dir/scheduler/tmp/coverage.info
+
 coverage_file=$tmpdir/coverage.info
 
 lcov=$usrdir/bin/lcov
 genhtml=$usrdir/bin/genhtml
 
 
-cd $basedir
-
 #-------------------------------------------------------------------------------
-# Re-configure with covarege collection enabled, compile and run the tests
+# Execute the coverage tests one by one
 #-------------------------------------------------------------------------------
-$bindir/autogen.sh --enable-coverage
-make clean
-make check
-
-#-------------------------------------------------------------------------------
-# Generate some symlinks so that the sources are visible from tmpdir
-#-------------------------------------------------------------------------------
-ln -s $basedir/include $tmpdir/include
-ln -s $basedir/src $tmpdir/src
+$modules_dir/core/bin/gen_coverage_data.sh
+$modules_dir/db/bin/gen_coverage_data.sh
+$modules_dir/storage/bin/gen_coverage_data.sh
+$products_dir/scheduler/bin/gen_coverage_data.sh
 
 
 #-------------------------------------------------------------------------------
-# Use lcov to generate an HTML report on the coverage data
+# Gather all the coverage information into one file
+# remove references to the tmp directories, and replace them with the module
+# directories themselves. this way the source files are found easlity by lcov
 #-------------------------------------------------------------------------------
-$lcov -d $tmpdir -c > $raw_coverage_file
-$lcov -e $raw_coverage_file "$tmpdir/*" > $coverage_file
+echo "" > $coverage_file
+cat $core_coverage_file | sed -e "s/core\/tmp\//core\//g" >> $coverage_file
+cat $db_coverage_file | sed -e "s/db\/tmp\//db\//g" >> $coverage_file
+cat $storage_coverage_file | sed -e "s/storage\/tmp\//storage\//g" >> $coverage_file
+cat $scheduler_coverage_file | sed -e "s/scheduler\/tmp\//scheduler\//g" >> $coverage_file
+
 rm -rf $coverage_report_dir
 mkdir -p $coverage_report_dir
 $genhtml -t "$module" -o $coverage_report_dir $coverage_file
 
-
-#-------------------------------------------------------------------------------
-# Clean up
-#-------------------------------------------------------------------------------
-rm -f $tmpdir/include
-rm -f $tmpdir/src

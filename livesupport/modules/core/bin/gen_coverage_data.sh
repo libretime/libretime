@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/bin/gen_coverage_data.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -46,6 +46,8 @@ coverage_file=$tmpdir/coverage.info
 lcov=$usrdir/bin/lcov
 genhtml=$usrdir/bin/genhtml
 
+
+cd $basedir
 
 #-------------------------------------------------------------------------------
 # Re-configure with covarege collection enabled, compile and run the tests
@@ -76,4 +78,3 @@ $genhtml -t "$module" -o $coverage_report_dir $coverage_file
 #-------------------------------------------------------------------------------
 rm -f $tmpdir/include
 rm -f $tmpdir/src
-rm -f $raw_coverage_file $coverage_file

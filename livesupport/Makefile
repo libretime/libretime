@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -40,10 +40,11 @@ FLAWFINDER = flawfinder
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
 #-------------------------------------------------------------------------------
-BASE_DIR    = .
-DOC_DIR     = ${BASE_DIR}/doc
-DOXYGEN_DIR = ${DOC_DIR}/doxygen
-ETC_DIR     = ${BASE_DIR}/etc
+BASE_DIR     = .
+DOC_DIR      = ${BASE_DIR}/doc
+DOXYGEN_DIR  = ${DOC_DIR}/doxygen
+COVERAGE_DIR = ${DOC_DIR}/coverage
+ETC_DIR      = ${BASE_DIR}/etc
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -113,6 +114,7 @@ flawfinder:
 
 clean:
 	${RMDIR} ${DOXYGEN_DIR}/html
+	${RMDIR} ${COVERAGE_DIR}/*
 
 setup: tools_setup modules_setup products_setup
 

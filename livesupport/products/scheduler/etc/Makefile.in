@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -158,7 +158,7 @@ doc:
 clean:
 	${RM} ${SCHEDULER_EXE_OBJS} ${SCHEDULER_EXE}
 	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
-	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da
+	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
 docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html

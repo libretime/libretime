@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -117,7 +117,7 @@ doc:
 clean:
 	${RM} ${DB_LIB_OBJS} ${DB_LIB_FILE}
 	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
-	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da
+	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
 docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
