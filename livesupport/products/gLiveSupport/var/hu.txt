@@ -13,9 +13,21 @@ hu:table
         okButtonLabel:string   { "Belépés" }
     }
 
-    audioClipWindow:table
+    audioClipListWindow:table
     {
         windowTitle:string            { "LiveSupport Hang Anyag Ablak" }
+
+        idColumnLabel:string          { "azonositó" }
+        lengthColumnLabel:string      { "hossz" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "token" }
+
+        closeButtonLabel:string       { "Bezár" }
+    }
+
+    playlistListWindow:table
+    {
+        windowTitle:string            { "LiveSupport Playlist Ablak" }
 
         idColumnLabel:string          { "azonositó" }
         lengthColumnLabel:string      { "hossz" }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -131,7 +131,6 @@ AudioClipListWindow :: AudioClipListWindow (
 void
 AudioClipListWindow :: showAllAudioClips(void)                  throw ()
 {
-    // list all audio clips
     Ptr<SessionId>::Ref                             sessionId;
     Ptr<StorageClientInterface>::Ref                storage;
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips;

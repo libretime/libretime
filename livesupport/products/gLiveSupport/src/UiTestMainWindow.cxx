@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LoginWindow.h"
 #include "AudioClipListWindow.h"
+#include "PlaylistListWindow.h"
 #include "UiTestMainWindow.h"
 
 
@@ -87,10 +88,15 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     logoutButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &UiTestMainWindow::onLogoutButtonClicked));
 
-    // set up the audio clip button
-    audioClipButton.reset(new Gtk::Button("audioClips"));
-    audioClipButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &UiTestMainWindow::onAudioClipButtonClicked));
+    // set up the audio clip list button
+    audioClipListButton.reset(new Gtk::Button("audioClipList"));
+    audioClipListButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &UiTestMainWindow::onAudioClipListButtonClicked));
+
+    // set up the playlist list button
+    playlistListButton.reset(new Gtk::Button("playlistList"));
+    playlistListButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &UiTestMainWindow::onPlaylistListButtonClicked));
 
     // set up the quit button
     quitButton.reset(new Gtk::Button("quit"));
@@ -105,7 +111,8 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->add(*statusLabel);
     layout->add(*timeLabel);
     layout->add(*loginButton);
-    layout->add(*audioClipButton);
+    layout->add(*audioClipListButton);
+    layout->add(*playlistListButton);
     layout->add(*logoutButton);
     layout->add(*quitButton);
     add(*layout);
@@ -236,23 +243,44 @@ UiTestMainWindow :: onUpdateTime(int   dummy)                       throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the audio clip button getting clicked.
+ *  Event handler for the audio clip list button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-UiTestMainWindow :: onAudioClipButtonClicked (void)                 throw ()
+UiTestMainWindow :: onAudioClipListButtonClicked (void)             throw ()
 {
     Ptr<ResourceBundle>::Ref    bundle;
     try {
-        bundle = getBundle("audioClipWindow");
+        bundle = getBundle("audioClipListWindow");
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         return;
     }
 
-    Ptr<AudioClipListWindow>::Ref   audioClipWindow(
+    Ptr<AudioClipListWindow>::Ref   audioClipListWindow(
                                 new AudioClipListWindow(gLiveSupport, bundle));
 
-    Gtk::Main::run(*audioClipWindow);
+    Gtk::Main::run(*audioClipListWindow);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the audio clip list button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+UiTestMainWindow :: onPlaylistListButtonClicked (void)             throw ()
+{
+    Ptr<ResourceBundle>::Ref    bundle;
+    try {
+        bundle = getBundle("playlistListWindow");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
+
+    Ptr<PlaylistListWindow>::Ref   playlistListWindow(
+                                new PlaylistListWindow(gLiveSupport, bundle));
+
+    Gtk::Main::run(*playlistListWindow);
 }
 
 

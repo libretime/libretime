@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -108,9 +108,14 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
         Ptr<Gtk::Button>::Ref       logoutButton;
 
         /**
-         *  The button to that brings up the audio clip window.
+         *  The button to that brings up the audio clip list window.
          */
-        Ptr<Gtk::Button>::Ref       audioClipButton;
+        Ptr<Gtk::Button>::Ref       audioClipListButton;
+
+        /**
+         *  The button to that brings up the playlist list window.
+         */
+        Ptr<Gtk::Button>::Ref       playlistListButton;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.
@@ -133,13 +138,19 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
          *  Signal handler for the logout button clicked.
          */
         virtual void
-        onLogoutButtonClicked(void)                          throw ();
+        onLogoutButtonClicked(void)                         throw ();
 
         /**
-         *  Signal handler for the audio clip button clicked.
+         *  Signal handler for the audio clip list button clicked.
          */
         virtual void
-        onAudioClipButtonClicked(void)                        throw ();
+        onAudioClipListButtonClicked(void)                  throw ();
+
+        /**
+         *  Signal handler for the playlist list button clicked.
+         */
+        virtual void
+        onPlaylistListButtonClicked(void)                   throw ();
 
         /**
          *  Function that updates timeLabel with the current time.

@@ -13,9 +13,21 @@ root:table
         okButtonLabel:string   { "OK" }
     }
 
-    audioClipWindow:table
+    audioClipListWindow:table
     {
         windowTitle:string            { "LiveSupport Audio Clip Window" }
+
+        idColumnLabel:string          { "id" }
+        lengthColumnLabel:string      { "length" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "token" }
+
+        closeButtonLabel:string       { "close" }
+    }
+
+    playlistListWindow:table
+    {
+        windowTitle:string            { "LiveSupport Playlist Window" }
 
         idColumnLabel:string          { "id" }
         lengthColumnLabel:string      { "length" }

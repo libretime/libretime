@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef AudioClipListWindow_h
-#define AudioClipListWindow_h
+#ifndef PlaylistListWindow_h
+#define PlaylistListWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,43 +64,67 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A window, showing and handling audio clips.
+ *  A window, showing and handling playlists.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  */
-class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
+class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
 {
+    private:
+
+        /**
+         *  Display audio clip info in a row of the detail tree view.
+         *
+         *  @param audioClip the audio clip to display
+         *  @param row the row in the detail tree view to display in.
+         */
+        void
+        displayAudioClipDetails(Ptr<AudioClip>::Ref     audioClip,
+                                Gtk::TreeModel::Row   & row)
+                                                                throw ();
+
+        /**
+         *  Display playlist info in a row of the detail tree view.
+         *
+         *  @param playlist the playlist to display
+         *  @param row the row in the detail tree view to display in.
+         */
+        void
+        displayPlaylistDetails(Ptr<Playlist>::Ref       playlist,
+                                Gtk::TreeModel::Row   & row)
+                                                                throw ();
+
 
     protected:
 
         /**
-         *  The model columns, for the audio clip window.
-         *  Lists one clip per row.
+         *  The model columns, for the playlist window.
+         *  Lists one playlist per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.1 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
             public:
                 /**
-                 *  The column for the id of the audio clip.
+                 *  The column for the id of the playlist.
                  */
                 Gtk::TreeModelColumn<unsigned int>      idColumn;
 
                 /**
-                 *  The column for the length of the audio clip.
+                 *  The column for the length of the playlist.
                  */
                 Gtk::TreeModelColumn<Glib::ustring>     lengthColumn;
 
                 /**
-                 *  The column for the URI of the audio clip.
+                 *  The column for the URI of the playlist.
                  */
                 Gtk::TreeModelColumn<Glib::ustring>     uriColumn;
 
                 /**
-                 *  The column for the token of the audio clip.
+                 *  The column for the token of the playlist.
                  */
                 Gtk::TreeModelColumn<Glib::ustring>     tokenColumn;
 
@@ -133,19 +157,52 @@ class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
         Gtk::VBox                   vBox;
 
         /**
-         *  A scrolled window, so that the list can be scrolled.
+         *  The container holding the two tables for playlist viewing:
+         *  one lists the playlist, the other the details of the selected
+         *  playlist.
          */
-        Gtk::ScrolledWindow         scrolledWindow;
+        Gtk::HBox                   hBox;
 
         /**
-         *  The tree view, now only showing rows.
+         *  A scrolled window holding the list of playlists
+         *  so that the list can be scrolled.
          */
-        Gtk::TreeView               treeView;
+        Gtk::ScrolledWindow         listScrolledWindow;
 
         /**
-         *  The tree model, as a GTK reference.
+         *  A tree view, showing rows only, the list of playlists.
          */
-        Glib::RefPtr<Gtk::ListStore>    treeModel;
+        Gtk::TreeView               listTreeView;
+
+        /**
+         *  The tree model, as a GTK reference, holding the list of
+         *  playlists.
+         */
+        Glib::RefPtr<Gtk::ListStore>    listTreeModel;
+
+        /**
+         *  The tree selection, as a GTK reference, holding info on
+         *  what's selected from the playlist list.
+         */
+        Glib::RefPtr<Gtk::TreeSelection>    listTreeSelection;
+
+        /**
+         *  A scrolled window holding the details of a playlist
+         *  so that the details can be scrolled.
+         */
+        Gtk::ScrolledWindow         detailScrolledWindow;
+
+        /**
+         *  A tree view, showing rows only, the details of the selected
+         *  playlist.
+         */
+        Gtk::TreeView               detailTreeView;
+
+        /**
+         *  The tree model, as a GTK reference, holding the details of a
+         *  playlist.
+         */
+        Glib::RefPtr<Gtk::ListStore>    detailTreeModel;
 
         /**
          *  The box containing the close button.
@@ -158,16 +215,31 @@ class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
         Ptr<Gtk::Button>::Ref       closeButton;
 
         /**
+         *  Signal to catch the event of the user selecting a row
+         *  in the playlist list tree view.
+         */
+        virtual void
+        onPlaylistListSelection(void)                           throw ();
+
+        /**
          *  Signal handler for the close button clicked.
          */
         virtual void
         onCloseButtonClicked(void)                              throw ();
 
         /**
-         *  Update the window contents, with all the audio clips.
+         *  Update the window contents, with all the playlists.
          */
         void
-        showAllAudioClips(void)                                 throw ();
+        showAllPlaylists(void)                                  throw ();
+
+        /**
+         *  Display the details of a playlist in the detailTreeView.
+         *
+         *  @param playlistId the id of the playlist to display.
+         */
+        void
+        showPlaylistDetails(Ptr<UniqueId>::Ref  playlistId)     throw ();
 
 
     public:
@@ -178,14 +250,14 @@ class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
          *  @param bundle the resource bundle holding the localized
          *         resources for this window
          */
-        AudioClipListWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle)     throw ();
+        PlaylistListWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
+                           Ptr<ResourceBundle>::Ref    bundle)      throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~AudioClipListWindow(void)                                  throw ();
+        ~PlaylistListWindow(void)                                   throw ();
 };
 
 /* ================================================= external data structures */
@@ -197,5 +269,5 @@ class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // AudioClipListWindow_h
+#endif // PlaylistListWindow_h
 
