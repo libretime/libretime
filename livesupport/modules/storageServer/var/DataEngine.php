@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -311,7 +311,7 @@ class DataEngine{
                 (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
                 "ORDER BY m.object".($desc? ' DESC':'')."\n";
         }
-        echo "\n---\n$sql\n---\n";
+        // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
         if(PEAR::isError($cnt)) return $cnt;
         $res = $this->dbc->getCol($sql.$limitPart);
