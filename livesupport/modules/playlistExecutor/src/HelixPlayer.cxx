@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,11 @@ const std::string HelixPlayer::configElementNameStr = "helixPlayer";
 static const std::string    dllPathName = "dllPath";
 
 /**
+ *  The name of the audio device attribute.
+ */
+static const std::string    audioDeviceName = "audioDevice";
+
+/**
  *  The name of the client core shared object, as found under dllPath
  */
 static const std::string    clntcoreName = "/clntcore.so";
@@ -116,6 +121,10 @@ HelixPlayer :: configure(const xmlpp::Element   &  element)
         throw std::invalid_argument(eMsg);
     }
     dllPath = attribute->get_value();
+
+    if ((attribute = element.get_attribute(audioDeviceName))) {
+        setAudioDevice(attribute->get_value());
+    }
 }
 
 

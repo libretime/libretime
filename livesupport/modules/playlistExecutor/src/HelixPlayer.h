@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,22 +76,25 @@ using namespace LiveSupport::Core;
  *  This class can be configured with the following XML element.
  *
  *  <pre><code>
- *  <helixPlayer dllPath = "../../usr/lib/helix"
+ *  <helixPlayer dllPath     = "../../usr/lib/helix"
+ *               audioDevice = "/dev/sound/dsp"
  *  />
  *  <pre><code>
  *
  *  where the dllPath is the path to the directory containing the Helix
- *  library shared objects.
+ *  library shared objects.  The optional audioDevice argument sets the
+ *  AUDIO environment variable which is read by the Helix client.
  *
  *  The DTD for the above configuration is the following:
  *
  *  <pre><code>
  *  <!ELEMENT helixPlayer   EMPTY >
- *  <!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+ *  <!ATTLIST helixPlayer   dllPath      CDATA   #REQUIRED >
+ *  <!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
  *  </pre></code>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,

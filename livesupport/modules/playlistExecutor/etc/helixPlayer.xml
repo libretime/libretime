@@ -2,7 +2,9 @@
 <!DOCTYPE helixPlayer [
 
 <!ELEMENT helixPlayer   EMPTY >
-<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+<!ATTLIST helixPlayer   dllPath      CDATA   #REQUIRED >
+<!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
 ]>
 <helixPlayer dllPath = "../../usr/lib/helix"
+             audioDevice = "/dev/sound/dsp"
 />
