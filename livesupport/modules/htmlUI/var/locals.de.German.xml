@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+	<Id>de.German</Id>
+	<item>
+		<key>Access</key>
+		<value />
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value />
+	</item>
+	<item>
+		<key>Add to Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Artist</key>
+		<value />
+	</item>
+	<item>
+		<key>Browse</key>
+		<value />
+	</item>
+	<item>
+		<key>CW</key>
+		<value />
+	</item>
+	<item>
+		<key>Clear</key>
+		<value />
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Count</key>
+		<value />
+	</item>
+	<item>
+		<key>Creator</key>
+		<value />
+	</item>
+	<item>
+		<key>Daily View</key>
+		<value />
+	</item>
+	<item>
+		<key>Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Day</key>
+		<value />
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Duration</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit</key>
+		<value />
+	</item>
+	<item>
+		<key>Fade</key>
+		<value />
+	</item>
+	<item>
+		<key>File</key>
+		<value />
+	</item>
+	<item>
+		<key>File List</key>
+		<value />
+	</item>
+	<item>
+		<key>File Management</key>
+		<value />
+	</item>
+	<item>
+		<key>Folder Structure</key>
+		<value />
+	</item>
+	<item>
+		<key>Go</key>
+		<value />
+	</item>
+	<item>
+		<key>Item</key>
+		<value />
+	</item>
+	<item>
+		<key>KW</key>
+		<value />
+	</item>
+	<item>
+		<key>Library Search</key>
+		<value />
+	</item>
+	<item>
+		<key>Local Time</key>
+		<value />
+	</item>
+	<item>
+		<key>MDataXML</key>
+		<value />
+	</item>
+	<item>
+		<key>Main</key>
+		<value />
+	</item>
+	<item>
+		<key>Media Library</key>
+		<value />
+	</item>
+	<item>
+		<key>Metadata</key>
+		<value />
+	</item>
+	<item>
+		<key>Month</key>
+		<value />
+	</item>
+	<item>
+		<key>Monthly View</key>
+		<value />
+	</item>
+	<item>
+		<key>Move</key>
+		<value />
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+		<value />
+	</item>
+	<item>
+		<key>Music</key>
+		<value />
+	</item>
+	<item>
+		<key>Name</key>
+		<value />
+	</item>
+	<item>
+		<key>New</key>
+		<value />
+	</item>
+	<item>
+		<key>New Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>New Playlist using Item</key>
+		<value />
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>No Entry</key>
+		<value />
+	</item>
+	<item>
+		<key>No match found.</key>
+		<value />
+	</item>
+	<item>
+		<key>No objects</key>
+		<value />
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Page</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+		<value />
+	</item>
+	<item>
+		<key>Range</key>
+		<value />
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove Selected</key>
+		<value />
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Save Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Save and Close</key>
+		<value />
+	</item>
+	<item>
+		<key>Scheduler</key>
+		<value />
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+		<value />
+	</item>
+	<item>
+		<key>Scratch Pad</key>
+		<value />
+	</item>
+	<item>
+		<key>Search</key>
+		<value />
+	</item>
+	<item>
+		<key>Signed in</key>
+		<value />
+	</item>
+	<item>
+		<key>Station Settings</key>
+		<value />
+	</item>
+	<item>
+		<key>Station Time</key>
+		<value />
+	</item>
+	<item>
+		<key>Stream</key>
+		<value />
+	</item>
+	<item>
+		<key>Talk</key>
+		<value />
+	</item>
+	<item>
+		<key>Title</key>
+		<value />
+	</item>
+	<item>
+		<key>To Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Today</key>
+		<value />
+	</item>
+	<item>
+		<key>Tree view</key>
+		<value />
+	</item>
+	<item>
+		<key>Type</key>
+		<value />
+	</item>
+	<item>
+		<key>UploadM</key>
+		<value />
+	</item>
+	<item>
+		<key>User/Groups</key>
+		<value />
+	</item>
+	<item>
+		<key>Week</key>
+		<value />
+	</item>
+	<item>
+		<key>Weekly View</key>
+		<value />
+	</item>
+	<item>
+		<key>copy</key>
+		<value />
+	</item>
+	<item>
+		<key>go up</key>
+		<value />
+	</item>
+	<item>
+		<key>move</key>
+		<value />
+	</item>
+	<item>
+		<key>move down</key>
+		<value />
+	</item>
+	<item>
+		<key>move up</key>
+		<value />
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+		<value />
+	</item>
+	<item>
+		<key>next</key>
+		<value />
+	</item>
+	<item>
+		<key>permissions</key>
+		<value />
+	</item>
+	<item>
+		<key>previous</key>
+		<value />
+	</item>
+	<item>
+		<key>{$o.name}</key>
+		<value />
+	</item>
+	<item>
+		<key>{$sec.header}</key>
+		<value />
+	</item>
+	<item>
+		<key>$1 must be $2</key>
+		<value />
+	</item>
+	<item>
+		<key>Do</key>
+		<value />
+	</item>
+	<item>
+		<key>Missing value for $1</key>
+		<value />
+	</item>
+	<item>
+		<key>Select a Value</key>
+		<value />
+	</item>
+</language>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+	<status />
+	<Id>nl.Dutch</Id>
+	<item>
+		<key>Access</key>
+	</item>
+	<item>
+		<key>Add Audio</key>
+	</item>
+	<item>
+		<key>Add to Playlist</key>
+	</item>
+	<item>
+		<key>Artist</key>
+	</item>
+	<item>
+		<key>Browse</key>
+	</item>
+	<item>
+		<key>CW</key>
+	</item>
+	<item>
+		<key>Clear</key>
+	</item>
+	<item>
+		<key>Clear Playlist</key>
+	</item>
+	<item>
+		<key>Count</key>
+	</item>
+	<item>
+		<key>Creator</key>
+	</item>
+	<item>
+		<key>Daily View</key>
+	</item>
+	<item>
+		<key>Data</key>
+	</item>
+	<item>
+		<key>Day</key>
+	</item>
+	<item>
+		<key>Delete Playlist</key>
+	</item>
+	<item>
+		<key>Duration</key>
+	</item>
+	<item>
+		<key>Edit</key>
+	</item>
+	<item>
+		<key>Fade</key>
+	</item>
+	<item>
+		<key>File</key>
+	</item>
+	<item>
+		<key>File List</key>
+	</item>
+	<item>
+		<key>File Management</key>
+	</item>
+	<item>
+		<key>Folder Structure</key>
+	</item>
+	<item>
+		<key>Go</key>
+	</item>
+	<item>
+		<key>Item</key>
+	</item>
+	<item>
+		<key>KW</key>
+	</item>
+	<item>
+		<key>Library Search</key>
+	</item>
+	<item>
+		<key>Local Time</key>
+	</item>
+	<item>
+		<key>MDataXML</key>
+	</item>
+	<item>
+		<key>Main</key>
+	</item>
+	<item>
+		<key>Media Library</key>
+	</item>
+	<item>
+		<key>Metadata</key>
+	</item>
+	<item>
+		<key>Month</key>
+	</item>
+	<item>
+		<key>Monthly View</key>
+	</item>
+	<item>
+		<key>Move</key>
+	</item>
+	<item>
+		<key>Multiple Action:</key>
+	</item>
+	<item>
+		<key>Music</key>
+	</item>
+	<item>
+		<key>Name</key>
+	</item>
+	<item>
+		<key>New</key>
+	</item>
+	<item>
+		<key>New Playlist</key>
+	</item>
+	<item>
+		<key>New Playlist using Item</key>
+	</item>
+	<item>
+		<key>New empty Playlist</key>
+	</item>
+	<item>
+		<key>No Entry</key>
+	</item>
+	<item>
+		<key>No match found.</key>
+	</item>
+	<item>
+		<key>No objects</key>
+	</item>
+	<item>
+		<key>Open last Playlist</key>
+	</item>
+	<item>
+		<key>Page</key>
+	</item>
+	<item>
+		<key>Playlist Editor</key>
+	</item>
+	<item>
+		<key>Playlist Metadata</key>
+	</item>
+	<item>
+		<key>Range</key>
+	</item>
+	<item>
+		<key>RawAnalyze</key>
+	</item>
+	<item>
+		<key>Remove</key>
+	</item>
+	<item>
+		<key>Remove Selected</key>
+	</item>
+	<item>
+		<key>Revert to Saved</key>
+	</item>
+	<item>
+		<key>Save Playlist</key>
+	</item>
+	<item>
+		<key>Save and Close</key>
+	</item>
+	<item>
+		<key>Scheduler</key>
+	</item>
+	<item>
+		<key>Scheduler Navigation</key>
+	</item>
+	<item>
+		<key>Scratch Pad</key>
+	</item>
+	<item>
+		<key>Search</key>
+	</item>
+	<item>
+		<key>Signed in</key>
+	</item>
+	<item>
+		<key>Station Settings</key>
+	</item>
+	<item>
+		<key>Station Time</key>
+	</item>
+	<item>
+		<key>Stream</key>
+	</item>
+	<item>
+		<key>Talk</key>
+	</item>
+	<item>
+		<key>Title</key>
+	</item>
+	<item>
+		<key>To Playlist</key>
+	</item>
+	<item>
+		<key>Today</key>
+	</item>
+	<item>
+		<key>Tree view</key>
+	</item>
+	<item>
+		<key>Type</key>
+	</item>
+	<item>
+		<key>UploadM</key>
+	</item>
+	<item>
+		<key>User/Groups</key>
+	</item>
+	<item>
+		<key>Week</key>
+	</item>
+	<item>
+		<key>Weekly View</key>
+	</item>
+	<item>
+		<key>copy</key>
+	</item>
+	<item>
+		<key>go up</key>
+	</item>
+	<item>
+		<key>move</key>
+	</item>
+	<item>
+		<key>move down</key>
+	</item>
+	<item>
+		<key>move up</key>
+	</item>
+	<item>
+		<key>new&amp;nbsp;folder</key>
+	</item>
+	<item>
+		<key>next</key>
+	</item>
+	<item>
+		<key>permissions</key>
+	</item>
+	<item>
+		<key>previous</key>
+	</item>
+	<item>
+		<key>{$o.name}</key>
+	</item>
+	<item>
+		<key>{$sec.header}</key>
+	</item>
+	<item>
+		<key>$1 must be $2</key>
+	</item>
+	<item>
+		<key>Do</key>
+	</item>
+	<item>
+		<key>Missing value for $1</key>
+	</item>
+	<item>
+		<key>Select a Value</key>
+	</item>
+</language>
