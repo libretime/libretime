@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,22 +159,45 @@ void
 WebStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref  id01;
-    Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
-    Ptr<SessionId>::Ref sessionId;
-
     Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector = wsc->reset();
-/*
-    NOTE: this is incorrect, as WebStorageClient fakes the UniqueId's
-    TODO: fix!!!
-    std::cout << "\nReset storage result:\n";
+    CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
+    Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(0);
+    
+/*    std::cout << "\nReset storage result:\n";
     for (unsigned i=0; i<uniqueIdVector->size(); i++) {
-        std::cout << uniqueIdVector->at(i)->getId() << std::endl;
-    }
-*/    
-    CPPUNIT_ASSERT( sessionId = authentication->login("root", "q"));
+        std::cout << std::hex << uniqueIdVector->at(i)->getId() << std::endl;
+    } */
 
-    CPPUNIT_ASSERT(!wsc->existsAudioClip(sessionId, id77));
+    Ptr<SessionId>::Ref sessionId = authentication->login("root", "q");
+    CPPUNIT_ASSERT(sessionId);
+
+    bool exists;
+    try {
+        exists = wsc->existsAudioClip(sessionId, id01);
+    }
+    catch (std::logic_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(exists);
+/*
+    Ptr<AudioClip>::Ref audioClip;
+    try {
+        audioClip = wsc->getAudioClip(sessionId, id01);
+    }
+    catch (std::logic_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+std::cout << "\nid: " << audioClip->getId()->getId()
+          << "\nplaylength: " << audioClip->getPlaylength() << "\n";
+*/
+    Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
+    try {
+        exists = wsc->existsAudioClip(sessionId, id77);
+    }
+    catch (std::logic_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!exists);
 /*    
     Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
     Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));

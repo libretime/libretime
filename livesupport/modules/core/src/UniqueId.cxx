@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/UniqueId.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,8 +60,7 @@ UniqueId :: generateId(void)                        throw ()
     // TODO: implement this properly, e.g. use a GUID pattern
     //       one example is the algorithm found in xdoclet for GUID
 
-    Ptr<UniqueId>::Ref  id(new UniqueId());
-    id->id = rand();
+    Ptr<UniqueId>::Ref  id(new UniqueId(rand()));
 
     return id;
 }

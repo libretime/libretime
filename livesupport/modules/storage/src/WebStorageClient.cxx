@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -458,9 +458,9 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
                               storageServerPath.c_str(), false);
 
     parameters[existsAudioClipMethodSessionIdParamName] 
-            = sessionId->getId().c_str();
+            = sessionId->getId();
     parameters[existsAudioClipMethodAudioClipIdParamName] 
-            = int(id->getId());
+            = std::string(*id);
     
     if (!xmlRpcClient.execute(existsAudioClipMethodName.c_str(),
                               parameters, result)) {
@@ -501,9 +501,9 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
                               storageServerPath.c_str(), false);
 
     parameters[getAudioClipMethodSessionIdParamName] 
-            = sessionId->getId().c_str();
+            = sessionId->getId();
     parameters[getAudioClipMethodAudioClipIdParamName] 
-            = int(id->getId());
+            = std::string(*id);
     
     if (!xmlRpcClient.execute(getAudioClipMethodName.c_str(),
                               parameters, result)) {
@@ -526,6 +526,29 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     }
     
     std::string         xmlAudioClip(result[getAudioClipMethodResultParamName]);
+int offset = 353;
+std::cout << "\n" << xmlAudioClip.at(offset+0) << "\n";
+std::cout << xmlAudioClip.at(offset+1) << "\n";
+std::cout << xmlAudioClip.at(offset+2) << "\n";
+std::cout << xmlAudioClip.at(offset+3) << "\n";
+std::cout << xmlAudioClip.at(offset+4) << "\n";
+std::cout << xmlAudioClip.at(offset+5) << "\n";
+std::cout << xmlAudioClip.at(offset+6) << "\n";
+std::cout << xmlAudioClip.at(offset+7) << "\n";
+std::cout << xmlAudioClip.at(offset+8) << "\n";
+std::cout << xmlAudioClip.at(offset+9) << "\n";
+std::cout << xmlAudioClip.at(offset+10) << "\n";
+std::cout << xmlAudioClip.at(offset+11) << "\n";
+std::cout << xmlAudioClip.at(offset+12) << "\n";
+std::cout << xmlAudioClip.at(offset+13) << "\n";
+std::cout << xmlAudioClip.at(offset+14) << "\n";
+std::cout << xmlAudioClip.at(offset+15) << "\n";
+std::cout << xmlAudioClip.at(offset+16) << "\n";
+std::cout << xmlAudioClip.at(offset+17) << "\n";
+std::cout << xmlAudioClip.at(offset+18) << "\n";
+std::cout << xmlAudioClip.at(offset+19) << "\n";
+std::cout << xmlAudioClip.at(offset+20) << "\n";
+
     Ptr<AudioClip>::Ref audioClip;
 
     try {
@@ -721,7 +744,7 @@ WebStorageClient :: reset(void)
                  << result;
             throw std::logic_error(eMsg.str());
         }            
-        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(10001 + i));  // TODO: fix!!!
+        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(uniqueIdArray[i])));
         returnValue->push_back(uniqueId);
     }
     

@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.16 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.17 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -118,6 +118,7 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/LocalizedConfigurable.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                   ${TMP_DIR}/UniqueIdTest.o \
                    ${TMP_DIR}/AudioClipTest.o \
                    ${TMP_DIR}/FadeInfoTest.o \
                    ${TMP_DIR}/PlaylistElementTest.o \
