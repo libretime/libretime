@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.21 $
+#   Version  : $Revision: 1.22 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -202,6 +202,7 @@ accessPlaylist() {
     echo "# curl: "
     CURLOUT=`curl -fs $URL;` || { ERN=$?; echo $RES; exit $ERN; }
     if [ $DEBUG ]; then echo $CURLOUT; fi
+    # echo $CURLOUT
     if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo "#  status: $?"
     if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
@@ -211,15 +212,30 @@ accessPlaylist() {
 
 editPlaylist() {
     DATE=`date '+%H:%M:%S'`
-    PLAYLIST="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<smil><head><metadata>
- <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/metadata/dublin_core#\">
-  <dc:title>XY $DATE</dc:title>
- </rdf:RDF>
-</metadata></head><body><seq>
-   <audio src=\"123456789abcdefa\"/>
-   <audio src=\"123456789abcdefb\"/>
-</seq></body></smil>"
+    PLAYLIST="<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<playlist id=\"0000000000000001\" playlength=\"01:30:00.000000\" 
+          title=\"My First Playlist\">
+    <playlistElement id=\"0000000000000101\" relativeOffset=\"0\" >
+        <audioClip   id=\"0000000000010001\" playlength=\"01:00:00.000000\" 
+                                           title=\"one\"/>
+    </playlistElement>
+    <playlistElement id=\"0000000000000102\" relativeOffset=\"01:00:00.000000\" >
+        <audioClip   id=\"0000000000010002\" playlength=\"00:30:00.000000\" 
+                                           title=\"two\"/>
+    </playlistElement>
+    <metadata
+      xmlns=\"http://www.streamonthefly.org/\"
+      xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
+      xmlns:dcterms=\"http://purl.org/dc/terms/\"
+      xmlns:xbmf=\"http://www.streamonthefly.org/xbmf\"
+      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+     >
+        <dc:title>My First Playlist</dc:title>
+        <dc:creator>Me, myself and I</dc:creator>
+        <dcterms:extent>01:30:00.000000</dcterms:extent>
+    </metadata>
+</playlist>
+"
     echo -n "# editPlaylist: "
     RES=`$XR_CLI editPlaylist $SESSID $PLID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -513,9 +513,8 @@ class LocStor extends BasicStor{
     }
 
     /*====================================================== playlist methods */
-
     /**
-     *  Create a new Playlist metafile.
+     *  Create a new empty playlist.
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
@@ -539,7 +538,7 @@ class LocStor extends BasicStor{
         $oid = $this->addObj($tmpFname , 'File', $parid);
         if(PEAR::isError($oid)) return $oid;
         $ac =&  StoredFile::insert($this, $oid, '', '',
-            '<?xml version="1.0" encoding="UTF-8"?><smil><body/></smil>',
+            '<?xml version="1.0" encoding="UTF-8"?><playlist/>',
             'string', $playlistId, 'playlist'
         );
         if(PEAR::isError($ac)){
