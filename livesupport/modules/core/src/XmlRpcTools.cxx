@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,6 +118,16 @@ static const std::string fadeOutName = "fadeOut";
  *  The name of the session ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
 static const std::string sessionIdName = "sessionId";
+
+/*------------------------------------------------------------------------------
+ *  The name of the login name member in the XML-RPC parameter structure
+ *----------------------------------------------------------------------------*/
+static const std::string loginName = "login";
+
+/*------------------------------------------------------------------------------
+ *  The name of the password member in the XML-RPC parameter structure
+ *----------------------------------------------------------------------------*/
+static const std::string passwordName = "password";
 
 
 /* ================================================  local constants & macros */
@@ -663,9 +673,8 @@ XmlRpcTools :: playLogEntryToXmlRpcValue(
  *----------------------------------------------------------------------------*/
 void
 XmlRpcTools :: playLogVectorToXmlRpcValue(
-             Ptr<const std::vector<Ptr<PlayLogEntry>::Ref> >::Ref
-                                    playLogVector,
-             XmlRpc::XmlRpcValue  & returnValue)
+            Ptr<const std::vector<Ptr<PlayLogEntry>::Ref> >::Ref playLogVector,
+            XmlRpc::XmlRpcValue  & returnValue)
                                                 throw ()
 {
     returnValue.setSize(playLogVector->size());
@@ -702,5 +711,45 @@ XmlRpcTools :: extractSessionId(
     Ptr<SessionId>::Ref id(new SessionId(std::string(
                                         xmlRpcValue[sessionIdName] )));
     return id;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract the login name from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+XmlRpcTools :: extractLoginName(
+                            XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(loginName)
+        || xmlRpcValue[loginName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad login name argument");
+    }
+
+    Ptr<std::string>::Ref loginName(new std::string(
+                                        xmlRpcValue[loginName] ));
+    return loginName;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract the password from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+XmlRpcTools :: extractPassword(
+                            XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(passwordName)
+        || xmlRpcValue[passwordName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad password argument");
+    }
+
+    Ptr<std::string>::Ref password(new std::string(
+                                        xmlRpcValue[passwordName] ));
+    return password;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace boost::posix_time;
  *                xmlns:xbmf="http://www.streamonthefly.org/xbmf"
  *                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
  *             &lt;dc:title  &gt;File Title txt&lt;/dc:title&gt;
- *             &lt;dcterms:extent  &gt;123&lt;/dcterms:extent&gt;
+ *             &lt;dcterms:extent  &gt;00:02:30.000000&lt;/dcterms:extent&gt;
  *             ...
  *         &lt;/metadata&gt;
  *  &lt;/audioClip&gt;
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 class AudioClip : public Configurable,
                   public Playable

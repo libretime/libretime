@@ -22,36 +22,24 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ============================================================ include files */
 
-#ifdef HAVE_CONFIG_H
-#include "configure.h"
-#endif
-
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#error "Need unistd.h"
-#endif
-
-
 #include <string>
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
+
 #include "RpcGetVersionTest.h"
 
-using namespace std;
-using namespace XmlRpc;
+
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
-
 
 /* ===================================================  local data structures */
 
@@ -59,11 +47,6 @@ using namespace LiveSupport::Scheduler;
 /* ================================================  local constants & macros */
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RpcGetVersionTest);
-
-/**
- *  The name of the configuration file for the scheduler daemon.
- */
-static const std::string configFileName = "etc/scheduler.xml";
 
 /**
  *  The prefix of the persumed version string.
@@ -77,46 +60,13 @@ static const std::string versionPrefix = "LiveSupport Scheduler Daemon";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-RpcGetVersionTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string         & fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
-
-/*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
 RpcGetVersionTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-    if (!daemon->isConfigured()) {
-        try {
-            configure(daemon, configFileName);
-        } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("semantic error in configuration file");
-        } catch (xmlpp::exception &e) {
-            std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("error parsing configuration file");
-        }
-    }
-
     daemon->install();
-//    daemon->start();
-//    sleep(5);
 }
 
 
@@ -127,8 +77,6 @@ void
 RpcGetVersionTest :: tearDown(void)                     throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-//    daemon->stop();
     daemon->uninstall();
 }
 

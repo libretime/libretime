@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.48 $
+#   Version  : $Revision: 1.49 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -186,7 +186,10 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/GeneratePlayReportMethod.o \
                  ${TMP_DIR}/UpdateFadeInFadeOutMethod.o \
                  ${TMP_DIR}/PlaylistEventContainer.o \
-                 ${TMP_DIR}/PlaylistEvent.o
+                 ${TMP_DIR}/PlaylistEvent.o \
+                 ${TMP_DIR}/ResetStorageMethod.o \
+                 ${TMP_DIR}/LoginMethod.o \
+                 ${TMP_DIR}/LogoutMethod.o
 
 
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
@@ -201,31 +204,37 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/SchedulerDaemonTest.o \
-                   ${TMP_DIR}/RpcUploadPlaylistTest.o \
-                   ${TMP_DIR}/RpcDisplayScheduleTest.o \
-                   ${TMP_DIR}/RpcDisplayPlaylistTest.o \
-                   ${TMP_DIR}/RpcRemoveFromScheduleTest.o \
-                   ${TMP_DIR}/RpcRescheduleTest.o \
-                   ${TMP_DIR}/RpcAddAudioClipToPlaylistTest.o \
+                   ${TMP_DIR}/ResetStorageMethodTest.o \
                    ${TMP_DIR}/GetSchedulerTimeMethodTest.o \
                    ${TMP_DIR}/RpcGetSchedulerTimeTest.o \
                    ${TMP_DIR}/GetVersionMethodTest.o \
                    ${TMP_DIR}/RpcGetVersionTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcUploadPlaylistTest.o \
                    ${TMP_DIR}/DisplayScheduleMethodTest.o \
-                   ${TMP_DIR}/DisplayPlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcDisplayScheduleTest.o \
                    ${TMP_DIR}/RemoveFromScheduleMethodTest.o \
+                   ${TMP_DIR}/RpcRemoveFromScheduleTest.o \
                    ${TMP_DIR}/RescheduleMethodTest.o \
+                   ${TMP_DIR}/RpcRescheduleTest.o \
                    ${TMP_DIR}/PostgresqlScheduleTest.o \
                    ${TMP_DIR}/DeletePlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcDeletePlaylistTest.o \
+                   ${TMP_DIR}/DisplayPlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcDisplayPlaylistTest.o \
                    ${TMP_DIR}/DisplayPlaylistsMethodTest.o \
+                   ${TMP_DIR}/RpcDisplayPlaylistsTest.o \
                    ${TMP_DIR}/OpenPlaylistForEditingMethodTest.o \
                    ${TMP_DIR}/CreatePlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcCreatePlaylistTest.o \
                    ${TMP_DIR}/AddAudioClipToPlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcAddAudioClipToPlaylistTest.o \
                    ${TMP_DIR}/RemoveAudioClipFromPlaylistMethodTest.o \
                    ${TMP_DIR}/ValidatePlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayAudioClipMethodTest.o \
+                   ${TMP_DIR}/RpcDisplayAudioClipTest.o \
                    ${TMP_DIR}/DisplayAudioClipsMethodTest.o \
+                   ${TMP_DIR}/RpcDisplayAudioClipsTest.o \
                    ${TMP_DIR}/SavePlaylistMethodTest.o \
                    ${TMP_DIR}/RevertEditedPlaylistMethodTest.o \
                    ${TMP_DIR}/PostgresqlPlayLogTest.o \

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetSchedulerTimeTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,10 +42,10 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+
 namespace LiveSupport {
 namespace Scheduler {
 
-using namespace LiveSupport;
 using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
@@ -60,7 +60,7 @@ using namespace LiveSupport::Core;
  *  Unit test to test the getSchedulerTime XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see SchedulerDaemon
  */
 class RpcGetSchedulerTimeTest : public CPPUNIT_NS::TestFixture
@@ -68,22 +68,6 @@ class RpcGetSchedulerTimeTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(RpcGetSchedulerTimeTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST_SUITE_END();
-
-    private:
-
-        /**
-         *  Configure a configurable with an XML file.
-         *
-         *  @param configurable configure this
-         *  @param fileName the name of the XML file to configure with.
-         *  @exception std::invalid_argument on configuration errors.
-         *  @exception xmlpp::exception on XML parsing errors.
-         */
-        void
-        configure(Ptr<Configurable>::Ref    configurable,
-                  const std::string       & fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception);
 
     protected:
 

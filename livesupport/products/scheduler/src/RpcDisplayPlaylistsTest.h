@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistsTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef DisplayPlaylistsMethodTest_h
-#define DisplayPlaylistsMethodTest_h
+#ifndef RpcDisplayPlaylistsTest_h
+#define RpcDisplayPlaylistsTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -42,15 +42,14 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
+
 
 namespace LiveSupport {
 namespace Scheduler {
 
-using namespace LiveSupport;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -64,58 +63,21 @@ using namespace LiveSupport::Authentication;
  *  Unit test for the DisplayPlaylistsMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see DisplayPlaylistsMethod
  */
-class DisplayPlaylistsMethodTest : public CPPUNIT_NS::TestFixture
+class RpcDisplayPlaylistsTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(DisplayPlaylistsMethodTest);
+    CPPUNIT_TEST_SUITE(RpcDisplayPlaylistsTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
 
         /**
-         *  The name of the configuration file for the storage client factory.
-         */
-        static const std::string storageClientConfig;
-
-        /**
-         *  The name of the configuration file for the connection manager
-         *  factory.
-         */
-        static const std::string connectionManagerConfig;
-
-        /**
-         *  The name of the configuration file for the authentication client
-         *  factory.
-         */
-        static const std::string                authenticationClientConfig;
-
-        /**
-         *  The authentication client produced by the factory.
-         */
-        Ptr<AuthenticationClientInterface>::Ref authentication;
-
-        /**
          *  A session ID from the authentication client login() method.
          */
         Ptr<SessionId>::Ref                     sessionId;
-
-        /**
-         *  Configure a configurable with an XML file.
-         *
-         *  @param configurable configure this
-         *  @param fileName the name of the XML file to configure with.
-         *  @exception std::invalid_argument on configuration errors.
-         *  @exception xmlpp::exception on XML parsing errors.
-         */
-        void
-        configure(Ptr<Configurable>::Ref    configurable,
-                  std::string               fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception);
-
 
     protected:
 
@@ -126,7 +88,6 @@ class DisplayPlaylistsMethodTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
 
     public:
         
@@ -153,5 +114,5 @@ class DisplayPlaylistsMethodTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // DisplayPlaylistsMethodTest_h
+#endif // RpcDisplayPlaylistsTest_h
 

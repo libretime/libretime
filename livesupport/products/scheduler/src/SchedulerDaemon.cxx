@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -139,6 +139,9 @@ SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
     updateFadeInFadeOutMethod.reset(new UpdateFadeInFadeOutMethod());
     uploadPlaylistMethod.reset(new UploadPlaylistMethod());
     validatePlaylistMethod.reset(new ValidatePlaylistMethod());
+    loginMethod.reset(new LoginMethod());
+    logoutMethod.reset(new LogoutMethod());
+    resetStorageMethod.reset(new ResetStorageMethod());
 }
 
 
@@ -323,6 +326,9 @@ SchedulerDaemon :: registerXmlRpcFunctions(
     xmlRpcServer->addMethod(updateFadeInFadeOutMethod.get());
     xmlRpcServer->addMethod(uploadPlaylistMethod.get());
     xmlRpcServer->addMethod(validatePlaylistMethod.get());
+    xmlRpcServer->addMethod(loginMethod.get());
+    xmlRpcServer->addMethod(logoutMethod.get());
+    xmlRpcServer->addMethod(resetStorageMethod.get());
 }
 
 

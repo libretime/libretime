@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/TagConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ using namespace LiveSupport::Core;
  *  
  *  For a description of these metadata tag standards, see 
  *  http://www.id3.org/id3v2.4.0-frames.txt
- *  and http://dublincore.org/documents/dces/.
+ *  and http://dublincore.org/documents/dcmi-terms/.
  * 
  *  This object has to be configured with an XML configuration element
  *  called tagConversionTable. This may look like the following:
@@ -79,12 +79,17 @@ using namespace LiveSupport::Core;
  *         &lt;tag&gt;
  *             &lt;id3&gt;Artist&lt;/id3&gt;
  *             &lt;id3&gt;TPE1&lt;/id3&gt;
- *             &lt;dc&gt;dcterms:extent&lt;/dc&gt;
+ *             &lt;dc&gt;dc:creator&lt;/dc&gt;
  *         &lt;/tag&gt;
  *             ...
  *  &lt;/tagConversionTable&gt;
  *  </code></pre>
- *
+ *  
+ *  The id3 tag names in the table should be one of the id3v1 tag names
+ *  Artist, Title, Album, Comment, Genre, Year, Track, or one of the 
+ *  four-letter id3v2 tag abbreviations, e.g., TLEN (length) or 
+ *  TOPE (original performer) etc.
+ *  
  *  Note that more than one id3 tag name can map to the same dc tag name.
  *
  *  The DTD for the above element is:
@@ -92,12 +97,12 @@ using namespace LiveSupport::Core;
  *  <pre><code>
  *  &lt;!ELEMENT tagConversionTable (tag*) &gt;
  *  &lt;!ATTLIST tag    (id3+, dc) &gt;
- *  &lt;!ATTLIST id3    (#CDATA) &gt;
- *  &lt;!ATTLIST dc     (#CDATA) &gt;
+ *  &lt;!ATTLIST id3    (#PCDATA) &gt;
+ *  &lt;!ATTLIST dc     (#PCDATA) &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class TagConversion
 {

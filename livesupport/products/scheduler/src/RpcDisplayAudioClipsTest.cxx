@@ -22,125 +22,61 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ============================================================ include files */
 
-#ifdef HAVE_CONFIG_H
-#include "configure.h"
-#endif
-
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#error "Need unistd.h"
-#endif
-
-
 #include <string>
-#include <iostream>
-#include <vector>
+#include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "LiveSupport/Db/ConnectionManagerFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
-#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "SchedulerDaemon.h"
 
-#include "DisplayAudioClipsMethod.h"
-#include "DisplayAudioClipsMethodTest.h"
+#include "RpcDisplayAudioClipsTest.h"
 
 
-using namespace LiveSupport::Db;
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
-using namespace LiveSupport::Authentication;
-
 
 /* ===================================================  local data structures */
 
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(DisplayAudioClipsMethodTest);
-
-/**
- *  The name of the configuration file for the storage client factory.
- */
-const std::string DisplayAudioClipsMethodTest::storageClientConfig =
-                                                    "etc/storageClient.xml";
-
-/**
- *  The name of the configuration file for the connection manager factory.
- */
-const std::string DisplayAudioClipsMethodTest::connectionManagerConfig =
-                                          "etc/connectionManagerFactory.xml";
-
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-const std::string DisplayAudioClipsMethodTest::authenticationClientConfig =
-                                          "etc/authenticationClient.xml";
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayAudioClipsTest);
 
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
-
-/*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-DisplayAudioClipsMethodTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string           fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
                                                         
 /*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-DisplayAudioClipsMethodTest :: setUp(void)                         throw ()
+RpcDisplayAudioClipsTest :: setUp(void)                         throw ()
 {
-    Ptr<AuthenticationClientFactory>::Ref acf;
-    try {
-        Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
-        configure(scf, storageClientConfig);
-        Ptr<StorageClientInterface>::Ref storage = scf->getStorageClient();
-        storage->reset();
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
 
-        Ptr<ConnectionManagerFactory>::Ref cmf
-                                    = ConnectionManagerFactory::getInstance();
-        configure(cmf, connectionManagerConfig);
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfig);
+    CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in configuration file");
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL("error parsing configuration file");
-    } catch (std::exception &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    
-    authentication = acf->getAuthenticationClient();
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
-    }
+    parameters["login"]     = "root";
+    parameters["password"]  = "q";
+    CPPUNIT_ASSERT(xmlRpcClient.execute("login", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("sessionId"));
+
+    xmlRpcClient.close();
+
+    sessionId.reset(new SessionId(std::string(result["sessionId"])));
 }
 
 
@@ -148,11 +84,18 @@ DisplayAudioClipsMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-DisplayAudioClipsMethodTest :: tearDown(void)                      throw ()
+RpcDisplayAudioClipsTest :: tearDown(void)                      throw ()
 {
-    authentication->logout(sessionId);
-    sessionId.reset();
-    authentication.reset();
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
+
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+
+    parameters["sessionId"] = sessionId->getId();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }
 
 
@@ -160,7 +103,7 @@ DisplayAudioClipsMethodTest :: tearDown(void)                      throw ()
  *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-DisplayAudioClipsMethodTest :: firstTest(void)
+RpcDisplayAudioClipsTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
@@ -171,7 +114,7 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     parameters["sessionId"]  = sessionId->getId();
     xmlRpcClient.execute("displayAudioClips", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.size() == 2);
+    CPPUNIT_ASSERT(result.size() >= 2);
 
     XmlRpc::XmlRpcValue     audioClip = result[0];
     CPPUNIT_ASSERT(audioClip.hasMember("id"));

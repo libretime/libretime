@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcCreatePlaylistTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ResetStorageMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef RpcCreatePlaylistTest_h
-#define RpcCreatePlaylistTest_h
+#ifndef ResetStorageMethodTest_h
+#define ResetStorageMethodTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -42,14 +42,9 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/SessionId.h"
-
 
 namespace LiveSupport {
 namespace Scheduler {
-
-using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -60,24 +55,18 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the CreatePlaylistMethod class.
+ *  Unit test for the ResetStorageMethod class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
- *  @see CreatePlaylistMethod
+ *  @author  $Author: maroy, fgerlits
+ $
+ *  @version $Revision: 1.1 $
+ *  @see ResetStorageMethod
  */
-class RpcCreatePlaylistTest : public CPPUNIT_NS::TestFixture
+class ResetStorageMethodTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(RpcCreatePlaylistTest);
+    CPPUNIT_TEST_SUITE(ResetStorageMethodTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST_SUITE_END();
-
-    private:
-
-        /**
-         *  A session ID from the authentication client login() method.
-         */
-        Ptr<SessionId>::Ref                     sessionId;
 
     protected:
 
@@ -115,5 +104,5 @@ class RpcCreatePlaylistTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // RpcCreatePlaylistTest_h
+#endif // ResetStorageMethodTest_h
 

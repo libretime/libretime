@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,6 +85,9 @@
 #include "UploadPlaylistMethod.h"
 #include "ValidatePlaylistMethod.h"
 #include "XmlRpcDaemon.h"
+#include "LoginMethod.h"
+#include "LogoutMethod.h"
+#include "ResetStorageMethod.h"
 
 
 namespace LiveSupport {
@@ -158,7 +161,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -297,6 +300,21 @@ class SchedulerDaemon : public Installable,
          *  The validatePlaylistMethod the daemon is providing.
          */
         Ptr<ValidatePlaylistMethod>::Ref      validatePlaylistMethod;
+
+        /**
+         *  The loginMethod the daemon is providing.
+         */
+        Ptr<LoginMethod>::Ref           loginMethod;
+
+        /**
+         *  The logoutMethod the daemon is providing.
+         */
+        Ptr<LogoutMethod>::Ref          logoutMethod;
+
+        /**
+         *  The resetStorageMethod the daemon is providing.
+         */
+        Ptr<ResetStorageMethod>::Ref    resetStorageMethod;
 
         /**
          *  Default constructor.

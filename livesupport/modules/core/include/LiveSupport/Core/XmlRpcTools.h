@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,8 +73,8 @@ using namespace LiveSupport::Core;
  *  and XmlRpcValues.  Used by almost all XmlRpcServerMethod subclasses
  *  in the Scheduler.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  */
 class XmlRpcTools
 {
@@ -453,6 +453,30 @@ class XmlRpcTools
          */
         static Ptr<SessionId>::Ref
         extractSessionId(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the login name from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a std::string that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no login
+         *             member in xmlRpcValue
+         */
+        static Ptr<std::string>::Ref
+        extractLoginName(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the password from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a std::string that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no sessionId
+         *             member in xmlRpcValue
+         */
+        static Ptr<std::string>::Ref
+        extractPassword(XmlRpc::XmlRpcValue  & xmlRpcValue)
                                                 throw (std::invalid_argument);
 
 };

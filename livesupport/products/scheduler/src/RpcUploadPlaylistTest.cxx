@@ -22,42 +22,24 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ============================================================ include files */
 
-#ifdef HAVE_CONFIG_H
-#include "configure.h"
-#endif
-
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#error "Need unistd.h"
-#endif
-
-
 #include <string>
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "LiveSupport/Core/XmlRpcTools.h"
-#include "LiveSupport/Core/UniqueId.h"
 #include "SchedulerDaemon.h"
-#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
+
 #include "RpcUploadPlaylistTest.h"
 
-using namespace std;
-using namespace XmlRpc;
+
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
-using namespace LiveSupport::Authentication;
-using namespace LiveSupport::Storage;
-
 
 /* ===================================================  local data structures */
 
@@ -71,40 +53,11 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RpcUploadPlaylistTest);
  */
 static const std::string configFileName = "etc/scheduler.xml";
 
-/**
- *  The name of the configuration file for the storage client factory.
- */
-static const std::string storageClientConfig =
-                                            "etc/storageClient.xml";
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-static const std::string authenticationClientConfigFileName =
-                                            "etc/authenticationClient.xml";
-
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
-
-/*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-RpcUploadPlaylistTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string         & fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
 
 /*------------------------------------------------------------------------------
  *  Set up the test environment
@@ -116,7 +69,11 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
 
     if (!daemon->isConfigured()) {
         try {
-            configure(daemon, configFileName);
+            Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(
+                                                        configFileName, true));
+            const xmlpp::Document * document = parser->get_document();
+            const xmlpp::Element  * root     = document->get_root_node();
+            daemon->configure(*root);
         } catch (std::invalid_argument &e) {
             std::cerr << e.what() << std::endl;
             CPPUNIT_FAIL("semantic error in configuration file");
@@ -127,36 +84,24 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
     }
 
     daemon->install();
-//    daemon->start();
-//    sleep(5);
 
-    Ptr<AuthenticationClientFactory>::Ref acf;
-    try {
-        Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
-        configure(scf, storageClientConfig);
-        Ptr<StorageClientInterface>::Ref storage = scf->getStorageClient();
-        storage->reset();
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
 
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfigFileName);
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("semantic error in authentication configuration file");
-    } catch (xmlpp::exception &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("error parsing authentication configuration file");
-    }
-    
-    authentication = acf->getAuthenticationClient();
-    try {
-        sessionId = authentication->login("root", "q");
-    } catch (XmlRpcException &e) {
-        std::string eMsg = "could not log in:\n";
-        eMsg += e.what();
-        CPPUNIT_FAIL(eMsg);
-    }
+    CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    parameters["login"]     = "root";
+    parameters["password"]  = "q";
+    CPPUNIT_ASSERT(xmlRpcClient.execute("login", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("sessionId"));
+
+    xmlRpcClient.close();
+
+    sessionId.reset(new SessionId(std::string(result["sessionId"])));
 }
 
 
@@ -166,14 +111,19 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
 void
 RpcUploadPlaylistTest :: tearDown(void)                     throw ()
 {
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
 
-//    daemon->stop();
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+
+    parameters["sessionId"] = sessionId->getId();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
+
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
     daemon->uninstall();
-    
-    authentication->logout(sessionId);
-    sessionId.reset();
-    authentication.reset();
 }
 
 
@@ -184,13 +134,14 @@ void
 RpcUploadPlaylistTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
-    struct tm                   time;
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
+    struct tm               time;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
     // try to schedule playlist #1 for the time below
+    parameters.clear();
     parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
