@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ImageButton.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -107,6 +107,8 @@ ImageButton :: on_size_request(Gtk::Requisition* requisition)       throw ()
 void
 ImageButton :: on_size_allocate(Gtk::Allocation& allocation)        throw ()
 {
+    allocation.set_width(passiveImage->get_width());
+    allocation.set_height(passiveImage->get_height());
     set_allocation(allocation);
 
     if (gdkWindow) {
@@ -115,6 +117,8 @@ ImageButton :: on_size_allocate(Gtk::Allocation& allocation)        throw ()
                                 allocation.get_width(), 
                                 allocation.get_height() );
     }
+
+    Gtk::Button::on_size_allocate(allocation);
 }
 
 
