@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -147,21 +147,18 @@ WebStorageClientTest :: firstTest(void)
     try {
         authentication->logout(sessionId);
         CPPUNIT_FAIL("allowed logout operation without login");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 
     try {
         sessionId = authentication->login("noSuchUser", "incorrectPassword");
         CPPUNIT_FAIL("Allowed login with incorrect password.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "Login failed.";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -169,8 +166,7 @@ WebStorageClientTest :: firstTest(void)
 
     try {
         authentication->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "Login failed.";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -188,8 +184,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
     try {
         uniqueIdVector = wsc->reset();
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(uniqueIdVector->size() >= 3);
@@ -198,8 +193,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<SessionId>::Ref sessionId;
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(sessionId);
@@ -209,8 +203,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<Playlist>::Ref  playlist;
     try{
         playlist = wsc->createPlaylist(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(playlist);
@@ -221,8 +214,7 @@ WebStorageClientTest :: playlistTest(void)
     bool exists = false;
     try {
         exists = wsc->existsPlaylist(sessionId, playlistIdxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(exists);
@@ -230,8 +222,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<UniqueId>::Ref  playlistId77(new UniqueId(77));
     try {
         exists = wsc->existsPlaylist(sessionId, playlistId77);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -240,8 +231,7 @@ WebStorageClientTest :: playlistTest(void)
     // test editPlaylist()
     try {
         playlist = wsc->editPlaylist(sessionId, playlistIdxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(playlist);
@@ -249,10 +239,8 @@ WebStorageClientTest :: playlistTest(void)
     try {
         playlist = wsc->editPlaylist(sessionId, playlistIdxx);
         CPPUNIT_FAIL("allowed to open playlist for editing twice");
-    }
-    catch (Core::XmlRpcMethodFaultException &e) {
-    }
-    catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcMethodFaultException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "editPlaylist() threw unexpected exception:\n";
         CPPUNIT_FAIL(eMsg + e.what());
     }
@@ -261,8 +249,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<AudioClip>::Ref     audioClip;
     try {
         audioClip = wsc->getAudioClip(sessionId, audioClipId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -281,15 +268,13 @@ WebStorageClientTest :: playlistTest(void)
         // this should be OK, get old copy
         CPPUNIT_ASSERT(throwAwayPlaylist->getPlaylength()
                                         ->total_seconds() == 0);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wsc->savePlaylist(sessionId, playlist);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -298,8 +283,7 @@ WebStorageClientTest :: playlistTest(void)
     Ptr<Playlist>::Ref      newPlaylist;
     try {
         newPlaylist = wsc->getPlaylist(sessionId, playlistIdxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newPlaylist);
@@ -311,8 +295,7 @@ WebStorageClientTest :: playlistTest(void)
     // test acquirePlaylist() and releasePlaylist()
     try {
         newPlaylist = wsc->acquirePlaylist(sessionId, playlistIdxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newPlaylist);
@@ -337,8 +320,7 @@ WebStorageClientTest :: playlistTest(void)
 
     try {
         wsc->releasePlaylist(sessionId, newPlaylist);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newPlaylist->getUri());
@@ -347,15 +329,13 @@ WebStorageClientTest :: playlistTest(void)
     // test deletePlaylist()
     try {
         wsc->deletePlaylist(sessionId, playlistIdxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         exists = wsc->existsPlaylist(sessionId, playlistIdxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -372,8 +352,7 @@ WebStorageClientTest :: audioClipTest(void)
     Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
     try {
         uniqueIdVector = wsc->reset();
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(uniqueIdVector->size() >= 2);
@@ -387,8 +366,7 @@ WebStorageClientTest :: audioClipTest(void)
     Ptr<SessionId>::Ref sessionId;
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(sessionId);
@@ -398,8 +376,7 @@ WebStorageClientTest :: audioClipTest(void)
     bool exists = false;;
     try {
         exists = wsc->existsAudioClip(sessionId, id01);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(exists);
@@ -407,22 +384,19 @@ WebStorageClientTest :: audioClipTest(void)
     Ptr<AudioClip>::Ref audioClip;
     try {
         audioClip = wsc->getAudioClip(sessionId, id01);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wsc->deleteAudioClip(sessionId, id01);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         exists = wsc->existsAudioClip(sessionId, id01);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -430,8 +404,7 @@ WebStorageClientTest :: audioClipTest(void)
     Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
     try {
         exists = wsc->existsAudioClip(sessionId, id77);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -447,8 +420,7 @@ WebStorageClientTest :: audioClipTest(void)
 
     try {    
         wsc->storeAudioClip(sessionId, audioClip);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -457,16 +429,14 @@ WebStorageClientTest :: audioClipTest(void)
 
     try {
         CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, idxx));
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     
     Ptr<AudioClip>::Ref     newAudioClip;
     try {
         newAudioClip = wsc->getAudioClip(sessionId, idxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     
@@ -478,8 +448,7 @@ WebStorageClientTest :: audioClipTest(void)
     // test acquireAudioClip() and releaseAudioClip()
     try {
         newAudioClip = wsc->acquireAudioClip(sessionId, idxx);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newAudioClip->getUri());
@@ -488,8 +457,7 @@ WebStorageClientTest :: audioClipTest(void)
 
     try {
         wsc->releaseAudioClip(sessionId, newAudioClip);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newAudioClip->getUri());
@@ -499,8 +467,7 @@ WebStorageClientTest :: audioClipTest(void)
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector;
     try {
         audioClipVector = wsc->getAllAudioClips(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(audioClipVector->size() == 0);
@@ -508,8 +475,7 @@ WebStorageClientTest :: audioClipTest(void)
 
     try{
         authentication->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }

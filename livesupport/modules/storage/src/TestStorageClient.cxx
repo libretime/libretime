@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -195,6 +195,30 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
 
 
 /*------------------------------------------------------------------------------
+ *  Create a new playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw ()
+{
+    // generate a new UniqueId -- TODO: fix UniqueId to make sure
+    //     this is really unique; not checked here!
+    Ptr<UniqueId>::Ref       playlistId = 
+                     Ptr<UniqueId>::Ref(UniqueId :: generateId());
+
+    Ptr<time_duration>::Ref  playLength = 
+                     Ptr<time_duration>::Ref(new time_duration(0,0,0));
+
+    Ptr<Playlist>::Ref       playlist =
+                     Ptr<Playlist>::Ref(new Playlist(playlistId, playLength));
+
+    playlistMap[playlistId->getId()] = playlist;
+
+    return getPlaylist(sessionId, playlistId); // return a copy of the playlist
+}
+
+
+/*------------------------------------------------------------------------------
  *  Tell if a playlist exists.
  *----------------------------------------------------------------------------*/
 const bool
@@ -214,16 +238,25 @@ TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
-    PlaylistMapType::const_iterator   it = playlistMap.find(id->getId());
+    Ptr<Playlist>::Ref  playlist;
 
-    if (it == playlistMap.end()) {
-        throw XmlRpcException("no such playlist");
+    EditedPlaylistsType::const_iterator
+                    editIt = editedPlaylists.find(id->getId());
+    if (editIt != editedPlaylists.end()                     // is being edited
+        && (*editIt->second->getToken() == sessionId->getId())) {   // by us
+        playlist = editIt->second;
+    } else {
+        PlaylistMapType::const_iterator
+                    getIt = playlistMap.find(id->getId());
+        if (getIt != playlistMap.end()) {
+            playlist.reset(new Playlist(*getIt->second));   // get from storage
+        } else {
+            throw XmlRpcException("no such playlist");
+        }
     }
-
-    Ptr<Playlist>::Ref  copyOfPlaylist(new Playlist(*it->second));
-    return copyOfPlaylist;
+    
+    return playlist;
 }
-
 
 /*------------------------------------------------------------------------------
  *  Return a playlist to be edited.
@@ -237,8 +270,12 @@ TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcException("playlist is already being edited");
     }
     
-    editedPlaylists[id->getId()] = sessionId;
-    return getPlaylist(sessionId, id);
+    Ptr<Playlist>::Ref      playlist = getPlaylist(sessionId, id);
+    Ptr<std::string>::Ref   token(new std::string(sessionId->getId()));
+    playlist->setToken(token);
+
+    editedPlaylists[id->getId()] = playlist;
+    return playlist;
 }
 
 
@@ -248,17 +285,25 @@ TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
 void
 TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                                   Ptr<Playlist>::Ref  playlist)
-                                                throw ()
+                                                throw (XmlRpcException)
 {
-    EditedPlaylistsType::iterator
-                    editIt = editedPlaylists.find(playlist->getId()->getId());
-    
-    if ((editIt == editedPlaylists.end()) || (*editIt->second != *sessionId)) {
+    if (! playlist->getToken()) {
         throw XmlRpcException("savePlaylist() called without editPlaylist()");
     }
 
-    editedPlaylists.erase(editIt);
+    if (sessionId->getId() != *playlist->getToken()) {
+        throw XmlRpcException("tried to save playlist in different session"
+                              " than the one it was opened in???");
+    }
+        
+    EditedPlaylistsType::iterator
+                    editIt = editedPlaylists.find(playlist->getId()->getId());
     
+    if ((editIt == editedPlaylists.end()) 
+        || (*playlist->getToken() != *editIt->second->getToken())) {
+        throw XmlRpcException("savePlaylist() called without editPlaylist()");
+    }
+
     PlaylistMapType::iterator
                     storeIt = playlistMap.find(playlist->getId()->getId());
 
@@ -267,6 +312,8 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     }
 
     storeIt->second = playlist;
+
+    editedPlaylists.erase(editIt);
 }
 
 
@@ -458,30 +505,6 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId)
     }
 
     return playlistVector;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Create a new playlist.
- *----------------------------------------------------------------------------*/
-Ptr<Playlist>::Ref
-TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
-                                                throw ()
-{
-    // generate a new UniqueId -- TODO: fix UniqueId to make sure
-    //     this is really unique; not checked here!
-    Ptr<UniqueId>::Ref       playlistId = 
-                     Ptr<UniqueId>::Ref(UniqueId :: generateId());
-
-    Ptr<time_duration>::Ref  playLength = 
-                     Ptr<time_duration>::Ref(new time_duration(0,0,0));
-
-    Ptr<Playlist>::Ref       playlist =
-                     Ptr<Playlist>::Ref(new Playlist(playlistId, playLength));
-
-    playlistMap[playlistId->getId()] = playlist;
-
-    return getPlaylist(sessionId, playlistId); // return a copy of the playlist
 }
 
 

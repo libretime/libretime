@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -205,8 +205,7 @@ PlaylistTest :: audioClipTest(void)
                                                 // hour, min, sec, frac_sec
     try {
         playlist->addAudioClip(audioClip, relativeOffset);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         string eMsg = "addAudioClip returned with error: ";
         eMsg += e.what(); 
         CPPUNIT_FAIL(eMsg);
@@ -242,8 +241,7 @@ PlaylistTest :: audioClipTest(void)
 
     try {
         playlist->removePlaylistElement(relativeOffset);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         string eMsg = "removePlaylistElement returned with error: ";
         eMsg += e.what(); 
         CPPUNIT_FAIL(eMsg);
@@ -264,8 +262,7 @@ PlaylistTest :: audioClipTest(void)
         playlist->removePlaylistElement(phonyRelativeOffset);
         CPPUNIT_FAIL("removePlaylistElement allowed to remove "
                      "non-existent audio clip");
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
     }
 }
 
@@ -280,8 +277,7 @@ PlaylistTest :: savedCopyTest(void)
     try {
         playlist->revertToSavedCopy();
         CPPUNIT_FAIL("allowed to revert to non-existent state");
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
     }
 
     playlist->createSavedCopy();
@@ -295,8 +291,7 @@ PlaylistTest :: savedCopyTest(void)
 
     try {
         playlist->revertToSavedCopy();
-    }
-    catch (std::logic_error &e) {
+    } catch (std::logic_error &e) {
         CPPUNIT_FAIL("could not revert to saved state");
     }
     
@@ -318,8 +313,7 @@ PlaylistTest :: savedCopyTest(void)
     try {
         playlist->revertToSavedCopy();
         CPPUNIT_FAIL("allowed to revert to deleted state");
-    }
-    catch (std::logic_error &e) {
+    } catch (std::logic_error &e) {
     }
 }
 
@@ -356,16 +350,14 @@ PlaylistTest :: fadeInfoTest(void)
     Ptr<time_duration>::Ref relativeOffset (new time_duration(0,0,0,0));
     try {
         playlist->setFadeInfo(relativeOffset, fadeInfo);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("could not add new fade info");
     }
 
     relativeOffset.reset(new time_duration(0,0,11,0));
     try {
         playlist->setFadeInfo(relativeOffset, fadeInfo);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("could not update fade info");
     }
 
@@ -387,8 +379,7 @@ PlaylistTest :: fadeInfoTest(void)
     try {
         playlist->setFadeInfo(relativeOffset, fadeInfo);
         CPPUNIT_FAIL("allowed to set fade info for non-existent element");
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
     }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RevertEditedPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -141,8 +141,7 @@ RevertEditedPlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -191,16 +190,14 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     try {
         revertMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to revert playlist without saving it first");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 804);    // no saved copy
     }
 
     result.clear();
     try {
         openMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -210,8 +207,7 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         removeMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -222,15 +218,13 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     try {
         removeMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to remove the same playlist element twice");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
     }
 
     result.clear();
     try {
         revertMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -240,8 +234,7 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     result.clear();
     try {                                               // but now we can again
         removeMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -251,8 +244,7 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         saveMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -263,8 +255,7 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     try {
         revertMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to revert playlist after discarding saved copy");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 804);    // no saved copy
     }
 }

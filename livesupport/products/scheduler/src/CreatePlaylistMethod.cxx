@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,8 +109,7 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref      sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -126,8 +125,19 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref  playlist;
     try {
         playlist = storage->createPlaylist(sessionId);
+    } catch (XmlRpcException &e) {
+        std::string eMsg = "could not create playlist:\n";
+        eMsg += e.what();
+        XmlRpcTools :: markError(errorId+2,
+                                 eMsg,
+                                 returnValue);
+        return;
     }
-    catch (XmlRpcException &e) {
+
+    Ptr<UniqueId>::Ref  playlistId = playlist->getId();
+    try {
+        playlist = storage->editPlaylist(sessionId, playlistId);
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not create playlist:\n";
         eMsg += e.what();
         XmlRpcTools :: markError(errorId+2,

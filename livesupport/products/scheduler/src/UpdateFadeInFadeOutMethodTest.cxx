@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -141,8 +141,7 @@ UpdateFadeInFadeOutMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -188,8 +187,7 @@ UpdateFadeInFadeOutMethodTest :: firstTest(void)
     try {
         updateFadeMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("did not notice missing fade out parameter");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 1605);    // missing fade out
     }
 
@@ -200,16 +198,14 @@ UpdateFadeInFadeOutMethodTest :: firstTest(void)
     try {
         updateFadeMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed update fade info without opening playlist first");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 1607);    // not open for editing
     }
 
     result.clear();
     try {
         openPlaylistMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -221,8 +217,7 @@ UpdateFadeInFadeOutMethodTest :: firstTest(void)
         updateFadeMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed update fade info for non-existent "
                      "playlist element");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 1608);// no audio clip at this rel offset
     }
 
@@ -232,8 +227,7 @@ UpdateFadeInFadeOutMethodTest :: firstTest(void)
     result.clear();
     try {
         updateFadeMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();

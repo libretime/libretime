@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/StorageClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -151,8 +151,7 @@ StorageClientFactoryTest :: firstTest(void)
 
     try {
         CPPUNIT_ASSERT( storage->existsPlaylist(sessionId, id01));
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "existsPlaylist returned error:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -160,8 +159,7 @@ StorageClientFactoryTest :: firstTest(void)
     
     try {
         CPPUNIT_ASSERT(!storage->existsPlaylist(sessionId, id77));
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "existsPlaylist returned error:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -170,8 +168,7 @@ StorageClientFactoryTest :: firstTest(void)
     try {
         Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id01);
         CPPUNIT_ASSERT(playlist->getId()->getId() == id01->getId());
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "getPlaylist returned error:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);

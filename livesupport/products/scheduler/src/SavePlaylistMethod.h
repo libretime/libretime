@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,11 +87,12 @@ using namespace LiveSupport::Core;
  *     <li>701 - invalid argument format </li>
  *     <li>702 - argument is not a playlist ID </li>
  *     <li>703 - playlist not found </li>
- *     <li>704 - could not save playlist </li>
+ *     <li>704 - could not unlock playlist </li>
+ *     <li>705 - could not save playlist </li>
  *     <li>720 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class SavePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

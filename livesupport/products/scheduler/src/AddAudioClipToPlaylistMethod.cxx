@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,8 +110,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref      sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -121,8 +120,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<UniqueId>::Ref       playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
                                returnValue);
         return;
@@ -131,8 +129,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<UniqueId>::Ref       audioClipId;
     try{
         audioClipId = XmlRpcTools::extractAudioClipId(parameters);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+3, "missing audio clip ID argument",
                                returnValue);
         return;
@@ -141,8 +138,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<time_duration>::Ref  relativeOffset;
     try{
         relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+4, "missing relative offset argument",
                                returnValue);
         return;
@@ -156,8 +152,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+5, "playlist not found", 
                                returnValue);
         return;
@@ -173,8 +168,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<AudioClip>::Ref audioClip;
     try {
         audioClip = storage->getAudioClip(sessionId, audioClipId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+7, "audio clip does not exist", 
                                returnValue);
         return;
@@ -182,8 +176,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     try {                                        // and finally, the beef
         playlist->addAudioClip(audioClip, relativeOffset);
-    }
-    catch(std::invalid_argument &e) {
+    } catch(std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+8,
                                "two audio clips at the same relative offset",
                                returnValue);

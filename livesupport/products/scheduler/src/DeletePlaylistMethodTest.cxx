@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,8 +140,7 @@ DeletePlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -187,8 +186,7 @@ DeletePlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
        openMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -199,16 +197,14 @@ DeletePlaylistMethodTest :: firstTest(void)
     try {
         deleteMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to delete locked playlist");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 904);   // playlist is locked
     }
 
     result.clear();
     try {
         saveMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -218,8 +214,7 @@ DeletePlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         deleteMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -250,8 +245,7 @@ DeletePlaylistMethodTest :: negativeTest(void)
     try {
         method->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to delete non-existent playlist");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 903);   // playlist not found
     }
 }

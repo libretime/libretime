@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -137,8 +137,7 @@ DisplayAudioClipMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);

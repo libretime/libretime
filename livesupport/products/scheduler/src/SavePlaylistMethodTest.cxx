@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <string>
 #include <iostream>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
@@ -138,8 +139,7 @@ SavePlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -182,9 +182,8 @@ SavePlaylistMethodTest :: firstTest(void)
     try {
         saveMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to save non-existent playlist");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 703);    // playlist not found
+    } catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 703);             // playlist not found
     }
 
     parameter["playlistId"] = "0000000000000001";
@@ -192,8 +191,8 @@ SavePlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         openMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+        saveMethod->execute(rootParameter, result);
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -201,25 +200,10 @@ SavePlaylistMethodTest :: firstTest(void)
     }
 
     result.clear();
-    try {                                               // open then save OK
+    try {
         saveMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
-    }
-
-
-    result.clear();
-    try {                                               // save then open OK
-        saveMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
+        CPPUNIT_FAIL("allowed to save playlist twice");
+    } catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 705);             // could not save playlist
     }
 }

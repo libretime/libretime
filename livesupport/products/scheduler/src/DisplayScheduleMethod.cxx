@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,8 +106,7 @@ DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref      sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -117,8 +116,7 @@ DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<ptime>::Ref     fromTime;
     try {
         fromTime = XmlRpcTools::extractFromTime(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+2, "missing or invalid 'from' argument", 
                                returnValue);
         return;
@@ -127,8 +125,7 @@ DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<ptime>::Ref     toTime;
     try {
         toTime = XmlRpcTools::extractToTime(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "missing or invalid 'to' argument", 
                                returnValue);
         return;

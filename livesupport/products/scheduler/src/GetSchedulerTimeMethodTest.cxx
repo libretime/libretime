@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,8 +104,7 @@ GetSchedulerTimeMethodTest :: simpleTest(void)
     result.clear();
     try {
         getSchedulerTimeMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -117,8 +116,7 @@ GetSchedulerTimeMethodTest :: simpleTest(void)
     result.clear();
     try {
         getSchedulerTimeMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,8 +100,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref      sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -111,8 +110,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<UniqueId>::Ref       playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
                                returnValue);
         return;
@@ -125,8 +123,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);
@@ -141,8 +138,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     try {
         storage->deletePlaylist(sessionId, playlistId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "playlist could not be deleted:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+5, eMsg, returnValue);

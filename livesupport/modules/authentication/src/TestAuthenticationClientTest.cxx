@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,8 +114,7 @@ TestAuthenticationClientTest :: firstTest(void)
     try {
         sessionId = tac->login("Piszkos Fred", "malnaszor");
         CPPUNIT_FAIL("Allowed login with incorrect login and password.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 
     // TODO: this call writes some garbage to cerr; it should be told not to
@@ -123,29 +122,25 @@ TestAuthenticationClientTest :: firstTest(void)
     try {
         tac->logout(sessionId);
         CPPUNIT_FAIL("Allowed logout without previous login.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
     
     try {
         sessionId = tac->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         tac->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         tac->logout(sessionId);
         CPPUNIT_FAIL("Allowed to logout twice.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 }
 
@@ -230,8 +225,7 @@ TestAuthenticationClientTest :: preferencesTest(void)
     // and log out
     try {
         tac->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }

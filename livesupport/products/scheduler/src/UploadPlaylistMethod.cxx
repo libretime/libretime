@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,8 +110,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref      sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -121,8 +120,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<UniqueId>::Ref       playlistId;
     try {
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
                                returnValue);
         return;
@@ -131,8 +129,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<ptime>::Ref     playschedule;
     try {
         playschedule = XmlRpcTools::extractPlayschedule(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "missing playtime argument",
                                returnValue);
         return;
@@ -146,8 +143,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref  playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    }
-    catch (XmlRpcException &e)  {
+    } catch (XmlRpcException &e)  {
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);
@@ -169,8 +165,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<const UniqueId>::Ref  scheduleEntryId;
     try {
         scheduleEntryId = schedule->schedulePlaylist(playlist, playschedule);
-    }
-    catch (std::invalid_argument &e)  {
+    } catch (std::invalid_argument &e)  {
         XmlRpcTools::markError(errorId+6, e.what(),
                                returnValue);
         return;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,6 +144,9 @@ Playlist :: Playlist(const Playlist & otherPlaylist)
     playlength  = otherPlaylist.playlength;
     uri         = otherPlaylist.uri;
     token       = otherPlaylist.token;
+
+    isLockedForPlaying = otherPlaylist.isLockedForPlaying;
+    isLockedForEditing = otherPlaylist.isLockedForEditing;
 
     elementList.reset(new PlaylistElementListType(*otherPlaylist.elementList));
     

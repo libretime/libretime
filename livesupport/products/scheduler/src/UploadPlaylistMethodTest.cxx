@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,8 +149,7 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -201,8 +200,7 @@ UploadPlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         method->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -241,8 +239,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     result.clear();
     try {
         method->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -267,8 +264,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     try {
         method->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to schedule overlapping playlist");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 1405);    // timeframe not available
     }
 
@@ -287,8 +283,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     result.clear();
     try {
         method->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -312,8 +307,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     try {
         method->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to schedule doubly overlapping playlist");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 1405);    // timeframe not available
     }
 }

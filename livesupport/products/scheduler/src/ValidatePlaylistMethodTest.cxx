@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -141,8 +141,7 @@ ValidatePlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -187,8 +186,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
     try {
         validatePlaylistMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to validate non-existent playlist");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 503);  // no such playlist
     }
 
@@ -199,8 +197,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
     rootParameter[0]        = parameter;    
     try {
         openPlaylistMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -210,8 +207,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         validatePlaylistMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -225,8 +221,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
     rootParameter[0]            = parameter;    
     try {
         removeAudioClipMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -236,8 +231,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         validatePlaylistMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,8 +118,7 @@ AuthenticationClientFactoryTest :: firstTest(void)
     
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -127,8 +126,7 @@ AuthenticationClientFactoryTest :: firstTest(void)
 
     try {
         authentication->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
@@ -219,8 +217,7 @@ AuthenticationClientFactoryTest :: preferencesTest(void)
     // and log out
     try {
         authentication->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -139,8 +139,7 @@ AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -186,8 +185,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         openPlaylistMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -198,8 +196,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     try {
         addAudioClipMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to add overlapping audio clip");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 308);
     }
     
@@ -213,8 +210,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     result.clear();
     try {
         addAudioClipMethod->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();

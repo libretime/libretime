@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,8 +110,7 @@ ValidatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref      sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -121,8 +120,7 @@ ValidatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<UniqueId>::Ref       playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+2, 
                                "missing playlist ID argument",
                                 returnValue);
@@ -137,8 +135,7 @@ ValidatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "playlist does not exist:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);

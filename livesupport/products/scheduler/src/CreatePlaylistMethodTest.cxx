@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -139,8 +139,7 @@ CreatePlaylistMethodTest :: setUp(void)                         throw ()
     authentication = acf->getAuthenticationClient();
     try {
         sessionId = authentication->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -178,8 +177,7 @@ CreatePlaylistMethodTest :: firstTest(void)
     rootParameter[0]        = parameter;
     try {
         method->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method returned error: " << e.getCode()
              << " - " << e.getMessage();
@@ -202,8 +200,7 @@ CreatePlaylistMethodTest :: firstTest(void)
     try {
         method->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to open playlist twice");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 105);
+    } catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 104);
     }
 }

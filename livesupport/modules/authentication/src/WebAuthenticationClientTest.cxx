@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,37 +114,32 @@ WebAuthenticationClientTest :: firstTest(void)
     try {
         sessionId = wac->login("Piszkos Fred", "malnaszor");
         CPPUNIT_FAIL("Allowed login with incorrect login and password.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 
     sessionId.reset(new SessionId("bad_session_ID"));
     try {
         wac->logout(sessionId);
         CPPUNIT_FAIL("Allowed logout without previous login.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 
     try {
         sessionId = wac->login("root", "q");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wac->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wac->logout(sessionId);
         CPPUNIT_FAIL("Allowed to logout twice.");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 }
 
@@ -158,8 +153,7 @@ WebAuthenticationClientTest :: preferencesTest(void)
 {
     try {
         wac->reset();
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -236,8 +230,7 @@ WebAuthenticationClientTest :: preferencesTest(void)
     // and log out
     try {
         wac->logout(sessionId);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }

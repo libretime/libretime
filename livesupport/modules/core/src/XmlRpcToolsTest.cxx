@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -168,8 +168,7 @@ XmlRpcToolsTest :: firstTest(void)
        newPlaylistId     = XmlRpcTools::extractPlaylistId(xmlRpcPlaylistId);
        newAudioClipId    = XmlRpcTools::extractAudioClipId(xmlRpcPlaylistId);
        newRelativeOffset = XmlRpcTools::extractRelativeOffset(xmlRpcPlaylistId);
-    }
-    catch (std::invalid_argument &e) {
+    } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -191,8 +190,7 @@ XmlRpcToolsTest :: errorTest(void)
     try {
         XmlRpcTools :: markError(42, "this is an error", xmlRpcValue);
         CPPUNIT_FAIL("did not throw exception in markError()");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
+    } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 42);
         CPPUNIT_ASSERT(e.getMessage() == "this is an error");
     }

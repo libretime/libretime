@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -329,8 +329,7 @@ SchedulerDaemon :: install(void)                throw (std::exception)
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
     try {
         sf->install();
-    }
-    catch (std::exception &e) {
+    } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
@@ -348,8 +347,7 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
     try {
         plf->uninstall();
-    }
-    catch (std::exception &e) {
+    } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     
