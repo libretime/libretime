@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,17 +67,25 @@ class MetaData{
             is_readable($this->fname)
         ;
     }
+
     /**
      *  Parse and store metadata from XML file or XML string
      *
      *  @param mdata string, local path to metadata XML file or XML string
      *  @param loc string - location: 'file'|'string'
+     *  @param format string, metadata format for validation
+     *      ('audioclip' | 'playlist' | 'webstream' | NULL)
+     *      (NULL = no validation)
      *  @return true or PEAR::error
      */
-    function insert($mdata, $loc='file')
+    function insert($mdata, $loc='file', $format=NULL)
     {
         if($this->exists) return FALSE;
-        $res = $this->storeDoc($mdata, $loc);
+        $tree =& $this->parse($mdata, $loc);
+        if(PEAR::isError($tree)) return $tree;
+        $res = $this->validate($tree, $format);
+        if(PEAR::isError($res)) return $res;
+        $res = $this->storeDoc($tree);
         if(PEAR::isError($res)) return $res;
         switch($loc){
         case"file":
@@ -108,24 +116,7 @@ class MetaData{
         $this->exists = TRUE;
         return TRUE;
     }
-    /**
-     *  Parse and update metadata
-     *
-     *  @param mdata string, local path to metadata XML file or XML string
-     *  @param loc string 'file'|'string'
-     *  @return true or PEAR::error
-     */
-    function update($mdata, $loc='file')
-    {
-        return $this->replace($mdata, $loc);
-        /*
-        if(!$this->exists) return FALSE;
-        $res = $this->storeDoc($mdata, $loc, 'update');
-        if(PEAR::isError($res)) return $res;
-        $this->exists = TRUE;
-        return TRUE;
-        */
-    }
+
     /**
      *  Call delete and insert
      *
@@ -141,6 +132,7 @@ class MetaData{
         }
         return $this->insert($mdata, $loc);
     }
+
     /**
      *  Return true if metadata exists
      *
@@ -150,6 +142,7 @@ class MetaData{
     {
         return $this->exists;
     }
+
     /**
      *  Delete all file's metadata
      *
@@ -166,6 +159,7 @@ class MetaData{
         $this->exists = FALSE;
         return TRUE;
     }
+
     /**
      *  Return metadata XML string
      *
@@ -420,24 +414,24 @@ class MetaData{
 
     /* ============================================= parse and store metadata */
     /**
-     *  Parse and insert or update metadata XML to database
+     *  Parse XML metadata
      *
      *  @param mdata string, local path to metadata XML file or XML string
      *  @param loc string, location: 'file'|'string'
-     *  @return true or PEAR::error
+     *  @return array reference, parse result tree (or PEAR::error)
      */
-    function storeDoc($mdata='', $loc='file')
+    function &parse($mdata='', $loc='file')
     {
         switch($loc){
         case"file":
             if(!is_file($mdata)){
                 return PEAR::raiseError(
-                    "MetaData::storeDoc: metadata file not found ($mdata)"
+                    "MetaData::parse: metadata file not found ($mdata)"
                 );
             }
             if(!is_readable($mdata)){
                 return PEAR::raiseError(
-                    "MetaData::storeDoc: can't read metadata file ($mdata)"
+                    "MetaData::parse: can't read metadata file ($mdata)"
                 );
             }
             $mdata = file_get_contents($mdata);
@@ -446,24 +440,49 @@ class MetaData{
             $parser =& new XmlParser($mdata);
             if($parser->isError()){
                 return PEAR::raiseError(
-                    "MetaData::storeDoc: ".$parser->getError()
+                    "MetaData::parse: ".$parser->getError()
                 );
             }
             $tree = $parser->getTree();
-            //echo"<pre>";var_dump($tree);exit;
-            if(VALIDATE){
-                require_once"Validator.php";
-                require_once"audioClipFormat.php";
-                $val =& new Validator($audioClipFormat);
-                $res = $val->validate($tree);
-                if(PEAR::isError($res)) return $res;
-            }
             break;
         default:
             return PEAR::raiseError(
-                "MetaData::storeDoc: unsupported metadata location ($loc)"
+                "MetaData::parse: unsupported metadata location ($loc)"
             );
         }
+        return $tree;
+    }
+    
+    /**
+     *  Validate parsed metadata
+     *
+     *  @param tree array, parsed tree
+     *  @param format string, metadata format for validation
+     *      ('audioclip' | 'playlist' | 'webstream' | NULL)
+     *      (NULL = no validation)
+     *  @return true or PEAR::error
+     */
+    function validate(&$tree, $format=NULL)
+    {
+        //echo"<pre>";var_dump($tree);exit;
+        if(VALIDATE && !is_null($format)){
+            require_once"Validator.php";
+            $val =& new Validator($format, $this->gunid);
+            if(PEAR::isError($val)) return $val;
+            $res = $val->validate($tree);
+            if(PEAR::isError($res)) return $res;
+        }
+        return TRUE;
+    }
+    
+    /**
+     *  Insert parsed metadata into database
+     *
+     *  @param tree array, parsed tree
+     *  @return true or PEAR::error
+     */
+    function storeDoc(&$tree)
+    {
         $this->dbc->query("BEGIN");
         $res = $this->storeNode($tree);
         if(PEAR::isError($res)){
@@ -485,7 +504,7 @@ class MetaData{
      *  @param nSpaces array of name spaces definitions
      *  @return int, local metadata record id
      */
-    function storeNode($node, $parid=NULL, $nSpaces=array())
+    function storeNode(&$node, $parid=NULL, $nSpaces=array())
     {
         //echo $node->node_name().", ".$node->node_type().", ".$node->prefix().", $parid.\n";
         $nSpaces = array_merge($nSpaces, $node->nSpaces);
