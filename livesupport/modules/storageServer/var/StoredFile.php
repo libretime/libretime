@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ class StoredFile{
 
     /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
-     *   Create instace of StoreFile object and insert new file
+     *  Create instace of StoredFile object and insert new file
      *
      *  @param gb reference to GreenBox object
      *  @param oid int, local object id in the tree
@@ -227,7 +227,7 @@ class StoredFile{
             '', '', NULL, $src->_getType()
         );
         if(PEAR::isError($ac)) return $ac;
-        $ac->md->replace($src->md->getMetaData());
+        $ac->md->replace($src->md->getMetaData(), 'string');
         return $ac;
     }
 
@@ -593,10 +593,11 @@ class StoredFile{
     function _getType($gunid=NULL)
     {
         if(is_null($gunid)) $gunid = $this->gunid;
-        return $this->dbc->getOne("
+        $ftype = $this->dbc->getOne("
             SELECT ftype FROM {$this->filesTable}
             WHERE gunid=x'$gunid'::bigint
         ");
+        return $ftype;
     }
 
     /**

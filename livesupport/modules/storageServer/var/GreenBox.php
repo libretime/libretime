@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -395,8 +395,9 @@ class GreenBox extends BasicStor{
     {
         $type = $this->getObjName($oid, 'type');
         if($type == 'File'){
-            $type =
+            $ftype =
                 StoredFile::_getType($this->_gunidFromId($oid));
+            if(!is_null($ftype)) $type=$ftype;
         }
         return $type;
     }
@@ -411,6 +412,7 @@ class GreenBox extends BasicStor{
      */
     function copyObj($id, $newParid, $after=NULL)
     {
+        $parid = $this->getParent($id);
         $nid = parent::copyObj($id, $newParid, $after);
         if(PEAR::isError($nid)) return $nid;
         switch($this->getObjType($id)){
@@ -447,7 +449,7 @@ class GreenBox extends BasicStor{
      */
     function removeObj($id)
     {
-        switch($this->getObjType($id)){
+        switch($ot = $this->getObjType($id)){
             case"audioclip":
             case"playlist":
             case"File":
@@ -455,15 +457,21 @@ class GreenBox extends BasicStor{
                 if(!PEAR::isError($ac)){
                     $ac->delete();
                 }
-                parent::removeObj($id);
+                $r = parent::removeObj($id);
+                if(PEAR::isError($r)) return $r;
                 break;
             case"Folder":
-                parent::removeObj($id);
+                $r = parent::removeObj($id);
+                if(PEAR::isError($r)) return $r;
                 break;
             case"Replica":
-                parent::removeObj($id);
+                $r = parent::removeObj($id);
+                if(PEAR::isError($r)) return $r;
                 break;
             default:
+                return PEAR::raiseError(
+                    "GreenBox::removeObj: unknown obj type ($ot)"
+                );
         }
         return TRUE;
     }

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -184,6 +184,8 @@ class BasicStor extends Alib{
             return PEAR::raiseError(
                 "BasicStor::moveFile: destination is not folder ($did)", GBERR_WRTYPE
             );
+        $parid = $this->getParent($id);
+        if($parid == $did) return TRUE;
         $this->_relocateSubtree($id, $did);
     }
 
@@ -211,7 +213,6 @@ class BasicStor extends Alib{
      */
     function bsDeleteFile($id)
     {
-        $parid = $this->getParent($id);
         $res = $this->removeObj($id);
         if(PEAR::isError($res)) return $res;
         return TRUE;
@@ -747,7 +748,7 @@ class BasicStor extends Alib{
 ";
         $this->test_dump = $this->dumpTree($this->storId);
         if($this->test_dump==$this->test_correct)
-            { $this->test_log.="storageServer: OK\n"; return true; }
+            { $this->test_log.="# BasicStor::test: OK\n"; return true; }
         else PEAR::raiseError('BasicStor::test:', 1, PEAR_ERROR_DIE, '%s'.
             "<pre>\ncorrect:\n.{$this->test_correct}.\n".
             "dump:\n.{$this->test_dump}.\n</pre>\n");
@@ -874,7 +875,7 @@ class BasicStor extends Alib{
         $this->dbc->dropSequence("{$this->mdataTable}_id_seq");
         $this->dbc->query("DROP TABLE {$this->filesTable}");
         $this->dbc->query("DROP TABLE {$this->accessTable}");
-        $d = dir($this->storageDir);
+        $d = @dir($this->storageDir);
         while (is_object($d) && (false !== ($entry = $d->read()))){
             if(filetype("{$this->storageDir}/$entry")=='dir' &&
                     $entry!='CVS' && strlen($entry)==3)
@@ -894,7 +895,7 @@ class BasicStor extends Alib{
             while (false !== ($entry = $d->read())) if(substr($entry,0,1)!='.')
                 { unlink("{$this->bufferDir}/$entry"); }
             $d->close();
-            rmdir($this->bufferDir);
+            @rmdir($this->bufferDir);
         }
         parent::uninstall();
     }

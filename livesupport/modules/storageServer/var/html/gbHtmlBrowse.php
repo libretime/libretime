@@ -98,18 +98,18 @@ $tpldata['showMenu']=true;
     '</form>';
  }
  function fmove(id, relPath){
-    var newPath=prompt('Destination folder (relative path):', relPath);
-    if(newPath==null) return;
+    var newPath=prompt('Destination folder (relative path, e.g. "..", "folderName", "../folderName):', relPath);
+    if(newPath==null || newPath=='') return;
     location.href='gbHttp.php?id='+id+'&act=move&newPath='+newPath;
  }
  function fcopy(id, relPath){
-    var newPath=prompt('Destination folder (relative path):', relPath);
-    if(newPath==null) return;
+    var newPath=prompt('Destination folder (relative path, e.g. "..", "folderName", "../folderName):', relPath);
+    if(newPath==null || newPath=='') return;
     location.href='gbHttp.php?id='+id+'&act=copy&newPath='+newPath;
  }
  function freplicate(name, id){
-    var np=prompt('Destination folder (relative path):', id);
-    if(np==null) return;
+    var np=prompt('Destination folder (relative path, e.g. "..", "folderName", "../folderName):', id);
+    if(np==null || np=='') return;
     location.href='gbHttp.php?id='+id+'&act=repl&newparid='+np;
  }
  function newFolder(){
@@ -168,8 +168,8 @@ $tpldata['showMenu']=true;
     </td><td>
     <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R', 'audioclip'=>'A', 'playlist'=>'P'); echo$a[$o['type']]?>
     &nbsp;<a href="javascript:frename('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">rename</a>
-    &nbsp;<a href="javascript:fmove('<?php echo$o['id']?>', '.')" class="button">move</a>
-    &nbsp;<a href="javascript:fcopy('<?php echo$o['id']?>', '.')" class="button">copy</a>
+    &nbsp;<a href="javascript:fmove('<?php echo$o['id']?>', '')" class="button">move</a>
+    &nbsp;<a href="javascript:fcopy('<?php echo$o['id']?>', '')" class="button">copy</a>
 <?php /*?>
     &nbsp;<a href="javascript:freplicate('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">replicate</a>
 <?php */?>

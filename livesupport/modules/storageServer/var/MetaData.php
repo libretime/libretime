@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,8 +128,10 @@ class MetaData{
      */
     function replace($mdata, $loc='file')
     {
-        if($this->exists) $res = $this->delete();
-        if(PEAR::isError($res)) return $res;
+        if($this->exists){
+            $res = $this->delete();
+            if(PEAR::isError($res)) return $res;
+        }
         return $this->insert($mdata, $loc);
     }
     /**

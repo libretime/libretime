@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -163,13 +163,19 @@ switch($_REQUEST['act']){
     case"move":
         $newPath = urlencode($_REQUEST['newPath']);
         $did = $gb->getObjIdFromRelPath($id, $newPath);
+        if(PEAR::isError($did)){
+            $_SESSION['alertMsg'] = $did->getMessage();
+            $redirUrl = BROWSER."?id=$parid";
+            break;
+        }
         $parid = $gb->getParent($id);
         $r = $gb->moveFile($id, $did, $sessid);
         if(PEAR::isError($r)){
             $_SESSION['alertMsg'] = $r->getMessage();
             $redirUrl = BROWSER."?id=$parid";
+            break;
         }
-        else $redirUrl = BROWSER."?id=$did";
+        $redirUrl = BROWSER."?id=$did";
     break;
 /**
  *  copy
@@ -187,6 +193,7 @@ switch($_REQUEST['act']){
         $r = $gb->copyFile($id, $did, $sessid);
         if(PEAR::isError($r)){
             $_SESSION['alertMsg'] = $r->getMessage();
+            #$_SESSION['alertMsg'] = $r->getMessage()." ".$r->getUserInfo();
             $redirUrl = BROWSER."?id=$parid";
         }
         else $redirUrl = BROWSER."?id=$did";
