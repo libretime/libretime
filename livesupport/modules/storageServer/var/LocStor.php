@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -527,15 +527,7 @@ class LocStor extends BasicStor{
         $oid = $this->addObj($tmpFname , 'File', $parid);
         if(PEAR::isError($oid)) return $oid;
         $ac =&  StoredFile::insert($this, $oid, '', '',
-            '<?xml version="1.0" encoding="UTF-8"?>'.
-            '<playlist>'.
-            ' <metadata'.
-            ' xmlns:dc="http://purl.org/dc/elements/1.1/"'.
-            ' xmlns:dcterms="http://purl.org/dc/terms/"'.
-            ' xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"'.
-            '/>'.
-            '</playlist>',
-            'string', $playlistId, 'playlist'
+            '../emptyPlaylist.xml', 'file', $playlistId, 'playlist'
         );
         if(PEAR::isError($ac)){
             $res = $this->removeObj($oid);
