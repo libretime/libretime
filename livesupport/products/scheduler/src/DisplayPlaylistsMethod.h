@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,10 +81,9 @@ using namespace LiveSupport::Core;
  *      <li>playlength - int - the playlist length of the playlist, in seconds
  *      </li>
  *  </ul>
- *  In case of an error, a simple false value is returned.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
 {

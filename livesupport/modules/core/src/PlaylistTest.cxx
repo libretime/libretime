@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,3 +114,27 @@ PlaylistTest :: firstTest(void)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Test to see if locking works
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: lockTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Playlist>::Ref  playlist(new Playlist());
+
+    CPPUNIT_ASSERT(playlist->setLockedForEditing(true));
+    CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
+    CPPUNIT_ASSERT(playlist->setLockedForEditing(false));
+
+    CPPUNIT_ASSERT(playlist->setLockedForPlaying(true));
+    CPPUNIT_ASSERT(!playlist->setLockedForPlaying(true));
+    CPPUNIT_ASSERT(playlist->setLockedForPlaying(false));
+
+    CPPUNIT_ASSERT(playlist->setLockedForEditing(true));
+    CPPUNIT_ASSERT(playlist->setLockedForPlaying(true));
+    CPPUNIT_ASSERT(!playlist->setLockedForEditing(false));
+    CPPUNIT_ASSERT(playlist->setLockedForPlaying(false));
+    CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
+}

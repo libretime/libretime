@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,5 +101,56 @@ Playlist :: configure(const xmlpp::Element    & element)
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Lock or unlock the playlist for editing.
+ *----------------------------------------------------------------------------*/
+bool
+Playlist::setLockedForEditing(bool lockStatus)
+                                            throw ()
+{
+    if (lockStatus == true) {
+        if (isLockedForPlaying || isLockedForEditing) {
+            return false;
+        }
+        else {
+            isLockedForEditing = true;
+            return true;
+        }
+    }
+    else {
+        if (isLockedForPlaying) {
+            return false;
+        }
+        else {
+            isLockedForEditing = false;
+            return true;                    // returns true also if playlist
+        }                                   // was already unlocked!
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Lock or unlock the playlist for playing.
+ *----------------------------------------------------------------------------*/
+bool
+Playlist::setLockedForPlaying(bool lockStatus)
+                                            throw ()
+{
+    if (lockStatus == true) {
+        if (isLockedForPlaying) {
+            return false;
+        }
+        else {
+            isLockedForPlaying = true;      // preserve LockedForEditing state
+            return true;
+        }
+    }
+    else {
+        isLockedForPlaying = false;         // restore LockedForEditing state;
+        return true;                        // returns true also if playlist
+    }                                       // was already unlocked!
 }
 

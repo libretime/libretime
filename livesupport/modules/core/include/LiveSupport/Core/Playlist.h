@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace boost::posix_time;
  *  information of when and how each audio clip is played inside
  *  the playlist.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class Playlist : public Configurable
 {
@@ -89,6 +89,16 @@ class Playlist : public Configurable
          */
         Ptr<time_duration>::Ref     playlength;
 
+        /**
+         *  Flag set if playlist is currently playing.
+         */
+        bool                        isLockedForPlaying;
+
+        /**
+         *  Flag set if playlist is currently being edited.
+         */
+        bool                        isLockedForEditing;
+
 
     public:
         /**
@@ -96,6 +106,8 @@ class Playlist : public Configurable
          */
         Playlist(void)                          throw ()
         {
+            this->isLockedForPlaying = false;
+            this->isLockedForEditing = false;
         }
 
         /**
@@ -110,6 +122,8 @@ class Playlist : public Configurable
         {
             this->id         = id;
             this->playlength = playlength;
+            this->isLockedForPlaying = false;
+            this->isLockedForEditing = false;
         }
 
         /**
@@ -169,6 +183,27 @@ class Playlist : public Configurable
         {
             return playlength;
         }
+
+        /**
+         *  Lock or unlock the playlist for editing.
+         *
+         *  @return true if successfully obtained or releasedlock;
+         *          false otherwise.
+         */
+        bool
+        setLockedForEditing(bool lockStatus)
+                                                throw ();
+
+        /**
+         *  Lock or unlock the playlist for playing.
+         *
+         *  @return true if successfully obtained or releasedlock;
+         *          false otherwise.
+         */
+        bool
+        setLockedForPlaying(bool lockStatus)
+                                                throw ();
+
 };
 
 
