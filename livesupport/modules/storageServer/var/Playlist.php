@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -431,8 +431,10 @@ class Playlist extends StoredFile{
             $r = $this->delAudioClip($el['attrs']['id']);
             if(PEAR::isError($r)){ return $r; }
         }
+        if($newPos<1) $newPos = 1;
+        if($newPos>count($els)) $newPos = count($els);
         $movedel = array_splice($els, $movedi, 1);
-        array_splice($els, $newPos, 0, $movedel);
+        array_splice($els, $newPos-1, 0, $movedel);
 //        var_dump($els);
         foreach($els as $i=>$el){
             foreach($el['children'] as $j=>$af){
