@@ -23,11 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
-error_reporting(0);
+#error_reporting(0);
 ini_set("error_prepend_string", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <methodResponse>
 <fault>
@@ -57,7 +57,7 @@ require_once '../LocStor.php';
 function errHndl($errno, $errmsg, $filename, $linenum, $vars){
     if($errno == 8 /*E_NOTICE*/) return;
     $xr =& new xmlrpcresp(0, 805,
-        "ERROR:xrLoctor: $errno $errmsg ($filename:$linenum)\n");
+        "ERROR:xrLoctor: $errno $errmsg ($filename:$linenum)");
     header("Content-type: text/xml");
     echo $xr->serialize();
     exit($errno);
