@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,7 +159,7 @@ TestStorageClientTest :: getAllPlaylistsTest(void)
 {
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
                         playlistVector = tsc->getAllPlaylists(dummySessionId);
-    CPPUNIT_ASSERT(playlistVector->size() == 1);
+    CPPUNIT_ASSERT(playlistVector->size() == 2);
 
     Ptr<Playlist>::Ref  playlist = (*playlistVector)[0];
     CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 1);
@@ -200,7 +200,7 @@ TestStorageClientTest :: audioClipTest(void)
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
                             audioClipVector 
                             = tsc->getAllAudioClips(dummySessionId);
-    CPPUNIT_ASSERT(audioClipVector->size() == 2);
+    CPPUNIT_ASSERT(audioClipVector->size() == 3);
 
     audioClip = (*audioClipVector)[0];
     CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 10001);
@@ -231,7 +231,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     }
     string  audioClipUri("file://");
     audioClipUri += get_current_dir_name();
-    audioClipUri += "/var/test2.mp3";
+    audioClipUri += "/var/test10002.mp3";
     CPPUNIT_ASSERT(*(audioClip->getUri()) == audioClipUri);
     
     try {
