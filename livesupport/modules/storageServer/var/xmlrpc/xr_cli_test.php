@@ -23,12 +23,13 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
 
 include_once "../xmlrpc/XML/RPC.php";
+include_once "../conf.php";
 
 $pars = $argv;
 array_shift($pars);
@@ -38,7 +39,9 @@ if($pars[0] == '-s'){
     array_shift($pars);
     $serverPath = array_shift($pars);
 }else{
-    $serverPath = 'http://localhost:80/livesupportStorageServer/xmlrpc/xrLocStor.php';
+    $serverPath =
+      "http://{$config['storageUrlHost']}:{$config['storageUrlPort']}".
+      "{$config['storageUrlPath']}/{$config['storageXMLRPC']}";
 }
 
 #$serverPath = "http://localhost:80/livesupportStorageServerCVS/xmlrpc/xrLocStor.php";
