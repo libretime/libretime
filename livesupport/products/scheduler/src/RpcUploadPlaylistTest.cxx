@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,7 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "XmlRpcTools.h"
+#include "LiveSupport/Core/XmlRpcTools.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "SchedulerDaemon.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"

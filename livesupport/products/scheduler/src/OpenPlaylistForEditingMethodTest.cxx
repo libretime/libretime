@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "XmlRpcTools.h"
+#include "LiveSupport/Core/XmlRpcTools.h"
 
 #include "OpenPlaylistForEditingMethod.h"
 #include "OpenPlaylistForEditingMethodTest.h"

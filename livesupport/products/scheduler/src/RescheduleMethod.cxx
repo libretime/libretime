@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,7 @@
 
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
-#include "XmlRpcTools.h"
+#include "LiveSupport/Core/XmlRpcTools.h"
 
 #include "RescheduleMethod.h"
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlayLogInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,7 +46,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Playlist.h"
-#include "PlayLogEntry.h"
+#include "LiveSupport/Core/PlayLogEntry.h"
 
 
 namespace LiveSupport {
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class PlayLogInterface : virtual public Installable
 {
