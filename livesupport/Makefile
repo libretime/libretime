@@ -21,17 +21,18 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 #   General command definitions
 #-------------------------------------------------------------------------------
-MKDIR   = mkdir -p
-RM      = rm -f
-RMDIR   = rm -rf
-DOXYGEN = doxygen
+MKDIR    = mkdir -p
+RM       = rm -f
+RMDIR    = rm -rf
+DOXYGEN  = doxygen
+XSLTPROC = xsltproc
 
 
 #-------------------------------------------------------------------------------
@@ -44,16 +45,23 @@ ETC_DIR     = ${BASE_DIR}/etc
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
+TESTRESULTS_XSLT = ${ETC_DIR}/testResultsToHtml.xsl
+TESTRESULTS_IN   = ${ETC_DIR}/testResults.xml
+TESTRESULTS_FILE = ${DOC_DIR}/testResults.html
+
 
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all doc clean docclean depclean distclean
+.PHONY: all doc clean docclean depclean distclean testresults
 
 all: doc
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
+
+testresults:
+	${XSLTPROC} ${TESTRESULT_XSLT} ${TESTRESULTS_IN} > ${TESTRESULTS_FILE}
 
 clean:
 	${RMDIR} ${DOXYGEN_DIR}/html

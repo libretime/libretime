@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="testResultToHtml.xsl"?>
+<!DOCTYPE TestResults [
+
+<!ENTITY coreResults SYSTEM "../modules/core/doc/testResults.xml" >
+<!ENTITY dbResults SYSTEM "../modules/db/doc/testResults.xml" >
+<!ENTITY storageResults SYSTEM "../modules/storage/doc/testResults.xml" >
+<!ENTITY schedulerResults SYSTEM "../products/scheduler/doc/testResults.xml" >
+
+]>
+<TestResults>
+&coreResults;
+&dbResults;
+&storageResults;
+&schedulerResults;
+</TestResults>
