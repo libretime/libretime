@@ -151,6 +151,17 @@ class uiScheduler extends uiCalendar
     }
 
 
+    function getDayTimingScale()
+    {
+        for ($n = 0; $n <= 23; $n++) {
+            $scale[] = $n;
+        }
+        #print_r($scale);
+        return $scale;
+
+    }
+
+
     function _oneOrMore($in)
     {
         return $id < 1 ? ceil($in) : round($in);
