@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE webAuthentication [
+
+<!ELEMENT webAuthentication (location) >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+]>
+<webAuthentication>
+    <location server="localhost" port="80" 
+              path="/storage/var/xmlrpc/xrLocStor.php" />
+</webAuthentication>
