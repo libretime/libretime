@@ -53,7 +53,7 @@ class uiScheduler extends uiCalendar
 
     function _datetime2timestamp($i)
     {
-        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[6].$i[7].'-'.$i[4].$i[5].strrchr($i, 'T');
+        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, 'T');
         #echo $formatted;
         return strtotime($formatted);
     }
@@ -71,16 +71,19 @@ class uiScheduler extends uiCalendar
 
     function getDayUsagePercentage($year, $month, $day)
         {
+        #echo "date: ".$year.$month.$day."<br>";
         if (isset($this->_duration[$year.$month.$day]))
             return $this->_duration[$year.$month.$day];
 
         $this->_duration[$year.$month.$day] = 0;
         if (!$arr = $this->getDayUsage($year, $month, $day))
             return false;
-        foreach ($arr as $val) {
-            $this->_duration[$year.$month.$day] =+ ($this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']))/86400*100;
 
+        foreach ($arr as $val) {
+            #print_r($val);
+            $this->_duration[$year.$month.$day] += ($this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']))/86400*100;
         }
+        #echo "duration: ".$this->_duration[$year.$month.$day]."<br>";
         return $this->_duration[$year.$month.$day];
     }
 
@@ -109,14 +112,18 @@ class uiScheduler extends uiCalendar
     {
         $gunid = $formdata['gunid'];
         $datetime = $this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$formdata['time'];
-        echo $datetime;
+        #echo $datetime;
         $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime.UI_TIMEZONE);
-        #var_dump($r);
+        #print_r($r);
+        if (is_array($r['error']))
+            $this->Base->_retMsg('Eroor: $1', $r['error']['message']);
+        if (isset($r['scheduleEntryId']))
+            $this->Base->_retMsg('ScheduleId: $1', $r['scheduleEntryId']);
     }
 
 
     function displayScheduleMethod($from, $to)
-    {
+    {     #echo $from.$to;
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
         return $r;
     }
