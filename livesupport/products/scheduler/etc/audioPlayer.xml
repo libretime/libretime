@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE audioPlayer [
+
+<!ELEMENT audioPlayer   (helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+]>
+<audioPlayer>
+    <helixPlayer dllPath = "../../usr/lib/helix"
+    />
+</audioPlayer>

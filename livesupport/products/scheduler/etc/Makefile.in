@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.21 $
+#   Version  : $Revision: 1.22 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -171,6 +171,7 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
                      -lxmlrpc++ -lssl -lxml++-1.0
 
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
+                   ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/SchedulerDaemonTest.o \
                    ${TMP_DIR}/SchedulerDaemonUploadTest.o \
                    ${TMP_DIR}/SchedulerDaemonDisplayScheduleTest.o \
@@ -198,7 +199,8 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/PostgresqlPlayLogTest.o \
                    ${TMP_DIR}/GeneratePlayReportMethodTest.o \
                    ${TMP_DIR}/UpdateFadeInFadeOutMethodTest.o \
-                   ${TMP_DIR}/TestRunner.o
+                   ${TMP_DIR}/PlaylistEventContainerTest.o \
+                   ${TMP_DIR}/PlaylistEventTest.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 
 
