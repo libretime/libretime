@@ -1,4 +1,4 @@
-<?
+<?php
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,8 +38,8 @@ define('GBERR_NOTF', 47);
 
 define('GBERR_NOTIMPL', 50);
 
-require_once '../../../alib/var/alib.php';
-require_once '../StoredFile.php';
+require_once "../../../alib/var/alib.php";
+require_once "StoredFile.php";
 
 /**
  *  GreenBox class
@@ -47,7 +47,7 @@ require_once '../StoredFile.php';
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -800,7 +800,7 @@ class GreenBox extends Alib{
      */
     function testData($d='')
     {
-        $exdir = dirname(getcwd()).'/tests';
+        $exdir = '../../../storageServer/var/tests';
         $s = $this->sessid;
         $o[] = $this->addSubj('test1', 'a');
         $o[] = $this->addSubj('test2', 'a');

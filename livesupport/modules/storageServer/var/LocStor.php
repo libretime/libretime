@@ -1,4 +1,4 @@
-<?
+<?php
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
@@ -23,12 +23,12 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
 
-require_once '../GreenBox.php';
+require_once "GreenBox.php";
 
 /**
  *  LocStor class
@@ -100,7 +100,7 @@ class LocStor extends GreenBox{
             $oid = $this->addObj($tmpid , 'File', $parid);
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
-                &$this, $oid, '', $mediaFileLP, $mdataFileLP
+                &$this, $oid, '', $mediaFileLP, $mdataFileLP, $gunid
             );
             if(PEAR::isError($ac)) return $ac;
             $res = $this->renameFile($oid, $ac->gunid, $sessid);

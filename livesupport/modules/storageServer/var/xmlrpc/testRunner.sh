@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -31,7 +31,6 @@ COMM=$1
 shift
 GUNID=$1
 
-#XMLRPC=http://localhost:80/tom/work/mdlf/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php
 XMLRPC=http://localhost:80/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php
 echo "XMLRPC server URL (check it in troubles):"
 echo $XMLRPC
@@ -71,7 +70,7 @@ storeAudioClip() {
     echo "storeAudioClip:"
     MEDIA=../tests/ex1.mp3
     METADATA=../tests/testStorage.xml
-    RGUNID=`$XR_CLI storeAudioClip "$SESSID" 'X' "$MEDIA" "$METADATA"`
+    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"`
     echo $RGUNID
 }
 

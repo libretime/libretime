@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlPerms.php,v 1.1 2004/09/12 21:59:09 tomas Exp $
+// $Id: gbHtmlPerms.php,v 1.2 2004/09/21 00:27:41 tomas Exp $
 require_once"gbHtml_h.php";
 require_once"gbHtmlTestAuth.php";
 
@@ -52,7 +52,7 @@ $tpldata['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
     
 <h1>Permission editor</h1>
 <?php if(is_array($tpldata['pathdata'])){?>
-<h2><a href="gbHtmlBrowse.php?id=<?=$id?>" title="Tree editor">Path</a>:
+<h2><a href="gbHtmlBrowse.php?id=<?php echo$id?>" title="Tree editor">Path</a>:
  <?php foreach($tpldata['pathdata'] as $k=>$it) {?>
   <?php echo$it["name"]?></a><span class="slash">/</span>
  <?php }?>
@@ -64,12 +64,12 @@ $tpldata['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
 <?php if(is_array($tpldata['perms'])&&count($tpldata['perms'])>0) foreach($tpldata['perms'] as $k=>$row) {
     $da=($row['type']=='A' ? 'allow' : ($row['type']=='D' ? '<b>deny</b>' : $row['type']));?>
   <tr class="<?php echo(($o=1-$o) ? 'odd' : 'ev')?>">
-    <td class="b"><a <?#href="alibExPList.php?id=<?php echo$row['subj']? >"?>><?php echo$row['login']?></a></td>
+    <td class="b"><a <?php #href="alibExPList.php?id=<?php echo$row['subj']? >"?>><?php echo$row['login']?></a></td>
     <td class="b"><?php echo$row['action']?></td>
     <td><?php echo$da?></td>
     <td>
      <a href="gbHttp.php?act=removePerm&permid=<?php echo$row['permid']?>&oid=<?php echo$tpldata['id']?>&id=<?php echo$id?>"
-        class="lnkbutt" onClick="return confirm('Delete permission &quot;<?=$da?>&nbsp;<?=$row['action']?>&quot; for user <?php echo$row['login']?>?')">remove</a>
+        class="lnkbutt" onClick="return confirm('Delete permission &quot;<?php echo$da?>&nbsp;<?php echo$row['action']?>&quot; for user <?php echo$row['login']?>?')">remove</a>
     </td>
   </tr>
 <?php }else{?>
@@ -88,13 +88,13 @@ for action
  <option value="_all">all</option>
 <?php if(is_array($tpldata['actions'])) foreach($tpldata['actions'] as $k=>$it) {?>
  <option value="<?php echo$it?>"><?php echo$it?></option>
-<?}?>
+<?php }?>
 </select>
 to subject
 <select name="subj">
 <?php if(is_array($tpldata['subjects'])) foreach($tpldata['subjects'] as $k=>$it) {?>
  <option value="<?php echo$it['id']?>"><?php echo$it['login']?></option>
-<?}?>
+<?php }?>
 </select>
 <input type="hidden" name="act" value="addPerm">
 <input type="hidden" name="id" value="<?php echo$tpldata['id']?>">

@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlSubj.php,v 1.1 2004/09/12 21:59:11 tomas Exp $
+// $Id: gbHtmlSubj.php,v 1.2 2004/09/21 00:27:41 tomas Exp $
 require_once"gbHtml_h.php";
 require_once"gbHtmlTestAuth.php";
 
@@ -70,12 +70,12 @@ $d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
   <tr class="<?php echo(($o=1-$o) ? 'odd' : 'ev')?>">
     <td><?php echo$c['id']?></td>
     <td class="b">
-        <?if($c['type']=='G'){?>
+        <?php if($c['type']=='G'){?>
             <a href="gbHtmlSubj.php?id=<?php echo$c['id']?>"><?php echo$c['login']?></a>
-        <?}else{?><?php echo$c['login']?>
-        <?}?>
+        <?php }else{?><?php echo$c['login']?>
+        <?php }?>
      </td
-     <td><?if($c['type']=='G'){?>(G:<?php echo$c['cnt']?>)<?}else{?> (U)<?}?></td>
+     <td><?php if($c['type']=='G'){?>(G:<?php echo$c['cnt']?>)<?php }else{?> (U)<?php }?></td>
     <td>
      <a class="lnkbutt" href="gbHttp.php?act=removeSubj&login=<?php echo urlencode($c['login'])?>">remove</a>
      <a class="lnkbutt" href="gbHtmlSubj.php?act=passwd&uid=<?php echo urlencode($c['id'])?>">change password</a>
@@ -107,12 +107,12 @@ Add subject with name:  <input type="text" name="login" value="" size="10">
   <tr class="<?php echo(($o=1-$o) ? 'odd' : 'ev')?>">
     <td><?php echo$row['id']?></td>
     <td class="b">
-        <?if($row['type']=='G'){?>
+        <?php if($row['type']=='G'){?>
             <a href="gbHtmlSubj.php?id=<?php echo$row['id']?>"><?php echo$row['login']?></a>
-        <?}else{?><?php echo$row['login']?>
-        <?}?>
+        <?php }else{?><?php echo$row['login']?>
+        <?php }?>
      </td
-     <td><?if($row['type']=='G'){?> (G)<?}else{?> (U)<?}?></td>
+     <td><?php if($row['type']=='G'){?> (G)<?php }else{?> (U)<?php }?></td>
     <td>
      <a class="lnkbutt"
         href="gbHttp.php?act=removeSubjFromGr&login=<?php echo urlencode($row['login'])?>&gname=<?php echo urlencode($d['gname'])?>&reid=<?php echo$d['id']?>">
@@ -130,7 +130,7 @@ Add subject
 <select name="login">
 <?php if(is_array($d['subj'])) foreach($d['subj'] as $k=>$row) {?>
  <option value="<?php echo$row['login']?>"><?php echo$row['login']?></option>
-<?}?>
+<?php }?>
 </select>
 to group <?php echo$d['gname']?>
 <input type="hidden" name="act" value="addSubj2Gr">

@@ -1,4 +1,4 @@
-<?
+<?php
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,8 +36,8 @@ $config = array(
         'phptype'       => 'pgsql',
         'database'      => 'LiveSupport-test',
     ),
-    'tblNamePrefix' => 'gb_',
-    'authCookieName'=> 'gbsid',
+    'tblNamePrefix' => 'ls_',
+    'authCookieName'=> 'lssid',
     'RootNode'	    => 'RootNode',
     'tmpRootPass'   => 'q',
     'objtypes'      => array(

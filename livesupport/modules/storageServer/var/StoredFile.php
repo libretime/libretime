@@ -23,13 +23,13 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
-require_once '../RawMediaData.php';
-require_once '../MetaData.php';
-require_once '../../../getid3/var/getid3.php';
+require_once "RawMediaData.php";
+require_once "MetaData.php";
+require_once "../../../getid3/var/getid3.php";
  
 /**
  *  StoredFile class
@@ -77,11 +77,12 @@ class StoredFile{
      *  @param name string, name of new file
      *  @param mediaFileLP string, local path to media file
      *  @param mdataFileLP string, local path to metadata XML file
+     *  @param gunid global unique id (optional) - for insert file with gunid
      *  @return instace of StoredFile object
      */
-    function insert(&$gb, $oid, $name, $mediaFileLP='', $mdataFileLP='')
+    function insert(&$gb, $oid, $name, $mediaFileLP='', $mdataFileLP='', $gunid=NULL)
     {
-        $ac =& new StoredFile(&$gb);
+        $ac =& new StoredFile(&$gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
         $ac->id   = $oid;
         $ac->type = "unKnown";
@@ -136,7 +137,9 @@ class StoredFile{
         if(PEAR::isError($row)) return $row;
         if(is_null($row)){
             return PEAR::raiseError(
-                "StoredFile::recall: fileobj not exist", GBERR_FOBJNEX);
+                "StoredFile::recall: fileobj not exist ($oid/$gunid)",
+                GBERR_FOBJNEX
+            );
         }
         $ac =& new StoredFile(&$gb, $row['gunid']);
         $ac->type = $row['type'];
@@ -157,7 +160,7 @@ class StoredFile{
             WHERE tmpLink='$tmpLink' AND sessid='$sessid'");
         if(PEAR::isError($gunid)) return $gunid;
         if(is_null($gunid)) return PEAR::raiseError(
-            "StoredFile::recallFromLink: accessobj not exist", GBERR_AOBJNEX);
+            "StoredFile::recallFromLink: accessobj not exist ($tmpLink)", GBERR_AOBJNEX);
         return StoredFile::recall(&$gb, '', $gunid);
     }
     /**

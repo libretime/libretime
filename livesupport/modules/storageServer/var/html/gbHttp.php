@@ -1,4 +1,4 @@
-<?
+<?php
 require_once"gbHtml_h.php";
 #header("Content-type: text/plain"); echo"GET:\n"; print_r($_GET); echo"POST:\n"; print_r($_POST); echo"REQUEST:\n"; print_r($_REQUEST); echo"FILES:\n"; print_r($_FILES); exit;
 #echo"<pre>\n"; print_r($_SERVER); exit;

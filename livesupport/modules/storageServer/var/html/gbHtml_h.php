@@ -1,8 +1,8 @@
-<?
+<?php
 session_start();
 require_once '../conf.php';
 require_once 'DB.php';
-require_once '../GreenBox.php';
+require_once '../../../storageServer/var/GreenBox.php';
 
 #PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
 #PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');

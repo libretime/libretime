@@ -1,4 +1,4 @@
-<?
+<?php
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,8 +54,13 @@ $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox(&$dbc, $config);
 
 #    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
-echo "Trying to uninstall all ...\n";
+echo "Trying to uninstall storageServer ...\n";
 $gb->uninstall();
+
+echo "Uninstall Tranport submodule ...\n";
+require_once "../Transport.php";
+$tr =& new Transport(&$dbc, $config);
+$r = $tr->uninstall();
 
 $dbc->disconnect();
 ?>

@@ -1,5 +1,5 @@
-<?
-// $Id: gbHtmlLogin.php,v 1.1 2004/09/12 21:59:08 tomas Exp $
+<?php
+// $Id: gbHtmlLogin.php,v 1.2 2004/09/21 00:27:41 tomas Exp $
 require_once"gbHtml_h.php";
 
 // prefill data structure for template

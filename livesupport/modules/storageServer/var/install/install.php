@@ -1,4 +1,4 @@
-<?
+<?php
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,6 +86,11 @@ else{
     fclose($fp); unlink($config['storageDir']."/_writeTest");
     echo "\nStorage is probably installed OK\n";
 }
+
+echo "Install Transport submodule ...\n";
+require_once "../Transport.php";
+$tr =& new Transport(&$dbc, $config);
+$r = $tr->install();
 
 $dbc->disconnect();
 ?>

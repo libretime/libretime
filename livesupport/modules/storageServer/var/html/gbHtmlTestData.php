@@ -1,4 +1,4 @@
-<?
+<?php
 $gb->initDb();
 $gb->init();
 #system("rm -f {$config['storageDir']}/*.bin {$config['storageDir']}/*.xml");

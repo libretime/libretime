@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#   Storage - file storage component
+#   StorageServer - file storage component
 #   Copyright (c) 2004 Media Development Loan Fund
 #
 #   This file is part of the LiveSupport project.
@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -63,6 +63,7 @@ USR_LIB_DIR     = ${USR_DIR}/lib
 DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
 
 HTTP_GROUP   = apache
+#HTTP_GROUP   = nobody
 
 PHP_DIR 	= ${BASE_DIR}/var
 INSTALL_DIR = ${PHP_DIR}/install
@@ -90,7 +91,8 @@ TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all dir_setup doc clean docclean depclean distclean dist db_init db_clean
+.PHONY: all dir_setup doc clean docclean depclean distclean dist \
+  db_init db_clean transtest
 
 all: dir_setup db_init
 
@@ -117,6 +119,10 @@ check: all ${TEST_RUNNER}
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
+transtest:
+	@echo "Transfer module test (needs ArchiveServer installed):"
+	cd var/tests; php -q transTest.php
+
 db_init:
 	cd var/install; php -q install.php
 
@@ -130,6 +136,8 @@ ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
 ${STOR_DIR}:
+	@echo "Http daemon group have set in Makefile: ${HTTP_GROUP}"
+	@echo "You should be in this group for easy testing"
 	${MKDIR} ${STOR_DIR}
 	chown .${HTTP_GROUP} ${STOR_DIR}
 	chmod g+ws ${STOR_DIR}

@@ -1,180 +1,336 @@
 <?php
-// $Id: xrLocStor.php,v 1.1 2004/09/12 21:59:27 tomas Exp $
+/*------------------------------------------------------------------------------
+
+    Copyright (c) 2004 Media Development Loan Fund
+ 
+    This file is part of the LiveSupport project.
+    http://livesupport.campware.org/
+    To report bugs, send an e-mail to bugs@campware.org
+ 
+    LiveSupport is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+  
+    LiveSupport is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License
+    along with LiveSupport; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+ 
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.2 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
+
+------------------------------------------------------------------------------*/
 include_once "xmlrpc.inc";
 include_once "xmlrpcs.inc";
 require_once '../conf.php';
 require_once 'DB.php';
-require_once '../GreenBox.php';
 require_once '../LocStor.php';
 
-#PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
-#PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-#PEAR::setErrorHandling(PEAR_ERROR_PRINT);
-
-function errCallBack($err)
-{
-    echo "<pre>gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo()."\nui:\n".$err->getUserInfo()."\n";
-    echo "<hr>BackTrace:\n";
-    print_r($err->backtrace);
-    echo "</pre>\n";
-    exit;
-}
-
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-function v2xr($var, $struct=true){
-	if(is_array($var)){
-		$r = array();
-		foreach($var as $k=>$v) if($struct) $r[$k]=v2xr($v); else $r[]=v2xr($v);
-		return new xmlrpcval($r, ($struct ? "struct" : "array"));
-	}else if(is_int($var)){
-		return new xmlrpcval($var, "int");
-	}else if(is_bool($var)){
-		return new xmlrpcval($var, "boolean");
-	}else{
-		return new xmlrpcval($var, "string");
-	}
-}
 
 class XR_LocStor extends LocStor{
- function _xr_getPars($input)
- {
-    $p = $input->getParam(0);
-    if(isset($p) && $p->scalartyp()=="struct"){
-        $p->structreset();  $r = array();
-        while(list($k,$v) = $p->structeach()){   $r[$k] = $v->scalarval(); }
-        return array(TRUE, $r);
+
+    /**
+     *  Convert PHP variables to XMLRPC objects
+     *
+     *  @param var mixed - PHP variable
+     *  @param struct boolean - flag for using XMLRPC struct instead of array
+     *  @return XMLRPC object
+     */
+    function _v2xr($var, $struct=true){
+        if(is_array($var)){
+            $r = array();
+            foreach($var as $k=>$v){
+                if($struct) $r[$k]=$this->_v2xr($v);
+                else $r[]=$this->_v2xr($v);
+            }
+            return new xmlrpcval($r, ($struct ? "struct" : "array"));
+        }else if(is_int($var)){
+            return new xmlrpcval($var, "int");
+        }else if(is_bool($var)){
+            return new xmlrpcval($var, "boolean");
+        }else{
+            return new xmlrpcval($var, "string");
+        }
     }
-    else return array(FALSE, new xmlrpcresp(0, 801, "xr_login: wrong 1st parameter, struct expected."));
- }
- function xr_test($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    return new xmlrpcresp(v2xr(array(
-        'str'=>strtoupper($r['teststring']),
-        'login'=>$this->getSessLogin($r['sessid']),
-        'sessid'=>$r['sessid']
-    ), true));
- }
- function xr_authenticate($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->authenticate($r['login'], $r['pass']);
-    return new xmlrpcresp(new xmlrpcval($res, "boolean"));
- }
- function xr_login($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    if(!($res = $this->login($r['login'], $r['pass'])))
-        return new xmlrpcresp(0, 802, "xr_login: login failed - incorrect username or password.");
-    else
-        return new xmlrpcresp(v2xr($res, false));
- }
- function xr_logout($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->logout($r['sessid']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(v2xr('Bye', false));
-    else return new xmlrpcresp(0, 803, "xr_logout: logout failed - not logged.");
- }
- function xr_existsAudioClip($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-#    $this->debugLog(join(', ', $r));
-    $res = $this->existsAudioClip($r['sessid'], $r['gunid']);
-#    $this->debugLog($res);
-    if(PEAR::isError($res))
-        return new xmlrpcresp(0, 803, "xr_existsAudioClip: ".$res->getMessage()." ".$res->getUserInfo());
-    return new xmlrpcresp(new xmlrpcval($res, "boolean"));
- }
- function xr_storeAudioClip($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->storeAudioClip($r['sessid'], $r['gunid'], $r['mediaFileLP'], $r['mdataFileLP']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "string"));
-    else return new xmlrpcresp(0, 803, "xr_storeAudioClip: ".$res->getMessage()." ".$res->getUserInfo());
- }
- function xr_deleteAudioClip($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->deleteAudioClip($r['sessid'], $r['gunid']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "boolean"));
-    else return new xmlrpcresp(0, 803, "xr_deleteAudioClip: ".$res->getMessage()." ".$res->getUserInfo());
- }
- function xr_updateAudioClipMetadata($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->updateAudioClipMetadata($r['sessid'], $r['gunid'], $r['mdataFileLP']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "boolean"));
-    else return new xmlrpcresp(0, 803, "xr_updateAudioClip: ".$res->getMessage()." ".$res->getUserInfo());
- }
- function xr_searchMetadata($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->searchMetadata($r['sessid'], $r['criteria']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "boolean"));
-    else return new xmlrpcresp(0, 803, "xr_searchAudioClip: ".$res->getMessage()." ".$res->getUserInfo());
- }
- function xr_accessRawAudioData($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->accessRawAudioData($r['sessid'], $r['gunid']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "string"));
-    else return new xmlrpcresp(0, 803, "xr_accessRawAudioData: ".$res->getMessage()." ".$res->getUserInfo());
- }
- function xr_releaseRawAudioData($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->releaseRawAudioData($r['sessid'], $r['tmpLink']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "boolean"));
-    else return new xmlrpcresp(0, 803, "xr_releaseRawAudioData: ".$res->getMessage()." ".$res->getUserInfo());
- }
- function xr_getAudioClip($input)
- {
-    list($ok, $r) = $this->_xr_getPars($input);
-    if(!$ok) return $r;
-    $res = $this->getAudioClip($r['sessid'], $r['gunid'], $r['metaData']);
-    if(!PEAR::isError($res)) return new xmlrpcresp(new xmlrpcval($res, "string"));
-    else return new xmlrpcresp(0, 803, "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo());
- }
+    /**
+     *  Convert XMLRPC struct to PHP array
+     *
+     *  @param input XMLRPC struct
+     */
+    function _xr_getPars($input)
+    {
+        $p = $input->getParam(0);
+        if(isset($p) && $p->scalartyp()=="struct"){
+            $p->structreset();  $r = array();
+            while(list($k,$v) = $p->structeach()){ $r[$k] = $v->scalarval(); }
+            return array(TRUE, $r);
+        }
+        else return array(FALSE, new xmlrpcresp(0, 801,
+            "xr_login: wrong 1st parameter, struct expected."
+        ));
+    }
+
+    /**
+     *  Test XMLRPC - strupper and return given string,
+     *  also return loginname of logged user
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_test($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        return new xmlrpcresp($this->_v2xr(array(
+            'str'=>strtoupper($r['teststring']),
+            'login'=>$this->getSessLogin($r['sessid']),
+            'sessid'=>$r['sessid']
+        ), true));
+    }
+
+    /**
+     *  Call LocStor::authenticate
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_authenticate($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->authenticate($r['login'], $r['pass']);
+        return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+    }
+
+    /**
+     *  Call LocStor::login
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_login($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        if(!($res = $this->login($r['login'], $r['pass'])))
+            return new xmlrpcresp(0, 802,
+                "xr_login: login failed - incorrect username or password."
+            );
+        else
+            return new xmlrpcresp($this->_v2xr($res, false));
+    }
+
+    /**
+     *  Call LocStor::logout
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_logout($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->logout($r['sessid']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp($this->_v2xr('Bye', false));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_logout: logout failed - not logged."
+            );
+    }
+
+    /**
+     *  Call LocStor::existsAudioClip
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_existsAudioClip($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        #$this->debugLog(join(', ', $r));
+        $res = $this->existsAudioClip($r['sessid'], $r['gunid']);
+        #$this->debugLog($res);
+        if(PEAR::isError($res))
+            return new xmlrpcresp(0, 803,
+                "xr_existsAudioClip: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+    }
+
+    /**
+     *  Call LocStor::storeAudioClip
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_storeAudioClip($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->storeAudioClip(
+            $r['sessid'], $r['gunid'], $r['mediaFileLP'], $r['mdataFileLP']
+        );
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "string"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_storeAudioClip: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+    }
+
+    /**
+     *  Call LocStor::deleteAudioClip
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_deleteAudioClip($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->deleteAudioClip($r['sessid'], $r['gunid']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_deleteAudioClip: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+    }
+
+    /**
+     *  Call LocStor::updateAudioClipMetadata
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_updateAudioClipMetadata($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->updateAudioClipMetadata(
+            $r['sessid'], $r['gunid'], $r['mdataFileLP']
+        );
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_updateAudioClip: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+    }
+
+    /**
+     *  Call LocStor::searchMetadata
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_searchMetadata($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->searchMetadata($r['sessid'], $r['criteria']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_searchAudioClip: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+    }
+
+    /**
+     *  Call LocStor::accessRawAudioData
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_accessRawAudioData($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->accessRawAudioData($r['sessid'], $r['gunid']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "string"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_accessRawAudioData: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+    }
+
+    /**
+     *  Call LocStor::releaseRawAudioData
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_releaseRawAudioData($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->releaseRawAudioData($r['sessid'], $r['tmpLink']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_releaseRawAudioData: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+    }
+
+    /**
+     *  Call LocStor::getAudioClip
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_getAudioClip($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->getAudioClip($r['sessid'], $r['gunid'], $r['metaData']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "string"));
+        else
+            return new xmlrpcresp(0, 803,
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+    }
 }
 
 $locStor = &new XR_LocStor(&$dbc, $config);
 
 $methods = array(
-    'test'                    => 'Tests toupper and checks sessid, params: teststring, sessid.',
+    'test'                    => 'Tests toupper and checks sessid, params: '.
+                                  'teststring, sessid.',
     'authenticate'            => 'Checks authentication.',
     'login'                   => 'Login to storage.',
     'logout'                  => 'Logout from storage.',
-    'existsAudioClip'         => 'Checks if an Audio clip with the specified id is stored in local storage.',
-    'storeAudioClip'          => 'Store a new audio clip or replace an existing one.',
+    'existsAudioClip'         => 'Checks if an Audio clip with the specified '.
+                                  'id is stored in local storage.',
+    'storeAudioClip'          => 'Store a new audio clip or replace '.
+                                 'an existing one.',
     'deleteAudioClip'         => 'Delete an existing Audio clip.',
-    'updateAudioClipMetadata' => 'Update the metadata of an Audio clip stored in Local storage.',
-    'searchMetadata'          => 'Search through the metadata of stored AudioClips, and return all matching clip ids.',
-    'accessRawAudioData'      => 'Get access to raw audio data of an AudioClip.',
-    'releaseRawAudioData'     => 'Release access for raw audio data.',
+    'updateAudioClipMetadata' => 'Update the metadata of an Audio clip '.
+                                  'stored in Local storage.',
+    'searchMetadata'          => 'Search through the metadata of stored '.
+                                  'AudioClips, return all matching clip ids.',
+    'accessRawAudioData'      => 'Get access to raw audio data.',
+    'releaseRawAudioData'     => 'Release access to raw audio data.',
     'getAudioClip'            => 'Return the contents of an Audio clip.'
 );
 
 $defs = array();
 foreach($methods as $method=>$description){
     $defs["locstor.$method"] = array(
-    		"function" => array(&$locStor, "xr_$method"),
-    		"signature" => array(array($xmlrpcStruct, $xmlrpcStruct)),
-    		"docstring" => $description
+            "function" => array(&$locStor, "xr_$method"),
+            "signature" => array(array($xmlrpcStruct, $xmlrpcStruct)),
+            "docstring" => $description
     );
 }
 $s=new xmlrpc_server( $defs );

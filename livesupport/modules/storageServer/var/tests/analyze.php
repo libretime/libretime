@@ -1,5 +1,5 @@
 #!/usr/bin/php -q
-<?
+<?php
 header("Content-type: text/plain");
 echo "TEST\n";
 
