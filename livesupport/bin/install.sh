@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -49,6 +49,8 @@ products_dir=$basedir/products
 
 usrdir=`cd $basedir/usr; pwd;`
 
+installlog=/tmp/livesupport_install.log
+
 
 #-------------------------------------------------------------------------------
 #  Print the usage information for this script.
@@ -68,6 +70,8 @@ printUsage()
     echo "  -p, --port          The port of the apache web server [default: 80]"
     echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
     echo "                          [default: 3344]";
+    echo "  -s, --dbserver      The name of the database server host.";
+    echo "                      [default: same as host]";
     echo "  -u, --dbuser        The name of the database user to access the"
     echo "                      database. [default: livesupport]";
     echo "  -w, --dbpassword    The database user password.";
@@ -82,7 +86,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:H:hp:P:u:w: -l apache-group:,database:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:D:g:H:hp:P:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -106,6 +110,9 @@ while true; do
             shift; shift;;
         -P|--scheduler-port)
             scheduler_port=$2;
+            shift; shift;;
+        -s|--dbserver)
+            dbserver=$2;
             shift; shift;;
         -u|--dbuser)
             dbuser=$2;
@@ -141,6 +148,10 @@ if [ "x$scheduler_port" == "x" ]; then
     scheduler_port=3344;
 fi
 
+if [ "x$dbserver" == "x" ]; then
+    dbserver=$hostname;
+fi
+
 if [ "x$database" == "x" ]; then
     database=LiveSupport;
 fi
@@ -166,6 +177,7 @@ echo "  installation directory: $installdir";
 echo "  host name:              $hostname";
 echo "  web server port:        $http_port";
 echo "  scheduler port:         $scheduler_port";
+echo "  database server:        $dbserver";
 echo "  database:               $database";
 echo "  database user:          $dbuser";
 echo "  database user password: $dbpassword";
@@ -180,7 +192,10 @@ ls_php_host=$hostname
 ls_php_port=$http_port
 ls_php_urlPrefix=livesupport
 
-ls_dbserver=$hostname
+ls_alib_xmlRpcPrefix="xmlrpc/xrLocStor.php"
+ls_storage_xmlRpcPrefix="xmlrpc/xrLocStor.php"
+
+ls_dbserver=$dbserver
 ls_dbuser=$dbuser
 ls_dbpassword=$dbpassword
 ls_database=$database
@@ -193,7 +208,43 @@ ls_scheduler_xmlRpcPrefix=RC2
 
 postgres_user=postgres
 
+install_bin=$installdir/bin
+install_etc=$installdir/etc
+install_lib=$installdir/lib
+install_tmp=$installdir/tmp
 install_var=$installdir/var
+
+
+# replace / characters with a \/ sequence, for sed below
+# the sed statement is really "s/\//\\\\\//g", but needs escaping because of
+# bash, hence the extra '\' characters
+installdir_s=`echo $installdir | sed -e "s/\//\\\\\\\\\//g"`
+ls_storage_xmlRpcPrefix_s=`echo $ls_storage_xmlRpcPrefix | \
+                                sed -e "s/\//\\\\\\\\\//g"`
+ls_alib_xmlRpcPrefix_s=`echo $ls_alib_xmlRpcPrefix | sed -e "s/\//\\\\\\\\\//g"`
+ls_php_urlPrefix_s=`echo $ls_php_urlPrefix | sed -e "s/\//\\\\\\\\\//g"`
+ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
+                                sed -e "s/\//\\\\\\\\\//g"`
+ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
+                                sed -e "s/\//\\\\\\\\\//g"`
+
+replace_sed_string="s/ls_install_dir/$installdir_s/; \
+              s/ls_dbuser/$ls_dbuser/; \
+              s/ls_dbpassword/$ls_dbpassword/; \
+              s/ls_dbserver/$ls_dbserver/; \
+              s/ls_database/$ls_database/; \
+              s/ls_storageUrlPath/\/$ls_php_urlPrefix_s\/storageServer\/var/; \
+              s/ls_php_urlPrefix/$ls_php_urlPrefix_s/; \
+              s/ls_storage_xmlRpcPrefix/$ls_storage_xmlRpcPrefix_s/; \
+              s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
+              s/ls_php_host/$ls_php_host/; \
+              s/ls_php_port/$ls_php_port/; \
+              s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
+              s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
+              s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
+              s/ls_scheduler_host/$ls_scheduler_host/; \
+              s/ls_scheduler_port/$ls_scheduler_port/;"
+
 
 
 #-------------------------------------------------------------------------------
@@ -248,6 +299,7 @@ echo "Checking for required tools..."
 check_exe "psql" || exit 1;
 check_exe "php" || exit 1;
 check_exe "pear" || exit 1;
+check_exe "odbcinst" || exit 1;
 
 check_pear_module "DB" || exit 1;
 check_pear_module "Calendar" || exit 1;
@@ -283,16 +335,45 @@ su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
 
 
 #-------------------------------------------------------------------------------
+#  Create the ODBC data source and driver
+#-------------------------------------------------------------------------------
+echo "Creating ODBC data source and driver...";
+
+odbcinst_template=$products_dir/scheduler/etc/odbcinst_template
+odbc_template=$products_dir/scheduler/etc/odbc_template
+odbc_template_tmp=/tmp/odbc_template.$$
+
+# check for an existing PostgreSQL ODBC driver, and only install if necessary
+odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
+if [ "x$odbcinst_res" == "x" ]; then
+    echo "Registering ODBC PostgreSQL driver...";
+    odbcinst -i -d -v -f $odbcinst_template || exit 1;
+fi
+
+echo "Registering LiveSupport ODBC data source...";
+cat $odbc_template | sed -e "$replace_sed_string" > $odbc_template_tmp
+odbcinst -i -s -l -f $odbc_template_tmp || exit 1;
+rm -f $odbc_template_tmp
+
+
+#-------------------------------------------------------------------------------
 #  Create the installation directory structure
 #-------------------------------------------------------------------------------
+echo "Copying files..."
+
 mkdir -p $installdir
+mkdir -p $install_bin
+mkdir -p $install_etc
+mkdir -p $install_lib
+mkdir -p $install_tmp
 mkdir -p $install_var
 
 
 #-------------------------------------------------------------------------------
 #  Copy the PHP files
 #-------------------------------------------------------------------------------
-echo "Copying files..."
+mkdir $install_var/getid3
+cp -a $modules_dir/getid3/var $install_var/getid3
 
 mkdir $install_var/alib
 cp -a $modules_dir/alib/var $install_var/alib
@@ -308,6 +389,14 @@ cp -a $modules_dir/htmlUI/var $install_var/htmlUI
 
 
 #-------------------------------------------------------------------------------
+#  Copy scheduler related files
+#-------------------------------------------------------------------------------
+cp -a $usrdir/lib/* $install_lib
+cp -a $products_dir/scheduler/tmp/scheduler $install_bin
+cp -a $products_dir/scheduler/bin/scheduler.sh $install_bin
+
+
+#-------------------------------------------------------------------------------
 #  Clean up remnants of the CVS system
 #-------------------------------------------------------------------------------
 rm -rf `find $install_var -type d -name CVS`
@@ -318,19 +407,6 @@ rm -rf `find $install_var -type d -name CVS`
 #-------------------------------------------------------------------------------
 echo "Customizing configuration files..."
 
-replace_sed_string="s/ls_dbuser/$ls_dbuser/; \
-              s/ls_dbpassword/$ls_dbpassword/; \
-              s/ls_dbserver/$ls_dbserver/; \
-              s/ls_database/$ls_database/; \
-              s/ls_storageUrlPath/\/$ls_php_urlPrefix\/storageServer\/var/; \
-              s/ls_php_host/$ls_php_host/; \
-              s/ls_php_port/$ls_php_port/; \
-              s/ls_archiveUrlPath/\/$ls_php_urlPrefix\/archiveServer\/var/; \
-              s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix/; \
-              s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix/; \
-              s/ls_scheduler_host/$ls_scheduler_host/; \
-              s/ls_scheduler_port/$ls_scheduler_port/;"
-
 cat $install_var/storageServer/var/conf.php.template \
     | sed -e "$replace_sed_string" \
     > $install_var/storageServer/var/conf.php
@@ -338,6 +414,10 @@ cat $install_var/storageServer/var/conf.php.template \
 cat $install_var/archiveServer/var/conf.php.template \
     | sed -e "$replace_sed_string" \
     > $install_var/archiveServer/var/conf.php
+
+cat $products_dir/scheduler/etc/scheduler.xml.template \
+    | sed -e "$replace_sed_string" \
+    > $install_etc/scheduler.xml
 
 
 #-------------------------------------------------------------------------------
@@ -370,6 +450,22 @@ chgrp $apache_group $install_var/htmlUI/var/html/img
 
 chmod g+sw $install_var/htmlUI/var/templates_c
 chmod g+sw $install_var/htmlUI/var/html/img
+
+
+#-------------------------------------------------------------------------------
+#  Initialize the database
+#-------------------------------------------------------------------------------
+echo "Initializing database...";
+
+# create PHP-related database tables
+cd $install_var/storageServer/var/install
+php -q install.php > $installlog || (cat $installog; exit 1);
+cd -
+
+# create scheduler-related database tables
+cd $installdir
+./bin/scheduler.sh install > $installlog 2&>1 || (cat $intallog; exit 1);
+cd -
 
 
 #-------------------------------------------------------------------------------
