@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/SessionId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace Core {
 /**
  *  A class representing session identifiers.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  */
 class SessionId
 {
@@ -96,7 +96,7 @@ class SessionId
          *  Compare this is with an other one.
          *
          *  @param otherId the other unqiue id to compare to.
-         *  @return true if this an otherId have the same ID value,
+         *  @return true if this another sessionId have the same value,
          *          false otherwise.
          */
         bool
@@ -104,6 +104,20 @@ class SessionId
                                                 throw ()
         {
             return this->id == otherId.id;
+        }
+
+        /**
+         *  Compare this is with an other one.
+         *
+         *  @param otherId the other unqiue id to compare to.
+         *  @return true if this another sessionId do not have the same value,
+         *          false otherwise.
+         */
+        bool
+        operator!=(const SessionId & otherId) const
+                                                throw ()
+        {
+            return this->id != otherId.id;
         }
 
         /**

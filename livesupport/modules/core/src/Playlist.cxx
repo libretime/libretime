@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,6 +129,29 @@ Playlist :: configure(const xmlpp::Element    & element)
     
     isLockedForPlaying = false;
     isLockedForEditing = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Copy constructor.
+ *----------------------------------------------------------------------------*/
+Playlist :: Playlist(const Playlist & otherPlaylist)
+                                            throw ()
+                        : Playable(PlaylistType)
+{
+    id          = otherPlaylist.id;
+    title       = otherPlaylist.title;
+    playlength  = otherPlaylist.playlength;
+    uri         = otherPlaylist.uri;
+    token       = otherPlaylist.token;
+
+    elementList.reset(new PlaylistElementListType(*otherPlaylist.elementList));
+    
+    if (otherPlaylist.savedCopy) {
+        savedCopy.reset(new Playlist(*otherPlaylist.savedCopy));
+    }
+    
+    metadata = otherPlaylist.metadata;
 }
 
 

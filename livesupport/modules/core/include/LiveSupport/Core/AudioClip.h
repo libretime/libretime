@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -167,6 +167,18 @@ class AudioClip : public Configurable,
 
 
     public:
+        /**
+         *  Copy constructor.
+         *
+         *  Copies the <i>pointers</i> for all fields except xmlAudioClip.
+         *  These fields are immutable; if you want to modify them, call the
+         *  appropriate setter function with (a pointer to) an object 
+         *  with the new value.
+         *
+         *  @param otherAudioClip the audio clip to be copied
+         */
+        AudioClip(const AudioClip & otherAudioClip)        throw ();
+
         /**
          *  Default constructor.
          *

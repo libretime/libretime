@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,12 +64,27 @@ using namespace Core;
 /**
  *  An interface for storage clients.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.5 $
  */
 class StorageClientInterface
 {
     public:
+        /**
+         *  Create a new, empty, playlist.  Does not automatically open the
+         *  playlist for editing; for that, use editPlaylist() and
+         *  savePlaylist(). 
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @return the newly created playlist.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Playlist>::Ref
+        createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
         /**
          *  Tell if a playlist with a given id exists.
          *
@@ -87,7 +102,8 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return a playlist with the specified id, to be displayed.
+         *  Return a playlist with the specified id to be displayed.
+         *  If the playlist is being edited, its last saved state is returned.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -103,7 +119,9 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return a playlist with the specified id, to be edited.
+         *  Return a playlist with the specified id to be edited.
+         *  This puts a lock on the playlist, and nobody else can edit it
+         *  until we release it using savePlaylist().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -114,12 +132,14 @@ class StorageClientInterface
          */
         virtual Ptr<Playlist>::Ref
         editPlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<UniqueId>::Ref  id) const
+                     Ptr<UniqueId>::Ref  id)
                                                 throw (XmlRpcException)
                                                                         = 0;
 
         /**
          *  Save the playlist after editing.
+         *  Can only be called after we obtained a lock on the playlist using
+         *  editPlaylist(); this method releases the lock.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to save.
@@ -129,12 +149,20 @@ class StorageClientInterface
          */
         virtual void
         savePlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<Playlist>::Ref  playlist) const
+                     Ptr<Playlist>::Ref  playlist)
                                                 throw (XmlRpcException)
                                                                         = 0;
 
         /**
          *  Acquire the resources for the playlist.
+         *  The last saved copy of the playlist is read, and a local copy
+         *  is created in SMIL format.  (A local copy is also created for
+         *  each sub-playlist contained in the playlist.)
+         *  The address of this local copy is
+         *  stored in the <code>uri</code> field of the playlist.  The SMIL
+         *  file can be played using the Helix client.
+         *  For each audio clip contained (directly or indirectly) in the
+         *  playlist, acquireAudioClip() is called
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to acquire.
@@ -154,6 +182,11 @@ class StorageClientInterface
         /**
          *  Release the resources (audio clips, other playlists) used 
          *  in a playlist.
+         *  For each audio clip contained (directly or indirectly) in the
+         *  playlist, releaseAudioClip() is called, and the local copy of
+         *  the playlist (and sub-playlists, if any) is removed.
+         *  The <code>uri</code> field of the playlist is erased (set to
+         *  a null pointer).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
@@ -168,6 +201,9 @@ class StorageClientInterface
                                                                         = 0;
         /**
          *  Delete a playlist with the specified id.
+         *  Will refuse to delete the playlist if it is being edited (i.e., 
+         *  has been opened with editPlaylist() but has not yet been released
+         *  with savePlaylist()).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
@@ -183,6 +219,7 @@ class StorageClientInterface
 
         /**
          *  Return a list of all playlists in the playlist store.
+         *  This is for testing only; will be replaced by a search method.
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.
@@ -191,19 +228,6 @@ class StorageClientInterface
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException)
-                                                                        = 0;
-
-        /**
-         *  Create a new playlist.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return the newly created playlist.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual Ptr<Playlist>::Ref
-        createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw (XmlRpcException)
                                                                         = 0;
 
@@ -224,7 +248,10 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return an audio clip with the specified id.
+         *  Return an audio clip with the specified id to be displayed.
+         *  The audio clip returned contains all the metadata (title, author, 
+         *  etc.) available for the audio clip, but no binary sound file.
+         *  If you want to play the audio clip, use acquireAudioClip().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
@@ -241,6 +268,18 @@ class StorageClientInterface
 
         /**
          *  Store an audio clip.
+         *  The audio clip is expected to have valid <code>title</code>,
+         *  <code>playlength</code> and <code>uri</code> fields, the latter
+         *  containing the URI of a binary sound file.
+         *  
+         *  If the audio clip does not have
+         *  an ID field (i.e., <code>audioClip->getId()</code> is a null 
+         *  pointer), one will be generated, and <code>audioClip->getId()</code>
+         *  will contain a valid UniqueId after the method returns.
+         *  If the audio clip had an ID already, then it remains unchanged.
+         *
+         *  The size of the binary sound file must be less than 2 GB, because 
+         *  the storage server can not deal with larger files.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.
@@ -256,6 +295,13 @@ class StorageClientInterface
 
         /**
          *  Acquire the resources for the audio clip with the specified id.
+         *  The <code>uri</code> field of the audio clip returned by the
+         *  method points to a binary sound file playable by the Helix client.
+         *  This binary sound file can be randomly accessed.
+         *
+         *  The returned audio clip also contains a <code>token</code> field
+         *  which identifies it to the storage server; this is used by
+         *  releaseAudioClip().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to acquire.
@@ -273,6 +319,9 @@ class StorageClientInterface
 
         /**
          *  Release the resource (sound file) used by an audio clip.
+         *  After the call to this method, the binary sound file is no longer
+         *  accessible, and the <code>uri</code> and <code>token</code> fields
+         *  of the audioClip are erased (set to null pointers).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the id of the audio clip to release.
@@ -303,6 +352,7 @@ class StorageClientInterface
 
         /**
          *  Return a list of all audio clips in the playlist store.
+         *  This is for testing only; will be replaced by a search method.
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -814,7 +814,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
-                                 Ptr<UniqueId>::Ref  id) const
+                                 Ptr<UniqueId>::Ref  id)
                                                 throw (Core::XmlRpcException)
 {
     Ptr<Playlist>::Ref              playlist(new Playlist(id));
@@ -848,7 +848,7 @@ void
 WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
                                        Ptr<UniqueId>::Ref  id,
                                        Ptr<const std::string>::Ref& url,
-                                       Ptr<const std::string>::Ref& token) const
+                                       Ptr<const std::string>::Ref& token)
                                                 throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
@@ -905,7 +905,7 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
  *----------------------------------------------------------------------------*/
 void
 WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
-                                 Ptr<Playlist>::Ref  playlist) const
+                                 Ptr<Playlist>::Ref  playlist)
                                                 throw (Core::XmlRpcException)
 {
     if (!playlist || !playlist->getToken()) {

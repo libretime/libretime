@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -98,8 +98,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST location path          CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.16 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.17 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -147,7 +147,7 @@ class WebStorageClient :
         editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
                            Ptr<UniqueId>::Ref  id,
                            Ptr<const std::string>::Ref& url,
-                           Ptr<const std::string>::Ref& token) const
+                           Ptr<const std::string>::Ref& token)
                                                 throw (XmlRpcException);
 
     public:
@@ -185,6 +185,20 @@ class WebStorageClient :
 
 
         /**
+         *  Create a new, empty, playlist.  Does not automatically open the
+         *  playlist for editing; for that, use editPlaylist() and
+         *  savePlaylist(). 
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @return the newly created playlist.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<Playlist>::Ref
+        createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw (XmlRpcException);
+
+        /**
          *  Tell if a playlist with a given id exists.
          *
          *  @param sessionId the session ID from the authentication client
@@ -200,7 +214,8 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return a playlist with the specified id, to be displayed.
+         *  Return a playlist with the specified id to be displayed.
+         *  If the playlist is being edited, its last saved state is returned.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -216,7 +231,9 @@ class WebStorageClient :
 
 
         /**
-         *  Return a playlist with the specified id, to be edited.
+         *  Return a playlist with the specified id to be edited.
+         *  This puts a lock on the playlist, and nobody else can edit it
+         *  until we release it using savePlaylist().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -227,11 +244,13 @@ class WebStorageClient :
          */
         virtual Ptr<Playlist>::Ref
         editPlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<UniqueId>::Ref  id) const
+                     Ptr<UniqueId>::Ref  id)
                                                 throw (XmlRpcException);
 
         /**
          *  Save the playlist after editing.
+         *  Can only be called after we obtained a lock on the playlist using
+         *  editPlaylist(); this method releases the lock.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to save.
@@ -241,15 +260,22 @@ class WebStorageClient :
          */
         virtual void
         savePlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<Playlist>::Ref  playlist) const
+                     Ptr<Playlist>::Ref  playlist)
                                                 throw (XmlRpcException);
 
 
         /**
          *  Acquire the resources for the playlist.
+         *  The last saved copy of the playlist is read, and a local copy
+         *  is created in SMIL format.  (A local copy is also created for
+         *  each sub-playlist contained in the playlist.)
+         *  The address of this local copy is
+         *  stored in the <code>uri</code> field of the playlist.  The SMIL
+         *  file can be played using the Helix client.
+         *  For each audio clip contained (directly or indirectly) in the
+         *  playlist, acquireAudioClip() is called
          *
-         *  The Playlist returned has a uri field (read using getUri())
-         *  which points to a playable SMIL file.  This URI is a random string
+         *  The URI of the SMIL file is a random string
          *  appended to the temp storage path read from the configuration file,
          *  plus a ".smil" extension.
          *
@@ -269,8 +295,12 @@ class WebStorageClient :
 
         /**
          *  Release the resources (audio clips, other playlists) used 
-         *  in a playlist.  The uri of the playlist is no longer valid, and 
-         *  the uri field is deleted.
+         *  in a playlist.
+         *  For each audio clip contained (directly or indirectly) in the
+         *  playlist, releaseAudioClip() is called, and the local copy of
+         *  the playlist (and sub-playlists, if any) is removed.
+         *  The <code>uri</code> field of the playlist is erased (set to
+         *  a null pointer).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
@@ -285,6 +315,9 @@ class WebStorageClient :
 
         /**
          *  Delete a playlist with the specified id.
+         *  Will refuse to delete the playlist if it is being edited (i.e., 
+         *  has been opened with editPlaylist() but has not yet been released
+         *  with savePlaylist()).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
@@ -299,6 +332,7 @@ class WebStorageClient :
 
         /**
          *  Return a list of all playlists in the playlist store.
+         *  This is for testing only; will be replaced by a search method.
          *
          *  Since this makes no sense whatsoever, this method currently returns
          *  an empty list.  It will be replaced by a method which uses
@@ -311,18 +345,6 @@ class WebStorageClient :
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException);
-
-        /**
-         *  Create a new playlist.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return the newly created playlist.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual Ptr<Playlist>::Ref
-        createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw (XmlRpcException);
 
         /**
@@ -341,7 +363,10 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return an audio clip with the specified id.
+         *  Return an audio clip with the specified id to be displayed.
+         *  The audio clip returned contains all the metadata (title, author, 
+         *  etc.) available for the audio clip, but no binary sound file.
+         *  If you want to play the audio clip, use acquireAudioClip().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
@@ -356,15 +381,20 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Store an audio clip.  The <code>uri</code> field of the audio clip
-         *  is expected to contain the valid URI of a binary audio file.
+         *  Store an audio clip.
+         *  The audio clip is expected to have valid <code>title</code>,
+         *  <code>playlength</code> and <code>uri</code> fields, the latter
+         *  containing the URI of a binary sound file.
          *  
-         *  If the ID of the audio clip is UniqueId::NoId, a new globally unique
-         *  ID is generated, and the audioClip ID is changed to the new ID.
-         *
-         *  In this testing version, the audio clip URI is expected in the
-         *  form <code>file:relative_path/file_name.mp3</code>.  Later this
-         *  should be changed to an absolute URI.
+         *  If the audio clip does not have
+         *  an ID field (i.e., <code>audioClip->getId()</code> is a null 
+         *  pointer), one will be generated, and <code>audioClip->getId()</code>
+         *  will contain a valid UniqueId after the method returns.
+         *  If the audio clip had an ID already, then it remains unchanged.
+         *  
+         *  In this testing version, the audio clip URI is expected in the form
+         *  <code>file</code><code>:relative_path/file_name.mp3</code>.
+         *  Later this should be changed to an absolute URI.
          *
          *  The size of the binary file must be less than 2 GB, because the
          *  storage server can not deal with larger files.
@@ -382,9 +412,13 @@ class WebStorageClient :
 
         /**
          *  Acquire the resources for the audio clip with the specified id.
+         *  The <code>uri</code> field of the audio clip returned by the
+         *  method points to a binary sound file playable by the Helix client.
+         *  This binary sound file can be randomly accessed.
          *
-         *  Returns an AudioClip instance with a valid uri field, which points
-         *  to the binary sound file.
+         *  The returned audio clip also contains a <code>token</code> field
+         *  which identifies it to the storage server; this is used by
+         *  releaseAudioClip().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to acquire.
@@ -400,9 +434,10 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Release the resource (sound file) used by an audio clip.  The
-         *  uri of the audio clip is no longer valid, and the uri field is
-         *  deleted.
+         *  Release the resource (sound file) used by an audio clip.
+         *  After the call to this method, the binary sound file is no longer
+         *  accessible, and the <code>uri</code> and <code>token</code> fields
+         *  of the audioClip are erased (set to null pointers).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the id of the audio clip to release.
@@ -431,6 +466,7 @@ class WebStorageClient :
 
         /**
          *  Return a list of all audio clips in the playlist store.
+         *  This is for testing only; will be replaced by a search method.
          *
          *  Since this makes no sense whatsoever, this method currently returns
          *  an empty list.  It will be replaced by a method which uses

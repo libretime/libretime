@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.20 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,11 +114,25 @@ TestStorageClientTest :: firstTest(void)
         Ptr<UniqueId>::Ref  id1(new UniqueId(1));
         Ptr<UniqueId>::Ref  id2(new UniqueId(77));
 
+    try {
         CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, id1));
-        CPPUNIT_ASSERT(!tsc->existsPlaylist(dummySessionId, id2));
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
-        Ptr<Playlist>::Ref  playlist = tsc->getPlaylist(dummySessionId, id1);
-        CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
+    try {
+        CPPUNIT_ASSERT(!tsc->existsPlaylist(dummySessionId, id2));
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<Playlist>::Ref  playlist;
+    try {
+        playlist = tsc->getPlaylist(dummySessionId, id1);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
 }
 
 
@@ -129,24 +143,26 @@ void
 TestStorageClientTest :: deletePlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<UniqueId>::Ref      id1(new UniqueId(0x1));
-        Ptr<UniqueId>::Ref      id2(new UniqueId(0x77));
+    Ptr<UniqueId>::Ref      id1(new UniqueId(0x1));
+    Ptr<UniqueId>::Ref      id2(new UniqueId(0x77));
 
-        try {
-            tsc->deletePlaylist(dummySessionId, id2);
-            CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (XmlRpcException &e) {
-        }
-        try {
-            tsc->deletePlaylist(dummySessionId, id1);
-        } catch (XmlRpcException &e) {
-            CPPUNIT_FAIL("cannot delete existing playlist");
-        }
-        try {
-            tsc->deletePlaylist(dummySessionId, id1);
-            CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (XmlRpcException &e) {
-        }
+    try {
+        tsc->deletePlaylist(dummySessionId, id2);
+        CPPUNIT_FAIL("allowed to delete non-existent playlist");
+    } catch (XmlRpcException &e) {
+    }
+
+    try {
+        tsc->deletePlaylist(dummySessionId, id1);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL("cannot delete existing playlist");
+    }
+
+    try {
+        tsc->deletePlaylist(dummySessionId, id1);
+        CPPUNIT_FAIL("allowed to delete non-existent playlist");
+    } catch (XmlRpcException &e) {
+    }
 }
 
 
@@ -157,12 +173,21 @@ void
 TestStorageClientTest :: getAllPlaylistsTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-                        playlistVector = tsc->getAllPlaylists(dummySessionId);
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector;
+    try {
+        playlistVector = tsc->getAllPlaylists(dummySessionId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(playlistVector->size() == 2);
 
-    Ptr<Playlist>::Ref  playlist = (*playlistVector)[0];
-    CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 0x1);
+    Ptr<Playlist>::Ref  playlist;
+    try {
+        playlist = (*playlistVector)[0];
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(int(playlist->getId()->getId()) == 1);
 }
 
 
@@ -173,9 +198,18 @@ void
 TestStorageClientTest :: createPlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<Playlist>::Ref playlist = tsc->createPlaylist(dummySessionId);
+    Ptr<Playlist>::Ref  playlist;
+    try {
+        playlist = tsc->createPlaylist(dummySessionId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
-    CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, playlist->getId()));
+    try {
+        CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, playlist->getId()));
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 }
 
 
@@ -189,23 +223,39 @@ TestStorageClientTest :: audioClipTest(void)
     Ptr<UniqueId>::Ref    id02(new UniqueId(0x10002));
     Ptr<UniqueId>::Ref    id77(new UniqueId(0x10077));
 
-    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id02));
-    CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id77));
+    try {
+        CPPUNIT_ASSERT( tsc->existsAudioClip(dummySessionId, id02));
+        CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id77));
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
-    Ptr<AudioClip>::Ref     audioClip = tsc->getAudioClip(dummySessionId, id02);
+    Ptr<AudioClip>::Ref     audioClip;
+    try {
+        audioClip = tsc->getAudioClip(dummySessionId, id02);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(audioClip->getId()->getId() == id02->getId());
     CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
                                                    == 30*60);
 
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-                            audioClipVector 
-                            = tsc->getAllAudioClips(dummySessionId);
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector;
+    try {
+        audioClipVector = tsc->getAllAudioClips(dummySessionId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(audioClipVector->size() == 3);
 
     audioClip = (*audioClipVector)[0];
     CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 0x10001);
 
-    tsc->deleteAudioClip(dummySessionId, id02);
+    try {
+        tsc->deleteAudioClip(dummySessionId, id02);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id02));
 
     Ptr<const Glib::ustring>::Ref   title(new Glib::ustring("New Title"));
@@ -213,11 +263,29 @@ TestStorageClientTest :: audioClipTest(void)
     Ptr<const std::string>::Ref     uri;
 
     Ptr<AudioClip>::Ref     newAudioClip(new AudioClip(title, playlength, uri));
-    CPPUNIT_ASSERT(!newAudioClip->getId());
-    tsc->storeAudioClip(dummySessionId, newAudioClip);
-    Ptr<UniqueId>::Ref      newId = newAudioClip->getId();
-    CPPUNIT_ASSERT(newId);
-    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, newId));    
+
+    try {
+        tsc->storeAudioClip(dummySessionId, newAudioClip);
+        CPPUNIT_FAIL("Allowed to store audio clip without binary sound file.");
+    } catch (XmlRpcException &e) {
+    }
+    
+    uri.reset(new std::string("file:var/test10001.mp3"));
+    newAudioClip->setUri(uri);
+    try {
+        CPPUNIT_ASSERT(!newAudioClip->getId());
+        tsc->storeAudioClip(dummySessionId, newAudioClip);
+        CPPUNIT_ASSERT(newAudioClip->getId());
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, 
+                                            newAudioClip->getId()));
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 }
 
 
@@ -234,8 +302,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     
     try {
         audioClip = tsc->acquireAudioClip(dummySessionId, id2);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string     eMsg = "could not acquire audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -247,8 +314,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     
     try {
         tsc->releaseAudioClip(dummySessionId, audioClip);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string     eMsg = "could not release audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -257,8 +323,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     try {
         audioClip = tsc->acquireAudioClip(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent audio clip");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }
 }
 
@@ -276,8 +341,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     
     try {
         playlist = tsc->acquirePlaylist(dummySessionId, id1);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string     eMsg = "could not acquire playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -295,8 +359,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     string  savedTempFilePath = playlist->getUri()->substr(7);
     try {
         tsc->releasePlaylist(dummySessionId, playlist);
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
         std::string     eMsg = "could not release playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -312,7 +375,6 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     try {
         playlist = tsc->acquirePlaylist(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent playlist");
-    }
-    catch (XmlRpcException &e) {
+    } catch (XmlRpcException &e) {
     }  
 }

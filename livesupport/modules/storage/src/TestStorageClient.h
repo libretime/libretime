@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.22 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,8 +89,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST testStorage tempFiles CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.22 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.23 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -106,23 +106,45 @@ class TestStorageClient :
          *  The map type containing the playlists by their ids.
          */
         typedef std::map<const UniqueId::IdType, Ptr<Playlist>::Ref>
-                                                                PlaylistMap;
+                                                            PlaylistMapType;
 
         /**
          *  The map holding all contained playlists, by ids.
          */
-        PlaylistMap                 playlistMap;
+        PlaylistMapType             playlistMap;
+
+        /**
+         *  The type for the list of playlists which are currently being edited
+         */
+        typedef std::map<const UniqueId::IdType, Ptr<SessionId>::Ref>
+                                                            EditedPlaylistsType;
+
+        /**
+         *  The list of playlists which are currently being edited
+         */
+        EditedPlaylistsType         editedPlaylists;
 
         /**
          *  The map type containing the audio clips by their ids.
          */
         typedef std::map<const UniqueId::IdType, Ptr<AudioClip>::Ref>
-                                                                AudioClipMap;
+                                                            AudioClipMapType;
 
         /**
          *  The map holding all contained audio clips, by ids.
          */
-        AudioClipMap                audioClipMap;
+        AudioClipMapType            audioClipMap;
+
+        /**
+         *  The map type containing the URIs of the audio clips
+         */
+        typedef std::map<const UniqueId::IdType, Ptr<const std::string>::Ref>
+                                                            AudioClipUrisType;
+
+        /**
+         *  The map type containing the URIs of the audio clips
+         */
+        AudioClipUrisType           audioClipUris;
 
         /**
          *  The path where the temporary SMIL files are strored.
@@ -164,6 +186,19 @@ class TestStorageClient :
 
 
         /**
+         *  Create a new, empty, playlist.  Does not automatically open the
+         *  playlist for editing; for that, use editPlaylist() and
+         *  savePlaylist(). 
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @return the newly created playlist.
+         */
+        virtual Ptr<Playlist>::Ref
+        createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw ();
+
+
+        /**
          *  Tell if a playlist with a given id exists.
          *
          *  @param sessionId the session ID from the authentication client
@@ -178,7 +213,8 @@ class TestStorageClient :
 
 
         /**
-         *  Return a playlist with the specified id, to be displayed.
+         *  Return a playlist with the specified id to be displayed.
+         *  If the playlist is being edited, its last saved state is returned.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -193,7 +229,9 @@ class TestStorageClient :
 
 
         /**
-         *  Return a playlist with the specified id, to be edited.
+         *  Return a playlist with the specified id to be edited.
+         *  This puts a lock on the playlist, and nobody else can edit it
+         *  until we release it using savePlaylist().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -203,27 +241,36 @@ class TestStorageClient :
          */
         virtual Ptr<Playlist>::Ref
         editPlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<UniqueId>::Ref  id) const
+                     Ptr<UniqueId>::Ref  id)
                                                 throw (XmlRpcException);
 
 
         /**
          *  Save the playlist after editing.
+         *  Can only be called after we obtained a lock on the playlist using
+         *  editPlaylist(); this method releases the lock.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to save.
          */
         virtual void
         savePlaylist(Ptr<SessionId>::Ref sessionId,
-                     Ptr<Playlist>::Ref  playlist) const
+                     Ptr<Playlist>::Ref  playlist)
                                                 throw ();
 
 
         /**
          *  Acquire the resources for the playlist.
+         *  The last saved copy of the playlist is read, and a local copy
+         *  is created in SMIL format.  (A local copy is also created for
+         *  each sub-playlist contained in the playlist.)
+         *  The address of this local copy is
+         *  stored in the <code>uri</code> field of the playlist.  The SMIL
+         *  file can be played using the Helix client.
+         *  For each audio clip contained (directly or indirectly) in the
+         *  playlist, acquireAudioClip() is called
          *
-         *  The Playlist returned has a uri field (read using getUri())
-         *  which points to a playable SMIL file.  This URI is a random string
+         *  The URI of the SMIL file is a random string
          *  appended to the temp storage path read from the configuration file,
          *  plus a ".smil" extension.
          *
@@ -244,6 +291,11 @@ class TestStorageClient :
         /**
          *  Release the resources (audio clips, other playlists) used 
          *  in a playlist.
+         *  For each audio clip contained (directly or indirectly) in the
+         *  playlist, releaseAudioClip() is called, and the local copy of
+         *  the playlist (and sub-playlists, if any) is removed.
+         *  The <code>uri</code> field of the playlist is erased (set to
+         *  a null pointer).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
@@ -257,6 +309,9 @@ class TestStorageClient :
 
         /**
          *  Delete a playlist with the specified id.
+         *  Will refuse to delete the playlist if it is being edited (i.e., 
+         *  has been opened with editPlaylist() but has not yet been released
+         *  with savePlaylist()).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
@@ -271,23 +326,13 @@ class TestStorageClient :
 
         /**
          *  Return a list of all playlists in the playlist store.
+         *  This is for testing only; will be replaced by a search method.
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw ();
-
-
-        /**
-         *  Create a new playlist.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return the newly created playlist.
-         */
-        virtual Ptr<Playlist>::Ref
-        createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw ();
 
 
@@ -305,7 +350,10 @@ class TestStorageClient :
                                                 throw ();
 
         /**
-         *  Return an audio clip with the specified id.
+         *  Return an audio clip with the specified id to be displayed.
+         *  The audio clip returned contains all the metadata (title, author, 
+         *  etc.) available for the audio clip, but no binary sound file.
+         *  If you want to play the audio clip, use acquireAudioClip().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
@@ -320,6 +368,15 @@ class TestStorageClient :
 
         /**
          *  Store an audio clip.
+         *  The audio clip is expected to have valid <code>title</code>,
+         *  <code>playlength</code> and <code>uri</code> fields, the latter
+         *  containing the URI of a binary sound file.
+         *  
+         *  If the audio clip does not have
+         *  an ID field (i.e., <code>audioClip->getId()</code> is a null 
+         *  pointer), one will be generated, and <code>audioClip->getId()</code>
+         *  will contain a valid UniqueId after the method returns.
+         *  If the audio clip had an ID already, then it remains unchanged.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.
@@ -333,9 +390,14 @@ class TestStorageClient :
 
         /**
          *  Acquire the resources for the audio clip with the specified id.
+         *  The <code>uri</code> field of the audio clip returned by the
+         *  method points to a binary sound file playable by the Helix client.
+         *  This binary sound file can be randomly accessed.
          *
-         *  Returns an AudioClip instance with a valid uri field, which points
-         *  to the binary sound file.
+         *  The returned audio clip also contains a <code>token</code> field
+         *  which identifies it to the storage server; this is used by
+         *  releaseAudioClip().
+         *
          *  Assumes URIs in the config file are relative paths prefixed by
          *  "file:"; e.g., "file:var/test1.mp3".
          *
@@ -354,6 +416,9 @@ class TestStorageClient :
 
         /**
          *  Release the resource (sound file) used by an audio clip.
+         *  After the call to this method, the binary sound file is no longer
+         *  accessible, and the <code>uri</code> and <code>token</code> fields
+         *  of the audioClip are erased (set to null pointers).
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the id of the audio clip to release.
@@ -382,6 +447,7 @@ class TestStorageClient :
 
         /**
          *  Return a list of all audio clips in the playlist store.
+         *  This is for testing only; will be replaced by a search method.
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.

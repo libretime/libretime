@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/UniqueId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,8 +59,8 @@ namespace Core {
 /**
  *  A class representing globally unique identifiers.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.6 $
  */
 class UniqueId
 {
@@ -153,6 +153,19 @@ class UniqueId
         operator==(const UniqueId & otherId) const          throw ()
         {
             return this->id == otherId.id;
+        }
+
+        /**
+         *  Compare this is with an other one.
+         *
+         *  @param otherId the other unqiue id to compare to.
+         *  @return true if this an otherId do not have the same ID value,
+         *          false otherwise.
+         */
+        bool
+        operator!=(const UniqueId & otherId) const          throw ()
+        {
+            return this->id != otherId.id;
         }
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,6 +118,27 @@ static const std::string    defaultPrefixUri ="http://www.streamonthefly.org/";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
+ *  Copy constructor.
+ *----------------------------------------------------------------------------*/
+AudioClip :: AudioClip(const AudioClip & otherAudioClip)   throw ()
+                        : Playable(AudioClipType)
+{
+    this->id            = otherAudioClip.id;
+    this->title         = otherAudioClip.title;
+    this->playlength    = otherAudioClip.playlength;
+    this->uri           = otherAudioClip.uri;
+    this->token         = otherAudioClip.token;
+
+    if (otherAudioClip.xmlAudioClip) {
+        xmlAudioClip.reset(new xmlpp::Document);
+        xmlAudioClip->create_root_node_by_import(
+                        otherAudioClip.xmlAudioClip->get_root_node(),
+                        true);     // true == recursive
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Test constructor without title.
  *----------------------------------------------------------------------------*/
 AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
@@ -137,6 +158,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
                                         to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
+
 
 /*------------------------------------------------------------------------------
  *  Test constructor with title.
