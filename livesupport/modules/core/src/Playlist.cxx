@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,12 +106,16 @@ Playlist :: configure(const xmlpp::Element    & element)
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
-
+    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+                                                 attribute->get_value() ));
+    metadata["dcterms:extent"] = playlengthString;
+    
     if ((attribute = element.get_attribute(titleAttrName))) {
         title.reset(new const Glib::ustring(attribute->get_value()));
     } else {
         title.reset(new const Glib::ustring(""));
     }
+    metadata["dc:title"] = title;
 
     xmlpp::Node::NodeList  childNodes 
                            = element.get_children(elementListAttrName);

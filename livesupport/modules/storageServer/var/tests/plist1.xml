@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<smil>
- <body>
-  <seq>
-   <audio src="gunid:///123456789abcdef1"/>
-   <audio src="gunid:///123456789abcdef2"/>
-  </seq>
- </body>
-</smil>
+<playlist id="1" playlength="00:00:23.000" 
+          title="My First Playlist">
+    <playlistElement id="101"    relativeOffset="0" >
+        <audioClip   id="10001"  playlength="00:00:11.000" 
+                     title="one" />
+    </playlistElement>
+    <playlistElement id="102"    relativeOffset="00:00:11.000000" >
+        <audioClip   id="10002"  playlength="00:00:12.000000" 
+                        title="two" />
+    </playlistElement>
+    <metadata
+      xmlns="http://www.streamonthefly.org/"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dcterms="http://purl.org/dc/terms/"
+      xmlns:xbmf="http://www.streamonthefly.org/xbmf"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     >
+        <dc:title>My First Playlist</dc:title>
+        <dc:creator>Me, myself and I</dc:creator>
+        <dcterms:extent>00:00:23.000000</dcterms:extent>
+    </metadata>
+</playlist>

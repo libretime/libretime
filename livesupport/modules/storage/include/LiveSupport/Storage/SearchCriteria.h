@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/Attic/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,8 @@
 
 namespace LiveSupport {
 namespace Storage {
+
+class TestStorageClient;        // forward declaration of friend class
 
 /* ================================================================ constants */
 
@@ -143,6 +145,12 @@ class SearchCriteria
             return returnValue;
         }
 
+        /**
+         *  Give access of private members to the TestStorageClient.
+         */
+        friend class Storage::TestStorageClient;
+
+
     public:
 
         /**
@@ -158,7 +166,7 @@ class SearchCriteria
                        : limit(0), offset(0)
         {
             setType(type);
-            setOperator(logicalOperator);
+            setLogicalOperator(logicalOperator);
         }
 
         /**
@@ -202,7 +210,7 @@ class SearchCriteria
          *  @param logicalOperator either "and" or "or"
          */
         void
-        setOperator(const std::string & logicalOperator)
+        setLogicalOperator(const std::string & logicalOperator)
                                                 throw(std::invalid_argument)
         {
             std::string  lowerCaseOp = lowerCase(logicalOperator);

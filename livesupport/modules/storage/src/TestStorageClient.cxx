@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -199,8 +199,12 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
  *----------------------------------------------------------------------------*/
 Ptr<UniqueId>::Ref
 TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
-                                                throw ()
+                                                throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     // generate a new UniqueId -- TODO: fix UniqueId to make sure
     //     this is really unique; not checked here!
     Ptr<UniqueId>::Ref       playlistId = 
@@ -224,8 +228,12 @@ TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 const bool
 TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id) const
-                                                                throw ()
+                                                throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     return playlistMap.count(id->getId()) == 1 ? true : false;
 }
  
@@ -238,6 +246,10 @@ TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     Ptr<Playlist>::Ref  playlist;
 
     EditedPlaylistsType::const_iterator
@@ -266,6 +278,10 @@ TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                   Ptr<UniqueId>::Ref  id)
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     if (editedPlaylists.find(id->getId()) != editedPlaylists.end()) {
         throw XmlRpcException("playlist is already being edited");
     }
@@ -287,6 +303,10 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                                   Ptr<Playlist>::Ref  playlist)
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     if (! playlist->getToken()) {
         throw XmlRpcException("savePlaylist() called without editPlaylist()");
     }
@@ -327,6 +347,10 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     PlaylistMapType::const_iterator     playlistMapIt 
                                         = playlistMap.find(id->getId());
 
@@ -416,6 +440,10 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                                      Ptr<Playlist>::Ref  playlist) const
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     if (! playlist->getUri()) {
         throw XmlRpcInvalidArgumentException("playlist URI not found");
     }
@@ -474,6 +502,10 @@ TestStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id)
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     if (editedPlaylists.find(id->getId()) != editedPlaylists.end()) {
         throw XmlRpcException("playlist is being edited");
     }
@@ -491,8 +523,12 @@ TestStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
 TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId)
                                                                         const
-                                                throw ()
+                                                throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     PlaylistMapType::const_iterator         it = playlistMap.begin();
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
                          playlistVector (new std::vector<Ptr<Playlist>::Ref>);
@@ -512,8 +548,12 @@ TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId)
 const bool
 TestStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id) const
-                                                throw ()
+                                                throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     return audioClipMap.count(id->getId()) == 1 ? true : false;
 }
  
@@ -526,6 +566,10 @@ TestStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
                                   Ptr<UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     AudioClipMapType::const_iterator   it = audioClipMap.find(id->getId());
 
     if (it == audioClipMap.end()) {
@@ -545,6 +589,10 @@ TestStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<AudioClip>::Ref audioClip)
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     if (!audioClip->getUri()) {
         throw XmlRpcException("audio clip has no URI field");
     }
@@ -572,6 +620,10 @@ TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
                                       Ptr<UniqueId>::Ref  id) const
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     AudioClipUrisType::const_iterator   it = audioClipUris.find(id->getId());
     
     if (it == audioClipUris.end()) {
@@ -606,6 +658,10 @@ TestStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                                       Ptr<AudioClip>::Ref audioClip) const
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     if (!audioClip->getUri()) {
         throw XmlRpcException("audio clip does not have a URI field");
     }
@@ -623,6 +679,10 @@ TestStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id)
                                                 throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     // erase() returns the number of entries found & erased
     if (!audioClipMap.erase(id->getId())) {
         throw XmlRpcException("no such audio clip");
@@ -636,8 +696,12 @@ TestStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
 TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
                                                                         const
-                                                throw ()
+                                                throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
     AudioClipMapType::const_iterator        it = audioClipMap.begin();
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
                         audioClipVector (new std::vector<Ptr<AudioClip>::Ref>);
@@ -648,5 +712,166 @@ TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
     }
 
     return audioClipVector;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Search for audio clips or playlists.
+ *----------------------------------------------------------------------------*/
+int
+TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
+                            Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException)
+{
+    if (!sessionId) {
+        throw XmlRpcException("missing session ID argument");
+    }
+
+    int     counter = 0;
+    int     first   = searchCriteria->offset;
+    int     last;
+    if (searchCriteria->limit) {
+        last = searchCriteria->offset + searchCriteria->limit;
+    } else {
+        last = 0;
+    }
+
+    audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
+    playlistIds.reset(new  std::vector<Ptr<UniqueId>::Ref>);
+
+    if (searchCriteria->type == "audioclip" || searchCriteria->type == "all") {
+        AudioClipMapType::const_iterator    it = audioClipMap.begin();
+        while (it != audioClipMap.end()) {
+            if (matchesCriteria(it->second, searchCriteria)) {
+                if (counter >= first) {
+                    audioClipIds->push_back(it->second->getId());
+                }
+                ++counter;
+                if (last && counter >= last) {
+                    return (counter - first);
+                }
+            }
+            ++it;
+        }
+    }
+
+    if (searchCriteria->type == "playlist" || searchCriteria->type == "all") {
+        PlaylistMapType::const_iterator    it = playlistMap.begin();
+        while (it != playlistMap.end()) {
+            if (matchesCriteria(it->second, searchCriteria)) {
+                if (counter >= first) {
+                    playlistIds->push_back(it->second->getId());
+                }
+                ++counter;
+                if (last && counter >= last) {
+                    return (counter - first);
+                }
+            }
+            ++it;
+        }
+    }
+    
+    return (counter - first);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  See if the Playable instance satisfies the search criteria
+ *----------------------------------------------------------------------------*/
+bool 
+TestStorageClient :: matchesCriteria(Ptr<Playable>::Ref         playable,
+                                     Ptr<SearchCriteria>::Ref   criteria)
+                                                throw (XmlRpcException)
+{
+    bool    vetoValue;
+    if (criteria->logicalOperator == "and") {
+        vetoValue = false;
+    } else if (criteria->logicalOperator == "or") {
+        vetoValue = true;
+    } else {
+        std::string eMsg = "unknown logical operator: ";
+        eMsg += criteria->type;
+        throw XmlRpcException(eMsg);
+    }
+    
+    bool    foundAVetoValue = false;
+    
+    SearchCriteria::SearchConditionListType::const_iterator 
+                                    it = criteria->searchConditions.begin();
+    while (it != criteria->searchConditions.end()) {
+        if (satisfiesCondition(playable, *it) == vetoValue) {
+            foundAVetoValue = true;
+            break;
+        }
+        ++it;
+    }
+    
+    if (foundAVetoValue) {
+        return vetoValue;
+    } else {
+        return !vetoValue;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  See if the Playable instance satisfies a single condition
+ *----------------------------------------------------------------------------*/
+bool 
+TestStorageClient :: satisfiesCondition(
+                        Ptr<Playable>::Ref                          playable,
+                        const SearchCriteria::SearchConditionType & condition)
+                                                throw (XmlRpcException)
+{
+    std::string             name, nameSpace;
+    separateNameAndNameSpace(condition.key, name, nameSpace);
+    
+    Ptr<Glib::ustring>::Ref value = playable->getMetadata(name, nameSpace);
+    if (!value) {
+        return false;
+    }
+    
+    std::string     op = condition.comparisonOperator;
+
+    if (op == "=") {
+        return  (*value == condition.value);
+    } else if (op == "partial") {
+        return  (value->find(condition.value) != std::string::npos);
+    } else if (op == "prefix") {
+        return  (value->find(condition.value) == 0);
+    } else if (op == "<") {
+        return (*value < condition.value);
+    } else if (op == "<=") {
+        return (*value <= condition.value);
+    } else if (op == ">") {
+        return (*value > condition.value);
+    } else if (op == ">=") {
+        return (*value >= condition.value);
+    } else {
+        std::string eMsg = "unknown comparison operator: ";
+        eMsg += op;
+        throw XmlRpcException(eMsg);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Separate a key into the metadata name and its namespace
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport::Storage :: separateNameAndNameSpace(const std::string & key,
+                                                 std::string &       name,
+                                                 std::string &       nameSpace)
+                                                            throw ()
+{
+    unsigned int    colonPosition = key.find(':');
+
+    if (colonPosition != std::string::npos) {               // there is a colon
+        nameSpace   = key.substr(0, colonPosition);
+        name        = key.substr(colonPosition+1);
+    } else {                                                // no colon found
+        nameSpace   = "";
+        name        = key;
+    }
 }
 

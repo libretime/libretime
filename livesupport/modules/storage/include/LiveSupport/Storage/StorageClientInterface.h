@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,8 @@
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/XmlRpcException.h"
 
+#include "LiveSupport/Storage/SearchCriteria.h"
+
 
 namespace LiveSupport {
 namespace Storage {
@@ -65,7 +67,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class StorageClientInterface
 {
@@ -363,6 +365,45 @@ class StorageClientInterface
         getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
                                                 throw (XmlRpcException)
                                                                         = 0;
+
+        /**
+         *  Search for audio clips or playlists.  The results can be read
+         *  using getAudioClipIds() and getPlaylistIds().
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param searchCriteria an object containing the search criteria
+         *  @return the number of items found.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual int
+        search(Ptr<SessionId>::Ref      sessionId,
+               Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Return the list of audio clip IDs found by the search method.
+         *
+         *  (Or the list of audio clip IDs returned by the reset() method
+         *  in WebStorageClient -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getAudioClipIds(void)                   throw ()                = 0;
+
+
+        /**
+         *  Return the list of playlist IDs found by the search method.
+         *
+         *  (Or the list of playlist IDs returned by the reset() method
+         *  in WebStorageClient -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getPlaylistIds(void)                    throw ()                = 0;
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -132,6 +132,7 @@ TestStorageClientTest :: firstTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
+    CPPUNIT_ASSERT(playlist->getId());
     CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
 }
 
@@ -238,7 +239,7 @@ TestStorageClientTest :: audioClipTest(void)
     }
     CPPUNIT_ASSERT(audioClip->getId()->getId() == id02->getId());
     CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
-                                                   == 30*60);
+                                                   == 12);
 
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector;
     try {
@@ -378,3 +379,68 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     } catch (XmlRpcException &e) {
     }  
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Search test.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: searchTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
+                                    "audioClip", 
+                                    "dcterms:extent", "=", "00:00:11.000000"));
+
+        int numberFound = tsc->search(dummySessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 2);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->size() == 2);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->at(0)->getId() == 0x10001);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->at(1)->getId() == 0x10003);
+        CPPUNIT_ASSERT(tsc->getPlaylistIds()->size() == 0);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (Core::XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "or"));
+        criteria->addCondition("dcterms:extent", ">",  "00:00:11.000000");
+        criteria->addCondition("dc:title", "prefix", "Playlist");
+        int numberFound = tsc->search(dummySessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 3);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->size() == 1);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->at(0)->getId() == 0x10002);
+        CPPUNIT_ASSERT(tsc->getPlaylistIds()->size() == 2);
+        CPPUNIT_ASSERT(tsc->getPlaylistIds()->at(0)->getId()  == 1);
+        CPPUNIT_ASSERT(tsc->getPlaylistIds()->at(1)->getId()  == 2);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (Core::XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+        criteria->setType("all");
+        criteria->addCondition("dc:title", "partial",  "t");
+        criteria->setLimit(2);
+        criteria->setOffset(1);
+        int numberFound = tsc->search(dummySessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 2);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->size() == 1);
+        CPPUNIT_ASSERT(tsc->getAudioClipIds()->at(0)->getId() == 0x10003);
+        CPPUNIT_ASSERT(tsc->getPlaylistIds()->size() == 1);
+        CPPUNIT_ASSERT(tsc->getPlaylistIds()->at(0)->getId()  == 1);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (Core::XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+

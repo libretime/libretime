@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,11 +42,7 @@
 
 #include <stdexcept>
 
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/UniqueId.h"
-#include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 
 
@@ -90,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -151,6 +147,34 @@ class TestStorageClient :
          */
         std::string                 localTempStorage;
 
+        /**
+         *  A vector containing the unique IDs of the audio clips returned 
+         *  by search().
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  audioClipIds;
+
+        /**
+         *  A vector containing the unique IDs of the playlists returned 
+         *  by search().
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
+
+        /**
+         *  Auxilliary method used by search().
+         */
+        bool 
+        matchesCriteria(Ptr<Playable>::Ref         playable,
+                        Ptr<SearchCriteria>::Ref   criteria)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Auxilliary method used by matchesCriteria().
+         */
+        bool 
+        satisfiesCondition(
+                        Ptr<Playable>::Ref                          playable,
+                        const SearchCriteria::SearchConditionType & condition)
+                                                throw (XmlRpcException);
 
     public:
         /**
@@ -195,7 +219,7 @@ class TestStorageClient :
          */
         virtual Ptr<UniqueId>::Ref
         createPlaylist(Ptr<SessionId>::Ref sessionId)
-                                                throw ();
+                                                throw (XmlRpcException);
 
 
         /**
@@ -209,7 +233,7 @@ class TestStorageClient :
         virtual const bool
         existsPlaylist(Ptr<SessionId>::Ref  sessionId,
                        Ptr<UniqueId>::Ref   id) const
-                                                throw ();
+                                                throw (XmlRpcException);
 
 
         /**
@@ -344,7 +368,7 @@ class TestStorageClient :
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw ();
+                                                throw (XmlRpcException);
 
 
         /**
@@ -358,7 +382,7 @@ class TestStorageClient :
         virtual const bool
         existsAudioClip(Ptr<SessionId>::Ref sessionId,
                         Ptr<UniqueId>::Ref  id) const
-                                                throw ();
+                                                throw (XmlRpcException);
 
         /**
          *  Return an audio clip with the specified id to be displayed.
@@ -465,7 +489,57 @@ class TestStorageClient :
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
         getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
-                                                throw ();
+                                                throw (XmlRpcException);
+
+
+        /**
+         *  Search for audio clips or playlists.  The results can be read
+         *  using getAudioClipIds() and getPlaylistIds().
+         *  
+         *  If an audio clip or playlist does not have a metadata field X,
+         *  it does not match any condition about field X.  In particular,
+         *  a search for ("X", "partial", "") returns all records
+         *  which contain a metadata field X.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param searchCriteria an object containing the search criteria
+         *  @return the number of items found.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual int
+        search(Ptr<SessionId>::Ref      sessionId,
+               Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException);
+
+        /**
+         *  Return the list of audio clip IDs found by the search method.
+         *
+         *  (Or the list of audio clip IDs returned by the reset() method
+         *  -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getAudioClipIds(void)                   throw ()
+        {
+            return audioClipIds;
+        }
+
+
+        /**
+         *  Return the list of playlist IDs found by the search method.
+         *
+         *  (Or the list of playlist IDs returned by the reset() method
+         *  -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getPlaylistIds(void)                    throw ()
+        {
+            return playlistIds;
+        }
 };
 
 
@@ -474,8 +548,16 @@ class TestStorageClient :
 
 /* ====================================================== function prototypes */
 
+        /**
+         *  Auxilliary method used by satisfiesCondition().
+         */
+        void
+        separateNameAndNameSpace(const std::string & key,
+                                 std::string &       name,
+                                 std::string &       nameSpace)
+                                                throw ();
 
-} // namespace Core
+} // namespace Storage
 } // namespace LiveSupport
 
 #endif // TestStorageClient_h

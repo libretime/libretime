@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -240,13 +240,17 @@ AudioClip :: configure(const xmlpp::Element  & element)
 
     if (!playlength
             && (attribute = element.get_attribute(playlengthAttrName))) {
-        playlength.reset(new time_duration(
-                                duration_from_string(attribute->get_value())));
+        playlength.reset(new time_duration(duration_from_string(
+                                                     attribute->get_value() )));
+        Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
+                                                     attribute->get_value() ));
+        setMetadata(playlengthString, extentElementName, extentElementPrefix);
     }
 
     if (!title
             && (attribute = element.get_attribute(titleAttrName))) {
         title.reset(new const Glib::ustring(attribute->get_value()));
+        setMetadata(title, titleElementName, titleElementPrefix);
     }
 
     if (!uri 
@@ -326,10 +330,6 @@ AudioClip :: configure(const xmlpp::Element  & element)
         throw std::invalid_argument(eMsg);
     }
     
-    Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
-                                             to_simple_string(*playlength) ));
-    setMetadata(playlengthString, extentElementName, extentElementPrefix);
-
     if (!title) {
         std::string eMsg = "missing attribute ";
         eMsg += titleAttrName;
@@ -337,8 +337,6 @@ AudioClip :: configure(const xmlpp::Element  & element)
         eMsg += titleElementPrefix + ":" + titleElementName;
         throw std::invalid_argument(eMsg);
     }
-    
-    setMetadata(title, titleElementName, titleElementPrefix);
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,11 +42,8 @@
 
 #include <stdexcept>
 
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 
 
@@ -99,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -161,6 +158,19 @@ class WebStorageClient :
                            Ptr<const std::string>::Ref& url,
                            Ptr<const std::string>::Ref& token)
                                                 throw (XmlRpcException);
+
+        /**
+         *  A vector containing the unique IDs of the audio clips returned 
+         *  by reset() (for testing) or by search().
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  audioClipIds;
+
+        /**
+         *  A vector containing the unique IDs of the playlists returned 
+         *  by reset() (for testing) or by search().
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  playlistIds;
+
 
     public:
         /**
@@ -506,18 +516,6 @@ class WebStorageClient :
 
 
         /**
-         *  A vector containing the unique IDs of the audio clips in the 
-         *  storage.  Set by reset().  Used for testing.
-         */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  testAudioClipIds;
-
-        /**
-         *  A vector containing the unique IDs of the playlists in the 
-         *  storage.  Set by reset().  Used for testing.
-         */
-        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  testPlaylistIds;
-
-        /**
          *  Reset the storage to its initial state.  
          *  Calls locstor.resetStorage, and puts the unique IDs returned
          *  into testAudioClipIds and testPlaylistIds.  Used for testing.
@@ -527,6 +525,51 @@ class WebStorageClient :
         void
         reset(void)
                                                 throw (XmlRpcException);
+
+
+        /**
+         *  Search for audio clips or playlists.  The results can be read
+         *  using getAudioClipIds() and getPlaylistIds().
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param searchCriteria an object containing the search criteria
+         *  @return the number of items found.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual int
+        search(Ptr<SessionId>::Ref      sessionId,
+               Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException);
+
+        /**
+         *  Return the list of audio clip IDs found by the search method.
+         *
+         *  (Or the list of audio clip IDs returned by the reset() method
+         *  -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getAudioClipIds(void)                   throw ()
+        {
+            return audioClipIds;
+        }
+
+
+        /**
+         *  Return the list of playlist IDs found by the search method.
+         *
+         *  (Or the list of playlist IDs returned by the reset() method
+         *  -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getPlaylistIds(void)                    throw ()
+        {
+            return playlistIds;
+        }
 };
 
 
