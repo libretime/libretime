@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/include/LiveSupport/SchedulerClient/SchedulerClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  An interface to access the scheduler daemon as a client.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SchedulerClientInterface
 {
@@ -82,13 +82,10 @@ class SchedulerClientInterface
         /**
          *  Return the current time at the scheduler server.
          *
-         *  @param sessionId a sessionId previously acquired by successfully
-         *         authenticating with the authentication module
          *  @return the current time at the scheduler server.
          */
         virtual Ptr<const boost::posix_time::ptime>::Ref
-        getSchedulerTime(Ptr<SessionId>::Ref    sessionId)
-                                                            throw ()
+        getSchedulerTime(void)                      throw ()
                                                                     = 0;
 };
 

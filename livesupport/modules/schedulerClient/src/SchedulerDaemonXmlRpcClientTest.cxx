@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -169,7 +169,7 @@ void
 SchedulerDaemonXmlRpcClientTest :: getSchedulerTimeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<const ptime>::Ref   time = schedulerClient->getSchedulerTime(sessionId);
+    Ptr<const ptime>::Ref   time = schedulerClient->getSchedulerTime();
     Ptr<const ptime>::Ref   now  = TimeConversion::now();
 
     CPPUNIT_ASSERT(time.get());

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -158,8 +158,7 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)                 throw ()
  *  Get the current time from the server.
  *----------------------------------------------------------------------------*/
 Ptr<const ptime>::Ref
-SchedulerDaemonXmlRpcClient :: getSchedulerTime(
-                                    Ptr<SessionId>::Ref     sessionId)
+SchedulerDaemonXmlRpcClient :: getSchedulerTime(void)
                                                                     throw ()
 {
     XmlRpcValue             xmlRpcParams;
@@ -172,7 +171,6 @@ SchedulerDaemonXmlRpcClient :: getSchedulerTime(
                                          false);
 
     xmlRpcResult.clear();
-    xmlRpcParams["sessionId"] = sessionId->getId();
     xmlRpcClient.execute("getSchedulerTime", xmlRpcParams, xmlRpcResult);
 
     if (xmlRpcResult.hasMember("schedulerTime")) {
