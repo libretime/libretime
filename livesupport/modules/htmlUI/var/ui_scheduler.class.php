@@ -85,7 +85,7 @@ class uiScheduler extends uiCalendar
     function copyPlFromSP()
     {
         foreach ($this->Base->SCRATCHPAD->get() as $val) {
-            if (strtolower($val['type'])=='playlist')
+            if (strtolower($val['type'])=='playlist' && $val['id']!=$this->Base->PLAYLIST->activeId)
                 $this->playlists[] = $val;
         }
     }
