@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
 #endif
 
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "TestAuthenticationClient.h"
 #include "LiveSupport/Authentication/WebAuthenticationClient.h"
 
 using namespace LiveSupport::Core;
@@ -92,8 +93,20 @@ AuthenticationClientFactory :: configure(const xmlpp::Element & element)
 
     authenticationClient.reset();
 
-    // try to look for an WebAuthenticationClient configuration element
+    // try to look for a TestAuthenticationClient configuration element
     xmlpp::Node::NodeList   nodes =
+        element.get_children(TestAuthenticationClient::getConfigElementName());
+    if (nodes.size() >= 1) {
+        const xmlpp::Element  * configElement =
+                         dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
+        Ptr<TestAuthenticationClient>::Ref tac(new TestAuthenticationClient());
+        tac->configure(*configElement);
+        authenticationClient = tac;
+        return;
+    }
+
+    // try to look for a WebAuthenticationClient configuration element
+    nodes =
         element.get_children(WebAuthenticationClient::getConfigElementName());
     if (nodes.size() >= 1) {
         const xmlpp::Element  * configElement =
@@ -101,11 +114,9 @@ AuthenticationClientFactory :: configure(const xmlpp::Element & element)
         Ptr<WebAuthenticationClient>::Ref   wac(new WebAuthenticationClient());
         wac->configure(*configElement);
         authenticationClient = wac;
+        return;
     }
 
-    if (!authenticationClient) {
-        throw std::invalid_argument("no authentication client factories "
-                                                                "to configure");
-    }
+    throw std::invalid_argument("no authentication client configuration found");
 }
 
