@@ -253,7 +253,7 @@ switch($_REQUEST['act']){
     default:
         $uiHandler->_retMsg("Unknown method: $1", $_REQUEST["act"]);
         $uiHandler->redirUrl = UI_BROWSER;
-        if ($_REQUEST['was_popup'])
+        if ($_REQUEST['is_popup'])
              $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';
 }
 if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;

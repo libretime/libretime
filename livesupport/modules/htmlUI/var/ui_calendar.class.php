@@ -62,7 +62,8 @@ class uiCalendar
                                 'isFirst'       => $Day->isFirst(),
                                 'isLast'        => $Day->isLast(),
                                 'isSelected'    => $Day->isSelected(),
-                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE,
+                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] && $Day->thisMonth()==$this->curr['month'] ? TRUE : FALSE,
+                                'isToday'       => $Day->thisDay()==strftime("%d") && $Day->thisMonth()==strftime("%m") ? TRUE : FALSE,
                                 'timestamp'     => $Day->thisDay(TRUE)
                              );
         }
@@ -86,6 +87,7 @@ class uiCalendar
                                 'label'         => $this->_getDayName($Day),
                                 'isSelected'    => $Day->isSelected(),
                                 'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE,
+                                'isToday'       => $Day->thisDay()==strftime("%d") && $Day->thisMonth()==strftime("%m") ? TRUE : FALSE,
                                 'timestamp'     => $Day->thisDay(TRUE)
                             );
         }
@@ -131,7 +133,7 @@ class uiCalendar
                                 'hour'         => $Min->thisHour(),
                                 'minute'       => $Min->thisMinute(),
                                 'isSelected'   => $Min->isSelected(),
-                                'isCurrent'    => $Min->thisDay()==$this->curr['day'] ? TRUE : FALSE
+                                'isCurrent'    => $Min->thisDay()==$this->curr['hour'] ? TRUE : FALSE
                             );
         }
     }

@@ -3,6 +3,12 @@
 {assign var="_divisor" value=70}
 
 <table border=1 bgcolor="#97bacf">
+    <tr>
+        <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=--')"><<</a></th>
+        <th colspan="3" {if $SCHEDULER->curr.isToday} bgcolor="grey"{/if}>{$SCHEDULER->curr.dayname}, {$SCHEDULER->curr.year}-{$SCHEDULER->curr.month}-{$SCHEDULER->curr.day}</th>
+        <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=%2B%2B')">>></a></th>
+    </tr>
+
 {foreach from=$SCHEDULER->Day item="_Hour"}
     {assign var="_year"  value=$_Hour.year}
     {assign var="_month" value=$_Hour.month}
@@ -14,7 +20,7 @@
             <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&hour={$_Hour.hour}')">{$_Hour.hour}</a>
         </td>
 
-        {if !$_one}
+        {if !$_passed}
             <td rowspan="24">
                 {assign var="_oneday" value=$SCHEDULER->getDayTiming($SCHEDULER->curr.year, $SCHEDULER->curr.month, $SCHEDULER->curr.day)}
                 <table border="0" cellspacing="0" cellpadding="0">
@@ -30,7 +36,7 @@
                 </table>
 
             </td>
-            {assign var="_one" value=TRUE}
+            {assign var="_passed" value=TRUE}
         {/if}
 
         {foreach from=$_usage item="_entry"}

@@ -33,9 +33,25 @@
      {
         var screenX;
         var screenY;
-        url = url + '&was_popup=1';
-        screenX = (window.screenX + window.innerWidth/2 - width/2);
-        screenY = (window.screenY + window.innerHeight/2 - height/2);
+        var Xpos;
+        var Ypos;
+        var Pwidth;
+        var Pheight;
+
+        if (ie5) {
+            Xpos     = window.screenLeft;
+            Ypos     = window.screenTop;
+            Pwidth   = document.body.clientWidth;
+            Pheight  = document.body.clientHeight;
+        } else {
+            Xpos     = window.screenX;
+            Ypos     = window.screenY;
+            Pwidth   = window.innerWidth;
+            Pheight  = window.innerHeight;
+        } 
+        url = url + '&is_popup=1';
+        screenX = (Xpos + Pwidth/2  - width/2);
+        screenY = (Ypos + Pheight/2 - height/2);
         arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
 
         popupwin = window.open(url, name, arg);
@@ -44,7 +60,7 @@
 
      function hpopup(url, name)                 //hidden popup!       'width=1, height=1'
      {
-        url = url + '&was_popup=1';
+        url = url + '&is_popup=1';
         popupwin = window.open(url, name);
         //window.parent.focus();
      }

@@ -7,18 +7,20 @@
 
 <tr>
     <td rowspan="3" valign="top"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=--')"><<</a> </td>
-    {foreach from=$SCHEDULER->Week item="_Day"}
-        <th colspan="2" width="100"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.label.full}</a></th>
-    {/foreach}
+
+{foreach from=$SCHEDULER->Week item="_Day"}
+    <th colspan="2" width="100"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.label.full}</a></th>
+{/foreach}
+
     <td rowspan="3" valign="top"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=%2B%2B')">>></a></td>
 </tr>
 
 <tr>
-    {foreach from=$SCHEDULER->Week item="_Day"}
-        <td colspan="2">
-            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')"><b>{$_Day.day}</b></a>
-        </td>
-    {/foreach}
+{foreach from=$SCHEDULER->Week item="_Day"}
+    <td colspan="2" {if $_Day.isToday} bgcolor="grey"{/if}>
+        <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')"><b>{$_Day.day}</b></a>
+    </td>
+{/foreach}
 </tr>
 
 <tr>

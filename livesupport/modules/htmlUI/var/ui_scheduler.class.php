@@ -6,10 +6,12 @@ class uiScheduler extends uiCalendar
         $this->curr   =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
         if (!is_array($this->curr)) {
             $this->curr['view']     = 'month';
-            $this->curr['year']     = date("Y");
-            $this->curr['month']    = date("m");
-            $this->curr['day']      = date('d');
-            $this->curr['hour']     = date('H');
+            $this->curr['year']     = strftime("%Y");
+            $this->curr['month']    = strftime("%m");
+            $this->curr['day']      = strftime("%d");
+            $this->curr['hour']     = strftime("%H");
+            $this->curr['dayname']  = strftime("%A");
+            $this->curr['isToday']  = TRUE;
         }
 
         $this->Base =& $uiBase;
@@ -30,14 +32,15 @@ class uiScheduler extends uiCalendar
         extract($arr);
 
         if (isset($view))  $this->curr['view'] = $view;
-        if (isset($year))  $this->curr['year'] = $year;
-        if (isset($day))   $this->curr['day']  = sprintf('%02d', $day);
-        if (isset($hour))  $this->curr['hour'] = sprintf('%02d', $hour);
-        if (is_numeric($month))
-                    $this->curr['month'] = sprintf('%02d', $month);
+
+        if (is_numeric($year))  $this->curr['year']  = $year;
+        if (is_numeric($month)) $this->curr['month'] = sprintf('%02d', $month);
+        if (is_numeric($day))   $this->curr['day']   = sprintf('%02d', $day);
+        if (is_numeric($hour))  $this->curr['hour']  = sprintf('%02d', $hour);
 
         $stampNow    = $this->_datetime2timestamp($this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$this->curr['hour'].':00:00');
         $stampTarget = $stampNow;
+
         if ($month=='++')
             $stampTarget = strtotime("+1 month", $stampNow);
         if ($month=='--')
@@ -46,6 +49,11 @@ class uiScheduler extends uiCalendar
             $stampTarget = strtotime("+1 week", $stampNow);
         if ($week=='--')
             $stampTarget = strtotime("-1 week", $stampNow);
+        if ($day=='++')
+            $stampTarget = strtotime("+1 day", $stampNow);
+        if ($day=='--')
+            $stampTarget = strtotime("-1 day", $stampNow);
+
         if ($today)
             $stampTarget = time();
 
@@ -53,7 +61,12 @@ class uiScheduler extends uiCalendar
         $this->curr['month']    = strftime("%m", $stampTarget);
         $this->curr['day']      = strftime("%d", $stampTarget);
         $this->curr['hour']     = strftime("%H", $stampTarget);
+        $this->curr['dayname']  = strftime("%A", $stampTarget);
 
+        if ($this->curr['year'] == strftime("%Y") && $this->curr['month'] == strftime("%m") && $this->curr['day'] == strftime("%d"))
+            $this->curr['isToday'] = TRUE;
+        else
+            $this->curr['isToday'] = FALSE;
         #print_r($this->curr);
     }
 

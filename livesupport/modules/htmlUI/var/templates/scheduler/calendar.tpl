@@ -47,6 +47,8 @@
 
         {if $_Day.isEmpty}
                     <div>
+        {elseif $_Day.isToday}
+                    <div style="background-color: grey"> 
         {elseif $_Day.isCurrent}
                     <div style="background-color: lightblue">
         {else}
