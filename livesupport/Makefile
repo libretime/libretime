@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -169,20 +169,20 @@ products_setup:
 	${SCHEDULER_DIR}/bin/autogen.sh
 
 distclean:
-	${MAKE} -c ${CORE_DIR} distclean
-	${MAKE} -c ${AUTHENTICATION_DIR} distclean
-	${MAKE} -c ${DB_DIR} distclean
-	${MAKE} -c ${STORAGE_DIR} distclean
-	${MAKE} -c ${PLAYLIST_EXECUTOR_DIR} distclean
-	${MAKE} -c ${EVENT_SCHEDULER_DIR} distclean
-	${MAKE} -c ${SCHEDULER_DIR} distclean
+	${MAKE} -C ${CORE_DIR} distclean
+	${MAKE} -C ${AUTHENTICATION_DIR} distclean
+	${MAKE} -C ${DB_DIR} distclean
+	${MAKE} -C ${STORAGE_DIR} distclean
+	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} distclean
+	${MAKE} -C ${EVENT_SCHEDULER_DIR} distclean
+	${MAKE} -C ${SCHEDULER_DIR} distclean
 
 depclean:
-	${MAKE} -c ${CORE_DIR} clean
-	${MAKE} -c ${AUTHENTICATION_DIR} clean
-	${MAKE} -c ${DB_DIR} clean
-	${MAKE} -c ${STORAGE_DIR} clean
-	${MAKE} -c ${PLAYLIST_EXECUTOR_DIR} clean
-	${MAKE} -c ${EVENT_SCHEDULER_DIR} clean
-	${MAKE} -c ${SCHEDULER_DIR} clean
+	${MAKE} -C ${CORE_DIR} depclean
+	${MAKE} -C ${AUTHENTICATION_DIR} depclean
+	${MAKE} -C ${DB_DIR} depclean
+	${MAKE} -C ${STORAGE_DIR} depclean
+	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} depclean
+	${MAKE} -C ${EVENT_SCHEDULER_DIR} depclean
+	${MAKE} -C ${SCHEDULER_DIR} depclean
 
