@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -455,50 +455,6 @@ class LocStor extends BasicStor{
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
         return $ac->replaceMetaData($metadata, 'string');
-    }
-
-    /**
-     *  Reset storageServer for debugging.
-     *
-     *  @param input string
-     */
-    function resetStorage($input='')
-    {
-        $this->deleteData();
-        if(!$this->config['isArchive']){
-            $tr =& new Transport($this->dbc, $this, $this->config);
-            $tr->resetData();
-        }
-        $rootHD = $this->getObjId('root', $this->storId);
-        include"../tests/sampleData.php";
-        $res = array('audioclips'=>array(), 'playlists'=>array());
-        foreach($sampleData as $k=>$it){
-            switch($it['type']){
-                case"audioclip":
-                    $media = $it['media'];
-                    $xml = $it['xml'];
-                    if(isset($it['gunid'])) $gunid = $it['gunid'];
-                    else $gunid = '';
-                    $r = $this->bsPutFile(
-                        $rootHD, basename($media),
-                        $media, $xml, $gunid, 'audioclip'
-                    );
-                    if(PEAR::isError($r)){ return $r; }
-                    $res['audioclips'][] = $this->_gunidFromId($r);
-                    break;
-                case"playlist":
-                    $xml = $it['xml'];
-                    if(isset($it['gunid'])) $gunid = $it['gunid'];
-                    else $gunid = '';
-                    $r = $this->bsPutFile(
-                        $rootHD, basename($xml), '', $xml, $gunid, 'playlist'
-                    );
-                    if(PEAR::isError($r)){ return $r; }
-                    $res['playlists'][] = $this->_gunidFromId($r);
-                    break;
-            }
-        }
-        return $res;
     }
 
     /*====================================================== playlist methods */

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1118,6 +1118,50 @@ class BasicStor extends Alib{
     }
 
     /* =============================================== test and debug methods */
+    /**
+     *  Reset storageServer for debugging.
+     *
+     *  @param input string
+     */
+    function resetStorage($input='')
+    {
+        $this->deleteData();
+        if(!$this->config['isArchive']){
+            $tr =& new Transport($this->dbc, $this, $this->config);
+            $tr->resetData();
+        }
+        $rootHD = $this->getObjId('root', $this->storId);
+        include"../tests/sampleData.php";
+        $res = array('audioclips'=>array(), 'playlists'=>array());
+        foreach($sampleData as $k=>$it){
+            switch($it['type']){
+                case"audioclip":
+                    $media = $it['media'];
+                    $xml = $it['xml'];
+                    if(isset($it['gunid'])) $gunid = $it['gunid'];
+                    else $gunid = '';
+                    $r = $this->bsPutFile(
+                        $rootHD, basename($media),
+                        $media, $xml, $gunid, 'audioclip'
+                    );
+                    if(PEAR::isError($r)){ return $r; }
+                    $res['audioclips'][] = $this->_gunidFromId($r);
+                    break;
+                case"playlist":
+                    $xml = $it['xml'];
+                    if(isset($it['gunid'])) $gunid = $it['gunid'];
+                    else $gunid = '';
+                    $r = $this->bsPutFile(
+                        $rootHD, basename($xml), '', $xml, $gunid, 'playlist'
+                    );
+                    if(PEAR::isError($r)){ return $r; }
+                    $res['playlists'][] = $this->_gunidFromId($r);
+                    break;
+            }
+        }
+        return $res;
+    }
+
     /**
      *  dump
      *
