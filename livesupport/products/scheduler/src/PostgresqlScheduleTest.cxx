@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -293,6 +293,100 @@ PostgresqlScheduleTest :: getScheduleEntriesTest(void)
         CPPUNIT_ASSERT(*(entry->getStartTime()) == *from);
         to.reset(new ptime(time_from_string("2004-07-23 13:00:00")));
         CPPUNIT_ASSERT(*(entry->getEndTime()) == *to);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  See if scheduleEntryExists() returns correct results
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlScheduleTest :: scheduleEntryExistsTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // create a 1 hour long playlist
+    Ptr<UniqueId>::Ref      playlistId = UniqueId::generateId();
+    Ptr<time_duration>::Ref playlength(new time_duration(1, 0, 0));
+    Ptr<Playlist>::Ref      playlist(new Playlist(playlistId, playlength));
+
+    Ptr<ptime>::Ref         from;
+    Ptr<ptime>::Ref         to;
+
+    Ptr<UniqueId>::Ref      entryId1;
+    Ptr<UniqueId>::Ref      entryId2;
+
+    // at the very first, check for a nonexistent entry
+    entryId1.reset(new UniqueId(9999));
+    CPPUNIT_ASSERT(!schedule->scheduleEntryExists(entryId1));
+
+    try {
+        // schedule our playlist for 2004-07-23, 10 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        entryId1 = schedule->schedulePlaylist(playlist, from);
+
+        // schedule our playlist for 2004-07-23, 12 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 12:00:00")));
+        entryId2 = schedule->schedulePlaylist(playlist, from);
+
+        // now let's check if our entries exist
+        CPPUNIT_ASSERT(schedule->scheduleEntryExists(entryId1));
+        CPPUNIT_ASSERT(schedule->scheduleEntryExists(entryId2));
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  See if removeFromSchedule() really removes
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlScheduleTest :: removeFromScheduleTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // create a 1 hour long playlist
+    Ptr<UniqueId>::Ref      playlistId = UniqueId::generateId();
+    Ptr<time_duration>::Ref playlength(new time_duration(1, 0, 0));
+    Ptr<Playlist>::Ref      playlist(new Playlist(playlistId, playlength));
+
+    Ptr<ptime>::Ref         from;
+    Ptr<ptime>::Ref         to;
+
+    Ptr<UniqueId>::Ref      entryId1;
+    Ptr<UniqueId>::Ref      entryId2;
+
+    // at the very first, try to remove something not scheduled
+    bool                    gotException = false;
+    try {
+        entryId1.reset(new UniqueId(9999));
+        schedule->removeFromSchedule(entryId1);
+    } catch (std::invalid_argument &e) {
+        gotException = true;
+    }
+    CPPUNIT_ASSERT(gotException);
+
+    try {
+        // schedule our playlist for 2004-07-23, 10 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        entryId1 = schedule->schedulePlaylist(playlist, from);
+
+        // schedule our playlist for 2004-07-23, 12 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 12:00:00")));
+        entryId2 = schedule->schedulePlaylist(playlist, from);
+
+        // now let's remove one of them, and see that it's not there anymore
+        CPPUNIT_ASSERT(schedule->scheduleEntryExists(entryId1));
+        schedule->removeFromSchedule(entryId1);
+        CPPUNIT_ASSERT(!schedule->scheduleEntryExists(entryId1));
+
+        // now let's remove the other, and see that it's not there anymore
+        CPPUNIT_ASSERT(schedule->scheduleEntryExists(entryId2));
+        schedule->removeFromSchedule(entryId2);
+        CPPUNIT_ASSERT(!schedule->scheduleEntryExists(entryId2));
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }

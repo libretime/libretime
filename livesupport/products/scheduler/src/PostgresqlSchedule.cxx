@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,6 +108,21 @@ const std::string PostgresqlSchedule::getScheduleEntriesStmt =
     "SELECT id, playlist, starts, ends FROM schedule WHERE "
     "(? <= starts) AND (starts < ?) "
     "ORDER BY starts";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for querying if a schedule entry exists.
+ *  Expects a single argument, the id of the schedule to check.
+ *  Returns 1 if the entry exists, 0 otherwise.
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::scheduleEntryExistsStmt =
+    "SELECT COUNT(*) FROM schedule WHERE id = ?";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for removing a schedule.
+ *  Expects a single argument, the id of the schedule to remove.
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::removeFromScheduleStmt =
+    "DELETE FROM schedule WHERE id = ?";
 
 
 /* ===============================================  local function prototypes */
@@ -219,7 +234,7 @@ PostgresqlSchedule :: isTimeframeAvailable(
 /*------------------------------------------------------------------------------
  *  Schedule a playlist
  *----------------------------------------------------------------------------*/
-void
+Ptr<UniqueId>::Ref
 PostgresqlSchedule :: schedulePlaylist(
                         Ptr<Playlist>::Ref  playlist,
                         Ptr<ptime>::Ref     playtime)
@@ -227,11 +242,11 @@ PostgresqlSchedule :: schedulePlaylist(
 {
     Ptr<Connection>::Ref    conn;
     bool                    result = false;
+    Ptr<UniqueId>::Ref      id;
 
     try {
         conn = cm->getConnection();
         Ptr<Timestamp>::Ref         timestamp;
-        Ptr<UniqueId>::Ref          id;
         Ptr<ptime>::Ref             ends;
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         schedulePlaylistStmt));
@@ -260,6 +275,8 @@ PostgresqlSchedule :: schedulePlaylist(
     if (!result) {
         throw std::invalid_argument("couldn't insert into database");
     }
+
+    return id;
 }
 
 
@@ -314,5 +331,70 @@ PostgresqlSchedule :: getScheduleEntries(
     }
 
     return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Tell if a schedule entry exists.
+ *----------------------------------------------------------------------------*/
+bool
+PostgresqlSchedule :: scheduleEntryExists(
+                            Ptr<const UniqueId>::Ref    entryId)
+                                                                    throw ()
+{
+    Ptr<Connection>::Ref    conn;
+    bool                    result = false;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                                    scheduleEntryExistsStmt));
+        pstmt->setInt(1, entryId->getId());
+
+        Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
+        result = (rs->next()) ? (rs->getInt(1) == 1) : false;
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        throw std::invalid_argument(e.what());
+    }
+
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove a schedule entry from a schedule
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlSchedule :: removeFromSchedule(
+                            Ptr<const UniqueId>::Ref     entryId)
+                                            throw (std::invalid_argument)
+{
+    Ptr<Connection>::Ref    conn;
+    bool                    result = false;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                                    removeFromScheduleStmt));
+        pstmt->setInt(1, entryId->getId());
+
+        result = pstmt->executeUpdate() == 1;
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        throw std::invalid_argument(e.what());
+    }
+
+    if (!result) {
+        throw std::invalid_argument("specified schedule entry does not exist");
+    }
 }
 

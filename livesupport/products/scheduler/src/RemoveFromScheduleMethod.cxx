@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -42,19 +42,13 @@
 
 #include <string>
 
-#include "LiveSupport/Core/StorageClientInterface.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
-#include "UploadPlaylistMethod.h"
+#include "RemoveFromScheduleMethod.h"
 
-
-using namespace boost;
-using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
 
 using namespace LiveSupport::Scheduler;
 
@@ -66,19 +60,14 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of this XML-RPC method.
  *----------------------------------------------------------------------------*/
-const std::string UploadPlaylistMethod::methodName = "uploadPlaylist";
+const std::string RemoveFromScheduleMethod::methodName = "removeFromSchedule";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist id member in the XML-RPC parameter
  *  structure.
  *----------------------------------------------------------------------------*/
-const std::string UploadPlaylistMethod::playlistIdName = "playlistId";
-
-/*------------------------------------------------------------------------------
- *  The name of the playtime member in the XML-RPC parameter
- *  structure.
- *----------------------------------------------------------------------------*/
-const std::string UploadPlaylistMethod::playtimeName = "playtime";
+const std::string RemoveFromScheduleMethod::scheduleEntryIdName =
+                                                        "scheduleEntryId";
 
 
 /* ===============================================  local function prototypes */
@@ -89,7 +78,7 @@ const std::string UploadPlaylistMethod::playtimeName = "playtime";
 /*------------------------------------------------------------------------------
  *  Construct the method and register it right away.
  *----------------------------------------------------------------------------*/
-UploadPlaylistMethod :: UploadPlaylistMethod (
+RemoveFromScheduleMethod :: RemoveFromScheduleMethod (
                         Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)   throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
 {
@@ -100,46 +89,25 @@ UploadPlaylistMethod :: UploadPlaylistMethod (
  *  Extract the UniqueId from an XML-RPC function call parameter
  *----------------------------------------------------------------------------*/
 Ptr<UniqueId>::Ref
-UploadPlaylistMethod :: extractPlaylistId(
+RemoveFromScheduleMethod :: extractScheduleEntryId(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(playlistIdName)) {
+    if (!xmlRpcValue.hasMember(scheduleEntryIdName)) {
         throw std::invalid_argument("no playlist id in parameter structure");
     }
 
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
+    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[scheduleEntryIdName]));
     return id;
 }
 
 
 /*------------------------------------------------------------------------------
- *  Extract the playtime from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<ptime>::Ref
-UploadPlaylistMethod :: extractPlayschedule(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(playtimeName)) {
-        throw std::invalid_argument("no playtime in parameter structure");
-    }
-
-    struct tm       tm = (struct tm) xmlRpcValue[playtimeName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Execute the upload playlist method XML-RPC function call.
+ *  Execute the remove from schedule XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
-                                XmlRpc::XmlRpcValue  & returnValue)
+RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+                                    XmlRpc::XmlRpcValue  & returnValue)
                                                                     throw ()
 {
     try {
@@ -149,43 +117,25 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
             return;
         }
 
-        Ptr<UniqueId>::Ref  id           = extractPlaylistId(parameters[0]);
-        Ptr<ptime>::Ref     playschedule = extractPlayschedule(parameters[0]);
-        Ptr<UniqueId>::Ref  scheduleEntryId;
-
-        Ptr<StorageClientFactory>::Ref      scf;
-        Ptr<StorageClientInterface>::Ref    storage;
-
-        scf     = StorageClientFactory::getInstance();
-        storage = scf->getStorageClient();
- 
-        if (!storage->existsPlaylist(id)) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<Playlist>::Ref  playlist = storage->getPlaylist(id);
-        Ptr<ptime>::Ref     until(new ptime(*playschedule
-                                          + *(playlist->getPlaylength())));
+        Ptr<UniqueId>::Ref  entryId = extractScheduleEntryId(parameters[0]);
 
         Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
         Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
 
-        if (!schedule->isTimeframeAvailable(playschedule, until)) {
+        if (!schedule->scheduleEntryExists(entryId)) {
             // TODO: mark error;
             returnValue = XmlRpc::XmlRpcValue(false);
             return;
         }
 
-        scheduleEntryId = schedule->schedulePlaylist(playlist, playschedule);
-
-        returnValue = XmlRpc::XmlRpcValue((int) scheduleEntryId->getId());
+        schedule->removeFromSchedule(entryId);
 
     } catch (std::invalid_argument &e) {
         // TODO: mark error
         returnValue = XmlRpc::XmlRpcValue(false);
         return;
     }
+
+    returnValue = XmlRpc::XmlRpcValue(true);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,6 +165,7 @@ SchedulerDaemon :: registerXmlRpcFunctions(
     xmlRpcServer->addMethod(uploadPlaylistMethod.get());
     xmlRpcServer->addMethod(displayScheduleMethod.get());
     xmlRpcServer->addMethod(displayPlaylistMethod.get());
+    xmlRpcServer->addMethod(removeFromScheduleMethod.get());
 }
 
 

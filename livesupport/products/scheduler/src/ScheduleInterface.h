@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class ScheduleInterface : virtual public Installable
 {
@@ -92,10 +92,11 @@ class ScheduleInterface : virtual public Installable
          *
          *  @param playlist the playlist to schedule.
          *  @param playtime the time to schedule the playlist for.
+         *  @return the id of the newly created playlist.
          *  @exception std::invalid_argument if the there is something
          *             already scheduled for the duration of the playlist.
          */
-        virtual void
+        virtual Ptr<UniqueId>::Ref
         schedulePlaylist(Ptr<Playlist>::Ref     playlist,
                          Ptr<ptime>::Ref        playtime)
                                                 throw (std::invalid_argument)
@@ -114,6 +115,30 @@ class ScheduleInterface : virtual public Installable
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
                                                             throw ()
+                                                                    = 0;
+
+        /**
+         *  Tell if a schedule entry exists by the give name.
+         *
+         *  @param entryId the id of the schedule entry to check for.
+         *  @return true if the schedule entry exists in the Schedule,
+         *          false otherwise.
+         */
+        virtual bool
+        scheduleEntryExists(Ptr<const UniqueId>::Ref    entryId)
+                                                            throw ()
+                                                                    = 0;
+
+        /**
+         *  Remove a schedule entry from the schedule.
+         *
+         *  @param entryId the id of the schedule to remove.
+         *  @exception std::invalid_argument if no schedule with the specified
+         *             id exists.
+         */
+        virtual void
+        removeFromSchedule(Ptr<const UniqueId>::Ref     entryId)
+                                                throw (std::invalid_argument)
                                                                     = 0;
 };
 

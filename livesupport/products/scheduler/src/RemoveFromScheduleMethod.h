@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef UploadPlaylistMethod_h
-#define UploadPlaylistMethod_h
+#ifndef RemoveFromScheduleMethod_h
+#define RemoveFromScheduleMethod_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -65,24 +65,19 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An XML-RPC method object to accept a playlist for upload,
- *  and schedule it in the scheduler.
+ *  An XML-RPC method object to remove a scheduled entry.
  *
- *  The name of the method when called through XML-RPC is "uploadPlaylist".
+ *  The name of the method when called through XML-RPC is "removeFromSchedule".
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
- *      <li>playlistId - int, the id of the playlist to upload</li>
- *      <li>playtime - the time when the playlist should be scheduled,
- *                     an ISO 8601 DateTime field</li>
+ *      <li>scheduleEntryId - int - the id of the scheduled entry to remove</li>
  *  </ul>
- *  The return value is an int, the id of the schedule entry created
- *  by uploading, or a boolean false, if there were errors.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.1 $
  */
-class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
+class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
     private:
         /**
@@ -92,19 +87,13 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         static const std::string        methodName;
 
         /**
-         *  The name of the playlist id member in the XML-RPC parameter
+         *  The name of the entry id member in the XML-RPC parameter
          *  structure.
          */
-        static const std::string        playlistIdName;
+        static const std::string        scheduleEntryIdName;
 
         /**
-         *  The name of the playtime member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        playtimeName;
-
-        /**
-         *  Extract the playlist id from the XML-RPC parameters.
+         *  Extract the schedule entry id from the XML-RPC parameters.
          *
          *  @param xmlRpcValue the XML-RPC parameter to extract from.
          *  @return a UniqueId that was found in the XML-RPC parameter.
@@ -112,19 +101,7 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          *             in xmlRpcValue
          */
         Ptr<UniqueId>::Ref
-        extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Extract the playtime from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the playing time, as stored in the XML-RPC parameter
-         *  @exception std::invalid_argument if there was no playtime
-         *             in xmlRpcValue
-         */
-        Ptr<boost::posix_time::ptime>::Ref
-        extractPlayschedule(XmlRpc::XmlRpcValue & xmlRpcValue)
+        extractScheduleEntryId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument);
 
 
@@ -132,7 +109,7 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        UploadPlaylistMethod(void)                      throw ()
+        RemoveFromScheduleMethod(void)                      throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -142,12 +119,12 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          *
          *  @param xmlRpcServer the XML-RPC server to register with.
          */
-        UploadPlaylistMethod(
+        RemoveFromScheduleMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
                                                                     throw ();
 
         /**
-         *  Execute the upload playlist command on the Scheduler daemon.
+         *  Execute the remove from schedule command on the Scheduler daemon.
          *
          *  @param parameters XML-RPC function call parameters
          *  @param returnValue the return value of the call (out parameter)
@@ -167,5 +144,5 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // UploadPlaylistMethod_h
+#endif // RemoveFromScheduleMethod_h
 

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonRemoveFromScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef PostgresqlScheduleTest_h
-#define PostgresqlScheduleTest_h
+#ifndef SchedulerDaemonRemoveFromScheduleTest_h
+#define SchedulerDaemonRemoveFromScheduleTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -42,15 +42,11 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Db/ConnectionManagerInterface.h"
-
 
 namespace LiveSupport {
 namespace Scheduler {
 
 using namespace LiveSupport;
-using namespace LiveSupport::Db;
-using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -61,85 +57,36 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the PostgresqlSchedule class.
+ *  Unit test to test the removeFromSchedule XML-RPC call.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
- *  @see PostgresqlSchedule
+ *  @version $Revision: 1.1 $
+ *  @see SchedulerDaemon
  */
-class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
+class SchedulerDaemonRemoveFromScheduleTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(PostgresqlScheduleTest);
-    CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(simpleScheduleTest);
-    CPPUNIT_TEST(scheduleAndQueryTest);
-    CPPUNIT_TEST(getScheduleEntriesTest);
-    CPPUNIT_TEST(scheduleEntryExistsTest);
-    CPPUNIT_TEST(removeFromScheduleTest);
+    CPPUNIT_TEST_SUITE(SchedulerDaemonRemoveFromScheduleTest);
+    CPPUNIT_TEST(simpleTest);
+    CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
-
-    private:
-        /**
-         *  The connection manager used for testing.
-         */
-        Ptr<ConnectionManagerInterface>::Ref    cm;
-
-        /**
-         *  The schedule used for testing.
-         */
-        Ptr<PostgresqlSchedule>::Ref                    schedule;
 
     protected:
 
         /**
-         *  Test for an available timeframe in an empty schedule database.
+         *  Simple smoke test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+        simpleTest(void)                     throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Schedule a single playlist.
+         *  Simple negative test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        simpleScheduleTest(void)                throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Schedule a single playlist, and then query for available timeframes
-         *  around it.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        scheduleAndQueryTest(void)              throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Schedule some playlists, then get the list of scheduled playlists
-         *  for different time intervals.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        getScheduleEntriesTest(void)            throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Schedule some playlists, then check if they exist.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        scheduleEntryExistsTest(void)           throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Schedule some playlists, then remove them.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        removeFromScheduleTest(void)           throw (CPPUNIT_NS::Exception);
+        negativeTest(void)                  throw (CPPUNIT_NS::Exception);
 
     public:
         
@@ -166,5 +113,5 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // PostgresqlScheduleTest_h
+#endif // SchedulerDaemonRemoveFromScheduleTest_h
 
