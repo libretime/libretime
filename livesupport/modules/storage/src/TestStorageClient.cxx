@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -132,3 +132,21 @@ TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
 }
 
 
+/*------------------------------------------------------------------------------
+ *  Return a listing of all the playlists in the playlist store.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+TestStorageClient :: getAllPlaylists(void) const
+                                                throw ()
+{
+    PlaylistMap::const_iterator         it = playlistMap.begin();
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+                         playlistVector (new std::vector<Ptr<Playlist>::Ref>);
+
+    while (it != playlistMap.end()) {
+        playlistVector->push_back(it->second);    // TODO: check this
+        ++it;
+    }
+
+    return playlistVector;
+}

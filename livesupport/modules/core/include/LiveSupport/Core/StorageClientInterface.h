@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class StorageClientInterface
 {
@@ -101,6 +101,16 @@ class StorageClientInterface
         deletePlaylist(Ptr<const UniqueId>::Ref id)
                                             throw (std::invalid_argument)
                                                                         = 0;
+
+        /**
+         *  Return a list of all playlists in the playlist store.
+         *
+         *  @param (none).
+         *  @return a vector containing the playlists.
+         */
+        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        getAllPlaylists(void) const         throw ()                    = 0;
+
 };
 
 

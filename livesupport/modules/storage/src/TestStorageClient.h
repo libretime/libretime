@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -159,6 +159,16 @@ class TestStorageClient :
         virtual void
         deletePlaylist(Ptr<const UniqueId>::Ref id)
                                             throw (std::invalid_argument);
+
+        /**
+         *  Return a list of all playlists in the playlist store.
+         *
+         *  @param (none).
+         *  @return a vector containing the playlists.
+         */
+        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        getAllPlaylists(void) const             throw ();
+
 };
 
 

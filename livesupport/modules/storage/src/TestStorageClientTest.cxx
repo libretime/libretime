@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -143,4 +143,20 @@ TestStorageClientTest :: deletePlaylistTest(void)
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
         } catch (std::invalid_argument &e) {
         }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the getAllPlaylists method
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: getAllPlaylistsTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector =
+                                                tsc->getAllPlaylists();
+    CPPUNIT_ASSERT(playlistVector->size() == 1);
+
+    Ptr<Playlist>::Ref playlist = (*playlistVector)[0];
+    CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 1);
 }
