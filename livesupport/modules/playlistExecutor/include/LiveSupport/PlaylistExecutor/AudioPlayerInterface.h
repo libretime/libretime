@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class AudioPlayerInterface
 {
@@ -165,11 +165,17 @@ class AudioPlayerInterface
         virtual void
         stop(void)                              throw (std::logic_error)
                                                                       = 0;
+
         /**
          *  Play a playlist, with simulated fading.
          *
          *  This is a stopgap method, and should be replaced as soon as
          *  the SMIL animation issues are fixed in the Helix client.
+         *
+         *  The playlist is assumed to contain a URI field, which points
+         *  to a SMIL file containing the same audio clips, with the same
+         *  offsets, as the playlist.  This can be ensured, for example, by 
+         *  calling Storage::WebStorageClient::acquirePlaylist().
          *
          *  @param playlist the Playlist object to be played.
          *  @exception std::invalid_argument playlist is invalid (e.g.,
@@ -180,7 +186,7 @@ class AudioPlayerInterface
          *  @exception std::runtime_error on errors thrown by the helix player
          */
         virtual void
-        openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
+        openAndStart(Ptr<Playlist>::Ref  playlist)       
                                                 throw (std::invalid_argument,
                                                        std::logic_error,
                                                        std::runtime_error)

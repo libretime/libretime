@@ -38,21 +38,21 @@
     <playlistElement id="0000000000000102"    
                      relativeOffset="00:00:06" >
         <audioClip   id="0000000000010002"  
-                     playlength="00:00:12" 
+                     playlength="00:00:12.200000" 
 		     title = "two"
                      uri="file:var/test10002.mp3" /> 
         <fadeInfo    id="0000000000009902"   
                      fadeIn="00:00:05" 
-                     fadeOut="0" />
+                     fadeOut="00:00:04" />
     </playlistElement>
     <playlistElement id="0000000000000103" 
-                     relativeOffset="00:00:18" >
+                     relativeOffset="00:00:18.200000" >
         <audioClip   id="0000000000010003" 
                      playlength="00:00:11.500000" 
-		     title = "three"
+		             title = "three"
                      uri="file:var/test10003.mp3" />
         <fadeInfo    id="0000000000009903"   
-                     fadeIn="0" 
-                     fadeOut="00:00:05" />
+                     fadeIn="00:00:06" 
+                     fadeOut="00:00:04" />
     </playlistElement>
 </playlist>

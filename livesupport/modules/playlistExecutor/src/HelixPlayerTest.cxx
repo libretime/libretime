@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -419,7 +419,7 @@ HelixPlayerTest :: animationWorkaroundTest(void)
     playlist->setUri(uri);
     
     CPPUNIT_ASSERT_NO_THROW(helixPlayer->initialize());
-    CPPUNIT_ASSERT_NO_THROW(helixPlayer->openAndStartPlaylist(playlist));
+    CPPUNIT_ASSERT_NO_THROW(helixPlayer->openAndStart(playlist));
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
 
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));

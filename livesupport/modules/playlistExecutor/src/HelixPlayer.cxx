@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,14 +85,12 @@ static const std::string    clntcoreName = "/clntcore.so";
 /**
  *  Magic number #1: max time to wait for an audio stream, in milliseconds
  */
-static const int            getAudioStreamTimeOut = 10;
+static const int            getAudioStreamTimeOut = 5;
 
 /**
- *  Magic number #2: time to wait after getting crossfade interface, 
- *  and before setting crossfade values, in milliseconds
+ *  Magic number #2: schedule fading this many milliseconds in advance
  */
-static const int            crossFadeWaitingTime = 50;
-
+static const int            lookAheadTime = 2500;
 
 /* ===============================================  local function prototypes */
 
@@ -398,10 +396,10 @@ DLLAccessPath* GetDLLAccessPath(void)
 
 
 /*------------------------------------------------------------------------------
- *  Play a playlist, with simulated fading.
+ *  Open a playlist, with simulated fading.
  *----------------------------------------------------------------------------*/
 void
-HelixPlayer :: openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
+HelixPlayer :: openAndStart(Ptr<Playlist>::Ref  playlist)       
                                                 throw (std::invalid_argument,
                                                        std::logic_error,
                                                        std::runtime_error)
@@ -409,96 +407,177 @@ HelixPlayer :: openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)
     if (!playlist || !playlist->getUri()) {
         throw std::invalid_argument("no playlist SMIL file found");
     }
+
     open(*playlist->getUri());      // may throw invalid_argument
 
-    bool    hasFadeInfo = false;
-    int     numberOfPlaylistElements = 0;
-    Playlist::const_iterator    it = playlist->begin();
-    while (it != playlist->end()) {
-        ++numberOfPlaylistElements;
-        if (it->second->getFadeInfo()) {
-            hasFadeInfo = true;
-        }
-        ++it;
-    }
-
     start();                        // may throw logic_error
-    if (!numberOfPlaylistElements || !hasFadeInfo) {
-        return;
-    }
 
     IHXAudioPlayer* audioPlayer = 0;
-    if (player->QueryInterface(IID_IHXAudioPlayer, (void**)&audioPlayer)
-                                                        != HXR_OK
+    if (player->QueryInterface(IID_IHXAudioPlayer, 
+                                (void**)&audioPlayer)    != HXR_OK
             || !audioPlayer) {
         throw std::runtime_error("can't get IHXAudioPlayer interface");
     }
 
-    IHXAudioCrossFade* crossFade = 0;
-    if (audioPlayer->QueryInterface(IID_IHXAudioCrossFade, (void**)&crossFade)
-                                                            != HXR_OK
-            || !crossFade) {
-        throw std::runtime_error("can't get IHXAudioCrossFade interface");
-    }
+    int                 playlistSize = playlist->size();
+    IHXAudioStream*     audioStream[playlistSize];
 
+    unsigned long       playlength[playlistSize];
+    unsigned long       relativeOffset[playlistSize];
+    unsigned long       fadeIn[playlistSize];
+    unsigned long       fadeOut[playlistSize];
+    
     Ptr<time_duration>::Ref sleepT(new time_duration(microseconds(10)));
 
-    IHXAudioStream*     audioStream[numberOfPlaylistElements + 1];
-    for (int i = 0; i < numberOfPlaylistElements; i++) {
-        int j = 0;
-        do {
-            TimeConversion::sleep(sleepT);
-            audioStream[i] = audioPlayer->GetAudioStream(i);
-            ++j;
-            if (j > getAudioStreamTimeOut * 100) {
+    bool                        hasFadeInfo = false;
+    Playlist::const_iterator    it = playlist->begin();
+
+    for (int i = 0; i < playlistSize; ++i) {
+        audioStream[i] = audioPlayer->GetAudioStream(i);
+        int counter = 0;
+        while (!audioStream[i]) {
+            if (counter > getAudioStreamTimeOut * 100) {
                 std::stringstream   eMsg;
                 eMsg << "can't get audio stream number " << i;
                 throw std::runtime_error(eMsg.str());
             }
-        } while (!audioStream[i]);
-    }
-    audioStream[numberOfPlaylistElements] = 0;  // fade out last clip into 0
-
-    it = playlist->begin();
+            TimeConversion::sleep(sleepT);
     
-    sleepT.reset(new time_duration(milliseconds(crossFadeWaitingTime)));
-    TimeConversion::sleep(sleepT);
-
-    for (int i = 0; i < numberOfPlaylistElements; i++) {
-
-        Ptr<PlaylistElement>::Ref   playlistElement = it->second;
-        if (!playlistElement->getFadeInfo()) {
-            ++it;
-            continue;
+            audioStream[i] = audioPlayer->GetAudioStream(i);
+            ++counter;
         }
         
-        // we assume i-th fade out is the same as (i+1)-st fade in
-        unsigned long   crossFadeLength = playlistElement
-                                                ->getFadeInfo()
-                                                ->getFadeOut()
-                                                ->total_milliseconds();
-        unsigned long   fadeOutAt   = playlistElement->getRelativeOffset()
-                                                     ->total_milliseconds()
-                                    + playlistElement->getPlayable()
-                                                     ->getPlaylength()
-                                                     ->total_milliseconds()
-                                    - crossFadeLength;
-
-        if (crossFadeLength) {
-//std::cerr << "fadeOutAt: " << fadeOutAt << "\n"
-//          << "crossFadeLength: " << crossFadeLength << "\n";
-            crossFade->CrossFade(audioStream[i], audioStream[i+1], 
-                                fadeOutAt, fadeOutAt, crossFadeLength);
+        relativeOffset[i]   = it->second->getRelativeOffset()
+                                        ->total_milliseconds();
+        playlength[i]       = it->second->getPlayable()->getPlaylength()
+                                        ->total_milliseconds();
+        
+        if (it->second->getFadeInfo()) {
+            hasFadeInfo = true;
+            fadeIn[i] = it->second->getFadeInfo()
+                                  ->getFadeIn()->total_milliseconds();
+            fadeOut[i] = it->second->getFadeInfo()
+                                   ->getFadeOut()->total_milliseconds();
+        } else {
+            fadeIn[i]  = 0;
+            fadeOut[i] = 0;
         }
-    
+
         ++it;
     }
 
-    for (int i = 0; i < numberOfPlaylistElements; i++) {
+    if (!hasFadeInfo) {
+        return;
+    }
+
+    fadeIn[0] = 0;  // can't do fade-in on the first audio clip, sorry
+    
+    fadeDataList.reset(new std::list<FadeData>);
+    FadeData    fadeData;
+
+    for (int i = 0; i < playlistSize; ++i) {
+        if (fadeIn[i]) {
+            fadeData.audioStreamFrom    = 0;
+            fadeData.audioStreamTo      = audioStream[i];
+            fadeData.fadeAt             = relativeOffset[i];
+            fadeData.fadeLength         = fadeIn[i];
+            fadeDataList->push_back(fadeData);
+        }
+        
+        if (fadeOut[i]) {
+            if (i < playlistSize - 1 
+                    && fadeOut[i] == fadeIn[i+1]
+                    && relativeOffset[i] + playlength[i] 
+                                  == relativeOffset[i+1] + fadeIn[i+1]) {
+                fadeData.audioStreamFrom    = audioStream[i];
+                fadeData.audioStreamTo      = audioStream[i+1];
+                fadeData.fadeAt             = relativeOffset[i+1];
+                fadeData.fadeLength         = fadeIn[i+1];
+                fadeDataList->push_back(fadeData);
+                fadeIn[i+1] = 0;
+            } else {
+                fadeData.audioStreamFrom    = audioStream[i];
+                fadeData.audioStreamTo      = 0;
+                fadeData.fadeAt             = relativeOffset[i] 
+                                              + playlength[i] - fadeOut[i];
+                fadeData.fadeLength         = fadeOut[i];
+                fadeDataList->push_back(fadeData);
+            }
+        }
+        
         HX_RELEASE(audioStream[i]);
     }
-    HX_RELEASE(crossFade);
-    HX_RELEASE(audioPlayer);
+
+//do {
+//    std::cerr << "\n";
+//    std::list<FadeData>::const_iterator it = fadeDataList->begin();
+//    while (it != fadeDataList->end()) {
+//        std::cerr << it->audioStreamFrom << " -> "
+//                  << it->audioStreamTo << " : at "
+//                  << it->fadeAt << ", for "
+//                  << it->fadeLength << "\n";
+//        ++it;
+//    }
+//    std::cerr << "\n";
+//} while (false);
+
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Activate the crossfading of clips in a playlist.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: implementFading(unsigned long    position)
+                                                throw (std::runtime_error)
+{
+    if (!fadeDataList) {
+        return;
+    }
+
+    std::list<FadeData>::iterator   it = fadeDataList->begin();
+    
+    while (it != fadeDataList->end()) {
+        unsigned long   fadeAt = it->fadeAt;
+
+        if (fadeAt < position) {                            // we missed it
+            it = fadeDataList->erase(it);
+            continue;
+
+        } else if (fadeAt < position + lookAheadTime) {     // we are on time
+
+            IHXAudioPlayer* audioPlayer = 0;
+            if (player->QueryInterface(IID_IHXAudioPlayer, 
+                                       (void**)&audioPlayer)    != HXR_OK
+                    || !audioPlayer) {
+                throw std::runtime_error("can't get IHXAudioPlayer interface");
+            }
+
+            IHXAudioCrossFade* crossFade = 0;
+            if (audioPlayer->QueryInterface(IID_IHXAudioCrossFade,
+                                            (void**)&crossFade) != HXR_OK
+                    || !crossFade) {
+                throw std::runtime_error("can't get IHXAudioCrossFade "
+                                                                "interface");
+            }
+
+//std::cerr << "position:" << position << "\n"
+//          << "fadeAt: " << fadeAt << "\n"
+//          << "fadeLength: " << it->fadeLength << "\n\n";
+          
+            crossFade->CrossFade(it->audioStreamFrom, it->audioStreamTo, 
+                                fadeAt, fadeAt, it->fadeLength);
+
+            HX_RELEASE(crossFade);
+            HX_RELEASE(audioPlayer);
+
+            it = fadeDataList->erase(it);
+            continue;
+
+        } else {
+            ++it;
+        }
+    }
 }
 
 

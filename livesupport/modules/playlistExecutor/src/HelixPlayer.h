@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include "configure.h"
 #endif
 
+#include <list>
 #include <boost/enable_shared_from_this.hpp>
 
 #include "LiveSupport/Core/Configurable.h"
@@ -53,6 +54,9 @@
 #include "AuthenticationManager.h"
 #include "ClientContext.h"
 #include "LiveSupport/Core/Playlist.h"
+
+#include <hxausvc.h>
+
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
@@ -94,7 +98,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -135,7 +139,7 @@ class HelixPlayer : virtual public Configurable,
          *  The Helix player.
          */
         IHXPlayer             * player;
-
+        
         /**
          *  The example client context.
          */
@@ -171,6 +175,44 @@ class HelixPlayer : virtual public Configurable,
          */
         Ptr<Thread>::Ref        eventHandlerThread;
 
+        /**
+         *  A type to contain the data about a single fade-in or fade-out
+         *  event.
+         */
+        struct FadeData {
+            IHXAudioStream* audioStreamFrom;
+            IHXAudioStream* audioStreamTo;
+            unsigned long   fadeAt;
+            unsigned long   fadeLength;
+        };
+
+        /**
+         *  A list of fade-in/fade-out events.
+         *  This is set by the openAndStartPlaylist() method, and the
+         *  actual fading is done by implementFading(), called from
+         *  AdviseSink::OnPosLength().
+         */
+        Ptr<std::list<FadeData> >::Ref  fadeDataList;
+
+        /**
+         *  Declare AdviseSink::OnPosLength() to be a friend, so it can
+         *  call the private method implementFading().
+         */
+        friend STDMETHODIMP
+        AdviseSink::OnPosLength(UINT32      ulPosition,
+                                UINT32      ulLength)
+                                                throw ();
+
+        /**
+         *  Implement the actual fading scheduled by open(Ptr<Playlist>::Ref).
+         *  This method is called from AdviceSink::OnPosLength().
+         *  DO NOT call this method directly.
+         *
+         *  @param position the clip position
+         */
+        void
+        implementFading(unsigned long position)
+                                                throw(std::runtime_error);
 
     public:
         /**
@@ -336,9 +378,6 @@ class HelixPlayer : virtual public Configurable,
          *  This is a stopgap method, and should be replaced as soon as
          *  the SMIL animation issues are fixed in the Helix client.
          *
-         *  Note: the method only reads the fade out value, and assumes
-         *  that the following fade in value is equal to it.
-         *
          *  The playlist is assumed to contain a URI field, which points
          *  to a SMIL file containing the same audio clips, with the same
          *  offsets, as the playlist.  This can be ensured, for example, by 
@@ -353,7 +392,7 @@ class HelixPlayer : virtual public Configurable,
          *  @exception std::runtime_error on errors thrown by the helix player
          */
         virtual void
-        openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
+        openAndStart(Ptr<Playlist>::Ref  playlist)       
                                                 throw (std::invalid_argument,
                                                        std::logic_error,
                                                        std::runtime_error);
