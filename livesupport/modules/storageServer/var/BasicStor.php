@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -151,13 +151,20 @@ class BasicStor extends Alib{
     function bsRenameFile($id, $newName)
     {
         $parid = $this->getParent($id);
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)){
-            // catch nonerror exception:
-            if($ac->getCode() != GBERR_FOBJNEX) return $ac;
+        switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+            case"File":
+                $ac =& StoredFile::recall(&$this, $id);
+                if(PEAR::isError($ac)){
+                    #// catch nonerror exception:
+                    #if($ac->getCode() != GBERR_FOBJNEX)
+                    return $ac;
+                }
+                $res = $ac->rename($newName);
+                if(PEAR::isError($res)) return $res;
+            default:
         }
-        $res = $ac->rename($newName);
-        if(PEAR::isError($res)) return $res;
         return $this->renameObj($id, $newName);
     }
 

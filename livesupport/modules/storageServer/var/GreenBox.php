@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -409,9 +409,10 @@ class GreenBox extends BasicStor{
      *
      *  @return id
      */
-    function copyObj($id, $newParid, $after='')
+    function copyObj($id, $newParid, $after=NULL)
     {
-        $nid = parent::copyObj($id, $newParid, $after='');
+        $nid = parent::copyObj($id, $newParid, $after);
+        if(PEAR::isError($nid)) return $nid;
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
