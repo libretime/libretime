@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.55 $
+    Version  : $Revision: 1.56 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.55 $
+ *  @version $Revision: 1.56 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -498,12 +498,21 @@ class GreenBox extends BasicStor{
         require_once"Playlist.php";
         $pl =& Playlist::recallByToken($this, $token);
         if(PEAR::isError($pl)) return $pl;
+        $acGunid = $this->_gunidFromId($acId);
+        if($pl->_cyclicRecursion($acGunid)){
+            return PEAR::raiseError(
+                "GreenBox::addAudioClipToPlaylist: cyclic-recursion detected".
+                " ($type)"
+            );
+        }
+/*
         if('playlist' == ($type = $this->getFileType($acId))){
             return PEAR::raiseError(
                 "GreenBox::addAudioClipToPlaylist: object type not supported".
                 " ($type)"
             );
         }
+*/
         $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut);
         if(PEAR::isError($res)) return $res;
         // recalculate offsets and total length:

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,7 @@ class Playlist extends StoredFile{
      *   <li>acGunid, string - audioClip gunid</li>
      *   <li>acLen string - length of clip in dcterms:extent format</li>
      *   <li>acTit string - clip title</li>
+     *   <li>elType string - audioclip | playlist</li>
      *  </ul>
      */
     function getAcInfo($acId)
@@ -87,7 +88,9 @@ class Playlist extends StoredFile{
         if(PEAR::isError($r)){ return $r; }
         if(isset($r[0]['value'])) $acTit = $r[0]['value'];
         else $acTit = $acGunid;
-        return compact('acGunid', 'acLen', 'acTit');
+        $elType = $this->gb->getObjType($acId);
+        if($elType == 'webstream') $elType = 'audioclip';
+        return compact('acGunid', 'acLen', 'acTit', 'elType');
     }
 
     /**
@@ -163,6 +166,7 @@ class Playlist extends StoredFile{
      *  @param fadeIn string - fadein value in ss.ssssss or extent format
      *  @param fadeOut string - fadeout value in ss.ssssss or extent format
      *  @param plElGunid string - optional playlist element gunid
+     *  @param elType string - optional 'audioClip' | 'playlist'
      *  @return array with fields:
      *  <ul>
      *   <li>plElId int - record id of playlistElement</li>
@@ -172,7 +176,7 @@ class Playlist extends StoredFile{
      *  </ul>
      */
     function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
-        $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL)
+        $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL, $elType='audioClip')
     {
         // insert playlistElement
         $r = $this->md->insertMetadataEl($parid, 'playlistElement');
@@ -186,8 +190,8 @@ class Playlist extends StoredFile{
         $r = $this->md->insertMetadataEl(
             $plElId, 'relativeOffset', $offset, 'A');
         if(PEAR::isError($r)){ return $r; }
-        // insert audioClip element into playlistElement
-        $r = $this->md->insertMetadataEl($plElId, 'audioClip');
+        // insert audioClip (or playlist) element into playlistElement
+        $r = $this->md->insertMetadataEl($plElId, $elType);
         if(PEAR::isError($r)){ return $r; }
         $acId = $r;
         $r = $this->md->insertMetadataEl($acId, 'id', $acGunid, 'A');
@@ -297,7 +301,7 @@ class Playlist extends StoredFile{
         // get information about audioClip
         $acInfo = $this->getAcInfo($acId);
         if(PEAR::isError($acInfo)){ return $acInfo; }
-        extract($acInfo);   // 'acGunid', 'acLen', 'acTit'
+        extract($acInfo);   // 'acGunid', 'acLen', 'acTit', 'elType'
         // get information about playlist and containers
         $plInfo = $this->getPlInfo();
         if(PEAR::isError($plInfo)){ return $plInfo; }
@@ -306,7 +310,8 @@ class Playlist extends StoredFile{
         // insert new playlist element
         $offset = $plLen;
         $plElInfo = $this->insertPlaylistElement($parid, $offset,
-            $acGunid, $acLen, $acTit, $fadeIn, $fadeOut, $plElGunid);
+            $acGunid, $acLen, $acTit, $fadeIn, $fadeOut, $plElGunid,
+            $elType);
         if(PEAR::isError($plElInfo)){ return $plElInfo; }
         extract($plElInfo); // 'plElId', 'plElGunid', 'fadeInId', 'fadeOutId'
 
@@ -510,6 +515,8 @@ class Playlist extends StoredFile{
             $offset = $offArr[0]['value'];
             // get audioClip:
             $acArr = $this->md->getMetadataEl('audioClip', $elId);
+            if(is_array($acArr) && is_null($acArr[0]))
+                $acArr = $this->md->getMetadataEl('playlist', $elId);
             if(PEAR::isError($acArr)){ return $acArr; }
             $storedAcMid = $acArr[0]['mid'];
             // get playlength:
@@ -585,10 +592,8 @@ class Playlist extends StoredFile{
     function displayPlaylistClipAtOffset($offset, $distance=0)
     {
         $offsetS = $this->_plTimeToSecs($offset);
-#        echo "\nOFFSET: $offset, SECS=$offsetS, DISTANCE=$distance\n";
         $plGunid = $this->gunid;
         $arr = $this->md->genPhpArray();
-#        var_dump($arr); exit;
         if(PEAR::isError($arr)){ return $arr; }
         $plArr = array('els'=>array());
         foreach($arr[children] as $i=>$plEl){
@@ -601,7 +606,7 @@ class Playlist extends StoredFile{
                 );
                 $plInfo['elOffset']  = $pom = $plEl['attrs']['relativeoffset'];
                 $plInfo['elOffsetS'] = $this->_plTimeToSecs($pom);
-                foreach($plEl[children] as $j=>$acFi){
+                foreach($plEl['children'] as $j=>$acFi){
                     switch($acFi['elementname']){
                     case"audioclip":
                         $plInfo['acLen'] = $pom = $acFi['attrs']['playlength'];
@@ -634,15 +639,12 @@ class Playlist extends StoredFile{
             $plArr['length'] = $pom = $arr['attrs']['playlength'];
             $plArr['lengthS'] = $this->_plTimeToSecs($pom);
         }
-#        var_dump($plArr); exit;
         
         $res  = array('gunid'=>NULL, 'elapsed'=>NULL,
             'remaining'=>NULL, 'duration'=>NULL);
         $dd = -1;
         foreach($plArr['els'] as $el){
-#            var_dump($el);
             extract($el);
-#            echo "     ### $offsetS, $elOffsetS, ".($elOffsetS+$acLenS)."\n";
             if($offsetS > $elOffsetS &&
                 $offsetS < ($elOffsetS + $acLenS) &&
                 $dd<0
@@ -651,7 +653,6 @@ class Playlist extends StoredFile{
                 $playedS = $offsetS - $elOffsetS;
                 if($playedS < 0) $playedS = 0;
                 $remainS = $acLenS - $playedS;
-#                echo "    X $acGunid, $playedS, $remainS, $acLenS\n";
                 $res  = array('gunid'=>$acGunid,
                     'elapsed'   => $this->_secsToPlTime($playedS),
                     'remaining' => $this->_secsToPlTime($remainS),
@@ -659,7 +660,6 @@ class Playlist extends StoredFile{
                 );
                 return $res;
             }
-#            echo " * elOffset: $elOffset, secs=$elOffsetS, playLength:$acLen\n";
             if($dd >= 0) $dd++;
         }
         return $res;
@@ -699,6 +699,33 @@ class Playlist extends StoredFile{
         $res = sprintf("%02d:%02d:%02d", $h, $m, $s);
         $res .= str_replace('0.', '.', number_format($r, 6, '.', ''));
         return $res;
+    }
+
+    /**
+     *  Cyclic-recursion checking
+     *
+     *  @param insGunid string, gunid of playlist beeing inserted
+     *  @return 
+     */
+    function _cyclicRecursion($insGunid)
+    {
+        if($this->gunid == $insGunid) return TRUE;
+        $pl =& Playlist::recallByGunid($this->gb, $insGunid);
+        if(PEAR::isError($pl)){ return $pl; }
+        $arr = $pl->md->genPhpArray();
+        if(PEAR::isError($arr)){ return $arr; }
+        $els =& $arr['children'];
+        if(!is_array($els)) return FALSE;
+        foreach($els as $i=>$plEl){
+            if($plEl['elementname'] != "playlistelement") continue;
+            foreach($plEl['children'] as $j=>$elCh){
+                if($elCh['elementname'] != "playlist") continue;
+                $nextGunid = $elCh['attrs']['id'];
+                $res = $this->_cyclicRecursion($nextGunid);
+                if($res) return TRUE;
+            }
+        }
+        return FALSE;
     }
 
     /**
