@@ -4,15 +4,16 @@
 <!ELEMENT authenticationClientFactory (testAuthentication|
                                        webAuthentication)>
 
-<!ELEMENT testAuthentication (user) >
+<!ELEMENT webAuthentication (location) >
 
-<!ELEMENT user EMPTY >
-<!ATTLIST user login        CDATA       #REQUIRED >
-<!ATTLIST user password     CDATA       #REQUIRED >
-
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
 ]>
 <authenticationClientFactory>
-    <testAuthentication>
-        <user login="root" password="q" />
-    </testAuthentication>
+    <webAuthentication>
+        <location server="localhost" port="80"
+                  path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+    </webAuthentication>
 </authenticationClientFactory>

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1874,6 +1874,8 @@ WebStorageClient :: reset(void)
              << result;
         throw XmlRpcMethodResponseException(eMsg.str());
     }
+
+    editedPlaylists.clear();
 
     XmlRpcValue audioClipArray = result[resetStorageAudioClipResultParamName];
     audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);

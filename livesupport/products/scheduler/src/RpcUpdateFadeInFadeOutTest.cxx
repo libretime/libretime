@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUpdateFadeInFadeOutTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -33,9 +33,7 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "SchedulerDaemon.h"
-
-#include "RpcDisplayPlaylistTest.h"
+#include "RpcUpdateFadeInFadeOutTest.h"
 
 
 using namespace LiveSupport::Core;
@@ -46,7 +44,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcUpdateFadeInFadeOutTest);
 
 
 /* ===============================================  local function prototypes */
@@ -58,7 +56,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: setUp(void)                        throw ()
+RpcUpdateFadeInFadeOutTest :: setUp(void)                         throw ()
 {
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
@@ -84,7 +82,7 @@ RpcDisplayPlaylistTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
+RpcUpdateFadeInFadeOutTest :: tearDown(void)                      throw ()
 {
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
@@ -100,53 +98,62 @@ RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
 
 
 /*------------------------------------------------------------------------------
- *  A simple smoke test.
+ *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: simpleTest(void)
+RpcUpdateFadeInFadeOutTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             result;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = "0000000000000001";
+    parameters["sessionId"]      = sessionId->getId();
+    parameters["playlistId"]     = "0000000000000001";
+    parameters["relativeOffset"] = 90*60;
+    parameters["fadeIn"]         = 0;
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.execute("updateFadeInFadeOut", 
+                                        parameters, result));
+    CPPUNIT_ASSERT_MESSAGE("did not notice missing fade out parameter",
+                           xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 1605);    // missing fade out
+
+    parameters["fadeOut"]        = 2100;
+
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("updateFadeInFadeOut", 
+                                        parameters, result));
+    CPPUNIT_ASSERT_MESSAGE(
+                "allowed update fade info without opening playlist first",
+                xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 1607);    // not open for editing
+
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("openPlaylistForEditing", 
+                                        parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(result.hasMember("playlength"));
-    CPPUNIT_ASSERT(result["playlength"].getType() == XmlRpcValue::TypeInt);
-    
-    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
-    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
-
-    xmlRpcClient.close();
-}
-
-
-/*------------------------------------------------------------------------------
- *  A simple negative test.
- *----------------------------------------------------------------------------*/
-void
-RpcDisplayPlaylistTest :: negativeTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
-
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = "0000000000009999";
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(xmlRpcClient.execute("updateFadeInFadeOut", 
+                                        parameters, result));
+    CPPUNIT_ASSERT_MESSAGE(
+                "allowed update fade info for non-existent playlist element",
+                xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 1608);
+                                            // no audio clip at this rel offset
+
+    parameters["relativeOffset"] = 0;
+
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("updateFadeInFadeOut", 
+                                        parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
 }

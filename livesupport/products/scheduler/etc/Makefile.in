@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.49 $
+#   Version  : $Revision: 1.50 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -225,21 +225,28 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/DisplayPlaylistsMethodTest.o \
                    ${TMP_DIR}/RpcDisplayPlaylistsTest.o \
                    ${TMP_DIR}/OpenPlaylistForEditingMethodTest.o \
+                   ${TMP_DIR}/RpcOpenPlaylistForEditingTest.o \
                    ${TMP_DIR}/CreatePlaylistMethodTest.o \
                    ${TMP_DIR}/RpcCreatePlaylistTest.o \
                    ${TMP_DIR}/AddAudioClipToPlaylistMethodTest.o \
                    ${TMP_DIR}/RpcAddAudioClipToPlaylistTest.o \
                    ${TMP_DIR}/RemoveAudioClipFromPlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcRemoveAudioClipFromPlaylistTest.o \
                    ${TMP_DIR}/ValidatePlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcValidatePlaylistTest.o \
                    ${TMP_DIR}/DisplayAudioClipMethodTest.o \
                    ${TMP_DIR}/RpcDisplayAudioClipTest.o \
                    ${TMP_DIR}/DisplayAudioClipsMethodTest.o \
                    ${TMP_DIR}/RpcDisplayAudioClipsTest.o \
                    ${TMP_DIR}/SavePlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcSavePlaylistTest.o \
                    ${TMP_DIR}/RevertEditedPlaylistMethodTest.o \
+                   ${TMP_DIR}/RpcRevertEditedPlaylistTest.o \
                    ${TMP_DIR}/PostgresqlPlayLogTest.o \
                    ${TMP_DIR}/GeneratePlayReportMethodTest.o \
+                   ${TMP_DIR}/RpcGeneratePlayReportTest.o \
                    ${TMP_DIR}/UpdateFadeInFadeOutMethodTest.o \
+                   ${TMP_DIR}/RpcUpdateFadeInFadeOutTest.o \
                    ${TMP_DIR}/PlaylistEventContainerTest.o \
                    ${TMP_DIR}/PlaylistEventTest.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl

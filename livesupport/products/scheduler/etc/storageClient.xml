@@ -3,48 +3,18 @@
 
 <!ELEMENT storageClientFactory (webStorage|testStorage) >
 
-<!ELEMENT testStorage (playlist*, audioClip*) >
-<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
-
-<!ELEMENT playlist (playlistElement*) >
-<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
-<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
-
-<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
-<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
-<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
-
-<!ELEMENT audioClip EMPTY >
-<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip title           CDATA       #REQUIRED >
-<!ATTLIST audioClip uri             CDATA       #REQUIRED >
-
-<!ELEMENT fadeInfo EMPTY >
-<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
-<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
-<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+ 
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+ 
 ]>
 <storageClientFactory>
-    <testStorage tempFiles="file:///tmp/tempPlaylist">
-        <playlist id="0000000000000001" playlength="01:30:00.000">
-            <playlistElement id="0000000000000101" relativeOffset="0" >
-                    <audioClip id="0000000000010001" playlength="01:00:00.000" 
-                               title="one"
-                               uri="file:var/test1.mp3" />
-            </playlistElement>
-            <playlistElement id="0000000000000102" 
-                             relativeOffset="01:00:00.000" >
-                    <audioClip id="0000000000010002"  playlength="00:30:00.000"
-                               title="two"
-                               uri="file:var/test2.mp3" />
-            </playlistElement>
-        </playlist>
-        <audioClip id="0000000000010001" playlength="01:00:00.000" 
-                   title="one"
-                   uri="file:var/test1.mp3" />
-        <audioClip id="0000000000010002" playlength="00:30:00.000" 
-                   title="two"
-                   uri="file:var/test2.mp3" /> 
-    </testStorage>
+    <webStorage tempFiles="file:///tmp/webStorageClient" >
+        <location server="localhost" port="80" 
+                  path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+    </webStorage>
 </storageClientFactory>

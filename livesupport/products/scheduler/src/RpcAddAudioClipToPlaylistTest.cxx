@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,9 +106,10 @@ void
 RpcAddAudioClipToPlaylistTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
+
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
     parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = "0000000000000001";

@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveAudioClipFromPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -35,7 +35,7 @@
 
 #include "SchedulerDaemon.h"
 
-#include "RpcDisplayPlaylistTest.h"
+#include "RpcRemoveAudioClipFromPlaylistTest.h"
 
 
 using namespace LiveSupport::Core;
@@ -46,7 +46,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcRemoveAudioClipFromPlaylistTest);
 
 
 /* ===============================================  local function prototypes */
@@ -58,7 +58,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: setUp(void)                        throw ()
+RpcRemoveAudioClipFromPlaylistTest :: setUp(void)                         throw ()
 {
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
@@ -84,7 +84,7 @@ RpcDisplayPlaylistTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
+RpcRemoveAudioClipFromPlaylistTest :: tearDown(void)                      throw ()
 {
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
@@ -100,53 +100,54 @@ RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
 
 
 /*------------------------------------------------------------------------------
- *  A simple smoke test.
+ *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: simpleTest(void)
+RpcRemoveAudioClipFromPlaylistTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             result;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = "0000000000000001";
+    parameters["sessionId"]      = sessionId->getId();
+    parameters["playlistId"]     = "0000000000000001";
+    parameters["audioClipId"]    = "0000000000010001";
+    parameters["relativeOffset"] = 90*60;
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(result.hasMember("playlength"));
-    CPPUNIT_ASSERT(result["playlength"].getType() == XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(xmlRpcClient.execute("removeAudioClipFromPlaylist", 
+                                        parameters, result));
+    CPPUNIT_ASSERT_MESSAGE("allowed to edit playlist without opening it first",
+                           xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 405);    // not open for editing
     
-    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
-    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
-
-    xmlRpcClient.close();
-}
-
-
-/*------------------------------------------------------------------------------
- *  A simple negative test.
- *----------------------------------------------------------------------------*/
-void
-RpcDisplayPlaylistTest :: negativeTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
-
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = "0000000000009999";
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("openPlaylistForEditing", 
+                                        parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("removeAudioClipFromPlaylist", 
+                                        parameters, result));
+    CPPUNIT_ASSERT_MESSAGE(
+                    "allowed to remove non-existent audio clip from playlist",
+                    xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 406);
+                                          // no audio clip at this rel offset
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(xmlRpcClient.execute("addAudioClipToPlaylist", 
+                                        parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    result.clear();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("removeAudioClipFromPlaylist", 
+                                        parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
     xmlRpcClient.close();
 }
