@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class Playlist : public Configurable
 {
@@ -375,6 +375,20 @@ class Playlist : public Configurable
          */
          Ptr<xmlpp::Document>::Ref
          toSmil(void) const                     throw (std::logic_error);
+
+        /**
+         *  Open for playing.
+         */
+
+         Ptr<std::string>::Ref
+         openForPlaying(void) const             throw (std::logic_error);
+
+        /**
+         *  Close after playing.
+         */
+
+         void
+         closeForPlaying(void) const            throw (std::logic_error);
 };
 
 

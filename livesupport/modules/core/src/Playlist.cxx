@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -405,3 +405,24 @@ Playlist::toSmil(void) const             throw (std::logic_error)
 
     return smilDocument;
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Open for playing.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+Playlist :: openForPlaying(void) const                  throw (std::logic_error)
+{
+    Ptr<std::string>::Ref   returnValue(new std::string("/tmp/somefile.xml"));
+    return returnValue;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Close after playing.
+ *----------------------------------------------------------------------------*/
+void
+Playlist :: closeForPlaying(void) const                 throw (std::logic_error)
+{
+}
+
