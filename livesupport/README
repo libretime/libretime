@@ -22,13 +22,13 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/README,v $
 
 --------------------------------------------------------------------------------
 
 To get started with compiling & working on LiveSupport, please read
-doc/gettingStared.html
+doc/gettingStarted.html
 
 The generic documentation start page is doc/index.html
 
