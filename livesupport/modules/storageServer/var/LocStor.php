@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -273,25 +273,38 @@ class LocStor extends BasicStor{
      */
     function searchMetadata($sessid, $criteria)
     {
+        if(($res = $this->_authorize('read', $this->storId, $sessid)) !== TRUE)
+            return $res;
         $filetype   = strtolower($criteria['filetype']);
+        $limit      = intval($criteria['limit']);
+        $offset     = intval($criteria['offset']);
         if($filetype=='all'){
             $criteriaAC = $criteria;    $criteriaAC['filetype'] = 'audioclip';
             $criteriaPL = $criteria;    $criteriaPL['filetype'] = 'playlist';
-            $resAC = $this->bsLocalSearch($criteriaAC);
-            $resPL = $this->bsLocalSearch($criteriaPL);
+            $resAC = $this->bsLocalSearch($criteriaAC, $limit, $offset);
+            $resPL = $this->bsLocalSearch($criteriaPL, $limit, $offset);
             return array(
                 'audioClipResults'  => $resAC['results'],
-                'playlistResults'   => $resPL['results']
+                'audioClipCnt'      => $resAC['cnt'],
+                'playlistResults'   => $resPL['results'],
+                'playlistCnt'       => $resPL['cnt'],
             );
         }
-        $srchRes = $this->bsLocalSearch($criteria);
-        $res = array('audioClipResults'=>NULL, 'playlistResults'=>NULL);
+        $srchRes = $this->bsLocalSearch($criteria, $limit, $offset);
+        $res = array(
+            'audioClipResults'  => array(),
+            'audioClipCnt'      => 0,
+            'playlistResults'   => array(),
+            'playlistCnt'       => 0,
+        );
         switch($filetype){
         case"audioclip":
             $res['audioClipResults'] = $srchRes['results'];
+            $res['audioClipCnt']     = $srchRes['cnt'];
             break;
         case"playlist":
             $res['playlistResults'] = $srchRes['results'];
+            $res['playlistCnt']     = $srchRes['cnt'];
             break;
         }
         return $res;

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -565,7 +565,7 @@ class BasicStor extends Alib{
      *  @return hash, field 'results' is an array with gunid strings
      *  of files have been found
      */
-    function bsLocalSearch($criteria)
+    function bsLocalSearch($criteria, $limit, $offset)
     {
         $operators = array('and'=>'AND', 'or'=>'OR');
         $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
@@ -589,6 +589,7 @@ class BasicStor extends Alib{
             $whereArr[] = "$sqlCond";
         }
         $selPart = "SELECT DISTINCT to_hex(f.gunid)as gunid, f.ftype as filetype";
+        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).($offset != 0 ? " OFFSET $offset" : '' );
         $ftypeCond = " AND f.ftype='$filetype'";
         if($operator == 'and'){
             // operator: and
@@ -616,11 +617,12 @@ class BasicStor extends Alib{
                 "INNER JOIN {$this->filesTable} f ON md.gunid=f.gunid $ftypeCond\n".
                 "WHERE ".join(' OR ', $whereArr);
         }
-        $res = $this->dbc->getCol($sql);
+        $rh = $this->dbc->query($sql); $cnt = $rh->numRows(); $rh->free();
+        $res = $this->dbc->getCol($sql.$limitPart);
         if(!is_array($res)) $res = array();
         $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
 #        return array('sql'=>$sql, 'results'=>$res);
-        return array('results'=>$res);
+        return array('results'=>$res, 'cnt'=>$cnt);
     }
 
     /* --------------------------------------------------------- info methods */

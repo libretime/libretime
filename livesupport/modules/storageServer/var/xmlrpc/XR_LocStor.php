@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1120,21 +1120,23 @@ class XR_LocStor extends LocStor{
      *      <li> sessid  :  string  -  session id </li>
      *      <li> criteria : struct, with following fields:<br>
      *   <ul>
-     *     <li>filetype - string, type of searched files,
+     *     <li>filetype : string - type of searched files,
      *       meaningful values: 'audioclip', 'playlist', 'all'</li>
-     *     <li>operator - string, type of conditions join
+     *     <li>operator : string - type of conditions join
      *       (any condition matches / all conditions match), 
      *       meaningful values: 'and', 'or', ''
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
      *     </li>
-     *     <li>conditions - array of struct with fields:
+     *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
+     *     <li>offset : int - starting point (0 means without offset)</li>
+     *     <li>conditions : array of struct with fields:
      *       <ul>
-     *           <li>cat - string, metadata category name</li>
-     *           <li>op - string, operator - meaningful values:
+     *           <li>cat : string - metadata category name</li>
+     *           <li>op : string - operator, meaningful values:
      *               'full', 'partial', 'prefix', '=', '&lt;', '&lt;=',
      *               '&gt;', '&gt;='</li>
-     *           <li>val - string, search value</li>
+     *           <li>val : string - search value</li>
      *       </ul>
      *     </li>
      *   </ul>
