@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -203,6 +203,17 @@ HelixPlayerTest :: checkErrorConditions(void)
     try {
         helixPlayer->start();
     } catch (std::logic_error &e) {
+        gotException = true;
+    }
+    CPPUNIT_ASSERT(gotException);
+
+    // check for opening a wrong URL after opening a proper one
+    helixPlayer->open("file:var/test.mp3");
+    helixPlayer->close();
+    gotException = false;
+    try {
+        helixPlayer->open("totally/bad/URL");
+    } catch (std::invalid_argument &e) {
         gotException = true;
     }
     CPPUNIT_ASSERT(gotException);

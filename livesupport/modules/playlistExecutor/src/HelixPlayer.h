@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -253,15 +253,7 @@ class HelixPlayer : virtual public Configurable,
          *  @see #open
          */
         virtual void
-        close(void)                             throw ()
-        {
-            if (isPlaying()) {
-                stop();
-            }
-
-            // nothing else to do here, the Helix Player object does not
-            // have a close() function...
-        }
+        close(void)                             throw ();
 
         /**
          *  Start playing.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -237,9 +237,7 @@ HelixPlayer :: open(const std::string   fileUrl)
     if (HXR_OK != player->OpenURL(fileUrl.c_str())) {
         throw std::invalid_argument("can't open URL");
     }
-    // if the source count was not 0 before OpenURL(), the source is simply
-    // replaced
-    if (!sourceCount && sourceCount == player->GetSourceCount()) {
+    if (sourceCount == player->GetSourceCount()) {
         throw std::invalid_argument("can't open URL");
     }
 }
@@ -315,6 +313,21 @@ HelixPlayer :: stop(void)                       throw (std::logic_error)
     // TODO: gather error info from the ErrorSink
 }
  
+
+/*------------------------------------------------------------------------------
+ *  Close the currently opened audio file.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: close(void)                       throw ()
+{
+    if (isPlaying()) {
+        stop();
+    } else {
+        // else, call IHXPlayer->Stop(), to clean up things...
+        player->Stop();
+    }
+}
+
 
 /*------------------------------------------------------------------------------
  *  A global function needed by the Helix library, this will return the
