@@ -5,5 +5,10 @@ root:table
         foo:string      { "foo" }
         bar:string      { "bar" }
     }
+
+    messages:table
+    {
+        aMessage:string     { "parameter 0: {0}, parameter 1: {1}" }
+    }
 }
 

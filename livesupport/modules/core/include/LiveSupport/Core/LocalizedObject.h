@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <stdexcept>
 
 #include <unicode/resbund.h>
+#include <unicode/fmtable.h>
 
 #include "LiveSupport/Core/Ptr.h"
 
@@ -62,7 +63,7 @@ namespace Core {
  *  to make localized life easier.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class LocalizedObject
 {
@@ -133,6 +134,47 @@ class LocalizedObject
         virtual Ptr<UnicodeString>::Ref
         getResourceString(const char  * key)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  A convenience function to format a message.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param pattern the pattern to format
+         *  @param arguments the arguments to use in the formatting
+         *  @param nArguments the number of arguments supplied
+         *  @return the formatted string
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        static Ptr<UnicodeString>::Ref
+        formatMessage(Ptr<const UnicodeString>::Ref   pattern,
+                      Formattable                   * arguments,
+                      unsigned int                    nArguments)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param arguments the arguments to use in the formatting
+         *  @param nArguments the number of arguments supplied
+         *  @return the formatted string
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<UnicodeString>::Ref
+        formatMessage(const char      * patternKey,
+                      Formattable     * arguments,
+                      unsigned int      nArguments)
+                                                throw (std::invalid_argument);
+
 };
 
 /* ================================================= external data structures */

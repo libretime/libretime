@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -186,4 +186,42 @@ LocalizedObjectTest :: unicodeTest(void)
         CPPUNIT_FAIL(e.what());
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Test message formatting.
+ *----------------------------------------------------------------------------*/
+void
+LocalizedObjectTest :: formatMessageTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    UErrorCode                status = U_ZERO_ERROR;
+    Ptr<ResourceBundle>::Ref  bundle(new ResourceBundle("./tmp/" PACKAGE_NAME,
+                                                        "root",
+                                                        status));
+    CPPUNIT_ASSERT(U_SUCCESS(status));
+
+    try {
+        Ptr<UnicodeString>::Ref     message;
+        Ptr<LocalizedObject>::Ref   locObj(new LocalizedObject(bundle));
+        Ptr<LocalizedObject>::Ref   messages(new LocalizedObject(
+                                                locObj->getBundle("messages")));
+        Formattable                 arguments[] = { "p1", "p2" };
+
+        // test formatting through a key
+        message = messages->formatMessage("aMessage", arguments, 2);
+        CPPUNIT_ASSERT(
+                    message->compare("parameter 0: p1, parameter 1: p2" == 0));
+
+        // test formatting through an explicit pattern
+        Ptr<UnicodeString>::Ref     pattern(new UnicodeString(
+                                                    "only 1 parameter: {0}"));
+        message = LocalizedObject::formatMessage(pattern, arguments, 1);
+        CPPUNIT_ASSERT(message->compare("only 1 parameter: p1") == 0);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
 

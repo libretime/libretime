@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <unicode/msgfmt.h>
 
 #include "LiveSupport/Core/LocalizedObject.h"
 
@@ -83,5 +85,38 @@ LocalizedObject :: getResourceString(const char * key)
     }
 
     return unicodeStr;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Format a message
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+LocalizedObject :: formatMessage(Ptr<const UnicodeString>::Ref   pattern,
+                                 Formattable                   * arguments,
+                                 unsigned int                    nArguments)
+                                            throw (std::invalid_argument)
+{
+    Ptr<UnicodeString>::Ref     message(new UnicodeString());
+    UErrorCode                  err = U_ZERO_ERROR;
+    MessageFormat::format(*pattern, arguments, nArguments, *message, err);
+    if (!U_SUCCESS(err)) {
+        throw std::invalid_argument("can't format string");
+    }
+
+    return message;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Format a message, based on a resource key for its pattern
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+LocalizedObject :: formatMessage(const char       * patternKey,
+                                 Formattable      * arguments,
+                                 unsigned int       nArguments)
+                                            throw (std::invalid_argument)
+{
+    return formatMessage(getResourceString(patternKey), arguments, nArguments);
 }
 
