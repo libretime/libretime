@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,7 +56,8 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-WhiteWindow :: WhiteWindow(unsigned int                 backgroundColor,
+WhiteWindow :: WhiteWindow(Glib::ustring                title,
+                           unsigned int                 backgroundColor,
                            Ptr<CornerImages>::Ref       cornerImages)
                                                                     throw ()
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
@@ -77,14 +78,14 @@ WhiteWindow :: WhiteWindow(unsigned int                 backgroundColor,
     colormap->alloc_color(bgColor);
 
     // set the window title
-    title.reset(new Gtk::Label("Window Title"));
+    this->title.reset(new Gtk::Label(title));
     titleAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                             Gtk::ALIGN_CENTER,
                                             0, 0));
     titleEventBox.reset(new Gtk::EventBox());
     titleEventBox->set_visible_window();
     titleEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
-    titleAlignment->add(*title);
+    titleAlignment->add(*this->title);
     titleEventBox->add(*titleAlignment);
     layout->attach(*titleEventBox, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 

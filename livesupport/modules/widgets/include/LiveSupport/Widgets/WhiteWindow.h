@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -233,10 +233,12 @@ class WhiteWindow : public Gtk::Window
         /**
          *  Constructor.
          *
+         *  @param title the title of the window.
          *  @param backgroundColor the RGB value for the background color.
          *  @param cornerImages the corner images.
          */
-        WhiteWindow(unsigned int                backgroundColor,
+        WhiteWindow(Glib::ustring               title,
+                    unsigned int                backgroundColor,
                     Ptr<CornerImages>::Ref      cornerImages)
                                                             throw ();
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,7 +57,8 @@ using namespace LiveSupport::Widgets;
  *----------------------------------------------------------------------------*/
 TestWindow :: TestWindow (void)
                                                                     throw ()
-          : WhiteWindow(0xffffff,
+          : WhiteWindow("test window",
+                        0xffffff,
                         WidgetFactory::getInstance()->getWhiteWindowCorners())
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
