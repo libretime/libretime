@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 
 #include "PlaylistEvent.h"
 
+using namespace boost;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
@@ -65,15 +66,19 @@ using namespace LiveSupport::Scheduler;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 PlaylistEvent :: PlaylistEvent(
+                        Ptr<SessionId>::Ref                 sessionId,
                         Ptr<AudioPlayerInterface>::Ref      audioPlayer,
                         Ptr<StorageClientInterface>::Ref    storage,
                         Ptr<ScheduleEntry>::Ref             scheduleEntry)
                                                                     throw ()
 {
+    this->sessionId     = sessionId;
     this->audioPlayer   = audioPlayer;
     this->storage       = storage;
     this->scheduleEntry = scheduleEntry;
-    this->sessionId.reset(new SessionId("dummy session ID"));
+
+    // this init time is a wild guess, say 5 seconds should be enough
+    initTime.reset(new posix_time::time_duration(0, 0, 5, 0));
 }
 
 

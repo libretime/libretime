@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,6 +54,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "ScheduleFactory.h"
@@ -89,6 +90,20 @@ static const std::string confElement = "scheduler";
  */
 static const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
 
+/**
+ *  The name of the config child element for the login and password
+ */
+static const std::string    userConfigElementName = "user";
+
+/**
+ *  The name of the config element attribute for the login
+ */
+static const std::string    userLoginAttrName = "login";
+
+/**
+ *  The name of the config element attribute for the password
+ */
+static const std::string    userPasswordAttrName = "password";
 
 
 /* ===============================================  local function prototypes */
@@ -154,7 +169,27 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument(eMsg);
     }
 
-    xmlpp::Node::NodeList   nodes;
+    xmlpp::Node::NodeList       nodes;
+    const xmlpp::Element      * elem;
+    const xmlpp::Attribute    * attribute;
+
+    // read in the user data
+    std::string                 login;
+    std::string                 password;
+
+    nodes = element.get_children(userConfigElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no user element");
+    }
+    elem = dynamic_cast<const xmlpp::Element*> (*nodes.begin());
+    if (!(attribute = elem->get_attribute(userLoginAttrName))) {
+        throw std::invalid_argument("missing login attribute");
+    }
+    login = attribute->get_value();
+    if (!(attribute = elem->get_attribute(userPasswordAttrName))) {
+        throw std::invalid_argument("missing password attribute");
+    }
+    password = attribute->get_value();
 
     // configure the ConnectionManagerFactory
     nodes =
@@ -165,6 +200,16 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     Ptr<ConnectionManagerFactory>::Ref cmf
                                 = ConnectionManagerFactory::getInstance();
     cmf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
+    // configure the AuthenticationClientFactory
+    nodes =
+      element.get_children(AuthenticationClientFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no authenticationClientFactory element");
+    }
+    Ptr<AuthenticationClientFactory>::Ref acf
+                                = AuthenticationClientFactory::getInstance();
+    acf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     // configure the StorageClientFactory
     nodes = element.get_children(StorageClientFactory::getConfigElementName());
@@ -207,11 +252,20 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
 
 
     // do some initialization, using the configured objects
+    authentication = acf->getAuthenticationClient();
+    try {
+        sessionId      = authentication->login(login, password);
+    } catch (AuthenticationException &e) {
+        // TODO: mark error
+        std::cerr << "authentication problem: " << e.what() << std::endl;
+    }
+
     audioPlayer = apf->getAudioPlayer();
 
     Ptr<PlaylistEventContainer>::Ref    eventContainer;
     Ptr<time_duration>::Ref             granularity;
-    eventContainer.reset(new PlaylistEventContainer(scf->getStorageClient(),
+    eventContainer.reset(new PlaylistEventContainer(sessionId,
+                                                    scf->getStorageClient(),
                                                     sf->getSchedule(),
                                                     audioPlayer));
     // TODO: read granularity from config file
@@ -223,6 +277,17 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
 }
 
 
+/*------------------------------------------------------------------------------
+ *  Destructor.
+ *----------------------------------------------------------------------------*/
+SchedulerDaemon :: ~SchedulerDaemon(void)                       throw ()
+{
+    if (authentication.get() && sessionId.get()) {
+        authentication->logout(sessionId);
+    }
+}
+
+ 
 /*------------------------------------------------------------------------------
  *  Register our XML-RPC methods
  *----------------------------------------------------------------------------*/

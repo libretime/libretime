@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE scheduler [
 
-<!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
-                     scheduleFactory,playLogFactory,audioPlayer,xmlRpcDaemon) >
+<!ELEMENT scheduler (user,
+                     connectionManagerFactory,
+                     authenticationClientFactory,
+                     storageClientFactory,
+                     scheduleFactory,
+                     playLogFactory,
+                     audioPlayer,
+                     xmlRpcDaemon) >
 
 <!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
 
@@ -11,6 +17,22 @@
 <!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
 <!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
 
+<!ELEMENT authenticationClientFactory (testAuthentication|
+                                       webAuthentication)>
+
+<!ELEMENT testAuthentication (user) >
+
+<!ELEMENT user EMPTY >
+<!ATTLIST user login        CDATA       #REQUIRED >
+<!ATTLIST user password     CDATA       #REQUIRED >
+
+<!ELEMENT webAuthentication (location) >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+
 <!ELEMENT storageClientFactory (testStorage|webStorage) >
 
 <!ELEMENT testStorage (playlist*, audioClip*) >
@@ -18,11 +40,6 @@
 
 <!ELEMENT webStorage (location) >
 <!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
-
-<!ELEMENT location EMPTY >
-<!ATTLIST location server   CDATA       #REQUIRED >
-<!ATTLIST location port     NMTOKEN     #REQUIRED >
-<!ATTLIST location path     CDATA       #REQUIRED >
 
 <!ELEMENT playlist (playlistElement*) >
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
@@ -62,12 +79,21 @@
 
 ]>
 <scheduler>
+    <user login="root" password="q" />
+
     <connectionManagerFactory>
         <simpleConnectionManager    dsn      = "LiveSupport-test"
                                     userName = "test"
                                     password = "test"
         />
     </connectionManagerFactory>
+
+    <authenticationClientFactory>
+        <webAuthentication>
+            <location server="localhost" port="80"
+                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+        </webAuthentication>
+    </authenticationClientFactory>
 
     <storageClientFactory>
         <webStorage tempFiles="file:///tmp/webStorageClient" >

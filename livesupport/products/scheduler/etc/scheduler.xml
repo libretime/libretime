@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE scheduler [
 
-<!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
-                     scheduleFactory,playLogFactory,audioPlayer,xmlRpcDaemon) >
+<!ELEMENT scheduler (user,
+                     connectionManagerFactory,
+                     authenticationClientFactory,
+                     storageClientFactory,
+                     scheduleFactory,
+                     playLogFactory,
+                     audioPlayer,
+                     xmlRpcDaemon) >
 
 <!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
 
@@ -10,6 +16,22 @@
 <!ATTLIST simpleConnectionManager   dsn         CDATA   #REQUIRED >
 <!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
 <!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
+
+<!ELEMENT authenticationClientFactory (testAuthentication|
+                                       webAuthentication)>
+
+<!ELEMENT testAuthentication (user) >
+
+<!ELEMENT user EMPTY >
+<!ATTLIST user login        CDATA       #REQUIRED >
+<!ATTLIST user password     CDATA       #REQUIRED >
+
+<!ELEMENT webAuthentication (location) >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
 
 <!ELEMENT storageClientFactory (testStorage) >
 
@@ -54,12 +76,20 @@
 
 ]>
 <scheduler>
+    <user login="root" password="q" />
+
     <connectionManagerFactory>
         <simpleConnectionManager    dsn      = "LiveSupport-test"
                                     userName = "test"
                                     password = "test"
         />
     </connectionManagerFactory>
+
+    <authenticationClientFactory>
+        <testAuthentication>
+            <user login="root" password="q" />
+        </testAuthentication>
+    </authenticationClientFactory>
 
     <storageClientFactory>
         <testStorage tempFiles="file:///tmp/tempPlaylist">

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,11 +63,13 @@ using namespace LiveSupport::Scheduler;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 PlaylistEventContainer :: PlaylistEventContainer(
+                        Ptr<SessionId>::Ref                 sessionId,
                         Ptr<StorageClientInterface>::Ref    storage,
                         Ptr<ScheduleInterface>::Ref         schedule,
                         Ptr<AudioPlayerInterface>::Ref      audioPlayer)
                                                                     throw ()
 {
+    this->sessionId   = sessionId;
     this->storage     = storage;
     this->schedule    = schedule;
     this->audioPlayer = audioPlayer;
@@ -84,7 +86,7 @@ PlaylistEventContainer :: getNextEvent(Ptr<ptime>::Ref  when)       throw ()
     Ptr<PlaylistEvent>::Ref     event;
 
     if (entry.get()) {
-        event.reset(new PlaylistEvent(audioPlayer, storage, entry));
+        event.reset(new PlaylistEvent(sessionId, audioPlayer, storage, entry));
     }
 
     return event;

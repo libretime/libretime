@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include "configure.h"
 #endif
 
+#include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventContainerInterface.h"
@@ -70,12 +71,18 @@ using namespace LiveSupport::Storage;
 /**
  *  An event container holding the scheduled playlists.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.3 $
  */
 class PlaylistEventContainer : public virtual EventContainerInterface
 {
     private:
+        /**
+         *  The session id, passed on to PlaylistEvents, to access
+         *  resources from the storage.
+         */
+        Ptr<SessionId>::Ref                 sessionId;
+
         /**
          *  The storage containing the playlists to play.
          */
@@ -96,12 +103,15 @@ class PlaylistEventContainer : public virtual EventContainerInterface
         /**
          *  Constructor.
          *
+         *  @param sessionId the session id that will be accepted by
+         *         calls to storage
          *  @param storage the storage containing the playlist and related
          *         audio clips
          *  @param schedule the schedule to get the events from.
          *  @param audioPlayer the audio player to play the playlists with.
          */
-        PlaylistEventContainer(Ptr<StorageClientInterface>::Ref storage,
+        PlaylistEventContainer(Ptr<SessionId>::Ref              sessionId,
+                               Ptr<StorageClientInterface>::Ref storage,
                                Ptr<ScheduleInterface>::Ref      schedule,
                                Ptr<AudioPlayerInterface>::Ref   audioPlayer)
                                                                     throw ();

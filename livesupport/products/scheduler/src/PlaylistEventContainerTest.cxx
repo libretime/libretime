@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -198,7 +198,10 @@ PlaylistEventContainerTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<PlaylistEventContainer>::Ref    container;
-    container.reset(new PlaylistEventContainer(storage, schedule, audioPlayer));
+    container.reset(new PlaylistEventContainer(sessionId,
+                                               storage,
+                                               schedule,
+                                               audioPlayer));
 
     // see that there are no events scheduled
     Ptr<ScheduledEventInterface>::Ref   scheduledEvent;
@@ -215,7 +218,10 @@ PlaylistEventContainerTest :: scheduleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<PlaylistEventContainer>::Ref    container;
-    container.reset(new PlaylistEventContainer(storage, schedule, audioPlayer));
+    container.reset(new PlaylistEventContainer(sessionId,
+                                               storage,
+                                               schedule,
+                                               audioPlayer));
 
     // schedule playlist 1 at 10 seconds from now
     Ptr<UniqueId>::Ref      playlistId(new UniqueId(1));

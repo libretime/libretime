@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include "configure.h"
 #endif
 
+#include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/ScheduleEntry.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
@@ -69,7 +70,7 @@ using namespace LiveSupport::Storage;
  *  A scheduled event for playing a playlist.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {
@@ -109,13 +110,15 @@ class PlaylistEvent : public virtual ScheduledEventInterface
         /**
          *  Constructor.
          *
+         *  @param sessionId the session id used to access the storage.
          *  @param audioPlayer the audio player to play the playlist with.
          *  @param storage the storage containing the playlist to play,
          *         and all the related audio clips.
          *  @param scheduleEntry the schedule entry this event is
          *         playing.
          */
-        PlaylistEvent(Ptr<AudioPlayerInterface>::Ref    audioPlayer,
+        PlaylistEvent(Ptr<SessionId>::Ref               sessionId,
+                      Ptr<AudioPlayerInterface>::Ref    audioPlayer,
                       Ptr<StorageClientInterface>::Ref  storage,
                       Ptr<ScheduleEntry>::Ref           scheduleEntry)
                                                                     throw ();

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 
@@ -53,6 +54,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Authentication;
 using namespace LiveSupport::PlaylistExecutor;
 
 /* ================================================================ constants */
@@ -66,8 +68,8 @@ using namespace LiveSupport::PlaylistExecutor;
 /**
  *  Unit test for the PlaylistEvent class
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.3 $
  *  @see PlaylistEvent
  */
 class PlaylistEventTest : public CPPUNIT_NS::TestFixture
@@ -93,6 +95,16 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  The duration of the testing events.
          */
         Ptr<time_duration>::Ref             duration;
+
+        /**
+         *  An authentication client.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
 
         /**
          *  Create a playlist event for testing purposes.

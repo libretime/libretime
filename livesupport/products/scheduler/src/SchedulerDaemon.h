@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,6 +60,8 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/SessionId.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventScheduler.h"
 #include "AddAudioClipToPlaylistMethod.h"
@@ -90,6 +92,7 @@ namespace Scheduler {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Authentication;
 using namespace LiveSupport::PlaylistExecutor;
 
 /* ================================================================ constants */
@@ -112,9 +115,13 @@ using namespace LiveSupport::PlaylistExecutor;
  *
  *  <pre><code>
  *  &lt;scheduler&gt;
+ *      &lt;user login="userid" password="pwd" /&gt;
  *      &lt;connectionManagerFactory&gt;
  *          ...
  *      &lt;/connectionManagerFactory&gt;
+ *      &lt;authenticationClientFactory&gt;
+ *          ...
+ *      &lt;/authenticationClientFactory&gt;
  *      &lt;storageClientFactory&gt;
  *          ...
  *      &lt;/storageClientFactory&gt;
@@ -130,20 +137,30 @@ using namespace LiveSupport::PlaylistExecutor;
  *  &lt;/scheduler&gt;
  *  </code></pre>
  *
+ *  The user element holds creditentials for accessing the storage,
+ *  configured below.
+ *
  *  For details on the included elements, see the corresponding documentation
  *  for XmlRpcDaemon, StorageClientFactory, ConnectionManagerFactory
- *  and ScheduleFactory.
+ *  ScheduleFactory and AuthenticationClientFactory.
  *
  *  The DTD for the above element is the following:
  *
  *  <pre><code>
- *  &lt;!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
- *                          scheduleFactory,playLogFactory,xmlRpcDaemon) &gt;
+ *  &lt;!ELEMENT scheduler (user,
+ *                       connectionManagerFactory,
+ *                       authenticationClientFactory,
+ *                       storageClientFactory,
+ *                       scheduleFactory,
+ *                       playLogFactory,
+ *                       audioPlayer,
+ *                       xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.13 $
  *  @see ConnectionManagerFactory
+ *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
  *  @see XmlRpcDaemon
@@ -158,6 +175,16 @@ class SchedulerDaemon : public Installable,
          *  The singleton instance of the scheduler daemon.
          */
         static Ptr<SchedulerDaemon>::Ref    schedulerDaemon;
+
+        /**
+         *  The authentication client.
+         */
+        Ptr<AuthenticationClientInterface>::Ref     authentication;
+
+        /**
+         *  The session id for the scheduler user.
+         */
+        Ptr<SessionId>::Ref                 sessionId;
 
         /**
          *  The event scheduler.
@@ -301,9 +328,7 @@ class SchedulerDaemon : public Installable,
          *  Virtual destructor.
          */
         virtual
-        ~SchedulerDaemon(void)                          throw ()
-        {
-        }
+        ~SchedulerDaemon(void)                          throw ();
 
         /**
          *  Return a pointer to the singleton instance of SchedulerDaemon.
