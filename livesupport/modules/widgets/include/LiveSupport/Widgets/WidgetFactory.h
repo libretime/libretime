@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 #endif
 
 #include <stdexcept>
+#include <gtkmm/image.h>
 
 #include "LiveSupport/Core/Configurable.h"
 
@@ -85,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -164,6 +165,11 @@ class WidgetFactory :
          *  The combo box right image.
          */
         Glib::RefPtr<Gdk::Pixbuf>       comboBoxRightImage;
+
+        /**
+         *  The image for the resize handle.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       resizeImage;
 
         /**
          *  The default constructor.
@@ -302,6 +308,16 @@ class WidgetFactory :
         {
             return whiteWindowImages;
         }
+
+        /**
+         *  Create and return a container holding a resize image.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @return the container holding the resize image.
+         */
+        Gtk::Image *
+        createResizeImage(void)                             throw ();
 };
 
 

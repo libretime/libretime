@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/CornerImages.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,6 +123,10 @@ CornerImages :: loadImage(const std::string     path,
     if (!(image = Gdk::Pixbuf::create_from_file(path + imageName))) {
         throw std::invalid_argument("Missing " + image);
     }
+    
+    // activate alpha channel (transparency)
+//     but it doesn't seem to work :(
+//    image->add_alpha(false, 0, 0, 0);
 
     return image;
 }

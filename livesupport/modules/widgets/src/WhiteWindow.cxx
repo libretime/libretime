@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,6 +104,17 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     childContainer = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_CENTER));
     layout->attach(*childContainer, 0, 2, 1, 2);
 
+    // create the resize image
+    resizeImage = Gtk::manage(wf->createResizeImage());
+    resizeEventBox = Gtk::manage(new Gtk::EventBox());
+    resizeEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
+    resizeEventBox->add(*resizeImage);
+    resizeAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+                                                     Gtk::ALIGN_CENTER,
+                                                     0, 0));
+    resizeAlignment->add(*resizeEventBox);
+    layout->attach(*resizeAlignment, 1, 2, 2, 3, Gtk::FILL, Gtk::SHRINK);
+
     // add the corners
     blueBin = Gtk::manage(new BlueBin(backgroundColor, cornerImages));
     blueBin->add(*layout);
@@ -120,6 +131,9 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                           &WhiteWindow::onCloseButtonClicked));
 
+    resizeEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
+    resizeEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
+                                                &WhiteWindow::onResizeClicked));
 }
 
 
@@ -319,5 +333,23 @@ WhiteWindow :: set_default_size(int     width,
 {
     defaultWidth  = width;
     defaultHeight = height;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The event of the resize image being clicked
+ *----------------------------------------------------------------------------*/
+bool
+WhiteWindow :: onResizeClicked(GdkEventButton     * event)  throw ()
+{
+    if (event->button == 1) {
+        begin_resize_drag(Gdk::WINDOW_EDGE_SOUTH_EAST,
+                          event->button,
+                          (int) event->x_root,
+                          (int) event->y_root,
+                          event->time);
+    }
+
+    return false;
 }
 

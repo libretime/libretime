@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,6 +152,11 @@ static const std::string    comboBoxCenterName = "combo/center.png";
  */
 static const std::string    comboBoxRightName = "combo/right.png";
 
+/**
+ *  The name of the image for the resize handle.
+ */
+static const std::string    resizeName = "whiteWindow/resize.png";
+
 
 /* ===============================================  local function prototypes */
 
@@ -209,6 +214,9 @@ WidgetFactory :: configure(const xmlpp::Element & element)
 
     // load the white window corner images
     whiteWindowImages.reset(new CornerImages(path + whiteWindowPath));
+
+    // load the bottom right resize image
+    resizeImage              = loadImage(resizeName);
 }
 
 
@@ -326,5 +334,15 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
     }
 
     return new ImageButton(passiveImage, rollImage);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a resize image
+ *----------------------------------------------------------------------------*/
+Gtk::Image *
+WidgetFactory :: createResizeImage(void)                        throw ()
+{
+    return new Gtk::Image(resizeImage);
 }
 

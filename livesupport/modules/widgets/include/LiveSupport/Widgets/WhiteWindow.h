@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <gtkmm/table.h>
 #include <gtkmm/alignment.h>
 #include <gtkmm/eventbox.h>
+#include <gtkmm/image.h>
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -68,8 +69,8 @@ using namespace LiveSupport::Core;
 /**
  *  A container holding exactly one child, habing a light blue border to it.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.6 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -120,6 +121,21 @@ class WhiteWindow : public Gtk::Window
         ImageButton                   * closeButton;
 
         /**
+         *  The right alignment contaner for the resize image.
+         */
+        Gtk::Alignment                * resizeAlignment;
+
+        /**
+         *  The event box container for the resize image.
+         */
+        Gtk::EventBox                 * resizeEventBox;
+
+        /**
+         *  The resize image.
+         */
+        Gtk::Image                    * resizeImage;
+
+        /**
          *  Just a container for the main content of the window.
          */
         Gtk::Alignment                * childContainer;
@@ -138,6 +154,15 @@ class WhiteWindow : public Gtk::Window
          */
         virtual void
         onCloseButtonClicked(void)                          throw ();
+
+        /**
+         *  The event handler for the resize being clicked on.
+         *
+         *  @param event the button click event.
+         *  @return true if the the event was handled, false otherwise.
+         */
+        bool
+        onResizeClicked(GdkEventButton     * event)         throw ();
 
         /**
          *  Default constructor.
