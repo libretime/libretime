@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -298,6 +298,102 @@ class GreenBox extends BasicStor{
         return $res;
     }
     
+    /* ---------------------------------------------- methods for preferences */
+    
+    /**
+     *  Read preference record by session id
+     *
+     *  @param sessid string, session id
+     *  @param key string, preference key
+     *  @return string, preference value
+     */
+    function loadPref($sessid, $key)
+    {
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs($this);
+        $res = $pr->loadPref($sessid, $key);
+        return $res;
+    }
+
+    /**
+     *  Save preference record by session id
+     *
+     *  @param sessid string, session id
+     *  @param key string, preference key
+     *  @param value string, preference value
+     *  @return boolean
+     */
+    function savePref($sessid, $key, $value)
+    {
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs($this);
+        $res = $pr->savePref($sessid, $key, $value);
+        return $res;
+    }
+
+    /**
+     *  Delete preference record by session id
+     *
+     *  @param sessid string, session id
+     *  @param key string, preference key
+     *  @return boolean
+     */
+    function delPref($sessid, $key)
+    {
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs($this);
+        $res = $pr->delPref($sessid, $key);
+        return $res;
+    }
+
+    /**
+     *  Read group preference record
+     *
+     *  @param sessid string, session id
+     *  @param group string, group name
+     *  @param key string, preference key
+     *  @return string, preference value
+     */
+    function loadGroupPref($sessid, $group, $key)
+    {
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs($this);
+        $res = $pr->loadGroupPref($sessid, $group, $key);
+        return $res;
+    }
+
+    /**
+     *  Save group preference record
+     *
+     *  @param sessid string, session id
+     *  @param group string, group name
+     *  @param key string, preference key
+     *  @param value string, preference value
+     *  @return boolean
+     */
+    function saveGroupPref($sessid, $group, $key, $value)
+    {
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs($this);
+        $res = $pr->saveGroupPref($sessid, $group, $key, $value);
+        return $res;
+    }
+
+    /**
+     *  Delete group preference record
+     *
+     *  @param sessid string, session id
+     *  @param group string, group name
+     *  @param key string, preference key
+     *  @return boolean
+     */
+    function delGroupPref($sessid, $group, $key)
+    {
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs($this);
+        $res = $pr->delGroupPref($sessid, $group, $key);
+        return $res;
+    }
     /* --------------------------------------------------------- info methods */
 
     /**

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Prefs.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ class Prefs{
         $subjid = $this->gb->getSessUserId($sessid);
         if(PEAR::isError($subjid)) return $subjid;
         if(is_null($subjid)){
-            return PEAR::raiseError("Prefs::loadPref: invalid session id",
+            return PEAR::raiseError("Prefs::savePref: invalid session id",
                 GBERR_SESS);
         }
         $r = $this->update($subjid, $key, $value);
@@ -114,7 +114,7 @@ class Prefs{
         $subjid = $this->gb->getSessUserId($sessid);
         if(PEAR::isError($subjid)) return $subjid;
         if(is_null($subjid)){
-            return PEAR::raiseError("Prefs::loadPref: invalid session id",
+            return PEAR::raiseError("Prefs::delPref: invalid session id",
                 GBERR_SESS);
         }
         $r = $this->delete($subjid, $key);
@@ -131,13 +131,13 @@ class Prefs{
      *  Read group preference record
      *
      *  @param sessid string, session id
-     *  @param grname string, group name
+     *  @param group string, group name
      *  @param key string, preference key
      *  @return string, preference value
      */
-    function loadGroupPref($sessid, $grname, $key)
+    function loadGroupPref($sessid, $group, $key)
     {
-        $subjid = $this->gb->getSubjId($grname);
+        $subjid = $this->gb->getSubjId($group);
         if(PEAR::isError($subjid)) return $subjid;
         if(is_null($subjid)){
             return PEAR::raiseError(
@@ -156,20 +156,20 @@ class Prefs{
      *  Save group preference record
      *
      *  @param sessid string, session id
-     *  @param grname string, group name
+     *  @param group string, group name
      *  @param key string, preference key
      *  @param value string, preference value
      *  @return boolean
      */
-    function saveGroupPref($sessid, $grname, $key, $value)
+    function saveGroupPref($sessid, $group, $key, $value)
     {
         $uid = $this->gb->getSessUserId($sessid);
         if(PEAR::isError($uid)) return $uid;
         if(is_null($uid)){
             return PEAR::raiseError(
-                "Prefs::loadGroupPref: invalid session id", GBERR_SESS);
+                "Prefs::saveGroupPref: invalid session id", GBERR_SESS);
         }
-        $gid = $this->gb->getSubjId($grname);
+        $gid = $this->gb->getSubjId($group);
         if(PEAR::isError($gid)) return $gid;
         if(is_null($gid)){
             return PEAR::raiseError(
@@ -190,7 +190,43 @@ class Prefs{
         return TRUE;
     }
 
-    /* ===================================================== gb level methods */
+    /**
+     *  Delete group preference record
+     *
+     *  @param sessid string, session id
+     *  @param group string, group name
+     *  @param key string, preference key
+     *  @return boolean
+     */
+    function delGroupPref($sessid, $group, $key)
+    {
+        $uid = $this->gb->getSessUserId($sessid);
+        if(PEAR::isError($uid)) return $uid;
+        if(is_null($uid)){
+            return PEAR::raiseError(
+                "Prefs::delGroupPref: invalid session id", GBERR_SESS);
+        }
+        $gid = $this->gb->getSubjId($group);
+        if(PEAR::isError($gid)) return $gid;
+        if(is_null($gid)){
+            return PEAR::raiseError(
+                "Prefs::delGroupPref: invalid group name", GBERR_SESS);
+        }
+        $memb = $this->gb->isMemberOf($uid, $gid);
+        if(PEAR::isError($memb)) return $memb;
+        if(!$memb){
+            return PEAR::raiseError(
+                "Prefs::delGroupPref: access denied", GBERR_DENY);
+        }
+        $r = $this->delete($gid, $key);
+        if(PEAR::isError($r)) return $r;
+        if($r === FALSE){
+            return PEAR::raiseError(
+                "Prefs::delGroupPref: invalid preference key", GBERR_PREF);
+        }
+        return TRUE;
+    }
+    /* ==================================================== low level methods */
     /**
      *  Insert of new preference record
      *
