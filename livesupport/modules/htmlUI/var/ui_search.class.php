@@ -82,24 +82,27 @@ class uiSearch
     function searchDB()
     {
         $this->results = NULL;
-        #print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         foreach ($results['results'] as $rec) {
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
+        #print_r($this->criteria); print_r($this->results);
         $this->pagination($results);
     }
 
 
     function pagination(&$results)
     {
+        if (sizeof($this->results) == 0) {
+            return FALSE;
+        }
         $this->results['count'] = $results['cnt'];
         $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
         $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
 
         $p = 1;
         for ($n = 1; $n <= ceil($results['cnt'] / $this->criteria['limit']); $n = $n+$p) {
-            $p = bcpow(10, floor($n/10)); echo "$p<br>";
+            $p = bcpow(10, floor($n/10));
             $this->results['pages'][$n-1] = $n;
         }
 

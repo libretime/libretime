@@ -18,12 +18,11 @@ $ui_fmask = array(
             'type'      => 'text',
             'label'     => 'Reduce Upload Filesize<br><small>(must be smaller than ' .ini_get('upload_max_filesize').')</small>',
             'rule'      => 'numeric',
-            /*
             'attributes'   => array(
                                 'onClick'  => 'alert ("Note: System Maximum is set to '.
-                                                strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'))
-                                                .' in php.ini\n You cannot override this here.")'
-                           )  */
+                                                ini_get('upload_max_filesize')
+                                                .' in php.ini\n You can just reduce this amount this here.")'
+                           )
         ),
         array(
             'rule'      => 'nopunctuation',
@@ -62,7 +61,8 @@ $ui_fmask = array(
             'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Station URL',
-            'default'   => 'http://'
+            'default'   => 'http://',
+            'required'  => TRUE
         ),
         array(
             'rule'      => 'regex',

@@ -40,12 +40,12 @@
     {include file="editMetaData.tpl"}
 {/if}
 
-{if $changeStationPrefs}  
+{if $changeStationPrefs}
     {include file="changeStationPrefs.tpl"}
 {/if}
 
-{if $playlist}
-    {include file="playlist/playlist.tpl"}
+{if $PL_simpleManagement}     
+    {include file="playlist/simpleManagement.tpl"}
 {/if}
 
 

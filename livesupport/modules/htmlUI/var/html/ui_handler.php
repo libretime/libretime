@@ -4,16 +4,20 @@ require dirname(__FILE__).'/../ui_handler_init.php';
 switch($_REQUEST['act']){
 
     case "login":
-        $uiHandler->login($_REQUEST, $ui_fmask["login"]);
+        if (($ui_tmp_sessid = $uiHandler->login($_REQUEST, $ui_fmask["login"])) !== FALSE) {
+            $uiHandler->PLAYLIST->testForLooked();
+        }
     break;
 
     case "logout":
         $uiHandler->SCRATCHPAD->save();
+        $uiHandler->PLAYLIST->testForLooked();
         $uiHandler->logout();
     break;
 
     case "signover":
         $uiHandler->SCRATCHPAD->save();
+        $uiHandler->PLAYLIST->testForLooked();
         $uiHandler->logout(TRUE);
     break;
 

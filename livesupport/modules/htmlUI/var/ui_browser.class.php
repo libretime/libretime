@@ -50,7 +50,7 @@ class uiBrowser extends uiBase {
 
 
     function getAlertMsg()
-    {
+    {        
         if ($_SESSION['alertMsg']) {
             $this->alertMsg = $_SESSION['alertMsg'];
             unset($_SESSION['alertMsg']);

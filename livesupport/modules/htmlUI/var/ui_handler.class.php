@@ -40,18 +40,30 @@ class uiHandler extends uiBase {
     {
         session_destroy();
         session_start();
-        if ($this->_validateForm($formdata, $mask)) {
-            $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
-            if($sessid && !PEAR::isError($sessid)){
-                setcookie($this->config['authCookieName'], $sessid);
-                $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
-                if(!PEAR::isError($id)) $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
-            }else{
-                $this->_retMsg('Login failed.');
-                $_SESSION['retransferFormData']['login']=$formdata['login'];
-                $this->redirUrl = UI_BROWSER.'?popup[]=login';
-            }
+
+        if (!$this->_validateForm($formdata, $mask)) {
+            $_SESSION['retransferFormData']['login']=$formdata['login'];
+            $this->redirUrl = UI_BROWSER.'?popup[]=login';
+            return FALSE;
         }
+        $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
+        if(!$sessid || PEAR::isError($sessid)){
+            $this->_retMsg('Login failed');
+            $_SESSION['retransferFormData']['login']=$formdata['login'];
+            $this->redirUrl = UI_BROWSER.'?popup[]=login';
+            return FALSE;
+        }
+        setcookie($this->config['authCookieName'], $sessid);
+        $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
+        if(PEAR::isError($id)) {
+            $this->_retMsg('Login failed');
+            $_SESSION['retransferFormData']['login']=$formdata['login'];
+            $this->redirUrl = UI_BROWSER.'?popup[]=login';
+            return FALSE;
+        }
+        $this->sessid = $sessid;
+        $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
+        return TRUE;
      }
 
     /**

@@ -328,8 +328,7 @@ class uiBase
                       'duration'    => $this->_niceTime($this->_getMDataValue($id, 'dcterms:extent')),
                       'type'        => $this->gb->getFileType($id),
                 );
-
-        return ($data);
+         return ($data);
     }
 
 
