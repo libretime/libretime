@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -402,8 +402,8 @@ class GreenBox extends BasicStor{
         return $type;
     }
     
-    /* ==================================================== "private" methods */
 
+    /* ========================================== redefined "private" methods */
     /**
      *  Copy virtual file.<br>
      *  Redefined from parent class.
@@ -422,6 +422,7 @@ class GreenBox extends BasicStor{
                 $ac =& StoredFile::recall(&$this, $id);
                 if(PEAR::isError($ac)){ return $ac; }
                 $ac2 =& StoredFile::copyOf(&$ac, $nid);
+                $ac2->rename($this->getObjName($nid));
                 break;
             default:
         }
@@ -476,6 +477,7 @@ class GreenBox extends BasicStor{
         return TRUE;
     }
     
+    /* ==================================================== "private" methods */
     /**
      *  Return users's home folder local ID
      *
