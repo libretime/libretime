@@ -307,13 +307,12 @@ class uiBrowser extends uiBase {
      */
     function getSearchForm($id, &$formdata, &$mask)
     {
-        $rowsBegin = ($formdata['counter'] ? $formdata['counter']-1 : UI_SEARCH_MIN_ROWS);
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_BROWSER);
-        $form->setConstants(array('id'=>$id, 'counter'=>$rowsBegin+1));
+        $form->setConstants(array('id'=>$id, 'counter'=>($formdata['counter'] ? $formdata['counter'] : UI_SEARCH_MIN_ROWS)));
 
         foreach ($mask['mData']['tabs']['group']['group'] as $k=>$v) {
             foreach ($mask['mData']['pages'][$v] as $val){
-                $options[$val['element']] = $val['element'];
+                $col1[$val['element']] = $val['element'];
                 if (isset($val['relation']))
                     $col2[$val['element']] = $mask['relations'][$val['relation']];
                 else
@@ -321,19 +320,17 @@ class uiBrowser extends uiBase {
             };
         };
 
-        $col1 = $options;
-
         for($n=1; $n<=UI_SEARCH_MAX_ROWS; $n++) {
             unset ($group);
 
             $form->addElement('static', 's1', NULL, "<div id='searchRow_$n'>");
 
-            if ($n>$rowsBegin) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
+            if ($n>($formdata['counter'] ? $formdata['counter'] : UI_SEARCH_MIN_ROWS)) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
             $sel = &$form->createElement('hierselect', "row_$n", NULL);
             $sel->setOptions(array($col1, $col2));
             $group[] = &$sel;
-            $group[] = &$form->createElement('text', 'criteria['.$n.']', NULL);
-            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "document.getElementById('searchRow_$n').style.visibility = 'hidden'; document.getElementById('searchRow_$n').style.height = '0px'"));
+            $group[] = &$form->createElement('text', 'row_'.$n.'[2]', NULL);
+            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "dropRow('$n')"));
             $form->addGroup($group);
 
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
@@ -363,16 +360,16 @@ class uiBrowser extends uiBase {
      */
     function getSearchRes($id, &$formdata)
     {
-        foreach ($formdata['criteria'] as $key=>$val) {
-            if (strlen($val)) {
-                $critArr[] = array('cat' => $formdata['searchBy'][$key],
-                                   'op'  => $formdata['relation'][$key],
-                                   'val' => $val
+        foreach ($formdata as $key=>$val) {
+            if (is_array($val) && strlen($val[2])) {
+                $critArr[] = array('cat' => $val[0],
+                                   'op'  => $val[1],
+                                   'val' => $val[2]
                              );
             }
         }
         $searchCriteria = array('filetype'  => 'audioclip',
-                                'operator'  => 'or',
+                                'operator'  => $formdata['operator'],
                                 'conditions'=> $critArr
                           );
 

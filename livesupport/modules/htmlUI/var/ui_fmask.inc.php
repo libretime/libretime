@@ -683,31 +683,25 @@ $ui_fmask = array(
             'type'      => 'hidden'
         ),
         array(
-            'element'   => 'addRow',
-            'type'      => 'button',
-            'label'     => 'One more Row',
-            'attributes'  => array('onClick' => 'showSearchRow()'),
-            'groupit'   => TRUE,
+            'element'   => 'max_rows',
+            'type'      => 'hidden',
+            'constant'  => UI_SEARCH_MAX_ROWS
         ),
         array(
-            'element'   => 'JS',
-            'type'      => 'static',
-            'text'      => "<script langauge='javascript'>
-                                function showSearchRow()
-                                {
-                                    var counter;
-
-                                    counter = document.forms['search'].elements['counter'].value
-
-                                    if (counter <= ".UI_SEARCH_MAX_ROWS.") {
-                                       document.forms['search'].elements['counter'].value = Number(counter)+1;
-                                       showRow = new Function('show', \"document.getElementById('searchRow_\" + counter + \"').style.visibility='visible'; document.getElementById('searchRow_\" + counter + \"').style.height='30px';\");
-                                       showRow();
-                                    } else {
-                                      alert('Maximum reached');
-                                    }
-                                }
-                           </script>",
+            'element'   => 'operator',
+            'type'      => 'select',
+            'label'     => 'Operator',
+            'options'   => array(
+                            'or'    => 'Or',
+                            'and'   => 'And',
+                            )
+        ),
+        array(
+            'element'   => 'addrow',
+            'type'      => 'button',
+            'label'     => 'One more Row',
+            'attributes'  => array('onClick' => 'addRow()'),
+            'groupit'   => TRUE,
         ),
         array(
             'element'   => 'doSearch',
@@ -715,13 +709,13 @@ $ui_fmask = array(
             'label'     => 'Submit',
             'groupit'   => TRUE,
         ),
-        array('group'   => array('addRow', 'doSearch')
+        array('group'   => array('addrow', 'doSearch')
         ),
     ),
     'relations'     => array(
         'standard'    => array(
-                'full'       => 'full',
                 'partial'    => 'partial',
+                'full'       => 'full',
                 'prefix'     => 'prefix',
                 '='          => '=' ,
                 '<'         => '<',
@@ -730,8 +724,8 @@ $ui_fmask = array(
                 '>='        => '>='
         ),
         1  => array(
-                'full'       => 'full',
                 'partial'    => 'partial',
+                'full'       => 'full',
                 'prefix'     => 'prefix',
                 '='          => '='
               ),

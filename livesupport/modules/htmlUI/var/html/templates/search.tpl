@@ -1,5 +1,7 @@
 {*Smarty template*}
 
+{include file="script/search.js.tpl"}
+
 {if $showSearchForm}
     {literal}
     <style type="text/css">
