@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gtkmm/gtkmm-2.4.7/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ gtkmm_tar=$basedir/src/$gtkmm_product.tar.bz2
 export CPPFLAGS="-I$installdir/include"
 export LDFLAGS="-L$installdir/lib"
 export PKG_CONFIG_PATH="$installdir/lib/pkgconfig"
-export LD_LIBRARY_PATH="$installdir/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$usrdir/lib"
 
 mkdir -p $tmpdir
 
