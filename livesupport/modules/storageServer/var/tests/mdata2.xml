@@ -28,8 +28,8 @@
 <xbmf:episodesequence  >Episode sequence</xbmf:episodesequence>
 <xbmf:contributor>
  <xbmf:role>Author</xbmf:role>
- <xbmf:name>John X</xbmf:name>
- <xbmf:phone>123456789</xbmf:phone>
+ <xbmf:name>John X2</xbmf:name>
+ <xbmf:phone>23456789</xbmf:phone>
 </xbmf:contributor>
 </metadata>
 </audioClip>
