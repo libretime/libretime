@@ -133,7 +133,7 @@ class uiPlaylist
             $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid);
             if (PEAR::isError($r)) {
                 print_r($r);
-                $this->Base->_retMsg('Cannot add Item to Playlist');
+                $this->Base->_retMsg('Error on add item to Playlist');
                 return FALSE;
             }
         }
@@ -173,7 +173,7 @@ class uiPlaylist
             $this->Base->_retMsg('Cannot create Playlist');
             return FALSE;
         }
-        $this->Base->_setMDataValue($plid, 'dc:title', $datetime);
+        $this->Base->_setMDataValue($plid, UI_MDATA_KEY_TITLE, $datetime);
         if ($this->activate($plid)===FALSE) {
             return FALSE;
         }
@@ -208,10 +208,10 @@ class uiPlaylist
                 $this->flat[$parent]['attrs'] = $attrs;
             }
             if ($sub['elementname']=='fadeinfo') {
-                $this->flat[$parent]['fadein']  = $this->_plTimeToSecs($sub['attrs']['fadein']);
-                $this->flat[$parent]['fadeout'] = $this->_plTimeToSecs($sub['attrs']['fadeout']);
-                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadein']  ? $this->_plTimeToSecs($sub['attrs']['fadein'])  * 1000 : 0;
-                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeout'] ? $this->_plTimeToSecs($sub['attrs']['fadeout']) * 1000 : 0;
+                $this->flat[$parent]['fadein']  = GreenBox::_plTimeToSecs($sub['attrs']['fadein']);
+                $this->flat[$parent]['fadeout'] = GreenBox::_plTimeToSecs($sub['attrs']['fadeout']);
+                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadein']  ? GreenBox::_plTimeToSecs($sub['attrs']['fadein'])  * 1000 : 0;
+                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeout'] ? GreenBox::_plTimeToSecs($sub['attrs']['fadeout']) * 1000 : 0;
             }
         }
     }
@@ -226,32 +226,35 @@ class uiPlaylist
         switch ($type) {
             case "fadeX":
                 $item[$prev['attrs']['id']] =
-                              array('fadeIn'  => $this->_secsToPlTime($prev['fadein']),
-                                    'fadeOut' => $this->_secsToPlTime($duration/1000));
-                $item[$id]  = array('fadeIn'  => $this->_secsToPlTime($duration/1000),
-                                    'fadeOut' => $this->_secsToPlTime($curr['fadeout']));
+                              array('fadeIn'  => GreenBox::_secsToPlTime($prev['fadein']),
+                                    'fadeOut' => GreenBox::_secsToPlTime($duration/1000));
+                $item[$id]  = array('fadeIn'  => GreenBox::_secsToPlTime($duration/1000),
+                                    'fadeOut' => GreenBox::_secsToPlTime($curr['fadeout']));
             break;
             case "pause":
                 $item[$prev['attrs']['id']] =
-                              array('fadeIn'  => $this->_secsToPlTime($prev['fadein']),
-                                    'fadeOut' => $this->_secsToPlTime(-$duration/1000));
-                $item[$id]  = array('fadeIn'  => $this->_secsToPlTime(-$duration/1000),
-                                    'fadeOut' => $this->_secsToPlTime($curr['fadeout']));
+                              array('fadeIn'  => GreenBox::_secsToPlTime($prev['fadein']),
+                                    'fadeOut' => GreenBox::_secsToPlTime(-$duration/1000));
+                $item[$id]  = array('fadeIn'  => GreenBox::_secsToPlTime(-$duration/1000),
+                                    'fadeOut' => GreenBox::_secsToPlTime($curr['fadeout']));
             break;
             case "fadeIn":
-                $item[$id]  = array('fadeIn'  => $this->_secsToPlTime($duration/1000),
-                                    'fadeOut' => $this->_secsToPlTime($curr['fadeout']));
+                $item[$id]  = array('fadeIn'  => GreenBox::_secsToPlTime($duration/1000),
+                                    'fadeOut' => GreenBox::_secsToPlTime($curr['fadeout']));
             break;
             case "fadeOut":
-                $item[$id] = array('fadeIn'  => $this->_secsToPlTime($curr['fadein']),
-                                   'fadeOut' => $this->_secsToPlTime($duration/1000));
+                $item[$id] = array('fadeIn'  => GreenBox::_secsToPlTime($curr['fadein']),
+                                   'fadeOut' => GreenBox::_secsToPlTime($duration/1000));
             break;
         }
         #print_r($item);
         foreach ($item as $i=>$val) {
-            if ($this->Base->gb->changeFadeInfo($this->token, $i, $val['fadeIn'], $val['fadeOut'], $this->Base->sessid) === FALSE)
-                $this->Base->_retMsg('Feiled: changeFadeInfo');
-                return FALSE;
+            $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val['fadeIn'], $val['fadeOut'], $this->Base->sessid);
+            #print_r($r);
+            if (PEAR::isError($r)) {
+                    $this->Base->_retMsg('ChangeFadeInfo failed');
+                    return FALSE;
+                }
         }
     }
 

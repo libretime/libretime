@@ -33,9 +33,13 @@
                 <td><input type="checkbox" name="all" onClick="form_switchAll('SP')"></th>
                 <td align="center" colspan="2">
                     <select>
-                        <option>Multiple Action:</option>
+                        <option selected>Multiple Action:</option>
                         <option onClick="form_submit('SP', 'SP.removeItem')">Remove</option>
-                        <option onClick="form_submit('SP', 'PL.addItem')">Add to Playlist</option>
+                        {if $_PL_activeId}
+                            <option onClick="form_submit('SP', 'PL.addItem')">Add to Playlist</option>
+                        {else}
+                            <option onClick="form_submit('SP', 'PL.create')">New Playlist using Item</option>
+                        {/if}
                     </select>
                 </th>
                 <td align="center" colspan="2"><a href="#" onClick="form_clearAll('SP', 'SP.removeItem')">[Clear]</a></th>

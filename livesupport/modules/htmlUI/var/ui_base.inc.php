@@ -280,6 +280,7 @@ class uiBase
 
     function _twoDigits($num)
     {
+        
         if (strlen($num) == 1)
             return "0$num";
         if (strlen($num) == 0)

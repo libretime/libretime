@@ -97,11 +97,12 @@ class uiScheduler extends uiCalendar
             require_once 'Calendar/Month/Weekdays.php';
             $Period = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
             $Period->build();
-        }
-        if ($period=='week') {
+        } elseif ($period=='week') {
             require_once 'Calendar/Week.php';
             $Period = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
             $Period->build();
+        } else {
+            return array();
         }
         $d = $Period->fetch();
         $corrMonth = $d->thisMonth()<=12 ? $this->Base->_twoDigits($d->thisMonth()) : '01';   ## due to bug in
@@ -135,8 +136,9 @@ class uiScheduler extends uiCalendar
     {
         $dfrom = $dfrom.'T00:00:00';
         $dto   = $dto.'T23:59:59';
-        $pArr  = $this->displayScheduleMethod($dfrom, $dto);
-        #print_r($pArr);
+        if (($pArr  = $this->displayScheduleMethod($dfrom, $dto)) === FALSE)
+            return array(FALSE);;
+
         foreach ($pArr as $val) {
             #print_r($val);
             $pStampArr[] = array('start' => $this->_datetime2timestamp($val['start']),
@@ -167,7 +169,16 @@ class uiScheduler extends uiCalendar
         }
     }
 
-    ## XML-RPC methods ############################################################################################
+    function _isError($r)
+    {
+        if (is_array($r['error'])) {
+            $this->Base->_retMsg('Error: $1', $r['error']['message']);
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    ## XML-RPC wrapper methods ############################################################################################
     function initXmlRpc()
     {
         include_once dirname(__FILE__).'/SchedulerPhpClient.class.php';
@@ -182,8 +193,8 @@ class uiScheduler extends uiCalendar
         #echo "Schedule Gunid: $gunid  At: ".$datetime;
         $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime.UI_TIMEZONE);
         #print_r($r);
-        if (is_array($r['error']))
-            $this->Base->_retMsg('Error: $1', $r['error']['message']);
+        if ($this->_isError($r))
+            return FALSE;
         if (isset($r['scheduleEntryId']))
             $this->Base->_retMsg('ScheduleId: $1', $r['scheduleEntryId']);
     }
@@ -193,6 +204,8 @@ class uiScheduler extends uiCalendar
     {
         #echo $from.$to;
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
+        if ($this->_isError($r))
+            return FALSE;
         return $r;
     }
 }
