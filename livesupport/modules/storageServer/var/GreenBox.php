@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.46 $
+    Version  : $Revision: 1.47 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.46 $
+ *  @version $Revision: 1.47 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -404,10 +404,13 @@ class GreenBox extends BasicStor{
         $lc =& new LocStor($this->dbc, $this->config);
         $gunid2 = $lc->createPlaylist($sessid, $gunid, $fname);
         if(PEAR::isError($gunid2)) return $gunid2;
+        // get local id:
         $id = $this->_idFromGunid($gunid2);
         if(PEAR::isError($id)) return $id;
+        // get home dir id:
         $hdid = $this->_getHomeDirId($sessid);
         if(PEAR::isError($hdid)) return $hdid;
+        // optionally move it to the destination folder:
         if($parid != $hdid && !is_null($parid)){
             $r = $this->bsMoveFile($id, $parid);
             if(PEAR::isError($r)){ return $r; }
@@ -492,119 +495,25 @@ class GreenBox extends BasicStor{
     function addAudioClipToPlaylist($token, $acId, $sessid,
         $fadeIn=NULL, $fadeOut=NULL)
     {
-        $acGunid = $this->_gunidFromId($acId);
-        if(PEAR::isError($acGunid)) return $acGunid;
-        $plGunid = $this->_gunidFromToken($token, 'download');
-        if(PEAR::isError($plGunid)) return $plGunid;
-        if(is_null($plGunid)){
+        require_once"Playlist.php";
+        $pl =& Playlist::recallByToken($this, $token);
+        if(PEAR::isError($pl)) return $pl;
+        if('playlist' == ($type = $this->getFileType($acId))){
             return PEAR::raiseError(
-                "GreenBox::addClipToPlaylist: invalid token"
+                "GreenBox::addAudioClipToPlaylist: object type not supported".
+                " ($type)"
             );
         }
-        $pl =& StoredFile::recallByGunid($this, $plGunid);
-        if(PEAR::isError($pl)){ return $pl; }
-        $id = $pl->getId();
-        // get playlist length and record id:
-        $r = $pl->md->getMetadataEl('dcterms:extent');
-        if(PEAR::isError($r)){ return $r; }
-        if(isset($r[0])){
-            $plLen = $r[0]['value'];
-            $plLenMid = $r[0]['mid'];
-        }else{
-            $plLen = '00:00:00.000000';
-            $plLenMid = NULL;
-        }
-
-        // get audioClip legth and title
-        $ac =& StoredFile::recallByGunid($this, $acGunid);
-        if(PEAR::isError($ac)){ return $ac; }
-        $r = $ac->md->getMetadataEl('dcterms:extent');
-        if(PEAR::isError($r)){ return $r; }
-        $acLen = $r[0]['value'];
-        $r = $ac->md->getMetadataEl('dc:title');
-        if(PEAR::isError($r)){ return $r; }
-        $acTit = $r[0]['value'];
-
-        // get main playlist container
-        $r = $pl->md->getMetadataEl('playlist');
-        if(PEAR::isError($r)){ return $r; }
-        $parid = $r[0]['mid'];
-        if(is_null($parid)){
-            return PEAR::raiseError(
-                "GreenBox::addClipToPlaylist: can't find main container"
-            );
-        }
-        // get metadata container (optionally insert it)
-        $r = $pl->md->getMetadataEl('metadata');
-        if(PEAR::isError($r)){ return $r; }
-        $metaParid = $r[0]['mid'];
-        if(is_null($metaParid)){
-            $r = $pl->md->insertMetadataEl($parid, 'metadata');
-            if(PEAR::isError($r)){ return $r; }
-            $metaParid = $r;
-        }
-
-        // insert new playlist element
-        $r = $pl->md->insertMetadataEl($parid, 'playlistElement');
-        if(PEAR::isError($r)){ return $r; }
-        $plElId = $r;
-        $plElGunid = StoredFile::_createGunid();
-        $r = $pl->md->insertMetadataEl($plElId, 'id', $plElGunid, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        $r = $pl->md->insertMetadataEl(
-            $plElId, 'relativeOffset', $plLen, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        // insert audioClip element into playlistElement
-        $r = $pl->md->insertMetadataEl($plElId, 'audioClip');
-        if(PEAR::isError($r)){ return $r; }
-        $acId = $r;
-        $r = $pl->md->insertMetadataEl($acId, 'id', $acGunid, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        $r = $pl->md->insertMetadataEl($acId, 'playlength', $acLen, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        $r = $pl->md->insertMetadataEl($acId, 'title', $acTit, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        if(!is_null($fadeIn) || !is_null($fadeOut)){
-            // insert fadeInfo element into playlistElement
-            $r = $pl->md->insertMetadataEl($plElId, 'fadeInfo');
-            if(PEAR::isError($r)){ return $r; }
-            $fiId = $r;
-            $fiGunid = StoredFile::_createGunid();
-            $r = $pl->md->insertMetadataEl($fiId, 'id', $fiGunid, 'A');
-            if(PEAR::isError($r)){ return $r; }
-            $r = $pl->md->insertMetadataEl($fiId, 'fadeIn', $fadeIn, 'A');
-            if(PEAR::isError($r)){ return $r; }
-            $r = $pl->md->insertMetadataEl($fiId, 'fadeOut', $fadeOut, 'A');
-            if(PEAR::isError($r)){ return $r; }
-        }
-        // calculate and insert total length:
-        $newPlLen = $this->_secsToPlTime(
-            $this->_plTimeToSecs($plLen) + $this->_plTimeToSecs($acLen)
-        );
-        if(is_null($plLenMid)){
-            $r = $pl->md->insertMetadataEl(
-                $metaParid, 'dcterms:extent', $newPlLen);
-        }else{
-            $r = $pl->md->setMetadataEl($plLenMid, $newPlLen);
-        }
-        if(PEAR::isError($r)){ return $r; }
-        /* commented - maybe useless (C++ part doesn't do it)
-        // set access to audio clip:
-        $r = $this->bsAccess(NULL, '', $acGunid, 'access');
-        if(PEAR::isError($r)){ return $r; }
-        $acToken = $r['token'];
-        // insert token attribute:
-        $r = $pl->md->insertMetadataEl($acId, 'accessToken', $acToken, 'A');
-        if(PEAR::isError($r)){ return $r; }
-        */
-        return $plElGunid;
+        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut);
+        if(PEAR::isError($res)) return $res;
+        return $res;
     }
 
     /**
      *  Remove audioclip from playlist
      *
      *  @param token string, playlist access token
-     *  <span style="color:red">
+     *  <span style="color:green">
      *  @param plElGunid string, global id of deleted playlistElement
      *  </span>
      *  @param sessid string, session ID
@@ -612,90 +521,34 @@ class GreenBox extends BasicStor{
      */
     function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
-        // $acGunid = $this->_gunidFromId($acId);
-        // if(PEAR::isError($acGunid)) return $acGunid;
-        $plGunid = $this->_gunidFromToken($token, 'download');
-        if(PEAR::isError($plGunid)) return $plGunid;
-        if(is_null($plGunid)){
-            return PEAR::raiseError(
-                "GreenBox::addClipToPlaylist: invalid token"
-            );
-        }
-        $pl =& StoredFile::recallByGunid($this, $plGunid);
-        if(PEAR::isError($pl)){ return $pl; }
-        $id = $pl->getId();
+        require_once"Playlist.php";
+        $pl =& Playlist::recallByToken($this, $token);
+        if(PEAR::isError($pl)) return $pl;
+        $res = $pl->delAudioClip($plElGunid);
+        if(PEAR::isError($res)) return $res;
+        return $res;
+    }
 
-        // get main playlist container:
-        $r = $pl->md->getMetadataEl('playlist');
-        if(PEAR::isError($r)){ return $r; }
-        $parid = $r[0]['mid'];
-        if(is_null($parid)){
-            return PEAR::raiseError(
-                "GreenBox::addClipToPlaylist: can't find main container"
-            );
-        }
-        // get playlist length and record id:
-        $r = $pl->md->getMetadataEl('dcterms:extent');
-        if(PEAR::isError($r)){ return $r; }
-        $plLen = $r[0]['value'];
-        $plLenMid = $r[0]['mid'];
-        // get array of playlist elements:
-        $plElArr = $pl->md->getMetadataEl('playlistElement', $parid);
-        if(PEAR::isError($plElArr)){ return $plElArr; }
-        $found = FALSE;
-        foreach($plElArr as $el){
-            $plElGunidArr = $pl->md->getMetadataEl('id', $el['mid']);
-            if(PEAR::isError($plElGunidArr)){ return $plElGunidArr; }
-            // select playlist element to remove
-            if($plElGunidArr[0]['value'] == $plElGunid){
-                $acArr = $pl->md->getMetadataEl('audioClip', $el['mid']);
-                if(PEAR::isError($acArr)){ return $acArr; }
-                $storedAcMid = $acArr[0]['mid'];
-                $acLenArr = $pl->md->getMetadataEl('playlength', $storedAcMid);
-                if(PEAR::isError($acLenArr)){ return $acLenArr; }
-                $acLen = $acLenArr[0]['value'];
-                /*
-                $acTokArr = $pl->md->getMetadataEl('accessToken', $storedAcMid);
-                if(PEAR::isError($acTokArr)){ return $acTokArr; }
-                $acToken = $acTokArr[0]['value'];
-                */
-                // remove playlist element:
-                $r = $pl->md->setMetadataEl($el['mid'], NULL);
-                if(PEAR::isError($r)){ return $r; }
-                /*
-                // release audioClip:
-                $r = $this->bsRelease($acToken, 'access');
-                if(PEAR::isError($r)){ return $r; }
-                */
-                $found = TRUE;
-                continue;
-            }
-            if($found){
-                // corect relative offsets in remaining elements:
-                $acOffArr = $pl->md->getMetadataEl('relativeOffset', $el['mid']);
-                if(PEAR::isError($acOffArr)){ return $acOffArr; }
-                $newOff = $this->_secsToPlTime(
-                    $this->_plTimeToSecs($acOffArr[0]['value'])
-                    -
-                    $this->_plTimeToSecs($acLen)
-                );
-                $r = $pl->md->setMetadataEl($acOffArr[0]['mid'], $newOff);
-                if(PEAR::isError($r)){ return $r; }
-            }
-        }
-        if(!$found){
-            return PEAR::raiseError(
-                "GreenBox::delAudioClipFromPlaylist: playlistElement not found".
-                " ($plElGunid)"
-            );
-        }
-        // correct total length:
-        $newPlLen = $this->_secsToPlTime(
-            $this->_plTimeToSecs($plLen) - $this->_plTimeToSecs($acLen)
-        );
-        $r = $pl->md->setMetadataEl($plLenMid, $newPlLen);
-        if(PEAR::isError($r)){ return $r; }
-        return TRUE;
+    /**
+     *  <span style="color:red">
+     *  Change fadInfo values
+     *
+     *  @param token string, playlist access token
+     *  @param plElGunid string, global id of deleted playlistElement
+     *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
+     *  @param fadeOut string, dtto
+     *  @param sessid string, session ID
+     *  @return boolean
+     *  </span>
+     */
+    function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
+    {
+        require_once"Playlist.php";
+        $pl =& Playlist::recallByToken($this, $token);
+        if(PEAR::isError($pl)) return $pl;
+        $res = $pl->changeFadeInfo($plElGunid, $fadeIn, $fadeOut);
+        if(PEAR::isError($res)) return $res;
+        return $res;
     }
 
     /**
@@ -718,35 +571,6 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($res)){ return $res; }
         $this->_setEditFlag($gunid, FALSE, $sessid);
         return $gunid;
-    }
-
-    /**
-     *  Convert playlist time value to float seconds
-     *
-     *  @param plt string, playlist time value (HH:mm:ss.dddddd)
-     *  @return int, seconds
-     */
-    function _plTimeToSecs($plt)
-    {
-        $arr = split(':', $plt);
-        if(isset($arr[2])){ return ($arr[0]*60 + $arr[1])*60 + $arr[2]; }
-        if(isset($arr[1])){ return $arr[0]*60 + $arr[1]; }
-        return $arr[0];
-    }
-
-    /**
-     *  Convert float seconds value to playlist time format
-     *
-     *  @param s0 int, seconds
-     *  @return string, time in playlist time format (HH:mm:ss.dddddd)
-     */
-    function _secsToPlTime($s0)
-    {
-        $m = intval($s0 / 60);
-        $r = $s0 - $m*60;
-        $h = $m  / 60;
-        $m = $m  % 60;
-        return sprintf("%02d:%02d:%09.6f", $h, $m, $r);
     }
 
     /**
