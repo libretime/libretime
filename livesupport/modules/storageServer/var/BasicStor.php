@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.28 $
+ *  @version $Revision: 1.29 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -805,6 +805,31 @@ class BasicStor extends Alib{
         return $nid;
     }
     
+    /**
+     *  Check if file exists in the storage
+     *
+     *  @param id int, local id
+     *  @param ftype string, internal file type
+     *  @return boolean
+     */
+    function bsExistsFile($id, $ftype=NULL)
+    {
+        $ac =& StoredFile::recall($this, $id);
+        if(PEAR::isError($ac)){
+            // catch some exceptions
+            switch($ac->getCode()){
+                case GBERR_FILENEX:
+                case GBERR_FOBJNEX:
+                    return FALSE;
+                    break;
+                default: return $ac;
+            }
+        }
+        if(!is_null($ftype) && ($this->_getType($ac->gunid) != $ftype))
+            return FALSE;
+        return TRUE;
+    }
+
     /* ---------------------------------------------------- redefined methods */
     /**
      *  Get object type by id.

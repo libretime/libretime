@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.32 $
+ *  @version $Revision: 1.33 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -880,6 +880,36 @@ class GreenBox extends BasicStor{
             return $res;
         $listArr = $this->bsListFolder($id);
         return $listArr;
+    }
+    
+    /**
+     *  Get type of stored file (by local id)
+     *
+     *  @param id int, local id
+     *  @return string/err
+     */
+    function getFileType($id)
+    {
+        // $id = $this->_idFromGunid($gunid);
+        $type = $this->getObjType($id);
+        return $type;
+    }
+
+    /**
+     *  Check if file exists in the storage and
+     *  user have permission to read it
+     *
+     *  @param gunid string
+     *  @param ftype string, internal file type
+     *  @return string/err
+     */
+    function existsFile($sessid, $gunid, $ftype=NULL)
+    {
+        $id = $this->_idFromGunid($gunid);
+        $ex = $this->bsExistsFile($id, $ftype);
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $ex;
     }
     
     /* ---------------------------------------------------- redefined methods */

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -390,7 +390,6 @@ class LocStor extends BasicStor{
      *  @param sessid string
      *  @param gunid string
      *  @return boolean
-     *  @see GreenBox
      */
     function existsAudioClip($sessid, $gunid)
     {
@@ -412,23 +411,13 @@ class LocStor extends BasicStor{
      *  @param gunid string
      *  @param ftype string, internal file type
      *  @return boolean
-     *  @see GreenBox
      */
     function existsFile($sessid, $gunid, $ftype=NULL)
     {
-        $ac =& StoredFile::recallByGunid($this, $gunid);
-        if(PEAR::isError($ac)){
-            // catch some exceptions
-            switch($ac->getCode()){
-                case GBERR_FILENEX:
-                case GBERR_FOBJNEX:
-                    return FALSE;
-                    break;
-                default: return $ac;
-            }
-        }
-        if(!is_null($ftype) && ($this->_getType($gunid) != $ftype)) return FALSE;
-        if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
+        $id = $this->_idFromGunid($gunid);
+        if(is_null($id)) return FALSE;
+        $ex = $this->bsExistsFile($id, $ftype);
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
         return TRUE;
     }
