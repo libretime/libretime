@@ -23,20 +23,25 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
+define('DEBUG', FALSE);
+#define('DEBUG', TRUE);
+define('MODIFY_LAST_MATCH', TRUE);
+
+require_once "XML/Util.php";
 
 /**
  *  MetaData class
  *
  *  LiveSupport file storage support class.<br>
  *  Store metadata tree in relational database.<br>
- *  <b>requires DOMXML support in PHP!</b>
- *  TODO: use SAX parser instead of DOMXML
  *
  *  @see StoredFile
+ *  @see XmlParser
+ *  @see DataEngine
  */
 class MetaData{
     /**
@@ -64,13 +69,13 @@ class MetaData{
      *  Parse and store metadata from XML file or XML string
      *
      *  @param mdata string, local path to metadata XML file or XML string
-     *  @param loc string 'file'|'string'
+     *  @param loc string - location: 'file'|'string'
      *  @return true or PEAR::error
      */
     function insert($mdata, $loc='file')
     {
         if($this->exists) return FALSE;
-        $res = $this->storeXMLDoc($mdata, $loc);
+        $res = $this->storeDoc($mdata, $loc);
         if(PEAR::isError($res)) return $res;
         switch($loc){
         case"file":
@@ -113,7 +118,7 @@ class MetaData{
         return $this->replace($mdata, $loc);
         /*
         if(!$this->exists) return FALSE;
-        $res = $this->storeXMLDoc($mdata, $loc, 'update');
+        $res = $this->storeDoc($mdata, $loc, 'update');
         if(PEAR::isError($res)) return $res;
         $this->exists = TRUE;
         return TRUE;
@@ -167,12 +172,158 @@ class MetaData{
     function getMetaData()
     {
         // return $this->genXMLDoc();       // obsolete
-        if(file_exists($this->fname))
-            return file_get_contents($this->fname);
-        else
+        if(file_exists($this->fname)){
+            $res = file_get_contents($this->fname);
+#            require_once "XML/Beautifier.php";
+#            $fmt = new XML_Beautifier();
+#            $res = $fmt->formatString($res);
+            return $res;
+        }else
             return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<metadata/>\n";
     }
 
+    /**
+     *  Get metadata element value
+     *
+     *  @param category string, metadata element name
+     *  @param lang string, optional xml:lang value for select language version
+     *  @param objns string, object namespace prefix - for internal use only
+     *  @return array of matching records as hash with fields:
+     *   <ul>
+     *      <li>mid int, local metadata record id</li>
+     *      <li>value string, element value</li>
+     *      <li>attrs hasharray of element's attributes indexed by
+     *          qualified name (e.g. xml:lang)</li>
+     *   </ul>
+     *  @see BasicStor::bsGetMetadataValue
+     */
+    function getMetadataValue($category, $lang=NULL, $objns='_L')
+    {
+        // handle predicate namespace shortcut
+        $a     = XML_Util::splitQualifiedName(strtolower($category));
+        if(PEAR::isError($a)) return $a;
+        $catNs = $a['namespace'];
+        $cat   = $a['localPart'];
+        $cond = "
+                gunid=x'{$this->gunid}'::bigint AND objns='$objns' AND
+                predicate='$cat'
+        ";
+        if(!is_null($catNs)) $cond .= " AND predns='$catNs'";
+        $sql = "
+            SELECT id as mid, object as value
+            FROM {$this->mdataTable}
+            WHERE $cond
+            ORDER BY id
+        ";
+        $all = $this->dbc->getAll($sql);
+        if(PEAR::isError($all)) return $all;
+        $res = array();
+        // add attributes to result
+        foreach($all as $i=>$rec){
+            $pom = $this->getSubrows($rec['mid']);
+            if(PEAR::isError($pom)) return $pom;
+            $all[$i]['attrs'] = $pom['attrs'];
+            $atlang = $pom['attrs']['xml:lang'];
+            // select only matching lang (en is default)
+            if(
+                is_null($lang) ||
+                strtolower($lang) == strtolower($atlang) ||
+                (is_null($atlang) && strtolower($lang) == 'en')
+            ){
+                $res[] = $all[$i];
+            }
+        }
+        return $res;
+    }
+
+    /**
+     *  Set metadata element value
+     *
+     *  @param category string, metadata element name (e.g. dc:title)
+     *  @param value string/NULL value to store, if NULL then delete record
+     *  @param lang string, optional xml:lang value for select language version
+     *  @param mid int, metadata record id (OPTIONAL on unique elements)
+     *  @return boolean
+     */
+    function setMetadataValue($category, $value, $lang=NULL, $mid=NULL)
+    {
+        $rows   = $this->getMetadataValue($category, $lang);
+        $aktual = NULL;
+        if(count($rows)>1){
+            if(is_null($mid)){
+                if(MODIFY_LAST_MATCH){ $aktual = array_pop($rows); }
+                else{
+                    return PEAR::raiseError(
+                        "MetaData::setMdataValue:".
+                        " nonunique category, mid required"
+                    );
+                }
+            }else{
+                foreach($rows as $i=>$row){
+                    if($mid == intval($row['mid'])) $aktual = $row;
+                }
+            }
+        }else $aktual = $rows[0];
+        if(!is_null($aktual)){
+            if(!is_null($value)){
+                $sql = "
+                    UPDATE {$this->mdataTable}
+                    SET object='$value'
+                    WHERE id={$aktual['mid']}
+                ";
+                $res = $this->dbc->query($sql);
+            }else{
+                $res = $this->deleteRecord($aktual['mid']);
+            }
+            if(PEAR::isError($res)) return $res;
+        }else{
+            $container = $this->getMetadataValue('metadata', NULL, '_blank');
+            if(PEAR::isError($container)) return $container;
+            $id = $container[0]['mid'];
+            if(is_null($id)){
+                return PEAR::raiseError(
+                    "MetaData::setMdataValue: metadata container  not found"
+                );
+            }
+            $a     = XML_Util::splitQualifiedName(strtolower($category));
+            if(PEAR::isError($a)) return $a;
+            $catNs = $a['namespace'];
+            $cat   = $a['localPart'];
+            $nid= $this->storeRecord('_I', $id, $catNs, $cat, $predxml='T',
+                '_L', $value);
+            if(PEAR::isError($nid)) return $nid;
+            if(!is_null($lang)){
+                $res= $this->storeRecord('_I', $nid, 'xml', 'lang', $predxml='A',
+                    '_L', $lang);
+                if(PEAR::isError($res)) return $res;
+            }
+        }
+        return TRUE;
+    }
+
+    /**
+     *  Regenerate XML metadata file after category value change
+     *
+     *  @return boolean
+     */
+    function regenerateXmlFile()
+    {
+        $fn = $this->fname;
+        $xml = $this->genXMLDoc();
+        if (!$fh = fopen($fn, 'w')) {
+            return PEAR::raiseError(
+                "MetaData::regenerateXmlFile: cannot open for write ($fn)"
+            );
+        }
+        if(fwrite($fh, $xml) === FALSE) {
+            return PEAR::raiseError(
+                "MetaData::regenerateXmlFile: write error ($fn)"
+            );
+        }
+        fclose($fh);
+        return TRUE;
+    }
+    
     /**
      *  Contruct filepath of metadata file
      *
@@ -215,52 +366,43 @@ class MetaData{
      *  Parse and insert or update metadata XML to database
      *
      *  @param mdata string, local path to metadata XML file or XML string
-     *  @param loc string 'file'|'string'
-     *  @param mode string 'insert'|'update'
+     *  @param loc string, location: 'file'|'string'
      *  @return true or PEAR::error
      */
-    function storeXMLDoc($mdata='', $loc='file', $mode='insert')
+    function storeDoc($mdata='', $loc='file')
     {
         switch($loc){
         case"file":
             if(!is_file($mdata)){
                 return PEAR::raiseError(
-                    "MetaData::storeXMLDoc: metadata file not found ($mdata)"
+                    "MetaData::storeDoc: metadata file not found ($mdata)"
                 );
             }
             if(!is_readable($mdata)){
                 return PEAR::raiseError(
-                    "MetaData::storeXMLDoc: can't read metadata file ($mdata)"
+                    "MetaData::storeDoc: can't read metadata file ($mdata)"
                 );
             }
-            $mdstr = file_get_contents($mdata);
-            $xml = domxml_open_mem($mdstr);
-            break;
+            $mdata = file_get_contents($mdata);
         case"string":
-            $xml = domxml_open_mem($mdata);
+            require_once"XmlParser.php";
+            $parser =& new XmlParser($mdata);
+            if($parser->isError()){
+                return PEAR::raiseError(
+                    "MetaData::storeDoc: ".$parser->getError()
+                );
+            }
+            $tree = $parser->getTree();
             break;
         default:
             return PEAR::raiseError(
-                "MetaData::storeXMLDoc: unsupported metadata location ($loc)"
+                "MetaData::storeDoc: unsupported metadata location ($loc)"
             );
         }
-        $root = $xml->document_element();
-        if(!is_object($root)) return PEAR::raiseError(
-            "MetaData::storeXMLDoc: metadata parser failed (".gettype($root).")"
-        );
         $this->dbc->query("BEGIN");
-        if($mode == 'update') $this->nameSpaces = $this->readNamespaces();
-        $res = $this->storeXMLNode($root, NULL, $mode);
+        $res = $this->storeNode($tree);
         if(PEAR::isError($res)){
             $this->dbc->query("ROLLBACK"); return $res;
-        }
-        foreach($this->nameSpaces as $prefix=>$uri){
-            $res = $this->storeRecord(
-                '_L', $prefix, NULL, '_namespace', 'T', '_L', $uri, $mode
-            );
-            if(PEAR::isError($res)){
-                $this->dbc->query("ROLLBACK"); return $res;
-            }
         }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
@@ -271,108 +413,42 @@ class MetaData{
     }
 
     /**
-     *  Read namespace definitions from database and return it as array
-     *
-     *  @return array or PEAR::error
-     */
-    function readNamespaces()
-    {
-        $nameSpaces = array();
-        $arr = $this->dbc->getAll("SELECT subject, object
-            FROM {$this->mdataTable}
-            WHERE gunid=x'{$this->gunid}'::bigint
-                AND subjns='_L'
-                AND predns is null AND predicate='_namespace'
-                AND objns='_L'
-        ");
-        if(PEAR::isError($arr)) return $arr;
-        if(is_array($arr)){
-            foreach($arr as $i=>$v){
-                $nameSpaces[$v['subject']] = $v['object'];
-            }
-        }
-        return $nameSpaces;
-    }
-
-    /**
      *  Process one node of metadata XML for insert or update.<br>
-     *  <b>TODO: add support for other usable node types</b>
      *
-     *  @param node DOM node object
+     *  @param node object, node in tree returned by XmlParser
      *  @param parid int, parent id
-     *  @param mode 'insert'|'update'
-     *  @return
+     *  @param nSpaces array of name spaces definitions
+     *  @return int, local metadata record id
      */
-    function storeXMLNode($node, $parid=NULL, $mode='insert')
+    function storeNode($node, $parid=NULL, $nSpaces=array())
     {
         //echo $node->node_name().", ".$node->node_type().", ".$node->prefix().", $parid.\n";
-        // preprocessing:
-        switch($node->node_type()){
-            case 1:             // element
-            case 2:             // attribute
-                $subjns  = (is_null($parid)? '_G'         : '_I');
-                $subject = (is_null($parid)? $this->gunid : $parid);
-                // DOM XML extension doesn't like empty prefix - use '_d'
-                $prefix = $node->prefix(); $prefix = ($prefix === '' ? '_d' : $prefix);
-                if(!isset($this->nameSpaces[$prefix]))   
-                    $this->nameSpaces[$prefix] = $node->namespace_uri();
-            break;
+        $nSpaces = array_merge($nSpaces, $node->nSpaces);
+        // null parid = root node of metadata tree
+        $subjns  = (is_null($parid)? '_G'         : '_I');
+        $subject = (is_null($parid)? $this->gunid : $parid);
+        $object  = $node->content;
+        if(is_null($object) || $object == ''){
+            $objns  = '_blank';
+            $object = 'NULL';
+        }else $objns = '_L';
+        $id = $this->storeRecord($subjns, $subject,
+            $node->ns, $node->name, 'T', $objns, $object);
+        // process attributes
+        foreach($node->attrs as $atn=>$ato){
+            $this->storeRecord('_I', $id,
+                $ato->ns, $ato->name, 'A', '_L', $ato->val);
         }
-        // main processing:
-        switch($node->node_type()){
-            case 9:             // document
-                $this->storeXMLNode($node->document_element(), $parid, $mode);
-            break;
-            case 1:             // element
-                if($node->is_blank_node()) break;
-                $id = $this->storeRecord(
-                    $subjns, $subject, $prefix, $node->node_name(), 'T',
-                    '_blank', NULL, $mode
-                );
-                if(PEAR::isError($id)) return $id;
-                if($node->has_attributes()){
-                    foreach($node->attributes() as $attr){
-                        $res = $this->storeXMLNode($attr, $id, $mode);
-                        if(PEAR::isError($res)) return $res;
-                    }
-                }
-                if($node->has_child_nodes()){
-                    foreach($node->child_nodes() as $child){
-                        $res = $this->storeXMLNode($child, $id, $mode);
-                        if(PEAR::isError($res)) return $res;
-                    }
-                }
-            break;
-            case 2:             // attribute
-                $res = $this->storeRecord(
-                    $subjns, $subject, $prefix, $node->node_name(),
-                    'A', '_L', $node->value(), $mode
-                );
-                if(PEAR::isError($res)) return $res;
-            break;
-            case 3:             // text
-            case 4:             // cdata
-#                echo"T\n";
-                if($node->is_blank_node()) break;
-                $objns_sql  = "'_L'";
-                // coalesce ... returns the first of its arguments that is not NULL
-                $object_sql = "coalesce(object,'')||'".$node->node_value()."'";
-                $res = $this->dbc->query("
-                    UPDATE {$this->mdataTable}
-                    SET objns=$objns_sql, object=$object_sql
-                    WHERE id='$parid'
-                ");
-                if(PEAR::isError($res)) return $res;
-            break;
-            case"5": case"6": case"7": case"8":
-            break;
-            default:
-                return PEAR::raiseError(
-                    "MetaData::storeXMLNode: unsupported node type (".
-                    $node->node_type().")"
-                );
+        // process child nodes
+        foreach($node->children as $ch){
+            $this->storeNode($ch, $id, $nSpaces);
         }
-        return TRUE;
+        // process namespace definitions
+        foreach($node->nSpaces as $ns=>$uri){
+            $this->storeRecord('_I', $id,
+                'xmlns', $ns, 'N', '_L', $uri);
+        }
+        return $id;
     }
 
     /**
@@ -404,63 +480,66 @@ class MetaData{
      *  @param predns string, predicate namespace prefix, have to be defined
      *          in file's metadata (or reserved prefix)
      *  @param predicate string, predicate value, e.g. name of DC element
-     *  @param predxml string 'T'|'A' - XML tag or attribute
+     *  @param predxml string 'T'|'A'|'N' - XML tag, attribute or NS def.
      *  @param objns string, object namespace prefix, have to be defined
      *          in file's metadata (or reserved prefix)
      *  @param object string, object value, e.g. title of song
-     *  @param mode 'insert'|'update'
      *  @return int, new metadata record id
      */
     function storeRecord($subjns, $subject, $predns, $predicate, $predxml='T',
-        $objns=NULL, $object=NULL, $mode='insert')
+        $objns=NULL, $object=NULL)
     {
-        //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object, $mode\n";
-        $predns_sql = (is_null($predns) ? "NULL" : "'".strtolower($predns)."'" );
+        //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object\n";
+        $predns_sql = (is_null($predns) ? "NULL" : "'$predns'" );
         $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
         $object_sql = (is_null($object)? "NULL" : "'$object'");
-        $predicate  = strtolower($predicate);
-        $id = NULL;
-        if($mode == 'update'){
-            $cond = "gunid = x'{$this->gunid}'::bigint AND predns=$predns_sql
-                AND predicate='$predicate'";
-            if($subjns == '_I'){
-                $cond .= " AND subjns='_I' AND subject='$subject'";
-            }
-            $id = $this->dbc->getOne("SELECT id FROM {$this->mdataTable}
-                WHERE $cond");
-            //echo "$id, ".(is_null($id) ? 'null' : 'not null')."\n";
-        }
-        if(is_null($id)){ $mode = 'insert'; }
-        if($mode == 'insert'){
-            $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
-        }
+        $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
         if(PEAR::isError($id)) return $id;
-        if($mode == 'insert'){
-            $res = $this->dbc->query("
-                INSERT INTO {$this->mdataTable}
-                    (id , gunid           , subjns   , subject   ,
-                        predns     , predicate   , predxml   ,
-                        objns     , object
-                    )
-                VALUES
-                    ($id, x'{$this->gunid}'::bigint, '$subjns', '$subject',
-                        $predns_sql, '$predicate', '$predxml',
-                        $objns_sql, $object_sql
-                    )
-            ");
-        }else{
-            $res = $this->dbc->query("
-                UPDATE {$this->mdataTable}
-                SET subjns = '$subjns',   subject   = '$subject',
-                    objns  = $objns_sql,  object    = $object_sql
-                WHERE id='$id'
-            ");
-            //    WHERE $cond
-        }
+        $res = $this->dbc->query("
+            INSERT INTO {$this->mdataTable}
+                (id , gunid           , subjns   , subject   ,
+                    predns     , predicate   , predxml   ,
+                    objns     , object
+                )
+            VALUES
+                ($id, x'{$this->gunid}'::bigint, '$subjns', '$subject',
+                    $predns_sql, '$predicate', '$predxml',
+                    $objns_sql, $object_sql
+                )
+        ");
         if(PEAR::isError($res)) return $res;
         return $id;
     }
 
+    /**
+     *  Delete metadata record recursively
+     *
+     *  @return boolean
+     */
+    function deleteRecord($mid)
+    {
+        $sql = "
+            SELECT id FROM {$this->mdataTable}
+            WHERE subjns='_I' AND subject='{$mid}' AND
+                gunid=x'{$this->gunid}'::bigint
+        ";
+        $rh = $this->dbc->query($sql);
+        if(PEAR::isError($rh)) return $rh;
+        while($row = $rh->fetchRow()){
+            $r = $this->deleteRecord($row['id']);
+            if(PEAR::isError($r)) return $r;
+        }
+        $rh->free();
+        $sql = "
+            DELETE FROM {$this->mdataTable}
+            WHERE id={$mid} AND
+                gunid=x'{$this->gunid}'::bigint
+        ";
+        $res = $this->dbc->query($sql);
+        if(PEAR::isError($res)) return $res;
+        return TRUE;
+    }
+    
     /* =========================================== XML reconstruction from db */
     /**
      *  Generate XML document from metadata database
@@ -469,7 +548,8 @@ class MetaData{
      */
     function genXMLDoc()
     {
-        $domd =& domxml_new_xmldoc('1.0');
+        require_once "XML/Util.php";
+        $res = XML_Util::getXMLDeclaration("1.0", "UTF-8")."\n";
         $row = $this->dbc->getRow("
             SELECT * FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint
@@ -477,74 +557,95 @@ class MetaData{
         ");
         if(PEAR::isError($row)) return $row;
         if(is_null($row)){
-//            return PEAR::raiseError(
-//                "MetaData::genXMLDoc: not exists ({$this->gunid})"
-//            );
-            $nxn =& $domd->create_element('metadata');
-            $domd->append_child($nxn);
+            $node = XML_Util::createTagFromArray(array(
+                'localpart'=>'none'
+            ));
         }else{
-            $rr = $this->genXMLNode($domd, $domd, $row);
-            if(PEAR::isError($rr)) return $rr;
+            $node = $this->genXMLNode($row);
+            if(PEAR::isError($node)) return $node;
         }
-        //return preg_replace("|</([^>]*)>|", "</\\1>\n", $domd->dump_mem())."\n";
-        return $domd->dump_mem(TRUE, 'UTF-8');
+        $res .= $node;
+        require_once "XML/Beautifier.php";
+        $fmt = new XML_Beautifier();
+        $res = $fmt->formatString($res);
+        return $res;
     }
 
     /**
      *  Generate XML element from database
      *
-     *  @param domd DOM document object
-     *  @param xn DOM element object
-     *  @param row array, database row with values for created element
-     *  @return void
+     *  @param row array, hash with metadata record fields
+     *  @return string, XML serialization of node
      */
-    function genXMLNode(&$domd, &$xn, $row)
+    function genXMLNode($row)
     {
-        if($row['predxml']=='T'){
-            $nxn =& $domd->create_element($row['predicate']);
-        }else{
-            $nxn =& $domd->create_attribute($row['predicate'], '');
-        }
-        $xn->append_child($nxn);
-        $uri = $this->dbc->getOne("
-            SELECT object FROM {$this->mdataTable}
-            WHERE gunid=x'{$this->gunid}'::bigint AND predicate='_namespace'
-                AND subjns='_L' AND subject='{$row['predns']}'
-        ");
-        if(!is_null($uri) && $uri !== ''){
-            $root =& $domd->document_element();
-            if($row['predns'] === '') $row['predns']='_d';
-            $root->add_namespace($uri, $row['predns']);
-            $nxn->set_namespace($uri, $row['predns']);
-        }
-        if($row['object'] != 'NULL'){
-            $tn =& $domd->create_text_node($row['object']);
-            $nxn->append_child($tn);
-        }
-        $this->genXMLTree($domd, $nxn, $row['id']);
+        if(DEBUG) echo"genXMLNode:\n";
+        if(DEBUG) var_dump($row);
+        extract($row);
+        $arr = $this->getSubrows($id);
+        if(PEAR::isError($arr)) return $arr;
+        if(DEBUG) var_dump($arr);
+        extract($arr);
+        $node = XML_Util::createTagFromArray(array(
+            'namespace' => $predns,
+            'localPart' => $predicate,
+            'attributes'=> $attrs,
+#            'content'   => $object." X ".$children,
+            'content'   => ($object == 'NULL' ? $children : $object),
+        ), FALSE);
+        return $node;
     }
 
     /**
-     *  Generate XML subtree from database
+     *  Return values of attributes, child nodes and namespaces for
+     *  one metadata record
      *
-     *  @param domd DOM document object
-     *  @param xn DOM element object
-     *  @param parid parent id
-     *  @return void
+     *  @param parid int, local id of parent metadata record
+     *  @return hash with three fields:
+     *      - attr hash, attributes
+     *      - children array, child nodes
+     *      - nSpaces hash, namespace definitions
      */
-    function genXMLTree(&$domd, &$xn, $parid)
+    function getSubrows($parid)
     {
-        $qh = $this->dbc->query("
-            SELECT * FROM {$this->mdataTable}
-            WHERE gunid=x'{$this->gunid}'::bigint AND subjns='_I'
-                AND subject='$parid'
+        if(DEBUG) echo" getSubrows:\n";
+        $qh = $this->dbc->query($q = "
+            SELECT
+                id, predxml, predns, predicate, objns,
+                coalesce(object, 'NULL')as object
+            FROM {$this->mdataTable}
+            WHERE
+                subjns='_I' AND subject='$parid' AND
+                gunid=x'{$this->gunid}'::bigint
             ORDER BY id
         ");
         if(PEAR::isError($qh)) return $qh;
+        $attrs      = array();
+        $children   = array();
+        $nSpaces    = array();
+        if(DEBUG) echo "  #=".$qh->numRows()."\n$q\n";
         while($row = $qh->fetchRow()){
-            $this->genXMLNode($domd, $xn, $row);
+            if(DEBUG) var_dump($row);
+            extract($row);
+            switch($predxml){
+            case"N":
+                $nSpaces["$predicate"] = $object;
+            case"A":
+                $sep=':';
+                if($predns=='' || $predicate=='') $sep='';
+                $attrs["{$predns}{$sep}{$predicate}"] = $object;
+                break;
+            case"T":
+                $children[] = $this->genXMLNode($row);
+                break;
+            default:
+                return PEAR::raiseError(
+                    "MetaData::getSubrows: unknown predxml ($predxml)");
+            } // switch
         }
         $qh->free();
+        $children   = join(" ", $children);
+        return compact('attrs', 'children', 'nSpaces');
     }
     
     /* ========================================================= test methods */
