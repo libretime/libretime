@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SchedulerDaemonXmlRpcClient :
                     virtual public Configurable,
@@ -162,6 +162,14 @@ class SchedulerDaemonXmlRpcClient :
          */
         virtual Ptr<const std::string>::Ref
         getVersion(void)                            throw ();
+
+        /**
+         *  Return the current time at the scheduler server.
+         *
+         *  @return the current time at the scheduler server.
+         */
+        virtual Ptr<const boost::posix_time::ptime>::Ref
+        getSchedulerTime(Ptr<SessionId>::Ref    sessionId)      throw ();
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
 #include "SchedulerDaemonXmlRpcClient.h"
 
 namespace LiveSupport {
@@ -61,13 +62,14 @@ using namespace LiveSupport::Core;
  *  Unit test for the SchedulerDaemonXmlRpcClient class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see SchedulerDaemonXmlRpcClient
  */
 class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SchedulerDaemonXmlRpcClientTest);
-    CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(getVersionTest);
+    CPPUNIT_TEST(getSchedulerTimeTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -76,15 +78,49 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
          */
         Ptr<SchedulerDaemonXmlRpcClient>::Ref   schedulerClient;
 
+        /**
+         *  An authentication client.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
+
+        /**
+         *  Configure a configurable with an XML file.
+         *
+         *  @param configurable configure this
+         *  @param fileName the name of the XML file to configure with.
+         *  @exception std::invalid_argument on configuration errors.
+         *  @exception xmlpp::exception on XML parsing errors.
+         */
+        void
+        configure(Ptr<Configurable>::Ref    configurable,
+                  const std::string       & fileName)
+                                                throw (std::invalid_argument,
+                                                       xmlpp::exception);
+
+
     protected:
 
         /**
-         *  A simple test.
+         *  A simple test, just to get the version string from the scheduler.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+        getVersionTest(void)                    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to check the getSchedulerTime XML-RPC method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        getSchedulerTimeTest(void)              throw (CPPUNIT_NS::Exception);
+
 
     public:
         

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/include/LiveSupport/SchedulerClient/SchedulerClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,8 +41,10 @@
 #endif
 
 #include <stdexcept>
+#include "boost/date_time/posix_time/posix_time.hpp"
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
 namespace SchedulerClient {
@@ -62,7 +64,7 @@ using namespace LiveSupport::Core;
  *  An interface to access the scheduler daemon as a client.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SchedulerClientInterface
 {
@@ -75,6 +77,18 @@ class SchedulerClientInterface
          */
         virtual Ptr<const std::string>::Ref
         getVersion(void)                            throw ()
+                                                                    = 0;
+
+        /**
+         *  Return the current time at the scheduler server.
+         *
+         *  @param sessionId a sessionId previously acquired by successfully
+         *         authenticating with the authentication module
+         *  @return the current time at the scheduler server.
+         */
+        virtual Ptr<const boost::posix_time::ptime>::Ref
+        getSchedulerTime(Ptr<SessionId>::Ref    sessionId)
+                                                            throw ()
                                                                     = 0;
 };
 

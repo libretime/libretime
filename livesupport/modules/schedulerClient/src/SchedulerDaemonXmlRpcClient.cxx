@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,7 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "SchedulerDaemonXmlRpcClient.h"
 
 using namespace boost::posix_time;
@@ -145,6 +146,42 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)                 throw ()
 
     if (xmlRpcResult.hasMember("version")) {
         result.reset(new std::string(xmlRpcResult["version"]));
+    }
+
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the current time from the server.
+ *----------------------------------------------------------------------------*/
+Ptr<const ptime>::Ref
+SchedulerDaemonXmlRpcClient :: getSchedulerTime(
+                                    Ptr<SessionId>::Ref     sessionId)
+                                                                    throw ()
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    xmlRpcResult.clear();
+    xmlRpcParams["sessionId"] = sessionId->getId();
+    xmlRpcClient.execute("getSchedulerTime", xmlRpcParams, xmlRpcResult);
+
+    if (xmlRpcResult.hasMember("schedulerTime")) {
+        struct tm   time = xmlRpcResult["schedulerTime"];
+
+        try {
+            result = TimeConversion::tmToPtime(&time);
+        } catch (std::out_of_range &e) {
+            // TODO: report error, for some reason the returned time is wrong
+        }
+
     }
 
     return result;

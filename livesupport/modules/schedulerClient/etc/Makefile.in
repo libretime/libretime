@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -63,6 +63,12 @@ CORE_LIB_DIR     = ${CORE_DIR}/lib
 CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
+AUTHENTICATION_DIR         = ${MODULES_DIR}/authentication
+AUTHENTICATION_INCLUDE_DIR = ${AUTHENTICATION_DIR}/include
+AUTHENTICATION_LIB_DIR     = ${AUTHENTICATION_DIR}/lib
+AUTHENTICATION_LIB         = livesupport_authentication
+AUTHENTICATION_LIB_FILE   = ${AUTHENTICATION_LIB_DIR}/lib${AUTHENTICATION_LIB}.a
+
 PRODUCTS_DIR     = ${BASE_DIR}/../../products
 
 SCHEDULER_DIR    = ${PRODUCTS_DIR}/scheduler
@@ -94,8 +100,13 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
+                             -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
-LDFLAGS  = @LDFLAGS@ -pthread -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
+LDFLAGS  = @LDFLAGS@ -pthread \
+                     -L${USR_LIB_DIR} \
+                     -L${CORE_LIB_DIR} \
+                     -L${AUTHENTICATION_LIB_DIR} \
+                     -L${LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -108,7 +119,10 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/SchedulerDaemonXmlRpcClientTest.o \
                    ${TMP_DIR}/SchedulerClientFactoryTest.o
 
-TEST_RUNNER_LIBS = -l${SCHEDULER_CLIENT_LIB} -l${CORE_LIB} -lxml++-1.0 \
+TEST_RUNNER_LIBS = -l${SCHEDULER_CLIENT_LIB} \
+                   -l${CORE_LIB} \
+                   -l${AUTHENTICATION_LIB} \
+                   -lboost_date_time-gcc -lxml++-1.0 \
                    -lcppunit -ldl -lxmlrpc++ -lssl
 
 
@@ -136,6 +150,8 @@ docclean:
 	${RM} ${TEST_RESULTS}
 
 depclean: clean
+	${MAKE} -C ${AUTHENTICATION_DIR} clean
+	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
@@ -175,6 +191,9 @@ ${TEST_RUNNER}: ${CORE_LIB_FILE} ${TEST_RUNNER_OBJS} ${SCHEDULER_CLIENT_LIB_FILE
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}
+
+${AUTHENTICATION_LIB_FILE}:
+	${MAKE} -C ${AUTHENTICATION_DIR}
 
 ${SCHEDULER_EXE}:
 	${MAKE} -C ${SCHEDULER_DIR}
