@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.1 $</li>
+  <li>Version: $Revision: 1.2 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -36,7 +36,7 @@ Those who think they know everything, the quick steps to install
 LiveSupport are (make sure to run at least the <code>./bin/install.sh</code>
 script as root):<br>
 <br>
-<pre><code>wget </code><code>http://ls-demo.campware.org/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code>http://ls-demo.campware.org/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>make setup &amp;&amp; make compile<br>./bin/install.sh -d /usr/local/livesupport -g apache<br>ln -s /usr/local/livesupport/var /var/www/livesupport<br></code></pre>
+<pre><code>wget </code><code>http://ls-demo.campware.org/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code>http://ls-demo.campware.org/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>make setup &amp;&amp; make compile<br>./bin/install.sh -d /usr/local/livesupport -g apache<br>ln -s /usr/local/livesupport/var /var/www/livesupport<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
 <br>
 Then try the URL <code>http://localhost/livesupport/htmlUI/var/html/ </code>,
 and log in using username: <code>root</code>, password: <code>q</code>.<br>
@@ -238,6 +238,13 @@ Where <code>&lt;apache-docroot&gt;</code> is dependent on your
 installation, but is usually something like <code>/var/www</code> or <code>/var/www/htdocs</code>
 or <code>/var/www/&lt;yourhost&gt;/htdocs</code>. <br>
 <h1>Try it out</h1>
+After a successful installation, the LiveSupport scheduler has to be
+started. The scheduler has a System V runlevel-style startup script,
+under &lt;ls-installdir&gt;/bin/scheduler.sh. To start the scheduler,
+simply invoke:<br>
+<br>
+<pre><code>&lt;ls-installdir&gt;/bin/scheduler.sh start</code><br></pre>
+<br>
 The only thing left to do is to try out the LiveSupport web interface.
 For this purpose, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/htmlUI/var/html/</code>
 . For your first login, use the following values:<br>

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/INSTALL,v $
 
 --------------------------------------------------------------------------------
@@ -40,6 +40,7 @@ cd livesupport-<version>
 make setup && make compile
 ./bin/install.sh -d /usr/local/livesupport -g apache
 ln -s /usr/local/livesupport/var /var/www/livesupport
+/usr/local/livesupport/bin/scheduler.sh start
 
 
 Then try the URL http://localhost/livesupport/htmlUI/var/html/ ,
