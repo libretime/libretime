@@ -178,6 +178,11 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReload();
     break;
 
+    case "PL.revert":
+        $uiHandler->PLAYLIST->revert();
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
     default:
         $_SESSION["alertMsg"] = tra("Unknown method: $1", $_REQUEST["act"]);
         header("Location: ".UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close');

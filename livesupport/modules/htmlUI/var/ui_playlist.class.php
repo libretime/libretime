@@ -56,12 +56,36 @@ class uiPlaylist
             return FALSE;
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
+        if (PEAR::isError($plgunid)) {
+            $this->Base->_retMsg('Unable to release Playlist');
+            return FALSE;
+        }
         $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
         return TRUE;
     }
+
+
+    function revert()
+    {
+        if(!$this->token) {
+            $this->Base->_retMsg('No Playlist is looked by You');
+            return FALSE;
+        }
+        $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
+        if (PEAR::isError($plgunid)) {
+            $this->Base->_retMsg('Unable to revert to looked state');
+            return FALSE;
+        }
+        $this->Base->_retMsg('Playlist "$1" reverted and released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        $this->activeId = NULL;
+        $this->token    = NULL;
+        $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
+        return TRUE;
+    }
+
 
     function testForLooked()
     {
@@ -140,8 +164,10 @@ class uiPlaylist
             if ($sub['elementname']=='playlistelement') {
                 $this->plwalk($sub, $node);
             }
-            if ($sub['elementname']=='audioclip') {
-                $this->flat["$parent.$node"] = $sub['attrs'];
+            if ($sub['elementname']=='audioclip' || $sub['elementname']=='webstream') {
+                #$this->flat["$parent.$node"] = $sub['attrs'];
+                #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
+                $this->flat["$parent.$node"] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
             }
         }
     }
