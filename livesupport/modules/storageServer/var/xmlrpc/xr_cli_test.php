@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,6 +104,10 @@ $infos = array(
     "searchMetadata"    => array('m'=>"locstor.searchMetadata", 'p'=>NULL),
     "browseCategory"    => array('m'=>"locstor.browseCategory", 'p'=>NULL),
     "resetStorage"  => array('m'=>"locstor.resetStorage", 'p'=>array()),
+    "storeWebstream"    => array('m'=>"locstor.storeWebstream",
+        'p'=>array('sessid', 'gunid', 'metadata', 'fname', 'url'),
+        'r'=>array('gunid')
+    ),
 
     "createPlaylist"    => array('m'=>"locstor.createPlaylist",
         'p'=>array('sessid', 'plid', 'fname'), 'r'=>'plid'),

@@ -166,7 +166,7 @@ $tpldata['showMenu']=true;
     </td><td valign="top">
     <i><?php echo($o['gunid'] ? "({$o['gunid']})" : '' )?></i>
     </td><td>
-    <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R', 'audioclip'=>'A', 'playlist'=>'P'); echo$a[$o['type']]?>
+    <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R', 'audioclip'=>'A', 'playlist'=>'P', 'webstream'=>'S'); echo$a[$o['type']]?>
     &nbsp;<a href="javascript:frename('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">rename</a>
     <?php if($o['type']!='Folder'){?>
     &nbsp;<a href="javascript:fmove('<?php echo$o['id']?>', '')" class="button">move</a>
@@ -184,6 +184,11 @@ $tpldata['showMenu']=true;
     &nbsp;<a href="gbHttp.php?act=getMdata&amp;id=<?php echo$o['id']?>" class="button">MetaData</a>
     <?php }?>
     <?php if($o['type']=='playlist'){?>
+    &nbsp;<a href="../xmlrpc/simpleGet.php?sessid=<?php echo$sessid?>&amp;id=<?php echo$o['gunid']?>" class="button">simpleGet</a>
+    &nbsp;<a href="gbHttp.php?act=getMdata&amp;id=<?php echo$o['id']?>" class="button">MetaData</a>
+    <?php }?>
+    <?php if($o['type']=='webstream'){?>
+    &nbsp;<a href="../xmlrpc/simpleGet.php?sessid=<?php echo$sessid?>&amp;id=<?php echo$o['gunid']?>" class="button">simpleGet</a>
     &nbsp;<a href="gbHttp.php?act=getMdata&amp;id=<?php echo$o['id']?>" class="button">MetaData</a>
     <?php }?>
     <?php if($o['type']=='Replica'){?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,6 +105,8 @@ $methods = array(
     'releaseRawAudioData'     => 'Release access to raw audio data.',
     'getAudioClip'            => 'Return the contents of an Audio clip.',
     'resetStorage'            => 'Reset storageServer for debugging.',
+    'storeWebstream'          => 'Store audio stream identified by URL',
+
     'createPlaylist'          => 'Create a new Playlist metafile.',
     'editPlaylist'            => 'Open a Playlist metafile for editing.',
     'savePlaylist'            => 'Save a Playlist metafile.',

@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.20 $
+#   Version  : $Revision: 1.21 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -174,6 +174,14 @@ browseCategory() {
     RES=`$XR_CLI browseCategory $SESSID 'title' 'title' 'testRunner'` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     echo $RES
+}
+
+storeWebstream() {
+    URL="http://localhost/x"
+    echo -n "# storeWebstream: "
+    RGUNID=`$XR_CLI storeWebstream "$SESSID" '' "$METADATA" "new stream" "$URL"` || \
+    	{ ERN=$?; echo $RGUNID; exit $ERN; }
+    echo $RGUNID
 }
 
 PLID="123456789abcdef8"
@@ -342,6 +350,19 @@ playlistTest(){
     echo ""
 }
 
+webstreamTest(){
+    echo "#XMLRPC webstream test"
+    login
+    storeWebstream;    GUNID=$RGUNID
+#    GUNID="4e58a66cf6e9f539"
+#    downloadMeta
+    getAudioClip
+    deleteAudioClip
+    logout
+    echo "#XMLRPC: webstream: OK."
+    echo ""
+}
+
 storageTest(){
     echo "#XMLRPC: storage test"
     login
@@ -400,6 +421,8 @@ elif [ "$COMM" == "preferences" ]; then
     preferenceTest
 elif [ "$COMM" == "playlists" ]; then
     playlistTest
+elif [ "$COMM" == "webstream" ]; then
+    webstreamTest
 elif [ "$COMM" == "storage" ]; then
     storageTest
 elif [ "x$COMM" == "x" ]; then

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,15 +97,34 @@ if(PEAR::isError($ex_pl)){
 if(!$ex_ac && !$ex_pl){ http_error(404, "404 File not found"); }
 $ac =& StoredFile::recallByGunid($locStor, $gunid);
 if(PEAR::isError($ac)){ http_error(500, $ac->getMessage()); }
+$ftype = $locStor->getObjType($id = $locStor->_idFromGunid($gunid));
+if(PEAR::isError($ftype)){ http_error(500, $ftype->getMessage()); }
 if($ex_ac){
-    $realFname  = $ac->_getRealRADFname();
-    $mime = $ac->rmd->getMime();
-    header("Content-type: $mime");
-    readfile($realFname);
+    switch($ftype){
+        case"audioclip":
+            $realFname  = $ac->_getRealRADFname();
+            $mime = $ac->rmd->getMime();
+            header("Content-type: $mime");
+            readfile($realFname);
+            break;
+        case"webstream":
+            $url = $locStor->bsGetMetadataValue($id, 'ls:url');
+            if(PEAR::isError($url)){ http_error(500, $url->getMessage()); }
+            $url = $url[0]['value'];
+            $txt = "Location: $url";
+            header($txt);
+            // echo "$txt\n";
+            break;
+        default:
+            var_dump($ftype);
+            http_error(500, "500 Unknown ftype ($ftype)");
+    }
     exit;
 }
 if($ex_pl){
-    $md = $locStor->getMdata($ac->getId(), $sessid);
+    // $md = $locStor->bsGetMetadata($ac->getId(), $sessid);
+    $md = $locStor->getAudioClip($sessid, $gunid);
+    // header("Content-type: text/xml");
     header("Content-type: application/smil");
     echo $md;
     exit;

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -270,6 +270,57 @@ class XR_LocStor extends LocStor{
             $ec  = ($ec0 == GBERR_TOKEN ? 800+$ec0 : 805 );
             return new XML_RPC_Response(0, $ec,
                 "xr_storeAudioClipClose: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('gunid'=>$res)));
+    }
+
+    /**
+     *  Store audio stream identified by URL - no raw audio data 
+     *
+     *  The XML-RPC name of this method is "locstor.storeWebstream".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *      <li> metadata  : string -  metadata XML string</li>
+     *      <li> fname :  string - human readable mnemonic file name
+     *                      with extension corresponding to filetype</li>
+     *      <li> url :  string - URL of the webstrea,</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> gunid : string - gunid of stored file</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_storeWebstream:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::storeWebstream
+     */
+    function xr_storeWebstream($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->storeWebstream(
+            $r['sessid'], $r['gunid'], $r['metadata'], $r['fname'], $r['url']
+        );
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_storeWebstream: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         }
