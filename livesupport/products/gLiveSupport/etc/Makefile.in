@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.10 $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -141,6 +141,8 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 #-------------------------------------------------------------------------------
 G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/UiTestMainWindow.o \
+                     ${TMP_DIR}/MasterPanelWindow.o \
+                     ${TMP_DIR}/MasterPanelUserInfoWidget.o \
                      ${TMP_DIR}/GtkLocalizedObject.o \
                      ${TMP_DIR}/LoginWindow.o \
                      ${TMP_DIR}/AudioClipListWindow.o \

@@ -1,8 +1,10 @@
 root:table
 {
-    windowTitle:string      { "LiveSupport Test Window" }
-    welcomeMsg:string       { "welcome" }
-    loggedInMsg:string      { "Logged in as {0}" }
+    windowTitle:string       { "LiveSupport Master Panel" }
+    notLoggedInMsg:string    { "Not logged in" }
+    loggedInMsg:string       { "Logged in as {0}" }
+    loginButtonLabel:string  { "Log in" }
+    logoutButtonLabel:string { "log out" }
 
     loginWindow:table
     {

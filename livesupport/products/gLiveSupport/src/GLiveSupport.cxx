@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 
-#include "UiTestMainWindow.h"
+#include "MasterPanelWindow.h"
 #include "LoginWindow.h"
 #include "GLiveSupport.h"
 
@@ -137,12 +137,13 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: show(void)                              throw ()
 {
-    Ptr<UiTestMainWindow>::Ref  mainWindow;
+    Ptr<MasterPanelWindow>::Ref  masterPanel;
 
-    mainWindow.reset(new UiTestMainWindow(shared_from_this(), resourceBundle));
+    masterPanel.reset(new MasterPanelWindow(shared_from_this(),
+                      resourceBundle));
 
     // Shows the window and returns when it is closed.
-    Gtk::Main::run(*mainWindow);
+    Gtk::Main::run(*masterPanel);
 }
 
 

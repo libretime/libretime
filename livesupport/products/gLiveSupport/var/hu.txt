@@ -1,8 +1,10 @@
 hu:table
 {
-    windowTitle:string      { "LiveSupport Teszt Ablak" }
-    welcomeMsg:string       { "Üdvözöljük" }
-    loggedInMsg:string      { "Bejelentkezve {0} felhasználóként" }
+    windowTitle:string       { "LiveSupport Fő Panel" }
+    notLoggedInMsg:string    { "Nincs bejelentkezve" }
+    loggedInMsg:string       { "Bejelentkezve {0} felhasználóként" }
+    loginButtonLabel:string  { "Bejelentkezés" }
+    logoutButtonLabel:string { "Kijelentkezés }
 
     loginWindow:table
     {
