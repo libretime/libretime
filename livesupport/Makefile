@@ -21,19 +21,20 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 #   General command definitions
 #-------------------------------------------------------------------------------
-MKDIR    = mkdir -p
-RM       = rm -f
-RMDIR    = rm -rf
-DOXYGEN  = doxygen
-XSLTPROC = xsltproc
-ECHO     = @echo
+MKDIR      = mkdir -p
+RM         = rm -f
+RMDIR      = rm -rf
+DOXYGEN    = doxygen
+XSLTPROC   = xsltproc
+ECHO       = @echo
+FLAWFINDER = flawfinder
 
 
 #-------------------------------------------------------------------------------
@@ -49,6 +50,8 @@ DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 TESTRESULTS_XSLT = ${ETC_DIR}/testResultsToHtml.xsl
 TESTRESULTS_IN   = ${ETC_DIR}/testResults.xml
 TESTRESULTS_FILE = ${DOC_DIR}/testResults.html
+
+FLAWFINDER_FILE  = ${DOC_DIR}/flawfinderReport.html
 
 TOOLS_DIR  = ${BASE_DIR}/tools
 
@@ -97,6 +100,14 @@ doxygen:
 
 testresults:
 	${XSLTPROC} ${TESTRESULT_XSLT} ${TESTRESULTS_IN} > ${TESTRESULTS_FILE}
+
+flawfinder:
+	${FLAWFINDER} -c --immediate --html \
+                  ${CORE_DIR}/include ${CORE_DIR}/src \
+                  ${DB_DIR}/include ${DB_DIR}/src \
+                  ${STORAGE_DIR}/include ${STORAGE_DIR}/src \
+                  ${SCHEDULER_DIR}/src \
+                  > ${FLAWFINDER_FILE}
 
 clean:
 	${RMDIR} ${DOXYGEN_DIR}/html
