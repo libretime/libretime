@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -518,7 +518,7 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
-     *  @param fname string, human readable menmonic file name
+     *  @param fname string, human readable mnemonic file name
      *  @return string, playlist global unique ID
      */
     function createPlaylist($sessid, $playlistId, $fname)
@@ -538,7 +538,14 @@ class LocStor extends BasicStor{
         $oid = $this->addObj($tmpFname , 'File', $parid);
         if(PEAR::isError($oid)) return $oid;
         $ac =&  StoredFile::insert($this, $oid, '', '',
-            '<?xml version="1.0" encoding="UTF-8"?><playlist/>',
+            '<?xml version="1.0" encoding="UTF-8"?>'.
+            '<playlist>'.
+            ' <metadata'.
+            ' xmlns:dc="http://purl.org/dc/elements/1.1/"'.
+            ' xmlns:dcterms="http://purl.org/dc/terms/"'.
+            ' xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"'.
+            '/>'.
+            '</playlist>',
             'string', $playlistId, 'playlist'
         );
         if(PEAR::isError($ac)){
@@ -583,6 +590,8 @@ class LocStor extends BasicStor{
         $ac =& StoredFile::recallByGunid($this, $playlistId);
         if(PEAR::isError($ac)){ return $ac; }
         $id = $ac->getId();
+        if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
+            return $res;
         $res = $this->bsOpenDownload($id, 'metadata');
         if(PEAR::isError($res)){ return $res; }
         $this->_setEditFlag($playlistId, TRUE);
@@ -600,10 +609,11 @@ class LocStor extends BasicStor{
      */
     function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
-        $playlistId = $this->bsCloseDownload($playlistToken, $part='metadata');
+        $playlistId = $this->bsCloseDownload($playlistToken, 'metadata');
+        if(PEAR::isError($playlistId)){ return $playlistId; }
         $ac =& StoredFile::recallByGunid($this, $playlistId);
         if(PEAR::isError($ac)){ return $ac; }
-        $res = $ac->replaceMetaData($newPlaylist, $mdataLoc='string');
+        $res = $ac->replaceMetaData($newPlaylist, 'string');
         if(PEAR::isError($res)){ return $res; }
         $this->_setEditFlag($playlistId, FALSE);
         return $playlistId;
@@ -705,33 +715,5 @@ class LocStor extends BasicStor{
         return !$this->_isEdited($playlistId);
     }
 
-    /* ---------------------------------------------------- "private" methods */
-    /**
-     *  Check if playlist is marked as edited
-     *
-     *  @param playlistId string, playlist global unique ID
-     *  @return boolean
-     */
-    function _isEdited($playlistId)
-    {
-        $ac =& StoredFile::recallByGunid($this, $playlistId);
-        return $ac->isEdited($playlistId);
-    }
-
-    /**
-     *  Set edit flag
-     *
-     *  @param playlistId string, playlist global unique ID
-     *  @param val boolean, set/clear of edit flag
-     *  @return boolean, previous state
-     */
-    function _setEditFlag($playlistId, $val=TRUE)
-    {
-        $ac =& StoredFile::recallByGunid($this, $playlistId);
-        $state = $ac->_getState();
-        if($val){ $ac->setState('edited'); }
-        else{ $ac->setState('ready'); }
-        return ($state == 'edited');
-    }
 }
 ?>
