@@ -266,12 +266,13 @@ class uiHandler extends uiBase {
             }
         }
         $data = $this->_dateArr2Str($mData);
-        foreach ($data as $key=>$val) { echo "\n".$key.": ".$val."\n";
+        foreach ($data as $key=>$val) { 
             $r = $this->gb->setMDataValue($id, $key, $this->sessid, $val);
-            print_r($r);
+            if (PEAR::isError($r)) {
+                $this->_retMsg('Unable to set $1: $2', $key, $val);
+            }
         }
         $this->_retMsg('Metadata saved');
-        $type = $this->gb->getFileType($id)=='webstream' ? 'Webstream' : 'File';
         $this->redirUrl = UI_BROWSER."?act=editItem&id=$id";
     }
 

@@ -84,44 +84,46 @@ class uiScheduler extends uiCalendar
 
     function getDayTiming($year, $month, $day)
     {
-        if (!$arr = $this->getDayUsage($year, $month, $day))
-            return false;
-
         ## !! bug in strtotime. zeigt 8h später an als reines datum, wenn Txx:xx:xx verwendet wird !!
-
         $day_start = $this->_datetime2timestamp($year.$month.$day.'T00:00:00');
         $day_end   = $this->_datetime2timestamp($year.$month.$day.'T23:59:59');
+
+        if (!$arr = $this->getDayUsage($year, $month, $day))
+            return array(array(                                               ## empty day
+                        'type'      => 'gap',
+                        'length'    => $day_end - $day_start
+                   ));
 
         $curr = current($arr);
         if (strtotime($curr['start']) > $day_start)                     ## insert gap if first entry start after 00:00:00
             $list[] = array(
-                        'type'      => 'firstgap',
-                        'pos'       => 0,
-                        'length'    => strtotime($curr['start']) - $day_start -1
+                        'type'      => 'gap',
+                        #'pos'       => 0,
+                        'length'    => strtotime($curr['start']) - $day_start
                       );
 
         while ($curr = current($arr)) {
             $list[] = array(
                         'type'      => 'entry',
-                        'pos'       => strtotime($curr['start']) - $day_start,
+                        #'pos'       => strtotime($curr['start']) - $day_start,
                         'length'    => strtotime($curr['end']) - strtotime($curr['start']),
                         'entry'     => $curr
                       );
 
             if ($next = next($arr)) {
-                if ($next['start'] > $curr['end']+1)  ## insert gap between entrys
+                if (strtotime($next['start']) > strtotime($curr['end'])+1)  ## insert gap between entrys
                     $list[] = array(
                                 'type'      => 'gap',
-                                'pos'       => strtotime($curr['start'])-$day_start,
-                                'length'    => strtotime($next['start']) - strtotime($curr['end']) -1,
+                                #'pos'       => strtotime($curr['start'])-$day_start,
+                                'length'    => strtotime($next['start']) - strtotime($curr['end']),
                               );
             }
             else {
                 if (strtotime($curr['end']) < $day_end)        ## insert gap if prev entry was not until midnight
                     $list[] = array(
-                                'type'      => 'lastgap',
-                                'pos'       => strtotime($curr['end']) - $day_start,
-                                'length'    => $day_end-strtotime($curr['end']),
+                                'type'      => 'gap',
+                                #'pos'       => strtotime($curr['end']) - $day_start,
+                                'length'    => $day_end - strtotime($curr['end']),
                               );
             }
 
@@ -130,6 +132,11 @@ class uiScheduler extends uiCalendar
         return $list;
     }
 
+
+    function _oneOrMore($in)
+    {
+        return $id < 1 ? ceil($in) : round($in);
+    }
 
     function _scheduledDays($period)
     {
