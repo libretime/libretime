@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@
 # (based on the version in enlightenment's cvs)
 #-------------------------------------------------------------------------------
 
-package="Storage"
+package="Authentication"
 
 # assume we're in $basedir/bin
 basedir=`dirname $0`/..
