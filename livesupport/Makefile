@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -223,5 +223,5 @@ check:
 	-${MAKE} -C ${EVENT_SCHEDULER_DIR} check
 	-${MAKE} -C ${SCHEDULER_CLIENT_DIR} check
 	-${MAKE} -C ${SCHEDULER_DIR} check
-	-${MAKE} -C ${GLIVESUPPORT_DIR} check
+#	-${MAKE} -C ${GLIVESUPPORT_DIR} check
 
