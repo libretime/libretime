@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.24 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.25 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -86,6 +86,8 @@ ICU_DIR           = ${TOOLS_DIR}/icu
 ICU_VERSION       = icu-3.0
 CURL_DIR          = ${TOOLS_DIR}/curl
 CURL_VERSION      = curl-7.12.3
+TAGLIB_DIR        = ${TOOLS_DIR}/taglib
+TAGLIB_VERSION    = taglib-1.3.1
 
 MODULES_DIR           = ${BASE_DIR}/modules
 CORE_DIR              = ${MODULES_DIR}/core
@@ -167,6 +169,7 @@ tools_setup:
 	${LIBXMLXX_DIR}/${LIBXMLXX_VERSION}/bin/install.sh
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh
+	${TAGLIB_DIR}/${TAGLIB_VERSION}/bin/install.sh
 
 doxytag_setup:
 	${DOXYTAG} -t ${TAGFILE} ${EXTERNAL_DOC_PAGES}

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -224,6 +224,16 @@ static const std::string    searchAudioClipResultParamName = "audioClipResults";
  *  The name of the playlists result parameter returned by the method
  *----------------------------------------------------------------------------*/
 static const std::string    searchPlaylistResultParamName = "playlistResults";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip count parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    searchAudioClipCountParamName = "audioClipCnt";
+
+/*------------------------------------------------------------------------------
+ *  The name of the playlist count parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    searchPlaylistCountParamName = "playlistCnt";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ playlist methods */
@@ -2016,6 +2026,21 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         playlistIds->push_back(uniqueId);
     }
     
-    return audioClipIds->size() + playlistIds->size();
+    if (! result.hasMember(searchAudioClipCountParamName)
+            || result[searchAudioClipCountParamName].getType() 
+                                                != XmlRpcValue::TypeInt
+            || ! result.hasMember(searchPlaylistCountParamName)
+            || result[searchPlaylistCountParamName].getType() 
+                                                != XmlRpcValue::TypeInt) {
+        std::stringstream eMsg;
+        eMsg << "Missing or bad count returned by XML-RPC method '" 
+             << searchMethodName
+             << "':\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    return int(result[searchAudioClipCountParamName])
+           + int(result[searchPlaylistCountParamName]);
 }
 
