@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,7 +165,7 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
     std::string     staticLibPath(dllPath);
     staticLibPath += clntcoreName;
     if (DLLAccess::DLL_OK != dllAccess.open(staticLibPath.c_str())) {
-        throw std::exception();
+        throw std::runtime_error("Couldn't open Helix shared object");
     }
 
     // get the main entry function pointers
@@ -177,7 +177,8 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
                 (FPRMSETDLLACCESSPATH) dllAccess.getSymbol("SetDLLAccessPath");
 
     if (!createEngine || !closeEngine || !setDLLAccessPath) {
-        throw std::exception();
+        throw std::runtime_error(
+			"Couldn't access symbols from Helix shared object");
     }
 
     // set the DLL access path
@@ -195,11 +196,11 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
 
     // create the client engine and the player
     if (HXR_OK != createEngine(&clientEngine)) {
-        throw std::exception();
+        throw std::runtime_error("Couldn't create Helix Client Engine");
     }
 
     if (HXR_OK != clientEngine->CreatePlayer(player)) {
-        throw std::exception();
+        throw std::runtime_error("Couldn't create Helix Client Player");
     }
 
     // create and attach the client context
