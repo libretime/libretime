@@ -39,6 +39,8 @@ root:table
         titleColumnLabel:string       { "title" }
         closeButtonLabel:string       { "close" }
 
+        upMenuItem:string               { "Move _Up" }
+        downMenuItem:string             { "Move D_own" }
         removeMenuItem:string           { "_Remove" }
         addToPlaylistMenuItem:string    { "_Add To Playlist" }
         schedulePlaylistMenuItem:string { "_Schedule Playlist" }

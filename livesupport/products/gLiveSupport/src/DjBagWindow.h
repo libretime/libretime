@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  playlists.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class DjBagWindow : public Gtk::Window, public LocalizedObject
 {
@@ -80,7 +80,7 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.3 $
+         *  @version $Revision: 1.4 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -191,6 +191,20 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onDeleteItem(void)                                      throw ();
+
+        /**
+         *  Signal handler for the "up" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onUpItem(void)                                          throw ();
+
+        /**
+         *  Signal handler for the "down" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onDownItem(void)                                        throw ();
 
         /**
          *  Signal handler for the "add to playlist" menu item selected from

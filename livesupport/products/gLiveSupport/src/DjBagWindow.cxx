@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,6 +129,14 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 sigc::mem_fun(*this,
                                                &DjBagWindow::onAddToPlaylist)));
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("upMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onUpItem)));
+    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("downMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onDownItem)));
+    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
                                                &DjBagWindow::onRemoveItem)));
@@ -150,6 +158,14 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 *getResourceUstring("schedulePlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                            &DjBagWindow::onSchedulePlaylist)));
+    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("upMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onUpItem)));
+    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("downMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onDownItem)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
@@ -277,6 +293,99 @@ DjBagWindow :: onRemoveItem(void)                               throw ()
             showContents();
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Up menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onUpItem(void)                               throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView.get_selection();
+
+    if (refSelection) {
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        if (iter) {
+            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+            Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+            GLiveSupport::PlayableList::iterator    it;
+            GLiveSupport::PlayableList::iterator    end;
+
+            djBagContents = gLiveSupport->getDjBagContents();
+            it  = djBagContents->begin();
+            end = djBagContents->end();
+            while (it != end) {
+                Ptr<Playable>::Ref      p= *it;
+
+                if (*p->getId() == *playable->getId()) {
+                    // move one up, and insert the same before that
+                    if (it == djBagContents->begin()) {
+                        break;
+                    }
+                    djBagContents->insert(--it, playable);
+                    // move back to what we've found, and erase it
+                    djBagContents->erase(++it);
+
+                    showContents();
+                    break;
+                }
+
+                it++;
+            }
+        }
+    }
+
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Down menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onDownItem(void)                             throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView.get_selection();
+
+    if (refSelection) {
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        if (iter) {
+            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+            Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+            GLiveSupport::PlayableList::iterator    it;
+            GLiveSupport::PlayableList::iterator    end;
+
+            djBagContents = gLiveSupport->getDjBagContents();
+            it  = djBagContents->begin();
+            end = djBagContents->end();
+            while (it != end) {
+                Ptr<Playable>::Ref      p= *it;
+
+                if (*p->getId() == *playable->getId()) {
+                    // move two down, and insert the same before that
+                    ++it;
+                    if (it == end) {
+                        break;
+                    }
+                    djBagContents->insert(++it, playable);
+                    // move back to what we've found, and erase it
+                    --it;
+                    --it;
+                    djBagContents->erase(--it);
+
+                    showContents();
+                    break;
+                }
+
+                it++;
+            }
+        }
+    }
+
 }
 
 
