@@ -323,9 +323,10 @@ class uiBase
     }
 
 
-    function _niceTime($in)
+    function _niceTime($in, $all=FALSE)
     {
         if(is_array($in)) $in = current($in);
+
         if (strpos($in, '.')) list ($in, $lost) = explode('.', $in);
         $in = str_replace('&nbsp;', '', $in);
 
@@ -333,7 +334,7 @@ class uiBase
         elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))           list($i, $s) = explode(':', $in);
         else                                                            $s = $in;
 
-        if ($h > 0) $H = $this->_twoDigits($h).':';
+        if ($all || $h > 0) $H = $this->_twoDigits($h).':';
         else        $H = '&nbsp;&nbsp;&nbsp;';
         $I = $this->_twoDigits($i).':';
         $S = $this->_twoDigits($s);

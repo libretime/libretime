@@ -24,7 +24,7 @@ class uiPlaylist
     }
 
     function getActiveId()
-    {   
+    {
         if (!$this->activeId) {
             return FALSE;
         }
@@ -147,7 +147,7 @@ class uiPlaylist
         return TRUE;
     }
 
-    function create($id=FALSE)
+    function create($id)
     {
         # create PL
         # activate
@@ -157,7 +157,8 @@ class uiPlaylist
             return FALSE;
         }
         $datetime = date('Y-m-d H:i:s');
-        if (!$plid = $this->Base->gb->createPlaylist($this->Base->homeid, $datetime, $this->Base->sessid)) {
+        $plid = $this->Base->gb->createPlaylist($this->Base->homeid, $datetime, $this->Base->sessid);
+        if (!$plid) {
             $this->Base->_retMsg('Cannot create Playlist');
             return FALSE;
         }
@@ -165,11 +166,12 @@ class uiPlaylist
         if ($this->activate($plid)===FALSE) {
             return FALSE;
         }
-        if ($id!==FALSE) {
+        if ($id) {
             if ($this->addItem($id)!==TRUE) {
                 return FALSE;
             }
         }
+        #$this->redirUrl = UI_BRWOSER.'?popup=_2PL.simpleManagement';
         return $plid;
     }
 

@@ -171,12 +171,16 @@ class uiBrowser extends uiBase {
      *
      *  @eturn string  (html)
      */
-    function uploadFile(&$mask, $id, $replace=FALSE)
+    function fileForm($parms)
     {
+        extract ($parms);
+        $mask =& $GLOBALS['ui_fmask']['file'];
+
         $form = new HTML_QuickForm('uploadFile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
-        $form->setConstants(array('id'  => $id,
-                                  'act' => $replace ? 'replaceFile' : 'uploadFile'));
+        $form->setConstants(array('folderId' => $folderId,
+                                  'id'  => $id,
+                                  'act' => $id ? 'editFile' : 'uploadFile'));
         $this->_parseArr2Form($form, $mask);
         return $form->toHTML();
     }
@@ -191,11 +195,20 @@ class uiBrowser extends uiBase {
      *
      *  @eturn string  (html)
      */
-    function addWebstream($mask, $id, $replace=FALSE)
+    function webstreamForm($parms)
     {
+        extract ($parms);
+        $mask =& $GLOBALS['ui_fmask']['webstream'];
+
         $form = new HTML_QuickForm('addWebstream', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setConstants(array('id'  => $id,
-                                  'act' => $replace ? 'replaceWebstream' : 'addWebstream'));
+        $const = array('folderId' => $folderId,
+                       'id'     => $id,
+                       'act'    => 'editWebstream',
+                       'title'  => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_TITLE) : NULL,
+                       'url'    => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_URL) : 'http://',
+                       'length' => $id ? $this->_niceTime($this->_getMDataValue($id, UI_MDATA_KEY_DURATION), TRUE) : NULL
+                      );
+        $form->setConstants($const);
         $this->_parseArr2Form($form, $mask);
         return $form->toHTML();
     }
@@ -351,8 +364,10 @@ class uiBrowser extends uiBase {
      *  @param id int
      *  @return string (html)
      */
-    function editMetaData($id, $get=FALSE, $data=NULL)
-    {
+    function metaDataForm($parms, $get=FALSE, $data=NULL)
+    {     
+        extract ($parms);
+
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
         $form = new HTML_QuickForm('tabs', UI_STANDARD_FORM_METHOD, UI_BROWSER);

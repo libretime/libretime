@@ -56,10 +56,10 @@ if ($uiBrowser->userid) {
   #$Smarty->assign('PLid',        $uiBrowser->PLAYLIST->activeId);
 
   switch ($_REQUEST['act']){
-    case "fileBrowse":
+    case "fileList":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
 
-        $Smarty->assign('fileBrowse', TRUE);
+        $Smarty->assign('fileList', TRUE);
         if ($_REQUEST['tree']=='Y')
             $Smarty->assign('showTree', TRUE);
         else
@@ -71,7 +71,7 @@ if ($uiBrowser->userid) {
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
 
         $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
-        $Smarty->assign('fileBrowse', TRUE);
+        $Smarty->assign('fileList', TRUE);
     break;
 
 
@@ -82,26 +82,15 @@ if ($uiBrowser->userid) {
     break;
 
 
-    case "uploadFile":
+    case "editFile":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, TRUE));
-             # booth masks on one page
-             $Smarty->assign('uploadform',  $uiBrowser->uploadFile($ui_fmask['uploadFile'], $uiBrowser->id, $_REQUEST['replace']));
+        $Smarty->assign('editItem', array('type' => 'file', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
     break;
 
 
-    case "addWebstream":
+    case "editWebstream":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('uploadform',  $uiBrowser->addWebstream($ui_fmask['addWebstream'], $uiBrowser->id, $_REQUEST['replace']));
-            # booth masks on one page
-            $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, TRUE));
-    break;
-
-
-    case "editMetaData":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-
-        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, TRUE));
+        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
     break;
 
 
@@ -161,11 +150,6 @@ if ($uiBrowser->userid) {
     break;
 
     case "PL.simpleManagement":
-        if ($uiBrowser->PLAYLIST->get() === FALSE) {
-            if (($ui_tmpid = $uiBrowser->PLAYLIST->create($_REQUEST['id'])) !== FALSE) {
-                $uiBrowser->SCRATCHPAD->addItem($ui_tmpid);
-            }
-        }
         $Smarty->assign('PL_simpleManagement', TRUE);
     break;
   }

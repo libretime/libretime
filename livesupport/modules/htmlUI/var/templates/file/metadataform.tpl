@@ -1,3 +1,5 @@
+{UIBROWSER->metaDataForm id=$editItem.id assign="_metadataform"}
+
 {literal}
 <style type="text/css">
     .dynformelement {
@@ -8,11 +10,10 @@
 {/literal}
 
 <div id="metadataform">
-{include file="sub/x.tpl"}
 <center>
-    {$editMetaData.tabs}
-    {$editMetaData.langswitch}
-    {foreach from=$editMetaData.pages key=key item=dynform}
+    {$_metadataform.tabs}
+    {$_metadataform.langswitch}
+    {foreach from=$_metadataform.pages key="key" item="dynform"}
         {include file="sub/dynForm_plain.tpl"}
     {/foreach}
 </center>

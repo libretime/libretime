@@ -4,8 +4,10 @@ require dirname(__FILE__).'/../ui_handler_init.php';
 switch($_REQUEST['act']){
 
     case "login":
-        if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE)
+        if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE) {
+            #$uiHandler->checkSystemPrefs();
             $uiHandler->PLAYLIST->loadLookedFromPref();
+        }
     break;
 
     case "logout":
@@ -26,29 +28,24 @@ switch($_REQUEST['act']){
     break;
 
     case "uploadFile":
-        if ($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFile"]))
+        if ($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $ui_fmask["file"]))
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 
     case "replaceFile":
         $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
         if ($uiHandler->delete($uiHandler->id) === TRUE) {
-            $ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->pid, $ui_fmask["uploadFile"], $ui_tmpgunid);
+            $ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->pid, $ui_fmask["file"], $ui_tmpgunid);
             $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
     break;
 
-    case "addWebstream":
-        if ($ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->id, $ui_fmask['addWebstream']))
-            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
-    break;
-
-    case "replaceWebstream":
-        $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
-        if ($uiHandler->delete($uiHandler->id) == TRUE) {
-            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->pid, $ui_fmask['addWebstream'], $ui_tmpgunid);
-            $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
+    case "editWebstream":
+        if ($_REQUEST['id']) {
+            $uiHandler->editWebstream($_REQUEST, $ui_fmask['webstream']);
+        } else {
+            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
     break;

@@ -257,13 +257,17 @@ $ui_fmask = array(
         )
     ),
 
-    'uploadFile'    => array(
+    'file'          => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden'
         ),
         array(
             'element'   => 'id',
+            'type'      => 'hidden'
+        ),
+        array(
+            'element'   => 'folderId',
             'type'      => 'hidden'
         ),
         array(
@@ -280,7 +284,7 @@ $ui_fmask = array(
         )
     ),
 
-    'addWebstream'    => array(
+    'webstream'     => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
@@ -290,17 +294,12 @@ $ui_fmask = array(
             'type'      => 'hidden'
         ),
         array(
-            'element'   => 'name',
-            'type'      => 'text',
-            'label'     => 'Name',
-            'required'  => TRUE,
-            'rule'      => 'alphanumeric',
-            'rulemsg'   => 'Name must be alphanumeric'
+            'element'   => 'folderId',
+            'type'      => 'hidden'
         ),
         array(
             'element'   => 'url',
             'type'      => 'text',
-            'default'   => 'http://',
             'label'     => 'Stream URL',
             'required'  => TRUE,
             'requiredmsg'=> 'URL is missing',
@@ -309,12 +308,10 @@ $ui_fmask = array(
             'rulemsg'   => 'URL seems invalid',
         ),
         array(
-            'element'   => 'duration',
+            'element'   => 'length',
             'type'      => 'date',
-            'label'     => 'Duration',
-            'options'   => array(
-                            'format'    => 'His',
-                            )
+            'label'     => 'Length<br><small>Leave zero for Live Stream</small>',
+            'options'   => array('format' => 'His'),
         ),
         array(
             'element'   => 'Submit',

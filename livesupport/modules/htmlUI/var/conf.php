@@ -23,7 +23,7 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,4 +149,5 @@ define('UI_BROWSE_SESSNAME',      'L_BROWSE');
 define('UI_MDATA_KEY_TITLE',      'dc:title');
 define('UI_MDATA_KEY_ARTIST',     'dc:creator');
 define('UI_MDATA_KEY_DURATION',   'dcterms:extent');
+define('UI_MDATA_KEY_URL',        'ls:url');
 ?>

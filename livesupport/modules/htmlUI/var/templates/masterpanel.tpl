@@ -13,11 +13,11 @@
 {/if}
 
 {if $structure}
-    {include file="fileBrowse/path.tpl"}
+    {include file="file/path.tpl"}
 {/if}
 
-{if $fileBrowse}
-    {include file="fileBrowse/fileBrowse.tpl"}
+{if $fileList}
+    {include file="file/list.tpl"}
 {/if}
 
 {if $showLibrary}
@@ -32,8 +32,8 @@
     {include file="filedata.tpl"}
 {/if}
 
-{if $uploadform}
-    {include file="uploadform.tpl"}
+{if $editItem}
+    {include file="file/edit.tpl"}
 {/if}
 
 {if $editMetaData}

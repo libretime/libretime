@@ -86,13 +86,6 @@
     margin-top: 10px;
 }
 
-#uploadform {
-    width: 800px;
-    border-style : dotted;
-    padding : 5px;
-    margin-top: 10px;
-}
-
 #searchform {
     width: 800px;
     border-style : dotted;
@@ -124,8 +117,15 @@
     margin-top: 10px;
 }
 
-#metadataform {;
-    width: 800px;
+#uploadform {
+    width: 780px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#metadataform {
+    width: 780px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
