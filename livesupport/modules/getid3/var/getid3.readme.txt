@@ -1,0 +1,459 @@
+/////////////////////////////////////////////////////////////////
+/// getID3() by James Heinrich <getid3@users.sourceforge.net>  //
+//        available at http://getid3.sourceforge.net          ///
+/////////////////////////////////////////////////////////////////
+
+        This code is released under the GNU GPL:
+          http://www.gnu.org/copyleft/gpl.html
+
+     +---------------------------------------------+
+     | If you do use this code somewhere, send me  |
+     | an email and tell me how/where you used it. |
+     |                                             |
+     | If you really like it, send me a postcard:  |
+     |   James Heinrich                            |
+     |   17 Scott Street                           |
+     |   Kingston, Ontario                         |
+     |   K7L 1L3                                   |
+     |   Canada                                    |
+     +---------------------------------------------+
+
+
+What does getID3() do?
+======================
+
+Reads & parses (to varying degrees):
+  * APE tags: v1 and v2
+  * ASF: ASF, Windows Media Audio (WMA), Windows Media Video (WMV)
+  * BMP (Windows & OS/2, uncompressed / RLE4 / RLE8)
+  * CD-audio (*.cda)
+  * FLAC
+  * GIF
+  * ISO-9660 CD-ROM image (directory structure)
+  * JPEG
+  * LA (Lossless Audio)
+  * Lyrics 3: v1 and v2
+  * MIDI
+  * Monkey's Audio
+  * MPC / Musepack
+  * ID3v1 & ID3v1.1
+  * ID3v2.2, ID3v2.3, ID3v2.4
+  * MP3: MPEG-audio information (bitrate, sampling frequency, etc)
+  * Lyrics3 v1 & v2
+  * MPEG-1 video frame size, bitrate, aspect ratio, etc
+  * NSV (Nullsoft Streaming Video)
+  * Ogg Vorbis: stream information, comment tags
+  * PNG
+  * Quicktime
+  * RealAudio, RealVideo
+  * RIFF: AVI audio/video information (codecs, bitrates, frame sizes, etc)
+  * RIFF: WAV audio information (bitrate, sampling frequency, etc)
+  * Speex
+  * VQF
+  * ZIP (directory structure)
+
+Writes:
+  * ID3v1 & ID3v1.1
+  * ID3v2.3 & ID3v2.4
+  * Ogg Vorbis comment tags
+
+
+Requirements
+============
+
+* PHP 4.1.0 (or higher)
+* GD  <1.6 for GIF and JPEG functions
+* GD >=1.6 for PNG and JPEG functions
+
+
+Notes
+=====
+
+If the format parser encounters a problem, it will return something
+in $fileinfo['error'], describing the encountered error. If nothing is
+returned in that array element, you can assume the entire file parsed OK.
+
+Conforms to ID3v2.2, ID3v2.3 and ID3v2.4 specs as published at www.id3.org
+
+
+Known Bugs/Issues
+=================
+
+See the end of getid3.changelog.txt for notes on known issues with getID3(),
+encoders, players, etc.
+
+
+Disclaimer
+==========
+
+getID3() has been tested on many systems, on many types of files, under many
+operating systems, and is generally believe to be stable and safe.
+That being said, there is still the chance there is an undiscovered and/or
+unfixed bug that may potentially corrupt your file, especially within the
+writing functions. By using getID3() you agree that it's not my fault if
+any of your files are corrupted.  In fact, I'm not liable for anything :)
+
+
+Usage
+=====
+
+For detailed examples of implementation, see getid3.check.php
+
+$mp3info = GetAllMP3info(<filename>);
+$mp3info = GetAllMP3info('/home/mp3s/song.mp3');
+$mp3info = GetAllMP3info('c:\\mp3s\\song.mp3');
+$mp3info = GetAllMP3info('http://www.example.com/song.mp3');
+
+
+
+// Sample recursive scanning code that scans every file starting in the
+// current directory (or whatever $DirectoryToStartScanningFrom is set
+// to).
+
+/*
+$DirectoryToStartScanningFrom = '.';
+$DirectoriesToScan  = array(realpath($DirectoryToStartScanningFrom));
+$DirectoriesScanned = array();
+while (count($DirectoriesToScan) > 0) {
+  foreach ($DirectoriesToScan as $DirectoryKey => $startingdir) {
+    if ($dir = @opendir($startingdir)) {
+      while (($file = readdir($dir)) !== false) {
+        if (($file != '.') && ($file != '..')) {
+          $RealPathName = realpath($startingdir.'/'.$file);
+          if (is_dir($RealPathName)) {
+            if (!in_array($RealPathName, $DirectoriesScanned) && !in_array($RealPathName, $DirectoriesToScan)) {
+              $DirectoriesToScan[] = $RealPathName;
+            }
+          } else if (is_file($RealPathName)) {
+            $FilesInDir[] = $RealPathName;
+          }
+        }
+      }
+      closedir($dir);
+    }
+    $DirectoriesScanned[] = $startingdir;
+    unset($DirectoriesToScan[$DirectoryKey]);
+  }
+}
+
+$FilesInDir = array_unique($FilesInDir);
+sort($FilesInDir);
+
+require_once('getid3.php');
+foreach ($FilesInDir as $filename) {
+
+  set_time_limit(30);
+  $fileinfo = GetAllFileInfo($filename);
+
+  // do something with $fileinfo here...
+
+}
+*/
+
+
+
+
+What does the returned data structure look like?
+================================================
+
+array() {
+  ['exist']=>bool()                  // does this file actually exist?
+  ['filename']=>string()             // filename including extension, not including path
+  ['filesize']=>int()                // in bytes
+  ['getID3version']=>string()        // ex: '1.4.0'
+  ['error']=>string()                // if present, what error occured
+  ['fileformat']=>string()           // 'mp3', 'mp2', 'zip', 'ogg', 'id3', 'mpg', 'riff', 'wav', 'midi', 'asf', 'mac', 'ape', 'gif', 'jpg', 'png', 'bmp', 'mpc', 'real'
+  ['dataformat']=>string()           //
+  ['bitrate_audio']=>float()         // total bitrate for audio stream (if present) in bits per second
+  ['bitrate_video']=>float()         // total bitrate for video stream (if present) in bits per second
+  ['bitrate']=>float()               // total bitrate (audio + video) in bits per second
+  ['bitrate_mode']=>string()         // 'cbr' or 'vbr' or 'abr'
+  ['resolution_x']=>int()            // horizontal resolution of video stream, if present
+  ['resolution_y']=>int()            // vertical resolution of video stream, if present
+  ['playtime_seconds']=>float()      // playtime in floating-point seconds
+  ['playtime_string']=>string()      // playtime in minutes:seconds format
+  ['audiobytes']=>int()              // bytes of MPEG audio, with ID3v2 headers stripped
+  ['audiodataoffset']=>int()         // byte offset where start of data is (not counting prepended / appended tags)
+  ['audiodataend']=>int()            // byte offset where end of data is (not counting prepended / appended tags)
+  ['mime_type']=>string()            //
+  ['id3v1']=>
+  array(8) {
+    ['title']=>string()
+    ['artist']=>string()
+    ['album']=>string()
+    ['year']=>string()
+    ['comment']=>string()
+    ['genreid']=>int()
+    ['genre']=>string()
+    ['track']=>int()
+  }
+  ['id3v2']=>array(8) {            // ID3v2.x data
+    ['header']=>bool()
+    ['majorversion']=>int()
+    ['minorversion']=>int()
+    ['flags']['unsynch']=>bool()
+    ['flags']['exthead']=>bool()
+    ['flags']['experim']=>bool()
+    ['flags']['isfooter']=>bool()
+    ['headerlength']=>int()        // in bytes, including the 6/10-byte ID3v2 header
+    ['title']=>string()
+    ['artist']=>string()
+    ['album']=>string()
+    ['year']=>string()
+    ['track']=>string()
+    ['totaltracks']=>string()
+    ['genre']=>string()
+    ['genreid']=>int()
+    ['genrelist']=>array()
+    ['comment']=>string()
+    ['padding']=>array() {
+      ['start']=>int()               // start of padding, byte offset from beginning of file
+      ['length']=>int()              // amount of padding, in bytes
+      ['valid']=>bool()              // TRUE if padding consists entirely of null bytes
+      ['errorpos']=>int()            // position of non-null byte, byte offset from beginning of file
+    }
+    [<3- or 4-char frame name>]=>    // see http://www.id3.org/id3v2.4.0-structure.txt
+    array {                          //   for details on which 4-character name represents which data
+      ['flags']=>string()            // NOTE: the actual structure varies depending on the FrameID
+      ['datalength']=>int()          // length of frame data (in bytes) not including 6/10-byte frame header
+      ['dataoffset']=>int()          // offset of beginning of frame from beginning of file, in *de-unsynchronized* bytes
+      ['asciidata']=>string()        // approximate translation from text-encodings other than ISO-8859-1 (ie UTF-16, UTF-16BE and UTF-8)
+    }
+  }
+  ['lyrics3']=>array() {             // for MP3 files with Lyrics3 tag only
+  }
+  ['ogg']=>array() {                 // for Ogg Vorbis files only
+    ['comments']=>array() {
+      [n]=>array() {
+        ['key']=>string              // 'TITLE', 'ARTIST', etc [http://www.xiph.org/ogg/vorbis/doc/v-comment.html]
+        ['value']=>string            // 'Yellow Submarine', 'The Beatles', etc
+      }
+    }
+  }
+  ['riff']=>array() {                 // for RIFF/WAV files only
+    ['raw']=>array() {                  // data as read in, unprocessed
+      ['riff']=>array() {
+        ['size']=>int()                     // in bytes
+      }
+      ['WAVE']=>array() {
+        ['size']=>int()                     // in bytes
+      }
+      ['fmt ']=>array() {                 // note the trailing space
+        ['size']=>int()                     // in bytes
+        ['wFormatTag']=>int()               // waveform format code
+        ['nChannels']=>int()                // 1 (mono) or 2 (stereo)
+        ['nSamplesPerSec']=>int()           // samples per second (aka frequency)
+        ['nAvgBytesPerSec']=>int()          // byterate, bytes per second
+        ['nBlockAlign']=>                   // The block alignment (in bytes) of the waveform data
+      }
+      ['rgad']=>array() {
+        ['size']=>int()                     // in bytes
+        ['fPeakAmplitude']=>float()         // 1 means the .wav file peaks at digital full scale (equivalent to -32768 for 16-bit wav)
+        ['nRadioRgAdjust']=>int()           // meaningless by itself, see below array
+        ['nAudiophileRgAdjust']=>int()      // meaningless by itself, see below array
+        ['radio']=>array() {                // settings for Radio Gain Adjustment
+          ['name']=>int()                     // represents 'Radio' or 'not set'
+          ['originator']=>int()               // how/by whom the RGAD was set/calculated
+          ['signbit']=>int()                  // 1->negative, 0->positive
+          ['adjustment']=>int()               // absolute value of adjustment, multiplied by 10
+        }
+        ['audiophile']=>array() {           //
+          ['name']=>int()                     // represents 'Audiophile' or 'not set'
+          ['originator']=>int()               // how/by whom the RGAD was set/calculated
+          ['signbit']=>int()                  // 1->negative, 0->positive
+          ['adjustment']=>int()               // absolute value of adjustment, multiplied by 10
+        }
+      }
+      ['data']=>array() {
+        ['size']=>int()                     // in bytes
+      }
+    }
+    ['rgad']=>array() {
+      ['peakamplitude']=>float()         // 1 means the .wav file peaks at digital full scale (equivalent to -32768 for 16-bit wav)
+      ['radio']=>array() {
+        ['name']=>string()                 // 'Radio Gain Adjustment'
+        ['originator']=>string()           // how/by whom the RGAD was set/calculated
+        ['adjustment']=>float()            // adjustment in dB
+      }
+      ['audiophile']=>array() {
+        ['name']=>string()                 // 'Audiophile Gain Adjustment'
+        ['originator']=>string()           // how/by whom the RGAD was set/calculated
+        ['adjustment']=>float()            // adjustment in dB
+      }
+    }
+    ['audio']=>array() {
+      [n]=>array() {
+        ['codec']=>string()                // MS-PCM, IBM mu-law, IBM a-law, IBM ADPCM
+        ['channels']=>int()                // 1 (mono) or 2 (stereo)
+        ['channelmode']=>string()          // 'mono' or 'stereo'
+        ['frequency']=>int()               // sampling frequency in Hz
+        ['bitrate']=>int()                 // in bits per second
+        ['bitspersample']=>int()
+      }
+    }
+  }
+  ['mpeg']=>array() {
+    ['audio']=>array() {                // MPEG audio data
+      ['version']=>string()              // MPEG audio version - 1, 2, or 2.5
+      ['layer']=>string()                // MPEG audio layer   - I, II or III
+      ['protection']=>boolean()
+      ['bitrate']=>int()                 // in kbps, ex: 128 (CBR files only)
+      ['frequency']=>int()               // in Hz, ex: 44100
+      ['padding']=>boolean()
+      ['private']=>boolean()
+      ['channelmode']=>string()          // mono, stereo, joint stereo or dual channel
+      ['channels']=>int()                // 1 or 2
+      ['modeextension']=>string()        // IS, MS, IS+MS for Layer III; 4-31, 8-31, 12-31, 16-31 for Layer I or Layer II
+      ['copyright']=>boolean()
+      ['original']=>boolean()
+      ['emphasis']=>string()             // none, 50/15 ms or CCIT J.17
+      ['raw']=>array() {
+        // same as above, but unparsed integer values
+      }
+      ['VBR_bitrate']=>double()          // exact average bitrate in kbps (VBR files only)
+      ['bitratemode']=>string()          // 'VBR' or 'CBR'
+      ['VBR_method']=>string()           // 'Xing' or 'Fraunhofer' (VBR files only)
+      ['VBR_frames']=>int()              // NOT including the Xing / Fraunhofer (VBRI) header frame (VBR files only)
+      ['VBR_bytes']=>int()               // should be the same as ['audiobytes'] (VBR files only)
+      ['VBR_quality']=>int()             // 0-100 (VBR, Fraunhofer only)
+      ['VBR_seek_offsets']=>int()        // number of seek offsets
+      ['VBR_seek_offsets_stride']=>int() // offset "stride" (number of frames between offsets)
+      ['VBR_offsets_relative']=>array()  // array of seek offsets (from previous offset)
+      ['VBR_offsets_absolute']=>array()  // array of seek offsets (from beginning of file)
+
+    ['video']=>array() {                // MPEG video data
+      ['framesize_horizontal']=>int()       // frame width in pixels  (ex: 352)
+      ['framesize_vertical']=>int()         // frame height in pixels (ex: 240)
+      ['pixel_aspect_ratio']=>float()       // pixel aspect ratio (ex: 1.095)
+      ['pixel_aspect_ratio_text']=>string() // pixel aspect ratio (ex: '4:3, 525 line, NTSC, CCIR601')
+      ['frame_rate']=>int()                 // frames per second  (ex: 25)
+      ['bitrate_type']=>int()               // 'constant' or 'variable'
+      ['bitrate_bps']=>int()                // bits per second (ex: 1150000)
+      ['raw']=>array() {
+        // same as above, but unparsed integer values
+      }
+  }
+  ['replay_gain']=>array() {
+    ['radio']=>array() {
+      ['peak']=>double()                    // peak level - 1.0 = 100%
+      ['originator']=>string()              // who set the replay gain
+      ['adjustment']=>double()              // adjustment in dB
+    }
+    ['audiophile']=>array() {
+      ['peak']=>double()                    // peak level - 1.0 = 100%
+      ['originator']=>string()              // who set the replay gain
+      ['adjustment']=>double()              // adjustment in dB
+    }
+  }
+  ['asf']=>array() {
+  }
+  ['mpc']=>array() {
+  }
+  ['real']=>array() {
+  }
+  ['jpg']=>array() {
+  }
+  ['gif']=>array() {
+  }
+  ['png']=>array() {
+  }
+  ['bmp']=>array() {
+    ['type_os']=>string()                   // 'OS/2' or 'Windows'
+    ['type_version']=>int()                 // 1 or
+    ['header']=>array() {
+    }
+    ['palette']=>array() {
+    }
+    ['data']=>array() {
+    }
+  }
+  ['flac']=>array() {
+  }
+  ['vqf']=>array() {
+  }
+  ['aac']=>array() {
+  }
+  ['quicktime']=>array() {
+  }
+  ['zip']=>array() {
+  }
+  ['iso']=>array() {
+  }
+}
+
+
+
+/////////////////////////////////////////////////////////////////////
+
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to:
+Free Software Foundation, Inc.
+59 Temple Place - Suite 330
+Boston, MA  02111-1307, USA.
+
+
+/////////////////////////////////////////////////////////////////////
+
+Reference material:
+[www.id3.org material now mirrored at http://id3lib.sourceforge.net/id3/]
+* http://www.id3.org/id3v2.4.0-structure.txt
+* http://www.id3.org/id3v2.4.0-frames.txt
+* http://www.id3.org/id3v2.4.0-changes.txt
+* http://www.id3.org/id3v2.3.0.txt
+* http://www.id3.org/id3v2-00.txt
+* http://www.id3.org/mp3frame.html
+* http://minnie.tuhs.org/pipermail/mp3encoder/2001-January/001800.html <mathewhendry@hotmail.com>
+* http://www.dv.co.yu/mpgscript/mpeghdr.htm
+* http://www.mp3-tech.org/programmer/frame_header.html
+* http://users.belgacom.net/gc247244/extra/tag.html
+* http://www.id3.org/iso4217.html
+* http://www.unicode.org/Public/MAPPINGS/ISO8859/8859-1.TXT
+* http://www.xiph.org/ogg/vorbis/doc/framing.html
+* http://www.xiph.org/ogg/vorbis/doc/v-comment.html
+* http://leknor.com/code/php/class.ogg.php.txt
+* http://www.id3.org/iso639-2.html
+* http://www.psc.edu/general/software/packages/ieee/ieee.html
+* http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/ieee-expl.html
+* http://www.scri.fsu.edu/~jac/MAD3401/Backgrnd/binary.html
+* http://www.jmcgowan.com/avi.html
+* http://www.wotsit.org/
+* http://www.herdsoft.com/ti/davincie/davp3xo2.htm
+* http://www.mathdogs.com/vorbis-illuminated/bitstream-appendix.html
+* "Standard MIDI File Format" by Dustin Caldwell (from www.wotsit.org)
+* http://midistudio.com/Help/GMSpecs_Patches.htm
+* http://www.xiph.org/archives/vorbis/200109/0459.html
+* http://www.replaygain.org/
+* http://www.lossless-audio.com/
+* http://download.microsoft.com/download/winmediatech40/Doc/1.0/WIN98MeXP/EN-US/ASF_Specification_v.1.0.exe
+* http://mediaxw.sourceforge.net/files/doc/Active%20Streaming%20Format%20(ASF)%201.0%20Specification.pdf
+* http://www.uni-jena.de/~pfk/mpp/sv8/
+* http://jfaul.de/atl/
+* http://www.uni-jena.de/~pfk/mpp/
+* http://www.libpng.org/pub/png/spec/png-1.2-pdg.html
+* http://www.real.com/devzone/library/creating/rmsdk/doc/rmff.htm
+* http://www.fastgraph.com/help/bmp_os2_header_format.html
+* http://netghost.narod.ru/gff/graphics/summary/os2bmp.htm
+* http://flac.sourceforge.net/format.html
+* http://www.research.att.com/projects/mpegaudio/mpeg2.html
+* http://www.audiocoding.com/wiki/index.php?page=AAC
+* http://libmpeg.org/mpeg4/doc/w2203tfs.pdf
+* http://www.geocities.com/xhelmboyx/quicktime/formats/qtm-layout.txt
+* http://developer.apple.com/techpubs/quicktime/qtdevdocs/RM/frameset.htm
+* http://www.nullsoft.com/nsv/
+* http://www.wotsit.org/download.asp?f=iso9660
+* http://sandbox.mc.edu/~bennet/cs110/tc/tctod.html
+* http://www.cdroller.com/htm/readdata.html
+* http://www.speex.org/manual/node10.html
+* http://www.harmony-central.com/Computer/Programming/aiff-file-format.doc
+* http://www.faqs.org/rfcs/rfc2361.html
