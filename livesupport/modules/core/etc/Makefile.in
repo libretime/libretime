@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -114,7 +114,8 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/Playlist.o \
                 ${TMP_DIR}/TimeConversion.o \
                 ${TMP_DIR}/Thread.o \
-                ${TMP_DIR}/LocalizedObject.o
+                ${TMP_DIR}/LocalizedObject.o \
+                ${TMP_DIR}/LocalizedConfigurable.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/AudioClipTest.o \
@@ -124,7 +125,8 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/TimeConversionTest.o \
                    ${TMP_DIR}/TestRunnable.o \
                    ${TMP_DIR}/ThreadTest.o \
-                   ${TMP_DIR}/LocalizedObjectTest.o
+                   ${TMP_DIR}/LocalizedObjectTest.o \
+                   ${TMP_DIR}/LocalizedConfigurableTest.o
 
 TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_en.res \

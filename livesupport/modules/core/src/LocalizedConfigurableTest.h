@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedConfigurableTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LocalizedObjectTest_h
-#define LocalizedObjectTest_h
+#ifndef LocalizedConfigurableTest_h
+#define LocalizedConfigurableTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -55,21 +55,17 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the LocalizedObject class.
+ *  Unit test for the LocalizedConfigurable class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.1 $
  *  @see LocalizedObject
  */
-class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
+class LocalizedConfigurableTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(LocalizedObjectTest);
+    CPPUNIT_TEST_SUITE(LocalizedConfigurableTest);
     CPPUNIT_TEST(simpleTest);
-    CPPUNIT_TEST(fallbackTest);
-    CPPUNIT_TEST(unicodeTest);
-    CPPUNIT_TEST(formatMessageTest);
-    CPPUNIT_TEST(loadFromConfigTest);
-    CPPUNIT_TEST(ustringTest);
+    CPPUNIT_TEST(changeLocaleTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -83,46 +79,12 @@ class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
         simpleTest(void)                        throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Test to see if multiple locales work, and they fall back to
-         *  more generic values.
+         *  A test to see if changing the locale works.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        fallbackTest(void)                      throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Test to see if funny unicode characters work properly.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        unicodeTest(void)                       throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  A test to see if message formatting works all right.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        formatMessageTest(void)                 throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  A test to see if a resource bundle can be loaded based on a
-         *  configuration file
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        loadFromConfigTest(void)                throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  A test to check the Glib::ustring related functions.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        ustringTest(void)                       throw (CPPUNIT_NS::Exception);
+        changeLocaleTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -150,5 +112,5 @@ class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // LocalizedObjectTest_h
+#endif // LocalizedConfigurableTest_h
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ namespace Core {
  *  to make localized life easier.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class LocalizedObject
 {
@@ -80,6 +80,8 @@ class LocalizedObject
          */
         Ptr<ResourceBundle>::Ref    bundle;
 
+
+    protected:
         /**
          *  The default constructor.
          */
@@ -168,6 +170,17 @@ class LocalizedObject
         }
 
         /**
+         *  Change the resource bundle for this object.
+         *
+         *  @param the new resource bundle used by the object.
+         */
+        virtual void
+        setBundle(Ptr<ResourceBundle>::Ref  bundle)             throw ()
+        {
+            this->bundle = bundle;
+        }
+
+        /**
          *  Get a resource bundle nested inside our bundle.
          *
          *  @param key the name of the resource bundle to get.
@@ -229,6 +242,66 @@ class LocalizedObject
                       unsigned int      nArguments)
                                                 throw (std::invalid_argument);
 
+        /**
+         *  Convert an ICU unicode string to a Glib ustring.
+         *
+         *  @param unicodeString the ICU unicode string to convert.
+         *  @return the same string as supplied, in Glib ustring form.
+         */
+        static Ptr<Glib::ustring>::Ref
+        unicodeStringToUstring(Ptr<const UnicodeString>::Ref   unicodeString)
+                                                                    throw ();
+
+        /**
+         *  Convert a Glib ustring to an ICU unicode string.
+         *
+         *  @param gString the Glib ustring to convert
+         *  @return the same string as supplied, in ICU unicode form.
+         */
+        static Ptr<UnicodeString>::Ref
+        ustringToUnicodeString(Ptr<const Glib::ustring>::Ref   gString)
+                                                                    throw ();
+
+        /**
+         *  Get a string from the resource bundle, as a Glib ustring.
+         *
+         *  @param key the key identifying the requested string.
+         *  @return the requested string
+         *  @exception std::invalid_argument if there is no string for the
+         *             specified key.
+         */
+        Ptr<Glib::ustring>::Ref
+        getResourceUstring(const char * key)
+                                                throw (std::invalid_argument)
+        {
+            return unicodeStringToUstring(getResourceString(key));
+        }
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param arguments the arguments to use in the formatting
+         *  @param nArguments the number of arguments supplied
+         *  @return the formatted string, in Glib ustring form
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        formatMessageUstring(const char      * patternKey,
+                             Formattable     * arguments,
+                             unsigned int      nArguments)
+                                                throw (std::invalid_argument)
+        {
+            return unicodeStringToUstring(formatMessage(patternKey,
+                                                        arguments,
+                                                        nArguments));
+        }
 };
 
 /* ================================================= external data structures */

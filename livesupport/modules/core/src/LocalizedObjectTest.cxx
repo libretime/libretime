@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -234,7 +234,7 @@ LocalizedObjectTest :: formatMessageTest(void)
  *  Test to see if resource bundle can be loaded based on a config file
  *----------------------------------------------------------------------------*/
 void
-LocalizedObjectTest :: loadFromConfig(void)
+LocalizedObjectTest :: loadFromConfigTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<ResourceBundle>::Ref    bundle;
@@ -264,4 +264,47 @@ LocalizedObjectTest :: loadFromConfig(void)
         CPPUNIT_FAIL(e.what());
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Test the ustring related functions.
+ *----------------------------------------------------------------------------*/
+void
+LocalizedObjectTest :: ustringTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    UErrorCode                status = U_ZERO_ERROR;
+    Ptr<ResourceBundle>::Ref  bundle(new ResourceBundle("./tmp/" PACKAGE_NAME,
+                                                        "root",
+                                                        status));
+    CPPUNIT_ASSERT(U_SUCCESS(status));
+
+    // test getting an ustring resource
+    try {
+        Ptr<LocalizedObject>::Ref   locObj(new LocalizedObject(bundle));
+        Ptr<LocalizedObject>::Ref   section1(new LocalizedObject(
+                                                locObj->getBundle("section1")));
+        Ptr<Glib::ustring>::Ref     foo = section1->getResourceUstring("foo");
+        CPPUNIT_ASSERT(*foo == "foo");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    // test message formatting to ustring
+    try {
+        Ptr<Glib::ustring>::Ref     message;
+        Ptr<LocalizedObject>::Ref   locObj(new LocalizedObject(bundle));
+        Ptr<LocalizedObject>::Ref   messages(new LocalizedObject(
+                                                locObj->getBundle("messages")));
+        Formattable                 arguments[] = { "p1", "p2" };
+
+        // test formatting through a key
+        message = messages->formatMessageUstring("aMessage", arguments, 2);
+        CPPUNIT_ASSERT(*message == "parameter 0: p1, parameter 1: p2");
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
 

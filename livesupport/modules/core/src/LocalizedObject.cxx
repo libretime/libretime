@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -175,5 +175,46 @@ LocalizedObject :: formatMessage(const char       * patternKey,
                                             throw (std::invalid_argument)
 {
     return formatMessage(getResourceString(patternKey), arguments, nArguments);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a Glib ustring from an ICU UnicodeString
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+LocalizedObject :: unicodeStringToUstring(
+                            Ptr<const UnicodeString>::Ref   unicodeString)
+                                                                    throw ()
+{
+    const UChar   * uchars = unicodeString->getBuffer();
+    int32_t         length = unicodeString->length();
+    Ptr<Glib::ustring>::Ref    ustr(new Glib::ustring());
+    ustr->reserve(length);
+
+    while (length--) {
+        ustr->push_back((gunichar) (*(uchars++)));
+    }
+
+    return ustr;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create an ICU UnicodeString from a Glib ustring
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+LocalizedObject :: ustringToUnicodeString(
+                                Ptr<const Glib::ustring>::Ref   gString)
+                                                                    throw ()
+{
+    Ptr<UnicodeString>::Ref     uString(new UnicodeString());
+
+    Glib::ustring::const_iterator     it = gString->begin();
+    Glib::ustring::const_iterator     end = gString->end();
+    while (it < end) {
+        uString->append((UChar32) *it++);
+    }
+
+    return uString;
 }
 
