@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.25 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.26 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -273,7 +273,7 @@ uninstall: ${SCHEDULER_EXE}
                                                                       uninstall
 
 storage_server_init:
-	${MAKE} -C ${STORAGE_SERVER_DIR}
+#	${MAKE} -C ${STORAGE_SERVER_DIR}
 
 
 #-------------------------------------------------------------------------------

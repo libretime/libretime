@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -96,9 +96,11 @@ LDFLAGS  = @LDFLAGS@ -pthread -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
 #	Dependencies
 #-------------------------------------------------------------------------------
 AUTHENTICATION_LIB_OBJS = ${TMP_DIR}/AuthenticationClientFactory.o \
+                          ${TMP_DIR}/TestAuthenticationClient.o \
                           ${TMP_DIR}/WebAuthenticationClient.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/WebAuthenticationClientTest.o \
+                   ${TMP_DIR}/TestAuthenticationClientTest.o \
                    ${TMP_DIR}/TestRunner.o
 
 TEST_RUNNER_LIBS = -l${AUTHENTICATION_LIB} -l${CORE_LIB} -lxml++-1.0 \
@@ -133,7 +135,7 @@ distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
 check: all ${TEST_RUNNER}
-	${MAKE} -C ${STORAGE_SERVER_DIR}
+#	${MAKE} -C ${STORAGE_SERVER_DIR}
 	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
                                    -o ${TEST_RESULTS} -s ${TEST_XSLT}
 

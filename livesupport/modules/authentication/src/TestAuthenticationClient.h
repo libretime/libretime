@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/Attic/WebAuthenticationClient.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef WebAuthenticationClient_h
-#define WebAuthenticationClient_h
+#ifndef TestAuthenticationClient_h
+#define TestAuthenticationClient_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -41,6 +41,8 @@
 #endif
 
 #include <stdexcept>
+#include <string>
+#include <set>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
@@ -63,62 +65,66 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An interface to the authentication methods on the php storage server.
+ *  A dummy authentication client.
  *
  *  This object has to be configured with an XML configuration element
- *  called webAuthentication. This element contains a child element
- *  specifying the location of the authentication server.
+ *  called testAuthentication. This element contains a child element
+ *  specifying the login and password.
  *
- *  A webAuthentication configuration element may look like the following:
+ *  A testAuthentication configuration element may look like the following:
  *
  *  <pre><code>
- *  &lt;webAuthentication&gt;
- *      &lt;location
- *          server="localhost"
- *          port="80" 
- *          path="/storage/var/xmlrpc/xrLocStor.php"
+ *  &lt;testAuthentication&gt;
+ *      &lt;user
+ *          login="root"
+ *          password="q" 
  *      /&gt;
- *  &lt;/webAuthentication&gt;
+ *  &lt;/testAuthentication&gt;
  *  </code></pre>
  *
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT webAuthentication (location) &gt;
- *  &lt;!ELEMENT location EMPTY &gt;
- *  &lt;!ATTLIST location server   CDATA       #REQUIRED &gt;
- *  &lt;!ATTLIST location port     NMTOKEN     #REQUIRED &gt;
- *  &lt;!ATTLIST location path     CDATA       #REQUIRED &gt;
+ *  &lt;!ELEMENT testAuthentication (user) &gt;
+ *  &lt;!ELEMENT user EMPTY &gt;
+ *  &lt;!ATTLIST user login      CDATA      #REQUIRED &gt;
+ *  &lt;!ATTLIST user password   CDATA      #REQUIRED &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.1 $
  */
-class WebAuthenticationClient :
+class TestAuthenticationClient :
                     virtual public Configurable,
                     virtual public AuthenticationClientInterface
 {
     private:
         /**
          *  The name of the configuration XML elmenent used by 
-         *      WebAuthenticationClient
+         *      TestAuthenticationClient
          */
         static const std::string    configElementNameStr;
 
         /**
          *  The name of the storage server, e.g. "myserver.mycompany.com".
          */
-        std::string                 storageServerName;
+        std::string                 userLogin;
 
-        /**
-         *  The port wher the storage server is listening (default is 80).
-         */
-        int                         storageServerPort;
+       /**
+        *  The path to the storage server php page.
+        */
+        std::string                 userPassword;
 
-        /**
-         *  The path to the storage server php page.
-         */
-        std::string                 storageServerPath;
+       /**
+        *  A type for the list of sessionId's.
+        */
+        typedef std::set<std::string>
+                                    sessionIdListType;
+
+       /**
+        *  A list of the sessionId's we have issued.
+        */
+        sessionIdListType           sessionIdList;
 
 
     public:
@@ -126,7 +132,7 @@ class WebAuthenticationClient :
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~WebAuthenticationClient(void)                 throw ()
+        ~TestAuthenticationClient(void)                 throw ()
         {
         }
 
@@ -192,5 +198,5 @@ class WebAuthenticationClient :
 } // namespace Authentication
 } // namespace LiveSupport
 
-#endif // WebAuthenticationClient_h
+#endif // TestAuthenticationClient_h
 
