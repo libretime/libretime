@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,6 +148,7 @@ class Playlist extends StoredFile{
      *  @param acTit string - audioClip title
      *  @param fadeIn string - fadein value in ss.ssssss or extent format
      *  @param fadeOut string - fadeout value in ss.ssssss or extent format
+     *  @param plElGunid string - optional playlist element gunid
      *  @return array with fields:
      *  <ul>
      *   <li>plElId int - record id of playlistElement</li>
@@ -156,15 +157,15 @@ class Playlist extends StoredFile{
      *   <li>fadeOutId int - record id</li>
      *  </ul>
      */
-    function insertPlaylistElement($parid, $offset,
-        $acGunid, $acLen, $acTit, $fadeIn=NULL, $fadeOut=NULL)
+    function insertPlaylistElement($parid, $offset, $acGunid, $acLen, $acTit,
+        $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL)
     {
         // insert playlistElement
         $r = $this->md->insertMetadataEl($parid, 'playlistElement');
         if(PEAR::isError($r)){ return $r; }
         $plElId = $r;
         // create and insert gunid (id attribute)
-        $plElGunid = StoredFile::_createGunid();
+        if(is_null($plElGunid)) $plElGunid = StoredFile::_createGunid();
         $r = $this->md->insertMetadataEl($plElId, 'id', $plElGunid, 'A');
         if(PEAR::isError($r)){ return $r; }
         // insert relativeOffset
@@ -273,9 +274,10 @@ class Playlist extends StoredFile{
      *  @param acId string, local ID of added file
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
      *  @param fadeOut string, dtto
+     *  @param plElGunid string - optional playlist element gunid
      *  @return string, generated playlistElement gunid
      */
-    function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL)
+    function addAudioClip($acId, $fadeIn=NULL, $fadeOut=NULL, $plElGunid=NULL)
     {
         $plGunid = $this->gunid;
         // get information about audioClip
@@ -290,7 +292,7 @@ class Playlist extends StoredFile{
         // insert new playlist element
         $offset = $plLen;
         $plElInfo = $this->insertPlaylistElement($parid, $offset,
-            $acGunid, $acLen, $acTit, $fadeIn, $fadeOut);
+            $acGunid, $acLen, $acTit, $fadeIn, $fadeOut, $plElGunid);
         if(PEAR::isError($plElInfo)){ return $plElInfo; }
         extract($plElInfo); // 'plElId', 'plElGunid', 'fadeInId', 'fadeOutId'
 
@@ -392,9 +394,9 @@ class Playlist extends StoredFile{
             $fiGunid = StoredFile::_createGunid();
             $r = $this->_getMidOrInsert('id', $fiMid, $fiGunid, 'A');
             if(PEAR::isError($r)){ return $r; }
-            $fadeInId = $this->_getMidOrInsert('fadeIn', $fiMid, NULL, 'A');
+            $fadeInId = $this->_getMidOrInsert('fadeIn', $fiMid, $fadeIn, 'A');
             if(PEAR::isError($fadeInId)){ return $fadeInId; }
-            $fadeOutId = $this->_getMidOrInsert('fadeOut', $fiMid, NULL, 'A');
+            $fadeOutId = $this->_getMidOrInsert('fadeOut', $fiMid, $fadeOut, 'A');
             if(PEAR::isError($fadeOutId)){ return $fadeOutId; }
             $r = $this->_setValueOrInsert(
                 $fadeInId, $fadeIn, $fiMid, 'fadeIn');
@@ -437,6 +439,9 @@ class Playlist extends StoredFile{
         array_splice($els, $newPos-1, 0, $movedel);
 //        var_dump($els);
         foreach($els as $i=>$el){
+            $plElGunid2 = $el['attrs']['id'];
+            $fadeIn = NULL;
+            $fadeOut = NULL;
             foreach($el['children'] as $j=>$af){
                 if($af['elementname'] == 'audioclip'){
                     $acGunid = $af['attrs']['id'];
@@ -447,7 +452,13 @@ class Playlist extends StoredFile{
                 }
             }
             $acId = $this->gb->_idFromGunid($acGunid);
-            $r = $this->addAudioClip($acId, $fadeIn, $fadeOut);
+            if(PEAR::isError($acId)){ return $acId; }
+            if(is_null($acId)){
+                return PEAR::raiseError(
+                    "Playlist::moveAudioClip: null audioClip gunid"
+                );
+            }
+            $r = $this->addAudioClip($acId, $fadeIn, $fadeOut, $plElGunid2);
             if(PEAR::isError($r)){ return $r; }
         }
         return TRUE;
