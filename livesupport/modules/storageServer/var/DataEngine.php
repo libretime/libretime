@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -189,6 +189,7 @@ class DataEngine{
         }
         if(!is_null($ftypeCond)) $whereArr[] = " $ftypeCond";
         if(count($whereArr)>0) $sql .= "WHERE\n".join("  AND\n", $whereArr);
+        if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
     
@@ -233,6 +234,7 @@ class DataEngine{
             $glue = " AND";
         }else{ $glue = "WHERE";}
         if(!is_null($ftypeCond)) $sql .= "\n$glue $ftypeCond";
+        if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
     
@@ -267,6 +269,7 @@ class DataEngine{
             $glue = " AND";
         }else{ $glue = "WHERE"; }
         if(!is_null($ftypeCond)) $sql .= "$glue $ftypeCond";
+        if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
     
