@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -254,6 +254,8 @@ class GreenBox extends BasicStor{
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
      *     </li>
+     *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
+     *     <li>offset : int - starting point (0 means without offset)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
      *           <li>cat - string, metadata category name</li>
@@ -271,9 +273,31 @@ class GreenBox extends BasicStor{
      */
     function localSearch($criteria, $sessid='')
     {
-        return $this->bsLocalSearch($criteria);
+        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
+        return $this->bsLocalSearch($criteria, $limit, $offset);
     }
 
+    /**
+     *  Return values of specified metadata category
+     *
+     *  @param category string, metadata category name
+     *          with or without namespace prefix (dc:title, author)
+     *  @param criteria hash, see localSearch method
+     *  @param sessid string
+     *  @return hash, fields:
+     *       results : array with gunid strings
+     *       cnt : integer - number of matching values 
+     *  @see BasicStor::bsBrowseCategory
+     */
+    function browseCategory($category, $criteria, $sessid='')
+    {
+        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
+        $res = $this->bsBrowseCategory($category, $limit, $offset, $criteria);
+        return $res;
+    }
+    
     /* --------------------------------------------------------- info methods */
 
     /**

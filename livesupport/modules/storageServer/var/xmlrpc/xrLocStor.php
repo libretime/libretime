@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,8 @@ $methods = array(
     'updateAudioClipMetadata' => 'Update the metadata of an Audio clip '.
                                   'stored in Local storage.',
     'searchMetadata'          => 'Search through the metadata of stored '.
-                                  'AudioClips, return all matching clip ids.',
+                                  'files, return all matching clip ids.',
+    'browseCategory'          =>'Return values of specified metadata category.',
     'accessRawAudioData'      => 'Get access to raw audio data.',
     'releaseRawAudioData'     => 'Release access to raw audio data.',
     'getAudioClip'            => 'Return the contents of an Audio clip.',

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,7 +159,6 @@ class XR_LocStor extends LocStor{
      *
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
-     *  @see GreenBox::logout
      */
     function xr_logout($input)
     {
@@ -1188,7 +1187,7 @@ class XR_LocStor extends LocStor{
      *  @param input XMLRPC struct
      *  @return XMLRPC struct
      *  @see LocStor::searchMetadata
-     *  @see GreenBox::localSearch
+     *  @see BasicStor::localSearch
      */
     function xr_searchMetadata($input)
     {
@@ -1215,7 +1214,66 @@ class XR_LocStor extends LocStor{
                 (count($res['playlistResults'])==0
                     ? new XML_RPC_Value(array(), 'array')
                     : XML_RPC_encode($res['playlistResults'])
-            ),
+                ),
+        ));
+        return new XML_RPC_Response($xv);
+    }
+
+    /**
+     *  Return values of specified metadata category
+     *
+     *  The XML-RPC name of this method is "locstor.browseCategory".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> category : string - metadata category name
+     *          with or without namespace prefix (dc:title, author) </li>
+     *      <li> criteria : hash - see searchMetadata method </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> results : array with values having been found </li>
+     *      <li> cnt : integer - number of matching values </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_browseCategory:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Pref::browseCategory
+     */
+    function xr_browseCategory($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->browseCategory(
+            $r['category'], $r['criteria'], $r['sessid']
+        );
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+                
+            );
+        }
+        $xv = new XML_RPC_Value;
+        $xv->addStruct(array(
+            'cnt'      => XML_RPC_encode($res['cnt']),
+            'results'  =>
+                (count($res['results'])==0
+                    ? new XML_RPC_Value(array(), 'array')
+                    : XML_RPC_encode($res['results'])
+                ),
         ));
         return new XML_RPC_Response($xv);
     }

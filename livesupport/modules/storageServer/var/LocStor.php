@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -257,7 +257,7 @@ class LocStor extends BasicStor{
         return $md;
     }
 
-    /* --------------------------------------------------------------- search */
+    /* ------------------------------------------------------- search, browse */
     /**
      *  Search in metadata database
      *
@@ -288,18 +288,22 @@ class LocStor extends BasicStor{
      *   <ul>
      *      <li>audioClipResults : array with gunid strings
      *          of audioClips have been found</li>
+     *      <li>audioClipCnt : int - number of audioClips matching
+     *          the criteria</li>
      *      <li>playlistResults : array with gunid strings
      *          of playlists have been found</li>
+     *      <li>playlistCnt : int - number of playlists matching
+     *          the criteria</li>
      *   </ul>
-     *  @see GreenBox::localSearch
-     */
+     *  @see BasicStor::localSearch
+      */
     function searchMetadata($sessid, $criteria)
     {
         if(($res = $this->_authorize('read', $this->storId, $sessid)) !== TRUE)
             return $res;
-        $filetype   = strtolower($criteria['filetype']);
-        $limit      = intval($criteria['limit']);
-        $offset     = intval($criteria['offset']);
+        $filetype = strtolower($criteria['filetype']);
+        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
         if($filetype=='all'){
             $criteriaAC = $criteria;    $criteriaAC['filetype'] = 'audioclip';
             $criteriaPL = $criteria;    $criteriaPL['filetype'] = 'playlist';
@@ -332,6 +336,26 @@ class LocStor extends BasicStor{
         return $res;
     }
 
+    /**
+     *  Return values of specified metadata category
+     *
+     *  @param category string, metadata category name
+     *          with or without namespace prefix (dc:title, author)
+     *  @param criteria hash, see searchMetadata method
+     *  @param sessid string
+     *  @return hash, fields:
+     *       results : array with gunid strings
+     *       cnt : integer - number of matching values 
+     *  @see BasicStor::bsBrowseCategory
+     */
+    function browseCategory($category, $criteria=NULL, $sessid='')
+    {
+        $limit  = intval(isset($criteria['limit']) ? $criteria['limit'] : 0);
+        $offset = intval(isset($criteria['offset']) ? $criteria['offset'] : 0);
+        $res = $this->bsBrowseCategory($category, $limit, $offset, $criteria);
+        return $res;
+    }
+    
     /* ----------------------------------------------------------------- etc. */
     /**
      *  Check if audio clip exists
