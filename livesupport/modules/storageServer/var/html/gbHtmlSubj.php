@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlSubj.php,v 1.2 2004/09/21 00:27:41 tomas Exp $
+// $Id: gbHtmlSubj.php,v 1.3 2004/12/09 00:42:42 tomas Exp $
 require_once"gbHtml_h.php";
 require_once"gbHtmlTestAuth.php";
 
@@ -40,7 +40,8 @@ $d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
 
 #header("Content-type: text/plain"); print_r($d); echo($list ? 'Y' : 'N')."\n"; exit;
 #require_once"gbHtml_f.php";
-// template follows:
+
+// =================== template: =================== 
 ?>
 <html><head>
 <title>Storage - user and roles editor</title>

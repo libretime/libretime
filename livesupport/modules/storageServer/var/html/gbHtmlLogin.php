@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlLogin.php,v 1.2 2004/09/21 00:27:41 tomas Exp $
+// $Id: gbHtmlLogin.php,v 1.3 2004/12/09 00:42:42 tomas Exp $
 require_once"gbHtml_h.php";
 
 // prefill data structure for template
@@ -21,7 +21,8 @@ unset($_SESSION['lastPost']);
 
 #header("Content-type: text/plain"); print_r($d); exit;
 #require_once"gbHtml_f.php";
-// template follows:
+
+// =================== template: =================== 
 ?>
 <html><head>
 <title>Storage - login</title>
