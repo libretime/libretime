@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,6 +129,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
                                 = dynamic_cast<const xmlpp::Element*> (*it);
         type = AudioClipType;
         audioClip.reset(new AudioClip);
+        playable = audioClip;
         audioClip->configure(*audioClipElement);        // may throw exception
         
         ++it;
@@ -147,6 +148,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
                                 = dynamic_cast<const xmlpp::Element*> (*it);
             type = PlaylistType;
             playlist.reset(new Playlist);
+            playable = playlist;
             playlist->configure(*playlistElement);      // may throw exception
             ++it;
             if (it != childNodes.end()) {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/Playable.h"
 #include "LiveSupport/Core/PlaylistElement.h"
 
 
@@ -92,9 +93,10 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
-class Playlist : public Configurable
+class Playlist : public Configurable,
+                 public Playable
 {
     private:
         /**
@@ -232,8 +234,8 @@ class Playlist : public Configurable
          *
          *  @return the unique id of the playlist.
          */
-        Ptr<UniqueId>::Ref
-        getId(void) const                        throw ()
+        virtual Ptr<UniqueId>::Ref
+        getId(void) const                       throw ()
         {
             return id;
         }
@@ -241,52 +243,58 @@ class Playlist : public Configurable
         /**
          *  Return the total playing length for this playlist.
          *
-         *  @return the playling length of this playlist, in microseconds.
+         *  @return the playing length in microseconds.
          */
-        Ptr<time_duration>::Ref
-        getPlaylength(void) const                throw ()
+        virtual Ptr<time_duration>::Ref
+        getPlaylength(void) const               throw ()
         {
             return playlength;
         }
 
         /**
-         *  Return the URI of the SMIL file generated from this playlist.
+         *  Return the URI of the SMIL file created from this
+         *  playlist, which can be played by the helix client.
          *
-         *  @return the uri of the playlist.
+         *  @return the URI.
          */
-        Ptr<const std::string>::Ref
-        getUri(void) const                                  throw ()
+        virtual Ptr<const string>::Ref
+        getUri(void) const                      throw ()
         {
             return uri;
         }
 
         /**
-         *  Set the URI of the SMIL file generated from this playlist.
+         *  Set the URI of the SMIL file created from this
+         *  playlist, which can be played by the helix client.
          *
+         *  @param uri the new URI.
          */
-        void
-        setUri(Ptr<const std::string>::Ref uri)             throw ()
+        virtual void
+        setUri(Ptr<const string>::Ref uri)      throw ()
         {
             this->uri = uri;
         }
 
         /**
-         *  Return the token given to this playlist by the storage server.
+         *  Return the token which is used to identify this
+         *  playlist to the storage server.
          *
-         *  @return the uri of the playlist.
+         *  @return the token.
          */
-        Ptr<const std::string>::Ref
-        getToken(void) const                                throw ()
+        virtual Ptr<const string>::Ref
+        getToken(void) const                    throw ()
         {
             return token;
         }
 
         /**
-         *  Set the token given to this playlist by the storage server.
+         *  Set the token which is used to identify this
+         *  playlist to the storage server.
          *
+         *  @param token a new token.
          */
-        void
-        setToken(Ptr<const std::string>::Ref token)         throw ()
+        virtual void
+        setToken(Ptr<const string>::Ref token)  throw ()
         {
             this->token = token;
         }

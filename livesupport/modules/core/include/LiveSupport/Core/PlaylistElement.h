@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,7 +49,9 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/Playable.h"
 #include "LiveSupport/Core/AudioClip.h"
+#include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/FadeInfo.h"
 
 
@@ -76,6 +78,10 @@ class Playlist;
  *  An item in a Playlist, consisting of an AudioClip or another Playlist
  *  and optional FadeInfo (fade in / fade out information).
  *
+ *  The contents of the playlist element can be accessed either by calling
+ *  getPlayable(), or, if a specific type of element is needed, by checking
+ *  getType() first, and then calling either getAudioClip() or getPlaylist().
+ *
  *  This object has to be configured with an XML configuration element
  *  called playlistElement. This may look like the following:
  *
@@ -98,7 +104,7 @@ class Playlist;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -129,6 +135,12 @@ class PlaylistElement : public Configurable
          *  The type of the entry (audio clip or sub-playlist).
          */
         Type                        type;
+
+        /**
+         *  The generic playable object associated with the entry.
+         *  This is either an audio clip or a playlist.
+         */
+        Ptr<Playable>::Ref          playable;
 
         /**
          *  The audio clip associated with the entry.
@@ -176,6 +188,7 @@ class PlaylistElement : public Configurable
             this->id             = id;
             this->relativeOffset = relativeOffset;
             this->audioClip      = audioClip;
+            this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
         }
 
@@ -198,6 +211,7 @@ class PlaylistElement : public Configurable
             this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
             this->audioClip      = audioClip;
+            this->playable       = audioClip;
             this->fadeInfo       = fadeInfo;
             this->type           = AudioClipType;
         }
@@ -221,6 +235,7 @@ class PlaylistElement : public Configurable
             this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
             this->playlist       = playlist;
+            this->playable       = playlist;
             this->fadeInfo       = fadeInfo;
             this->type           = PlaylistType;
         }
@@ -281,7 +296,10 @@ class PlaylistElement : public Configurable
         }
 
         /**
-         *  Return the type of this playlist element.
+         *  Return the type of this playlist element.  If the return
+         *  value is PlaylistElement::AudioClipType (resp. PlaylistType),
+         *  the getAudioClip() (resp. getPlaylist())
+         *  method is guaranteed to return a non-zero value.
          *
          *  @return either AudioClipType or PlaylistType.
          */
@@ -292,8 +310,23 @@ class PlaylistElement : public Configurable
         }
 
         /**
+         *  Return the Playable instance (an AudioClip or a Playlist)
+         *  associated with the playlist element.  Use this if you don't
+         *  care which type this playlist element is, e.g., you
+         *  just want to play it in a helix client.
+         *
+         *  @return the Playable instance associated with the element.
+         */
+        Ptr<Playable>::Ref
+        getPlayable(void) const                            throw ()
+        {
+            return playable;
+        }
+
+        /**
          *  Return the audio clip associated with the playlist element.
          *
+         *  @see getType()
          *  @return the audio clip associated with the element.
          */
         Ptr<AudioClip>::Ref
@@ -305,6 +338,7 @@ class PlaylistElement : public Configurable
         /**
          *  Return the sub-playlist associated with the playlist element.
          *
+         *  @see getType()
          *  @return the sub-playlist associated with the element.
          */
         Ptr<Playlist>::Ref

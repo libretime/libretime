@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/Playable.h"
 
 
 namespace LiveSupport {
@@ -94,9 +95,10 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
-class AudioClip : public Configurable
+class AudioClip : public Configurable,
+                  public Playable
 {
     private:
         /**
@@ -190,7 +192,7 @@ class AudioClip : public Configurable
          *
          *  @return the unique id of the audio clip.
          */
-        Ptr<UniqueId>::Ref
+        virtual Ptr<UniqueId>::Ref
         getId(void) const                       throw ()
         {
             return id;
@@ -199,53 +201,57 @@ class AudioClip : public Configurable
         /**
          *  Return the total playing length for this audio clip.
          *
-         *  @return the playing length of this audio clip, in microseconds.
+         *  @return the playing length in microseconds.
          */
-        Ptr<time_duration>::Ref
+        virtual Ptr<time_duration>::Ref
         getPlaylength(void) const               throw ()
         {
             return playlength;
         }
 
         /**
-         *  Return the URI of the binary sound file of this audio clip.
+         *  Return the URI of the binary sound file of this audio clip, 
+         *  which can be played by the helix client.
          *
-         *  @return the URI of this audio clip.
+         *  @return the URI.
          */
-        Ptr<const string>::Ref
+        virtual Ptr<const string>::Ref
         getUri(void) const                      throw ()
         {
             return uri;
         }
 
         /**
-         *  Set the URI of the binary sound file of this audio clip.
+         *  Set the URI of the binary sound file of this audio clip, 
+         *  which can be played by the helix client.
          *
-         *  @return the URI of this audio clip.
+         *  @param uri the new URI.
          */
-        void
+        virtual void
         setUri(Ptr<const string>::Ref uri)      throw ()
         {
             this->uri = uri;
         }
 
         /**
-         *  Return the token returned by the storage server.
+         *  Return the token which is used to identify this audio clip
+         *  to the storage server.
          *
-         *  @return the token of this audio clip.
+         *  @return the token.
          */
-        Ptr<const string>::Ref
+        virtual Ptr<const string>::Ref
         getToken(void) const                    throw ()
         {
             return token;
         }
 
         /**
-         *  Set the token returned by the storage server.
+         *  Set the token which is used to identify this audio clip
+         *  to the storage server.
          *
-         *  @return the token of this audio clip.
+         *  @param token a new token.
          */
-        void
+        virtual void
         setToken(Ptr<const string>::Ref token)  throw ()
         {
             this->token = token;

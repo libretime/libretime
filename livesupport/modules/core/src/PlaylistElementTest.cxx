@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -125,6 +125,11 @@ PlaylistElementTest :: firstTest(void)
         CPPUNIT_ASSERT(playlistElement->getType() 
                                         == PlaylistElement::PlaylistType);
                                         
+        // check that we can access the playlist inside the playlist element
+        //   as a Playable instance
+        CPPUNIT_ASSERT(playlistElement->getPlaylist()
+                    == playlistElement->getPlayable()); 
+
         // the playlist inside the playlist element
         CPPUNIT_ASSERT(playlistElement->getPlaylist()->getId()->getId()
                                                          == 2);
@@ -146,6 +151,11 @@ PlaylistElementTest :: firstTest(void)
         // and the audio clip inside the playlist element
         CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
                                                          == 10003);
+
+        // check that we can access this audio clip as a Playable instance
+        CPPUNIT_ASSERT(playlistElement->getAudioClip()
+                    == playlistElement->getPlayable()); 
+
     } catch (std::invalid_argument &e) {
         std::string eMsg = "semantic error in configuration file:\n";
         eMsg += e.what();
