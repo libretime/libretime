@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,6 +64,7 @@ if(PEAR::isError($dbc)){
     echo "Check if database '{$config['dsn']['database']}' exists".
         " with corresponding permissions.\n";
     echo "Database access is defined by 'dsn' values in var/conf.php.\n";
+    echo $dbc->getMessage()."\n";
     exit(1);
 }
 
