@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -108,6 +108,11 @@ class Playlist : public Configurable,
          *  The unique id of the playlist.
          */
         Ptr<UniqueId>::Ref          id;
+
+        /**
+         *  The title of the playlist.
+         */
+        Ptr<UnicodeString>::Ref     title;
 
         /**
          *  The playling length of the playlist.
@@ -163,12 +168,47 @@ class Playlist : public Configurable,
         Ptr<Playlist>::Ref          savedCopy;
 
 
+        /**
+         *  The type for storing the metadata.
+         */
+        typedef std::map<const std::string, Ptr<UnicodeString>::Ref>
+                                    metadataType;
+
+        /**
+         *  The metadata for this playlist.
+         */
+        metadataType                metadata;
+
+
     public:
         /**
          *  Default constructor.
          */
         Playlist(void)                          throw ()
         {
+            elementList.reset(new PlaylistElementListType);
+            this->isLockedForPlaying = false;
+            this->isLockedForEditing = false;
+        }
+
+        /**
+         *  Create a playlist by specifying all details, except the title.
+         *  This is used for testing purposes.
+         *
+         *  @param id the id of the playlist.
+         *  @param playlength the playing length of the playlist.
+         *  @param uri the location of the SMIL file representing this
+         *             playlist (optional)
+         */
+        Playlist(Ptr<UniqueId>::Ref         id,
+                 Ptr<time_duration>::Ref    playlength,
+                 Ptr<std::string>::Ref      uri = Ptr<std::string>::Ref())
+                                                throw ()
+        {
+            this->id         = id;
+            this->title.reset(new UnicodeString(""));
+            this->playlength = playlength;
+            this->uri        = uri;
             elementList.reset(new PlaylistElementListType);
             this->isLockedForPlaying = false;
             this->isLockedForEditing = false;
@@ -183,12 +223,14 @@ class Playlist : public Configurable,
          *  @param uri the location of the SMIL file representing this
          *             playlist (optional)
          */
-        Playlist(Ptr<UniqueId>::Ref         id,
-                 Ptr<time_duration>::Ref    playlength,
-                 Ptr<std::string>::Ref      uri = Ptr<std::string>::Ref())
+        Playlist(Ptr<UniqueId>::Ref        id,
+                 Ptr<UnicodeString>::Ref   title,
+                 Ptr<time_duration>::Ref   playlength,
+                 Ptr<std::string>::Ref     uri = Ptr<std::string>::Ref())
                                                 throw ()
         {
             this->id         = id;
+            this->title      = title;
             this->playlength = playlength;
             this->uri        = uri;
             elementList.reset(new PlaylistElementListType);
@@ -491,7 +533,56 @@ class Playlist : public Configurable,
          *  saved copy, do nothing and throw an exception.
          */
          void
-         revertToSavedCopy(void)                throw (std::logic_error);
+         revertToSavedCopy(void)                throw (std::invalid_argument);
+
+
+        /**
+         *  Return the title of this playlist.
+         *
+         *  @return the title.
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getTitle(void) const                    throw ()
+        {
+            return title;
+        }
+
+        /**
+         *  Set the title of this playlist.
+         *
+         *  @param title a new title.
+         */
+        virtual void
+        setTitle(Ptr<UnicodeString>::Ref title)
+                                                throw ()
+        {
+            this->title = title;
+        }
+
+
+        /**
+         *  Return the value of a metadata field in this playlist.
+         *
+         *  Currently, this always returns a null pointer.
+         *
+         *  @return the value of the metadata field; 0 if there is 
+         *          no such field;
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getMetadata(const string &key) const
+                                                throw ();
+
+        /**
+         *  Set the value of a metadata field in this playlist.
+         *
+         *  Currently, this does not do anything.
+         *
+         *  @param key the name of the metadata field.
+         *  @param value the new value of the metadata field.
+         */
+        virtual void
+        setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+                                                throw ();
 };
 
 

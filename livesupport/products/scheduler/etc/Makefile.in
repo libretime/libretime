@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.35 $
+#   Version  : $Revision: 1.36 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -64,6 +64,10 @@ VPATH    = ${SRC_DIR}
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
+
+# TODO: move ICU flag determination to configure script
+ICU_CFLAGS=
+ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
 
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 
@@ -126,6 +130,7 @@ export LD_LIBRARY_PATH=${USR_LIB_DIR}
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
+                             ${ICU_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
@@ -138,6 +143,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+                     ${ICU_LIBS} \
                      ${CURL_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${HELIX_LIB_DIR} \
@@ -229,7 +235,7 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/UpdateFadeInFadeOutMethodTest.o \
                    ${TMP_DIR}/PlaylistEventContainerTest.o \
                    ${TMP_DIR}/PlaylistEventTest.o
-TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
+TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} ${ICU_LIBS} -lcppunit -ldl
 
 
 #-------------------------------------------------------------------------------

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.18 $
+#   Version  : $Revision: 1.19 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -71,7 +71,7 @@ LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
 # TODO: move ICU flag determination to configure script
 ICU_CFLAGS=
-ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags-toolutil --ldflags-icuio`
+ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR

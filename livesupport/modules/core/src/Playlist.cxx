@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -350,10 +350,10 @@ Playlist::createSavedCopy(void)          throw ()
  *  Revert to a saved copy of the playlist.
  *----------------------------------------------------------------------------*/
 void
-Playlist::revertToSavedCopy(void)        throw (std::logic_error)
+Playlist::revertToSavedCopy(void)        throw (std::invalid_argument)
 {
     if (savedCopy == 0) {
-        throw (std::logic_error("playlist has no saved copy"));
+        throw (std::invalid_argument("playlist has no saved copy"));
     }
 
     this->id                      = savedCopy->id;
@@ -364,3 +364,34 @@ Playlist::revertToSavedCopy(void)        throw (std::logic_error)
 
     savedCopy.reset();
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Return the value of a metadata field.
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+Playlist :: getMetadata(const string &key) const
+                                                throw ()
+{
+    metadataType::const_iterator  it = metadata.find(key);
+
+    if (it != metadata.end()) {
+        return it->second;
+    }
+    else {
+        Ptr<UnicodeString>::Ref nullPointer;
+        return nullPointer;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of a metadata field.
+ *----------------------------------------------------------------------------*/
+void
+Playlist :: setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+                                                throw ()
+{
+    metadata[key] = value;
+}
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,10 +174,40 @@ AudioClip :: configure(const xmlpp::Element  & element)
 
 
 /*------------------------------------------------------------------------------
- *  Create an XML element from this audio clip.
+ *  Return the value of a metadata field.
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+AudioClip :: getMetadata(const string &key) const
+                                                throw ()
+{
+    metadataType::const_iterator  it = metadata.find(key);
+
+    if (it != metadata.end()) {
+        return it->second;
+    }
+    else {
+        Ptr<UnicodeString>::Ref nullPointer;
+        return nullPointer;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of a metadata field.
+ *----------------------------------------------------------------------------*/
+void
+AudioClip :: setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+                                                throw ()
+{
+    metadata[key] = value;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create an XML document from this audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<xmlpp::Document>::Ref
-AudioClip :: getMetadata()
+AudioClip :: toXml()
                                                throw ()
 {
     Ptr<xmlpp::Document>::Ref   metadata(new xmlpp::Document);

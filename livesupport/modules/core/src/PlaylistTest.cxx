@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -260,7 +260,7 @@ PlaylistTest :: savedCopyTest(void)
         playlist->revertToSavedCopy();
         CPPUNIT_FAIL("allowed to revert to non-existent state");
     }
-    catch (std::logic_error &e) {
+    catch (std::invalid_argument &e) {
     }
 
     playlist->createSavedCopy();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <libxml++/libxml++.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <unicode/unistr.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
@@ -69,7 +70,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class Playable
 {
@@ -91,6 +92,7 @@ class Playable
         virtual Ptr<time_duration>::Ref
         getPlaylength(void) const               throw () = 0;
 
+
         /**
          *  Return the URI of the sound file of this audio clip or
          *  playlist, which can be played by the helix client.  This
@@ -111,6 +113,7 @@ class Playable
         virtual void
         setUri(Ptr<const string>::Ref uri)      throw () = 0;
 
+
         /**
          *  Return the token which is used to identify this audio clip
          *  or playlist to the storage server.
@@ -128,6 +131,45 @@ class Playable
          */
         virtual void
         setToken(Ptr<const string>::Ref token)  throw () = 0;
+
+
+        /**
+         *  Return the title of this audio clip or playlist.
+         *
+         *  @return the title.
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getTitle(void) const                    throw () = 0;
+
+        /**
+         *  Set the title of this audio clip or playlist.
+         *
+         *  @param title a new title.
+         */
+        virtual void
+        setTitle(Ptr<UnicodeString>::Ref title)
+                                                throw () = 0;
+
+
+        /**
+         *  Return the value of a metadata field in this audio clip or playlist.
+         *
+         *  @return the value of the metadata field; 0 if there is 
+         *          no such field;
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getMetadata(const string &key) const
+                                                throw () = 0;
+
+        /**
+         *  Set the value of a metadata field in this audio clip or playlist.
+         *
+         *  @param key the name of the metadata field.
+         *  @param value the new value of the metadata field.
+         */
+        virtual void
+        setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+                                                throw () = 0;
 };
 
 

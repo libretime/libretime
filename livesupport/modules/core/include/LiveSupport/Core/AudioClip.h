@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -77,6 +77,7 @@ using namespace boost::posix_time;
  *
  *  <pre><code>
  *  &lt;audioClip id="1" 
+ *             title="Name of the Song"
  *             playlength="00:18:30.000000"
  *             uri="file:var/test1.mp3" &gt;
  *         &lt;metadata
@@ -108,13 +109,14 @@ using namespace boost::posix_time;
  *
  *  <pre><code>
  *  &lt;!ELEMENT audioClip (metadata?) &gt;
- *  &lt;!ATTLIST audioClip  id           NMTOKEN     #REQUIRED  &gt;
- *  &lt;!ATTLIST audioClip  playlength   NMTOKEN     #REQUIRED  &gt;
+ *  &lt;!ATTLIST audioClip  id           NMTOKEN     #IMPLIED  &gt;
+ *  &lt;!ATTLIST audioClip  title        CDATA       #IMPLIED  &gt;
+ *  &lt;!ATTLIST audioClip  playlength   NMTOKEN     #IMPLIED  &gt;
  *  &lt;!ATTLIST audioClip  uri          CDATA       #IMPLIED   &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -131,6 +133,11 @@ class AudioClip : public Configurable,
         Ptr<UniqueId>::Ref          id;
 
         /**
+         *  The title of the audio clip.
+         */
+        Ptr<UnicodeString>::Ref     title;
+
+        /**
          *  The playling length of the audio clip.
          */
         Ptr<time_duration>::Ref     playlength;
@@ -144,6 +151,17 @@ class AudioClip : public Configurable,
          *  The identifying token returned by the storage server.
          */
         Ptr<const string>::Ref      token;
+
+        /**
+         *  The type for storing the metadata.
+         */
+        typedef std::map<const std::string, Ptr<UnicodeString>::Ref>
+                                    metadataType;
+
+        /**
+         *  The metadata for this audio clip.
+         */
+        metadataType                metadata;
 
 
     public:
@@ -167,7 +185,8 @@ class AudioClip : public Configurable,
         }
 
         /**
-         *  Create an audio clip by specifying all details.
+         *  Create an audio clip by specifying all details, except
+         *  for the title.
          *  This is used for testing purposes.
          *
          *  @param id the id of the audio clip.
@@ -181,6 +200,28 @@ class AudioClip : public Configurable,
                                                            throw ()
         {
             this->id         = id;
+            this->title.reset(new UnicodeString(""));
+            this->playlength = playlength;
+            this->uri        = uri;
+        }
+
+        /**
+         *  Create an audio clip by specifying all details.
+         *  This is used for testing purposes.
+         *
+         *  @param id the id of the audio clip.
+         *  @param playlength the playing length of the audio clip.
+         *  @param uri the location of the sound file corresponding to
+         *             this audio clip object (optional)
+         */
+        AudioClip(Ptr<UniqueId>::Ref       id,
+                  Ptr<UnicodeString>::Ref  title,
+                  Ptr<time_duration>::Ref  playlength,
+                  Ptr<string>::Ref         uri = Ptr<string>::Ref())
+                                                           throw ()
+        {
+            this->id         = id;
+            this->title      = title;
             this->playlength = playlength;
             this->uri        = uri;
         }
@@ -288,6 +329,52 @@ class AudioClip : public Configurable,
             this->token = token;
         }
 
+
+        /**
+         *  Return the title of this audio clip.
+         *
+         *  @return the title.
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getTitle(void) const                    throw ()
+        {
+            return title;
+        }
+
+        /**
+         *  Set the title of this audio clip.
+         *
+         *  @param title a new title.
+         */
+        virtual void
+        setTitle(Ptr<UnicodeString>::Ref title)
+                                                throw ()
+        {
+            this->title = title;
+        }
+
+
+        /**
+         *  Return the value of a metadata field in this audio clip.
+         *
+         *  @return the value of the metadata field; 0 if there is 
+         *          no such field;
+         */
+        virtual Ptr<UnicodeString>::Ref
+        getMetadata(const string &key) const
+                                                throw ();
+
+        /**
+         *  Set the value of a metadata field in this audio clip.
+         *
+         *  @param key the name of the metadata field.
+         *  @param value the new value of the metadata field.
+         */
+        virtual void
+        setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+                                                throw ();
+
+
         /**
          *  Return an XML representation of this audio clip.  This contains
          *  the metadata fields of the audio clip, and it's roughly the
@@ -296,7 +383,7 @@ class AudioClip : public Configurable,
          *  @return an xmlpp::Document containing the metadata.
          */
         Ptr<xmlpp::Document>::Ref
-        getMetadata()                           throw ();
+        toXml()                           throw ();
 };
 
 

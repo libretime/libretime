@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/Attic/StorageException.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Storage {
  *  Common parent of exception classes for this module.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class StorageException : public std::runtime_error
 {
@@ -97,6 +97,28 @@ class XmlRpcMethodResponseException : public StorageException
 {
     public:
         XmlRpcMethodResponseException(const std::string &msg) 
+                                        : StorageException(msg) {
+        }
+};
+
+/**
+  *  Bad parameter passed to storage client.
+  */
+class InvalidArgumentException : public StorageException
+{
+    public:
+        InvalidArgumentException(const std::string &msg) 
+                                        : StorageException(msg) {
+        }
+};
+
+/**
+  *  Problem with reading or writing local files.
+  */
+class IOException : public StorageException
+{
+    public:
+        IOException(const std::string &msg) 
                                         : StorageException(msg) {
         }
 };
