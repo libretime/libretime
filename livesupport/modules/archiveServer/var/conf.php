@@ -1,4 +1,4 @@
-<?
+<?php
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
@@ -23,13 +23,19 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /**
+ *  \file conf.php
+ *  archiveServer configuration file
+ */
+
+/**
  *  configuration structure:
+ *
  *  <dl>
  *   <dt>dsn<dd> datasource setting
  *   <dt>tblNamePrefix <dd>prefix for table names in the database
@@ -38,6 +44,7 @@
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
+ *   <dt>isArchive <dd>local/central flag
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *      (on central archive side: storage=archive)
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
@@ -83,12 +90,16 @@ $config = array(
         'Storage'       => array('Folder', 'File', 'Replica'),
         'Folder'        => array('Folder', 'File', 'Replica'),
         'File'          => array(),
+        'audioclip'     => array(),
+        'playlist'      => array(),
         'Replica'       => array(),
     ),
     'allowedActions'=> array(
         'RootNode'      => array('classes', 'subjects'),
         'Folder'        => array('editPrivs', 'write', 'read'),
         'File'          => array('editPrivs', 'write', 'read'),
+        'audioclip'     => array('editPrivs', 'write', 'read'),
+        'playlist'      => array('editPrivs', 'write', 'read'),
         'Replica'       => array('editPrivs', 'write', 'read'),
         '_class'        => array('editPrivs', 'write', 'read'),
     ),
