@@ -15,16 +15,12 @@ switch($_REQUEST['act']){
         $uiHandler->logout(TRUE);
     break;
 
-    case "upload":    ## media- and metadata file together
+    case "upload":     ## media- and metadata file together #####
         $uiHandler->upload(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["upload"]);
     break;
 
-    case "upload_1":  ## first upload
-        $uiHandler->upload_1(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["upload_1"]);
-    break;
-
-    case "upload_2":  ## then edit metadata
-
+    case "uploadFile": ## just media file #######################
+        $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFile"]);
     break;
 
     case "newFolder":

@@ -31,7 +31,7 @@
                     <td>{$s.duration}</td>
                     <td><a href="{$UI_BROWSER}?act=getMdata&id={$s.id}">[XML]</a>
                         <a href="{$UI_BROWSER}?act=editMetaDataValues&id={$s.id}">[Form]</a>
-                        <a href="#" onClick="popup('{$UI_HANDLER}?act=add2SP&id={$s.id}', '2SP', 1, 1)">[SP]</a>
+                        <a href="#" onClick="hpopup('{$UI_HANDLER}?act=add2SP&id={$s.id}', '2SP')">[SP]</a>
                     </td>
                   </tr>
                 </div>

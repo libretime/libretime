@@ -165,7 +165,7 @@ $ui_fmask = array(
         'pages' => array(
             'Main'  => array(
                 array(
-                    'element'   => 'Title',
+                    'element'   => 'dc:title',
                     'type'      => 'text',
                     'label'     => 'Title',
                     'required'  => TRUE
@@ -174,31 +174,31 @@ $ui_fmask = array(
                     'element'   => 'Creator',
                     'type'      => 'text',
                     'label'     => 'Creator',
-                    'required'  => TRUE
+                    #'required'  => TRUE,
                 ),
                 array(
                     'element'   => 'Type_Genre',
                     'type'      => 'text',
                     'label'     => 'Type_Genre',
-                    'required'  => TRUE,
+                    #'required'  => TRUE,
                 ),
                 array(
-                    'element'   => 'Format',
+                    'element'   => 'dc:format',
                     'type'      => 'select',
                     'label'     => 'Format',
-                    'required'  => TRUE,
+                    #'required'  => TRUE,
                     'options'   => array(
                         ''              => '',
+                        'audio/mpeg'    => 'audio/mpeg',
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
                         'networked file'=> 'Networked File',
-                        'audio/mpeg'    => 'audio/mpeg'
                      )
                 ),
                 array(
-                    'element'   => 'Format_Extent',
+                    'element'   => 'dcterms:extent',
                     'type'      => 'text',
-                    'label'     => 'Format_Extent',
+                    'label'     => 'Extent',
                     #'attributes'=> array('readonly' => 'on')
                 ),
                 /*
@@ -233,12 +233,12 @@ $ui_fmask = array(
             ),
             'Music_Basic'  => array(
                 array(
-                    'element'   => 'Title',
+                    'element'   => 'dc:title',
                     'type'      => 'text',
                     'label'     => 'Title',
                 ),
                 array(
-                    'element'   => 'Creator',
+                    'element'   => 'dc:creator',
                     'type'      => 'text',
                     'label'     => 'Creator',
                 ),
@@ -247,6 +247,7 @@ $ui_fmask = array(
                     'type'      => 'text',
                     'label'     => 'Source_Album',
                 ),
+                /*
                 array(
                     'element'   => 'Source_Year',
                     'type'      => 'date',
@@ -258,25 +259,27 @@ $ui_fmask = array(
                         'minYear'       => 1900
                     )
                 ),
+                */
                 array(
                     'element'   => 'Type_Genre',
                     'type'      => 'text',
                     'label'     => 'Type_Genre',
                 ),
                 array(
-                    'element'   => 'Description',
+                    'element'   => 'dc:description',
                     'type'      => 'textarea',
                     'label'     => 'Description',
                 ),
                 array(
-                    'element'   => 'Format',
+                    'element'   => 'dc:format',
                     'type'      => 'select',
                     'label'     => 'Format',
                     'options'   => array(
+                        ''              => '',
+                        'audio/mpeg'    => 'audio/mpeg',
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
-                        'networked file'=> 'Networked File',
-                        'audio/mpeg'    => 'audio/mpeg'
+                        'networked file'=> 'Networked File'
                     )
                 ),
                 array(
@@ -292,9 +295,9 @@ $ui_fmask = array(
                     'rule'      => 'numeric',
                 ),
                 array(
-                    'element'   => 'Format_Extent',
+                    'element'   => 'dcterms:extent',
                     'type'      => 'text',
-                    'label'     => 'Format_Extent',
+                    'label'     => 'Extent',
                     'attributes'=> array('readonly' => 'on')
                 ),
             ),
@@ -342,6 +345,7 @@ $ui_fmask = array(
                     'type'      => 'select',
                     'label'     => 'Format_Medium_Channels',
                     'options'   => array(
+                        ''       => '',
                         'mono'   => 'Mono',
                         'stereo' => 'Stereo',
                         '5.1'    => '5.1'
@@ -444,7 +448,7 @@ $ui_fmask = array(
             ),
             'Talk_Basic'   => array(
                 array(
-                    'element'   => 'Title',
+                    'element'   => 'dc:title',
                     'type'      => 'text',
                     'label'     => 'Title',
                     'relation'  => 1
@@ -455,7 +459,7 @@ $ui_fmask = array(
                     'label'     => 'Coverage',
                 ),
                 array(
-                    'element'   => 'Description',
+                    'element'   => 'dc:description',
                     'type'      => 'textarea',
                     'label'     => 'Description',
                 ),
@@ -475,14 +479,15 @@ $ui_fmask = array(
                     'label'     => 'Type_Genre',
                 ),
                 array(
-                    'element'   => 'Format',
+                    'element'   => 'dc:format',
                     'type'      => 'select',
                     'label'     => 'Format',
                     'options'   => array(
+                        ''              => '',
+                        'audio/mpeg'    => 'audio/mpeg',
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
                         'networked file'=> 'Networked File',
-                        'audio/mpeg'    => 'audio/mpeg'
                     )
                 ),
             ),
@@ -663,11 +668,11 @@ $ui_fmask = array(
         )
     ),
 
-    'upload_1'    => array(
+    'uploadFile'    => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'upload_1'
+            'constant'  => 'uploadFile'
         ),
         array(
             'element'   => 'id',

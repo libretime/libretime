@@ -58,7 +58,7 @@ if ($uiBrowser->userid) {
         break;
 
     case "permissions":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id, $_REQUEST['act']=='getHomeDir' ? TRUE : FALSE));
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('showPath', TRUE);
 
         $Smarty->assign('perms', $uiBrowser->getPermissions($uiBrowser->id));
@@ -67,29 +67,31 @@ if ($uiBrowser->userid) {
 
 
     case "newfile":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id, $_REQUEST['act']=='getHomeDir' ? TRUE : FALSE));
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('showPath', TRUE);
 
         $Smarty->assign('newfileform', $uiBrowser->getNewFileForm($uiBrowser->id, $ui_fmask['upload']));
         $Smarty->assign('showNewFileForm', TRUE);
-        break;
+    break;
 
 
-    case "upload_1":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id, $_REQUEST['act']=='getHomeDir' ? TRUE : FALSE));
+    case "uploadFile":
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+        $Smarty->assign('showPath', FALSE);
+
+        $Smarty->assign('uploadform',  $uiBrowser->getUploadFileForm($uiBrowser->id, $ui_fmask['uploadFile']));
+        $Smarty->assign('showUploadForm', TRUE);
+    break;
+
+
+    case "editFile":
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('showPath', FALSE);
 
         $Smarty->assign('uploadform',  $uiBrowser->getUploadFileForm($uiBrowser->id, $ui_fmask['upload_1']));
         $Smarty->assign('showUploadForm', TRUE);
-        break;
+    break;
 
-    case "upload_2":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id, $_REQUEST['act']=='getHomeDir' ? TRUE : FALSE));
-        $Smarty->assign('showPath', FALSE);
-
-        $Smarty->assign('mDataForm', $uiBrowser->getMetaDataForm($uiBrowser->id, $ui_fmask['mData'], FALSE, $uiBrowser->getInfo($id, 'array')));
-        $Smarty->assign('showMetaDataForm', TRUE);
-        break;
 
     case "search":
         if($_REQUEST['doSearch']) {
@@ -130,7 +132,7 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showFile', TRUE);
     break;
 
-    case "getMdata":
+    case "getMData":
         $Smarty->assign('fMetaData', $uiBrowser->getMdata($uiBrowser->id));
         $Smarty->assign('showFile', TRUE);
     break;
@@ -141,7 +143,7 @@ if ($uiBrowser->userid) {
     break;
 
     case "getInfo":
-        $Smarty->assign('fInfo', $uiBrowser->getInfo($uiBrowser->id, 'text'));
+        $Smarty->assign('fInfo', $uiBrowser->_getInfo($uiBrowser->id, 'text'));
         $Smarty->assign('showFile', TRUE);
     break;
 

@@ -28,12 +28,12 @@ class uiBase
      */
     function uiBase(&$config)
     {
-        $dbc = DB::connect($config['dsn'], TRUE);
-        if (DB::isError($dbc)) {
-            die($dbc->getMessage());
+        $this->dbc = DB::connect($config['dsn'], TRUE);
+        if (DB::isError($this->dbc)) {
+            die($this->dbc->getMessage());
         }
-        $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb =& new GreenBox(&$dbc, $config);
+        $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+        $this->gb =& new GreenBox(&$this->dbc, $config);
         $this->config = $config;
         $this->sessid = $_REQUEST[$config['authCookieName']];
         $this->userid = $this->gb->getSessUserId($this->sessid);
@@ -211,7 +211,7 @@ class uiBase
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    >
                   <dc:title>'.$this->_getFileTitle($id).'</dc:title>
-                  <dc:format.extent>'.$ia['playtime_string'].'</dc:format.extent>
+                  <dcterms:extent>'.$ia['playtime_string'].'</dcterms:extent>
                   </metadata>
                   </audioClip>';
 
@@ -250,20 +250,50 @@ class uiBase
     }
 
 
+    function _toHex($gunid)
+    {
+        $res = $this->dbc->query("SELECT to_hex($gunid)");
+        $row = $res->fetchRow();
+
+        return $row['to_hex'];
+    }
+
+
+    function _toInt8($gunid)
+    {
+        $res = $this->dbc->query("SELECT x'$gunid'::bigint");
+        $row = $res->fetchRow();
+
+        return $row['int8'];
+    }
+
+
     function getSP()
     {
         $spData = $this->gb->loadPref($this->sessid, UI_SCRATCHPAD_KEY);
         if (!PEAR::isError($spData) && trim($spData) != '') {
             $arr = explode(' ', $spData);
+            /*
+            ## Akos old format #####################################
             foreach($arr as $val) {
-                $pieces = explode(':', $val);
-
                 if (preg_match(UI_SCRATCHPAD_REGEX, $val)) {
-                    $res[] = array_merge($this->_getMetaInfo($this->gb->_idFromGunid($pieces[0])),
-                                         array('added' => $pieces[1])
-                             );
+                    list ($gunid, $date) = explode(':', $val);
+                    if ($this->gb->_idFromGunid($gunid) != FALSE) {
+                        $res[] = array_merge($this->_getMetaInfo($this->gb->_idFromGunid($gunid)), array('added' => $date));
+                    }
                 }
             }
+            */
+
+            ## new format ##########################################
+            foreach($arr as $gunid) {
+                if (preg_match('/[0-9]{1,20}/', $gunid)) {
+                    if ($this->gb->_idFromGunid($this->_toHex($gunid)) != FALSE) {
+                        $res[] = $this->_getMetaInfo($this->gb->_idFromGunid($this->_toHex($gunid)));
+                    }
+                }
+            }
+
 
             return ($res);
         } else {
@@ -275,11 +305,12 @@ class uiBase
     {
         if (is_array($data)) {
             foreach($data as $val) {
-                $str .= $val['gunid'].':'.$val['added'].' ';
+                #$str .= $val['gunid'].':'.$val['added'].' ';   ## new format ###
+                $str .= $this->_toInt8($val['gunid']).' ';      ## Akos´ old format ###
             }
         }
 
-        $this->gb->savePref($this->sessid, UI_SCRATCHPAD_KEY, trim($str));
+        $this->gb->savePref($this->sessid, UI_SCRATCHPAD_KEY, $str);
     }
 
     function add2SP($id)
@@ -288,27 +319,26 @@ class uiBase
         $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         if ($sp = $this->getSP()) {
-            foreach ($sp as $val) {
+            foreach ($sp as $key => $val) {
                 if ($val['gunid'] == $info['gunid']) {
-                    $exists = TRUE;
+                    unset($sp[$key]);
+                    $this->_retMsg('Entry $1 was already on $2.\nMoved to Top.', $info['title'], $val['added']);
+                } else {
+                    #$this->incAccessCounter($id);
                 }
             }
         }
 
-        if(!$exists) {
-            $sp = array_merge(array(array('gunid'   => $info['gunid'],
-                                          'added'   => date('Y-m-d')
-                                   ),
-                              ),
-                              is_array($sp) ? $sp : NULL);
-            #print_r($sp);
-            $this->_saveSP($sp);
-            #$this->_retmsg('Entry $1 added', $gunid);
-            return TRUE;
-        } else {
-            $this->_retmsg('Entry $1 already exists', $info['title']);
-            return FALSE;
-        }
+
+        $sp = array_merge(array(array('gunid'   => $info['gunid'],
+                                      'added'   => date('Y-m-d')
+                               ),
+                          ),
+                          is_array($sp) ? $sp : NULL);
+
+        $this->_saveSP($sp);
+        #$this->_retmsg('Entry $1 added', $info['title']);
+        return TRUE;
     }
 
 
@@ -339,12 +369,13 @@ class uiBase
 
     function _getMetaInfo($id)
     {
-        $data['id']         = $id;
-        $data['gunid']      = $this->gb->_gunidFromId($id);
-        $data['title']      = $this->_getMDataValue($id, 'Title');
-        $data['artist']     = $this->_getMDataValue($id, 'Artist');
-        $data['duration']   = substr($this->_getMDataValue($id, 'format.extent'), 0 ,8);
-        $data['type']       = $this->gb->existsPlaylist($this->sessid, $this->gb->_idFromgunid($id)) ? $this->tra('playlist') : $this->tra('file');
+        $data = array('id'          => $id,
+                      'gunid'       => $this->gb->_gunidFromId($id),
+                      'title'       => $this->_getMDataValue($id, 'title'),
+                      'artist'      => $this->_getMDataValue($id, 'artist'),
+                      'duration'    => substr($this->_getMDataValue($id, 'format.extent'), 0 ,8),
+                      'type'        => $this->_getType($id),
+                );
 
         return ($data);
     }
@@ -361,6 +392,16 @@ class uiBase
     {
         $file = array_pop($this->gb->getPath($id));
         return $file['name'];
+    }
+
+    function _getType($id)
+    {
+        if ($this->gb->existsPlaylist($this->sessid, $this->gb->_gunidFromId($id))) return 'playlist';
+        return 'file';
+        #if ($this->gb->existsAudioClip($this->sessid, $this->gb->_gunidFromId($id))) return 'audioclip';
+        #if ($this->gb->existsFile($this->sessid, $this->gb->_gunidFromId($id))) return 'File';
+
+        return FALSE;
     }
 }
 ?>

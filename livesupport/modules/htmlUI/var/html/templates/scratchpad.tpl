@@ -12,7 +12,7 @@
             <td>{$i.title}</td>
             <td>{$i.duration}</td>
             <td>{$i.type} </td>
-            <th><a href="#" onclick="popup('{$UI_HANDLER}?act=remFromSP&id={$i.id}', 'remFromSP', 1, 1)">X</th>
+            <th><a href="#" onclick="hpopup('{$UI_HANDLER}?act=remFromSP&id={$i.id}', 'remFromSP')">X</th>
         </tr>
     {/foreach}
     <tr><td></td><td colspan="2">[Edit]</td><td colspan="2">[Delete]</td></tr>

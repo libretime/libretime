@@ -29,21 +29,27 @@
      {literal}}{/literal}
 
      {literal}
-     function popup(url, name, width, height)
+     function popup(url, name, width, height)   // popup in center of perent window
      {
         var screenX;
         var screenY;
 
         screenX = (window.screenX + window.innerWidth/2 - width/2);
         screenY = (window.screenY + window.innerHeight/2 - height/2);
-        arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, screenX='+screenX+', screenY='+screenY;
+        arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
 
         popupwin = window.open(url, name, arg);
         window.popupwin.focus();
      }
+
+     function hpopup(url, name)                 //hidden popup!
+     {
+        popupwin = window.open(url, name, 'width=1, height=1, scrollbars=no, menubar=no, depend=yes');
+        window.parent.focus();
+     }
      {/literal}
 
-     {uiBrowser->alertMsg assign='alertMsg'}
+     {uiBrowser->getAlertMsg assign='alertMsg'}
      {if $alertMsg}
         alert('{$alertMsg}');
      {/if}

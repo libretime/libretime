@@ -1,4 +1,7 @@
 <?php
+
+define('ACTION_BASE', '/actions' ) ;
+
 /**
  *  uiHandler class
  *
@@ -22,6 +25,9 @@ class uiHandler extends uiBase {
         $this->uiBase($config);
     }
 
+
+
+
     // --- authentication ---
     /**
      *  login
@@ -42,7 +48,7 @@ class uiHandler extends uiBase {
                 $fid = $this->gb->getObjId($formdata['login'], $this->gb->storId);
                 if(!PEAR::isError($fid)) $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
             }else{
-                $this->alertMsg = 'Login failed.';
+                $this->_retMsg('Login failed.');
                 $_SESSION['retransferFormData']['login']=$formdata['login'];
                 $this->redirUrl = UI_BROWSER.'?popup[]=login';
             }
@@ -97,7 +103,7 @@ class uiHandler extends uiBase {
                 }
             }
             $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
-            if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
+            if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
             else{
             #            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
                 @unlink($ntmp);
@@ -114,14 +120,14 @@ class uiHandler extends uiBase {
 
 
     /**
-     *  upload_1
+     *  uploadS1
      *
      *  Provides file upload and store it to the storage
      *
      *  @param formdata array, submitted text and file
      *  @param id int, destination folder id
      */
-    function upload_1(&$formdata, $id, &$mask)
+    function uploadFile(&$formdata, $id, &$mask)
     {
         if ($this->_validateForm($formdata, $mask)) {
             $tmpgunid = md5(
@@ -134,7 +140,7 @@ class uiHandler extends uiBase {
             chmod($ntmp, 0664);
 
             $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid);
-            if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
+            if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
             else{
             #            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
                 @unlink($ntmp);
@@ -147,7 +153,7 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editMetaDataValues&id=$r";
             return $r;
         } else {
-            $this->redirUrl = UI_BROWSER."?act=upload_1&id=$id";
+            $this->redirUrl = UI_BROWSER."?act=uploadFile&id=$id";
             return FALSE;
         }
     }
@@ -163,7 +169,7 @@ class uiHandler extends uiBase {
     function newFolder($newname, $id)
     {
         $r = $this->gb->createFolder($id, $newname, $this->sessid);
-        if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
+        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
         $this->redirUrl = UI_BROWSER.'?id='.$id;
     }
 
@@ -179,7 +185,7 @@ class uiHandler extends uiBase {
     {
         $parid = $this->gb->getparent($this->id);
         $r = $this->gb->renameFile($id, $newname, $this->sessid);
-        if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
+        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
         $this->redirUrl = UI_BROWSER."?id=$parid";
     }
 
@@ -199,7 +205,7 @@ class uiHandler extends uiBase {
         $parid = $this->gb->getparent($id);
         $r = $this->gb->moveFile($id, $did, $this->sessid);
         if(PEAR::isError($r)){
-            $this->alertMsg = $r->getMessage();
+            $this->_retMsg($r->getMessage());
             $this->redirUrl  = UI_BROWSER."?id=$parid";
         }
         else $this->redirUrl = UI_BROWSER."?id=$did";
@@ -221,7 +227,7 @@ class uiHandler extends uiBase {
         $parid = $this->gb->getparent($id);
         $r = $this->gb->copyFile($id, $did, $this->sessid);
         if(PEAR::isError($r)){
-            $this->alertMsg = $r->getMessage();
+            $this->_retMsg($r->getMessage());
             $this->redirUrl  = UI_BROWSER."?id=$parid";
         }
         else $this->redirUrl = UI_BROWSER."?id=$did";
@@ -242,14 +248,14 @@ class uiHandler extends uiBase {
         ## add emtyness-test here ###
         if (!($delOverride==$id) && (count($this->gb->getObjType($id)=='Folder'?
                       $this->gb->listFolder($id, $this->sessid):NULL))) {
-            $this->alertMsg = $this->tra("Folder is not empty. You can override this protection by clicking DEL again");
+            $this->_retMsg("Folder is not empty. You can override this protection by clicking DEL again");
             $this->redirUrl = UI_BROWSER."?id=$parid&delOverride=$id";
             return;
         }
         #############################
 
         $r = $this->gb->deleteFile($id, $this->sessid);
-        if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
+        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
         $this->redirUrl = UI_BROWSER."?id=$parid";
     }
 
@@ -266,7 +272,7 @@ class uiHandler extends uiBase {
     function getFile($id)
     {
         $r = $this->gb->access($id, $this->sessid);
-        if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
+        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
         else echo $r;
     }
 
@@ -300,13 +306,13 @@ class uiHandler extends uiBase {
         if ($this->_validateForm($formdata, $mask)) {
             if($this->gb->checkPerm($this->userid, 'subjects')){
                 $res = $this->gb->addSubj($formdata['login'], ($formdata['pass']=='' ? NULL:$formdata['pass'] ));
-                $this->alertMsg = $this->tra('Subject "'.$formdata['login'].'" added.');
+                $this->_retMsg('Subject $1 added.', $formdata['login']);
             } else {
-                $this->alertMsg = $this->tra('Access denied.');
+                $this->_retMsg('Access denied.');
                 return;
             }
         }
-        if(PEAR::isError($res)) $this->alertMsg = $res->getMessage();
+        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
     }
 
     /**
@@ -323,10 +329,10 @@ class uiHandler extends uiBase {
         if($this->gb->checkPerm($this->userid, 'subjects')){
             $res = $this->gb->removeSubj($login);
         }else{
-            $this->alertMsg='Access denied.';
+            $this->_retMsg('Access denied.');
             return;
         }
-        if(PEAR::isError($res)) $this->alertMsg = $res->getMessage();
+        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
     }
 
     /**
@@ -346,15 +352,15 @@ class uiHandler extends uiBase {
 
         if($this->userid != $uid &&
             ! $this->gb->checkPerm($this->userid, 'subjects')){
-            $this->alertMsg='Access denied..';
+            $this->_retMsg('Access denied.');
             return;
         }
         if(FALSE === $this->gb->authenticate($ulogin, $oldpass)){
-            $this->alertMsg='Wrong old pasword.';
+            $this->_retMsg('Wrong old pasword.');
             return;
         }
         if($pass !== $pass2){
-            $this->alertMsg = "Passwords do not match. ".
+            $this->_retMsg("Passwords do not match.").
                 "($pass/$pass2)";
             $this->redirUrl = UI_BROWSER.'?act=subjects';
             return;
@@ -379,7 +385,7 @@ class uiHandler extends uiBase {
             $this->gb->addPerm($subj, $permAction,
                 $id, $allowDeny);
         }else{
-            $this->alertMsg='Access denied.';
+            $this->_retMsg('Access denied.');
         }
         $this->redirUrl = UI_BROWSER.'?id='.$id.'&act=permissions';
     }
@@ -396,7 +402,7 @@ class uiHandler extends uiBase {
     {
         if($this->gb->checkPerm($this->userid, 'editPerms', $oid))
             $this->gb->removePerm($permid);
-        else $this->alertMsg='Access denied.';
+        else $this->_retMsg('Access denied.');
         $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$oid;
     }
 
@@ -416,10 +422,10 @@ class uiHandler extends uiBase {
         if($this->gb->checkPerm($this->userid, 'subjects')){
             $res = $this->gb->addSubj2Gr($login, $gname);
         }else{
-            $this->alertMsg='Access denied.';
+            $this->_retMsg('Access denied.');
             return;
         }
-        if(PEAR::isError($res)) $this->alertMsg = $res->getMessage();
+        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
 
         $this->redirUrl = UI_BROWSER.'?act=groups&id='.$reid;
     }
@@ -436,10 +442,10 @@ class uiHandler extends uiBase {
         if($this->gb->checkPerm($this->userid, 'subjects')){
             $res = $this->gb->removeSubjFromGr($login, $gname);
         }else{
-            $this->alertMsg='Access denied.';
+            $this->_retMsg('Access denied.');
             return;
         }
-        if(PEAR::isError($res)) $this->alertMsg = $res->getMessage();
+        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
 
         $this->redirUrl = UI_BROWSER.'?act=groups&id='.$reid;
     }
@@ -457,10 +463,11 @@ class uiHandler extends uiBase {
         $this->_dateArr2Str(&$mData);
 
         foreach ($mData as $key=>$val) {
+            #echo "id: {$formdata['id']}, key: $key, val: $val<br>";
             $this->gb->setMDataValue($formdata['id'], $key, $this->sessid, $val);
         }
 
-        $this->alertMsg = $this->tra('Metadata saved');
+        $this->_retMsg('Metadata saved');
     }
 
 
@@ -519,7 +526,7 @@ class uiHandler extends uiBase {
                 }
                 if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                     if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
-                        $this->alertMsg = $this->tra('Error uploading Logo');
+                        $this->_retMsg('Error uploading Logo');
                         return;
                 }
             }

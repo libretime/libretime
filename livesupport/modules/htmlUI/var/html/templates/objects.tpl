@@ -13,41 +13,38 @@
     {foreach from=$structure.listdata item=o}
         <tr bgcolor="{cycle values='#eeeeee, #dadada"'}">
           <td>
-            {if $structure.tree}
-                {str_repeat str='&nbsp;' count=$o.level}<span id="ID{$o.id}">
-            {else}
-                {str_repeat str='&nbsp;' count=3}       <span id="ID{$o.id}">
-            {/if}
-            <a {if $o.type eq 'Folder'}href="{$UI_BROWSER}?id={$o.id}" {/if}>[{$o.title}]</a>:&nbsp;&nbsp;
-                                                        </span>
-
+            <span id="ID{$o.id}">
+                {if $structure.tree}
+                    {str_repeat str='&nbsp;' count=$o.level}
+                {else}
+                    {str_repeat str='&nbsp;' count=3}
+                {/if}
+                <a {if $o.type eq 'Folder'}href="{$UI_BROWSER}?id={$o.id}" {/if}>[{$o.title}]</a>:&nbsp;&nbsp;
+            </span>
           </td>
+
           <td>
               {$a.$o.type}
-              &nbsp;<a href="javascript:frename('{$o.name}', '{$o.id}')" class="button">[rename]</a>
-              &nbsp;<a href="javascript:fmove('{$o.id}', '.')" class="button">[move]</a>
-              &nbsp;<a href="javascript:fcopy('{$o.id}', '.')" class="button">[copy]</a>
-              {*
-              &nbsp;<a href="javascript:freplicate('<?php echo$o['name']?>', '{$o.id}')" class="button">[replicate]</a>
-              *}
-              &nbsp;<a href="{$UI_BROWSER}?act=permissions&id={$o.id}" class="button">[permissions]</a>
+              &nbsp;<a href="javascript:frename('{$o.name}', '{$o.id}')">[rename]</a>
+              &nbsp;<a href="javascript:fmove('{$o.id}', '.')">[move]</a>
+              &nbsp;<a href="javascript:fcopy('{$o.id}', '.')">[copy]</a>
+              &nbsp;<a href="{$UI_BROWSER}?act=permissions&id={$o.id}">[permissions]</a>
               <br>
               &nbsp;
               {if ($delOverride eq $o.id)}
-                  <a href="{$UI_HANDLER}?act=delete&id={$o.id}&delOverride={$o.id}" class="button"
+                  <a href="{$UI_HANDLER}?act=delete&id={$o.id}&delOverride={$o.id}"
                     onClick="return confirm('Really delete non empty object &quot;{$o.name}&quot; now?')">[DEL]</a>
               {else}
-                  <a href="{$UI_HANDLER}?act=delete&id={$o.id}" class="button"
+                  <a href="{$UI_HANDLER}?act=delete&id={$o.id}"
                     onClick="return confirm('Delete object &quot;{$o.name}&quot;?')">[DEL]</a>
               {/if}
               {if $o.type != 'Folder'}
-                  &nbsp;<a href="{$UI_BROWSER}?act=getFile&id={$o.id}" class="button">[Access]</a>
-                  &nbsp;<a href="{$UI_BROWSER}?act=getInfo&id={$o.id}" class="button">[Analyze]</a>
-                  &nbsp;<a href="{$UI_BROWSER}?act=editMetaDataValues&id={$o.id}" class="button">[MData]</a>
-                  &nbsp;<a href="#" onclick="popup('{$UI_HANDLER}?act=add2SP&id={$o.id}', '2SP', 1, 1)" class="button">[SP]</a>
-              {/if}
-              {if $o.type eq 'Replica'}
-                  &nbsp; (-&gt;$o.target})
+                  &nbsp;<a href="{$UI_BROWSER}?act=getFile&id={$o.id}">[Access]</a>
+                  &nbsp;<a href="{$UI_BROWSER}?act=getMData&id={$o.id}">[vMData]</a>
+                  &nbsp;<a href="{$UI_BROWSER}?act=getInfo&id={$o.id}">[Analyze]</a>
+                  &nbsp;<a href="{$UI_BROWSER}?act=editFile&id={$o.id}">[Edit]</a>
+                  &nbsp;<a href="{$UI_BROWSER}?act=editMetaDataValues&id={$o.id}">[eMData]</a>
+                  &nbsp;<a href="#" onclick="hpopup('{$UI_HANDLER}?act=add2SP&id={$o.id}', '2SP')">[SP]</a>
               {/if}
               &nbsp;
           </td>

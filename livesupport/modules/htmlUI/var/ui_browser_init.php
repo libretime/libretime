@@ -30,7 +30,7 @@ $uiBase    = new uiBase($config);
 
 ## load Smarty+filters ##############################################
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
-#$Smarty->load_filter('output', 'trimwhitespace');
+$Smarty->load_filter('output', 'trimwhitespace');
 $Smarty->load_filter('post', 'template_marker');
 
 

@@ -16,20 +16,45 @@ class uiBrowser extends uiBase {
         $this->uiBase($config);
     }
 
+      /**
+     *  login
+     *
+     *  Perform a frontend action
+     *  map to a function called action_<actionName>.inc.php
+     *
+     *  @param actionName string, name of a action
+     *  @param params  array[], request vars
+     */
+    function performAction( $actionName, $params )
+    {
+        $actionFunctionName = 'action_' . $actionName ;
+        $actionFunctionFileName = ACTION_BASE . '/action_' . $actionName . '.inc.php' ;
+        if ( file_exists( $actionFunctionFileName ) )
+        {
+            include ( $actionFunctionFileName ) ;
+            if ( method_exists( $actionFunctionName ) )
+            {
+                $actionFunctionName( &$this, $params ) ;
+            }
+        }
+    }
+
     // --- error handling ---
     /**
-     *  alertMsg
+     *  getAlertMsg
      *
-     *  takes error message from session var
+     *  extractes error message from session var
      *
      *  @return string
      */
 
-    function alertMsg()
+
+    function getAlertMsg()
     {
         if ($_SESSION['alertMsg']) {
             $this->alertMsg = $_SESSION['alertMsg'];
             unset($_SESSION['alertMsg']);
+
             return $this->alertMsg;
         }
         return false;
