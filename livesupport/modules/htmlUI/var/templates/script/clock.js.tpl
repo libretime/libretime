@@ -33,9 +33,9 @@ function sClock()
 {
   sinterval = 100;      // milliseconds
   {/literal}
-  hours   = {$smarty.now|date_format:"%H"};
-  minutes = {$smarty.now|date_format:"%M"};
-  seconds = {$smarty.now|date_format:"%S"};
+  hours   = {$smarty.now|date_format:"%H"|string_format:"%d"};
+  minutes = {$smarty.now|date_format:"%M"|string_format:"%d"};
+  seconds = {$smarty.now|date_format:"%S"|string_format:"%d"};
   {literal}
   if(timer){clearInterval(timer);timer=null;}
   timer=setInterval("work();", sinterval);

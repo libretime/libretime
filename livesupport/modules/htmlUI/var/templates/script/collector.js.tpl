@@ -2,7 +2,7 @@
 
 {literal}
 <script type="text/javascript">
-function form_submit(formname, action)
+function collector_submit(formname, action)
 {
     var href = '{/literal}{$UI_HANDLER}{literal}?act='+action;
     var n;
@@ -15,7 +15,7 @@ function form_submit(formname, action)
     hpopup(href);
 }
 
-function form_switchAll(formname)
+function collector_switchAll(formname)
 {
     var n;
 
@@ -26,12 +26,12 @@ function form_switchAll(formname)
     }
 }
 
-function form_clearAll(formname, action)
+function collector_clearAll(formname, action)
 {
     if (confirm("{/literal}{tra 0='Are you sure to remove all Items?'}{literal}")) {
         document.forms[formname].elements['all'].checked = true;
-        form_switchAll(formname);
-        form_submit(formname, action);
+        collector_switchAll(formname);
+        collector_submit(formname, action);
     }
 }
 </script>

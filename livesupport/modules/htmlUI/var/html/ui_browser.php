@@ -45,6 +45,10 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('dynform', $uiBrowser->PLAYLIST->changeTransitionForm($_REQUEST['id'], $_REQUEST['type'], $ui_fmask['PL.changeTransition']));
                 $Smarty->display('playlist/changeTransition.tpl');
             break;
+
+            case "SCHEDULER.schedule":
+                $Smarty->display('scheduler/schedule.tpl');
+            break;
         }
     }
     die();
@@ -83,7 +87,7 @@ if ($uiBrowser->userid) {
 
     case "editItem":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => $uiBrowser->type=='webstream' ? 'webstream' : 'file', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
+        $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
     break;
 
     case "editFile":

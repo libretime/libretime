@@ -30,19 +30,22 @@
                 </tr>
             {/foreach}
             <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
-                <td><input type="checkbox" name="all" onClick="form_switchAll('SP')"></th>
+                <td><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></th>
                 <td align="center" colspan="2">
-                    <select>
-                        <option selected>Multiple Action:</option>
-                        <option onClick="form_submit('SP', 'SP.removeItem')">Remove</option>
+                    <select name="SP_multiaction">
+                        <option>Multiple Action:</option>
+                        <option onClick="collector_submit('SP', 'SP.removeItem')">Remove</option>
                         {if $_PL_activeId}
-                            <option onClick="form_submit('SP', 'PL.addItem')">Add to Playlist</option>
+                            <option onClick="collector_submit('SP', 'PL.addItem')">Add to Playlist</option>
                         {else}
-                            <option onClick="form_submit('SP', 'PL.create')">New Playlist using Item</option>
+                            <option onClick="collector_submit('SP', 'PL.create')">New Playlist using Item</option>
                         {/if}
                     </select>
+                    <script type="text/javascript">
+                        document.forms['SP'].elements['SP_multiaction'].options[0].selected=true;
+                    </script>
                 </th>
-                <td align="center" colspan="2"><a href="#" onClick="form_clearAll('SP', 'SP.removeItem')">[Clear]</a></th>
+                <td align="center" colspan="2"><a href="#" onClick="collector_clearAll('SP', 'SP.removeItem')">[Clear]</a></th>
             </tr>
         </table>
     </form>

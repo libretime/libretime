@@ -1,23 +1,34 @@
+{include file="header.tpl"}
 {$SCHEDULER->copyPlFromSP()}
 
 <form name="schedule_it">
-    <select name="gunid">
-        {foreach from=$SCHEDULER->playlists item="_pl"}
-            <option value="{$_pl.gunid}">{$_pl.title}</option>
-        {/foreach}
-    </select>
-    <input type="hidden" name="sc_last">
-    <input value="{$SCHEDULER->curr.hour}" type="text" size="2" name="hour" onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
-    <input value="00" type="text" size="2" name="min"  onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
-    <input value="00" type="text" size="2" name="sec"  onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)">
-    <a href="#" onClick="sc_change('-')" onMouseDown="sc_start('-')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">-</a>
-    <a href="#" onClick="sc_change('+')" onMouseDown="sc_start('+')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">+</a>
+<table>
+    <tr><td><b>Schedule date</b></td><td>{$SCHEDULER->curr.year}-{$SCHEDULER->curr.month}-{$SCHEDULER->curr.day}</td></tr>
+    <tr>
+        <td><b>Select Playlist</b></td>
+        <td>
+            <select name="gunid" multiple>
+                {foreach from=$SCHEDULER->playlists item="_pl"}
+                    <option value="{$_pl.gunid}">{$_pl.title}</option>
+                {/foreach}
+            </select>
+        </td>
+    </tr>
 
-    <br>
-    <input type="button" value="schedule" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.uploadPlaylistMethod&gunid='+schedule_it.gunid.value+'&time='+schedule_it.hour.value+':'+schedule_it.min.value+':'+schedule_it.sec.value)">
+    <tr>
+        <td><b>Schedule time</b></td>
+        <td>
+            <input type="hidden" name="sc_last">
+            <input value="{$SCHEDULER->curr.hour}" type="text" size="2" name="hour" onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
+            <input value="00" type="text" size="2" name="min"  onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
+            <input value="00" type="text" size="2" name="sec"  onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)">
+            <a href="#" onClick="sc_change('-')" onMouseDown="sc_start('-')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">-</a>
+            <a href="#" onClick="sc_change('+')" onMouseDown="sc_start('+')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">+</a
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td><td><input type="button" value="schedule" onClick="location.href='{$UI_HANDLER}?act=SCHEDULER.uploadPlaylistMethod&gunid='+schedule_it.gunid.value+'&time='+schedule_it.hour.value+':'+schedule_it.min.value+':'+schedule_it.sec.value"></td></tr>
+</table>
 </form>
-
-
 
 <script type="text/javascript">
 {literal}
@@ -106,3 +117,6 @@ function sc_check_int(element)
 }
 {/literal}
 </script>
+
+</body>
+</html>

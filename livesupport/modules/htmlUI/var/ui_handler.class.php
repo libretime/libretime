@@ -228,7 +228,7 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
         }
-        $length = $this->_twoDigits($formdata['length']['H']).':'.$this->_twoDigits($formdata['length']['i']).':'.$this->_twoDigits($formdata['length']['s']).'.000000';
+        $length = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
         $this->gb->setMDataValue($r, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
         $this->gb->setMDataValue($r, UI_MDATA_KEY_DURATION, $this->sessid, $length);
         $this->redirUrl = UI_BROWSER."?act=editWebstream&id=$r";
@@ -244,7 +244,7 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
         }
-        $length = $this->_twoDigits($formdata['length']['H']).':'.$this->_twoDigits($formdata['length']['i']).':'.$this->_twoDigits($formdata['length']['s']).'.000000';
+        $length = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
         $this->gb->setMDataValue($id, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
         $this->gb->setMDataValue($id, UI_MDATA_KEY_URL, $this->sessid, $formdata['url']);
         $this->gb->setMDataValue($id, UI_MDATA_KEY_DURATION, $this->sessid,  $length);
@@ -266,12 +266,13 @@ class uiHandler extends uiBase {
             }
         }
         $data = $this->_dateArr2Str($mData);
-        foreach ($data as $key=>$val) {
-            $this->gb->setMDataValue($id, $key, $this->sessid, $val);
+        foreach ($data as $key=>$val) { echo "\n".$key.": ".$val."\n";
+            $r = $this->gb->setMDataValue($id, $key, $this->sessid, $val);
+            print_r($r);
         }
         $this->_retMsg('Metadata saved');
         $type = $this->gb->getFileType($id)=='webstream' ? 'Webstream' : 'File';
-        $this->redirUrl = UI_BROWSER."?act=edit$type&id=$id";
+        $this->redirUrl = UI_BROWSER."?act=editItem&id=$id";
     }
 
 

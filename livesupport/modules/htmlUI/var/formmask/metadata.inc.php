@@ -93,7 +93,7 @@ $mask = array(
                 'id3'       => 'Artist'
             ),
             array(
-                'element'   => 'ls:genre',
+                'element'   => 'dc:type',
                 'type'      => 'text',
                 'label'     => 'Genre',
                 'required'  => TRUE,
@@ -168,6 +168,7 @@ $mask = array(
                 'label'     => 'Album',
                 'id3'       => 'Album'
             ),
+            /*
             array(
                 'element'   => 'ls:year',
                 'type'      => 'date',
@@ -178,6 +179,14 @@ $mask = array(
                                 'addEmptyOption'=> TRUE,
                                 'minYear'       => 1900
                                ),
+                'id3'       => 'Year'
+            ),
+            */
+            array(
+                'element'   => 'ls:year',
+                'type'      => 'select',
+                'label'     => 'Year',
+                'options'   => _getNumArr(1900, date('Y')+5),
                 'id3'       => 'Year'
             ),
             array(

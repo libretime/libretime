@@ -11,7 +11,7 @@ document.write('<div id="menucontainer"></div>');
 menuWidth  = 180,
 menuHeight = 0;
 
-function menu(id) {
+function menu(param) {
     var menuHeader  = "<div id='menu' style='position:absolute;top:-250;left:0;z-index:100'>"+
                       "<table cellpadding='5' cellspacing='0' width='"+menuWidth+"' height='"+menuHeight+"' style='border-style:outset;border-width:1;border-color:#3a6c96;background-color:#4682B4'>";
     var menuFooter  = "</table></div>";
@@ -25,7 +25,7 @@ function menu(id) {
     for (var i = 1; i < menu.arguments.length; ++i) {
         switch (menu.arguments[i]) {
             case "PL.display":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"{/literal}{$UI_BROWSER}{literal}?act=PL.display&id="+id+"\" "+oF+">&nbsp;Display this Playlist&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"{/literal}{$UI_BROWSER}{literal}?act=PL.display&id="+param+"\" "+oF+">&nbsp;Display this Playlist&nbsp;</a></td></tr>";
             break;
 
             case "PL.release":
@@ -33,55 +33,57 @@ function menu(id) {
             break;
 
             case "PL.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.addItem&id="+id+"')\" "+oF+">&nbsp;Add to active Playlist&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;Add to active Playlist&nbsp;</a></td></tr>";
             break;
 
             case "PL.removeItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.removeItem&id="+id+"')\" "+oF+">&nbsp;Remove Item from Playlist&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove Item from Playlist&nbsp;</a></td></tr>";
             break;
 
             case "PL.activate":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"javascript: hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.activate&id="+id+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"javascript: hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></td></tr>";
             break;
 
             case "PL.create":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.create&id="+id+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
             break;
 
             case "PL.changeFadeIn":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeIn&id="+id+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></td></tr>";
             break;
 
             case "PL.changeTransition":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=transition&id="+id+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></td></tr>";
             break;
 
             case "PL.changeFadeOut":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeOut&id="+id+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></td></tr>";
             break;
 
             case "SP.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+id+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></td></tr>";
             break;
 
             case "SP.removeItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+id+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></td></tr>";
             break;
 
             case "edit":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=editItem&id="+id+"'"+oF+">&nbsp;Edit&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=editItem&id="+param+"'"+oF+">&nbsp;Edit&nbsp;</a></td></tr>";
             break;
 
             case "delete":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+id+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+param+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></td></tr>";
             break;
 
             case "fileList":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=fileList&id="+id+"'"+oF+">&nbsp;List Folder&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=fileList&id="+param+"'"+oF+">&nbsp;List Folder&nbsp;</a></td></tr>";
             break;
 
             case "SCHEDULER.schedule":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SCHEDULER.set&view=schedule&hour="+id+"')\" "+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>"; 
+                //menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SCHEDULER.set&view=schedule&hour="+param+"')\" "+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&hour="+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.schedule', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>";
+
             break;
         }
     }

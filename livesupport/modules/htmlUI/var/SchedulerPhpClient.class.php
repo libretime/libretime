@@ -23,14 +23,14 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/SchedulerPhpClient.class.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ================================================================= includes */
-require_once 'DB.php';
-require_once "XML/RPC.php";
+#require_once 'DB.php';
+#require_once "XML/RPC.php";
 #include_once "../conf.php";
 
 /* ================================================== method definition array */
@@ -482,10 +482,19 @@ class SchedulerPhpClient{
         if($res->faultCode() > 0) {
             return array('error' => array('code' => $res->faultCode(), 'message' => $res->faultString()));   ## changed by sebastian
             /*
+            tomas´ orig. method
             return $this->dbc->raiseError(
                 "SchedulerPhpClient::$method:".$res->faultString()." ".
                 $res->faultCode()."\n", $res->faultCode()
-            ); */
+            );
+
+            newer method:
+            return PEAR::raiseError(
+                "SchedulerPhpClient::$method:".$res->faultString()." ".
+                $res->faultCode()."\n", $res->faultCode(),
+                PEAR_ERROR_RETURN
+            );
+            */
         }
         if($this->verbose){
             echo "result:\n";

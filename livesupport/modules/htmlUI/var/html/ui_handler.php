@@ -6,7 +6,7 @@ switch($_REQUEST['act']){
     case "login":
         if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE) {
             $uiHandler->loadStationPrefs($ui_fmask['stationPrefs'], TRUE);
-            $uiHandler->PLAYLIST->loadLookedFromPref();
+            $uiHandler->PLAYLIST->reportLookedPL(TRUE);
         }
     break;
 
@@ -206,7 +206,13 @@ switch($_REQUEST['act']){
     break;
 
     case "PL.revert":
-        $uiHandler->PLAYLIST->revert();
+        if (($ui_tmpid = $uiHandler->PLAYLIST->revert()) !== FALSE)
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case"PL.unlook":
+        $uiHandler->PLAYLIST->loadLookedFromPref();
         $uiHandler->PLAYLIST->setReload();
     break;
 
@@ -227,7 +233,7 @@ switch($_REQUEST['act']){
 
     case "SCHEDULER.uploadPlaylistMethod":
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
-        $uiHandler->SCHEDULER->setReload();
+        $uiHandler->SCHEDULER->setReload(); 
     break;
 
     default:

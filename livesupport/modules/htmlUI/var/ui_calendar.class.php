@@ -32,7 +32,7 @@ class uiCalendar
         $Year->build($selections, $this->firstDayOfWeek);
         while ($Month = $Year->fetch()) {
             $this->Year[] = array(
-                                'month'         => $this->Base->_twoDigits($Month->thisMonth()),
+                                'month'         => sprintf('%02d', $Month->thisMonth()),
                                 'label'         => $this->_getMonthName($Month),
                                 'isSelected'    => $Month->isSelected()
                             );
@@ -50,10 +50,10 @@ class uiCalendar
         $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
         $Month->build($this->_scheduledDays('month'));                                                       ## scheduled days are selected
         while ($Day = $Month->fetch()) {
-            $corrMonth = $Day->thisMonth()<=12 ? $this->Base->_twoDigits($Day->thisMonth()) : '01';   ## due to bug in
+            $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';   ## due to bug in
             $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;               ## Calendar_Month_Weekdays
             $this->Month[] = array(
-                                'day'           => $this->Base->_twoDigits($Day->thisDay()),
+                                'day'           => sprintf('%02d', $Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
                                 'month'         => $corrMonth,
                                 'year'          => $corrYear,
@@ -78,9 +78,9 @@ class uiCalendar
         $Week->build($this->_scheduledDays('week'));
         while ($Day = $Week->fetch()) {
             $this->Week[] = array(
-                                'day'           => $this->Base->_twoDigits($Day->thisDay()),
+                                'day'           => sprintf('%02d', $Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
-                                'month'         => $this->Base->_twoDigits($Day->thisMonth()),
+                                'month'         => sprintf('%02d', $Day->thisMonth()),
                                 'year'          => $Day->thisYear(),
                                 'label'         => $this->_getDayName($Day),
                                 'isSelected'    => $Day->isSelected(),

@@ -67,7 +67,7 @@ class uiScratchPad
     function addItem($id)
     {
         if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
-            if ($this->verbose) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
+            if (UI_WARNING) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
             return false;
         }
 
@@ -76,7 +76,7 @@ class uiScratchPad
         foreach ($sp as $key=>$val) {
             if ($val['id'] == $item['id']) {
                 unset($sp[$key]);
-                if ($this->verbose) $this->Base->_retMsg('Entry $1 was already on SP since $2.\nMoved to Top.', $item['title'], $val['added']);
+                if (UI_VERBOSE) $this->Base->_retMsg('Entry $1 was already on SP since $2.\nMoved to Top.', $item['title'], $val['added']);
             } else {
                 #$this->Base->incAccessCounter($id);
             }
@@ -91,7 +91,7 @@ class uiScratchPad
     function removeItems($ids)
     {
         if (!$ids) {
-            $this->Base->_retMsg('No Item(s) given');
+            if (UI_WARNING) $this->Base->_retMsg('No Item(s) selected');
             return FALSE;
         }
         if (!is_array($ids))

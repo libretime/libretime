@@ -9,11 +9,21 @@
 <tr><th colspan="4">Simple Playlist Management</th></tr>
 
 {PL->get assign='PL'}
+{PL->reportLookedPL assign="_looked"}
+
 {if is_array($PL)}          {* already activated Playlist *}
     {include file="playlist/editor.tpl"}
 {else}                      {* no active Playlist *}
-    <tr><td colspan="4">No active Playlist!</td></tr>
-    <tr><td colspan="4"><input type="button" value="Create empty Playlist" onClick="hpopup('{$UI_HANDLER}?act=PL.create')"></td></tr>
+
+    <tr>
+        <td colspan="4">
+        {if $_looked}
+            <input type="button" value="Unlook crashed Playlist" onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')">
+        {else}
+            <input type="button" value="New empty Playlist" onClick="hpopup('{$UI_HANDLER}?act=PL.create')">
+        {/if}
+        </td>
+    </tr>
 {/if}
 
 </table>

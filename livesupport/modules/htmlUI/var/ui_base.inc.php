@@ -37,14 +37,14 @@ function _getDArr($format)
     switch($format) {
     case 'h':
         for($n=0; $n<=23; $n++) {
-            $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
+            $arr[sprintf('%02d', $n)] = sprintf('%02d', $n);
         }
         break;
 
     case 'm':
     case 's':
         for($n=0; $n<=59; $n++) {
-            $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
+            $arr[sprintf('%02d', $n)] = sprintf('%02d', $n);
         }
         break;
     }
@@ -54,7 +54,7 @@ function _getDArr($format)
 
 function _getNumArr($start, $end, $step=1)
 {
-    for($n=$start; $n<=$end; $n=$n+$step) {
+    for($n=$start; $n<=$end; $n+=$step) {
         $arr[$n] = $n;
     }
     return $arr;
@@ -230,10 +230,10 @@ class uiBase
         foreach ($input as $k=>$v){
             if (is_array($v)) {
                 if ( ( isset($v['d']) ) && ( isset($v['M']) || isset($v['m']) ) && ( isset($v['Y']) || isset($v['y']) ) ) {
-                    $input[$k] = $v['Y'].$v['y'].'-'.$this->_twoDigits($v['M'].$v['m']).'-'.$this->_twoDigits($v['d']);
+                    $input[$k] = $v['Y'].$v['y'].'-'.sprintf('%02d', $v['M'].$v['m']).'-'.sprintf('%02d', $v['d']);
                 }
                 if ( ( isset($v['H']) ) || isset($v['h'] ) && ( isset($v['i']) ) && ( isset($v['s']) ) ) {
-                    $input[$k] = $this->_twoDigits($v['H'].$v['h']).':'.$this->_twoDigits($v['i']).':'.$this->_twoDigits($v['s']);
+                    $input[$k] = sprintf('%02d', $v['H'].$v['h']).':'.sprintf('%02d', $v['i']).':'.sprintf('%02d', $v['s']);
                 }
             }
         }
@@ -275,17 +275,6 @@ class uiBase
 
         }
         return FALSE;
-    }
-
-
-    function _twoDigits($num)
-    {
-        
-        if (strlen($num) == 1)
-            return "0$num";
-        if (strlen($num) == 0)
-            return '00';
-        return $num;
     }
 
 
@@ -337,10 +326,10 @@ class uiBase
         elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))           list($i, $s) = explode(':', $in);
         else                                                            $s = $in;
 
-        if ($all || $h > 0) $H = $this->_twoDigits($h).':';
+        if ($all || $h > 0) $H = sprintf('%02d', $h).':';
         else        $H = '&nbsp;&nbsp;&nbsp;';
-        $I = $this->_twoDigits($i).':';
-        $S = $this->_twoDigits($s);
+        $I = sprintf('%02d', $i).':';
+        $S = sprintf('%02d', $s);
 
         return $H.$I.$S;
     }

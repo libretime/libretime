@@ -38,11 +38,11 @@ class uiPlaylist
         # store access token to ls_pref abd session
         # load PL into session
         if($this->token) {
-            $this->Base->_retMsg('You have an Playlist already activated,\n first close it');
+             if (UI_WARNING) $this->Base->_retMsg('You have an Playlist already activated,\n first close it');
             return FALSE;
         }
         if(($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
-            $this->Base->_retMsg('Playlist is looked by $1', $this->Base->gb->getSubjName($userid));
+             if (UI_WARNING) $this->Base->_retMsg('Playlist is looked by $1', $this->Base->gb->getSubjName($userid));
             return FALSE;
         }
         $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
@@ -59,12 +59,13 @@ class uiPlaylist
         # delete PL from session
         # remove token from ls_pref
         if(!$this->token) {
-            $this->Base->_retMsg('No Playlist is looked by You');
+             if (UI_WARNING) $this->Base->_retMsg('No Playlist is looked by You');
             return FALSE;
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            $this->Base->_retMsg('Unable to release Playlist');
+            if (UI_VERBOSE) print_r($plgunid);
+             if (UI_WARNING) $this->Base->_retMsg('Unable to release Playlist');
             return FALSE;
         }
         if($msg) $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
@@ -89,12 +90,13 @@ class uiPlaylist
     function revert()
     {
         if(!$this->token) {
-            $this->Base->_retMsg('No Playlist is looked by You');
+             if (UI_WARNING) $this->Base->_retMsg('No Playlist is looked by You');
             return FALSE;
         }
         $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            $this->Base->_retMsg('Unable to revert to looked state');
+            if (UI_VERBOSE) print_r($plgunid);
+            if (UI_WARNING) $this->Base->_retMsg('Unable to revert to looked state');
             return FALSE;
         }
         $this->Base->_retMsg('Playlist "$1" reverted', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
@@ -102,15 +104,24 @@ class uiPlaylist
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
 
-        $this->activate($this->Base->gb->_idFromGunid($plgunid), FALSE);
-        return TRUE;
+        if ($this->activate($this->Base->gb->_idFromGunid($plgunid), FALSE) !== TRUE)
+            return FALSE;
+
+        return $this->activeId;
     }
 
+    function reportLookedPL($setMsg)
+    {
+        if(is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
+            if ($setMsg === TRUE) $this->Base->_retMsg('Found looked Playlist');
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     function loadLookedFromPref()
     {
         if(is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
-            $this->Base->_retMsg('Found Playlist looked by you');
             #$this->release();
             list ($this->activeId, $this->token) = explode (':', $saved);
 
@@ -123,7 +134,7 @@ class uiPlaylist
     function addItem($elemIds)
     {
         if (!$elemIds) {
-            $this->Base->_retMsg('No Item(s) given');
+            if (UI_WARNING) $this->Base->_retMsg('No Item(s) selected');
             return FALSE;
         }
         if (!is_array($elemIds))
@@ -143,7 +154,7 @@ class uiPlaylist
     function removeItem($elemIds)
     {
         if (!$elemIds) {
-            $this->Base->_retMsg('No Item(s) given');
+            if (UI_WARNING) $this->Base->_retMsg('No Item(s) selected');
             return FALSE;
         }
         if (!is_array($elemIds))
@@ -162,7 +173,7 @@ class uiPlaylist
     {
         # create PL
         # activate
-        # add clip if given
+        # add clip if $id is set
         if (is_array($this->activeId)) {
             $this->Base->_retMsg('Already active Playlist');
             return FALSE;
@@ -262,7 +273,13 @@ class uiPlaylist
 
     function moveItem($id, $pos)
     {
-        $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
+        $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
+        if (PEAR::isError($r)) {
+            if (UI_VERBOSE) print_r($r);
+            $this->Base->_retMsg('Cannot move item');
+            return FALSE;
+        }
+        return TRUE;
     }
 
 
@@ -314,7 +331,7 @@ class uiPlaylist
             break;
             case "transition":
                 $d = $this->getPrevElement($id);
-                $duration = $d['fadeout_ms'];
+                $duration = $s['fadein_ms'];
                 $form->setConstants(array('headline' => '<b>'.$d['title'].'</b> <-> <b>'.$s['title'].'</b>'));
             break;
             case "fadeOut":

@@ -28,26 +28,24 @@ class uiScheduler extends uiCalendar
     function set($arr)
     {
         extract($arr);
-        if ($view)  $this->curr['view'] = $view;
-        if ($year)  $this->curr['year'] = $year;
-        if ($day)   $this->curr['day']  = $this->Base->_twoDigits($day);
-        if ($hour)  $this->curr['hour'] = $this->Base->_twoDigits($hour);
+
+        if (isset($view))  $this->curr['view'] = $view;
+        if (isset($year))  $this->curr['year'] = $year;
+        if (isset($day))   $this->curr['day']  = sprintf('%02d', $day);
+        if (isset($hour))  $this->curr['hour'] = sprintf('%02d', $hour);
         if (is_numeric($month))
-                    $this->curr['month'] = $this->Base->_twoDigits($month);
+                    $this->curr['month'] = sprintf('%02d', $month);
 
         $stampNow    = $this->_datetime2timestamp($this->curr['year'].$this->curr['month'].$this->curr['day']);
         $stampTarget = $stampNow;
-
         if ($month=='++')
             $stampTarget = strtotime("+1 month", $stampNow);
         if ($month=='--')
             $stampTarget = strtotime("-1 month", $stampNow);
-
         if ($week=='++')
             $stampTarget = strtotime("+1 week", $stampNow);
         if ($week=='--')
             $stampTarget = strtotime("-1 week", $stampNow);
-
         $this->curr['year']     = strftime("%Y", $stampTarget);
         $this->curr['month']    = strftime("%m", $stampTarget);
         $this->curr['day']      = strftime("%d", $stampTarget);
@@ -74,20 +72,62 @@ class uiScheduler extends uiCalendar
 
     function getDayUsagePercentage($year, $month, $day)
         {
-        #echo "date: ".$year.$month.$day."<br>";
-        if (isset($this->_duration[$year.$month.$day]))
-            return $this->_duration[$year.$month.$day];
-
-        $this->_duration[$year.$month.$day] = 0;
         if (!$arr = $this->getDayUsage($year, $month, $day))
             return false;
 
         foreach ($arr as $val) {
-            #print_r($val);
-            $this->_duration[$year.$month.$day] += ($this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']))/86400*100;
+            $duration += ($this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']))/86400*100;
         }
-        #echo "duration: ".$this->_duration[$year.$month.$day]."<br>";
-        return $this->_duration[$year.$month.$day];
+        return $duration;
+    }
+
+
+    function getDayTiming($year, $month, $day)
+    {
+        if (!$arr = $this->getDayUsage($year, $month, $day))
+            return false;
+
+        ## !! bug in strtotime. zeigt 8h später an als reines datum, wenn Txx:xx:xx verwendet wird !!
+
+        $day_start = $this->_datetime2timestamp($year.$month.$day.'T00:00:00');
+        $day_end   = $this->_datetime2timestamp($year.$month.$day.'T23:59:59');
+
+        $curr = current($arr);
+        if (strtotime($curr['start']) > $day_start)                     ## insert gap if first entry start after 00:00:00
+            $list[] = array(
+                        'type'      => 'firstgap',
+                        'pos'       => 0,
+                        'length'    => strtotime($curr['start']) - $day_start -1
+                      );
+
+        while ($curr = current($arr)) {
+            $list[] = array(
+                        'type'      => 'entry',
+                        'pos'       => strtotime($curr['start']) - $day_start,
+                        'length'    => strtotime($curr['end']) - strtotime($curr['start']),
+                        'entry'     => $curr
+                      );
+
+            if ($next = next($arr)) {
+                if ($next['start'] > $curr['end']+1)  ## insert gap between entrys
+                    $list[] = array(
+                                'type'      => 'gap',
+                                'pos'       => strtotime($curr['start'])-$day_start,
+                                'length'    => strtotime($next['start']) - strtotime($curr['end']) -1,
+                              );
+            }
+            else {
+                if (strtotime($curr['end']) < $day_end)        ## insert gap if prev entry was not until midnight
+                    $list[] = array(
+                                'type'      => 'lastgap',
+                                'pos'       => strtotime($curr['end']) - $day_start,
+                                'length'    => $day_end-strtotime($curr['end']),
+                              );
+            }
+
+        }
+        #print_r($list);
+        return $list;
     }
 
 
@@ -105,9 +145,9 @@ class uiScheduler extends uiCalendar
             return array();
         }
         $d = $Period->fetch();
-        $corrMonth = $d->thisMonth()<=12 ? $this->Base->_twoDigits($d->thisMonth()) : '01';   ## due to bug in
-        $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;                  ## Calendar_Month_Weekdays
-        $first = array('day'   => $this->Base->_twoDigits($d->thisDay()),
+        $corrMonth = $d->thisMonth()<=12 ? sprintf('%02d', $d->thisMonth()) : '01';   ## due to bug in
+        $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;         ## Calendar_Month_Weekdays
+        $first = array('day'   => sprintf('%02d', $d->thisDay()),
                        'month' => $corrMonth,
                        'year'  => $corrYear
                  );
@@ -115,9 +155,9 @@ class uiScheduler extends uiCalendar
         while ($l = $Period->fetch()) {
             $d = $l;
         }
-        $corrMonth = $d->thisMonth()<=12 ? $this->Base->_twoDigits($d->thisMonth()) : '01';   ## due to bug in
-        $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;                  ## Calendar_Month_Weekdays
-        $last = array('day'   => $this->Base->_twoDigits($d->thisDay()),
+        $corrMonth = $d->thisMonth()<=12 ? sprintf('%02d', $d->thisMonth()) : '01';   ## due to bug in
+        $corrYear  = $d->thisMonth()<=12 ? $d->thisYear() : $d->thisYear()+1;         ## Calendar_Month_Weekdays
+        $last = array('day'   => sprintf('%02d', $d->thisDay()),
                       'month' => $corrMonth,
                       'year'  => $corrYear
                 );
@@ -172,7 +212,7 @@ class uiScheduler extends uiCalendar
     function _isError($r)
     {
         if (is_array($r['error'])) {
-            $this->Base->_retMsg('Error: $1', $r['error']['message']);
+            $this->Base->_retMsg('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message'])));
             return TRUE;
         }
         return FALSE;

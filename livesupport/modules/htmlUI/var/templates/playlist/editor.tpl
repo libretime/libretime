@@ -7,7 +7,7 @@
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
         onContextmenu="return menu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: lightblue">
-        <td colspan="4" align="center">{$i.fadein_ms} ms</td>
+        <td colspan="4" align="center">{$i.fadein_ms|string_format:"%d"} ms</td>
     </tr>
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
@@ -28,18 +28,19 @@
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
         onContextmenu="return menu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: lightblue">
-        <td colspan="4" align="center">{$i.fadeout_ms} ms</td>
+        <td colspan="4" align="center">{$i.fadeout_ms|string_format:"%d"} ms</td>
     </tr>
     {/if}
 
 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
-    <td><input type="checkbox" name="all" onClick="form_switchAll('PL')"></th>
-    <td align="center" colspan="2"><a href="#" onClick="form_submit('PL', 'PL.removeItem')">[Remove Selected]</a></th>
-    <td align="center" colspan="2"><a href="#" onClick="form_clearAll('PL')">[Clear]</a></th>
+    <td><input type="checkbox" name="all" onClick="collector_switchAll('PL')"></th>
+    <td align="center" colspan="2"><a href="#" onClick="collector_submit('PL', 'PL.removeItem')">[Remove Selected]</a></th>
+    <td align="center" colspan="2"><a href="#" onClick="collector_clearAll('PL', 'PL.removeItem')">[Clear]</a></th>
 </tr>
 
 <tr>
-    <td><input type="button" value="Save Changes" onClick="hpopup('{$UI_HANDLER}?act=PL.save')"></td>
-    <td colspan="2"><input type="button" value="Revert all Changes" onClick="hpopup('{$UI_HANDLER}?act=PL.revert')"></td>
+    <td><input type="button" value="Save" onClick="hpopup('{$UI_HANDLER}?act=PL.save')"></td>
+    <td><input type="button" value="Revert" onClick="hpopup('{$UI_HANDLER}?act=PL.revert')"></td>
+    <td><input type="button" value="Release" onClick="hpopup('{$UI_HANDLER}?act=PL.release')"></td>
     <td><input type="button" value="Delete" onClick="hpopup('{$UI_HANDLER}?act=PL.delete')"></td>
 </tr>

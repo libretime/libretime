@@ -7,17 +7,12 @@
 {else}
     New
 {/if}
-{if $editItem.type == 'file'}
-    File
-{else}
-    Webstream
-{/if}
+{$editItem.type|capitalize}
 </h4>
 
+{if $editItem.type == 'audioclip'}
 <input type="button" onClick="showData()" value="Data">
 <input type="button" onClick="showMData()" value="MData">
-
-{if $editItem.type == 'file'}
 <div id="div_Data">
     {include file="file/fileform.tpl"}
 </div>
@@ -27,11 +22,18 @@
 {/if}
 
 
-
 {if $editItem.type == 'webstream'}
+<input type="button" onClick="showData()" value="Data">
+<input type="button" onClick="showMData()" value="MData">
 <div id="div_Data">
     {include file="file/webstreamform.tpl"}
 </div>
+<div id="div_MData">
+    {include file="file/metadataform.tpl"}
+</div>
+{/if}
+
+{if $editItem.type == 'playlist'}
 <div id="div_MData">
     {include file="file/metadataform.tpl"}
 </div>
