@@ -5,7 +5,7 @@
  * @author Bertrand Mansion <bmansion@mamasam.com>
  * @author Thomas Schulz <ths@4bconsult.de>
  *
- * $Id: SmartyStatic_example.php,v 1.1 2005/02/03 16:55:35 sebastian Exp $
+ * $Id: SmartyStatic_example.php,v 1.2 2005/02/08 11:06:17 sebastian Exp $
  */
 
 require_once 'HTML/QuickForm.php';

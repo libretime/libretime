@@ -52,7 +52,7 @@ $ui_fmask = array(
         array(
             'rule'      => 'regex',
             'element'   => 'stationURL',
-            'format'    => '/^[0-9]{5}$/',
+            'format'    => UI_REGEX_URL,
             'rulemsg'   => 'URL seems not to be valid'
         ),
         array(
@@ -167,29 +167,29 @@ $ui_fmask = array(
         'pages' => array(
             'Main'  => array(
                 array(
-                    'element' => 'Title',
-                    'type'    => 'text',
-                    'label'   => 'Title',
-                    'required'=> TRUE,
+                    'element'   => 'Title',
+                    'type'      => 'text',
+                    'label'     => 'Title',
+                    'required'  => TRUE
                 ),
                 array(
-                    'element' => 'Creator',
-                    'type'    => 'text',
-                    'label'   => 'Creator',
-                    'required'=> TRUE,
+                    'element'   => 'Creator',
+                    'type'      => 'text',
+                    'label'     => 'Creator',
+                    'required'  => TRUE
                 ),
                 array(
-                    'element' => 'Type_Genre',
-                    'type'    => 'text',
-                    'label'   => 'Type_Genre',
-                    'required'=> TRUE,
+                    'element'   => 'Type_Genre',
+                    'type'      => 'text',
+                    'label'     => 'Type_Genre',
+                    'required'  => TRUE,
                 ),
                 array(
-                    'element' => 'Format',
-                    'type'    => 'select',
-                    'label'   => 'Format',
-                    'required'=> TRUE,
-                    'options' => array(
+                    'element'   => 'Format',
+                    'type'      => 'select',
+                    'label'     => 'Format',
+                    'required'  => TRUE,
+                    'options'   => array(
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
                         'networked file'=> 'Networked File',
@@ -197,33 +197,33 @@ $ui_fmask = array(
                      )
                 ),
                 array(
-                    'element' => 'Format_Extent',
-                    'type'    => 'text',
-                    'label'   => 'Format_Extent',
-                    'required'=> TRUE,
+                    'element'   => 'Format_Extent',
+                    'type'      => 'text',
+                    'label'     => 'Format_Extent',
+                    'required'  => TRUE,
                 ),
             ),
             'Music_Basic'  => array(
                 array(
-                    'element' => 'Title',
-                    'type'    => 'text',
-                    'label'   => 'Title',
+                    'element'   => 'Title',
+                    'type'      => 'text',
+                    'label'     => 'Title',
                 ),
                 array(
-                    'element' => 'Creator',
-                    'type'    => 'text',
-                    'label'   => 'Creator',
+                    'element'   => 'Creator',
+                    'type'      => 'text',
+                    'label'     => 'Creator',
                 ),
                 array(
-                    'element' => 'Source_Album',
-                    'type'    => 'text',
-                    'label'   => 'Source_Album',
+                    'element'   => 'Source_Album',
+                    'type'      => 'text',
+                    'label'     => 'Source_Album',
                 ),
                 array(
-                    'element' => 'Source_Year',
-                    'type'    => 'date',
-                    'label'   => 'Source_Year',
-                    'options' => array(
+                    'element'   => 'Source_Year',
+                    'type'      => 'date',
+                    'label'     => 'Source_Year',
+                    'options'   => array(
                         'language'      => 'en',
                         'format'        => 'dMY',
                         'addEmptyOption'=> TRUE,
@@ -231,20 +231,20 @@ $ui_fmask = array(
                     )
                 ),
                 array(
-                    'element' => 'Type_Genre',
-                    'type'    => 'text',
-                    'label'   => 'Type_Genre',
+                    'element'   => 'Type_Genre',
+                    'type'      => 'text',
+                    'label'     => 'Type_Genre',
                 ),
                 array(
-                    'element' => 'Description',
-                    'type'    => 'textarea',
-                    'label'   => 'Description',
+                    'element'   => 'Description',
+                    'type'      => 'textarea',
+                    'label'     => 'Description',
                 ),
                 array(
-                    'element' => 'Format',
-                    'type'    => 'select',
-                    'label'   => 'Format',
-                    'options' => array(
+                    'element'   => 'Format',
+                    'type'      => 'select',
+                    'label'     => 'Format',
+                    'options'   => array(
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
                         'networked file'=> 'Networked File',
@@ -252,203 +252,204 @@ $ui_fmask = array(
                     )
                 ),
                 array(
-                    'element' => 'Type_BPM',
-                    'type'    => 'text',
-                    'label'   => 'Type_BPM',
-                    'rule'    => 'numeric',
+                    'element'   => 'Type_BPM',
+                    'type'      => 'text',
+                    'label'     => 'Type_BPM',
+                    'rule'      => 'numeric',
                 ),
                 array(
-                    'element' => 'Description_Rating',
-                    'type'    => 'text',
-                    'label'   => 'Description_Rating',
-                    'rule'    => 'numeric',
+                    'element'   => 'Description_Rating',
+                    'type'      => 'text',
+                    'label'     => 'Description_Rating',
+                    'rule'      => 'numeric',
                 ),
                 array(
-                    'element' => 'Format_Extent',
-                    'type'    => 'text',
-                    'label'   => 'Format_Extent',
+                    'element'   => 'Format_Extent',
+                    'type'      => 'text',
+                    'label'     => 'Format_Extent',
                 ),
             ),
             'Music_Advanced'=> array(
                 array(
-                    'element' => 'Creator_Role_Encoder',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_Encoder',
+                    'element'   => 'Creator_Role_Encoder',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_Encoder',
                 ),
                 array(
-                    'element' => 'Source_Album_TrackNumber',
-                    'type'    => '',
-                    'label'   => 'Source_Album_TrackNumber',
-                    'rule'    => 'numeric',
+                    'element'   => 'Source_Album_TrackNumber',
+                    'type'      => '',
+                    'label'     => 'Source_Album_TrackNumber',
+                    'rule'      => 'numeric',
                 ),
                 array(
-                    'element' => 'Source_Album_DiscNumber',
-                    'type'    => 'text',
-                    'label'   => 'Source_Album_DiscNumber',
-                    'rule'    => 'numeric',
+                    'element'   => 'Source_Album_DiscNumber',
+                    'type'      => 'text',
+                    'label'     => 'Source_Album_DiscNumber',
+                    'rule'      => 'numeric',
                 ),
                 array(
-                    'element' => 'Description_Mood',
-                    'type'    => 'text',
-                    'label'   => 'Description_Mood',
+                    'element'   => 'Description_Mood',
+                    'type'      => 'text',
+                    'label'     => 'Description_Mood',
                 ),
                 array(
-                    'element' => 'Publisher',
-                    'type'    => 'text',
-                    'label'   => 'Publisher',
+                    'element'   => 'Publisher',
+                    'type'      => 'text',
+                    'label'     => 'Publisher',
                 ),
                 array(
-                    'element' => 'Creator_Role_Composer',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_Composer',
+                    'element'   => 'Creator_Role_Composer',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_Composer',
                 ),
                 array(
-                    'element' => 'Format_Medium_Bitrate',
-                    'type'    => 'text',
-                    'label'   => 'Format_Medium_Bitrate',
-                    'rule'    => 'numeric'
+                    'element'   => 'Format_Medium_Bitrate',
+                    'type'      => 'text',
+                    'label'     => 'Format_Medium_Bitrate',
+                    'rule'      => 'numeric'
                 ),
                 array(
-                    'element' => 'Format_Medium_Channels',
-                    'type'    => 'select',
-                    'label'   => 'Format_Medium_Channels',
-                    'options' => array(
+                    'element'   => 'Format_Medium_Channels',
+                    'type'      => 'select',
+                    'label'     => 'Format_Medium_Channels',
+                    'options'   => array(
                         'mono'   => 'Mono',
                         'stereo' => 'Stereo',
                         '5.1'    => '5.1'
                     )
                 ),
                 array(
-                    'element' => 'Format_Medium_Samplerate',
-                    'type'    => 'text',
-                    'label'   => 'Format_Medium_Samplerate',
-                    'rule'    => 'numeric'
+                    'element'   => 'Format_Medium_Samplerate',
+                    'type'      => 'text',
+                    'label'     => 'Format_Medium_Samplerate',
+                    'rule'      => 'numeric'
                 ),
                 array(
-                    'element' => 'Format_Medium_Encoder',
-                    'type'    => 'text',
-                    'label'   => 'Format_Medium_Encoder',
+                    'element'   => 'Format_Medium_Encoder',
+                    'type'      => 'text',
+                    'label'     => 'Format_Medium_Encoder',
                 ),
                 array(
-                    'element' => 'Format_CRC',
-                    'type'    => 'text',
-                    'label'   => 'Format_CRC',
-                    'rule'    => 'numeric'
+                    'element'   => 'Format_CRC',
+                    'type'      => 'text',
+                    'label'     => 'Format_CRC',
+                    'rule'      => 'numeric'
                 ),
                 array(
-                    'element' => 'Description_Lyrics',
-                    'type'    => 'textarea',
-                    'label'   => 'Description_Lyrics',
+                    'element'   => 'Description_Lyrics',
+                    'type'      => 'textarea',
+                    'label'     => 'Description_Lyrics',
                 ),
                 array(
-                    'element' => 'Creator_Role_Orchestra',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_Orchestra',
+                    'element'   => 'Creator_Role_Orchestra',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_Orchestra',
                 ),
                 array(
-                    'element' => 'Creator_Role_Conductor',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_Conductor',
+                    'element'   => 'Creator_Role_Conductor',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_Conductor',
                 ),
                 array(
-                    'element' => 'Creator_Role_Lyricist',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_Lyricist',
+                    'element'   => 'Creator_Role_Lyricist',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_Lyricist',
                 ),
                 array(
-                    'element' => 'Creator_Role_OriginalLyricist',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_OriginalLyricist',
+                    'element'   => 'Creator_Role_OriginalLyricist',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_OriginalLyricist',
                 ),
                 array(
-                    'element' => 'Creator_Role_RadioStationName',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_RadioStationName',
+                    'element'   => 'Creator_Role_RadioStationName',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_RadioStationName',
                 ),
                 array(
-                    'element' => 'Description_AudioFileInfoURL',
-                    'type'    => 'text',
-                    'label'   => 'Description_AudioFileInfoURL',
+                    'element'   => 'Description_AudioFileInfoURL',
+                    'type'      => 'text',
+                    'label'     => 'Description_AudioFileInfoURL',
                 ),
                 array(
-                    'element' => 'Description_ArtistURL',
-                    'type'    => 'text',
-                    'label'   => 'Description_ArtistURL',
+                    'element'   => 'Description_ArtistURL',
+                    'type'      => 'text',
+                    'label'     => 'Description_ArtistURL',
                 ),
                 array(
-                    'element' => 'Description_AudioSourceURL',
-                    'type'    => 'text',
-                    'label'   => 'Description_AudioSourceURL',
+                    'element'   => 'Description_AudioSourceURL',
+                    'type'      => 'text',
+                    'label'     => 'Description_AudioSourceURL',
                 ),
                 array(
-                    'element' => 'Description_RadioStationURL',
-                    'type'    => 'text',
-                    'label'   => 'Description_RadioStationURL',
+                    'element'   => 'Description_RadioStationURL',
+                    'type'      => 'text',
+                    'label'     => 'Description_RadioStationURL',
                 ),
                 array(
-                    'element' => 'Description_BuyCDURL',
-                    'type'    => 'text',
-                    'label'   => 'Description_BuyCDURL',
+                    'element'   => 'Description_BuyCDURL',
+                    'type'      => 'text',
+                    'label'     => 'Description_BuyCDURL',
                 ),
                 array(
-                    'element' => 'Identifier_ISRCNumber',
-                    'type'    => 'text',
-                    'label'   => 'Identifier_ISRCNumber',
-                    'rule'    => 'numeric'
+                    'element'   => 'Identifier_ISRCNumber',
+                    'type'      => 'text',
+                    'label'     => 'Identifier_ISRCNumber',
+                    'rule'      => 'numeric'
                 ),
                 array(
-                    'element' => 'Identifier_CatalogNumber',
-                    'type'    => 'text',
-                    'label'   => 'Identifier_CatalogNumber',
-                    'rule'    => 'numeric'
+                    'element'   => 'Identifier_CatalogNumber',
+                    'type'      => 'text',
+                    'label'     => 'Identifier_CatalogNumber',
+                    'rule'      => 'numeric'
                 ),
                 array(
-                    'element' => 'Creator_Role_OriginalArtist',
-                    'type'    => 'text',
-                    'label'   => 'Creator_Role_OriginalArtist',
+                    'element'   => 'Creator_Role_OriginalArtist',
+                    'type'      => 'text',
+                    'label'     => 'Creator_Role_OriginalArtist',
                 ),
                 array(
-                    'element' => 'Rights_Copyright',
-                    'type'    => 'text',
-                    'label'   => 'Rights_Copyright',
+                    'element'   => 'Rights_Copyright',
+                    'type'      => 'text',
+                    'label'     => 'Rights_Copyright',
                 ),
             ),
             'Talk_Basic'   => array(
                 array(
-                    'element' => 'Title',
-                    'type'    => 'text',
-                    'label'   => 'Title',
+                    'element'   => 'Title',
+                    'type'      => 'text',
+                    'label'     => 'Title',
+                    'relation'  => 1
                 ),
                 array(
-                    'element' => 'Coverage',
-                    'type'    => 'text',
-                    'label'   => 'Coverage',
+                    'element'   => 'Coverage',
+                    'type'      => 'text',
+                    'label'     => 'Coverage',
                 ),
                 array(
-                    'element' => 'Description',
-                    'type'    => 'textarea',
-                    'label'   => 'Description',
+                    'element'   => 'Description',
+                    'type'      => 'textarea',
+                    'label'     => 'Description',
                 ),
                 array(
-                    'element' => 'Creator',
-                    'type'    => 'text',
-                    'label'   => 'Creator',
+                    'element'   => 'Creator',
+                    'type'      => 'text',
+                    'label'     => 'Creator',
                 ),
                 array(
-                    'element' => 'Subject',
-                    'type'    => 'text',
-                    'label'   => 'Subject',
+                    'element'   => 'Subject',
+                    'type'      => 'text',
+                    'label'     => 'Subject',
                 ),
                 array(
-                    'element' => 'Type_Genre',
-                    'type'    => 'text',
-                    'label'   => 'Type_Genre',
+                    'element'   => 'Type_Genre',
+                    'type'      => 'text',
+                    'label'     => 'Type_Genre',
                 ),
                 array(
-                    'element' => 'Format',
-                    'type'    => 'select',
-                    'label'   => 'Format',
-                    'options' => array(
+                    'element'   => 'Format',
+                    'type'      => 'select',
+                    'label'     => 'Format',
+                    'options'   => array(
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
                         'networked file'=> 'Networked File',
@@ -458,19 +459,19 @@ $ui_fmask = array(
             ),
             'Talk_Advanced' => array(
                 array(
-                    'element' => 'Contributor',
-                    'type'    => 'text',
-                    'label'   => 'Contributor',
+                    'element'   => 'Contributor',
+                    'type'      => 'text',
+                    'label'     => 'Contributor',
                 ),
                 array(
-                    'element' => 'Language',
-                    'type'    => 'text',
-                    'label'   => 'Language',
+                    'element'   => 'Language',
+                    'type'      => 'text',
+                    'label'     => 'Language',
                 ),
                 array(
-                    'element' => 'Rights',
-                    'type'    => 'text',
-                    'label'   => 'Rights',
+                    'element'   => 'Rights',
+                    'type'      => 'text',
+                    'label'     => 'Rights',
                 ),
             )
         )
@@ -717,16 +718,23 @@ $ui_fmask = array(
         array('group'   => array('addRow', 'doSearch')
         ),
     ),
-    'searchform.relations'  =>
-        array(
-            'full'       => 'full',
-            'partial'    => 'partial',
-            'prefix'     => 'prefix',
-            '='          => '=' ,
-             '<'         => '<',
-             '<='        => '<=',
-             '>'         => '>',
-             '>='        => '>='
+    'relations'     => array(
+        'standard'    => array(
+                'full'       => 'full',
+                'partial'    => 'partial',
+                'prefix'     => 'prefix',
+                '='          => '=' ,
+                '<'         => '<',
+                '<='        => '<=',
+                '>'         => '>',
+                '>='        => '>='
+        ),
+        1  => array(
+                'full'       => 'full',
+                'partial'    => 'partial',
+                'prefix'     => 'prefix',
+                '='          => '='
+              ),
         ),
     'languages'    => array(
             array(

@@ -463,18 +463,19 @@ class uiHandler extends uiBase {
         $form = new HTML_QuickForm('validation', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->_parseArr2Form($form, $mask, 'server');
         if (!$form->validate()) {
-            $_SESSION['retransferFormData'] = $formdata;
+            $_SESSION['retransferFormData'] = $_REQUEST;
             return FALSE;
         }
         ## test for uploadet files bacause HTMLQuickForm::validate() ignores them ####
         foreach($mask as $k) {
             if ($k['type']=='file' && $k['required']==TRUE) {
-                if ($formdata[$k['element']]['error']) {
-                    $_SESSION['retransferFormData'] = $formdata;
+                if ($_FILES[$k['element']]['error']) {
+                    $_SESSION['retransferFormData'] = array_merge($_REQUEST, $_FILES);
                     return FALSE;
                 }
             }
         }
+
         reset($mask);
         return TRUE;
     }
@@ -488,7 +489,12 @@ class uiHandler extends uiBase {
         if ($this->_validateForm($formdata, $mask)) {
 
             foreach($mask as $key=>$val) {
-                if ($this->_isTextInput ($val['type'], $mask)) $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
+                if ($this->_isTextInput ($val['type'], $mask)) {
+                    if (strlen($formdata[$val['element']]))
+                        $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
+                    else
+                        $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
+                }
                 if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                     if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
                         $this->alertMsg = $this->tra('Error uploading Logo');

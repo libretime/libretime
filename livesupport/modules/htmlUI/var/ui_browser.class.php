@@ -51,11 +51,12 @@ class uiBrowser extends uiBase {
     }
 
 
-    function getStationInfo()
+    function getStationInfo(&$mask)
     {
-        $a['frequency']   = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'frequency');
-        $a['stationName'] = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationName');
-        $a['stationLogoPath'] = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath');
+        foreach ($mask as $key=>$val) {
+            if ($val['type']=='text')
+                $a[$val['element']] = is_string($this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+        }
 
         return $a;
     }
@@ -75,7 +76,7 @@ class uiBrowser extends uiBase {
         $form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
         $this->_parseArr2Form($form, $mask['loginform']);
         $this->_parseArr2Form($form, $mask['languages']);
-        
+
         ## using Static Smarty Renderer
         $renderer =& new HTML_QuickForm_Renderer_ArraySmarty($Smarty, true);
         $renderer->setRequiredTemplate(file_get_contents(UI_QFORM_REQUIRED));
@@ -313,54 +314,29 @@ class uiBrowser extends uiBase {
         foreach ($mask['mData']['tabs']['group']['group'] as $k=>$v) {
             foreach ($mask['mData']['pages'][$v] as $val){
                 $options[$val['element']] = $val['element'];
+                if (isset($val['relation']))
+                    $col2[$val['element']] = $mask['relations'][$val['relation']];
+                else
+                    $col2[$val['element']] = $mask['relations']['standard'];
             };
         };
 
+        $col1 = $options;
+
         for($n=1; $n<=UI_SEARCH_MAX_ROWS; $n++) {
-            $advRow = array(
-                array(
-                    'element'   => 's1',
-                    'type'      => 'static',
-                    'text'      => "<div id='searchRow_$n'>"
-                ),
-                $n>$rowsBegin ? array(
-                    'element'   => 's1_style',
-                    'type'      => 'static',
-                    'text'      => "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>"
-                ) : NULL,
-                array(
-                    'element'   => 'searchBy['.$n.']',
-                    'type'      => 'select',
-                    'label'     => 'Search by',
-                    'groupit'   => TRUE,
-                    'options'   =>  $options,
-                ),
-                array(
-                    'element'   => 'relation['.$n.']',
-                    'type'      => 'select',
-                    'groupit'   => TRUE,
-                    'options'   => $mask['searchform.relations'],
-                    'selected'  => '=',
-                ),
-                array(
-                    'element'   => 'criteria['.$n.']',
-                    'type'      => 'text',
-                    'groupit'   => TRUE
-                ),
-                array(
-                    'group'     => array('searchBy['.$n.']', 'relation['.$n.']', 'criteria['.$n.']'),
-                    'name'      => NULL,
-                    'label'     => NULL,
-                    'seperator' => '&nbsp;&nbsp;',
-                    'appendName'=> NULL
-                ),
-                $n>$rowsBegin ? array(
-                    'element'   => 's2',
-                    'type'      => 'static',
-                    'text'      => "</div id='searchRow_$n'>"
-                ) : NULL,
-            );
-            $this->_parseArr2Form($form, $advRow);
+            unset ($group);
+
+            $form->addElement('static', 's1', NULL, "<div id='searchRow_$n'>");
+
+            if ($n>$rowsBegin) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
+            $sel = &$form->createElement('hierselect', "row_$n", NULL);
+            $sel->setOptions(array($col1, $col2));
+            $group[] = &$sel;
+            $group[] = &$form->createElement('text', 'criteria['.$n.']', NULL);
+            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "document.getElementById('searchRow_$n').style.visibility = 'hidden'; document.getElementById('searchRow_$n').style.height = '0px'"));
+            $form->addGroup($group);
+
+            $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }
 
 

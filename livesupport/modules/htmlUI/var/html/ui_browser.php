@@ -38,7 +38,7 @@ if (is_array($_REQUEST['popup'])){
 
 };
 
-$Smarty->assign('statusbar', $uiBrowser->getStationInfo());
+$Smarty->assign('statusbar', $uiBrowser->getStationInfo($ui_fmask['systemPrefs']));
 
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
@@ -85,7 +85,7 @@ if ($uiBrowser->userid) {
     case "upload_2":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id, $_REQUEST['act']=='getHomeDir' ? TRUE : FALSE));
         $Smarty->assign('showPath', FALSE);
-                     
+
         $Smarty->assign('mDataForm', $uiBrowser->getMetaDataForm($uiBrowser->id, $ui_fmask['mData'], FALSE, $uiBrowser->getInfo($id, 'array')));
         $Smarty->assign('showMetaDataForm', TRUE);
         break;
@@ -140,7 +140,7 @@ if ($uiBrowser->userid) {
     break;
 
     case "getInfo":
-        $Smarty->assign('fInfo', $uiBrowser->getInfo($uiBrowser->id));
+        $Smarty->assign('fInfo', $uiBrowser->getInfo($uiBrowser->id, 'text'));
         $Smarty->assign('showFile', TRUE);
     break;
 
