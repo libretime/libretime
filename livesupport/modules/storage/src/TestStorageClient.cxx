@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -494,6 +494,10 @@ TestStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<AudioClip>::Ref audioClip)
                                                 throw (StorageException)
 {
+    if (!audioClip->getId()) {
+        audioClip->setId(UniqueId::generateId());
+    }
+
     audioClipMap[audioClip->getId()->getId()] = audioClip;
     return true;
 }

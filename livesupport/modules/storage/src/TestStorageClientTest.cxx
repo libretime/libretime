@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -208,8 +208,16 @@ TestStorageClientTest :: audioClipTest(void)
     tsc->deleteAudioClip(dummySessionId, id02);
     CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id02));
 
-    tsc->storeAudioClip(dummySessionId, (*audioClipVector)[1]);
-    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id02));    
+    Ptr<const Glib::ustring>::Ref   title(new Glib::ustring("New Title"));
+    Ptr<time_duration>::Ref         playlength(new time_duration(0,0,13,0));
+    Ptr<const std::string>::Ref     uri;
+
+    Ptr<AudioClip>::Ref     newAudioClip(new AudioClip(title, playlength, uri));
+    CPPUNIT_ASSERT(!newAudioClip->getId());
+    tsc->storeAudioClip(dummySessionId, newAudioClip);
+    Ptr<UniqueId>::Ref      newId = newAudioClip->getId();
+    CPPUNIT_ASSERT(newId);
+    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, newId));    
 }
 
 
