@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayScheduleTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -46,7 +46,7 @@
 
 #include "SchedulerDaemon.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "SchedulerDaemonDisplayScheduleTest.h"
+#include "RpcDisplayScheduleTest.h"
 
 using namespace std;
 using namespace XmlRpc;
@@ -60,7 +60,7 @@ using namespace LiveSupport::Authentication;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonDisplayScheduleTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayScheduleTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.
@@ -83,7 +83,7 @@ static const std::string authenticationClientConfigFileName =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonDisplayScheduleTest :: configure(
+RpcDisplayScheduleTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string         & fileName)
                                                 throw (std::invalid_argument,
@@ -101,7 +101,7 @@ SchedulerDaemonDisplayScheduleTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonDisplayScheduleTest :: setUp(void)                        throw ()
+RpcDisplayScheduleTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -144,7 +144,7 @@ SchedulerDaemonDisplayScheduleTest :: setUp(void)                        throw (
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonDisplayScheduleTest :: tearDown(void)                     throw ()
+RpcDisplayScheduleTest :: tearDown(void)                     throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -161,7 +161,7 @@ SchedulerDaemonDisplayScheduleTest :: tearDown(void)                     throw (
  *  Test a simple query, resulting in an empty result set.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonDisplayScheduleTest :: simpleTest(void)
+RpcDisplayScheduleTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcValue                 parameters;
@@ -190,7 +190,7 @@ SchedulerDaemonDisplayScheduleTest :: simpleTest(void)
 
     result.clear();
     xmlRpcClient.execute("displaySchedule", parameters, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.size() == 0);
 }
 

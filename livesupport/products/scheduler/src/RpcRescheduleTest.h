@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonRescheduleTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRescheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef SchedulerDaemonRescheduleTest_h
-#define SchedulerDaemonRescheduleTest_h
+#ifndef RpcRescheduleTest_h
+#define RpcRescheduleTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,12 +64,12 @@ using namespace LiveSupport::Core;
  *  Unit test to test the removeFromSchedule XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  *  @see SchedulerDaemon
  */
-class SchedulerDaemonRescheduleTest : public CPPUNIT_NS::TestFixture
+class RpcRescheduleTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(SchedulerDaemonRescheduleTest);
+    CPPUNIT_TEST_SUITE(RpcRescheduleTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
@@ -142,5 +142,5 @@ class SchedulerDaemonRescheduleTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // SchedulerDaemonRescheduleTest_h
+#endif // RpcRescheduleTest_h
 

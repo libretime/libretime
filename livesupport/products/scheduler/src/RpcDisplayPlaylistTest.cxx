@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonRemoveFromScheduleTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -46,7 +46,7 @@
 
 #include "SchedulerDaemon.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "SchedulerDaemonRemoveFromScheduleTest.h"
+#include "RpcDisplayPlaylistTest.h"
 
 using namespace std;
 using namespace XmlRpc;
@@ -60,7 +60,7 @@ using namespace LiveSupport::Authentication;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonRemoveFromScheduleTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.
@@ -83,7 +83,7 @@ static const std::string authenticationClientConfigFileName =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonRemoveFromScheduleTest :: configure(
+RpcDisplayPlaylistTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string         & fileName)
                                                 throw (std::invalid_argument,
@@ -101,7 +101,7 @@ SchedulerDaemonRemoveFromScheduleTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonRemoveFromScheduleTest :: setUp(void)                        throw ()
+RpcDisplayPlaylistTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -110,10 +110,10 @@ SchedulerDaemonRemoveFromScheduleTest :: setUp(void)                        thro
             configure(daemon, configFileName);
         } catch (std::invalid_argument &e) {
             std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("semantic error in configuration file");
+            CPPUNIT_FAIL("semantic error in scheduler configuration file");
         } catch (xmlpp::exception &e) {
             std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("error parsing configuration file");
+            CPPUNIT_FAIL("error parsing scheduler configuration file");
         }
     }
 
@@ -144,7 +144,7 @@ SchedulerDaemonRemoveFromScheduleTest :: setUp(void)                        thro
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonRemoveFromScheduleTest :: tearDown(void)                     throw ()
+RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -161,37 +161,22 @@ SchedulerDaemonRemoveFromScheduleTest :: tearDown(void)                     thro
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonRemoveFromScheduleTest :: simpleTest(void)
+RpcDisplayPlaylistTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
-    struct tm                   time;
 
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    // first schedule a playlist, so that there is something to remove
     parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 10;
-    time.tm_min  =  0;
-    time.tm_sec  =  0;
-    parameters["playtime"] = &time;
 
     result.clear();
-    xmlRpcClient.execute("uploadPlaylist", parameters, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
- 
-    Ptr<UniqueId>::Ref  entryId(new UniqueId(int(result["scheduleEntryId"])));
-    parameters["scheduleEntryId"] = (int) entryId->getId();
-
-    result.clear();
-    xmlRpcClient.execute("removeFromSchedule", parameters, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    xmlRpcClient.execute("displayPlaylist", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(((int) result["id"]) == 1);
+    CPPUNIT_ASSERT(((int) result["playlength"]) == (60 * 60));
 }
 
 
@@ -199,7 +184,7 @@ SchedulerDaemonRemoveFromScheduleTest :: simpleTest(void)
  *  A simple negative test.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonRemoveFromScheduleTest :: negativeTest(void)
+RpcDisplayPlaylistTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcValue                 parameters;
@@ -207,11 +192,10 @@ SchedulerDaemonRemoveFromScheduleTest :: negativeTest(void)
 
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    parameters["sessionId"]       = sessionId->getId();
-    parameters["scheduleEntryId"] = 9999;
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["playlistId"] = 9999;
 
     result.clear();
-    xmlRpcClient.execute("removeFromSchedule", parameters, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    xmlRpcClient.execute("displayPlaylist", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
 }
-

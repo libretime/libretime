@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonUploadTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveFromScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -44,11 +44,9 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "XmlRpcTools.h"
-#include "LiveSupport/Core/UniqueId.h"
 #include "SchedulerDaemon.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "SchedulerDaemonUploadTest.h"
+#include "RpcRemoveFromScheduleTest.h"
 
 using namespace std;
 using namespace XmlRpc;
@@ -62,7 +60,7 @@ using namespace LiveSupport::Authentication;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonUploadTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcRemoveFromScheduleTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.
@@ -85,7 +83,7 @@ static const std::string authenticationClientConfigFileName =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: configure(
+RpcRemoveFromScheduleTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string         & fileName)
                                                 throw (std::invalid_argument,
@@ -103,7 +101,7 @@ SchedulerDaemonUploadTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: setUp(void)                        throw ()
+RpcRemoveFromScheduleTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -146,7 +144,7 @@ SchedulerDaemonUploadTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: tearDown(void)                     throw ()
+RpcRemoveFromScheduleTest :: tearDown(void)                     throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -160,10 +158,10 @@ SchedulerDaemonUploadTest :: tearDown(void)                     throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test a simple upload.
+ *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: simpleTest(void)
+RpcRemoveFromScheduleTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcValue                 parameters;
@@ -172,7 +170,7 @@ SchedulerDaemonUploadTest :: simpleTest(void)
 
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    // try to schedule playlist #1 for the time below
+    // first schedule a playlist, so that there is something to remove
     parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
@@ -185,6 +183,35 @@ SchedulerDaemonUploadTest :: simpleTest(void)
 
     result.clear();
     xmlRpcClient.execute("uploadPlaylist", parameters, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+ 
+    Ptr<UniqueId>::Ref  entryId(new UniqueId(int(result["scheduleEntryId"])));
+    parameters["scheduleEntryId"] = (int) entryId->getId();
+
+    result.clear();
+    xmlRpcClient.execute("removeFromSchedule", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple negative test.
+ *----------------------------------------------------------------------------*/
+void
+RpcRemoveFromScheduleTest :: negativeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    XmlRpcValue                 parameters;
+    XmlRpcValue                 result;
+
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+
+    parameters["sessionId"]       = sessionId->getId();
+    parameters["scheduleEntryId"] = 9999;
+
+    result.clear();
+    xmlRpcClient.execute("removeFromSchedule", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
 }
 

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayPlaylistTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef SchedulerDaemonDisplayPlaylistTest_h
-#define SchedulerDaemonDisplayPlaylistTest_h
+#ifndef RpcDisplayPlaylistTest_h
+#define RpcDisplayPlaylistTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,12 +64,12 @@ using namespace LiveSupport::Core;
  *  Unit test to test the displayPlaylist XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  *  @see SchedulerDaemon
  */
-class SchedulerDaemonDisplayPlaylistTest : public CPPUNIT_NS::TestFixture
+class RpcDisplayPlaylistTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(SchedulerDaemonDisplayPlaylistTest);
+    CPPUNIT_TEST_SUITE(RpcDisplayPlaylistTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
@@ -142,5 +142,5 @@ class SchedulerDaemonDisplayPlaylistTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // SchedulerDaemonDisplayPlaylistTest_h
+#endif // RpcDisplayPlaylistTest_h
 

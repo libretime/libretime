@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayScheduleTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef SchedulerDaemonDisplayScheduleTest_h
-#define SchedulerDaemonDisplayScheduleTest_h
+#ifndef RpcDisplayScheduleTest_h
+#define RpcDisplayScheduleTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,12 +64,12 @@ using namespace LiveSupport::Core;
  *  Unit test to test the displaySchedule XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  *  @see SchedulerDaemon
  */
-class SchedulerDaemonDisplayScheduleTest : public CPPUNIT_NS::TestFixture
+class RpcDisplayScheduleTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(SchedulerDaemonDisplayScheduleTest);
+    CPPUNIT_TEST_SUITE(RpcDisplayScheduleTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -133,5 +133,5 @@ class SchedulerDaemonDisplayScheduleTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // SchedulerDaemonDisplayScheduleTest_h
+#endif // RpcDisplayScheduleTest_h
 
