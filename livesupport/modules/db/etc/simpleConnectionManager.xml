@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE simpleConnectionManager [
+
+<!ELEMENT simpleConnectionManager   EMPTY >
+<!ATTLIST simpleConnectionManager   dsn         CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
+]>
+<simpleConnectionManager    dsn      = "LiveSupport-test"
+                            userName = "test"
+                            password = "test"
+/>
