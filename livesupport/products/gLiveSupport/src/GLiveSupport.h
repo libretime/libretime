@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,8 +46,8 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
-#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 
 namespace LiveSupport {
@@ -55,6 +55,8 @@ namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::SchedulerClient;
+using namespace LiveSupport::Authentication;
+using namespace LiveSupport::Storage;
 
 /* ================================================================ constants */
 
@@ -84,8 +86,8 @@ using namespace LiveSupport::SchedulerClient;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.7 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory

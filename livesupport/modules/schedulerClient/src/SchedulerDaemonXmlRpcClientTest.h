@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,13 +42,14 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "SchedulerDaemonXmlRpcClient.h"
 
 namespace LiveSupport {
 namespace SchedulerClient {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -61,8 +62,8 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the SchedulerDaemonXmlRpcClient class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  *  @see SchedulerDaemonXmlRpcClient
  */
 class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
