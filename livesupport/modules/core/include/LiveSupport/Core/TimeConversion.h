@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class TimeConversion
 {
@@ -94,6 +94,16 @@ class TimeConversion
          */
         static Ptr<ptime>::Ref
         timevalToPtime(const struct timeval *timeval)           throw ();
+
+        /**
+         *  Convert a struct tm to a boost::posix_time::ptime,
+         *  with second precision.
+         *
+         *  @param time the struct tm to convert.
+         *  @return a boost::posix_time::ptime, holding the same time.
+         */
+        static Ptr<ptime>::Ref
+        tmToPtime(const struct tm *time)                        throw ();
 
         /**
          *  Return the current time, with microsecond precision.

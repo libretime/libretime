@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,26 @@ TimeConversion :: timevalToPtime(const struct timeval *timeval)
                                    + microseconds(timeval->tv_usec)));
 
     return time;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a struct tm to a boost::ptime
+ *----------------------------------------------------------------------------*/
+Ptr<ptime>::Ref
+TimeConversion :: tmToPtime(const struct tm *time)
+                                                                    throw ()
+{
+    // don't convert through the boost::posix_time::from_time_t() function
+    // as probably because of timezone settings it ruins the actual value
+    Ptr<ptime>::Ref pTime(new ptime(date(1900 + time->tm_year,
+                                         1 + time->tm_mon,
+                                         time->tm_mday),
+                                    time_duration(time->tm_hour,
+                                                  time->tm_min,
+                                                  time->tm_sec)));
+
+    return pTime;
 }
 
 

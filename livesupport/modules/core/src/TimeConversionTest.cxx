@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,6 +110,36 @@ TimeConversionTest :: timevalToPtimeTest(void)
     CPPUNIT_ASSERT((ptime->time_of_day().total_microseconds()
               - ((uint64_t) (ptime->time_of_day().total_seconds()) * 1000000UL))
               == 1234);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the tmToPtime function
+ *----------------------------------------------------------------------------*/
+void
+TimeConversionTest :: tmToPtimeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    struct tm       tm;
+    Ptr<ptime>::Ref ptime;
+
+    // first create a time_t with the time for 2004-11-04 12:58:30
+    tm.tm_year   = 104;     // number of years since 1900, 104 means 2004
+    tm.tm_mon    = 10;      // number of months since January, 10 means November
+    tm.tm_mday   = 4;
+    tm.tm_hour   = 12;
+    tm.tm_min    = 58;
+    tm.tm_sec    = 30;
+    tm.tm_isdst  = 0;
+
+    // and now convert, and see if it is correct
+    ptime = TimeConversion::tmToPtime(&tm);
+    CPPUNIT_ASSERT(ptime->date().year() == 2004);
+    CPPUNIT_ASSERT(ptime->date().month() == 11);
+    CPPUNIT_ASSERT(ptime->date().day() == 4);
+    CPPUNIT_ASSERT(ptime->time_of_day().hours() == 12);
+    CPPUNIT_ASSERT(ptime->time_of_day().minutes() == 58);
+    CPPUNIT_ASSERT(ptime->time_of_day().seconds() == 30);
 }
 
 
