@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -459,12 +459,12 @@ echo "Initializing database...";
 
 # create PHP-related database tables
 cd $install_var/storageServer/var/install
-php -q install.php > $installlog || (cat $installog; exit 1);
+php -q install.php || exit 1;
 cd -
 
 # create scheduler-related database tables
 cd $installdir
-./bin/scheduler.sh install > $installlog 2&>1 || (cat $intallog; exit 1);
+./bin/scheduler.sh install || exit 1;
 cd -
 
 
