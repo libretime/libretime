@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see Playlist
  */
 class PlaylistTest : public CPPUNIT_NS::TestFixture
@@ -69,6 +69,7 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST(savedCopyTest);
     CPPUNIT_TEST(fadeInfoTest);
+    CPPUNIT_TEST(toSmilTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -119,6 +120,14 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         fadeInfoTest(void)                   throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Check if the conversion to SMIL works.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        toSmilTest(void)                     throw (CPPUNIT_NS::Exception);
 
 
     public:

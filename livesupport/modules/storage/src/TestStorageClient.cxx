@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -134,6 +134,42 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
 
 
 /*------------------------------------------------------------------------------
+ *  Release a playlist.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: releasePlaylist(Ptr<const UniqueId>::Ref id) const
+                                                throw (std::invalid_argument,
+                                                       std::logic_error)
+{
+    PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
+
+    if (it == playlistMap.end()) {
+        throw std::invalid_argument("no such playlist");
+    }
+    
+    Ptr<Playlist>::Ref          playlist = it->second;
+    if (playlist->isLocked()) {
+        throw std::logic_error("playlist is locked");
+    }
+    
+    bool                        success = true;
+    Playlist::const_iterator    playlistIt = playlist->begin();
+    while (playlistIt != playlist->end()) {
+        try {
+            releaseAudioClip(playlistIt->second->getAudioClip()->getId());
+        }
+        catch (std::invalid_argument &e) {
+            success = false;
+        }
+        ++playlistIt;
+    }
+    if (!success) {
+        throw std::logic_error("some audio clips in playlist do not exist");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Delete a playlist.
  *----------------------------------------------------------------------------*/
 void
@@ -215,6 +251,21 @@ TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
     }
 
     return it->second;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Release an audio clip.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: releaseAudioClip(Ptr<const UniqueId>::Ref id) const
+                                                throw (std::invalid_argument)
+{
+    AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
+
+    if (it == audioClipMap.end()) {
+        throw std::invalid_argument("no such audio clip");
+    }
 }
 
 

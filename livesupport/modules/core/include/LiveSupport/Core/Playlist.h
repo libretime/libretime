@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class Playlist : public Configurable
 {
@@ -368,6 +368,13 @@ class Playlist : public Configurable
          void
          revertToSavedCopy(void)                throw (std::logic_error);
 
+        /**
+         *  Return a SMIL XML document representation of the playlist.
+         *  The playlist needs to be opened for playing first; otherwise 
+         *  an exception is thrown.
+         */
+         Ptr<xmlpp::Document>::Ref
+         toSmil(void) const                     throw (std::logic_error);
 };
 
 

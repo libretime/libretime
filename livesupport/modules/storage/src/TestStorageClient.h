@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -161,6 +161,19 @@ class TestStorageClient :
                                             throw (std::invalid_argument);
 
         /**
+         *  Release the lock on a playlist with the specified id.
+         *  At this point, this does not do anything.
+         *
+         *  @param id the id of the playlist to release.
+         *  @exception std::invalid_argument if no playlist with the specified
+         *             specified id exists. 
+         */
+        virtual void
+        releasePlaylist(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument,
+                                                   std::logic_error);
+
+        /**
          *  Delete the playlist with the specified id.
          *
          *  @param id the id of the playlist to be deleted.
@@ -208,6 +221,18 @@ class TestStorageClient :
          */
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument);
+
+        /**
+         *  Release the lock on an audio clip with the specified id.
+         *  At this point, this does not do anything.
+         *
+         *  @param id the id of the audio clip to release.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists. 
+         */
+        virtual void
+        releaseAudioClip(Ptr<const UniqueId>::Ref id) const
                                             throw (std::invalid_argument);
 
         /**

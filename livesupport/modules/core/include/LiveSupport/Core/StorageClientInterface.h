@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class StorageClientInterface
 {
@@ -88,6 +88,19 @@ class StorageClientInterface
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<const UniqueId>::Ref id) const
                                             throw (std::invalid_argument)
+                                                                        = 0;
+
+        /**
+         *  Release the lock on a playlist with the specified id.
+         *
+         *  @param id the id of the playlist to release.
+         *  @exception std::invalid_argument if no playlist with the specified
+         *             id exists.
+         */
+        virtual void
+        releasePlaylist(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument,
+                                                   std::logic_error)
                                                                         = 0;
 
         /**
@@ -132,13 +145,25 @@ class StorageClientInterface
         /**
          *  Return an audio clip with the specified id.
          *
-         *  @param id the id of the playlist to return.
+         *  @param id the id of the audio clip to return.
          *  @return the requested audio clip.
          *  @exception std::invalid_argument if no audio clip with the 
          *             specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument)
+                                                                        = 0;
+
+        /**
+         *  Release the lock on an audio clip with the specified id.
+         *
+         *  @param id the id of the audio clip to release.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists. 
+         */
+        virtual void
+        releaseAudioClip(Ptr<const UniqueId>::Ref id) const
                                             throw (std::invalid_argument)
                                                                         = 0;
 

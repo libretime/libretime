@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,6 +116,32 @@ TestStorageClientTest :: firstTest(void)
 
         Ptr<Playlist>::Ref      playlist = tsc->getPlaylist(id1);
         CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
+        
+        try {
+            tsc->releasePlaylist(id1);
+        }
+        catch (std::invalid_argument &e) {
+            std::string eMsg = "could not release playlist: ";
+            eMsg += e.what(); 
+            CPPUNIT_FAIL(eMsg);
+        }
+        catch (std::logic_error &e) {
+            std::string eMsg = "could not release playlist: ";
+            eMsg += e.what(); 
+            CPPUNIT_FAIL(eMsg);
+        }
+        
+        try {
+            tsc->releasePlaylist(id2);
+            CPPUNIT_FAIL("allowed to release non-existent playlist");
+        }
+        catch (std::invalid_argument &e) {
+        }
+        catch (std::logic_error &e) {
+            std::string eMsg = "release of non-existent playlist reports: ";
+            eMsg += e.what(); 
+            CPPUNIT_FAIL(eMsg);
+        }
 }
 
 

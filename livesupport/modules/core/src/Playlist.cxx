@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,6 +65,58 @@ static const std::string    playlengthAttrName = "playlength";
  *  The name of playlist element child nodes.
  */
 static const std::string    elementListAttrName = "playlistElement";
+
+/**
+ *  The XML version used to create the SMIL file.
+ */
+static const std::string    xmlVersion = "1.0";
+
+/**
+ *  The name of the SMIL root node.
+ */
+static const std::string    smilRootNodeName = "smil";
+
+/**
+ *  The name of the SMIL language description attribute.
+ */
+static const std::string    smilLanguageAttrName = "xmlns";
+
+/**
+ *  The value of the SMIL language description attribute.
+ */
+static const std::string    smilLanguageAttrValue
+                            = "http://www.w3.org/2001/SMIL20/Language";
+
+/**
+ *  The name of the SMIL real networks extension attribute.
+ */
+static const std::string    smilExtensionsAttrName = "xmlns:rn";
+
+/**
+ *  The value of the SMIL real networks extension attribute.
+ */
+static const std::string    smilExtensionsAttrValue
+                            = "http://features.real.com/2001/SMIL20/Extensions";
+
+/**
+ *  The name of the body node in the SMIL file.
+ */
+static const std::string    smilBodyNodeName = "body";
+
+/**
+ *  The name of the sequential audio clip list node in the SMIL file.
+ */
+static const std::string    smilSeqNodeName = "seq";
+
+/**
+ *  The name of the audio clip element node in the SMIL file.
+ */
+static const std::string    smilAudioClipNodeName = "audio";
+
+/**
+ *  The name of the attribute containing the URI of the audio clip element.
+ */
+static const std::string    smilAudioClipUriAttrName = "src";
 
 
 /* ===============================================  local function prototypes */
@@ -313,4 +365,43 @@ Playlist::revertToSavedCopy(void)        throw (std::logic_error)
     this->elementList             = savedCopy->elementList;
 
     savedCopy.reset();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a SMIL XML element representation of the playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<xmlpp::Document>::Ref
+Playlist::toSmil(void) const             throw (std::logic_error)
+{
+    if (!isLockedForPlaying) {
+        throw (std::logic_error("playlist not open for playing"));
+    }
+    
+    Ptr<xmlpp::Document>::Ref
+                        smilDocument(new xmlpp::Document(xmlVersion));
+    xmlpp::Element    * smilRootNode 
+                        = smilDocument->create_root_node(smilRootNodeName);
+    smilRootNode->set_attribute(smilLanguageAttrName,
+                                smilLanguageAttrValue);
+    smilRootNode->set_attribute(smilExtensionsAttrName,
+                                smilExtensionsAttrValue);
+
+    xmlpp::Element    * smilBodyNode
+                        = smilRootNode->add_child(smilBodyNodeName);
+    xmlpp::Element    * smilSeqNode
+                        = smilBodyNode->add_child(smilSeqNodeName);
+    
+    PlaylistElementListType::const_iterator it = elementList->begin();
+
+    while (it != elementList->end()) {
+        xmlpp::Element    * smilAudioClipNode
+                            = smilSeqNode->add_child(smilAudioClipNodeName);
+        smilAudioClipNode->set_attribute(
+                            smilAudioClipUriAttrName,
+                            *(it->second->getAudioClip()->getUri()));
+        ++it;
+    }
+
+    return smilDocument;
 }
