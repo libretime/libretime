@@ -389,13 +389,15 @@ function decodeMPEGaudioHeader($fd, $offset, &$ThisFileInfo, $recursivesearch=tr
 					$ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['raw']['originator']  = ($RadioReplayGainRaw & 0x1C00) >> 10;
 					$ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['raw']['sign_bit']    = ($RadioReplayGainRaw & 0x0200) >> 9;
 					$ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['raw']['gain_adjust'] = $RadioReplayGainRaw & 0x01FF;
-					$ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['name']       = RGADnameLookup($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['name']);
-					$ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['originator'] = RGADoriginatorLookup($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['originator']);
-					$ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['gain_db']    = RGADadjustmentLookup($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['gain_adjust'], $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['sign_bit']);
+					if(isset($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain'])){
+                        $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['name']       = RGADnameLookup($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['name']);
+                        $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['originator'] = RGADoriginatorLookup($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['originator']);
+                        $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['gain_db']    = RGADadjustmentLookup($ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['gain_adjust'], $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['radio_replay_gain']['raw']['sign_bit']);
+                        $ThisFileInfo['replay_gain']["$ReplayGainNameKey"]['originator'] = $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['originator'];
+                        $ThisFileInfo['replay_gain']["$ReplayGainNameKey"]['adjustment'] = $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['gain_db'];
+                    }
 
 					$ThisFileInfo['replay_gain']["$ReplayGainNameKey"]['peak']       = $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']['peak_amplitude'];
-					$ThisFileInfo['replay_gain']["$ReplayGainNameKey"]['originator'] = $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['originator'];
-					$ThisFileInfo['replay_gain']["$ReplayGainNameKey"]['adjustment'] = $ThisFileInfo['mpeg']['audio']['LAME']['RGAD']["$ReplayGainNameKey"]['gain_db'];
 				}
 
 				$EncodingFlagsATHtype = BigEndian2Int(substr($headerstring, $XingVBROffset, 1));
