@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,15 +94,15 @@ using namespace LiveSupport::Core;
  *     <li>302 - missing playlist ID argument </li>
  *     <li>303 - missing audio clip ID argument </li>
  *     <li>304 - missing relative offset argument </li>
- *     <li>305 - storage.getPlaylist() returned error message </li>
- *     <li>307 - storage.getAudioClip() returned error message </li>
- *     <li>308 - playlist.addAudioClip() returned error message </li>
- *     <li>310 - storage.savePlaylist() returned error message </li>
- *     <li>320 - missing session ID argument </li>
+ *     <li>305 - playlist not found </li>
+ *     <li>306 - playlist has not been opened for editing </li>
+ *     <li>307 - audio clip does not exist </li>
+ *     <li>308 - two audio clips at the same relative offset</li>
+ *     <li>322 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
