@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/PlayLogEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -35,11 +35,11 @@
 
 #include <sstream>
 
-#include "LiveSupport/Core/AudioClip.h"
+#include "PlayLogEntry.h"
 
 using namespace boost::posix_time;
-
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Scheduler;
 
 /* ===================================================  local data structures */
 
@@ -49,7 +49,7 @@ using namespace LiveSupport::Core;
 /*------------------------------------------------------------------------------
  *  The name of the config element for this class
  *----------------------------------------------------------------------------*/
-const std::string AudioClip::configElementNameStr = "audioClip";
+const std::string PlayLogEntry::configElementNameStr = "playLogEntry";
 
 /**
  *  The name of the attribute to get the id of the audio clip.
@@ -57,14 +57,15 @@ const std::string AudioClip::configElementNameStr = "audioClip";
 static const std::string    idAttrName = "id";
 
 /**
- *  The name of the attribute to get the title of the audio clip.
+ *  The name of the attribute to get the ID of the audio clip logged.
  */
-//static const std::string    titleAttrName = "title";
+static const std::string    audioClipIdAttrName = "audioClipId";
 
 /**
- *  The name of the attribute to get the playlength of the audio clip.
+ *  The name of the attribute to get the time the audio clip was played.
  */
-static const std::string    playlengthAttrName = "playlength";
+static const std::string    timeStampAttrName = "timeStamp";
+
 
 /* ===============================================  local function prototypes */
 
@@ -72,11 +73,11 @@ static const std::string    playlengthAttrName = "playlength";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Create an audio clip object based on an XML element.
+ *  Create a play log entry object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
-AudioClip :: configure(const xmlpp::Element  & element)
-                                               throw (std::invalid_argument)
+PlayLogEntry :: configure(const xmlpp::Element  & element)
+                                                  throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "bad configuration element ";
@@ -85,7 +86,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
     }
 
     const xmlpp::Attribute    * attribute;
-    std::stringstream           strStr;
+    std::stringstream           idStrStream;
     unsigned long int           idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
@@ -93,23 +94,26 @@ AudioClip :: configure(const xmlpp::Element  & element)
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    strStr.str(attribute->get_value());
-    strStr >> idValue;
+    idStrStream.str(attribute->get_value());
+    idStrStream >> idValue;
     id.reset(new UniqueId(idValue));
-/*
-    if (!(attribute = element.get_attribute(titleAttrName))) {
+
+    std::stringstream           audioClipIdStrStream;
+    unsigned long int           audioClipIdValue;
+
+    if (!(attribute = element.get_attribute(audioClipIdAttrName))) {
         std::string eMsg = "Missing attribute ";
-        eMsg += idAttrName;
+        eMsg += audioClipIdAttrName;
         throw std::invalid_argument(eMsg);
     }
-    std::string  titleValue = attribute->get_value();
-    title.reset(new std::string(titleValue));
-*/
-    if (!(attribute = element.get_attribute(playlengthAttrName))) {
+    audioClipIdStrStream.str(attribute->get_value());
+    audioClipIdStrStream >> audioClipIdValue;
+    audioClipId.reset(new UniqueId(audioClipIdValue));
+
+    if (!(attribute = element.get_attribute(timeStampAttrName))) {
         std::string eMsg = "missing attribute ";
-        eMsg += idAttrName;
+        eMsg += timeStampAttrName;
         throw std::invalid_argument(eMsg);
     }
-    playlength.reset(new time_duration(
-                            duration_from_string(attribute->get_value())));
+    timeStamp.reset(new ptime(time_from_string(attribute->get_value())));
 }

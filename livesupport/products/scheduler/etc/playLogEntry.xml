@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE playLogEntry [
+
+<!ELEMENT playLogEntry EMPTY >
+<!ATTLIST playLogEntry id           NMTOKEN     #REQUIRED >
+<!ATTLIST playLogEntry audioClipId  NMTOKEN     #REQUIRED >
+<!ATTLIST playLogEntry timeStamp    CDATA       #REQUIRED >
+]>
+<playLogEntry id="1" audioClipId="10001" timeStamp="1770-12-16 07:00:00.000"/>
