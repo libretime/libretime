@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -372,11 +372,16 @@ class MetaData{
                 AND subjns='_G' AND subject='{$this->gunid}'
         ");
         if(PEAR::isError($row)) return $row;
-        if(is_null($row)) return PEAR::raiseError(
-            "MetaData::genXMLDoc: not exists ({$this->gunid})"
-        );
-        $rr = $this->genXMLNode(&$domd, &$domd, $row);
-        if(PEAR::isError($rr)) return $rr;
+        if(is_null($row)){
+//            return PEAR::raiseError(
+//                "MetaData::genXMLDoc: not exists ({$this->gunid})"
+//            );
+            $nxn =& $domd->create_element('metadata');
+            $domd->append_child(&$nxn);
+        }else{
+            $rr = $this->genXMLNode(&$domd, &$domd, $row);
+            if(PEAR::isError($rr)) return $rr;
+        }
         return preg_replace("|</([^>]*)>|", "</\\1>\n", $domd->dump_mem())."\n";
     }
 
@@ -403,10 +408,11 @@ class MetaData{
         ");
         if(!is_null($uri) && $uri !== ''){
             $root =& $domd->document_element();
-            $root->add_namespace($uri, $row['predns']);
-            if($row['predns'] !== ''){
+#            if($row['predns'] !== ''){
+            if($row['predns'] === '') $row['predns']='d';
+                $root->add_namespace($uri, $row['predns']);
                 $nxn->set_namespace($uri, $row['predns']);
-            }
+#            }
         }
         if($row['object'] != 'NULL'){
             $tn =& $domd->create_text_node($row['object']);

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@ define('GBERR_NOTIMPL', 50);
 
 require_once "../../../alib/var/alib.php";
 require_once "StoredFile.php";
+require_once "Transport.php";
 
 /**
  *  GreenBox class
@@ -47,7 +48,7 @@ require_once "StoredFile.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -55,6 +56,7 @@ class GreenBox extends Alib{
     var $mdataTable;
     var $accessTable;
     var $storageDir;
+    var $bufferDir;
     var $accessDir;
     var $rootId;
     var $storId;
@@ -69,10 +71,13 @@ class GreenBox extends Alib{
     function GreenBox(&$dbc, $config)
     {
         parent::Alib(&$dbc, $config);
+        $this->config = $config;
         $this->filesTable = $config['tblNamePrefix'].'files';
         $this->mdataTable = $config['tblNamePrefix'].'mdata';
         $this->accessTable= $config['tblNamePrefix'].'access';
         $this->storageDir = $config['storageDir'];
+        $this->bufferDir  = $config['bufferDir'];
+        $this->transDir  = $config['transDir'];
         $this->accessDir  = $config['accessDir'];
         $this->dbc->setErrorHandling(PEAR_ERROR_RETURN);
         $this->rootId = $this->getRootNode();
@@ -112,14 +117,14 @@ class GreenBox extends Alib{
      *  @exception PEAR::error
      */
     function putFile($parid, $fileName,
-         $mediaFileLP, $mdataFileLP, $sessid='') 
+         $mediaFileLP, $mdataFileLP, $sessid='', $gunid=NULL)
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
         $name   = "$fileName";
         $id = $this->addObj($name , 'File', $parid);
         $ac =&  StoredFile::insert(
-            &$this, $id, $name, $mediaFileLP, $mdataFileLP
+            &$this, $id, $name, $mediaFileLP, $mdataFileLP, $gunid
         );
         if(PEAR::isError($ac)) return $ac;
         return $id;
@@ -447,12 +452,6 @@ class GreenBox extends Alib{
             GROUP BY md.gunid
         ");
         if(!is_array($res)) $res = array();
-/*
-        if(!(count($res)>0))
-            return PEAR::raiseError(
-                'GreenBox::localSearch: no items found', GBERR_NONE
-            );
-*/
         return $res;
     }
 
@@ -462,30 +461,70 @@ class GreenBox extends Alib{
      *  Upload file to remote repository
      *
      *  @param id int, virt.file's local id
+     *  @param gunid string, global id
      *  @param sessid string, session id
      *  @return string - transfer id or PEAR::error
      */
-    function uploadFile($id, $sessid='')
+    function uploadFile($id, $gunid, $sessid='')
     {
-        return PEAR::raiseError(
-            'GreenBox::uploadFile: not implemented', GBERR_NOTIMPL
-        );
+        $res = $this->prepareForTransport($id, $gunid, $sessid);
+        if(PEAR::isError($res)) return $res;
+        list($mediaFile, $mdataFile, $gunid) = $res;
+        $tr =& new Transport(&$this->dbc, $this->config);
+        $res = $tr->uploadOpen($mediaFile, 'media', $sessid, $gunid);
+        if(PEAR::isError($res)) return $res;
+        $res2 = $tr->uploadOpen($mdataFile, 'metadata', $sessid, $gunid);
+        if(PEAR::isError($res2)) return $res2;
+        $res3 = $tr->getTransportStatus($res);
+        $res4 = $tr->getTransportStatus($res2);
+#        return $res;
+        return array($res, $res2, $res3, $res4);
+#        return PEAR::raiseError(
+#            'GreenBox::uploadFile: not implemented', GBERR_NOTIMPL
+#        );
     }
 
     /**
      *  Download file from remote repository
      *
-     *  @param id int, virt.file's local id
-     *  @param parid int, destination folder local id
+     *  @param gunid int, global unique id
      *  @param sessid string, session id
      *  @return string - transfer id or PEAR::error
      */
-    function downloadFile($id, $parid, $sessid='')
+    function downloadFile($gunid, $sessid='')
     {
-        return PEAR::raiseError(
-            'GreenBox::downloadFile: not implemented', GBERR_NOTIMPL
+        $tr =& new Transport(&$this->dbc, $this->config);
+        // get home dir if needed
+        $res = $tr->downloadOpen($sessid, 'media', $gunid,
+            $this->getSessUserId($sessid)
         );
+        if(PEAR::isError($res)) return $res;
+        $res2 = $tr->downloadOpen($sessid, 'metadata', $gunid,
+            $this->getSessUserId($sessid)
+        );
+        if(PEAR::isError($res)) return $res;
+        $res3 = $tr->getTransportStatus($res);
+        $res4 = $tr->getTransportStatus($res2);
+#        return $res;
+        return array($res, $res2, $res3, $res4);
+#        return PEAR::raiseError(
+#            'GreenBox::downloadFile: not implemented', GBERR_NOTIMPL
+#        );
     }
+    
+
+
+    /**
+     *  Method for handling interupted transports via cron 
+     *
+     */
+     function cronJob()
+     {
+        $tr =& new Transport(&$this->dbc, $this->config);
+        $ru = $tr->uploadCron();
+        $rd = $tr->downloadCron(&$this);
+        return array($ru, $rd);
+     }
 
     /**
      *  Get status of asynchronous transfer
@@ -503,6 +542,82 @@ class GreenBox extends Alib{
     }
 
     /**
+     *  Prepare symlink to media file and create metadata file for transport
+     *
+     *  @param id
+     *  @param gunid
+     *  @param sessid
+     *  @return array
+     */
+    function prepareForTransport($id, $gunid, $sessid='')
+    {
+        if(!$gunid) $gunid = $this->_gunidFromId($id);
+        else $id = $this->_idFromGunid($gunid);
+        $ac =& StoredFile::recall(&$this, '', $gunid);
+        if(PEAR::isError($ac)) return $ac;
+        $mediaTarget = $ac->_getRealRADFname();
+        $mediaFile = "$gunid";
+        $mdataFile = "$gunid.xml";
+        @symlink($mediaTarget, $this->transDir."/$mediaFile");
+        $mdata = $this->getMdata($id, $sessid);
+        if(PEAR::isError($mdata)) return $mdata;
+        if(!($fh = fopen($this->transDir."/$mdataFile", 'w'))) $res=FALSE;
+        else{
+            $res = fwrite($fh, $mdata);
+            fclose($fh);
+        }
+        if($res === FALSE) return PEAR::raiseError(
+            "GreenBox::prepareForTransport:".
+            " can't write metadata tmp file ($mdataFile)"
+        );
+        return array($mediaFile, $mdataFile, $gunid);
+    }
+    
+    /**
+     *  Insert transported file and metadata into storage.<br>
+     *  TODO: cals methods from LocStor - it's not good
+     *
+     *  @param sessid string - session id
+     *  @param file string - local path to filr
+     *  @param type string - media|metadata|search
+     *  @param gunid string - global unique id
+     */
+    function processTransported($sessid, $file, $type, $gunid='X')
+    {
+        switch($type){
+            case 'media':
+                if(!file_exists($file)) break;
+                $res = $this->storeAudioClip($sessid, $gunid,
+                    $file, '');
+                if(PEAR::isError($res)) return $res;
+                @unlink($file);
+                break;
+            case 'metadata':
+            case 'mdata':
+                if(!file_exists($file)) break;
+                $res = $this->updateAudioClipMetadata($sessid, $gunid,
+                    $file);
+                if(PEAR::isError($res)){
+                    // catch valid exception
+                    if($res->getCode() == GBERR_FOBJNEX){
+                        $res2 = $this->storeAudioClip($sessid, $gunid,
+                            '', $file);
+                        if(PEAR::isError($res2)) return $res2;
+                    }else return $res;
+                }
+                @unlink($file);
+                break;
+            case 'search':
+                //$this->localSearch($criteria);
+                return PEAR::raiseError("processTranferred: search not implemented");
+                break;
+            default:
+                return PEAR::raiseError("processTranferred: unknown type ($type)");
+                break;
+        }
+    }
+
+    /**
      *  Search in central metadata database
      *
      *  @param searchData string, search query - see localSearch method
@@ -514,6 +629,15 @@ class GreenBox extends Alib{
         return PEAR::raiseError(
             'GreenBox::globalSearch: not implemented', GBERR_NOTIMPL
         );
+        /*
+        $srchid = md5($sessid.mtime());
+        $fh = fopen($this->transDir."/$srchid", "w");
+        fwrite($fh, serialize($searchData));
+        fclose($fh); 
+        $res = $tr->uploadOpen($srchid, 'search', $sessid, $gunid);
+        if(PEAR::isError($res)) return $res;
+        return $res;
+        */
     }
 
     /**
@@ -561,7 +685,6 @@ class GreenBox extends Alib{
      */
     function getObjIdFromRelPath($id, $relPath='.')
     {
-#        $a = $this->getDir($id, 'id, name, type, param as target', 'name');
         $a = split('/', $relPath);
         if($this->getObjType($id)!=='Folder') $nid = $this->getparent($id);
         else $nid = $id;
@@ -577,9 +700,7 @@ class GreenBox extends Alib{
                 default:
                     $nid = $this->getObjId($item, $nid);
             }
-#            $a[$i] = array('o'=>$item, 'n'=>($nid==null ? 'NULL' : $nid));
         }
-#        return $a;
         return $nid;
     }
     
@@ -730,7 +851,27 @@ class GreenBox extends Alib{
             $perm = $perm && $res;
         }
         if($perm) return TRUE;
-        return PEAR::raiseError("GreenBox::$method: access denied", GBERR_DENY);
+        $adesc = "[".join(',',$acts)."]";
+        return PEAR::raiseError("GreenBox::$adesc: access denied", GBERR_DENY);
+    }
+
+    /**
+     *  Create fake session for downloaded files
+     *
+     *  @param userid user id
+     *  @return string sessid
+     */
+    function _fakeSession($userid)
+    {
+        $sessid = $this->_createSessid();
+        if(PEAR::isError($sessid)) return $sessid;
+        $login = $this->getSubjName($userid);
+        $r = $this->dbc->query("INSERT INTO {$this->sessTable}
+                (sessid, userid, login, ts)
+            VALUES
+                ('$sessid', '$userid', '$login', now())");
+        if(PEAR::isError($r)) return $r;
+        return $sessid;
     }
 
     /**
@@ -743,6 +884,20 @@ class GreenBox extends Alib{
     {
         return $this->dbc->getOne(
             "SELECT id FROM {$this->filesTable} WHERE gunid='$gunid'"
+        );
+    }
+
+    /**
+     *  Get global id from local id
+     *
+     *  @param id int local id
+     *  @return string global id
+     */
+    function _gunidFromId($id)
+    {
+        if(!is_numeric($id)) return NULL;
+        return $this->dbc->getOne(
+            "SELECT gunid FROM {$this->filesTable} WHERE id='$id'"
         );
     }
 
@@ -922,9 +1077,9 @@ class GreenBox extends Alib{
         )");
         $this->dbc->query("CREATE INDEX {$this->accessTable}_acc_idx
             ON {$this->accessTable} (tmpLink, sessid)");
-        if(!file_exists("{$this->storageDir}/buffer")){
-            mkdir("{$this->storageDir}/buffer", 02775);
-            chmod("{$this->storageDir}/buffer", 02775);
+        if(!file_exists($this->bufferDir)){
+            mkdir($this->bufferDir, 02775);
+            chmod($this->bufferDir, 02775); // may be obsolete
         }
         $this->initData();
     }
@@ -960,7 +1115,6 @@ class GreenBox extends Alib{
             {
                 $dd = dir("{$this->storageDir}/$entry");
                 while (false !== ($ee = $dd->read())){
-                    //if(substr($ee, -4)=='.mp3' || substr($ee, -4)=='.xml')
                     if(substr($ee, 0, 1)!=='.')
                         unlink("{$this->storageDir}/$entry/$ee");
                 }
@@ -969,12 +1123,12 @@ class GreenBox extends Alib{
             }
         }
         if(is_object($d)) $d->close();
-        if(file_exists("{$this->storageDir}/buffer")){
-            $d = dir("{$this->storageDir}/buffer");
+        if(file_exists($this->bufferDir)){
+            $d = dir($this->bufferDir);
             while (false !== ($entry = $d->read())) if(substr($entry,0,1)!='.')
-                { unlink("{$this->storageDir}/buffer/$entry"); }
+                { unlink("{$this->bufferDir}/$entry"); }
             $d->close();
-            rmdir("{$this->storageDir}/buffer");
+            rmdir($this->bufferDir);
         }
         parent::uninstall();
     }

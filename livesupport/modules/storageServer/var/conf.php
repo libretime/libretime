@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,6 +58,21 @@ $config = array(
         'editPrivs', 'write', 'read', 'classes', 'subjects'
     ),
     'storageDir'    =>  dirname(getcwd()).'/stor',
+    'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
+    'transDir'      =>  dirname(getcwd()).'/trans',
     'accessDir'     =>  dirname(getcwd()).'/access',
+
+    'storageUrlPath'        => '/livesupport/modules/storageServer/var',
+    'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
+    'storageUrlHost'        => 'localhost',
+    'storageUrlPort'        => 80,
+
+    'archiveUrlPath'        => '/livesupport/modules/archiveServer/var',
+    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
+    'archiveUrlHost'        => 'localhost',
+    'archiveUrlPort'        => 80,
+    'archiveAccountLogin'   => 'root',
+    'archiveAccountPass'    => 'q',
+
 );
 ?>

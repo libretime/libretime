@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,10 +52,6 @@ if(PEAR::isError($dbc)){
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox(&$dbc, $config);
-
-echo "\nIMPORTANT settings:\n";
-echo " Makefile: HTTP_GROUP - group of running http daemon\n";
-echo " var/xmlrpc/testRunner.sh: XMLRPC - URL of XMLRPC server\n\n";
 
 echo "Storage: Install ...\n";
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);

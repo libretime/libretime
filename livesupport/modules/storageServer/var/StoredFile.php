@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -230,7 +230,7 @@ class StoredFile{
     {
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("UPDATE {$this->filesTable}
-            SET currentlyaccessing=currentlyaccessing+1
+            SET currentlyAccessing=currentlyAccessing+1
             WHERE gunid='{$this->gunid}'");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $accLinkName = $this->_getAccessFname($sessid, $this->_getExt());
@@ -261,11 +261,11 @@ class StoredFile{
     {
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("UPDATE {$this->filesTable}
-            SET currentlyaccessing=currentlyaccessing-1
-            WHERE gunid='{$this->gunid}' AND currentlyaccessing>0"
+            SET currentlyAccessing=currentlyAccessing-1
+            WHERE gunid='{$this->gunid}' AND currentlyAccessing>0"
         );
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $ca = $this->dbc->getOne("SELECT currentlyaccessing
+        $ca = $this->dbc->getOne("SELECT currentlyAccessing
             FROM {$this->filesTable}
             WHERE gunid='{$this->gunid}'"
         );
@@ -481,6 +481,7 @@ class StoredFile{
     function _getResDir()
     {
         $resDir="{$this->gb->storageDir}/".substr($this->gunid, 0, 3);
+        // see Transport::_getResDir too for resDir name create code
         if(!file_exists($resDir)){ mkdir($resDir, 02775); chmod($resDir, 02775); }
         return $resDir;
     }

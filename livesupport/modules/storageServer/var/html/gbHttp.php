@@ -42,8 +42,8 @@ switch($_REQUEST['act']){
 // --- files ---
     case"upload":
         $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport");
-        $ntmp = "{$gb->storageDir}/buffer/$tmpgunid";
-#        $ntmp = tempnam(""{$gb->storageDir}/buffer", 'gbTmp_');
+        $ntmp = "{$gb->bufferDir}/$tmpgunid";
+#        $ntmp = tempnam(""{$gb->bufferDir}", 'gbTmp_');
         $mdtmp = "";
         move_uploaded_file($_FILES['mediafile']['tmp_name'], $ntmp); chmod($ntmp, 0664);
         if($_FILES['mdatafile']['tmp_name']){

@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -31,7 +31,8 @@ COMM=$1
 shift
 GUNID=$1
 
-XMLRPC=http://localhost:80/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php
+#XMLRPC=http://localhost:80/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php
+XMLRPC=`cd var/install; php -q getXrUrl.php`
 echo "XMLRPC server URL (check it in troubles):"
 echo $XMLRPC
 

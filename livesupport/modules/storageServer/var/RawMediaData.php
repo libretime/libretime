@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/RawMediaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,16 +62,22 @@ class RawMediaData{
     function insert($mediaFileLP)
     {
         if($this->exists) return FALSE;
+        // for files downloaded from archive:
+        if($mediaFileLP == $this->fname){
+            $this->exists = TRUE;
+            return TRUE;
+        }
         umask(0002);
         if(@copy($mediaFileLP, $this->fname)){
 //            @chmod($this->fname, 0775);
             $this->exists = TRUE;
             return TRUE;
         }else{
-            @unlink($this->fname);
+//            @unlink($this->fname);
             $this->exists  = FALSE;
             return PEAR::raiseError(
-                "RawMediaData::insert: file save failed", GBERR_FILEIO
+                "RawMediaData::insert: file save failed".
+                " ($mediaFileLP, {$this->fname})",GBERR_FILEIO
             );
         }
     }
