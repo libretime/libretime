@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1198,6 +1198,8 @@ class XR_LocStor extends LocStor{
      *     </li>
      *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
      *     <li>offset : int - starting point (0 means without offset)</li>
+     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions : array of struct with fields:
      *       <ul>
      *           <li>cat : string - metadata category name</li>

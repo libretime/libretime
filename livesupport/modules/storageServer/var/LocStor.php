@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -301,6 +301,8 @@ class LocStor extends BasicStor{
      *     </li>
      *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
      *     <li>offset : int - starting point (0 means without offset)</li>
+     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
      *           <li>cat - string, metadata category name</li>
