@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -63,6 +63,10 @@ CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
 VPATH    = ${SRC_DIR}
+
+TEST_RESULTS = ${DOC_DIR}/testResults.xml
+# the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
+TEST_XSLT    = ../etc/testResultToHtml.xsl
 
 DB_LIB      = livesupport_db
 DB_LIB_FILE = ${LIB_DIR}/lib${DB_LIB}.a
@@ -114,6 +118,7 @@ clean:
 
 docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
+	${RM} ${TEST_RESULTS}
 
 depclean: clean
 
@@ -121,7 +126,8 @@ distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
 check: all ${TEST_RUNNER}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER}
+	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
+                                   -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 
 #-------------------------------------------------------------------------------
