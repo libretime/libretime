@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,14 +57,15 @@ namespace Storage {
 /**
  *  Unit test for the UploadPlaylistMetohd class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  *  @see TestStorageClient
  */
 class TestStorageClientTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(TestStorageClientTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(deletePlaylistTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -82,6 +83,15 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing deletePlaylist().
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        deletePlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception);
 
     public:
         

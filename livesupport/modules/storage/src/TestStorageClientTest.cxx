@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,3 +117,30 @@ TestStorageClientTest :: firstTest(void)
         CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Testing the deletePlaylist method
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: deletePlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+        Ptr<UniqueId>::Ref      id1(new UniqueId(1));
+        Ptr<UniqueId>::Ref      id2(new UniqueId(2));
+
+        try {
+            tsc->deletePlaylist(id2);
+            CPPUNIT_FAIL("allowed to delete non-existent playlist");
+        } catch (std::invalid_argument &e) {
+        }
+        try {
+            tsc->deletePlaylist(id1);
+        } catch (std::invalid_argument &e) {
+            CPPUNIT_FAIL("cannot delete existing playlist");
+        }
+        try {
+            tsc->deletePlaylist(id1);
+            CPPUNIT_FAIL("allowed to delete non-existent playlist");
+        } catch (std::invalid_argument &e) {
+        }
+}
