@@ -2979,7 +2979,7 @@
 
     * libs/Smarty.class.php
       libs/Smarty_Compiler.class.php:
-      added CVS $Id: ChangeLog,v 1.1 2005/02/03 16:55:35 sebastian Exp $
+      added CVS $Id: ChangeLog,v 1.2 2005/02/08 11:39:30 sebastian Exp $
 
 2003-03-31  Messju Mohr  <messju@lammfellpuschen.de>
 
