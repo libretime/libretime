@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -75,12 +75,8 @@ class Alib extends Subjects{
     function login($login, $pass)
     {
         if(FALSE === $this->authenticate($login, $pass)) return FALSE;
-        for($c=1; $c>0;){
-            $sessid = md5(uniqid(rand()));
-            $c = $this->dbc->getOne("SELECT count(*) FROM {$this->sessTable}
-                WHERE sessid='$sessid'");
-            if(PEAR::isError($c)) return $c;
-        }
+        $sessid = $this->_createSessid();
+        if(PEAR::isError($sessid)) return $sessid;
         $userid = $this->getSubjId($login);
         $r = $this->dbc->query("INSERT INTO {$this->sessTable}
                 (sessid, userid, login, ts)
@@ -367,7 +363,24 @@ class Alib extends Subjects{
         return $this->config['allowedActions'][$type];
     }
 
-
+    /* ====================================================== private methods */
+    
+    /**
+     *   Create new session id
+     *
+     *   @return string sessid
+     */
+    function _createSessid()
+    {
+        for($c=1; $c>0;){
+            $sessid = md5(uniqid(rand()));
+            $c = $this->dbc->getOne("SELECT count(*) FROM {$this->sessTable}
+                WHERE sessid='$sessid'");
+            if(PEAR::isError($c)) return $c;
+        }
+        return $sessid;
+    }
+    
     /* =============================================== test and debug methods */
 
     /**
