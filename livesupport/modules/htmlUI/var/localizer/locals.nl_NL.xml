@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+    <Id>nl_NL</Id>
+    <status>checked</status>
+    <item>
+        <key>collect expressions</key>
+        <value>uitdrukkingen verzamelen</value>
+    </item>
+    <item>
+        <key>localizer</key>
+        <value>localiseren</value>
+    </item>
+    <item>
+        <key>$1 file already exist in $2</key>
+        <value>$1 bestand bestaad reeds in $2</value>
+    </item>
+    <item>
+        <key>edit &quot;$1&quot;</key>
+        <value>&quot;$1&quot; aanpassen</value>
+    </item>
+    <item>
+        <key>edit &apos;$1&apos;</key>
+        <value>&apos;$1&apos; aanpassen</value>
+    </item>
+    <item>
+        <key>create new language file $1</key>
+        <value>creëer nieuw taalbestand $1</value>
+    </item>
+    <item>
+        <key>create new language file in</key>
+        <value>creëer een nieuwe taal in</value>
+    </item>
+    <item>
+        <key>delete</key>
+        <value>verwijderen</value>
+    </item>
+    <item>
+        <key>edit</key>
+        <value>aanpassen</value>
+    </item>
+    <item>
+        <key>entrys:</key>
+        <value>toegang:</value>
+    </item>
+    <item>
+        <key>$1 and $2 files already exist in $3</key>
+        <value>$1 and $2 bestanden bestaan reeds in $3</value>
+    </item>
+    <item>
+        <key>ok</key>
+        <value>ok</value>
+    </item>
+    <item>
+        <key>add new fields:</key>
+        <value>veld toevoegen</value>
+    </item>
+    <item>
+        <key>name</key>
+        <value>naam</value>
+    </item>
+    <item>
+        <key>native name</key>
+        <value>oorspronkelijke naam</value>
+    </item>
+    <item>
+        <key>code</key>
+        <value>kode</value>
+    </item>
+    <item>
+        <key>source:</key>
+        <value>bron:</value>
+    </item>
+    <item>
+        <key>target:</key>
+        <value>doel:</value>
+    </item>
+    <item>
+        <key>manage languages</key>
+        <value>talen beheren</value>
+    </item>
+    <item>
+        <key>choose language</key>
+        <value>kies een taal</value>
+    </item>
+    <item>
+        <key>key:</key>
+        <value>sleutel</value>
+    </item>
+    <item>
+        <key>cannot open $1</key>
+        <value>kan $1 niet openen </value>
+    </item>
+    <item>
+        <key>key &quot;$1&quot; already exists in $2-file</key>
+        <value>sleutel &quot;$1&quot; bestaad reeds in $2-file</value>
+    </item>
+    <item>
+        <key>show only untranslated</key>
+        <value>laat alleen de onvertaalde zien</value>
+    </item>
+    <item>
+        <key>cannot read $1</key>
+        <value>$1 is niet leesbaar</value>
+    </item>
+    <item>
+        <key>translate from:</key>
+        <value>vertaal formulier</value>
+    </item>
+    <item>
+        <key>really delete this entry?</key>
+        <value>weet u het zeker?</value>
+    </item>
+    <item>
+        <key>fully translated</key>
+        <value>voltooid</value>
+    </item>
+    <item>
+        <key>after</key>
+        <value>na</value>
+    </item>
+    <item>
+        <key>go</key>
+        <value>gaan</value>
+    </item>
+    <item>
+        <key>back</key>
+        <value>retour</value>
+    </item>
+    <item>
+        <key>and select file type</key>
+        <value>selecteer bestands type</value>
+    </item>
+    <item>
+        <key>and enter a positive integer value</key>
+        <value>en geef een positieve waarde in</value>
+    </item>
+    <item>
+        <key>save to file</key>
+        <value>opslaan in bestand</value>
+    </item>
+    <item>
+        <key>add new language</key>
+        <value>nieuwe taal toevoegen</value>
+    </item>
+    <item>
+        <key>create language files</key>
+        <value>nieuwe taal bestanden creëeren</value>
+    </item>
+    <item>
+        <key>at begin</key>
+        <value>beginen op</value>
+    </item>
+    <item>
+        <key>at end</key>
+        <value>eindigen op</value>
+    </item>
+    <item>
+        <key>key</key>
+        <value>sleutel</value>
+    </item>
+</language>
