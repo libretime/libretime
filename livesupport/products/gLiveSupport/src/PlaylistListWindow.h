@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,8 +66,25 @@ using namespace LiveSupport::Core;
 /**
  *  A window, showing and handling playlists.
  *
+ *  The layout of the window is as follows:
+ *  <code><pre>
+ *  +------ PlaylistListWindow -------------------------------------+
+ *  | +----- mainBox ---------------------------------------------+ |
+ *  | | +---- playlistBox --------------------------------------+ | |
+ *  | | | +--- listBox -----------+  +---- detailBox ---------+ | | |
+ *  | | | |  listBoxLabel         |  |  detailBoxLabel        | | | |
+ *  | | | |  listScrolledWindow   |  |  detailScrolledWindow  | | | |
+ *  | | | +-----------------------+  +------------------------+ | | |
+ *  | | +-------------------------------------------------------+ | |
+ *  | | +---- buttonBox ----------------------------------------+ | |
+ *  | | |  closeButton                                          | | |
+ *  | | +-------------------------------------------------------+ | |
+ *  | +-----------------------------------------------------------+ |
+ *  +---------------------------------------------------------------+
+ *  </pre></code>
+ *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -103,7 +120,7 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
          *  Lists one playlist per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -154,14 +171,25 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
         /**
          *  The main container in the window.
          */
-        Gtk::VBox                   vBox;
+        Gtk::VBox                   mainBox;
 
         /**
-         *  The container holding the two tables for playlist viewing:
+         *  The container holding the two boxes for playlist viewing:
          *  one lists the playlist, the other the details of the selected
          *  playlist.
          */
-        Gtk::HBox                   hBox;
+        Gtk::HBox                   playlistBox;
+
+        /**
+         *  The container holding the playlist list tree view and accompanying
+         *  label.
+         */
+        Gtk::VBox                   listBox;
+
+        /**
+         *  The label for listBox.
+         */
+        Gtk::Label                  listBoxLabel;
 
         /**
          *  A scrolled window holding the list of playlists
@@ -185,6 +213,17 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
          *  what's selected from the playlist list.
          */
         Glib::RefPtr<Gtk::TreeSelection>    listTreeSelection;
+
+        /**
+         *  The container holding the playlist detail tree view and accompanying
+         *  label.
+         */
+        Gtk::VBox                   detailBox;
+
+        /**
+         *  The label for detailBox.
+         */
+        Gtk::Label                  detailBoxLabel;
 
         /**
          *  A scrolled window holding the details of a playlist

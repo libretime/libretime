@@ -29,6 +29,9 @@ root:table
     {
         windowTitle:string            { "LiveSupport Playlist Window" }
 
+        listBoxLabel                  { "Playlists" }
+        detailBoxLabel                { "Playlist details" }
+
         idColumnLabel:string          { "id" }
         lengthColumnLabel:string      { "length" }
         uriColumnLabel:string         { "URI" }

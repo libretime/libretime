@@ -29,6 +29,9 @@ hu:table
     {
         windowTitle:string            { "LiveSupport Playlist Ablak" }
 
+        listBoxLabel                  { "Playlistek" }
+        detailBoxLabel                { "Playlist részletek" }
+
         idColumnLabel:string          { "azonositó" }
         lengthColumnLabel:string      { "hossz" }
         uriColumnLabel:string         { "URI" }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,8 +67,11 @@ PlaylistListWindow :: PlaylistListWindow (
 {
     this->gLiveSupport = gLiveSupport;
 
+    // get localized resources
     try {
         set_title(*getResourceUstring("windowTitle"));
+        listBoxLabel.set_text(*getResourceUstring("listBoxLabel"));
+        detailBoxLabel.set_text(*getResourceUstring("detailBoxLabel"));
         closeButton.reset(new Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
@@ -87,22 +90,22 @@ PlaylistListWindow :: PlaylistListWindow (
     set_border_width(5);
     set_default_size(400, 200);
 
-    add(vBox);
-    vBox.pack_start(hBox);
-    vBox.pack_start(buttonBox, PACK_SHRINK);
+    // set up the main box
+    add(mainBox);
+    mainBox.pack_start(playlistBox);
+    mainBox.pack_start(buttonBox, PACK_SHRINK);
 
+    // set up the playlist box
+    playlistBox.pack_start(listBox, PACK_EXPAND_WIDGET, 5);
+    playlistBox.pack_start(detailBox, PACK_EXPAND_WIDGET, 5);
+
+    // set up the listBox
+    listBox.pack_start(listBoxLabel, PACK_SHRINK);
+    listBox.pack_start(listScrolledWindow);
+
+    // set up the listScrolledWindow
     listScrolledWindow.add(listTreeView);
     listScrolledWindow.set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC);
-    detailScrolledWindow.add(detailTreeView);
-    detailScrolledWindow.set_policy(POLICY_AUTOMATIC,
-                                    POLICY_AUTOMATIC);
-
-    hBox.pack_start(listScrolledWindow);
-    hBox.pack_start(detailScrolledWindow);
-
-    buttonBox.pack_start(*closeButton, PACK_SHRINK);
-    buttonBox.set_border_width(5);
-    buttonBox.set_layout(BUTTONBOX_END);
 
     // create the list tree view, and add its columns
     listTreeModel = ListStore::create(modelColumns);
@@ -126,6 +129,14 @@ PlaylistListWindow :: PlaylistListWindow (
     listTreeSelection->signal_changed().connect(
             sigc::mem_fun(*this, &PlaylistListWindow::onPlaylistListSelection));
 
+    // set up the detailBox
+    detailBox.pack_start(detailBoxLabel, PACK_SHRINK);
+    detailBox.pack_start(detailScrolledWindow);
+
+    // set up the detailed scroll window
+    detailScrolledWindow.add(detailTreeView);
+    detailScrolledWindow.set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC);
+
     // create the detail tree view, and add its columns
     detailTreeModel = ListStore::create(modelColumns);
     detailTreeView.set_model(detailTreeModel);
@@ -141,6 +152,11 @@ PlaylistListWindow :: PlaylistListWindow (
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
+
+    // set up the button box
+    buttonBox.pack_start(*closeButton, PACK_SHRINK);
+    buttonBox.set_border_width(5);
+    buttonBox.set_layout(BUTTONBOX_END);
 
     showAllPlaylists();
 
