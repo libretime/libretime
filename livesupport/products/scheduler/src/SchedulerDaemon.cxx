@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,8 +108,8 @@ SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
     displayPlaylistMethod.reset(new DisplayPlaylistMethod());
     removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
     rescheduleMethod.reset(new RescheduleMethod());
-    openPlaylistForEditingMethod.reset(new OpenPlaylistForEditingMethod());
     addAudioClipToPlaylistMethod.reset(new AddAudioClipToPlaylistMethod());
+    openPlaylistForEditingMethod.reset(new OpenPlaylistForEditingMethod());
 }
 
 
@@ -237,8 +237,12 @@ SchedulerDaemon :: install(void)                throw (std::exception)
 {
     // TODO: check if we have already been configured
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-    sf->install();
-
+    try {
+        sf->install();
+    }
+    catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
     plf->install();
 }
@@ -251,8 +255,8 @@ void
 SchedulerDaemon :: uninstall(void)              throw (std::exception)
 {
     // TODO: check if we have already been configured
+    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
     try {
-        Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
         plf->uninstall();
     }
     catch (std::exception &e) {
