@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -103,17 +103,20 @@ class StoredFile{
         ");
         if(PEAR::isError($res)){ $ac->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
-        if($metadata != ''){
-            if($mdataLoc=='file' && !file_exists($metadata))
-            {
-                return PEAR::raiseError("StoredFile::insert: ".
-                    "metadata file not found ($metadata)");
-            }
-            $res = $ac->md->insert($metadata, $mdataLoc, $ftype);
-            if(PEAR::isError($res)){
-                $ac->dbc->query("ROLLBACK"); return $res;
-            }
+        if(is_null($metadata) || $metadata == ''){
+            $metadata = dirname(__FILE__).'/emptyMdata.xml';
+            $mdataLoc = 'file';
+        }else{
             $emptyState = FALSE;
+        }
+        if($mdataLoc=='file' && !file_exists($metadata))
+        {
+            return PEAR::raiseError("StoredFile::insert: ".
+                "metadata file not found ($metadata)");
+        }
+        $res = $ac->md->insert($metadata, $mdataLoc, $ftype);
+        if(PEAR::isError($res)){
+            $ac->dbc->query("ROLLBACK"); return $res;
         }
         // --- media file insert:
         if($mediaFileLP != ''){
