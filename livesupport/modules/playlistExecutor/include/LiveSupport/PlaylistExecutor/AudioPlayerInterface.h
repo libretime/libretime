@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/Playlist.h"
 
 
 namespace LiveSupport {
@@ -66,8 +67,8 @@ using namespace LiveSupport::Core;
 /**
  *  A generic interface for playing audio files.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.5 $
  */
 class AudioPlayerInterface
 {
@@ -164,6 +165,36 @@ class AudioPlayerInterface
         virtual void
         stop(void)                              throw (std::logic_error)
                                                                       = 0;
+        /**
+         *  Play a playlist, with simulated fading.
+         *
+         *  This is a stopgap method, and should be replaced as soon as
+         *  the SMIL animation issues are fixed in the Helix client.
+         *
+         *  @param playlist the Playlist object to be played.
+         *  @exception std::invalid_argument playlist is invalid (e.g.,
+         *              does not have a URI field, or there is no valid
+         *              SMIL file at the given URI).
+         *  @exception std::logic_error thrown by start() if open() was
+         *              unsuccessful, but returned normally (never happens)
+         *  @exception std::runtime_error on errors thrown by the helix player
+         */
+        virtual void
+        openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
+                                                throw (std::invalid_argument,
+                                                       std::logic_error,
+                                                       std::runtime_error)
+                                                                      = 0;
+
+        /**
+         *  Set the audio device used for playback.
+         *
+         *  @param deviceName the new device name, e.g., /dev/dsp
+         *  @return true if successful, false if not
+         */
+        virtual bool
+        setAudioDevice(const std::string &deviceName)       
+                                                throw ()              = 0;
 };
 
 

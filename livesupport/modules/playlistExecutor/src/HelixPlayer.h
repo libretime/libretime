@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -349,11 +349,28 @@ class HelixPlayer : virtual public Configurable,
          *              unsuccessful, but returned normally (never happens)
          *  @exception std::runtime_error on errors thrown by the helix player
          */
-        void
+        virtual void
         openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
                                                 throw (std::invalid_argument,
                                                        std::logic_error,
                                                        std::runtime_error);
+
+        /**
+         *  Set the audio device used for playback.
+         *
+         *  Sets the environment variable AUDIO.  This should be replaced with
+         *  a Helix function call as soon as this functionality is provided.
+         *
+         *  There are some strange issues with this: e.g., if you set the
+         *  device to "/dev/null", this works fine for SMIL files, but gives
+         *  Helix error 80040100 (HXR_AUDIO_DRIVER) when an mp3 file is played.
+         *
+         *  @param deviceName the new device name, e.g., /dev/dsp
+         *  @return true if successful, false if not
+         */
+        virtual bool
+        setAudioDevice(const std::string &deviceName)       
+                                                throw ();
 };
 
 

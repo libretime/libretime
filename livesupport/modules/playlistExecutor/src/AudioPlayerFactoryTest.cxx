@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -164,6 +164,37 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
+    audioPlayer->close();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Send stuff to /dev/null
+ *----------------------------------------------------------------------------*/
+void
+AudioPlayerFactoryTest :: nullDeviceTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<AudioPlayerFactory>::Ref        audioPlayerFactory;
+    Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    audioPlayerFactory = AudioPlayerFactory::getInstance();
+    audioPlayer        = audioPlayerFactory->getAudioPlayer();
+
+    CPPUNIT_ASSERT_NO_THROW(audioPlayer->open("file:var/simpleSmil.smil"));
+    CPPUNIT_ASSERT(!audioPlayer->isPlaying());
+
+    CPPUNIT_ASSERT(audioPlayer->setAudioDevice("/dev/null"));
+    CPPUNIT_ASSERT_NO_THROW(audioPlayer->start());
+    CPPUNIT_ASSERT(audioPlayer->isPlaying());
+
+    while (audioPlayer->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    CPPUNIT_ASSERT(!audioPlayer->isPlaying());
+
+    CPPUNIT_ASSERT(audioPlayer->setAudioDevice(""));
     audioPlayer->close();
 }
 

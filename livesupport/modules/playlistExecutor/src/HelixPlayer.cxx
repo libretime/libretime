@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -490,5 +490,17 @@ HelixPlayer :: openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)
     }
     HX_RELEASE(crossFade);
     HX_RELEASE(audioPlayer);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the audio device.
+ *----------------------------------------------------------------------------*/
+bool
+HelixPlayer :: setAudioDevice(const std::string &deviceName)       
+                                                throw ()
+{
+    return (setenv("AUDIO", deviceName.c_str(), 1) == 0);
+                                             // 1 = overwrite if exists
 }
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,14 +59,15 @@ namespace PlaylistExecutor {
 /**
  *  Unit test for the AudioPlayerFactory class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  *  @see AudioPlayerFactory
  */
 class AudioPlayerFactoryTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(AudioPlayerFactoryTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(nullDeviceTest);
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -87,6 +88,14 @@ class AudioPlayerFactoryTest : public CPPUNIT_NS::TestFixture
          */
         void
         simplePlayTest(void)                    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Check the setAudioDevice() method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        nullDeviceTest(void)                    throw (CPPUNIT_NS::Exception);
 
     public:
         
