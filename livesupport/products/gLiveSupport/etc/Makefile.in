@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -84,6 +84,12 @@ STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
 STORAGE_LIB         = livesupport_storage
 STORAGE_LIB_FILE    = ${STORAGE_LIB_DIR}/lib${STORAGE_LIB}.a
 
+SCHEDULER_CLIENT_DIR         = ${MODULES_DIR}/schedulerClient
+SCHEDULER_CLIENT_INCLUDE_DIR = ${SCHEDULER_CLIENT_DIR}/include
+SCHEDULER_CLIENT_LIB_DIR     = ${SCHEDULER_CLIENT_DIR}/lib
+SCHEDULER_CLIENT_LIB         = livesupport_scheduler_client
+SCHEDULER_CLIENT_LIB_FILE = ${SCHEDULER_CLIENT_LIB_DIR}/lib${SCHEDULER_CLIENT_LIB}.a
+
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
 
@@ -118,6 +124,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${STORAGE_INCLUDE_DIR} \
+                             -I${SCHEDULER_CLIENT_INCLUDE_DIR} \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${ICU_LIBS} \
@@ -125,7 +132,8 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
-                     -L${STORAGE_LIB_DIR}
+                     -L${STORAGE_LIB_DIR} \
+                     -L${SCHEDULER_CLIENT_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -146,6 +154,7 @@ FSDF = ${G_LIVESUPPORT_OBJS} \
                          ${TMP_DIR}/main.o
 G_LIVESUPPORT_EXE_LIBS = -l${CORE_LIB} \
                          -l${AUTHENTICATION_LIB} \
+                         -l${SCHEDULER_CLIENT_LIB} \
                          -lboost_date_time-gcc \
                          -lxmlrpc++ -lssl -lxml++-1.0
 
@@ -178,6 +187,7 @@ docclean:
 	${RM} ${TEST_RESULTS}
 
 depclean: clean
+	${MAKE} -C ${SCHEDULER_CLIENT_DIR} clean
 	${MAKE} -C ${STORAGE_DIR} clean
 	${MAKE} -C ${AUTHENTICATION_DIR} clean
 	${MAKE} -C ${CORE_DIR} clean
@@ -200,6 +210,7 @@ run: all
 ${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} \
                       ${AUTHENTICATION_LIB_FILE} \
                       ${STORAGE_LIB_FILE} \
+                      ${SCHEDULER_CLIENT_LIB_FILE} \
                       ${G_LIVESUPPORT_OBJS} ${G_LIVESUPPORT_EXE_OBJS}
 	${CXX} ${LDFLAGS} -o $@ $^ ${G_LIVESUPPORT_EXE_LIBS}
 
@@ -212,6 +223,7 @@ ${DOXYGEN_DIR}:
 ${TEST_RUNNER}: ${CORE_LIB_FILE} \
                 ${AUTHENTICATION_LIB_FILE} \
                 ${STORAGE_LIB_FILE} \
+                ${SCHEDULER_CLIENT_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
@@ -223,6 +235,9 @@ ${AUTHENTICATION_LIB_FILE}:
 
 ${STORAGE_LIB_FILE}:
 	${MAKE} -C ${STORAGE_DIR}
+
+${SCHEDULER_CLIENT_LIB_FILE}:
+	${MAKE} -C ${SCHEDULER_CLIENT_DIR}
 
 
 #-------------------------------------------------------------------------------

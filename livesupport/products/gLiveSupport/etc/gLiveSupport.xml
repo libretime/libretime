@@ -2,7 +2,8 @@
 <!DOCTYPE gLiveSupport [
 
 <!ELEMENT gLiveSupport                (resourceBundle,
-                                       authenticationClientFactory) >
+                                       authenticationClientFactory,
+                                       schedulerClientFactory) >
 
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
@@ -17,14 +18,31 @@
 <!ATTLIST user login        CDATA       #REQUIRED >
 <!ATTLIST user password     CDATA       #REQUIRED >
 
+<!ELEMENT schedulerClientFactory        (schedulerDaemonXmlRpcClient) >
+
+<!ELEMENT schedulerDaemonXmlRpcClient   EMPTY >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcHost    CDATA       #REQUIRED >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcPort    NMTOKEN     #REQUIRED >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
+
 ]>
 <gLiveSupport>
     <resourceBundle path   = "./tmp/gLiveSupport"
                     locale = "en"
     />
+
     <authenticationClientFactory>
         <testAuthentication>
             <user login="root" password="q" />
         </testAuthentication>
     </authenticationClientFactory>
+
+    <schedulerClientFactory>
+        <schedulerDaemonXmlRpcClient    xmlRpcHost = "localhost"
+                                        xmlRpcPort = "3344"
+                                        xmlRpcUri  = "/RC2"
+        />
+    </schedulerClientFactory>
+
 </gLiveSupport>
+

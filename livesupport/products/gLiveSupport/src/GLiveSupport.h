@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,11 +47,13 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::SchedulerClient;
 
 /* ================================================================ constants */
 
@@ -70,17 +72,20 @@ using namespace LiveSupport::Core;
  *
  *  <pre><code>
  *  <!ELEMENT gLiveSupport                (resourceBundle,
- *                                         authenticationClientFactory) >
+ *                                         authenticationClientFactory,
+ *                                         schedulerClientFactory) >
  *  </code></pre>
  *
- *  For a description of the <code>resourceBundle</code> and
- *  <code>authenticationClientFactory</code> elements see their
+ *  For a description of the <code>resourceBundle</code>,
+ *  <code>authenticationClientFactory</code> and
+ *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
+ *  @see SchedulerClientFactory
  */
 class GLiveSupport : public Configurable,
                      public boost::enable_shared_from_this<GLiveSupport>
@@ -100,6 +105,11 @@ class GLiveSupport : public Configurable,
          *  The authentication client used by the application.
          */
         Ptr<AuthenticationClientInterface>::Ref     authentication;
+
+        /**
+         *  The scheduler client, used to access the scheduler daemon.
+         */
+        Ptr<SchedulerClientInterface>::Ref          schedulerClient;
 
         /**
          *  The session id for the user.
