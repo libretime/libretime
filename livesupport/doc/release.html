@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.1 $</li>
+  <li>Version: $Revision: 1.2 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/release.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -51,7 +51,7 @@ control system</li>
 To get a fresh copy of the LiveSupport repository, execute the
 following in an empty directory:<br>
 <br>
-<pre><code>cvs -z3 -d :ext:&lt;username&gt;:netfinity-5.mdlf.org:/home/cvs checkout livesupport</code><br></pre>
+<pre><code>cvs -z3 -d :ext:&lt;username&gt;@netfinity-5.mdlf.org:/home/cvs checkout -P livesupport</code><br></pre>
 <br>
 Where <code>&lt;username&gt;</code> is the user name for accessing the
 repository of the person making the release.<br>
@@ -66,7 +66,8 @@ compiled by the master <code>Makefile</code> under the target <code>tools_setup<
 To check this, compare tool version variables in the two files, e.g. <code>BOOST_VERSION</code>
 from <code>Makefile</code> with <code>boost_version</code> from <code>bin/dist.sh</code>.
 Make sure to check the versions for all the tools mentioned in these
-files.<br>
+files. Also check that there are no tools missing from the distribution
+script that are mentioned in the master <code>Makefile</code>.<br>
 <h1>Creating release tarballs<br>
 </h1>
 To create the release tarballs, invoke the distribution script <code>bin/dist.sh</code>,
