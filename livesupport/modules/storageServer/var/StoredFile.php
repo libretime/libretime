@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,7 +109,7 @@ class StoredFile{
                 return PEAR::raiseError("StoredFile::insert: ".
                     "metadata file not found ($metadata)");
             }
-            $res = $ac->md->insert($metadata, $mdataLoc);
+            $res = $ac->md->insert($metadata, $mdataLoc, $ftype);
             if(PEAR::isError($res)){
                 $ac->dbc->query("ROLLBACK"); return $res;
             }
