@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -220,7 +220,8 @@ check_exe() {
 #  @return 0 if the module is available, non-0 otherwise
 #-------------------------------------------------------------------------------
 check_pear_module() {
-    if [ "`pear info $1`" ]; then
+    test_result=`pear info $1`
+    if [ $? = 0 ]; then
         echo "PEAR module $1 found...";
         return 0;
     else
@@ -269,12 +270,12 @@ echo "Creating database and database user...";
 su - $postgres_user -c "echo \"CREATE USER $ls_dbuser \
                                ENCRYPTED PASSWORD '$ls_dbpassword' \
                                CREATEDB NOCREATEUSER;\" \
-                        | psql" \
+                        | psql template1" \
     || echo "Couldn't create database user $ls_dbuser.";
 
 su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
                                 OWNER $ls_dbuser ENCODING 'utf-8';\" \
-                        | psql" \
+                        | psql template1" \
     || echo "Couldn't create database $ls_database.";
 
 
