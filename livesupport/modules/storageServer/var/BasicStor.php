@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -620,7 +620,8 @@ class BasicStor extends Alib{
      *       </ul>
      *     </li>
      *   </ul>
-     *
+     *  @param limit int, limit for result arrays (0 means unlimited)
+     *  @param offset int, starting point (0 means without offset)
      *  @return hash, field 'results' is an array with gunid strings
      *  of files have been found
      */
@@ -635,7 +636,11 @@ class BasicStor extends Alib{
         $conds      = $criteria['conditions'];
         $whereArr   = array();
         foreach($conds as $cond){
-            $cat = strtolower($cond['cat']);
+            $catOrig = strtolower($cond['cat']);
+            // handle predicate namespace shortcut
+            if(preg_match("|^([^:]+):([^:]+)$|", $catOrig, $catOrigArr)){
+                $catNs = $catOrigArr[1]; $cat = $catOrigArr[2];
+            }else{ $catNs=NULL; $cat=$catOrig; }
             $opVal  = sprintf($ops[$cond['op']], 
                 addslashes(strtolower($cond['val'])));
             // escape % for sprintf in whereArr construction:
@@ -645,10 +650,15 @@ class BasicStor extends Alib{
                 %s.predicate = '{$cat}' AND
                 %s.objns='_L' AND lower(%s.object) {$opVal}\n
             ";
+            if(!is_null($catNs)){
+                $catNs  = str_replace("%", "%%", $catNs);
+                $sqlCond = "%s.predns = '{$catNs}' AND  $sqlCond";
+            }
             $whereArr[] = "$sqlCond";
         }
         $selPart = "SELECT DISTINCT to_hex(f.gunid)as gunid, f.ftype as filetype";
-        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).($offset != 0 ? " OFFSET $offset" : '' );
+        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
+            ($offset != 0 ? " OFFSET $offset" : '' );
         $ftypeCond = " AND f.ftype='$filetype'";
         if($operator == 'and'){
             // operator: and
@@ -656,7 +666,7 @@ class BasicStor extends Alib{
             $joinArr = array("f.gunid = md0.gunid".$ftypeCond);
             foreach($whereArr as $i=>$v){
                 $from[] = "{$this->mdataTable} md$i";
-                $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i");
+                $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i");
                 $joinArr[] = "md$i.gunid = md".($i+1).".gunid";
             }
             // there are n-1 join condtions for join n tables - remove last:
@@ -669,7 +679,7 @@ class BasicStor extends Alib{
         }else{
             // operator: or
             foreach($whereArr as $i=>$v){
-                $whereArr[$i] = sprintf($v, "md", "md", "md");
+                $whereArr[$i] = sprintf($v, "md", "md", "md", "md");
             }
             // query construcion:
             $sql = "\n$selPart\nFROM {$this->mdataTable} md\n".
@@ -801,10 +811,12 @@ class BasicStor extends Alib{
     {
         $uid = parent::addSubj($login, $pass);
         if(PEAR::isError($uid)) return $uid;
-        $fid = $this->bsCreateFolder($this->storId, $login);
-        if(PEAR::isError($fid)) return $fid;
-        $res = $this->addPerm($uid, '_all', $fid, 'A');
-        if(PEAR::isError($res)) return $res;
+        if(!$this->isGroup($uid)){
+            $fid = $this->bsCreateFolder($this->storId, $login);
+            if(PEAR::isError($fid)) return $fid;
+            $res = $this->addPerm($uid, '_all', $fid, 'A');
+            if(PEAR::isError($res)) return $res;
+        }
         return $uid;
     }
     /**
@@ -1113,6 +1125,8 @@ class BasicStor extends Alib{
         $rootUid = parent::addSubj('root', $this->config['tmpRootPass']);
         $res = $this->addPerm($rootUid, '_all', $this->rootId, 'A');
         $fid = $this->bsCreateFolder($this->storId, 'root');
+        $stPrefGr = $this->addSubj($this->config['StationPrefsGr']);
+        $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
     }
     /**
      *  install - create tables
