@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <string>
 #include <iostream>
+
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "AudioPlayerFactoryTest.h"
 
@@ -129,6 +131,7 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
 {
     Ptr<AudioPlayerFactory>::Ref        audioPlayerFactory;
     Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
     audioPlayerFactory = AudioPlayerFactory::getInstance();
     audioPlayer        = audioPlayerFactory->getAudioPlayer();
@@ -138,7 +141,7 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
     audioPlayer->start();
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
     while (audioPlayer->isPlaying()) {
-        usleep(10000);
+        TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
 }

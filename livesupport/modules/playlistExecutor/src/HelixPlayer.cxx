@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include "HelixDefs.h"
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "HelixPlayer.h"
 
 
@@ -83,12 +84,13 @@ void *
 LiveSupport::PlaylistExecutor::eventHandlerThread(void   * helixPlayer)
                                                                     throw ()
 {
-    HelixPlayer   * hPlayer = (HelixPlayer *) helixPlayer;
+    HelixPlayer               * hPlayer = (HelixPlayer *) helixPlayer;
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
     while (hPlayer->handleEvents) {
         struct _HXxEvent  * event = 0;
         hPlayer->clientEngine->EventOccurred(event);
-        usleep(10000);
+        TimeConversion::sleep(sleepT);
     }
 
     return 0;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <string>
 #include <iostream>
+
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "HelixPlayer.h"
 #include "HelixPlayerTest.h"
@@ -124,13 +126,15 @@ void
 HelixPlayerTest :: simplePlayTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
     helixPlayer->initialize();
     helixPlayer->playThis("file:var/test.mp3");
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
     while (helixPlayer->isPlaying()) {
-        usleep(10000);
+        TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->deInitialize();
@@ -193,6 +197,8 @@ void
 HelixPlayerTest :: smilTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
     helixPlayer->initialize();
 
     helixPlayer->playThis("file:var/simpleSmil.smil");
@@ -200,7 +206,7 @@ HelixPlayerTest :: smilTest(void)
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
     while (helixPlayer->isPlaying()) {
-        usleep(10000);
+        TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
 
@@ -212,7 +218,7 @@ HelixPlayerTest :: smilTest(void)
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
     while (helixPlayer->isPlaying()) {
-        usleep(10000);
+        TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     */
@@ -224,7 +230,7 @@ HelixPlayerTest :: smilTest(void)
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
     while (helixPlayer->isPlaying()) {
-        usleep(10000);
+        TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
 
