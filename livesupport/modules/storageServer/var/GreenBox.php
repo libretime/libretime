@@ -2,28 +2,28 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the LiveSupport project.
     http://livesupport.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     LiveSupport is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     LiveSupport is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with LiveSupport; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.34 $
+
+
+    Author   : $Author: sebastian $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,8 @@ require_once "BasicStor.php";
  *
  *  LiveSupport file storage module
  *
- *  @author  $Author: tomas $
- *  @version $Revision: 1.34 $
+ *  @author  $Author: sebastian $
+ *  @version $Revision: 1.35 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -99,7 +99,7 @@ class GreenBox extends BasicStor{
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        if(!file_exists($mdataFileLP)){ $mdataFileLP = '../emptyMdata.xml'; }
+        if(!file_exists($mdataFileLP)){ $mdataFileLP = dirname(__FILE__).'/emptyMdata.xml'; }
         $oid = $this->bsPutFile(
             $parid, $fileName, '', $mdataFileLP, $gunid, 'webstream'
         );
@@ -156,7 +156,7 @@ class GreenBox extends BasicStor{
             return $res;
         return $this->bsAnalyzeFile($id);
     }
-    
+
     /**
      *  Rename file
      *
@@ -272,7 +272,7 @@ class GreenBox extends BasicStor{
             return $res;
         return $this->bsReplaceMetadata($id, $mdata, $mdataLoc);
     }
-    
+
     /**
      *  Get metadata XML tree as string
      *
@@ -335,7 +335,7 @@ class GreenBox extends BasicStor{
      *     <li>filetype - string, type of searched files,
      *       meaningful values: 'audioclip', 'playlist'</li>
      *     <li>operator - string, type of conditions join
-     *       (any condition matches / all conditions match), 
+     *       (any condition matches / all conditions match),
      *       meaningful values: 'and', 'or', ''
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
@@ -373,7 +373,7 @@ class GreenBox extends BasicStor{
      *  @param sessid string
      *  @return hash, fields:
      *       results : array with gunid strings
-     *       cnt : integer - number of matching values 
+     *       cnt : integer - number of matching values
      *  @see BasicStor::bsBrowseCategory
      */
     function browseCategory($category, $criteria, $sessid='')
@@ -383,7 +383,7 @@ class GreenBox extends BasicStor{
         $res = $this->bsBrowseCategory($category, $limit, $offset, $criteria);
         return $res;
     }
-    
+
     /*====================================================== playlist methods */
     /**
      *  Create a new empty playlist.
@@ -500,7 +500,7 @@ class GreenBox extends BasicStor{
         $r = $ac->md->getMetadataEl('dc:title');
         if(PEAR::isError($r)){ return $r; }
         $acTit = $r[0]['value'];
-        
+
         // get main playlist container
         $r = $pl->md->getMetadataEl('playlist');
         if(PEAR::isError($r)){ return $r; }
@@ -519,7 +519,7 @@ class GreenBox extends BasicStor{
             if(PEAR::isError($r)){ return $r; }
             $metaParid = $r;
         }
-        
+
         // insert new palylist element
         $r = $pl->md->insertMetadataEl($parid, 'playlistElement');
         if(PEAR::isError($r)){ return $r; }
@@ -710,7 +710,7 @@ class GreenBox extends BasicStor{
         $lc =& new LocStor($this->dbc, $this->config);
         return $lc->editPlaylist($sessid, $gunid);
     }
-    
+
     /**
      *  Store a new Playlist metafile in place of the old one.
      *
@@ -739,7 +739,7 @@ class GreenBox extends BasicStor{
         $lc =& new LocStor($this->dbc, $this->config);
         return $lc->deletePlaylist($sessid, $gunid);
     }
-    
+
     /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
@@ -769,9 +769,9 @@ class GreenBox extends BasicStor{
         $lc =& new LocStor($this->dbc, $this->config);
         return $lc->playlistIsAvailable($sessid, $gunid);
     }
-    
+
     /* ============================================== methods for preferences */
-    
+
     /**
      *  Read preference record by session id
      *
@@ -882,7 +882,7 @@ class GreenBox extends BasicStor{
         $listArr = $this->bsListFolder($id);
         return $listArr;
     }
-    
+
     /**
      *  Get type of stored file (by local id)
      *
@@ -912,7 +912,7 @@ class GreenBox extends BasicStor{
             return $res;
         return $ex;
     }
-    
+
     /* ---------------------------------------------------- redefined methods */
 
     /**
