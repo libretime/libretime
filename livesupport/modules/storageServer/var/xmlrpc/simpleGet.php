@@ -23,15 +23,17 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /**
- *  simpleGet.php is remote callable script through HTTP GET method.
+ *  \file simpleGet.php
  *  Returns stored media file identified by global unique ID.
- *  Requires valid session ID and read permission for requested file.
+ *
+ *  simpleGet.php is remote callable script through HTTP GET method.
+ *  Requires valid session ID with read permission for requested file.
  *
  *  This script accepts following HTTP GET parameters:
  *  <ul>

@@ -23,13 +23,19 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /**
+ *  \file conf.php
+ *  storageServer configuration file
+ */
+
+/**
  *  configuration structure:
+ *
  *  <dl>
  *   <dt>dsn<dd> datasource setting
  *   <dt>tblNamePrefix <dd>prefix for table names in the database
