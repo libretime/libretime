@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -296,6 +296,7 @@ fi
 #-------------------------------------------------------------------------------
 echo "Checking for required tools..."
 
+check_exe "sed" || exit 1;
 check_exe "psql" || exit 1;
 check_exe "php" || exit 1;
 check_exe "pear" || exit 1;
@@ -319,15 +320,17 @@ check_pear_module "XML_Util" || exit 1;
 #-------------------------------------------------------------------------------
 echo "Creating database and database user...";
 
+# FIXME: the below might not work for remote databases
+
 su - $postgres_user -c "echo \"CREATE USER $ls_dbuser \
                                ENCRYPTED PASSWORD '$ls_dbpassword' \
                                CREATEDB NOCREATEUSER;\" \
-                        | psql template1" \
+                        | psql -h $ls_dbserver template1" \
     || echo "Couldn't create database user $ls_dbuser.";
 
 su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
                                 OWNER $ls_dbuser ENCODING 'utf-8';\" \
-                        | psql template1" \
+                        | psql -h $ls_dbserver template1" \
     || echo "Couldn't create database $ls_database.";
 
 
