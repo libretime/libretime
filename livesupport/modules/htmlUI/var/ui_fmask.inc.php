@@ -91,7 +91,7 @@ $ui_fmask = array(
     ),
 
     /* =========================================================== Matadata-Mask */
-    'editMetaData' =>  array(
+    'metaData' =>  array(
         'basics' => array(
             array(
                 'element' => 'act',
@@ -225,19 +225,19 @@ $ui_fmask = array(
                 array(
                     'element'   => 'Format_Extent_h',
                     'type'      => 'select',
-                    'options'   => $uiBase->_getDArr('h'),
+                    'options'   => getDArr('h'),
                     'groupit'   => TRUE
                 ),
                 array(
                     'element'   => 'Format_Extent_m',
                     'type'      => 'select',
-                    'options'   => $uiBase->_getDArr('m'),
+                    'options'   => getDArr('m'),
                     'groupit'   => TRUE
                 ),
                 array(
                     'element'   => 'Format_Extent_s',
                     'type'      => 'select',
-                    'options'   => $uiBase->_getDArr('h'),
+                    'options'   => getDArr('h'),
                     'groupit'   => TRUE
                 ),
                 array(
@@ -471,7 +471,6 @@ $ui_fmask = array(
                     'element'   => 'dc:title',
                     'type'      => 'text',
                     'label'     => 'Title',
-                    'relation'  => 1
                 ),
                 array(
                     'element'   => 'Coverage',
@@ -792,23 +791,31 @@ $ui_fmask = array(
             'options'   => array(
                             'File'      => '*',
                             'audioclip' => 'Audioclip',
+                            'webstream' => 'Webstream',
                             'playlist'  => 'Playlist'
                             )
+        ),
+        array(
+            'element'   => 'clear',
+            'type'      => 'button',
+            'label'     => 'Clear',
+            'attributes'  => array('onClick' => "hpopup('".UI_HANDLER."?act=search', 'SF')"),
+            'groupit'   => TRUE,
         ),
         array(
             'element'   => 'addrow',
             'type'      => 'button',
             'label'     => 'One more Row',
-            'attributes'  => array('onClick' => 'addRow()'),
+            'attributes'  => array('onClick' => 'SearchForm_addRow()'),
             'groupit'   => TRUE,
         ),
         array(
-            'element'   => 'doSearch',
+            'element'   => 'submit',
             'type'      => 'submit',
             'label'     => 'Submit',
             'groupit'   => TRUE,
         ),
-        array('group'   => array('addrow', 'doSearch')
+        array('group'   => array('clear', 'addrow', 'submit')
         ),
     ),
     'relations'     => array(

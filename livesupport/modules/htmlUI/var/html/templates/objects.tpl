@@ -44,7 +44,7 @@
                   &nbsp;<a href="{$UI_BROWSER}?act=_analyzeFile&id={$o.id}">[Analyze]</a>
                   &nbsp;<a href="{$UI_BROWSER}?act=editFile&id={$o.id}">[Edit]</a>
                   &nbsp;<a href="{$UI_BROWSER}?act=editMetaData&id={$o.id}">[eMData]</a>
-                  &nbsp;<a href="#" onclick="hpopup('{$UI_HANDLER}?act=SP.addItem&SPid={$o.id}', '2SP')">[SP]</a>
+                  &nbsp;<a href="#" onclick="hpopup('{$UI_HANDLER}?act=SP.addItem&id={$o.id}', '2SP')">[SP]</a>
               {/if}
               &nbsp;
           </td>

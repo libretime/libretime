@@ -21,7 +21,7 @@
                     <td>{$i.title}</td>
                     <td>{$i.duration}</td>
                     <td>{$i.type} </td>
-                    <th><a href="#" onclick="hpopup('{$UI_HANDLER}?act=SP.removeItem&SPid={$i.id}', 'SP')">X</th>
+                    <th><a href="#" onclick="hpopup('{$UI_HANDLER}?act=SP.removeItem&id={$i.id}', 'SP')">X</th>
                 </tr>
             {/foreach}
             <tr>
@@ -43,7 +43,7 @@ function SP_submit()
 
     for (n=0; n < (document.forms['SP'].elements.length-1); n++) {
         if (document.forms['SP'].elements[n].checked) {
-            href = href + '&SPid[]=' + document.forms['SP'].elements[n].name;
+            href = href + '&id[]=' + document.forms['SP'].elements[n].name;
         }
     }
     hpopup(href, 'SP');

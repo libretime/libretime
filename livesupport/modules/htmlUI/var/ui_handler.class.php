@@ -512,7 +512,7 @@ class uiHandler extends uiBase {
 
         foreach ($mask['tabs']['group']['group'] as $key) {
             foreach ($mask['pages'][$key] as $k=>$v) {
-                $formdata[$key.'__'.$v['element']] ? $mData[strtr($v['element'], '_', '.')] = $formdata[$key.'__'.$v['element']] : NULL;
+                $formdata[$key.'___'.$this->_formElementEncode($v['element'])] ? $mData[$this->_formElementDecode($v['element'])] = $formdata[$key.'___'.$this->_formElementEncode($v['element'])] : NULL;
             }
         }
         $data = $this->_dateArr2Str($mData);
@@ -590,16 +590,42 @@ class uiHandler extends uiBase {
         }
     }
 
-    /*
-    function _isTextInput($input)
-    {
-        $test = array('text' =>0, 'textarea' =>0, 'select'=>0, 'radio'=>0, 'checkbox'=>0);
-        if (array_key_exists($input, $test))
-             return TRUE;
 
-        return FALSE;
+    /**
+     *  search
+     *
+     *  get Search Result and tore them in session
+     *
+     *  @param $id int local ID (file/folder) to search in
+     *  @param $serach string
+     */
+    function search(&$formdata)
+    {
+        $this->search = FALSE;;
+        $this->search['criteria']['operator'] = $formdata['operator'];
+        $this->search['criteria']['filetype'] = $formdata['filetype'];
+
+        foreach ($formdata as $key=>$val) {
+            if (is_array($val) && strlen($val[2])) {
+                $critArr[] = array('cat' => $this->_formElementDecode($val[0]),
+                                   'op'  => $val[1],
+                                   'val' => $val[2]
+                             );
+                $this->search['criteria'][$key] = $val;
+            }
+        }
+        $searchCriteria = array('filetype'  => $formdata['filetype'],
+                                'operator'  => $formdata['operator'],
+                                'conditions'=> $critArr
+                          );
+
+        $results = $this->gb->localSearch($searchCriteria, $this->sessid);
+        foreach ($results['results'] as $rec) {
+                $this->search['result'][] = $this->_getMetaInfo($this->gb->_idFromGunid($rec));
+            }
+
+        $this->redirUrl = UI_BROWSER.'?act=search&id='.$formdata['id'];
     }
-    */
 }
 
 ?>

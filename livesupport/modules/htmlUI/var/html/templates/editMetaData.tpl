@@ -31,12 +31,12 @@ function switchMDataLang()
 }
 
 function spread(element, name)
-{
-    if (document.forms['editMetaData'].elements['Main__' + name])           document.forms['editMetaData'].elements['Main__' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Music_Basic__' + name])    document.forms['editMetaData'].elements['Music_Basic__' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Music_Advanced__' + name]) document.forms['editMetaData'].elements['Music_Advanced__' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Talk_Basic__' + name])     document.forms['editMetaData'].elements['Talk_Basic__' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Talk_Advanced__' + name])  document.forms['editMetaData'].elements['Talk_Advanced__' + name].value = element.value;
+{            
+    if (document.forms['editMetaData'].elements['Main___' + name])           document.forms['editMetaData'].elements['Main___' + name].value = element.value;
+    if (document.forms['editMetaData'].elements['Music_Basic___' + name])    document.forms['editMetaData'].elements['Music_Basic___' + name].value = element.value;
+    if (document.forms['editMetaData'].elements['Music_Advanced___' + name]) document.forms['editMetaData'].elements['Music_Advanced___' + name].value = element.value;
+    if (document.forms['editMetaData'].elements['Talk_Basic___' + name])     document.forms['editMetaData'].elements['Talk_Basic___' + name].value = element.value;
+    if (document.forms['editMetaData'].elements['Talk_Advanced___' + name])  document.forms['editMetaData'].elements['Talk_Advanced___' + name].value = element.value;
 }
 
 function showMain()

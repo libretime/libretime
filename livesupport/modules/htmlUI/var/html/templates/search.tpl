@@ -22,16 +22,16 @@
 {if $showSearchRes}
     <div id="searchres">
     <center>
-    {if ( is_array($searchres.search))}
+    {if is_array($searchres)}
         <table>
           <tr><th>{tra 0=Title}</th><th>{tra 0=Duration}</th><th></th></tr>
-            {foreach from=$searchres.search item=s}
+            {foreach from=$searchres item=s}
                 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
                     <td>{$s.title}</td>
                     <td>{$s.duration}</td>
                     <td><a href="{$UI_BROWSER}?act=getMdata&id={$s.id}">[XML]</a>
                         <a href="{$UI_BROWSER}?act=editMetaDataValues&id={$s.id}">[Form]</a>
-                        <a href="#" onClick="hpopup('{$UI_HANDLER}?act=add2SP&id={$s.id}', '2SP')">[SP]</a>
+                        <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.addItem&id={$s.id}', '2SP')">[SP]</a>
                     </td>
                   </tr>
                 </div>

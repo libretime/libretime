@@ -31,6 +31,28 @@ function tra($input)
 }
 
 
+function _getDArr($format)
+{
+    #$arr['']  = '00';
+    switch($format) {
+    case 'h':
+        for($n=0; $n<=23; $n++) {
+            $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
+        }
+        break;
+
+    case 'm':
+    case 's':
+        for($n=0; $n<=59; $n++) {
+            $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
+        }
+        break;
+    }
+
+    return $arr;
+}
+
+
 /**
  *  uiBase class
  *
@@ -68,8 +90,9 @@ class uiBase
         $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
                                                'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
 
-        $this->SP =& new uiScratchPad(&$this);
-        $this->systemPrefs =& $_SESSION[UI_STATIONINFO_SESSNAME]; ;
+        $this->SP          =& new uiScratchPad(&$this);
+        $this->systemPrefs =& $_SESSION[UI_STATIONINFO_SESSNAME];
+        $this->search      =& $_SESSION[UI_SEARCH_SESSNAME];
     }
 
 
@@ -250,28 +273,6 @@ class uiBase
     }
 
 
-    function _getDArr($format)
-    {
-        #$arr['']  = '00';
-        switch($format) {
-        case 'h':
-            for($n=0; $n<=23; $n++) {
-                $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
-            }
-            break;
-
-        case 'm':
-        case 's':
-            for($n=0; $n<=59; $n++) {
-                $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
-            }
-            break;
-        }
-
-        return $arr;
-    }
-
-
     function _toHex($gunid)
     {
         $res = $this->dbc->query("SELECT to_hex($gunid)");
@@ -353,6 +354,22 @@ class uiBase
             return FALSE;
         }
         return TRUE;
+    }
+
+
+    function _formElementEncode($str)
+    {
+        $str = str_replace(':', '__', $str);
+        $str = str_replace('.', '_', $str);
+        return $str;
+    }
+
+
+    function _formElementDecode($str)
+    {
+        $str = str_replace('__', ':', $str);
+        $str = str_replace('_', '.', $str);
+        return $str;
     }
 }
 ?>

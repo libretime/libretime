@@ -44,7 +44,7 @@
     {include file="editMetaData.tpl"}
 {/if}
 
-{if $systemPrefs}
+{if $editSystemPrefs}
     {include file="systemPrefs.tpl"}
 {/if}
 

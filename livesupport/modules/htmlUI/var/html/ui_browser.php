@@ -99,13 +99,12 @@ if ($uiBrowser->userid) {
 
 
     case "search":
-        if($_REQUEST['doSearch']) {
-            $Smarty->assign('searchres', $uiBrowser->getSearchRes($uiBrwoser->id, $_REQUEST));
+        if (is_array($uiBrowser->search['result']) ){
+            $Smarty->assign('searchres', $uiBrowser->search['result']);
             $Smarty->assign('showSearchRes', TRUE);
-        }
+        };
 
-
-        $Smarty->assign('searchform', $uiBrowser->getSearchForm($uiBrowser->id, $_REQUEST, $ui_fmask));
+        $Smarty->assign('searchform', $uiBrowser->getSearchForm($_REQUEST['id'], $ui_fmask));
         $Smarty->assign('showSearchForm', TRUE);
 
         break;
@@ -143,7 +142,7 @@ if ($uiBrowser->userid) {
     break;
 
     case "editMetaData":
-        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, $ui_fmask['editMetaData'], TRUE));
+        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, $ui_fmask['metaData'], TRUE));
     break;
 
     case "_analyzeFile":

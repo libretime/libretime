@@ -89,22 +89,26 @@ switch($_REQUEST['act']){
     break;
 
     case "editMetaData":
-        $uiHandler->editMetaData($uiHandler->id, $_REQUEST, $ui_fmask["editMetaData"]);
+        $uiHandler->editMetaData($uiHandler->id, $_REQUEST, $ui_fmask["metaData"]);
     break;
 
     case "SP.addItem":
-        $uiHandler->SP->addItem($_REQUEST['SPid']);
+        $uiHandler->SP->addItem($_REQUEST['id']);
         $uiHandler->SP->setReload();
     break;
 
     case "SP.removeItem":
-        $uiHandler->SP->removeItems($_REQUEST['SPid']);
+        $uiHandler->SP->removeItems($_REQUEST['id']);
         $uiHandler->SP->setReload();
     break;
 
     case "SP.reOrder":
         $uiHandler->SP->reOrder($_REQUEST['by']);
         $uiHandler->SP->setReload();
+    break;
+
+    case "search":
+        $uiHandler->search($_REQUEST);
     break;
 
     default:

@@ -1,17 +1,17 @@
 <script type='text/javascript'>
 {literal}
 
-function displayRow(row)
+function SearchForm_displayRow(row)
 {
     document.getElementById('searchRow_' + row).style.visibility = 'visible';
     document.getElementById('searchRow_' + row).style.height     = '30px';
 }
 
-function addRow()
+function SearchForm_addRow()
 {
     if (document.forms['search'].elements['counter'].value < document.forms['search'].elements['max_rows'].value) {
         document.forms['search'].elements['counter'].value++;
-        displayRow(document.forms['search'].elements['counter'].value);
+        SearchForm_displayRow(document.forms['search'].elements['counter'].value);
         return true;
     } else {
         alert('Maximum reached');
@@ -20,7 +20,7 @@ function addRow()
 }
 
 
-function hideRow(row)
+function SearchForm_hideRow(row)
 {
     document.getElementById('searchRow_' + row).style.visibility = 'hidden';
     document.getElementById('searchRow_' + row).style.height     = '0px';
@@ -29,7 +29,7 @@ function hideRow(row)
     document.forms['search'].elements['row_' + Number(row) + '[2]'].value = '';
 }
 
-function dropRow(row)
+function SearchForm_dropRow(row)
 {
     var n;
     for (n=row; n<document.forms['search'].elements['counter'].value; n++) {
@@ -38,10 +38,9 @@ function dropRow(row)
         document.forms['search'].elements['row_' + Number(n) + '[2]'].value = document.forms['search'].elements['row_' + (Number(n)+1) + '[2]'].value;
     }
     document.forms['search'].elements['counter'].value--;
-    hideRow(Number(n));
+    SearchForm_hideRow(Number(n));
 
 }
-
 {/literal}
 </script>
 

@@ -337,18 +337,18 @@ class uiBrowser extends uiBase {
      *
      *  @return string (html)
      */
-    function getSearchForm($id, &$formdata, &$mask)
+    function getSearchForm($id, &$mask)
     {
-        $form = new HTML_QuickForm('search', 'get', UI_BROWSER);
-        $form->setConstants(array('id'=>$id, 'counter'=>($formdata['counter'] ? $formdata['counter'] : UI_SEARCH_MIN_ROWS)));
+        $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form->setConstants(array('id'=>$id, 'counter'=>UI_SEARCH_MIN_ROWS));
 
-        foreach ($mask['mData']['tabs']['group']['group'] as $k=>$v) {
-            foreach ($mask['mData']['pages'][$v] as $val){
-                $col1[$val['element']] = $val['element'];
+        foreach ($mask['metaData']['tabs']['group']['group'] as $k=>$v) {
+            foreach ($mask['metaData']['pages'][$v] as $val){
+                $col1[$this->_formElementEncode($val['element'])] = $val['label'];
                 if (isset($val['relation']))
-                    $col2[$val['element']] = $mask['relations'][$val['relation']];
+                    $col2[$this->_formElementEncode($val['element'])] = $mask['relations'][$val['relation']];
                 else
-                    $col2[$val['element']] = $mask['relations']['standard'];
+                    $col2[$this->_formElementEncode($val['element'])] = $mask['relations']['standard'];
             };
         };
 
@@ -357,20 +357,18 @@ class uiBrowser extends uiBase {
 
             $form->addElement('static', 's1', NULL, "<div id='searchRow_$n'>");
 
-            if ($n>($formdata['counter'] ? $formdata['counter'] : UI_SEARCH_MIN_ROWS)) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
+            if ($n > UI_SEARCH_MIN_ROWS) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
             $sel = &$form->createElement('hierselect', "row_$n", NULL);
             $sel->setOptions(array($col1, $col2));
             $group[] = &$sel;
-            $group[] = &$form->createElement('text', 'row_'.$n.'[2]', NULL);
-            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "dropRow('$n')"));
+            $group[] = &$form->createElement('text', "row_$n".'[2]', NULL);
+            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "SearchForm_dropRow('$n')"));
             $form->addGroup($group);
-
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }
 
-
-
         $this->_parseArr2Form($form, $mask['searchform']);
+        $form->setConstants($this->search['criteria']);
         $form->validate();
 
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
@@ -380,41 +378,6 @@ class uiBrowser extends uiBase {
         return $output;
     }
 
-
-    /**
-     *  getSearchRes
-     *
-     *  get Search Result
-     *
-     *  @param $id int local ID (file/folder) to search in
-     *  @param $serach string
-     *  @return array
-     */
-    function getSearchRes($id, &$formdata)
-    {
-        foreach ($formdata as $key=>$val) {
-            if (is_array($val) && strlen($val[2])) {
-                $critArr[] = array('cat' => $val[0],
-                                   'op'  => $val[1],
-                                   'val' => $val[2]
-                             );
-            }
-        }
-        $searchCriteria = array('filetype'  => $formdata['filetype'],
-                                'operator'  => $formdata['operator'],
-                                'conditions'=> $critArr
-                          );
-
-        $results = $this->gb->localSearch($searchCriteria, $this->sessid);
-        foreach ($results['results'] as $rec) {
-                $res[] = $this->_getMetaInfo($this->gb->_idFromGunid($rec));
-            }
-
-        return array('search'   => $res,
-                     'id'       => $id
-               );
-
-    }
 
     /**
      *  getFile
@@ -474,12 +437,12 @@ class uiBrowser extends uiBase {
         ## convert element names to be unique over different forms-parts, add javascript to spread values over parts, add existing values from database
         foreach ($mask['tabs']['group']['group'] as $key) {
             foreach ($mask['pages'][$key] as $k=>$v) {
-                $mask['pages'][$key][$k]['element']    = $key.'__'.$v['element'];
-                $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$v['element']."')"));
+                $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
+                $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$this->_formElementEncode($v['element'])."')"));
 
                 ## recive data from GreenBox
                 if ($get) {
-                    $mask['pages'][$key][$k]['default'] = $this->_getMDataValue($id, strtr($v['element'], '_', '.'));
+                    $mask['pages'][$key][$k]['default'] = $this->_getMDataValue($id, $v['element']);
                 }
 
                 ## get data from parameter
