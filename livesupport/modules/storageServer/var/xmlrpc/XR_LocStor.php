@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1188,7 +1188,8 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
-     *      <li> gunids : array - array with gunids of inserted files </li>
+     *      <li> gunids : array -
+     *              array with gunids/playlisIds of inserted files </li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.

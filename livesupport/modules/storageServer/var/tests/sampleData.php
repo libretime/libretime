@@ -1,7 +1,25 @@
 <?
         $sampleData = array(
-            array('../tests/ex1.mp3', '../tests/mdata1.xml'),
-            array('../tests/ex2.ogg', '../tests/mdata2.xml'),
-            array('../tests/ex3.wav', '../tests/mdata3.xml')
+            array(
+                'type'  => 'audioclip',
+                'media' => '../tests/ex1.mp3',
+                'xml'   => '../tests/mdata1.xml',
+                'gunid' => '123456789abcdef1'
+            ),
+            array(
+                'type'  => 'audioclip',
+                'media' => '../tests/ex2.ogg',
+                'xml'   => '../tests/mdata2.xml',
+                'gunid' => '123456789abcdef2'
+            ),
+            array(
+                'type'  => 'audioclip',
+                'media' => '../tests/ex3.wav',
+                'xml'   => '../tests/mdata3.xml'
+            ),
+            array(
+                'type'  => 'playlist',
+                'xml'   => '../tests/plist1.xml'
+            )
         );
 ?>

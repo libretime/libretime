@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -397,11 +397,26 @@ class LocStor extends GreenBox{
         include"../tests/sampleData.php";
         $res = array();
         foreach($sampleData as $k=>$it){
-            list($media, $meta) = $it;
-#            $r = $this->putFile($rootHD, "file".($k+1), $media, $meta, $s);
-            $r = $this->bsPutFile(
-                $rootHD, basename($media), $media, $meta, '', 'audioclip'
-            );
+            switch($it['type']){
+                case"audioclip":
+                    $media = $it['media'];
+                    $xml = $it['xml'];
+                    if(isset($it['gunid'])) $gunid = $it['gunid'];
+                    else $gunid = '';
+                    $r = $this->bsPutFile(
+                        $rootHD, basename($media),
+                        $media, $xml, $gunid, 'audioclip'
+                    );
+                    break;
+                case"playlist":
+                    $xml = $it['xml'];
+                    if(isset($it['gunid'])) $gunid = $it['gunid'];
+                    else $gunid = '';
+                    $r = $this->bsPutFile(
+                        $rootHD, basename($xml), '', $xml, $gunid, 'playlist'
+                    );
+                    break;
+            }
             if(PEAR::isError($r)){ return $r; }
             $res[] = $this->_gunidFromId($r);
         }
