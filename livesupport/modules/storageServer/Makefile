@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.12 $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -136,7 +136,7 @@ reset:
 #   Specific targets
 #-------------------------------------------------------------------------------
 transtest:
-	cdvar/tests/transTest.sh
+	./var/tests/transTest.sh
 #	cd var/tests; php -q transTest.php
 
 db_init:
