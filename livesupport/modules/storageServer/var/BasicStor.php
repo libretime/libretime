@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.35 $
+ *  @version $Revision: 1.36 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -859,7 +859,7 @@ class BasicStor extends Alib{
     {
         $uid = parent::addSubj($login, $pass);
         if($this->dbc->isError($uid)) return $uid;
-        if(!$this->isGroup($uid)){
+        if($this->isGroup($uid) !== FALSE){
             $fid = $this->bsCreateFolder($this->storId, $login);
             if($this->dbc->isError($fid)) return $fid;
             $res = $this->addPerm($uid, '_all', $fid, 'A');
@@ -882,7 +882,7 @@ class BasicStor extends Alib{
         return $uid;
     }
     /**
-     *  Remove user and his home folder
+     *  Remove user by login or by uid and his home folder
      *
      *  @param login string
      *  @param uid int OPT
@@ -890,10 +890,11 @@ class BasicStor extends Alib{
      */
     function removeSubj($login, $uid=NULL)
     {
-        $res = parent::removeSubj($login, $pass);
+        $res = parent::removeSubj($login);
         if($this->dbc->isError($res)) return $res;
         $id = $this->getObjId($login, $this->storId);
         if($this->dbc->isError($id)) return $id;
+        // remove home folder:
         $res = $this->bsDeleteFile($id);
         if($this->dbc->isError($res)) return $res;
         return TRUE;

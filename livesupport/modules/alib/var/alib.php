@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -177,11 +177,13 @@ class Alib extends Subjects{
      */
     function removePerm($permid=NULL, $subj=NULL, $obj=NULL)
     {
-        return $this->dbc->query("DELETE FROM {$this->permTable} WHERE 1=1".
-            ($permid ? " AND permid=$permid" : '').
-            ($subj ? " AND subj=$subj" : '').
-            ($obj ? " AND obj=$obj" : '')
-        );
+        $ca = array();
+        if($permid) $ca[] = "permid=$permid";
+        if($subj) $ca[] = "subj=$subj";
+        if($obj) $ca[] = "obj=$obj";
+        $cond = join(" AND ", $ca);
+        if(!$cond) return TRUE;
+        return $this->dbc->query("DELETE FROM {$this->permTable} WHERE $cond");
     }
 
     /**
@@ -296,6 +298,10 @@ class Alib extends Subjects{
     function removeSubj($login)
     {
         $uid = $this->getSubjId($login);    if(PEAR::isError($uid)) return $uid;
+        if(is_null($uid)){
+            return $this->dbc->raiseError("Alib::removeSubj: Subj not found ($login)",
+                ALIBERR_NOTEXISTS,  PEAR_ERROR_RETURN);
+        }
         $r = $this->removePerm(NULL, $uid); if(PEAR::isError($r)) return $r;
         return parent::removeSubj($login, $uid);
     }
