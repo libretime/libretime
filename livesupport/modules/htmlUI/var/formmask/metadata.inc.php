@@ -111,49 +111,20 @@ $mask = array(
                 'label'     => 'File format',
                 'required'  => TRUE,
                 'options'   => array(
-                                ''              => '',
                                 'File'          => 'File',
                                 'live stream'   => 'Live Stream',
                                 'networked file'=> 'Networked File',
                                ),
+                'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
             ),
             array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
                 'label'     => 'Length',
-                'attributes'=> array('readonly' => 'on'),
+                'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
             ),
-            /*
-            array(
-                'element'   => 'Format_Extent_h',
-                'type'      => 'select',
-                'options'   => getDArr('h'),
-                'groupit'   => TRUE
-            ),
-            array(
-                'element'   => 'Format_Extent_m',
-                'type'      => 'select',
-                'options'   => getDArr('m'),
-                'groupit'   => TRUE
-            ),
-            array(
-                'element'   => 'Format_Extent_s',
-                'type'      => 'select',
-                'options'   => getDArr('h'),
-                'groupit'   => TRUE
-            ),
-            array(
-                'group'     => array('Main__Format_Extent_h', 'Main__Format_Extent_m', 'Main__Format_Extent_s'),
-                #'name'      => 'gr_Format_Extent',
-                'label'     => 'Format_Extent',
-                'rule'      => 'required',
-                #'grouprule' => 'regex',
-                #'format'    => '/([1-9]0)|([1-9]{2})|(0[1-9])/',
-                #'arg1'      => 'Please enter Format_Extent',
-                #'howmany'   => 1
-            ), */
         ),
         'Music'  => array(
             array(
@@ -212,11 +183,11 @@ $mask = array(
                 'type'      => 'select',
                 'label'     => 'Format',
                 'options'   => array(
-                                ''              => '',
                                 'File'          => 'File',
                                 'live stream'   => 'Live Stream',
                                 'networked file'=> 'Networked File'
                                ),
+                'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
             ),
             array(
@@ -237,7 +208,7 @@ $mask = array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
                 'label'     => 'Length',
-                'attributes'=> array('readonly' => 'on'),
+                'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
             ),
             array(
@@ -486,11 +457,11 @@ $mask = array(
                 'type'      => 'select',
                 'label'     => 'Format',
                 'options'   => array(
-                    ''              => '',
-                    'File'          => 'File',
-                    'live stream'   => 'Live Stream',
-                    'networked file'=> 'Networked File',
-                )
+                                'File'          => 'File',
+                                'live stream'   => 'Live Stream',
+                                'networked file'=> 'Networked File'
+                                ),
+                'attributes'=> array('disabled' => 'on')
             ),
             array(
                 'element'   => 'dc:contributor',

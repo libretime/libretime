@@ -39,17 +39,22 @@
             <!-- end station time -->
             <!-- start what playing -->
             <div class="whatplaying">
-                {* {$SCHEDULER->getNowNextClip()} *}
-                <div class="nowplaying">Now Playing: Don Quixote</div>
-                <div class="scala">
-                    <div class="scala_in" style="width: 100px;">&nbsp;</div>
-                </div>
-                <div class="time">
-                    <div class="left">Elapsed:<strong>00:05:24</strong></div>
-                    <div class="right">Remaining:<strong>00:02:05</strong></div>
-                </div>
+                {assign var='_nowplaying' value=$SCHEDULER->getNowNextClip()}
+                {assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
+                {if $_nowplaying}
+                    <div class="nowplaying">Now Playing: {$_nowplaying.title}</div>
+                    <div class="scala">
+                        <div class="scala_in" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
+                    </div>
+                    <div class="time">
+                        <div class="left">Elapsed: <strong>{$_nowplaying.elapsed|truncate:8:""}</strong></div>
+                        <div class="right">Remaining: <strong>{$_nowplaying.remaining|truncate:8:""}</strong></div>
+                    </div>
+                {/if}
                 <div class="clearer"></div>
-                <p>Playing Next: Diego Diego 00:03:25</p>
+                {if $_nextplaying}
+                    <p>Playing Next: {$_nextplaying.title} {$_nextplaying.duration|truncate:8:""}</p>
+                {/if}
             </div>
             <!-- end what playing -->
         </div>

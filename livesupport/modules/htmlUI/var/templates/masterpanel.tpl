@@ -7,7 +7,7 @@
 {include file="statusbar.tpl"}
 
 {if $showMenuTop}
-    {include file="menu_top.tpl"}
+    {include file="menu.tpl"}
 {/if}
 
 {if $structure}
@@ -34,12 +34,8 @@
     {include file="file/edit.tpl"}
 {/if}
 
-{if $editMetaData}
-    {include file="editMetaData.tpl"}
-{/if}
-
 {if $changeStationPrefs}
-    {include file="changeStationPrefs.tpl"}
+    {include file="stationprefs.tpl"}
 {/if}
 
 {if $PL_simpleManagement}
@@ -52,7 +48,7 @@
 {/if}
 
 {if $SCRATCHPAD}
-    {include file="scratchPad.tpl"}
+    {include file="scratchpad.tpl"}
 {/if}
 </div>
 

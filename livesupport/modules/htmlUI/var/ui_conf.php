@@ -3,7 +3,7 @@ define('UI_VERBOSE', FALSE);
 define('UI_WARNING', TRUE);
 define('UI_ERROR',   TRUE);
 #define('UI_TIMEZONE', ' +100');
-define('UI_TIMEZONEOFFSET', date('Z'));
+define('UI_TIMEZONEOFFSET', date('Z')); 
 
 define('UI_HANDLER', 'ui_handler.php');
 define('UI_BROWSER', 'ui_browser.php');
@@ -34,6 +34,9 @@ define('UI_MDATA_KEY_TITLE',      'dc:title');
 define('UI_MDATA_KEY_CREATOR',    'dc:creator');
 define('UI_MDATA_KEY_DURATION',   'dcterms:extent');
 define('UI_MDATA_KEY_URL',        'ls:url');
+define('UI_MDATA_KEY_FORMAT',     'dc:format');
+define('UI_MDATA_VALUE_FORMAT_FILE',    'File');
+define('UI_MDATA_VALUE_FORMAT_STREAM',  'live stream');
 
 ## Simple Search Preferences
 define('UI_SIMPLESEARCH_FILETYPE',  'File');

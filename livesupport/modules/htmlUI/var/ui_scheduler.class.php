@@ -205,6 +205,27 @@ class uiScheduler extends uiCalendar
     }
 
 
+    function getNowNextClip($distance=0)
+    {
+        $datetime    = strftime('%Y-%m-%dT%H:%M:%S');
+        $xmldatetime = str_replace('-', '', $datetime);
+        $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
+        if(count($pl) == 0)
+            return FALSE;
+        $pl = current($pl);
+        $offset = strftime('%H:%M:%S', $this->_strtotime($datetime) - $this->_datetime2timestamp($pl['start']) - UI_TIMEZONEOFFSET);
+        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);
+
+        return array(
+                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE),
+                'duration'  => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION),
+                'elapsed'   => $clip['elapsed'],
+                'remaining' => $clip['remaining'],
+                'percentage'=> 50
+               );
+    }
+
+
     function _copyPlFromSP()
     {
         foreach ($this->Base->SCRATCHPAD->get() as $val) {
@@ -214,13 +235,6 @@ class uiScheduler extends uiCalendar
         if (!count($this->playlists))
             return FALSE;
         return TRUE;
-    }
-
-
-    function getNowNextClip()
-    {
-        $playingNow = $this->GeneratePlayReportMethod(strftime('%Y%m%dT%H:%M:%S'), strftime('%Y%m%dT%H:%M:%S'));
-        #print_r ($playingNow);
     }
 
 

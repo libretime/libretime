@@ -186,7 +186,8 @@ class uiHandler extends uiBase {
         $s  = $ia['playtime_seconds'];
         $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
         $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $extent);
-
+        $this->gb->setMDataValue($r, UI_MDATA_KEY_FORMAT, $this->sessid, UI_MDATA_VALUE_FORMAT_FILE);
+        
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if ($v['id3'] != FALSE) {
@@ -232,6 +233,7 @@ class uiHandler extends uiBase {
         $length = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
         $this->gb->setMDataValue($r, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
         $this->gb->setMDataValue($r, UI_MDATA_KEY_DURATION, $this->sessid, $length);
+        $this->gb->setMDataValue($r, UI_MDATA_KEY_FORMAT, $this->sessid, UI_MDATA_VALUE_FORMAT_STREAM);
         $this->redirUrl = UI_BROWSER."?act=editWebstream&id=$r";
         $this->_retMsg('Stream Data saved');
         return $r;
@@ -361,14 +363,17 @@ class uiHandler extends uiBase {
      */
     function delete($id, $delOverride=FALSE)
     {
-        $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
+        #$this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid;
+        $this->redirUrl = UI_BROWSER."?popup[]=_reload_parent&popup[]=_close";
 
+        /* no folder support yet
         if (!($delOverride==$id) && (count($this->gb->getObjType($id)=='Folder'?
                       $this->gb->listFolder($id, $this->sessid):NULL))) {
             $this->_retMsg("Folder is not empty. You can override this protection by clicking DEL again");
             $this->redirUrl = UI_BROWSER."?act=fileList&id=".$this->pid."&delOverride=$id";
             return FALSE;
         }
+        */
 
         if ($this->gb->getFileType($id)=='playlist') {
             $r = $this->gb->deletePlaylist($id, $this->sessid);

@@ -59,10 +59,10 @@
      }
 
      function hpopup(url, name)
-     {  
+     {                                   //, 'width=1, height=1'
         url = url + '&is_popup=1';
-        popupwin = window.open(url, name, 'width=1, height=1');
-        window.parent.focus();
+        popupwin = window.open(url, name);
+        //window.parent.focus();
      }
      {/literal}
 

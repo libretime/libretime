@@ -143,7 +143,7 @@ class uiPlaylist
         foreach ($elemIds as $elemId) {
             $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid);
             if (PEAR::isError($r)) {
-                if (UI_VERBOSE) print_r($r);
+                #print_r($r);
                 $this->Base->_retMsg('Error on add item to Playlist');
                 return FALSE;
             }

@@ -84,7 +84,7 @@ function contextmenu(param) {
             break;
 
             case "delete":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_HANDLER}?act=delete&id="+param+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=delete&id="+param+"')\" "+oF+">&nbsp;!Delete Item!&nbsp;</a></li>";
             break;
 
             case "fileList":
