@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.28 $
+ *  @version $Revision: 1.29 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -232,13 +232,38 @@ class GreenBox extends BasicStor{
      *  @param id int, virt.file's local id
      *  @param category string, metadata element name
      *  @param sessid string, session id
-     *  @return array of matching records
+     *  @param lang string, optional xml:lang value for select language version
+     *  @return array of matching records as hash with fields:
+     *   <ul>
+     *      <li>mid int, local metadata record id</li>
+     *      <li>value string, element value</li>
+     *      <li>attrs hasharray of element's attributes indexed by
+     *          qualified name (e.g. xml:lang)</li>
+     *   </ul>
      */
-    function getMdataValue($id, $category, $sessid='')
+    function getMdataValue($id, $category, $sessid='', $lang=NULL)
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsGetMetadataValue($id, $category);
+        return $this->bsGetMetadataValue($id, $category, $lang);
+    }
+
+    /**
+     *  Set metadata element value
+     *
+     *  @param id int, virt.file's local id
+     *  @param category string, metadata element identification (e.g. dc:title)
+     *  @param sessid string, session id
+     *  @param value string/NULL value to store, if NULL then delete record
+     *  @param lang string, optional xml:lang value for select language version
+     *  @param mid int, metadata record id (OPTIONAL on unique elements)
+     *  @return boolean
+     */
+    function setMdataValue($id, $category, $sessid='', $value, $lang=NULL, $mid=NULL)
+    {
+        if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsSetMetadataValue($id, $category, $value, $lang, $mid);
     }
 
     /**

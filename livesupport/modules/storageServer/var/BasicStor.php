@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -602,15 +602,36 @@ class BasicStor extends Alib{
      *
      *  @param id int, virt.file's local id
      *  @param category string, metadata element name
-     *  @return array of matching records
+     *  @param lang string, optional xml:lang value for select language version
+     *  @return array of matching records (as hash {id, value, attrs})
+     *  @see Metadata::getMetadataValue
      */
-    function bsGetMetadataValue($id, $category)
+    function bsGetMetadataValue($id, $category, $lang=NULL)
     {   
-        require_once "DataEngine.php";
-        $de =& new DataEngine($this);
-        return $de->getMetadataValue($id, $category);
+        $ac =& StoredFile::recall($this, $id);
+        return $ac->md->getMetadataValue($category, $lang);
     }
     
+    /**
+     *  Set metadata element value
+     *
+     *  @param id int, virt.file's local id
+     *  @param category string, metadata element identification (e.g. dc:title)
+     *  @param value string/NULL value to store, if NULL then delete record
+     *  @param lang string, optional xml:lang value for select language version
+     *  @param mid int, metadata record id (OPTIONAL on unique elements)
+     *  @return boolean
+     */
+    function bsSetMetadataValue($id, $category, $value, $lang=NULL, $mid=NULL)
+    {
+        $ac =& StoredFile::recall($this, $id);
+        $res = $ac->md->setMetadataValue($category, $value, $lang, $mid);
+        if(PEAR::isError($res)) return $res;
+        $r = $ac->md->regenerateXmlFile();
+        if(PEAR::isError($r)) return $r;
+        return $res;
+    }
+
     /**
      *  Search in local metadata database.
      *
