@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -329,14 +329,53 @@ GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
 
 
 /*------------------------------------------------------------------------------
- *  Upload a file to the server.
+ *  Open a  playlist for editing.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
+                                                    throw (XmlRpcException)
+{
+    releaseEditedPlaylist();
+
+    if (!playlistId.get()) {
+        editedPlaylist = storage->createPlaylist(sessionId);
+        playlistId     = editedPlaylist->getId();
+    }
+
+    editedPlaylist = storage->editPlaylist(sessionId, playlistId);
+
+    return editedPlaylist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Release the edited playlist.
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)         throw ()
+GLiveSupport :: releaseEditedPlaylist(void)
+                                                    throw (XmlRpcException)
+{
+    if (editedPlaylist.get()) {
+        if (editedPlaylist->isLocked()) {
+            storage->releasePlaylist(sessionId, editedPlaylist);
+        }
+        editedPlaylist.reset();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a playlist to the currently edited playlist
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
+                                                    throw (XmlRpcException)
 {
     if (!editedPlaylist.get()) {
-        editedPlaylist = storage->createPlaylist(sessionId);
+        openPlaylistForEditing();
     }
 
     // for some wierd reason, the storage functions won't accept
@@ -361,14 +400,16 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)         throw ()
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
+GLiveSupport :: savePlaylist(void)
                                                     throw (XmlRpcException)
 {
-    editedPlaylist->setTitle(title);
-
     storage->savePlaylist(sessionId, editedPlaylist);
 
+    Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId,
+                                                editedPlaylist->getId());
+
     // add the saved playlist to the DJ Bag, and update it
+    // TODO: if already in the DJ bag, don't add, just pop it to the front
     djBagContents->push_front(editedPlaylist);
     masterPanel->updateDjBagWindow();   
 
@@ -385,11 +426,8 @@ GLiveSupport :: schedulePlaylist(Ptr<Playlist>::Ref             playlist,
                                  Ptr<posix_time::ptime>::Ref    playtime)
                                                     throw (XmlRpcException)
 {
-std::cerr << "schedulePlaylist #1" << std::endl;
     scheduler->uploadPlaylist(sessionId, playlist->getId(), playtime);
-std::cerr << "schedulePlaylist #2" << std::endl;
     masterPanel->updateSchedulerWindow(playtime);
-std::cerr << "schedulePlaylist #3" << std::endl;
 }
 
 

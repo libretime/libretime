@@ -84,6 +84,7 @@ root:table
         saveButtonLabel:string        { "save" }
         closeButtonLabel:string       { "close" }
         statusBar:string              { "status bar" }
+        playlistSavedMessage:string   { "saved playlist {0}" }
     }
 
     schedulerWindow:table

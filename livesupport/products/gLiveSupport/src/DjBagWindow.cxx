@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -385,7 +385,6 @@ DjBagWindow :: onSchedulePlaylist(void)                       throw ()
             Ptr<StorageClientInterface>::Ref    storage =
                                                   gLiveSupport->getStorage();
 
-            // append the appropriate playable object to the end of the playlist
             if (!storage->existsPlaylist(sessionId, uid)) {
                 return;
             }
@@ -401,7 +400,6 @@ DjBagWindow :: onSchedulePlaylist(void)                       throw ()
             }
 
             Ptr<SchedulePlaylistWindow>::Ref    scheduleWindow;
-
             scheduleWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
                                                             bundle,
                                                             playlist));

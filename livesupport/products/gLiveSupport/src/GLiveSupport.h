@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -370,28 +370,60 @@ class GLiveSupport : public LocalizedConfigurable,
         }
 
         /**
+         *  Create a new playlist or Open a playlist for editing.
+         *  The opened playlist can be later accessed by getEditedPlaylist().
+         *  Always release the opened playlist by calling
+         *  releaseEditedPlaylist()
+         *
+         *  @param playlistId the id of the playlist to open for editing.
+         *         if a reference to 0, create a new playlist.
+         *  @return the new playlist object, which is opened for editing.
+         *  @exception XmlRpcException on XMl-RPC errors.
+         *  @see #getEditedPlaylist
+         *  @see #releaseEditedPlaylist
+         */
+        Ptr<Playlist>::Ref
+        openPlaylistForEditing(
+                    Ptr<UniqueId>::Ref playlistId = Ptr<UniqueId>::Ref())
+                                                      throw (XmlRpcException);
+
+        /**
          *  Add a playable item to the currently open playlist.
          *  If there is no currently open playlist, open the simple playlist
          *  management window with a new playlist, holding only this one
          *  entry.
+         *  Always release the opened playlist by calling
+         *  releaseEditedPlaylist()
          *
          *  @param id the id of the playable object to add to the playlist.
+         *  @exception XmlRpcException on XMl-RPC errors.
+         *  @see #releaseEditedPlaylist
          */
         void
-        addToPlaylist(Ptr<const UniqueId>::Ref  id)             throw ();
-
+        addToPlaylist(Ptr<const UniqueId>::Ref  id)
+                                                      throw (XmlRpcException);
         /**
          *  Save the currently edited playlist in storage.
+         *  This call has to be preceeded by a call to openPlaylistForEditing()
+         *  or addToPlaylist().
          *
-         *  @param title the title of the audio clip.
-         *  @return the audio clip that was uploaded.
+         *  @return the audio clip that was saved.
          *  @exception XmlRpcException on upload failures.
+         *  @see #openPlaylistForEditing
+         *  @see #addToPlaylist
          */
         Ptr<Playlist>::Ref
-        uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
-                                                    throw (XmlRpcException);
+        savePlaylist(void)                          throw (XmlRpcException);
 
-        
+        /**
+         *  Release the playlist that was opened for editing.
+         *
+         *  @exception XmlRpcException on XML-RPC errors.
+         *  @see #openPlaylistForEditing
+         */
+        void
+        releaseEditedPlaylist(void)                 throw (XmlRpcException);
+
         /**
          *  Return the scheduled entries for a specified time interval.
          *

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -196,6 +196,7 @@ SchedulerWindow :: showContents(void)                           throw ()
                                    *midnight));
 
     entries = gLiveSupport->displaySchedule(from, to);
+          
     it      = entries->begin();
     end     = entries->end();
     entriesModel->clear();
@@ -217,7 +218,10 @@ SchedulerWindow :: showContents(void)                           throw ()
         row[entryColumns->idColumn]    = entry->getId();
         row[entryColumns->startColumn] =
                                       to_simple_string(*entry->getStartTime());
-        row[entryColumns->titleColumn] = *playlist->getTitle();
+// the title is lost, for some reason, see
+// http://bugs.campware.org/view.php?id=534
+//        row[entryColumns->titleColumn] = *playlist->getTitle();
+        row[entryColumns->titleColumn] = "TODO: playlist title here";
         row[entryColumns->endColumn]   = to_simple_string(*entry->getEndTime());
 
         ++it;

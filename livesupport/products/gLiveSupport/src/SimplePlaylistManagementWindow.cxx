@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -145,11 +145,21 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
 
         title.reset(new Glib::ustring(nameEntry->get_text()));
 
-        playlist = gLiveSupport->uploadPlaylist(title);
+        playlist = gLiveSupport->getEditedPlaylist();
+        playlist->setTitle(title);
 
-        Glib::ustring   statusText("uploaded playlist ");
-        statusText += *playlist->getTitle();
-        statusBar->set_text(statusText);
+        playlist = gLiveSupport->savePlaylist();
+
+        Ptr<UnicodeString>::Ref uTitle = ustringToUnicodeString(
+                                                        playlist->getTitle());
+        Formattable             arguments[] = { *uTitle };
+        Ptr<Glib::ustring>::Ref statusText = formatMessageUstring(
+                                                    "playlistSavedMessage",
+                                                    arguments,
+                                                    1);
+        statusBar->set_text(*statusText);
+
+        gLiveSupport->releaseEditedPlaylist();
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
     }
@@ -162,6 +172,8 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
 void
 SimplePlaylistManagementWindow :: onCloseButtonClicked (void)       throw ()
 {
+    gLiveSupport->releaseEditedPlaylist();
+
     hide();
 }
 

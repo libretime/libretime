@@ -84,6 +84,7 @@ hu:table
         saveButtonLabel:string        { "elment" }
         closeButtonLabel:string       { "bezár" }
         statusBar:string              { "állapotsor" }
+        playlistSavedMessage:string   { "playlist {0} elmentve" }
     }
 
     schedulerWindow:table
