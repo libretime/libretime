@@ -7,6 +7,10 @@
     {include file="menu_top.tpl"}
 {/if}
 
+{if $showSP}
+    {include file="scratchpad.tpl"}
+{/if}
+
 {if $showPath}
     {include file="path.tpl"}
 {/if}

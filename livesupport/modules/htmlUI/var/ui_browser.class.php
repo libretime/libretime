@@ -6,29 +6,14 @@ class uiBrowser extends uiBase {
     /**
      *  uiBrowser
      *
-     *  Initialize a new Browser Class including:
-     *  - database  initialation
-     *  - GreenBox initialation
+     *  Initialize a new Browser Class
+     *  Call uiBase constructor
      *
      *  @param $config array, configurartion data
      */
-    function uiBrowser($config)
+    function uiBrowser(&$config)
     {
-        $dbc = DB::connect($config['dsn'], TRUE);
-        if (DB::isError($dbc)) {
-            die($dbc->getMessage());
-        }
-        $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb =& new GreenBox(&$dbc, $config);
-        $this->sessid = $_REQUEST[$config['authCookieName']];
-        $this->userid = $this->gb->getSessUserId($this->sessid);
-        $this->login  = $this->gb->getSessLogin($this->sessid);
-        $this->id =  $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
-        $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
-                                               'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
-
-
-
+        $this->uiBase($config);
     }
 
     // --- error handling ---
@@ -307,7 +292,7 @@ class uiBrowser extends uiBase {
      */
     function getSearchForm($id, &$formdata, &$mask)
     {
-        $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_BROWSER);
+        $form = new HTML_QuickForm('search', 'get', UI_BROWSER);
         $form->setConstants(array('id'=>$id, 'counter'=>($formdata['counter'] ? $formdata['counter'] : UI_SEARCH_MIN_ROWS)));
 
         foreach ($mask['mData']['tabs']['group']['group'] as $k=>$v) {

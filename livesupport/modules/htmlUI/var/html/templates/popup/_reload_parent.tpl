@@ -1,4 +1,4 @@
 <script type="text/javascript">
-    //opener.location.reload();
-    opener.location.href="{$UI_BROWSER}";
+    opener.location.reload();
+    //opener.location.href="{$UI_BROWSER}";
 </script>

@@ -87,6 +87,10 @@ switch($_REQUEST['act']){
         $uiHandler->storeMetaData($_REQUEST, $ui_fmask["mData"]);
     break;
 
+    case "add2SP":
+        $uiHandler->add2SP($uiHandler->id);
+    break;
+
     default:
         $_SESSION["alertMsg"] = $uiHandler->tra("Unknown method: ").$_REQUEST["act"];
         header("Location: ".UI_BROWSER);

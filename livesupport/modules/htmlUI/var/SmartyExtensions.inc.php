@@ -1,7 +1,12 @@
 <?php
-## some constants ########################
-$Smarty->assign('UI_BROWSER', UI_BROWSER);
-$Smarty->assign('UI_HANDLER', UI_HANDLER);
+$Smarty->register_object('uiBrowser', $uiBrowser);
+
+$Smarty->register_function('str_repeat', 'S_str_repeat');
+$Smarty->register_function('urlencode',  'S_urlencode');
+$Smarty->register_function('htmlspecialchars', 'S_htmlspecialchars');
+$Smarty->register_function('system', 'S_system');
+$Smarty->register_function('tra', 'S_tra');
+
 
 // --- Smarty Extensions ---
 /**
@@ -19,7 +24,7 @@ function S_str_repeat($param)
     return str_repeat($str, intval($count));
 
 }
-$Smarty->register_function('str_repeat', 'S_str_repeat');
+
 
  /**
  *  urlencode
@@ -34,7 +39,7 @@ function S_urlencode($param)
     extract($param);
     return urlencode($str);
 }
-$Smarty->register_function('urlencode',  'S_urlencode');
+
 
 /**
  *  htmlspecialchars
@@ -49,7 +54,7 @@ function S_htmlspecialchars($param)
     extract($param);
     return htmlspecialchars($str);
 }
-$Smarty->register_function('htmlspecialchars', 'S_htmlspecialchars');
+
 
 /**
  *  system
@@ -63,7 +68,7 @@ function S_system($param)
     extract($param);
     eval($code);
 }
-$Smarty->register_function('system', 'S_system');
+
 
 /**
  *  tra
@@ -78,5 +83,4 @@ function S_tra($param)
 
     echo $uiBrowser->tra($param[0], $param[1], $param[2], $param[3], $param[4], $param[5], $param[6], $param[7], $param[8], $param[9]);
 }
-$Smarty->register_function('tra', 'S_tra');
 ?>

@@ -27,6 +27,7 @@
             <div style="background-color: {cycle values='#eeeeee, #dadada'}">{$s.gunid}
                 <a href="{$UI_BROWSER}?act=getMdata&id={$s.par_id}">[XML]</a>
                 <a href="{$UI_BROWSER}?act=editMetaDataValues&id={$s.par_id}">[Form]</a>
+                <a href="#" onClick="popup('{$UI_HANDLER}?act=add2SP&id={$s.par_id}', '2SP', 1, 1)">[SP]</a>
             </div>
         {/foreach}
     {else}

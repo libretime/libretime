@@ -43,7 +43,10 @@
      }
      {/literal}
 
+     {uiBrowser->alertMsg assign='alertMsg'}
      {if $alertMsg}
         alert('{$alertMsg}');
      {/if}
+
+
 </script>

@@ -17,7 +17,7 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT);
 
 $uiHandler = new uiHandler($config);
-$uiBase    = new uiBase();
+$uiBase    = new uiBase($config);
 
 require_once dirname(__FILE__).'/ui_fmask.inc.php';
 ?>

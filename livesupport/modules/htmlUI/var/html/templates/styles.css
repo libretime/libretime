@@ -49,6 +49,14 @@
     margin-top: 10px;
 }
 
+#scratchpad {
+    text-align: center;
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
 #path {
     text-align: center;
     width: 800px;

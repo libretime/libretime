@@ -23,7 +23,7 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
 
 ------------------------------------------------------------------------------*/

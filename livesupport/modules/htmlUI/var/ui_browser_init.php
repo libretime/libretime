@@ -20,20 +20,22 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT);
 
 // some global vars/objects
-$Smarty = new Smarty;
-require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
+$Smarty    = new Smarty;
 $uiBrowser = new uiBrowser($config);
-$uiBase    = new uiBase();
+$uiBase    = new uiBase($config);
 
-## some basic things
-$Smarty->assign('alertMsg', $uiBrowser->alertMsg());
+require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
+
+## some basic things ################################################
+$Smarty->assign('UI_BROWSER', UI_BROWSER);
+$Smarty->assign('UI_HANDLER', UI_HANDLER);
 $Smarty->assign('GLOBALS', array_merge($GLOBALS, array('id' => &$uiBrowser->id)));  ## ??? really all GLOBALS ??? ##
 $Smarty->assign('user', array('sessid' => &$uiBrowser->sessid,
                               'userid' => &$uiBrowser->userid,
                               'login'  => &$uiBrowser->login
                         )
                 );
-## retransfer incomplete formdata from SESSION to POST-data
+## retransfer incomplete formdata from SESSION to POST-data #########
 if(is_array($_SESSION['retransferFormData'])){
     foreach($_SESSION['retransferFormData'] as $k=>$v){
         $_POST[$k] = $v;

@@ -8,16 +8,18 @@ class uiHandler extends uiBase {
     var $redirUrl;
     var $alertMsg;
 
-    function uiHandler($config)
+    // --- class constructor ---
+    /**
+     *  uiBrowser
+     *
+     *  Initialize a new Browser Class
+     *  Call uiBase constructor
+     *
+     *  @param $config array, configurartion data
+     */
+    function uiHandler(&$config)
     {
-        $dbc = DB::connect($config['dsn'], TRUE);
-        $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb =& new GreenBox(&$dbc, $config);
-        $this->id = (!$_REQUEST['id'] ? $this->gb->storId : $_REQUEST['id']);
-        $this->sessid = $_REQUEST[$config['authCookieName']];
-        $this->userid = $this->gb->getSessUserId($this->sessid);
-        $this->login  = $this->gb->getSessLogin ($this->sessid);
-        $this->config = $config;
+        $this->uiBase($config);
     }
 
     // --- authentication ---
@@ -517,7 +519,6 @@ class uiHandler extends uiBase {
 
         return FALSE;
     }
-
 }
 
 ?>

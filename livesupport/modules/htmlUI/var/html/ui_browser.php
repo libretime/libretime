@@ -31,7 +31,6 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('loginform', $uiBrowser->loginform($Smarty, $ui_fmask));
                 $Smarty->display('popup/login.tpl');
             break;
-
         }
     }
     die();
@@ -42,6 +41,9 @@ $Smarty->assign('statusbar', $uiBrowser->getStationInfo($ui_fmask['systemPrefs']
 
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
+  $Smarty->assign('sp', $uiBrowser->getSP());
+  $Smarty->assign('showSP', TRUE);
+
   switch ($_REQUEST['act']){
     default:
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
@@ -150,6 +152,7 @@ if ($uiBrowser->userid) {
     break;
   }
 }
- 
+#$Smarty->load_filter('output', 'trimwhitespace');
+#$Smarty->register_outputfilter('smarty_outputfilter_trimwhitespace');
 $Smarty->display('main.tpl');
 ?>

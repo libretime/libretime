@@ -16,6 +16,35 @@ function errCallBack($err)
  */
 class uiBase
 {
+    // --- class constructor ---
+    /**
+     *  uiBase
+     *
+     *  Initialize a new Basis Class including:
+     *  - database  initialation
+     *  - GreenBox initialation
+     *
+     *  @param $config array, configurartion data
+     */
+    function uiBase(&$config)
+    {
+        $dbc = DB::connect($config['dsn'], TRUE);
+        if (DB::isError($dbc)) {
+            die($dbc->getMessage());
+        }
+        $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+        $this->gb =& new GreenBox(&$dbc, $config);
+        $this->sessid = $_REQUEST[$config['authCookieName']];
+        $this->userid = $this->gb->getSessUserId($this->sessid);
+        $this->login  = $this->gb->getSessLogin($this->sessid);
+        $this->id =  $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
+        $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
+                                               'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
+
+
+
+    }
+
     // --- basic funtionality ---
     /**
      *  tra
@@ -218,6 +247,82 @@ class uiBase
         }
 
         return $arr;
+    }
+
+
+    function getSP()
+    {
+        $spData = $this->gb->loadPref($this->sessid, 'scratchPadContents');
+        if (!PEAR::isError($spData)) {
+            $arr = explode(' ', $spData);
+            foreach($arr as $val) {
+                $pieces = explode(':', $val);
+                $filedata = $this->getFileInfo($pieces[0]);
+                $res[] = array('id'         => $pieces[0],
+                               #'added'      => $pieces[1],
+                               'name'       => $filedata['name'],
+                               'duration'   => $filedata['playtime_string']
+                         );
+            }
+
+            return ($res);
+        } else {
+            return FALSE;
+        }
+    }
+
+    function saveSP($data)
+    {
+        foreach($data as $val) {
+            $str .= $val['id'].':'.$val['added'].' ';
+        }
+
+        $this->gb->savePref($this->sessid, 'scratchPadContents', trim($str));
+    }
+
+    function add2SP($id)
+    {
+        if ($sp = $this->getSP()) {
+            foreach ($sp as $val) {
+                if ($val['id'] == $id) $exists = TRUE;
+            }
+        }
+
+        if(!$exists) {
+            $sp[] = array('id'      => $id,
+                          'added'   => date('Y-m-d')
+                    );
+            $this->saveSP($sp);
+            $this->_retmsg('Entry $1 added', $id);
+        } else {
+            $this->_retmsg('Entry $1 already exists', $id);
+        }
+
+        $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+    }
+
+    function _retmsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
+    {
+        $_SESSION['alertMsg'] = $this->tra($msg, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9);
+    }
+
+
+    function getFileName($id)
+    {
+        $file = array_pop($this->gb->getPath($id));
+        return $file['name'];
+    }
+
+    function getFileInfo($id)
+    {
+        $f = $this->gb->analyzeFile($id, $this->sessid); 
+        return array(
+                    'name'              => $this->getFileName($id),
+                    'type'              => 0,
+                    'filename'          => $f['filename'],
+                    'playtime_seconds'  => $f['playtime_seconds'],
+                    'playtime_string'   => $f['playtime_string']
+                );
     }
 }
 ?>
