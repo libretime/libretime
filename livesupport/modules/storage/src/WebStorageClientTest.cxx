@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,10 +44,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "WebStorageClient.h"
+#include "LiveSupport/Storage/WebStorageClient.h"
 #include "LiveSupport/Core/SessionId.h"
 
-#include "LiveSupport/Storage/WebStorageClientTest.h"
+#include "WebStorageClientTest.h"
 
 using namespace std;
 using namespace LiveSupport::Core;

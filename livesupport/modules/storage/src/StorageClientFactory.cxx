@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/StorageClientFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,7 +36,7 @@
 
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "TestStorageClient.h"
-#include "WebStorageClient.h"
+#include "LiveSupport/Storage/WebStorageClient.h"
 
 
 using namespace LiveSupport::Core;
