@@ -23,11 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Transport.php,v $
 
 ------------------------------------------------------------------------------*/
-include_once "xmlrpc/xmlrpc.inc";
+include_once "xmlrpc/XML/RPC.php";
 
 /**
  *  Class for handling file tranport between StorageServer and ArchiveServer<br>
