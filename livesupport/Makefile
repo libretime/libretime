@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.14 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.15 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -78,6 +78,10 @@ LCOV_DIR          = ${TOOLS_DIR}/lcov
 LCOV_VERSION      = lcov-1.3
 HELIX_DIR         = ${TOOLS_DIR}/helix
 HELIX_VERSION     = all_clients_nodist-helix-20041010
+GTK_DIR           = ${TOOLS_DIR}/gtk+
+GTK_VERSION       = gtk+-2.4.13
+GTKMM_DIR         = ${TOOLS_DIR}/gtkmm
+GTKMM_VERSION     = gtkmm-2.4.7
 ICU_DIR           = ${TOOLS_DIR}/icu
 ICU_VERSION       = icu-3.0
 
@@ -146,6 +150,8 @@ tools_setup:
 	${XMLRPCXX_DIR}/${XMLRPCXX_VERSION}/bin/install.sh
 	${LCOV_DIR}/${LCOV_VERSION}/bin/install.sh
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
+	${GTK_DIR}/${GTK_VERSION}/bin/install.sh
+	${GTKMM_DIR}/${GTKMM_VERSION}/bin/install.sh
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 
 doxytag_setup:
