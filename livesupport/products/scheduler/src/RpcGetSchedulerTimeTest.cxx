@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetSchedulerTimeTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,14 +45,12 @@
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
-#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "RpcGetSchedulerTimeTest.h"
 
 using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
-using namespace LiveSupport::Authentication;
 
 
 /* ===================================================  local data structures */
@@ -66,12 +64,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RpcGetSchedulerTimeTest);
  *  The name of the configuration file for the scheduler daemon.
  */
 static const std::string configFileName = "etc/scheduler.xml";
-
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-static const std::string authenticationClientConfigFileName =
-                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -120,23 +112,6 @@ RpcGetSchedulerTimeTest :: setUp(void)                        throw ()
     daemon->install();
 //    daemon->start();
 //    sleep(5);
-
-    try {
-        Ptr<AuthenticationClientFactory>::Ref acf;
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfigFileName);
-        authentication = acf->getAuthenticationClient();
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("semantic error in authentication configuration file");
-    } catch (xmlpp::exception &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("error parsing authentication configuration file");
-    }
-    
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
-    }
 }
 
 
@@ -150,10 +125,6 @@ RpcGetSchedulerTimeTest :: tearDown(void)                     throw ()
 
 //    daemon->stop();
     daemon->uninstall();
-    
-    authentication->logout(sessionId);
-    sessionId.reset();
-    authentication.reset();
 }
 
 
@@ -171,32 +142,13 @@ RpcGetSchedulerTimeTest :: simpleTest(void)
 
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    xmlRpcClient.execute("getSchedulerTime", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("faultCode"));
-    CPPUNIT_ASSERT(int(result["faultCode"]) == 1901);
-
-    parameters["dummyParameter"] = "dummyValue";
-    xmlRpcClient.execute("getSchedulerTime", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("faultCode"));
-    CPPUNIT_ASSERT(int(result["faultCode"]) == 1920);
-
-// doesn't work yet
-//    parameters.clear();
-//    parameters["sessionId"] = badSessionId->getId();
-//    xmlRpcClient.execute("getSchedulerTime", parameters, result);
-//    CPPUNIT_ASSERT(xmlRpcClient.isFault());
-//    CPPUNIT_ASSERT(result.hasMember("faultCode"));
-//    CPPUNIT_ASSERT(int(result["faultCode"]) == NEW_ERROR_CODE);
-
-    parameters.clear();
-    parameters["sessionId"] = sessionId->getId();
+    result.clear();
     xmlRpcClient.execute("getSchedulerTime", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("schedulerTime"));
     time1 = result["schedulerTime"];
 
+    result.clear();
     xmlRpcClient.execute("getSchedulerTime", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("schedulerTime"));

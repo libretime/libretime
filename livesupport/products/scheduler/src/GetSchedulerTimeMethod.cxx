@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,28 +100,9 @@ GetSchedulerTimeMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                               XmlRpc::XmlRpcValue  & returnValue)
                                                 throw (XmlRpc::XmlRpcException)
 {
-    if (!rootParameter.valid() || rootParameter.size() != 1) {
-        XmlRpcTools::markError(errorId+1, "invalid argument format", 
-                               returnValue);
-        return;
-    }
-    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
-
-    Ptr<SessionId>::Ref      sessionId;
-    try{
-        sessionId = XmlRpcTools::extractSessionId(parameters);
-    }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+20, 
-                               "missing session ID argument",
-                                returnValue);
-        return;
-    }
-    
-    // TODO: check whether the session ID is valid
-
-    Ptr<ptime>::Ref schedulerPTime      = TimeConversion::now();
+    Ptr<ptime>::Ref schedulerPTime = TimeConversion::now();
     struct tm schedulerTime;
     TimeConversion::ptimeToTm(schedulerPTime, schedulerTime);
     returnValue["schedulerTime"] = & schedulerTime;
 }
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,14 +46,12 @@
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
-#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "GetSchedulerTimeMethodTest.h"
 
 using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
-using namespace LiveSupport::Authentication;
 
 
 /* ===================================================  local data structures */
@@ -63,12 +61,6 @@ using namespace LiveSupport::Authentication;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(GetSchedulerTimeMethodTest);
 
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-static const std::string authenticationClientConfigFileName =
-                                          "etc/authenticationClient.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -76,45 +68,11 @@ static const std::string authenticationClientConfigFileName =
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-GetSchedulerTimeMethodTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string         & fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
-
-/*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
 GetSchedulerTimeMethodTest :: setUp(void)                        throw ()
 {
-    try {
-        Ptr<AuthenticationClientFactory>::Ref acf;
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfigFileName);
-        authentication = acf->getAuthenticationClient();
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("semantic error in authentication configuration file");
-    } catch (xmlpp::exception &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("error parsing authentication configuration file");
-    }
-    
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
-    }
 }
 
 
@@ -124,9 +82,6 @@ GetSchedulerTimeMethodTest :: setUp(void)                        throw ()
 void
 GetSchedulerTimeMethodTest :: tearDown(void)                     throw ()
 {
-    authentication->logout(sessionId);
-    sessionId.reset();
-    authentication.reset();
 }
 
 
@@ -140,36 +95,12 @@ GetSchedulerTimeMethodTest :: simpleTest(void)
     Ptr<GetSchedulerTimeMethod>::Ref 
                         getSchedulerTimeMethod(new GetSchedulerTimeMethod());
 
-    XmlRpcValue         parameters;
+//    XmlRpcValue         parameters;
     XmlRpc::XmlRpcValue rootParameter;
+//    rootParameter[0] = parameters;
     XmlRpcValue         result;
     struct tm           time1,
                         time2;
-
-    result.clear();
-    try {
-        getSchedulerTimeMethod->execute(rootParameter, result);
-        CPPUNIT_FAIL("failed to detect invalid parameter format");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 1901);
-    }
-
-    rootParameter.setSize(1);
-    parameters["dummyParameter"] = "dummyValue";
-    rootParameter[0] = parameters;
-    result.clear();
-    try {
-        getSchedulerTimeMethod->execute(rootParameter, result);
-        CPPUNIT_FAIL("failed to detect missing session ID");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 1920);
-    }
-
-    parameters.clear();
-    parameters["sessionId"] = sessionId->getId();
-    rootParameter[0] = parameters;
     result.clear();
     try {
         getSchedulerTimeMethod->execute(rootParameter, result);

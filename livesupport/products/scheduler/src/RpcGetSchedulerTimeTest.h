@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetSchedulerTimeTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,15 +42,11 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
-#include "LiveSupport/Core/SessionId.h"
-
 namespace LiveSupport {
 namespace Scheduler {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -64,7 +60,7 @@ using namespace LiveSupport::Authentication;
  *  Unit test to test the getSchedulerTime XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see SchedulerDaemon
  */
 class RpcGetSchedulerTimeTest : public CPPUNIT_NS::TestFixture
@@ -74,15 +70,6 @@ class RpcGetSchedulerTimeTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        /**
-         *  An authentication client.
-         */
-        Ptr<AuthenticationClientInterface>::Ref authentication;
-
-        /**
-         *  A session ID from the authentication client login() method.
-         */
-        Ptr<SessionId>::Ref                     sessionId;
 
         /**
          *  Configure a configurable with an XML file.

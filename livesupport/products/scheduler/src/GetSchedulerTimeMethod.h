@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,12 +75,7 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is 
  *  "getSchedulerTime".
  *
- *  The expected parameter is an XML-RPC structure, with the following
- *  members:
- *  <ul>
- *      <li>sessionId  - string - the session ID obtained via the login()
- *                                method of the authentication client </li>
- *  </ul>
+ *  No input parameters are expected.
  *
  *  The XML-RPC function returns an XML-RPC structure containing a single
  *  date/time field:
@@ -88,15 +83,10 @@ using namespace LiveSupport::Core;
  *      <li>schedulerTime - date/time - the local time on the scheduler</li>
  *  </ul>
  *
- *  In case of an error, a standard XML-RPC fault response is generated, 
- *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
- *  possible errors are:
- *  <ul>
- *     <li>1901 - invalid argument format </li>
- *     <li>1920 - missing session ID argument </li>
- *  </ul>
+ *  This method does not generate any fault responses.
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class GetSchedulerTimeMethod : public XmlRpc::XmlRpcServerMethod
 {
