@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,8 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+
 #include "DisplayPlaylistsMethod.h"
 #include "DisplayPlaylistsMethodTest.h"
 
@@ -54,6 +56,8 @@
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -73,6 +77,12 @@ const std::string DisplayPlaylistsMethodTest::storageClientConfig =
  */
 const std::string DisplayPlaylistsMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string DisplayPlaylistsMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -104,6 +114,7 @@ DisplayPlaylistsMethodTest :: configure(
 void
 DisplayPlaylistsMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
@@ -113,12 +124,20 @@ DisplayPlaylistsMethodTest :: setUp(void)                         throw ()
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -129,6 +148,9 @@ DisplayPlaylistsMethodTest :: setUp(void)                         throw ()
 void
 DisplayPlaylistsMethodTest :: tearDown(void)                      throw ()
 {
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -141,11 +163,15 @@ DisplayPlaylistsMethodTest :: firstTest(void)
 {
     Ptr<DisplayPlaylistsMethod>::Ref method(new DisplayPlaylistsMethod());
     XmlRpc::XmlRpcValue       parameters;
+    XmlRpc::XmlRpcValue       rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue       result;
     XmlRpc::XmlRpcValue       playlist;       
 
     result.clear();
-    method->execute(parameters, result);
+    parameters["sessionId"]  = sessionId->getId();
+    rootParameter[0] = parameters;
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.size() == 1);
 
     playlist = result[0];

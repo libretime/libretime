@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,6 +106,17 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
     XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<UniqueId>::Ref       playlistId;
     try {
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
@@ -133,7 +144,7 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     Ptr<Playlist>::Ref  playlist;
     try {
-        playlist = storage->getPlaylist(playlistId);
+        playlist = storage->getPlaylist(sessionId, playlistId);
     }
     catch (std::invalid_argument &e)  {
         XmlRpcTools::markError(errorId+4, "playlist not found",

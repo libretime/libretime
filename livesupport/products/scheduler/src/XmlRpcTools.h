@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "PlayLogEntry.h"
 #include "ScheduleEntry.h"
@@ -72,7 +73,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class XmlRpcTools
 {
@@ -130,6 +131,12 @@ class XmlRpcTools
          *  structure.
          */
         static const std::string        fadeOutName;
+
+        /**
+         *  The name of the sessionId member in the XML-RPC parameter
+         *  structure given as the input to an XmlRpcServerMethod.
+         */
+        static const std::string        sessionIdName;
 
         /**
          *  Convert a boost::posix_time::ptime to an XmlRpcValue
@@ -377,6 +384,19 @@ class XmlRpcTools
                                     playLogVector,
             XmlRpc::XmlRpcValue   & returnValue)
                                                                      throw ();
+
+        /**
+         *  Extract the session ID from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a SessionId that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no sessionId
+         *             member in xmlRpcValue
+         */
+        static Ptr<SessionId>::Ref
+        extractSessionId(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
 
 };
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -62,7 +64,7 @@ using namespace LiveSupport::Core;
  *
  *  @author  $Author: maroy, fgerlits
  $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see DeletePlaylistMethod
  */
 class DeletePlaylistMethodTest : public CPPUNIT_NS::TestFixture
@@ -82,6 +84,22 @@ class DeletePlaylistMethodTest : public CPPUNIT_NS::TestFixture
          *  factory.
          */
         static const std::string connectionManagerConfig;
+
+        /**
+         *  The name of the configuration file for the authentication client
+         *  factory.
+         */
+        static const std::string                authenticationClientConfig;
+
+        /**
+         *  The authentication client produced by the factory.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
 
         /**
          *  Configure a configurable with an XML file.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,8 +69,10 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is "deletePlaylist".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist 
  *                                                   to be deleted.</li>
  *  </ul>
@@ -88,10 +90,11 @@ using namespace LiveSupport::Core;
  *     <li>903 - playlist not found </li>
  *     <li>904 - playlist is locked </li>
  *     <li>905 - playlist could not be deleted </li>
+ *     <li>922 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,6 +106,17 @@ DisplayAudioClipMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
     XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<UniqueId>::Ref id;
     try{
         id = XmlRpcTools::extractAudioClipId(parameters);
@@ -124,7 +135,7 @@ DisplayAudioClipMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
  
     Ptr<AudioClip>::Ref audioClip;
     try {
-        audioClip = storage->getAudioClip(id);
+        audioClip = storage->getAudioClip(sessionId, id);
     }
     catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "audio clip not found", 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,12 @@ using namespace LiveSupport::Core;
  *
  *  The name of the method when called through XML-RPC is "displayPlaylists".
  *
- *  No input parameters are expected.
+ *  The expected parameter is an XML-RPC structure, with the following
+ *  members:
+ *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
+ *  </ul>
  *
  *  The XML-RPC function returns an XML-RPC array, containing a structure
  *  for each playlist in the playlist store.  An array of size 0 means the
@@ -83,8 +88,19 @@ using namespace LiveSupport::Core;
  *      </li>
  *  </ul>
  *
+ *  In case of an error, an XML-RPC structure is returned, with the following
+ *  fields:
+ *  <ul>
+ *      <li>errorCode - int - the id of the error condition</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>1722 - missing session ID argument </li>
+ *  </ul>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -94,6 +110,11 @@ class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
+
+        /**
+         *  The ID of this method for error reporting purposes.
+         */
+        static const int                errorId;
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,6 +61,11 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string DisplayPlaylistsMethod::methodName = "displayPlaylists";
 
+/*------------------------------------------------------------------------------
+ *  The ID of this method for error reporting purposes.
+ *----------------------------------------------------------------------------*/
+const int DisplayPlaylistsMethod::errorId = 1700;
+
 
 /* ===============================================  local function prototypes */
 
@@ -81,10 +86,28 @@ DisplayPlaylistsMethod :: DisplayPlaylistsMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                   XmlRpc::XmlRpcValue  & returnValue)
                                                                       throw ()
 {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
+        return;
+    }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<StorageClientFactory>::Ref      scf;
     Ptr<StorageClientInterface>::Ref    storage;
 
@@ -92,7 +115,7 @@ DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
     storage = scf->getStorageClient();
 
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector = 
-                                               storage->getAllPlaylists();
+                                           storage->getAllPlaylists(sessionId);
 
     XmlRpcTools::playlistVectorToXmlRpcValue(playlistVector, returnValue);
 }

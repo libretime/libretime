@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace LiveSupport::Scheduler;
 /**
  *  A scheduled event for playing a playlist.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {
@@ -98,6 +98,11 @@ class PlaylistEvent : public virtual ScheduledEventInterface
          *  The Playlist this event is playing.
          */
         Ptr<Playlist>::Ref          playlist;
+
+        /**
+         *  The session ID used for authentication at the storage server.
+         */
+        Ptr<SessionId>::Ref         sessionId;
 
 
     public:

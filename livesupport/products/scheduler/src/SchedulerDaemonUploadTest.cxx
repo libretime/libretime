@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonUploadTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,12 +47,15 @@
 #include "XmlRpcTools.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "SchedulerDaemon.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "SchedulerDaemonUploadTest.h"
-
 
 using namespace std;
 using namespace XmlRpc;
+using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -66,11 +69,35 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonUploadTest);
  */
 static const std::string configFileName = "etc/scheduler.xml";
 
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+static const std::string authenticationClientConfigFileName =
+                                          "etc/authenticationClient.xml";
+
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  Configure a Configurable with an XML file.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonUploadTest :: configure(
+            Ptr<Configurable>::Ref      configurable,
+            const std::string         & fileName)
+                                                throw (std::invalid_argument,
+                                                       xmlpp::exception)
+{
+    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
+    const xmlpp::Document * document = parser->get_document();
+    const xmlpp::Element  * root     = document->get_root_node();
+
+    configurable->configure(*root);
+}
+
 
 /*------------------------------------------------------------------------------
  *  Set up the test environment
@@ -82,10 +109,7 @@ SchedulerDaemonUploadTest :: setUp(void)                        throw ()
 
     if (!daemon->isConfigured()) {
         try {
-            std::auto_ptr<xmlpp::DomParser> 
-                             parser(new xmlpp::DomParser(configFileName, true));
-            const xmlpp::Document * document = parser->get_document();
-            daemon->configure(*(document->get_root_node()));
+            configure(daemon, configFileName);
         } catch (std::invalid_argument &e) {
             std::cerr << e.what() << std::endl;
             CPPUNIT_FAIL("semantic error in configuration file");
@@ -98,6 +122,23 @@ SchedulerDaemonUploadTest :: setUp(void)                        throw ()
     daemon->install();
 //    daemon->start();
 //    sleep(5);
+
+    try {
+        Ptr<AuthenticationClientFactory>::Ref acf;
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfigFileName);
+        authentication = acf->getAuthenticationClient();
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        CPPUNIT_FAIL("semantic error in authentication configuration file");
+    } catch (xmlpp::exception &e) {
+        std::cerr << e.what() << std::endl;
+        CPPUNIT_FAIL("error parsing authentication configuration file");
+    }
+    
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
+    }
 }
 
 
@@ -111,6 +152,10 @@ SchedulerDaemonUploadTest :: tearDown(void)                     throw ()
 
 //    daemon->stop();
     daemon->uninstall();
+    
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -128,6 +173,7 @@ SchedulerDaemonUploadTest :: simpleTest(void)
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
     // try to schedule playlist #1 for the time below
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;

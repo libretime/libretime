@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,6 +97,17 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
     XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<UniqueId>::Ref       playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
@@ -113,7 +124,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                        = scf->getStorageClient(); 
     Ptr<Playlist>::Ref playlist;
     try {
-        playlist = storage->getPlaylist(playlistId);
+        playlist = storage->getPlaylist(sessionId, playlistId);
     }
     catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "playlist not found", 
@@ -128,7 +139,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
 
     try {
-        storage->deletePlaylist(playlistId);
+        storage->deletePlaylist(sessionId, playlistId);
     }
     catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+5, "playlist could not be deleted", 

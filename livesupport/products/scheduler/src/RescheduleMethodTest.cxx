@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,14 +46,17 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+
 #include "ScheduleFactory.h"
 #include "UploadPlaylistMethod.h"
 #include "RescheduleMethod.h"
 #include "RescheduleMethodTest.h"
 
-
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -67,6 +70,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RescheduleMethodTest);
  */
 const std::string RescheduleMethodTest::scheduleConfig =
                                             "etc/scheduleFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string RescheduleMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -98,18 +107,28 @@ RescheduleMethodTest :: configure(
 void
 RescheduleMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
         configure(sf, scheduleConfig);
 
         schedule = sf->getSchedule();
         schedule->install();
+
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -121,6 +140,10 @@ void
 RescheduleMethodTest :: tearDown(void)                      throw ()
 {
     schedule->uninstall();
+
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -141,6 +164,7 @@ RescheduleMethodTest :: firstTest(void)
     Ptr<UniqueId>::Ref              entryId;
 
     // let's upload something so we can reschedule it
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -159,6 +183,7 @@ RescheduleMethodTest :: firstTest(void)
 
     // now let's reschedule it
     parameters.clear();
+    parameters["sessionId"]       = sessionId->getId();
     parameters["scheduleEntryId"] = (int) entryId->getId();
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -175,6 +200,7 @@ RescheduleMethodTest :: firstTest(void)
 
     // now let's reschedule unto itself, should fail
     parameters.clear();
+    parameters["sessionId"]       = sessionId->getId();
     parameters["scheduleEntryId"] = (int) entryId->getId();
     time.tm_year = 2001;
     time.tm_mon  = 11;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,8 +74,10 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is "displaySchedule".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>from - datetime - the start of the interval to list schedule from,
  *          inclusive.</li>
  *      <li>to  - datetime - the end of the interval to list schedule from,
@@ -104,10 +106,11 @@ using namespace LiveSupport::Core;
  *     <li>1101 - invalid argument format </li>
  *     <li>1102 - missing or invalid 'from' argument </li>
  *     <li>1103 - missing or invalid 'to' argument </li>
+ *     <li>1122 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

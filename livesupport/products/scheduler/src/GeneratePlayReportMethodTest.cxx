@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,8 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+
 #include "PlayLogFactory.h"
 #include "UploadPlaylistMethod.h"
 #include "GeneratePlayReportMethod.h"
@@ -56,6 +58,8 @@ using namespace std;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -81,6 +85,12 @@ const std::string GeneratePlayReportMethodTest::connectionManagerConfig =
  */
 const std::string GeneratePlayReportMethodTest::playLogConfig =
                                             "etc/playLogFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string GeneratePlayReportMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -112,6 +122,7 @@ GeneratePlayReportMethodTest :: configure(
 void
 GeneratePlayReportMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
@@ -129,12 +140,20 @@ GeneratePlayReportMethodTest :: setUp(void)                         throw ()
 
         insertEntries();
 
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -146,6 +165,10 @@ void
 GeneratePlayReportMethodTest :: tearDown(void)                      throw ()
 {
     playLog->uninstall();
+
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -164,6 +187,7 @@ GeneratePlayReportMethodTest :: firstTest(void)
     struct tm                       time;
 
     // set up a structure for the parameters
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -223,6 +247,7 @@ GeneratePlayReportMethodTest :: intervalTest(void)
     struct tm                       time;
 
     // check for the interval 2004-10-26 between 13 and 15 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  = 10;
     time.tm_mday = 26;
@@ -255,6 +280,7 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
 
     // check for the interval 2004-10-26 between 14 o'clock and 15:30
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  = 10;
     time.tm_mday = 26;
@@ -287,6 +313,7 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
 
     // check for the interval 2004-10-26 15:00 to 2012-08-01 midnight
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  = 10;
     time.tm_mday = 26;
@@ -328,6 +355,7 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
 
     // check for the interval 2004-10-26 16 o'clock to 2004-10-27 10 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  = 10;
     time.tm_mday = 26;

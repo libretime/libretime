@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,8 +70,10 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is "displayPlaylist".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist requested.</li>
  *  </ul>
  *
@@ -94,10 +96,11 @@ using namespace LiveSupport::Core;
  *     <li>1001 - invalid argument format </li>
  *     <li>1002 - argument is not a playlist ID </li>
  *     <li>1003 - playlist not found </li>
+ *     <li>1022 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class DisplayPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

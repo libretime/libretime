@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.23 $
+#   Version  : $Revision: 1.24 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -70,6 +70,12 @@ CORE_LIB_DIR     = ${CORE_DIR}/lib
 CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
+AUTHENTICATION_DIR         = ${MODULES_DIR}/authentication
+AUTHENTICATION_INCLUDE_DIR = ${AUTHENTICATION_DIR}/include
+AUTHENTICATION_LIB_DIR     = ${AUTHENTICATION_DIR}/lib
+AUTHENTICATION_LIB         = livesupport_authentication
+AUTHENTICATION_LIB_FILE = ${AUTHENTICATION_LIB_DIR}/lib${AUTHENTICATION_LIB}.a
+
 DB_DIR         = ${MODULES_DIR}/db
 DB_INCLUDE_DIR = ${DB_DIR}/include
 DB_LIB_DIR     = ${DB_DIR}/lib
@@ -81,6 +87,8 @@ STORAGE_INCLUDE_DIR = ${STORAGE_DIR}/include
 STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
 STORAGE_LIB         = livesupport_storage
 STORAGE_LIB_FILE    = ${STORAGE_LIB_DIR}/lib${STORAGE_LIB}.a
+
+STORAGE_SERVER_DIR    = ${MODULES_DIR}/storageServer
 
 PLAYLIST_EXECUTOR_DIR         = ${MODULES_DIR}/playlistExecutor
 PLAYLIST_EXECUTOR_INCLUDE_DIR = ${PLAYLIST_EXECUTOR_DIR}/include
@@ -115,6 +123,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
+                             -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${DB_INCLUDE_DIR} \
                              -I${STORAGE_INCLUDE_DIR} \
                              -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
@@ -122,6 +131,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${HELIX_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
+                     -L${AUTHENTICATION_LIB_DIR} \
                      -L${DB_LIB_DIR} \
                      -L${STORAGE_LIB_DIR} \
                      -L${PLAYLIST_EXECUTOR_LIB_DIR} \
@@ -164,7 +174,8 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
                      ${TMP_DIR}/main.o
 SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
-                     -l${STORAGE_LIB} -l${DB_LIB} -l${CORE_LIB} \
+                     -l${STORAGE_LIB} -l${DB_LIB} -l${AUTHENTICATION_LIB} \
+                     -l${CORE_LIB} \
                      ${HELIX_LIBS} \
                      -lodbc++ -lboost_date_time-gcc \
                      -lxmlrpc++ -lssl -lxml++-1.0
@@ -231,12 +242,13 @@ depclean: clean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} clean
 	${MAKE} -C ${STORAGE_DIR} clean
 	${MAKE} -C ${DB_DIR} clean
+	${MAKE} -C ${AUTHENTICATION_DIR} clean
 	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER} start run_tests stop
+check: all ${TEST_RUNNER} storage_server_init start run_tests stop
 
 run_tests: ${TEST_RUNNER}
 	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
@@ -259,11 +271,15 @@ uninstall: ${SCHEDULER_EXE}
 	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} \
                                                                       uninstall
 
+storage_server_init:
+	${MAKE} -C ${STORAGE_SERVER_DIR}
+
 
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
-${SCHEDULER_EXE}: ${CORE_LIB_FILE} ${DB_LIB_FILE} ${STORAGE_LIB_FILE} \
+${SCHEDULER_EXE}: ${CORE_LIB_FILE} ${AUTHENTICATION_LIB_FILE} ${DB_LIB_FILE} \
+                  ${STORAGE_LIB_FILE} \
                   ${PLAYLIST_EXECUTOR_LIB_FILE} ${EVENT_SCHEDULER_LIB_FILE} \
                   ${SCHEDULER_EXE_OBJS}
 	${CXX} ${LDFLAGS} -o $@ $^ ${SCHEDULER_EXE_LIBS}
@@ -274,13 +290,17 @@ ${TMP_DIR}:
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
-${TEST_RUNNER}: ${CORE_LIB_FILE} ${DB_LIB_FILE} ${STORAGE_LIB_FILE} \
+${TEST_RUNNER}: ${CORE_LIB_FILE} ${AUTHENTICATION_LIB_FILE} ${DB_LIB_FILE} \
+                ${STORAGE_LIB_FILE} \
                 ${PLAYLIST_EXECUTOR_LIB_FILE} ${EVENT_SCHEDULER_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}
+
+${AUTHENTICATION_LIB_FILE} :
+	${MAKE} -C ${AUTHENTICATION_DIR}
 
 ${DB_LIB_FILE}:
 	${MAKE} -C ${DB_DIR}

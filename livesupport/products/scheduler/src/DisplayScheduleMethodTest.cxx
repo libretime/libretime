@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,8 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+
 #include "ScheduleFactory.h"
 #include "UploadPlaylistMethod.h"
 #include "DisplayScheduleMethod.h"
@@ -56,6 +58,8 @@ using namespace std;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -81,6 +85,12 @@ const std::string DisplayScheduleMethodTest::connectionManagerConfig =
  */
 const std::string DisplayScheduleMethodTest::scheduleConfig =
                                             "etc/scheduleFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string DisplayScheduleMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -117,17 +127,21 @@ DisplayScheduleMethodTest :: setUp(void)                         throw ()
                                         = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
 
-        Ptr<ConnectionManagerFactory>::Ref cmf
-                                    = ConnectionManagerFactory::getInstance();
+        Ptr<ConnectionManagerFactory>::Ref
+                    cmf = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 
-        Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+        Ptr<ScheduleFactory>::Ref
+                    sf = ScheduleFactory::getInstance();
         configure(sf, scheduleConfig);
-
         schedule = sf->getSchedule();
         schedule->install();
 
-        insertEntries();
+        Ptr<AuthenticationClientFactory>::Ref
+                    acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+        authentication = acf->getAuthenticationClient();
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
@@ -135,6 +149,12 @@ DisplayScheduleMethodTest :: setUp(void)                         throw ()
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
     }
+    
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
+    }
+
+    insertEntries();    // this can only be called after sessionId is obtained
 }
 
 
@@ -145,6 +165,10 @@ void
 DisplayScheduleMethodTest :: tearDown(void)                      throw ()
 {
     schedule->uninstall();
+
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -163,6 +187,7 @@ DisplayScheduleMethodTest :: firstTest(void)
     struct tm                       time;
 
     // set up a structure for the parameters
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -200,6 +225,7 @@ DisplayScheduleMethodTest :: insertEntries(void)
     struct tm                       time;
 
     // insert a playlist for 2004-07-31, at 10 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2004;
     time.tm_mon  =  7;
@@ -214,6 +240,7 @@ DisplayScheduleMethodTest :: insertEntries(void)
     method->execute(rootParameter, result);
 
     // insert a playlist for 2004-07-31, at 12 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2004;
     time.tm_mon  =  7;
@@ -228,6 +255,7 @@ DisplayScheduleMethodTest :: insertEntries(void)
     method->execute(rootParameter, result);
 
     // insert a playlist for 2004-07-31, at 14 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2004;
     time.tm_mon  =  7;
@@ -258,6 +286,7 @@ DisplayScheduleMethodTest :: intervalTest(void)
     struct tm                       time;
 
     // check for the interval 2004-07-31 between 9 and 11 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  =  7;
     time.tm_mday = 31;
@@ -296,6 +325,7 @@ DisplayScheduleMethodTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_sec == 0);
 
     // check for the interval 2004-07-31 between 9 and 13 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  =  7;
     time.tm_mday = 31;
@@ -350,6 +380,7 @@ DisplayScheduleMethodTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_sec == 0);
 
     // check for the interval 2004-07-31 between 8 and 9 o'clock
+    parameters["sessionId"]  = sessionId->getId();
     time.tm_year = 2004;
     time.tm_mon  =  7;
     time.tm_mday = 31;

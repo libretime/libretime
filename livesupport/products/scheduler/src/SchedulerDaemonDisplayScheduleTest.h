@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,11 +42,15 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
 namespace Scheduler {
 
 using namespace LiveSupport;
+using namespace LiveSupport::Core;
+
 
 /* ================================================================ constants */
 
@@ -59,8 +63,8 @@ using namespace LiveSupport;
 /**
  *  Unit test to test the displaySchedule XML-RPC call.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  *  @see SchedulerDaemon
  */
 class SchedulerDaemonDisplayScheduleTest : public CPPUNIT_NS::TestFixture
@@ -68,6 +72,31 @@ class SchedulerDaemonDisplayScheduleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(SchedulerDaemonDisplayScheduleTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
+        /**
+         *  An authentication client.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
+
+        /**
+         *  Configure a configurable with an XML file.
+         *
+         *  @param configurable configure this
+         *  @param fileName the name of the XML file to configure with.
+         *  @exception std::invalid_argument on configuration errors.
+         *  @exception xmlpp::exception on XML parsing errors.
+         */
+        void
+        configure(Ptr<Configurable>::Ref    configurable,
+                  const std::string       & fileName)
+                                                throw (std::invalid_argument,
+                                                       xmlpp::exception);
 
     protected:
 

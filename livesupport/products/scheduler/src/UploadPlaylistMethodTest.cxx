@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,14 +46,17 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "ScheduleFactory.h"
+
 #include "UploadPlaylistMethod.h"
 #include "UploadPlaylistMethodTest.h"
-
 
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -79,6 +82,12 @@ const std::string UploadPlaylistMethodTest::connectionManagerConfig =
  */
 const std::string UploadPlaylistMethodTest::scheduleConfig =
                                             "etc/scheduleFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string UploadPlaylistMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -110,6 +119,7 @@ UploadPlaylistMethodTest :: configure(
 void
 UploadPlaylistMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
@@ -124,12 +134,21 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
 
         schedule = sf->getSchedule();
         schedule->install();
+
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -141,6 +160,10 @@ void
 UploadPlaylistMethodTest :: tearDown(void)                      throw ()
 {
     schedule->uninstall();
+
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -159,6 +182,7 @@ UploadPlaylistMethodTest :: firstTest(void)
     struct tm                       time;
 
     // set up a structure for the parameters
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -190,6 +214,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     struct tm                       time;
 
     // load the first playlist, this will succeed
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -206,6 +231,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
 
     // try to load the same one, but in an overlapping time region
     // (we know that playlist with id 1 is 1 hour long)
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -222,6 +248,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     CPPUNIT_ASSERT(int(result["errorCode"]) == 1405); // timeframe not available
 
     // try to load the same one, but now in good timing
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -237,6 +264,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 
     // try to load the same one, this time overlapping both previos instances
+    parameters["sessionId"]  = sessionId->getId();
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;

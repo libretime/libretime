@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,8 +71,10 @@ using namespace LiveSupport::Core;
  *  "openPlaylistForEditing".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist requested.</li>
  *  </ul>
  *
@@ -95,9 +97,10 @@ using namespace LiveSupport::Core;
  *     <li>102 - argument is not a playlist ID </li>
  *     <li>104 - playlist not found </li>
  *     <li>105 - could not open playlist </li>
+ *     <li>122 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class OpenPlaylistForEditingMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RevertEditedPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,8 +71,10 @@ using namespace LiveSupport::Core;
  *  "revertEditedPlaylist".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist requested.</li>
  *  </ul>
  *
@@ -88,9 +90,10 @@ using namespace LiveSupport::Core;
  *     <li>802 - argument is not a playlist ID </li>
  *     <li>803 - playlist not found </li>
  *     <li>804 - could not revert playlist </li>
+ *     <li>822 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class RevertEditedPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

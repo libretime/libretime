@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,8 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+
 #include "DisplayAudioClipsMethod.h"
 #include "DisplayAudioClipsMethodTest.h"
 
@@ -54,6 +56,8 @@
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -73,6 +77,12 @@ const std::string DisplayAudioClipsMethodTest::storageClientConfig =
  */
 const std::string DisplayAudioClipsMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string DisplayAudioClipsMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -104,6 +114,7 @@ DisplayAudioClipsMethodTest :: configure(
 void
 DisplayAudioClipsMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
@@ -113,12 +124,20 @@ DisplayAudioClipsMethodTest :: setUp(void)                         throw ()
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -129,6 +148,9 @@ DisplayAudioClipsMethodTest :: setUp(void)                         throw ()
 void
 DisplayAudioClipsMethodTest :: tearDown(void)                      throw ()
 {
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -141,11 +163,15 @@ DisplayAudioClipsMethodTest :: firstTest(void)
 {
     Ptr<DisplayAudioClipsMethod>::Ref method(new DisplayAudioClipsMethod());
     XmlRpc::XmlRpcValue       parameter;
+    XmlRpc::XmlRpcValue       rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue       result;
     XmlRpc::XmlRpcValue       audioClip;       
 
     result.clear();
-    method->execute(parameter, result);
+    parameter["sessionId"]  = sessionId->getId();
+    rootParameter[0]        = parameter;
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.size() == 2);
 
     audioClip = result[0];
@@ -155,5 +181,5 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     audioClip = result[1];
     CPPUNIT_ASSERT(int(audioClip["id"]) == 10002);
     CPPUNIT_ASSERT(int(audioClip["playlength"]) == 30 * 60);
-
 }
+

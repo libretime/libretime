@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,6 +73,8 @@ using namespace LiveSupport::Core;
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist.</li>
  *      <li>relativeOffset - int - the number of seconds between the
  *                start of the playlist and the start of the audio clip
@@ -97,9 +99,10 @@ using namespace LiveSupport::Core;
  *     <li>1606 - playlist does not exist </li>
  *     <li>1607 - playlist has not been opened for editing </li>
  *     <li>1608 - no audio clip at the specified relative offset </li>
+ *     <li>1622 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class UpdateFadeInFadeOutMethod : public XmlRpc::XmlRpcServerMethod
 {

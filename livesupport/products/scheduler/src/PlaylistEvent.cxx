@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #endif
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/SessionId.h"
 
 #include "PlaylistEvent.h"
 
@@ -70,6 +71,7 @@ PlaylistEvent :: PlaylistEvent(
     this->audioPlayer   = audioPlayer;
     this->storage       = storage;
     this->scheduleEntry = scheduleEntry;
+    this->sessionId.reset(new SessionId("dummy session ID"));
 }
 
 
@@ -79,7 +81,10 @@ PlaylistEvent :: PlaylistEvent(
 void
 PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
-    playlist = storage->acquirePlaylist(scheduleEntry->getPlaylistId());
+    // some ugliness because getPlaylistId() returns a const pointer
+    Ptr<UniqueId>::Ref    playlistId(new UniqueId(scheduleEntry->getPlaylistId()
+                                                               ->getId()));
+    playlist = storage->acquirePlaylist(sessionId, playlistId);
 }
 
 
@@ -89,7 +94,7 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
 void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
-    storage->releasePlaylist(playlist);
+    storage->releasePlaylist(sessionId, playlist);
     playlist.reset();
 }
 

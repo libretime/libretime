@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,8 @@ using namespace LiveSupport::Core;
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>scheduleEntryId - int - the id of the scheduled entry to remove</li>
  *  </ul>
  *
@@ -84,12 +86,13 @@ using namespace LiveSupport::Core;
  *  The possible error codes are:
  *  <ul>
  *     <li>1201 - invalid argument format </li>
- *     <li>1202 - missing argument </li>
- *     <li>1203 -  not found </li>
+ *     <li>1202 - missing schedule entry ID argument </li>
+ *     <li>1203 - schedule entry not found </li>
+ *     <li>1222 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,6 +99,17 @@ RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         return;
     }
     XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
 
     Ptr<UniqueId>::Ref  entryId;
     try { 

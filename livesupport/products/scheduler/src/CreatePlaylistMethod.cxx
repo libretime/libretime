@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,17 +95,35 @@ CreatePlaylistMethod :: CreatePlaylistMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                 XmlRpc::XmlRpcValue  & returnValue)
                                                                        throw ()
 {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
+        return;
+    }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<StorageClientFactory>::Ref      scf;
     Ptr<StorageClientInterface>::Ref    storage;
 
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
  
-    Ptr<Playlist>::Ref  playlist = storage->createPlaylist();
+    Ptr<Playlist>::Ref  playlist = storage->createPlaylist(sessionId);
 
     if (!playlist->setLockedForEditing(true)) {    // this should never happen
         XmlRpcTools :: markError(errorId+1,

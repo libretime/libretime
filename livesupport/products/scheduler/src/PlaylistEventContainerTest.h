@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,13 +40,15 @@
 #include "configure.h"
 #endif
 
+
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
-
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -57,6 +59,7 @@ using namespace LiveSupport;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::Scheduler;
+
 
 /* ================================================================ constants */
 
@@ -69,8 +72,8 @@ using namespace LiveSupport::Scheduler;
 /**
  *  Unit test for the PlaylistEventContainer class
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  *  @see PlaylistEventContainer
  */
 class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
@@ -100,6 +103,16 @@ class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
          *  The schedule used by the container.
          */
         Ptr<ScheduleInterface>::Ref         schedule;
+
+        /**
+         *  An authentication client.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
 
 
     protected:

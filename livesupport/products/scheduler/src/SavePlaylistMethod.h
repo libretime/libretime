@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,8 +72,10 @@ using namespace LiveSupport::Core;
  *  "savePlaylist".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist to save.</li>
  *  </ul>
  *
@@ -89,9 +91,10 @@ using namespace LiveSupport::Core;
  *     <li>702 - argument is not a playlist ID </li>
  *     <li>703 - playlist not found </li>
  *     <li>704 - could not save playlist </li>
+ *     <li>722 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SavePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

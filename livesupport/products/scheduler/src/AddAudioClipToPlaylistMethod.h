@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,6 +73,8 @@ using namespace LiveSupport::Core;
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist.</li>
  *      <li>audioClipId - int - the unique id of the audio clip to
  *                              be added.</li>
@@ -96,10 +98,11 @@ using namespace LiveSupport::Core;
  *     <li>306 - playlist has not been opened for editing </li>
  *     <li>307 - audio clip does not exist </li>
  *     <li>308 - two audio clips at the same relative offset</li>
+ *     <li>322 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

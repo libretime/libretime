@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,8 +74,10 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is "generatePlayReport".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>from - datetime - the start of the interval to give the playlog
  *          from, inclusive.</li>
  *      <li>to   - datetime - the end of the interval to give the playlog
@@ -101,10 +103,11 @@ using namespace LiveSupport::Core;
  *     <li>1501 - invalid argument format </li>
  *     <li>1502 - missing or invalid 'from' argument </li>
  *     <li>1503 - missing or invalid 'to' argument </li>
+ *     <li>1522 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class GeneratePlayReportMethod : public XmlRpc::XmlRpcServerMethod
 {

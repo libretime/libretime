@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,8 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+
 #include "CreatePlaylistMethod.h"
 #include "OpenPlaylistForEditingMethod.h"
 #include "CreatePlaylistMethodTest.h"
@@ -55,6 +57,8 @@ using namespace XmlRpc;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+
 
 /* ===================================================  local data structures */
 
@@ -74,6 +78,12 @@ const std::string CreatePlaylistMethodTest::storageClientConfig =
  */
 const std::string CreatePlaylistMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string CreatePlaylistMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -105,6 +115,7 @@ CreatePlaylistMethodTest :: configure(
 void
 CreatePlaylistMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
@@ -114,12 +125,20 @@ CreatePlaylistMethodTest :: setUp(void)                         throw ()
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -130,6 +149,9 @@ CreatePlaylistMethodTest :: setUp(void)                         throw ()
 void
 CreatePlaylistMethodTest :: tearDown(void)                      throw ()
 {
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -147,6 +169,8 @@ CreatePlaylistMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue             result;
 
     result.clear();
+    parameter["sessionId"]  = sessionId->getId();
+    rootParameter[0]        = parameter;
     method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("id"));
     CPPUNIT_ASSERT(((int) result["playlength"]) == 0);
@@ -154,6 +178,7 @@ CreatePlaylistMethodTest :: firstTest(void)
     int playlistId = (int) result["id"];
     method.reset(new OpenPlaylistForEditingMethod());
     parameter.clear();
+    parameter["sessionId"]  = sessionId->getId();
     parameter["playlistId"] = playlistId;
     rootParameter[0]        = parameter;
 

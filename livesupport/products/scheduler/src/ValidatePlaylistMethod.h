@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,8 +70,10 @@ using namespace LiveSupport::Core;
  *  "validatePlaylist".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int - the unique id of the playlist.</li>
  *  </ul>
  *
@@ -93,9 +95,10 @@ using namespace LiveSupport::Core;
  *     <li>502 - missing playlist ID argument </li>
  *     <li>503 - playlist does not exist </li>
  *     <li>504 - playlist has not been opened for editing </li>
+ *     <li>522 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,8 @@ using namespace LiveSupport::Core;
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>scheduleEntryId - int - the id of the schedule entry to reschedule
  *      </li>
  *      <li>playtime - datetime - the new playing time for the entry</li>
@@ -90,10 +92,11 @@ using namespace LiveSupport::Core;
  *     <li>1303 - missing playtime argument </li>
  *     <li>1304 - schedule entry not found </li>
  *     <li>1305 - could not reschedule entry </li>
+ *     <li>1322 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

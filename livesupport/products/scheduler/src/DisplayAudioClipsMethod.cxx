@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,6 +61,11 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string DisplayAudioClipsMethod::methodName = "displayAudioClips";
 
+/*------------------------------------------------------------------------------
+ *  The ID of this method for error reporting purposes.
+ *----------------------------------------------------------------------------*/
+const int DisplayAudioClipsMethod::errorId = 1800;
+
 
 /* ===============================================  local function prototypes */
 
@@ -76,15 +81,32 @@ DisplayAudioClipsMethod :: DisplayAudioClipsMethod (
 {
 }
 
-
 /*------------------------------------------------------------------------------
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                    XmlRpc::XmlRpcValue  & returnValue)
                                                                       throw ()
 {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
+        return;
+    }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<StorageClientFactory>::Ref      scf;
     Ptr<StorageClientInterface>::Ref    storage;
 
@@ -92,7 +114,7 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
     storage = scf->getStorageClient();
 
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector = 
-                                                storage->getAllAudioClips();
+                                        storage->getAllAudioClips(sessionId);
 
     XmlRpcTools::audioClipVectorToXmlRpcValue(audioClipVector, returnValue);
 }

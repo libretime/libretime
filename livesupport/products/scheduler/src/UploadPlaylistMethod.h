@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,6 +73,8 @@ using namespace LiveSupport::Core;
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>playlistId - int, the id of the playlist to upload</li>
  *      <li>playtime - the time when the playlist should be scheduled,
  *                     an ISO 8601 DateTime field</li>
@@ -99,10 +101,11 @@ using namespace LiveSupport::Core;
  *     <li>1404 - playlist not found </li>
  *     <li>1405 - timeframe not available </li>
  *     <li>1406 - could not schedule playlist </li>
+ *     <li>1422 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,6 +68,13 @@ using namespace LiveSupport::Core;
  *
  *  The name of the method when called through XML-RPC is "createPlaylist".
  *
+ *  The expected parameter is an XML-RPC structure, with the following
+ *  members:
+ *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
+ *  </ul>
+ *
  *  The XML-RPC function returns an XML-RPC structure, containing the following
  *  fields:
  *  <ul>
@@ -84,10 +91,11 @@ using namespace LiveSupport::Core;
  *  The possible error codes are:
  *  <ul>
  *     <li>201 - could not open new playlist for editing</li>
+ *     <li>222 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

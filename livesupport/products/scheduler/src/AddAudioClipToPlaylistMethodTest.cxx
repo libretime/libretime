@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,17 +46,18 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "XmlRpcTools.h"
 
 #include "OpenPlaylistForEditingMethod.h"
 #include "AddAudioClipToPlaylistMethod.h"
 #include "AddAudioClipToPlaylistMethodTest.h"
 
-
 using namespace std;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
 
 
 /* ===================================================  local data structures */
@@ -77,6 +78,12 @@ const std::string AddAudioClipToPlaylistMethodTest::storageClientConfig =
  */
 const std::string AddAudioClipToPlaylistMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
+
+/**
+ *  The name of the configuration file for the authentication client factory.
+ */
+const std::string AddAudioClipToPlaylistMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -108,14 +115,18 @@ AddAudioClipToPlaylistMethodTest :: configure(
 void
 AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
+                            = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
 
         Ptr<ConnectionManagerFactory>::Ref cmf
-                                    = ConnectionManagerFactory::getInstance();
+                            = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
+
+        acf = AuthenticationClientFactory::getInstance();
+        configure(acf, authenticationClientConfig);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -123,6 +134,11 @@ AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
         CPPUNIT_FAIL("error parsing configuration file");
     } catch (std::exception &e) {
         CPPUNIT_FAIL(e.what());
+    }
+    
+    authentication = acf->getAuthenticationClient();
+    if (!(sessionId = authentication->login("root", "q"))) {
+        CPPUNIT_FAIL("could not log in to authentication server");
     }
 }
 
@@ -133,6 +149,9 @@ AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
 void
 AddAudioClipToPlaylistMethodTest :: tearDown(void)                      throw ()
 {
+    authentication->logout(sessionId);
+    sessionId.reset();
+    authentication.reset();
 }
 
 
@@ -152,6 +171,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
+    parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = 1;
     parameters["audioClipId"]    = 10001;
     parameters["relativeOffset"] = 60*60;
@@ -166,6 +186,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     CPPUNIT_ASSERT((int)(result["errorCode"]) == 308);
 
     parameters.clear();
+    parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = 1;
     parameters["audioClipId"]    = 10001;
     parameters["relativeOffset"] = 90*60;

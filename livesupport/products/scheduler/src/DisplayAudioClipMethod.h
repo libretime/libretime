@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,8 +70,10 @@ using namespace LiveSupport::Core;
  *  The name of the method when called through XML-RPC is "displayAudioClip".
  *
  *  The expected parameter is an XML-RPC structure, with the following
- *  member:
+ *  members:
  *  <ul>
+ *      <li>sessionId  - string - the session ID obtained via the login()
+ *                                method of the authentication client </li>
  *      <li>audioClipId - int - the unique id of the audio clip requested.</li>
  *  </ul>
  *
@@ -94,10 +96,11 @@ using namespace LiveSupport::Core;
  *     <li>601 - invalid argument format </li>
  *     <li>602 - argument is not an audio clip ID </li>
  *     <li>603 - audio clip not found </li>
+ *     <li>622 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class DisplayAudioClipMethod : public XmlRpc::XmlRpcServerMethod
 {

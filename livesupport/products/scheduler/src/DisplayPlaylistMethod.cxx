@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,6 +106,17 @@ DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
     XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<SessionId>::Ref      sessionId;
+    try{
+        sessionId = XmlRpcTools::extractSessionId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+22, 
+                               "missing session ID argument",
+                                returnValue);
+        return;
+    }
+
     Ptr<UniqueId>::Ref id;
     try{
         id = XmlRpcTools::extractPlaylistId(parameters);
@@ -124,7 +135,7 @@ DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
  
     Ptr<Playlist>::Ref playlist;
     try {
-        playlist = storage->getPlaylist(id);
+        playlist = storage->getPlaylist(sessionId, id);
     }
     catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "playlist not found", 

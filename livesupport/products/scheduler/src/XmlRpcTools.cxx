@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,6 +106,11 @@ const std::string XmlRpcTools::fadeInName = "fadeIn";
  *  structure.
  *----------------------------------------------------------------------------*/
 const std::string XmlRpcTools::fadeOutName = "fadeOut";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID member in the XML-RPC parameter structure
+ *----------------------------------------------------------------------------*/
+const std::string XmlRpcTools::sessionIdName = "sessionId";
 
 
 /* ================================================  local constants & macros */
@@ -504,3 +509,21 @@ XmlRpcTools :: playLogVectorToXmlRpcValue(
         ++it;
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Extract the session ID from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<SessionId>::Ref
+XmlRpcTools :: extractSessionId(
+                            XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(sessionIdName)) {
+        throw std::invalid_argument("missing session ID argument");
+    }
+
+    Ptr<SessionId>::Ref id(new SessionId(xmlRpcValue[sessionIdName]));
+    return id;
+}
+

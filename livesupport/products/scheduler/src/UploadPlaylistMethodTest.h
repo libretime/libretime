@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -60,8 +62,8 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the UploadPlaylistMethod class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  *  @see UploadPlaylistMethod
  */
 class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture
@@ -91,6 +93,22 @@ class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture
          *  The schedule used during the test.
          */
         Ptr<ScheduleInterface>::Ref     schedule;
+
+        /**
+         *  The name of the configuration file for the authentication client
+         *  factory.
+         */
+        static const std::string                authenticationClientConfig;
+
+        /**
+         *  The authentication client produced by the factory.
+         */
+        Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A session ID from the authentication client login() method.
+         */
+        Ptr<SessionId>::Ref                     sessionId;
 
         /**
          *  Configure a configurable with an XML file.
