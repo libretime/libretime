@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class StorageClientInterface
 {
@@ -114,7 +114,7 @@ class StorageClientInterface
          *             or the file does not exist, etc.
          */
         virtual void
-        releasePlaylist(Ptr<const Playlist>::Ref playlist) const
+        releasePlaylist(Ptr<Playlist>::Ref playlist) const
                                             throw (std::logic_error)
                                                                         = 0;
         /**
@@ -191,7 +191,7 @@ class StorageClientInterface
          *             or the file does not exist, etc. 
          */
         virtual void
-        releaseAudioClip(Ptr<const AudioClip>::Ref audioClip) const
+        releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                             throw (std::logic_error)
                                                                         = 0;
 

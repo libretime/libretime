@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -191,7 +191,7 @@ class TestStorageClient :
          *             or the file does not exist, etc.
          */
         virtual void
-        releasePlaylist(Ptr<const Playlist>::Ref playlist) const
+        releasePlaylist(Ptr<Playlist>::Ref playlist) const
                                             throw (std::logic_error);
 
         /**
@@ -268,7 +268,7 @@ class TestStorageClient :
          *             or the file does not exist, etc. 
          */
         virtual void
-        releaseAudioClip(Ptr<const AudioClip>::Ref audioClip) const
+        releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                             throw (std::logic_error);
 
         /**

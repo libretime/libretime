@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Core;
  *  An item in a playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -218,7 +218,7 @@ class PlaylistElement : public Configurable
          *
          *  @return the audio clip associated with the element.
          */
-        Ptr<const AudioClip>::Ref
+        Ptr<AudioClip>::Ref
         getAudioClip(void) const                           throw ()
         {
             return audioClip;

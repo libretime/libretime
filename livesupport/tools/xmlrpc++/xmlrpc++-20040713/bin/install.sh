@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/xmlrpc++/xmlrpc++-20040713/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -37,9 +37,9 @@ installdir=`cd $basedir/../../../usr; pwd; cd -`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 tar=$basedir/src/$product.tar.gz
+docdir=$installdir/share/doc/xmlrpc++
 
 echo "installing $product from $basedir to $installdir"
-
 
 mkdir -p $tmpdir
 cd $tmpdir
@@ -51,6 +51,10 @@ patch -p1 < $etcdir/uninitialised_XmlRpcSource_ssl_ssl.patch
 sh autogen.sh --prefix=$installdir
 make install
 
+cd $docdir
+doxytag -t xmlrpc++.tag XmlRpcServerMethod_8h-source.html \
+                        classXmlRpc_1_1XmlRpcServerMethod.html \
+                        classXmlRpc_1_1XmlRpcServerMethod-members.html
+                        
 cd $basedir
 rm -rf tmp
-

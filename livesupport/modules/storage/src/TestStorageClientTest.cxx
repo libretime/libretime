@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -288,8 +288,8 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
     }
-
-    std::ifstream ifs2(playlist->getUri()->substr(7).c_str());
+    CPPUNIT_ASSERT(!playlist->getUri());
+    std::ifstream ifs2(savedTempFilePath.c_str());
     if (ifs2) {
         ifs2.close();
         CPPUNIT_FAIL("temp file not destroyed correctly");

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,21 +62,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PlaylistTest);
  *  The name of the configuration file for the playlist.
  */
 static const std::string configFileName = "etc/playlist.xml";
-
-/**
- *  The playlist in SMIL XML format.
- */
-static const std::string smilPlaylist = 
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<smil xmlns=\"http://www.w3.org/2001/SMIL20/Language\""
-            " xmlns:rn=\"http://features.real.com/2001/SMIL20/Extensions\">\n"
-    "  <body>\n"
-    "    <seq>\n"
-    "      <audio src=\"file:var/test1.mp3\"/>\n"
-    "      <audio src=\"file:var/test2.mp3\"/>\n"
-    "    </seq>\n"
-    "  </body>\n"
-    "</smil>\n";
 
 
 /* ===============================================  local function prototypes */
@@ -368,27 +353,4 @@ PlaylistTest :: fadeInfoTest(void)
     }
     catch (std::invalid_argument &e) {
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Check if the conversion to SMIL works
- *----------------------------------------------------------------------------*/
-void
-PlaylistTest :: toSmilTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    playlist->setLockedForPlaying(true);
-
-    std::string newSmilPlaylist;
-    try {
-        newSmilPlaylist = playlist->toSmil()
-                                  ->write_to_string_formatted("UTF-8");
-    }
-    catch (std::logic_error &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    CPPUNIT_ASSERT(newSmilPlaylist == smilPlaylist);
-
-    playlist->setLockedForPlaying(false);
 }

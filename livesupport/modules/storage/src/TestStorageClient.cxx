@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,11 +58,6 @@ using namespace LiveSupport::Storage;
  *  The name of the config element for this class
  *----------------------------------------------------------------------------*/
 const std::string TestStorageClient::configElementNameStr = "testStorage";
-
-/*------------------------------------------------------------------------------
- *  The path to the local temp storage
- *----------------------------------------------------------------------------*/
-const std::string TestStorageClient::localTempStoragePath = "var/";
 
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
@@ -282,7 +277,7 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releasePlaylist(Ptr<const Playlist>::Ref playlist) const
+TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
                                                 throw (std::logic_error)
 {
     if (! playlist->getUri()) {
@@ -310,6 +305,9 @@ TestStorageClient :: releasePlaylist(Ptr<const Playlist>::Ref playlist) const
         }
         ++it;
     }
+
+    Ptr<std::string>::Ref   nullPointer;
+    playlist->setUri(nullPointer);
 
     if (badAudioClips) {
         std::stringstream eMsg;
@@ -450,12 +448,15 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releaseAudioClip(Ptr<const AudioClip>::Ref audioClip) const
+TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                                 throw (std::logic_error)
 {
     if (*(audioClip->getUri()) == "") {
         throw std::logic_error("audio clip URI not found");
     }
+    
+    Ptr<std::string>::Ref   nullPointer;
+    audioClip->setUri(nullPointer);
 }
 
 

@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.22 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.23 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -34,7 +34,6 @@ MKDIR   = mkdir -p
 RM      = rm -f
 RMDIR   = rm -rf
 DOXYGEN = doxygen
-
 
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
