@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -107,7 +107,8 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 #	Dependencies
 #-------------------------------------------------------------------------------
 WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
-				   ${TMP_DIR}/Button.o
+				   ${TMP_DIR}/Button.o \
+				   ${TMP_DIR}/BlueBin.o
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o
 

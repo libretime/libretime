@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ImageButton.h"
+#include "LiveSupport/Widgets/BlueBin.h"
 
 
 namespace LiveSupport {
@@ -66,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class TestWindow : public Gtk::Window
 {
@@ -85,6 +86,11 @@ class TestWindow : public Gtk::Window
          *  A button.
          */
         Ptr<Button>::Ref            button;
+
+        /**
+         *  A blue container.
+         */
+        Ptr<BlueBin>::Ref           blueBin;
 
 
     public:

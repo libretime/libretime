@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <iostream>
 
 #include "TestWindow.h"
 
@@ -89,12 +91,24 @@ TestWindow :: TestWindow (void)
                             rollImageCenter,
                             rollImageRight));
 
+    // init the blue container
+    blueBin.reset(new BlueBin(
+                  Gdk::Pixbuf::create_from_file("var/corner_topleft.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_leftside.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_topcentre.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_topright.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_rightside.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_botleft.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_botcentre.png"),
+                  Gdk::Pixbuf::create_from_file("var/corner_botright.png")));
+
     // create and set up the layout
     layout.reset(new Gtk::Table());
     layout->attach(*imageButton,    0, 1, 0, 1);
     layout->attach(*button,         0, 1, 1, 2);
-    
-    add(*layout);
+
+    blueBin->add(*layout);
+    add(*blueBin);
     show_all();
 }
 
