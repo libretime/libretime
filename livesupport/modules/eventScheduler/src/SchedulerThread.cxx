@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,16 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
     }
 
     if (imminent(now, nextInitTime)) {
-        nextEvent->initialize();
+        try {
+            nextEvent->initialize();
+        } catch (std::exception &e) {
+            // cancel event by getting the next event after this was
+            // supposed to finish
+            getNextEvent(nextEventEnd);
+            // TODO: log error
+            std::cerr << "event initialization error: " << e.what()
+                      << std::endl;
+        }
     } else if (imminent(now, nextEventTime)) {
         Ptr<time_duration>::Ref timeLeft(new time_duration(*nextEventTime
                                                          - *now));
