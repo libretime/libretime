@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -487,69 +487,64 @@ class BasicStor extends Alib{
     }
 
     /**
-     *  Search in local metadata database.<br>
-     *  <b>TODO: NOT FINISHED</b><br>
-     *  It will support structured queries -  array of mode and query parts.
-     *  Mode is &quot;match all&quot; or &quot;match any&quot;.
-     *  Query parts is array of [fieldname, operator, value] entities.
+     *  Search in local metadata database.
      *
-     *  @param criteria string, search query -
-     *      only one SQL LIKE term supported now.
-     *      It will be searched in all literal object values
-     *      in metadata database
-     *  @return array of gunid strings
+     *  @param criteria hash, search criteria - see 
+     *       <a href="../../search.html">format description</a>
+     *  @return hash, field 'results' is an array with gunid strings
+     *  of files have been found
      */
     function bsLocalSearch($criteria)
     {
-        $types = array('and'=>'AND', 'or'=>'OR');
+        $operators = array('and'=>'AND', 'or'=>'OR');
         $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
             '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
         );
-#        var_dump($criteria);
-        echo "\n";
-        $type  = strtolower($criteria['type']);
-        $conds = $criteria['conds'];
-        $whereArr = array();
+        $operator   = strtolower($criteria['operator']);
+        $conds      = $criteria['conditions'];
+        $whereArr   = array();
         foreach($conds as $cond){
             $cat = strtolower($cond['cat']);
-            $opVal = sprintf($ops[$cond['op']], strtolower($cond['val']));
+            $opVal  = sprintf($ops[$cond['op']], 
+                addslashes(strtolower($cond['val'])));
+            // escape % for sprintf in whereArr construction:
+            $cat    = str_replace("%", "%%", $cat);
+            $opVal  = str_replace("%", "%%", $opVal);
             $sqlCond = "
-                %s.predicate = '".str_replace("%", "%%", $cat)."' AND
-                %s.objns='_L' AND lower(%s.object) ".str_replace("%", "%%", $opVal)."\n
+                %s.predicate = '{$cat}' AND
+                %s.objns='_L' AND lower(%s.object) {$opVal}\n
             ";
-#            echo "$sqlCond\n";
             $whereArr[] = "$sqlCond";
         }
-        if($type == 'and'){
+        if($operator == 'and'){
+            // operator: and
             $from = array(); $joinArr = array();
             foreach($whereArr as $i=>$v){
                 $from[] = "{$this->mdataTable} md$i";
                 $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i");
                 $joinArr[] = "md$i.gunid = md".($i+1).".gunid";
             }
+            // there are n-1 join condtions for join n tables - remove last:
             array_pop($joinArr);
+            // query construcion:
             $sql = "SELECT to_hex(md0.gunid)as gunid \nFROM ".join(", ", $from).
                 "\nWHERE ".join(' AND ', $whereArr);
+            // add join conditions if there are any:
             if(count($joinArr)>0){ $sql .= " AND ".join(" AND ", $joinArr); }
         }else{
+            // operator: or
             foreach($whereArr as $i=>$v){
                 $whereArr[$i] = sprintf($v, "md", "md", "md");
             }
+            // query construcion:
             $sql = "\nSELECT to_hex(gunid)as gunid \n".
                 "FROM {$this->mdataTable} md \nWHERE ".join(' OR ', $whereArr);
         }
-        echo "$sql\n";
-#        var_dump($whereArr);
-        $sql0 = "SELECT to_hex(md.gunid)as gunid
-            FROM {$this->filesTable} f, {$this->mdataTable} md
-            WHERE f.gunid=md.gunid AND md.objns='_L' AND
-                md.object like '%$criteria%'
-            GROUP BY md.gunid
-        ";
         $res = $this->dbc->getCol($sql);
         if(!is_array($res)) $res = array();
-        // $res = array_map("StoredFile::_normalizeGunid", $res); // TODO: correct!
-        return $res;
+        $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
+#        return array('sql'=>$sql, 'results'=>$res);
+        return array('results'=>$res);
     }
 
     /* --------------------------------------------------------- info methods */

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -550,6 +550,9 @@ class StoredFile{
      */
     function _getExt()
     {
+        $fname = $this->_getFileName();
+        $ext = substr($fname, strrpos($fname, '.')+1);
+        if($ext !== FALSE) return $ext;
         switch(strtolower($this->mime)){
             case"audio/mpeg":
                 $ext="mp3"; break;
@@ -607,6 +610,21 @@ class StoredFile{
         if(is_null($gunid)) $gunid = $this->gunid;
         return $this->dbc->getOne("
             SELECT state FROM {$this->filesTable}
+            WHERE gunid=x'$gunid'::bigint
+        ");
+    }
+
+    /**
+     *  Get mnemonic file name
+     *
+     *  @param gunid string, optional, global unique id of file
+     *  @return string, see install()
+     */
+    function _getFileName($gunid=NULL)
+    {
+        if(is_null($gunid)) $gunid = $this->gunid;
+        return $this->dbc->getOne("
+            SELECT name FROM {$this->filesTable}
             WHERE gunid=x'$gunid'::bigint
         ");
     }

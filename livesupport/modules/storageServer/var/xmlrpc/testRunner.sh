@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -65,13 +65,11 @@ existsAudioClip() {
 }
 
 storeAudioClip() {
-#    echo -n "# storeAudioClip: "
-#    MEDIA=../tests/ex1.mp3
     MEDIA=var/tests/ex1.mp3
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     echo "md5=$MD5"
     echo -n "# storeAudioClipOpen: "
-    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' "$METADATA" "$MD5"` || \
+    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' "$METADATA" "stored file.mp3" "$MD5"` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
@@ -127,7 +125,6 @@ downloadMeta() {
     echo $URL
     if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl: "
-#     curl -Ifs $URL > /dev/null || { ERN=$?; echo $RES; exit $ERN; }
     METAOUT=`curl -fs $URL;` || { ERN=$?; echo $RES; exit $ERN; }
     echo "OK"
     if [ $DEBUG ]; then echo $METAOUT; echo -n "Press enter ..."; read KEY; fi
@@ -169,7 +166,7 @@ PLID="123456789abcdef2"
 
 createPlaylist() {
     echo -n "# createPlaylist: "
-    $XR_CLI createPlaylist $SESSID $PLID || exit $?
+    $XR_CLI createPlaylist $SESSID $PLID "newPlaylist.xml" || exit $?
 }
 
 accessPlaylist() {

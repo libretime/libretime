@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -258,19 +258,13 @@ class GreenBox extends BasicStor{
     }
 
     /**
-     *  Search in local metadata database.<br>
-     *  <b>TODO: NOT FINISHED</b><br>
-     *  It will support structured queries -  array of mode and query parts.
-     *  Mode is &quot;match all&quot; or &quot;match any&quot;.
-     *  Query parts is array of [fieldname, operator, value] entities.
+     *  Search in local metadata database.
      *
-     *
-     *  @param criteria string, search query -
-     *      only one SQL LIKE term supported now.
-     *      It will be searched in all literal object values
-     *      in metadata database
+     *  @param criteria hash, search criteria - see 
+     *       <a href="../../search.html">format description</a>
      *  @param sessid string, session id
-     *  @return array of gunid strings
+     *  @return hash, field 'results' is an array with gunid strings
+     *  of files have been found
      */
     function localSearch($criteria, $sessid='')
     {

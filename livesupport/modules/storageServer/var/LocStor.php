@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,11 +42,13 @@ class LocStor extends GreenBox{
      *
      *  @param sessid string
      *  @param gunid string
-     *  @param metadata string with metadata XML
+     *  @param metadata string, metadata XML string
+     *  @param fname string, human readable menmonic file name
+     *                      with extension corresponding to filetype
      *  @param chsum string, md5 checksum of media file
      *  @return struct {url:writable URL for HTTP PUT, token:access token
      */
-    function storeAudioClipOpen($sessid, $gunid, $metadata, $chsum)
+    function storeAudioClipOpen($sessid, $gunid, $metadata, $fname, $chsum)
     {
         // test if specified gunid exists:
         if(!preg_match("|^([0-9a-fA-F]{16})?$|", $gunid)){
@@ -71,12 +73,12 @@ class LocStor extends GreenBox{
             if(PEAR::isError($res)) return $res;
         }else{
             // gunid doesn't exists - do insert
-            $tmpid = uniqid('');
+            $tmpFname = uniqid('');
             $parid = $this->_getHomeDirId($sessid);
             if(PEAR::isError($parid)) return $parid;
             if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
                 return $res;
-            $oid = $this->addObj($tmpid , 'File', $parid);
+            $oid = $this->addObj($tmpFname , 'File', $parid);
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
                 &$this, $oid, '', '', $metadata, 'string',
@@ -86,10 +88,14 @@ class LocStor extends GreenBox{
                 $res = $this->removeObj($oid);
                 return $ac;
             }
-            $res = $this->renameFile($oid, $ac->gunid, $sessid);
             if(PEAR::isError($res)) return $res;
         }
         $res = $ac->setState('incomplete');
+        if(PEAR::isError($res)) return $res;
+        if($fname == ''){
+            $fname = "newFile";
+        }
+        $res = $this->renameFile($oid, $fname, $sessid);
         if(PEAR::isError($res)) return $res;
         return $this->bsOpenPut($chsum, $ac->gunid);
     }
@@ -105,11 +111,11 @@ class LocStor extends GreenBox{
     {
         $ac =& StoredFile::recallByToken(&$this, $token);
         if(PEAR::isError($ac)){ return $ac; }
-        $fname = $this->bsClosePut($token);
-        if(PEAR::isError($fname)){ $ac->delete(); return $fname; }
-        $res = $ac->replaceRawMediaData($fname);
+        $tmpFname = $this->bsClosePut($token);
+        if(PEAR::isError($tmpFname)){ $ac->delete(); return $tmpFname; }
+        $res = $ac->replaceRawMediaData($tmpFname);
         if(PEAR::isError($res)){ return $res; }
-        if(file_exists($fname)) @unlink($fname);
+        if(file_exists($tmpFname)) @unlink($tmpFname);
         $res = $ac->setState('ready');
         if(PEAR::isError($res)) return $res;
         return $ac->gunid;
@@ -341,17 +347,20 @@ class LocStor extends GreenBox{
     {
         $this->deleteData();
         $rootHD = $this->getObjId('root', $this->storId);
-        $this->login('root', $this->config['tmpRootPass']);
-        $s = $this->sessid;
+#        $this->login('root', $this->config['tmpRootPass']);
+#        $s = $this->sessid;
         include"../tests/sampleData.php";
         $res = array();
         foreach($sampleData as $k=>$it){
             list($media, $meta) = $it;
-            $r = $this->putFile($rootHD, "file".($k+1), $media, $meta, $s);
+#            $r = $this->putFile($rootHD, "file".($k+1), $media, $meta, $s);
+            $r = $this->bsPutFile(
+                $rootHD, basename($media), $media, $meta, '', 'audioclip'
+            );
             if(PEAR::isError($r)){ return $r; }
             $res[] = $this->_gunidFromId($r);
         }
-        $this->logout($this->sessid);
+#        $this->logout($this->sessid);
         return $res;
     }
 
@@ -362,9 +371,10 @@ class LocStor extends GreenBox{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
+     *  @param fname string, human readable menmonic file name
      *  @return string, playlist global unique ID
      */
-    function createPlaylist($sessid, $playlistId)
+    function createPlaylist($sessid, $playlistId, $fname)
     {
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if(PEAR::isError($ex)){ return $ex; }
@@ -373,12 +383,12 @@ class LocStor extends GreenBox{
                 'LocStor.php: createPlaylist: already exists'
             );
         }
-        $tmpid = uniqid('');
+        $tmpFname = uniqid('');
         $parid = $this->_getHomeDirId($sessid);
         if(PEAR::isError($parid)) return $parid;
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        $oid = $this->addObj($tmpid , 'File', $parid);
+        $oid = $this->addObj($tmpFname , 'File', $parid);
         if(PEAR::isError($oid)) return $oid;
         $ac =&  StoredFile::insert(&$this, $oid, '', '',
             '<?xml version="1.0" encoding="UTF-8"?><smil><body/></smil>',
@@ -388,7 +398,10 @@ class LocStor extends GreenBox{
             $res = $this->removeObj($oid);
             return $ac;
         }
-        $res = $this->renameFile($oid, $ac->gunid, $sessid);
+        if($fname == ''){
+            $fname = "newFile.xml";
+        }
+        $res = $this->renameFile($oid, $fname, $sessid);
         if(PEAR::isError($res)) return $res;
         $res = $ac->setState('ready');
         if(PEAR::isError($res)) return $res;

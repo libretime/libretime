@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -225,8 +225,10 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
-     *      <li> metadata  :  metadata XML string</li>
-     *      <li> chsum :  md5 checksum of media file</li>
+     *      <li> metadata  : string -  metadata XML string</li>
+     *      <li> fname :  string - human readable menmonic file name
+     *                      with extension corresponding to filetype</li>
+     *      <li> chsum :  string - md5 checksum of media file</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct:
@@ -254,7 +256,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         $res = $this->storeAudioClipOpen(
-            $r['sessid'], $r['gunid'], $r['metadata'], $r['chsum']
+            $r['sessid'], $r['gunid'], $r['metadata'], $r['fname'], $r['chsum']
         );
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
@@ -646,6 +648,7 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
+     *      <li> fname :  string - human readable menmonic file name</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
@@ -671,7 +674,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->createPlaylist($r['sessid'], $r['plid']);
+        $res = $this->createPlaylist($r['sessid'], $r['plid'], $r['fname']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_createPlaylist: ".$res->getMessage().
@@ -1153,15 +1156,13 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> criteria  : search string
-     *           - will be searched in object part of RDF tripples
-     *           - <b>this parameter may be changed</b> structured
-     *              queries will be supported in the near future</li>
+     *      <li> criteria  : search criteria, see 
+                   <a href="../../search.html">format description</a>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
-     *      <li> results: array - array of gunids have founded</li>
+     *      <li> results: array - array of gunids have been found</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -1190,7 +1191,7 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array('results'=>$res)));
+        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /**

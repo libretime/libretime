@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.9 $
+#    Version  : $Revision: 1.10 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -73,7 +73,6 @@ if verbose:
     print "pars: "
     print pars
     print "result:"
-#sys.exit(0)
 
 try:
     if method=="listMethods":
@@ -85,59 +84,103 @@ try:
     elif method=="test":
         print server.locstor.test({'sessid':pars[0], 'teststring':pars[1]})
     elif method=="authenticate":
-        print server.locstor.authenticate({'login':pars[0], 'pass':pars[1]})['authenticate']
+        print server.locstor.authenticate(
+            {'login':pars[0], 'pass':pars[1]}
+        )['authenticate']
     elif method=="login":
-        print server.locstor.login({'login':pars[0], 'pass':pars[1]})['sessid']
+        print server.locstor.login(
+            {'login':pars[0], 'pass':pars[1]}
+        )['sessid']
     elif method=="logout":
         print server.locstor.logout({'sessid':pars[0]})
     elif method=="storeAudioClipOpen":
-        r = server.locstor.storeAudioClipOpen({'sessid':pars[0], 'gunid':pars[1], 'metadata':pars[2], 'chsum':pars[3]})
+        r = server.locstor.storeAudioClipOpen({
+            'sessid':pars[0], 'gunid':pars[1], 'metadata':pars[2],
+            'fname':pars[3], 'chsum':pars[4]
+        })
         print r['url']+'\n'+r['token']
     elif method=="storeAudioClipClose":
-        print server.locstor.storeAudioClipClose({'sessid':pars[0], 'token':pars[1]})['gunid']
+        print server.locstor.storeAudioClipClose(
+            {'sessid':pars[0], 'token':pars[1]}
+        )['gunid']
     elif method=="accessRawAudioData":
-        r = server.locstor.accessRawAudioData({'sessid':pars[0], 'gunid':pars[1]})
+        r = server.locstor.accessRawAudioData(
+            {'sessid':pars[0], 'gunid':pars[1]}
+        )
         print r['url']+'\n'+r['token']
     elif method=="releaseRawAudioData":
-        print server.locstor.releaseRawAudioData({'sessid':pars[0], 'token':pars[1]})
+        print server.locstor.releaseRawAudioData(
+            {'sessid':pars[0], 'token':pars[1]}
+        )
     elif method=="downloadRawAudioDataOpen":
-        r = server.locstor.downloadRawAudioDataOpen({'sessid':pars[0], 'gunid':pars[1]})
+        r = server.locstor.downloadRawAudioDataOpen(
+            {'sessid':pars[0], 'gunid':pars[1]}
+        )
         print r['url']+'\n'+r['token']
     elif method=="downloadRawAudioDataClose":
-        print server.locstor.downloadRawAudioDataClose({'sessid':pars[0], 'token':pars[1]})
+        print server.locstor.downloadRawAudioDataClose(
+            {'sessid':pars[0], 'token':pars[1]}
+        )
     elif method=="downloadMetadataOpen":
-        r = server.locstor.downloadMetadataOpen({'sessid':pars[0], 'gunid':pars[1]})
+        r = server.locstor.downloadMetadataOpen(
+            {'sessid':pars[0], 'gunid':pars[1]}
+        )
         print r['url']+'\n'+r['token']
     elif method=="downloadMetadataClose":
-        print server.locstor.downloadMetadataClose({'sessid':pars[0], 'token':pars[1]})
+        print server.locstor.downloadMetadataClose(
+            {'sessid':pars[0], 'token':pars[1]}
+        )
     elif method=="deleteAudioClip":
-        print server.locstor.deleteAudioClip({'sessid':pars[0], 'gunid':pars[1]})
+        print server.locstor.deleteAudioClip(
+            {'sessid':pars[0], 'gunid':pars[1]}
+        )
     elif method=="existsAudioClip":
-        print server.locstor.existsAudioClip({'sessid':pars[0], 'gunid':pars[1]})
+        print server.locstor.existsAudioClip(
+            {'sessid':pars[0], 'gunid':pars[1]}
+        )
     elif method=="updateAudioClipMetadata":
-        print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'metadata':pars[2]})
+        print server.locstor.updateAudioClipMetadata(
+            {'sessid':pars[0], 'gunid':pars[1], 'metadata':pars[2]}
+        )
     elif method=="searchMetadata":
 #        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
-        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':{'type':'and', 'conds':['a', 'b']}})
+        print server.locstor.searchMetadata(
+            {'sessid':pars[0], 
+                'criteria':{
+                    'filetype':'audioclip',
+                    'operator':'and',
+                    'conditions':[
+                        {'cat':pars[1], 'op':'partial', 'val':pars[2]}
+                    ]
+                }
+            }
+        )
     elif method=="existsPlaylist":
         print server.locstor.existsPlaylist({'sessid':pars[0], 'plid':pars[1]})
     elif method=="playlistIsAvailable":
-        print server.locstor.playlistIsAvailable({'sessid':pars[0], 'plid':pars[1]})
+        print server.locstor.playlistIsAvailable(
+            {'sessid':pars[0], 'plid':pars[1]}
+        )
     elif method=="createPlaylist":
-        print server.locstor.createPlaylist({'sessid':pars[0], 'plid':pars[1]})
+        print server.locstor.createPlaylist(
+            {'sessid':pars[0], 'plid':pars[1], 'fname':pars[2]}
+        )
     elif method=="editPlaylist":
         r = server.locstor.editPlaylist({'sessid':pars[0], 'plid':pars[1]})
         print r['url']+'\n'+r['token']
     elif method=="savePlaylist":
-        print server.locstor.savePlaylist({'sessid':pars[0], 'token':pars[1], 'newPlaylist':pars[2]})
+        print server.locstor.savePlaylist(
+            {'sessid':pars[0], 'token':pars[1], 'newPlaylist':pars[2]}
+        )
     elif method=="deletePlaylist":
         print server.locstor.deletePlaylist({'sessid':pars[0], 'plid':pars[1]})
     elif method=="accessPlaylist":
         r = server.locstor.accessPlaylist({'sessid':pars[0], 'plid':pars[1]})
         print r['url']+'\n'+r['token']
     elif method=="releasePlaylist":
-        print server.locstor.releasePlaylist({'sessid':pars[0], 'token':pars[1]})
-
+        print server.locstor.releasePlaylist(
+            {'sessid':pars[0], 'token':pars[1]}
+        )
     elif method=="getAudioClip":
         r = server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
         print r['metadata']
@@ -151,5 +194,4 @@ try:
         print "Unknown command: "+method
         sys.exit(1)
 except Error, v:
-#    print "XML-RPC Error:",v
     sys.exit(v)
