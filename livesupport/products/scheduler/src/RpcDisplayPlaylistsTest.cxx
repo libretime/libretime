@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,7 +114,7 @@ RpcDisplayPlaylistsTest :: firstTest(void)
     parameters["sessionId"]  = sessionId->getId();
     xmlRpcClient.execute("displayPlaylists", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.size() == 1);
+    CPPUNIT_ASSERT(result.size() >= 1);
 
     XmlRpc::XmlRpcValue     result0 = result[0];
     CPPUNIT_ASSERT(result0.hasMember("playlist"));

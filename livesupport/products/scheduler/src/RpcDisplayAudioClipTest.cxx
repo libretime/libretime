@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,7 +123,7 @@ RpcDisplayAudioClipTest :: firstTest(void)
     Ptr<AudioClip>::Ref  audioClip;
     CPPUNIT_ASSERT_NO_THROW(audioClip.reset(new AudioClip(result)));
     CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10001);
-    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 60 * 60);
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 11);
 
     xmlRpcClient.close();
 }

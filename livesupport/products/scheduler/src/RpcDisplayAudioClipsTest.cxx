@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,7 +123,7 @@ RpcDisplayAudioClipsTest :: firstTest(void)
     Ptr<AudioClip>::Ref     audioClip;
     CPPUNIT_ASSERT_NO_THROW(audioClip.reset(new AudioClip(result0)));
     CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10001);
-    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 60 * 60);
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 11);
 
     XmlRpc::XmlRpcValue     result1 = result[1];
     CPPUNIT_ASSERT(result1.hasMember("audioClip"));
@@ -131,7 +131,7 @@ RpcDisplayAudioClipsTest :: firstTest(void)
                                         == XmlRpc::XmlRpcValue::TypeString);
     CPPUNIT_ASSERT_NO_THROW(audioClip.reset(new AudioClip(result1)));
     CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10002);
-    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 30 * 60);
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_microseconds() == 12200000);
 
     xmlRpcClient.close();
 }
