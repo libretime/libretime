@@ -33,11 +33,10 @@ $ui_fmask = array(
         array(
             'element'   => 'stationLogoPath',
             'isPref'    => TRUE,
-            'type'      => 'text',
+            'type'      => 'hidden',
             'label'     => 'Station Logo path',
-            'default'   => 'img/stationlogo.gif',
+            'default'   => 'img/stationlogo.image',
             'required'  => TRUE,
-            'attributes'=> array('disabled' => 'on')
         ),
         array(
             'rule'      => 'regex',
