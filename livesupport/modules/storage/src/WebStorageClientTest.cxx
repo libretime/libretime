@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -637,7 +637,7 @@ WebStorageClientTest :: searchTest(void)
     try {
         Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
                                     "audioClip", 
-                                    "dcterms:extent", "=", "00:00:00.100000"));
+                                    "dcterms:extent", ">=", "00:01:00.00000"));
         criteria->setLogicalOperator("and");
         criteria->addCondition("dc:title", "partial",  "Title ");
         int numberFound = wsc->search(sessionId, criteria);
@@ -654,13 +654,14 @@ WebStorageClientTest :: searchTest(void)
 
     try {
         Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "or"));
-        criteria->addCondition("dcterms:extent", "<",  "00:00:03.000000");
+        criteria->addCondition("dcterms:extent", "<",  "00:30:00.000000");
         criteria->addCondition("dc:title", "prefix", "My");
         int numberFound = wsc->search(sessionId, criteria);
-        CPPUNIT_ASSERT(numberFound == 3);
-        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip3);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip4);
+        CPPUNIT_ASSERT(numberFound == 4);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 3);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip3);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(2) == *audioClip4);
         CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 1);
         CPPUNIT_ASSERT(*wsc->getPlaylistIds()->at(0)  == *playlist0);
 
