@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE playlist [
+
+<!ELEMENT playlist EMPTY >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+]>
+<playlist id="1" playlength="01:30:00.000"/>
