@@ -8,9 +8,11 @@ class uiScheduler extends uiCalendar
             $this->curr['view']     = 'month';
             $this->curr['year']     = strftime("%Y");
             $this->curr['month']    = strftime("%m");
+            $this->curr['week']     = strftime("%V");
             $this->curr['day']      = strftime("%d");
             $this->curr['hour']     = strftime("%H");
             $this->curr['dayname']  = strftime("%A");
+            $this->curr['monthname']= strftime("%B");
             $this->curr['isToday']  = TRUE;
         }
 
@@ -59,9 +61,11 @@ class uiScheduler extends uiCalendar
 
         $this->curr['year']     = strftime("%Y", $stampTarget);
         $this->curr['month']    = strftime("%m", $stampTarget);
+        $this->curr['week']     = strftime("%V", $stampTarget);
         $this->curr['day']      = strftime("%d", $stampTarget);
         $this->curr['hour']     = strftime("%H", $stampTarget);
         $this->curr['dayname']  = strftime("%A", $stampTarget);
+        $this->curr['monthname']= strftime("%B", $stampTarget);
 
         if ($this->curr['year'] == strftime("%Y") && $this->curr['month'] == strftime("%m") && $this->curr['day'] == strftime("%d"))
             $this->curr['isToday'] = TRUE;

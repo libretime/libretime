@@ -9,7 +9,7 @@ class uiCalendar
 
     function buildDecade()
     {
-        if (is_array($this->Decade)) return TRUE;
+        if (is_array($this->Decade)) return;
 
         for ($Year = $this->curr['year']-5; $Year<=$this->curr['year']+5; $Year++) {
             $this->Decade[] = array(
@@ -23,6 +23,8 @@ class uiCalendar
 
     function buildYear()
     {
+        if (is_array($this->Year)) return;
+
         require_once 'Calendar/Year.php';
         require_once 'Calendar/Month.php';
 
@@ -44,7 +46,7 @@ class uiCalendar
 
     function buildMonth()
     {
-        if (is_array($this->Month)) return TRUE;
+        if (is_array($this->Month)) return;
 
         require_once 'Calendar/Month/Weekdays.php';
         require_once 'Calendar/Day.php';
@@ -74,7 +76,7 @@ class uiCalendar
 
     function buildWeek()
     {
-        if (is_array($this->Week)) return FALSE;
+        if (is_array($this->Week)) return;
 
         require_once 'Calendar/Week.php';
 
@@ -100,7 +102,7 @@ class uiCalendar
 
     function buildDay()
     {
-        if (is_array($this->Day)) return FALSE;
+        if (is_array($this->Day)) return;
 
         require_once 'Calendar/Day.php';
 
@@ -126,7 +128,7 @@ class uiCalendar
 
     function buildHour()
     {
-        if (is_array($this->Hour)) return FALSE;
+        if (is_array($this->Hour)) return;
 
         require_once 'Calendar/Hour.php';
 
