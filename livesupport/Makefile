@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.12 $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -78,6 +78,8 @@ LCOV_DIR          = ${TOOLS_DIR}/lcov
 LCOV_VERSION      = lcov-1.3
 HELIX_DIR         = ${TOOLS_DIR}/helix
 HELIX_VERSION     = all_clients_nodist-helix-20041010
+ICU_DIR           = ${TOOLS_DIR}/icu
+ICU_VERSION       = icu-3.0
 
 MODULES_DIR           = ${BASE_DIR}/modules
 CORE_DIR              = ${MODULES_DIR}/core
@@ -142,6 +144,7 @@ tools_setup:
 	${XMLRPCXX_DIR}/${XMLRPCXX_VERSION}/bin/install.sh
 	${LCOV_DIR}/${LCOV_VERSION}/bin/install.sh
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
+	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 
 doxytag_setup:
 	${DOXYTAG} -t ${TAGFILE} ${EXTERNAL_DOC_PAGES}
