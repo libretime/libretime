@@ -60,15 +60,15 @@
 
      function hpopup(url, name)
      {
-        var width  = 10;
-        var height = 10;
+        var width  = 50;
+        var height = 50;
         var screenX;
         var screenY;
         var Xpos;
         var Ypos;
         var Pwidth;
         var Pheight;
-        
+
         if (ie5) {
             Xpos     = window.screenLeft;
             Ypos     = window.screenTop;

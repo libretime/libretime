@@ -3,13 +3,25 @@
 {$SCHEDULER->buildMonth()}
 {$SCHEDULER->buildWeek()}
 
+<!-- start calendar tabs -->
+		<div id="tabnavsmall">
+			<ul>
+            <li><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day')">##Day##</a></li>
+            <li><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week')">##Week##</a></li>
+            <li><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month')">##Month##</a></li>
+            <!-- <input type="button" onClick="popup('{$UI_BROWSER}?popup[]=SCHEDULER.schedule', 'Schedule', 600, 400)" value="Schedule">  -->
+            <li><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&today=1')">##Today##</a></li>				
+			</ul>
+		</div>		
+<!-- end calendar tabs -->
 <!-- start calendar navigation -->
+<div class="container_elements">
+    <h1>##Scheduler Navigation##</h1>
             <script type="text/javascript">
                  document.forms['calendar_month'].month.value = '{$SCHEDULER->curr.month}';
                  document.forms['calendar_year'].year.value   = '{$SCHEDULER->curr.year}';
             </script>
 			<div class="container_calender_overview">
-				<p>Click any date below to view in scheduler</p>
 				<div class="calender_overview">
 					<table class="calender_overview_table">
 						<tr>
@@ -72,7 +84,9 @@
 					</table>
 				</div>
 			</div>
+</div>
 <!-- end calendar navigation -->
+{*
 <table border=1>
     <tr><th colspan="8">{$SCHEDULER->curr.year}-{$SCHEDULER->curr.month}-{$SCHEDULER->curr.day}</th></tr>
 
@@ -133,3 +147,4 @@
     {/foreach}
 
 </table>
+*}

@@ -351,10 +351,53 @@ input, select { font-size: 12px;
     float: left;
 }
 
+
+/*############## SMALL Navigation tabs on top of content box ############*/
+#tabnavsmall {
+    position: absolute;
+    top: 175px;
+    left: 20px;
+    z-index: 1;
+}
+
+#tabnavsmall ul {
+    width: auto;
+    list-style: none;
+    padding: 0;
+    display: block;
+}
+
+#tabnavsmall a {
+    background: url("css_img/bt_tabsm_off.gif");
+    display: block;
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 50px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+#tabnavsmall a:hover {
+    background: url("css_img/bt_tabsm_on.gif");
+    color: #FFF;
+}
+
+#tabnavsmall a.active {
+    background: url("css_img/bt_tabsm_on.gif");
+    color: #FFF;
+}
+
+#tabnavsmall li {
+    padding: 0;
+    float: left;
+}
+
 /* #################################### CONTENTAREA ############################### */
 
 
-.content { font-size: 12px;
+.content { 
     margin: 19px;
     margin-top: 0;
     float: left;
@@ -608,48 +651,55 @@ table.scheduler_day td { font-size: 12px;
     padding-top: 2px;
 }
 
-table.scheduler_week { font-size: 12px;
+table.scheduler_week_time { 
+    width: 20px;
+    border: 1px solid #7392A6;
+} 
+
+table.scheduler_week { 
     width: 790px;
     border: 1px solid #7392A6;
 }
 
-table.scheduler_week th { font-size: 12px;
+table.scheduler_week a {
+    text-decoration: none;
+    color: #fff;
+}
+
+table.scheduler_week th {
     background-color: #8baed1;
     color: #FFF;
     font-weight: bold;
     text-align: left;
 }
 
-table.scheduler_week th.firstrow { font-size: 12px;
-    width: 34px;
-}
-
-table.scheduler_week th.date { font-size: 12px;
-    width: 22px;
+table.scheduler_week th.date {
+    width: 20px;
     border-left: 1px solid #7392A6;
 }
 
-table.scheduler_week th.day { font-size: 12px;
-    width: 86px;
+table.scheduler_week th.day {
+    width: 186px;
 }
 
-table.scheduler_week td.firstrow_secondcol { font-size: 12px;
+table.scheduler_week td.firstrow_secondcol {
     background-color: #CFDEE7;
     border: none;
     border-bottom: 1px solid #757575;
     padding: 0;
 }
 
-table.scheduler_week td.date_secondcol { font-size: 12px;
+table.scheduler_week td.date_secondcol {
+    width: 20px;
     background-color: #CFDEE7;
     border: none;
     border-left: 1px solid #7392A6;
     border-bottom: 1px solid #757575;
-    padding: 2px;
+    padding: 0px;
     font-weight: bold;
 }
 
-table.scheduler_week td.day_secondcol { font-size: 12px;
+table.scheduler_week td.day_secondcol {
     background-color: #CFDEE7;
     border: none;
     border-bottom: 1px solid #757575;
@@ -657,14 +707,14 @@ table.scheduler_week td.day_secondcol { font-size: 12px;
     padding-left: 2px;
 }
 
-table.scheduler_week td.firstrow { font-size: 12px;
+table.scheduler_week td.firstrow {
     border: none;
     border-bottom: 1px solid #7392A6;
     padding: 2px;
     font-weight: bold;
 }
 
-table.scheduler_week td.date { font-size: 12px;
+table.scheduler_week td.date {
     border: none;
     border-left: 1px solid #7392A6;
     border-bottom: 1px solid #7392A6;
@@ -672,7 +722,7 @@ table.scheduler_week td.date { font-size: 12px;
     background-color: #D0D0D0;
 }
 
-table.scheduler_week td.date_full { font-size: 12px;
+table.scheduler_week td.date_full {
     border: none;
     border-left: 1px solid #7392A6;
     border-bottom: 1px solid #7392A6;
@@ -680,7 +730,7 @@ table.scheduler_week td.date_full { font-size: 12px;
     background-color: #97BACF;
 }
 
-table.scheduler_week td.date_locked { font-size: 12px;
+table.scheduler_week td.date_locked {
     border: none;
     border-left: 1px solid #7392A6;
     border-bottom: 1px solid #7392A6;
@@ -690,14 +740,14 @@ table.scheduler_week td.date_locked { font-size: 12px;
     padding-top: 3px;
 }
 
-table.scheduler_week td.day { font-size: 12px;
+table.scheduler_week td.day {
     border: none;
     border-bottom: 1px solid #7392A6;
     padding: 0;
     background-color: #EAEAEA;
 }
 
-table.scheduler_week td.day_full { font-size: 12px;
+table.scheduler_week td.day_full {
     border: none;
     border-bottom: 1px solid #7392A6;
     padding: 2px;
@@ -721,12 +771,11 @@ table.scheduler_week td p { font-size: 12px;
     margin: 0;
 }
 
-table.scheduler_month{ font-size: 12px;
+table.scheduler_month{ 
     width: 790px;
-    border: 1px solid #7392A6;
 }
 
-table.scheduler_month th { font-size: 12px;
+table.scheduler_month th { 
     background-color: #8baed1;
     color: #FFF;
     font-weight: bold;
@@ -734,28 +783,37 @@ table.scheduler_month th { font-size: 12px;
     border: 1px solid #7392A6;
 }
 
-table.scheduler_month td { font-size: 12px;
+table.scheduler_month td { 
     width: 113px;
     border: 1px solid #7392A6;
     padding: 2px;
     text-align: left;
 }
 
-table.scheduler_month p { font-size: 12px;
+table.scheduler_month p { 
     margin: 0 0 10px 0;
     font-weight: bold;
     font-size: 11px;
 }
 
-table.scheduler_month .scala { font-size: 12px;
+
+table.scheduler_month a { 
+    color: #000;
+}
+
+table.scheduler_month td.today { 
+    background: #d5e2ee;
+}
+
+table.scheduler_month .scala { 
     margin: 0 0 2px 4px;
-    width: 96px;
+    width: 100px;
     height: 12px;
     background-color: #DADADA;
     border: 1px solid #7F95A7;
 }
 
-table.scheduler_month .scala .scala_in { font-size: 12px;
+table.scheduler_month .scala .scala_in { 
     background: #DADADA url("css_img/bg_scala_in_scheduler.gif") repeat-x top left;
     font-size:1px;
     height: 12px;
