@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ namespace Core {
  *  to make localized life easier.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class LocalizedObject
 {
@@ -124,7 +124,6 @@ class LocalizedObject
 
         /**
          *  Get a string from the resource bundle.
-         *  ustring.
          *
          *  @param key the key identifying the requested string.
          *  @return the requested string
