@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ SavePlaylistMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue          result;
 
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 9999;
+    parameter["playlistId"] = "0000000000009999";
     rootParameter[0]        = parameter;
 
     result.clear();
@@ -187,7 +187,7 @@ SavePlaylistMethodTest :: firstTest(void)
         CPPUNIT_ASSERT(e.getCode() == 703);    // playlist not found
     }
 
-    parameter["playlistId"] = 1;
+    parameter["playlistId"] = "0000000000000001";
     rootParameter[0]        = parameter;
     result.clear();
     try {

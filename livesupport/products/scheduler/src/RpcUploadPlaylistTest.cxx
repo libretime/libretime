@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -180,7 +180,7 @@ RpcUploadPlaylistTest :: simpleTest(void)
 
     // try to schedule playlist #1 for the time below
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;

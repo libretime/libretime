@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,6 +54,7 @@
 #include "DisplayScheduleMethodTest.h"
 
 using namespace std;
+using namespace XmlRpc;
 
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
@@ -185,11 +186,11 @@ DisplayScheduleMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DisplayScheduleMethod>::Ref method(new DisplayScheduleMethod());
-    XmlRpc::XmlRpcValue             parameters;
-    XmlRpc::XmlRpcValue             rootParameter;
+    XmlRpcValue     parameters;
+    XmlRpcValue     rootParameter;
     rootParameter.setSize(1);
-    XmlRpc::XmlRpcValue             result;
-    struct tm                       time;
+    XmlRpcValue     result;
+    struct tm       time;
 
     // set up a structure for the parameters
     parameters["sessionId"]  = sessionId->getId();
@@ -231,15 +232,15 @@ DisplayScheduleMethodTest :: insertEntries(void)
                                                             throw ()
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
-    XmlRpc::XmlRpcValue             parameters;
-    XmlRpc::XmlRpcValue             rootParameter;
+    XmlRpcValue     parameters;
+    XmlRpcValue     rootParameter;
     rootParameter.setSize(1);
-    XmlRpc::XmlRpcValue             result;
-    struct tm                       time;
+    XmlRpcValue     result;
+    struct tm       time;
 
     // insert a playlist for 2004-07-31, at 10 o'clock
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2004;
     time.tm_mon  =  7;
     time.tm_mday = 31;
@@ -262,7 +263,7 @@ DisplayScheduleMethodTest :: insertEntries(void)
 
     // insert a playlist for 2004-07-31, at 12 o'clock
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2004;
     time.tm_mon  =  7;
     time.tm_mday = 31;
@@ -285,7 +286,7 @@ DisplayScheduleMethodTest :: insertEntries(void)
 
     // insert a playlist for 2004-07-31, at 14 o'clock
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2004;
     time.tm_mon  =  7;
     time.tm_mday = 31;
@@ -316,11 +317,11 @@ DisplayScheduleMethodTest :: intervalTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DisplayScheduleMethod>::Ref method(new DisplayScheduleMethod());
-    XmlRpc::XmlRpcValue             parameters;
-    XmlRpc::XmlRpcValue             rootParameter;
+    XmlRpcValue     parameters;
+    XmlRpcValue     rootParameter;
     rootParameter.setSize(1);
-    XmlRpc::XmlRpcValue             result;
-    struct tm                       time;
+    XmlRpcValue     result;
+    struct tm       time;
 
     // check for the interval 2004-07-31 between 9 and 11 o'clock
     parameters["sessionId"]  = sessionId->getId();
@@ -353,7 +354,10 @@ DisplayScheduleMethodTest :: intervalTest(void)
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
-    CPPUNIT_ASSERT((int)(result[0]["playlistId"]) == 1);
+    CPPUNIT_ASSERT(result[0].hasMember("playlistId"));
+    CPPUNIT_ASSERT(result[0]["playlistId"].getType() 
+                                                  == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result[0]["playlistId"]) == "0000000000000001");
     time = result[0]["start"];
     CPPUNIT_ASSERT(time.tm_year == 2004);
     CPPUNIT_ASSERT(time.tm_mon == 7);
@@ -400,7 +404,10 @@ DisplayScheduleMethodTest :: intervalTest(void)
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 2);
-    CPPUNIT_ASSERT((int)(result[0]["playlistId"]) == 1);
+    CPPUNIT_ASSERT(result[0].hasMember("playlistId"));
+    CPPUNIT_ASSERT(result[0]["playlistId"].getType() 
+                                                  == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result[0]["playlistId"]) == "0000000000000001");
     time = result[0]["start"];
     CPPUNIT_ASSERT(time.tm_year == 2004);
     CPPUNIT_ASSERT(time.tm_mon == 7);
@@ -416,7 +423,10 @@ DisplayScheduleMethodTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_min == 30);
     CPPUNIT_ASSERT(time.tm_sec == 0);
 
-    CPPUNIT_ASSERT((int)(result[1]["playlistId"]) == 1);
+    CPPUNIT_ASSERT(result[1].hasMember("playlistId"));
+    CPPUNIT_ASSERT(result[1]["playlistId"].getType() 
+                                                  == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result[1]["playlistId"]) == "0000000000000001");
     time = result[1]["start"];
     CPPUNIT_ASSERT(time.tm_year == 2004);
     CPPUNIT_ASSERT(time.tm_mon == 7);

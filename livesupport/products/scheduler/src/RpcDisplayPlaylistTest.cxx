@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -187,13 +187,18 @@ RpcDisplayPlaylistTest :: simpleTest(void)
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
 
     result.clear();
     xmlRpcClient.execute("displayPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(((int) result["id"]) == 1);
-    CPPUNIT_ASSERT(((int) result["playlength"]) == (90 * 60));
+    CPPUNIT_ASSERT(result.hasMember("id"));
+    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(result.hasMember("playlength"));
+    CPPUNIT_ASSERT(result["playlength"].getType() == XmlRpcValue::TypeInt);
+    
+    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
+    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
 }
 
 
@@ -210,7 +215,7 @@ RpcDisplayPlaylistTest :: negativeTest(void)
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 9999;
+    parameters["playlistId"] = "0000000000009999";
 
     result.clear();
     xmlRpcClient.execute("displayPlaylist", parameters, result);

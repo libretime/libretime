@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRescheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -177,7 +177,7 @@ RpcRescheduleTest :: simpleTest(void)
 
     // first schedule a playlist, so that there is something to reschedule
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -190,11 +190,14 @@ RpcRescheduleTest :: simpleTest(void)
     xmlRpcClient.execute("uploadPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
-    Ptr<UniqueId>::Ref  entryId(new UniqueId(int(result["scheduleEntryId"])));
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+                                                == XmlRpcValue::TypeString);
+    Ptr<UniqueId>::Ref  entryId(new UniqueId(std::string(
+                                                result["scheduleEntryId"] )));
 
     // now reschedule it
     parameters["sessionId"]       = sessionId->getId();
-    parameters["scheduleEntryId"] = (int) entryId->getId();
+    parameters["scheduleEntryId"] = std::string(*entryId);
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -209,7 +212,7 @@ RpcRescheduleTest :: simpleTest(void)
 
     // now reschedule it unto itself, should fail
     parameters["sessionId"]       = sessionId->getId();
-    parameters["scheduleEntryId"] = (int) entryId->getId();
+    parameters["scheduleEntryId"] = std::string(*entryId);
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -237,7 +240,7 @@ RpcRescheduleTest :: negativeTest(void)
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
     parameters["sessionId"]       = sessionId->getId();
-    parameters["scheduleEntryId"] = 9999;
+    parameters["scheduleEntryId"] = "0000000000009999";
 
     result.clear();
     xmlRpcClient.execute("removeFromSchedule", parameters, result);

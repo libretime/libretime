@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -166,28 +166,22 @@ void
 DisplayPlaylistsMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<DisplayPlaylistsMethod>::Ref method(new DisplayPlaylistsMethod());
-    XmlRpc::XmlRpcValue       parameters;
-    XmlRpc::XmlRpcValue       rootParameter;
-    rootParameter.setSize(1);
-    XmlRpc::XmlRpcValue       result;
-    XmlRpc::XmlRpcValue       playlist;       
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
 
     result.clear();
     parameters["sessionId"]  = sessionId->getId();
-    rootParameter[0] = parameters;
-    try {
-        method->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
-    }
+    xmlRpcClient.execute("displayPlaylists", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.size() == 1);
 
-    playlist = result[0];
-    CPPUNIT_ASSERT(((int) playlist["id"]) == 1);
-    CPPUNIT_ASSERT(((int) playlist["playlength"]) == (90 * 60));
+    XmlRpc::XmlRpcValue     playlist = result[0];
+    CPPUNIT_ASSERT(playlist.hasMember("id"));
+    CPPUNIT_ASSERT(playlist["id"].getType() == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(playlist["id"]) == "0000000000000001");
+
+    CPPUNIT_ASSERT(playlist.hasMember("playlength"));
+    CPPUNIT_ASSERT(playlist["playlength"].getType() == XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(int(playlist["playlength"]) == 90 * 60);
 }

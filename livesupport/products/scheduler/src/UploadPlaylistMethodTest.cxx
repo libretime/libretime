@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,7 +188,7 @@ UploadPlaylistMethodTest :: firstTest(void)
 
     // set up a structure for the parameters
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -228,7 +228,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
 
     // load the first playlist, this will succeed
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -253,7 +253,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     // try to load the same one, but in an overlapping time region
     // (we know that playlist with id 1 is 1 hour long)
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -274,7 +274,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
 
     // try to load the same one, but now in good timing
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -298,7 +298,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
 
     // try to load the same one, this time overlapping both previos instances
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;

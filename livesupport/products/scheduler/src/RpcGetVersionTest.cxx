@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -147,7 +147,8 @@ RpcGetVersionTest :: simpleTest(void)
 
     result.clear();
     xmlRpcClient.execute("getVersion", parameters, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
     CPPUNIT_ASSERT(result.hasMember("version"));
     std::string versionStr = result["version"];
     CPPUNIT_ASSERT(versionStr.find(versionPrefix) == 0);

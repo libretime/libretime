@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/SessionId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,7 +55,7 @@ namespace Core {
  *  A class representing session identifiers.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SessionId
 {
@@ -75,13 +75,12 @@ class SessionId
 
     public:
         /**
-         *  The type for the numeric value the session id is represented in.
+         *  The type for the value the session id is represented in.
          */
         typedef std::string     IdType;
 
         /**
          *  Constructor to create a SessionId with a specific value.
-         *  TODO: remove this later, as this is for testing purposes only.
          *
          *  @param id the value of the created id object.
          */
@@ -119,9 +118,9 @@ class SessionId
         }
 
         /**
-         *  Return the string value of this session ID.
+         *  Return the (string) value of this session ID.
          *
-         *  @return the string value of this id.
+         *  @return the value of this id.
          */
         const IdType
         getId(void) const                       throw ()

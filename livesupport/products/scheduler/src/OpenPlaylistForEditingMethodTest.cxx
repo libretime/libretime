@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,7 +174,7 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue             result;
 
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 1;
+    parameter["playlistId"] = "0000000000000001";
     rootParameter[0]        = parameter;
 
     result.clear();
@@ -187,12 +187,18 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
-    CPPUNIT_ASSERT((int) result["id"] == 1);
-    CPPUNIT_ASSERT((int) result["playlength"] == (90 * 60));
+    CPPUNIT_ASSERT(result.hasMember("id"));
+    CPPUNIT_ASSERT(result["id"].getType() == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
+
+    CPPUNIT_ASSERT(result.hasMember("playlength"));
+    CPPUNIT_ASSERT(result["playlength"].getType() 
+                                          == XmlRpc::XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
 
     parameter.clear();
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 6376;
+    parameter["playlistId"] = "0000000000009999";
     rootParameter[0]        = parameter;
 
     result.clear();
@@ -206,7 +212,7 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
 
     parameter.clear();
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 1;
+    parameter["playlistId"] = "0000000000000001";
     rootParameter[0]        = parameter;
 
     result.clear();

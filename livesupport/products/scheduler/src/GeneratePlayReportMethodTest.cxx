@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -193,15 +193,15 @@ GeneratePlayReportMethodTest :: firstTest(void)
 
     // set up a structure for the parameters
     parameters["sessionId"]  = sessionId->getId();
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
+    time.tm_year = 101;     // 2001
+    time.tm_mon  = 10;      // November
     time.tm_mday = 12;
     time.tm_hour = 18;
     time.tm_min  = 31;
     time.tm_sec  =  1;
     parameters["from"] = &time;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
+    time.tm_year = 101;     // 2001
+    time.tm_mon  = 10;      // November
     time.tm_mday = 12;
     time.tm_hour = 19;
     time.tm_min  = 31;
@@ -261,15 +261,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check for the interval 2004-10-26 between 13 and 15 o'clock
     parameters["sessionId"]  = sessionId->getId();
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 26;
     time.tm_hour = 13;
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["from"] = &time;
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 26;
     time.tm_hour = 15;
     time.tm_min  =  0;
@@ -290,10 +290,18 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
-    CPPUNIT_ASSERT((int)(result[0]["audioClipId"]) == 10001);
+    CPPUNIT_ASSERT(result[0].hasMember("audioClipId"));
+    CPPUNIT_ASSERT(result[0]["audioClipId"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    UniqueId   newAudioClipId = UniqueId(std::string(result[0]["audioClipId"]));
+    CPPUNIT_ASSERT(newAudioClipId.getId() == 10001);
+
+    CPPUNIT_ASSERT(result[0].hasMember("timestamp"));
+    CPPUNIT_ASSERT(result[0]["timestamp"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[0]["timestamp"];
-    CPPUNIT_ASSERT(time.tm_year == 2004);
-    CPPUNIT_ASSERT(time.tm_mon  == 10);
+    CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
+    CPPUNIT_ASSERT(time.tm_mon  == 9);      // October
     CPPUNIT_ASSERT(time.tm_mday == 26);
     CPPUNIT_ASSERT(time.tm_hour == 14);
     CPPUNIT_ASSERT(time.tm_min  == 0);
@@ -302,15 +310,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check for the interval 2004-10-26 between 14 o'clock and 15:30
     parameters["sessionId"]  = sessionId->getId();
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 26;
     time.tm_hour = 14;
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["from"] = &time;
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 26;
     time.tm_hour = 15;
     time.tm_min  = 30;
@@ -331,10 +339,18 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
-    CPPUNIT_ASSERT((int)(result[0]["audioClipId"]) == 10001);
+    CPPUNIT_ASSERT(result[0].hasMember("audioClipId"));
+    CPPUNIT_ASSERT(result[0]["audioClipId"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    newAudioClipId = UniqueId(std::string(result[0]["audioClipId"]));
+    CPPUNIT_ASSERT(newAudioClipId.getId() == 10001);
+
+    CPPUNIT_ASSERT(result[0].hasMember("timestamp"));
+    CPPUNIT_ASSERT(result[0]["timestamp"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[0]["timestamp"];
-    CPPUNIT_ASSERT(time.tm_year == 2004);
-    CPPUNIT_ASSERT(time.tm_mon  == 10);
+    CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
+    CPPUNIT_ASSERT(time.tm_mon  == 9);      // October
     CPPUNIT_ASSERT(time.tm_mday == 26);
     CPPUNIT_ASSERT(time.tm_hour == 14);
     CPPUNIT_ASSERT(time.tm_min  == 0);
@@ -343,15 +359,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check for the interval 2004-10-26 15:00 to 2012-08-01 midnight
     parameters["sessionId"]  = sessionId->getId();
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 26;
     time.tm_hour = 15;
     time.tm_min  = 30;
     time.tm_sec  =  0;
     parameters["from"] = &time;
-    time.tm_year = 2012;
-    time.tm_mon  =  8;
+    time.tm_year = 112;     // 2012
+    time.tm_mon  = 7;       // August
     time.tm_mday =  1;
     time.tm_hour =  0;
     time.tm_min  =  0;
@@ -372,19 +388,35 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 2);
-    CPPUNIT_ASSERT((int)(result[0]["audioClipId"]) == 10017);
+    CPPUNIT_ASSERT(result[0].hasMember("audioClipId"));
+    CPPUNIT_ASSERT(result[0]["audioClipId"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    newAudioClipId = UniqueId(std::string(result[0]["audioClipId"]));
+    CPPUNIT_ASSERT(newAudioClipId.getId() == 10017);
+
+    CPPUNIT_ASSERT(result[0].hasMember("timestamp"));
+    CPPUNIT_ASSERT(result[0]["timestamp"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[0]["timestamp"];
-    CPPUNIT_ASSERT(time.tm_year == 2004);
-    CPPUNIT_ASSERT(time.tm_mon  == 10);
+    CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
+    CPPUNIT_ASSERT(time.tm_mon  == 9);      // October
     CPPUNIT_ASSERT(time.tm_mday == 26);
     CPPUNIT_ASSERT(time.tm_hour == 15);
     CPPUNIT_ASSERT(time.tm_min  == 30);
     CPPUNIT_ASSERT(time.tm_sec  == 0);
 
-    CPPUNIT_ASSERT((int)(result[1]["audioClipId"]) == 10003);
+    CPPUNIT_ASSERT(result[1].hasMember("audioClipId"));
+    CPPUNIT_ASSERT(result[1]["audioClipId"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    newAudioClipId = UniqueId(std::string(result[1]["audioClipId"]));
+    CPPUNIT_ASSERT(newAudioClipId.getId() == 10003);
+
+    CPPUNIT_ASSERT(result[1].hasMember("timestamp"));
+    CPPUNIT_ASSERT(result[1]["timestamp"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeDateTime);
     time = result[1]["timestamp"];
-    CPPUNIT_ASSERT(time.tm_year == 2004);
-    CPPUNIT_ASSERT(time.tm_mon  == 10);
+    CPPUNIT_ASSERT(time.tm_year == 104);    // 2004
+    CPPUNIT_ASSERT(time.tm_mon  == 9);      // October
     CPPUNIT_ASSERT(time.tm_mday == 27);
     CPPUNIT_ASSERT(time.tm_hour == 10);
     CPPUNIT_ASSERT(time.tm_min  == 01);
@@ -393,15 +425,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
 
     // check for the interval 2004-10-26 16 o'clock to 2004-10-27 10 o'clock
     parameters["sessionId"]  = sessionId->getId();
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 26;
     time.tm_hour = 16;
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["from"] = &time;
-    time.tm_year = 2004;
-    time.tm_mon  = 10;
+    time.tm_year = 104;     // 2004
+    time.tm_mon  = 9;       // October
     time.tm_mday = 27;
     time.tm_hour = 10;
     time.tm_min  =  0;

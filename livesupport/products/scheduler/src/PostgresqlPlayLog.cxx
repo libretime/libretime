@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLog.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,8 +63,8 @@ const std::string PostgresqlPlayLog::configElementNameStr =
 const std::string PostgresqlPlayLog::createStmt =
     "CREATE TABLE playLog\n"
     "(\n"
-    "   id            INT         NOT NULL,\n"
-    "   audioClipId   INT         NOT NULL,\n"
+    "   id            BIGINT      NOT NULL,\n"
+    "   audioClipId   BIGINT      NOT NULL,\n"
     "   timestamp     TIMESTAMP   NOT NULL,\n"
     "\n"
     "   PRIMARY KEY(id)\n"
@@ -181,9 +181,9 @@ PostgresqlPlayLog :: addPlayLogEntry(
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         addPlayLogEntryStmt));
         id = UniqueId::generateId();
-        pstmt->setInt(1, id->getId());
+        pstmt->setLong(1, id->getId());
 
-        pstmt->setInt(2, audioClipId->getId());
+        pstmt->setLong(2, audioClipId->getId());
  
         timestamp = Conversion::ptimeToTimestamp(clipTimestamp);
         pstmt->setTimestamp(3, *timestamp);
@@ -231,8 +231,8 @@ PostgresqlPlayLog :: getPlayLogEntries(
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         while (rs->next()) {
-            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getInt(1)));
-            Ptr<UniqueId>::Ref      audioClipId(new UniqueId(rs->getInt(2)));
+            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getLong(1)));
+            Ptr<UniqueId>::Ref      audioClipId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref clipTimestamp 

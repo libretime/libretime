@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,8 +183,8 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue             result;
 
     parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = 1;
-    parameters["audioClipId"]    = 0x10001;
+    parameters["playlistId"]     = "0000000000000001";
+    parameters["audioClipId"]    = "0000000000010001";
     parameters["relativeOffset"] = 90*60;
     rootParameter[0]             = parameters;
 

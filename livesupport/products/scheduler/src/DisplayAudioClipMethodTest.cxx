@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -173,7 +173,7 @@ DisplayAudioClipMethodTest :: firstTest(void)
 
     // set up a structure for the parameter
     parameter["sessionId"]   = sessionId->getId();
-    parameter["audioClipId"] = 0x10001;
+    parameter["audioClipId"] = "0000000000010001";
     rootParameter[0] = parameter;
 
     result.clear();
@@ -186,8 +186,14 @@ DisplayAudioClipMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
-    CPPUNIT_ASSERT(int(result["id"]) == 0x10001);
-    CPPUNIT_ASSERT(int(result["playlength"]) == (60 * 60));
+    CPPUNIT_ASSERT(result.hasMember("id"));
+    CPPUNIT_ASSERT(result["id"].getType() == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000010001");
+
+    CPPUNIT_ASSERT(result.hasMember("playlength"));
+    CPPUNIT_ASSERT(result["playlength"].getType() 
+                                             == XmlRpc::XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(int(result["playlength"]) == 60 * 60);
 }
 
 
@@ -206,7 +212,7 @@ DisplayAudioClipMethodTest :: negativeTest(void)
 
     // set up a structure for the parameter
     parameter["sessionId"]   = sessionId->getId();
-    parameter["audioClipId"] = 0x9999;
+    parameter["audioClipId"] = "0000000000009999";
     rootParameter[0] = parameter;
 
     result.clear();

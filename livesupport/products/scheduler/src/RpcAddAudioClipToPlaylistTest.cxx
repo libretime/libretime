@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -194,15 +194,16 @@ RpcAddAudioClipToPlaylistTest :: firstTest(void)
     XmlRpc::XmlRpcValue             result;
 
     parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = 1;
-    parameters["audioClipId"]    = 0x10001;
+    parameters["playlistId"]     = "0000000000000001";
+    parameters["audioClipId"]    = "0000000000010001";
     parameters["relativeOffset"] = 0;
 
     result.clear();
     xmlRpcClient.execute("openPlaylistForEditing", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(int(result["id"]) == 1);
+    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
 
     result.clear();
     xmlRpcClient.execute("addAudioClipToPlaylist", parameters, result);
@@ -210,8 +211,8 @@ RpcAddAudioClipToPlaylistTest :: firstTest(void)
     
     parameters.clear();
     parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = 1;
-    parameters["audioClipId"]    = 0x10001;
+    parameters["playlistId"]     = "0000000000000001";
+    parameters["audioClipId"]    = "0000000000010001";
     parameters["relativeOffset"] = 90*60;
 
     result.clear();

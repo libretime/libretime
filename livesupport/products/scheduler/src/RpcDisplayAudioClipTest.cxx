@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,29 +165,24 @@ void
 DisplayAudioClipMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<DisplayAudioClipMethod>::Ref method(new DisplayAudioClipMethod());
-    XmlRpc::XmlRpcValue             parameter;
-    XmlRpc::XmlRpcValue             rootParameter;
-    rootParameter.setSize(1);
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
 
-    // set up a structure for the parameter
-    parameter["sessionId"]   = sessionId->getId();
-    parameter["audioClipId"] = 10001;
-    rootParameter[0] = parameter;
+    parameters["sessionId"]   = sessionId->getId();
+    parameters["audioClipId"] = "0000000000010001";
 
     result.clear();
-    try {
-        method->execute(rootParameter, result);
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
-    }
-    CPPUNIT_ASSERT(int(result["id"]) == 10001);
-    CPPUNIT_ASSERT(int(result["playlength"]) == (60 * 60));
+    xmlRpcClient.execute("displayAudioClip", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    CPPUNIT_ASSERT(result.hasMember("id"));
+    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000010001");
+
+    CPPUNIT_ASSERT(result.hasMember("playlength"));
+    CPPUNIT_ASSERT(result["playlength"].getType() == XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(int(result["playlength"]) == 60 * 60);
 }
 
 
@@ -198,23 +193,16 @@ void
 DisplayAudioClipMethodTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<DisplayAudioClipMethod>::Ref method(new DisplayAudioClipMethod());
-    XmlRpc::XmlRpcValue             parameter;
-    XmlRpc::XmlRpcValue             rootParameter;
-    rootParameter.setSize(1);
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
 
-    // set up a structure for the parameter
-    parameter["sessionId"]   = sessionId->getId();
-    parameter["audioClipId"] = 9999;
-    rootParameter[0] = parameter;
+    parameters["sessionId"]   = sessionId->getId();
+    parameters["audioClipId"] = "0000000000009999";
 
     result.clear();
-    try {
-        method->execute(rootParameter, result);
-        CPPUNIT_FAIL("allowed to display non-existent audio clip");
-    }
-    catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 603);    // audio clip not found
-    }
+    xmlRpcClient.execute("displayAudioClip", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 603);    // audio clip not found
 }

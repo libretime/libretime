@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 
 
 #include <string>
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "XmlRpcTools.h"
 
@@ -58,59 +59,52 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of the playlist ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::playlistIdName = "playlistId";
+static const std::string playlistIdName = "playlistId";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::audioClipIdName = "audioClipId";
+static const std::string audioClipIdName = "audioClipId";
 
 /*------------------------------------------------------------------------------
  *  The name of the relative offset member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::relativeOffsetName = "relativeOffset";
+static const std::string relativeOffsetName = "relativeOffset";
 
 /*------------------------------------------------------------------------------
- *  The name of the from member in the XML-RPC parameter
- *  structure.
+ *  The name of the from member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::fromTimeName = "from";
+static const std::string fromTimeName = "from";
 
 /*------------------------------------------------------------------------------
- *  The name of the to member in the XML-RPC parameter
- *  structure.
+ *  The name of the to member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::toTimeName = "to";
+static const std::string toTimeName = "to";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlist id member in the XML-RPC parameter
- *  structure.
+ *  The name of the playlist id member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::scheduleEntryIdName =
-                                                        "scheduleEntryId";
+static const std::string scheduleEntryIdName = "scheduleEntryId";
 
 /*------------------------------------------------------------------------------
- *  The name of the playtime member in the XML-RPC parameter
- *  structure.
+ *  The name of the playtime member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::playtimeName = "playtime";
+static const std::string playtimeName = "playtime";
 
 /*------------------------------------------------------------------------------
- *  The name of the fade in member in the XML-RPC parameter
- *  structure.
+ *  The name of the fade in member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::fadeInName = "fadeIn";
+static const std::string fadeInName = "fadeIn";
 
 /*------------------------------------------------------------------------------
- *  The name of the fade out member in the XML-RPC parameter
- *  structure.
+ *  The name of the fade out member in the XML-RPC parameter structure.
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::fadeOutName = "fadeOut";
+static const std::string fadeOutName = "fadeOut";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
-const std::string XmlRpcTools::sessionIdName = "sessionId";
+static const std::string sessionIdName = "sessionId";
 
 
 /* ================================================  local constants & macros */
@@ -129,11 +123,15 @@ XmlRpcTools :: extractScheduleEntryId(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(scheduleEntryIdName)) {
-        throw std::invalid_argument("missing schedule entry ID argument");
+    if (!xmlRpcValue.hasMember(scheduleEntryIdName)
+        || xmlRpcValue[scheduleEntryIdName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad schedule entry ID "
+                                        "argument");
     }
 
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[scheduleEntryIdName]));
+    Ptr<UniqueId>::Ref id(new UniqueId(std::string(
+                                        xmlRpcValue[scheduleEntryIdName] )));
     return id;
 }
 
@@ -145,11 +143,14 @@ Ptr<UniqueId>::Ref
 XmlRpcTools :: extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(playlistIdName)) {
-        throw std::invalid_argument("missing playlist ID argument");
+    if (!xmlRpcValue.hasMember(playlistIdName)
+        || xmlRpcValue[playlistIdName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad playlist ID argument");
     }
 
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
+    Ptr<UniqueId>::Ref id(new UniqueId(std::string(
+                                        xmlRpcValue[playlistIdName] )));
     return id;
 }
 
@@ -161,11 +162,14 @@ Ptr<UniqueId>::Ref
 XmlRpcTools :: extractAudioClipId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(audioClipIdName)) {
-        throw std::invalid_argument("missing audio clip ID argument");
+    if (!xmlRpcValue.hasMember(audioClipIdName)
+        || xmlRpcValue[audioClipIdName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad audio clip ID argument");
     }
 
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[audioClipIdName]));
+    Ptr<UniqueId>::Ref id(new UniqueId(std::string(
+                                        xmlRpcValue[audioClipIdName] )));
     return id;
 }
 
@@ -177,12 +181,14 @@ Ptr<time_duration>::Ref
 XmlRpcTools :: extractRelativeOffset(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(relativeOffsetName)) {
+    if (!xmlRpcValue.hasMember(relativeOffsetName)
+        || xmlRpcValue[relativeOffsetName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeInt) {
         throw std::invalid_argument("missing relative offset argument");
     }
 
     Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,
-                               (int) xmlRpcValue[relativeOffsetName], 0));
+                               int(xmlRpcValue[relativeOffsetName]), 0));
     return relativeOffset;
 }
 
@@ -196,8 +202,8 @@ XmlRpcTools :: playlistToXmlRpcValue(
                             XmlRpc::XmlRpcValue       & xmlRpcValue)
                                                 throw ()
 {
-    xmlRpcValue["id"]         = (int) (playlist->getId()->getId());
-    xmlRpcValue["playlength"] = playlist->getPlaylength()->total_seconds();
+    xmlRpcValue["id"]         = std::string(*playlist->getId());
+    xmlRpcValue["playlength"] = int(playlist->getPlaylength()->total_seconds());
 }
 
 
@@ -237,8 +243,9 @@ XmlRpcTools :: audioClipToXmlRpcValue(
                             XmlRpc::XmlRpcValue        & xmlRpcValue)
                                                 throw ()
 {
-    xmlRpcValue["id"]         = (int) (audioClip->getId()->getId());
-    xmlRpcValue["playlength"] = audioClip->getPlaylength()->total_seconds();
+    xmlRpcValue["id"]         = std::string(*audioClip->getId());
+    xmlRpcValue["playlength"] = int(audioClip->getPlaylength()
+                                             ->total_seconds());
 }
 
 
@@ -302,16 +309,15 @@ XmlRpcTools :: extractFromTime(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(fromTimeName)) {
-        throw std::invalid_argument("no from part in parameter structure");
+    if (!xmlRpcValue.hasMember(fromTimeName)
+        || xmlRpcValue[fromTimeName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeDateTime) {
+        throw std::invalid_argument("missing or bad 'from' time in "
+                                        "parameter structure");
     }
 
-    struct tm       tm = (struct tm) xmlRpcValue[fromTimeName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
+    struct tm       time = (struct tm) xmlRpcValue[fromTimeName];
+    return TimeConversion::tmToPtime(&time);
 }
 
 
@@ -323,16 +329,15 @@ XmlRpcTools :: extractToTime(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(toTimeName)) {
-        throw std::invalid_argument("no to part in parameter structure");
+    if (!xmlRpcValue.hasMember(toTimeName)
+        || xmlRpcValue[toTimeName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeDateTime) {
+        throw std::invalid_argument("missing or bad 'to' time in "
+                                        "parameter structure");
     }
 
-    struct tm       tm = (struct tm) xmlRpcValue[toTimeName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
+    struct tm       time = (struct tm) xmlRpcValue[toTimeName];
+    return TimeConversion::tmToPtime(&time);
 }
 
 
@@ -341,22 +346,14 @@ XmlRpcTools :: extractToTime(
  *----------------------------------------------------------------------------*/
 void
 XmlRpcTools :: ptimeToXmlRpcValue(
-                            Ptr<const ptime>::Ref   ptime,
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
+                            Ptr<const ptime>::Ref   ptimeParam,
+                            XmlRpc::XmlRpcValue&    xmlRpcValue)
                                                                 throw ()
 {
-    gregorian::date           date  = ptime->date();
-    posix_time::time_duration hours = ptime->time_of_day();
-    struct tm                 time;
-
-    time.tm_year  = date.year();
-    time.tm_mon   = date.month();
-    time.tm_mday  = date.day();
-    time.tm_hour  = hours.hours();
-    time.tm_min   = hours.minutes();
-    time.tm_sec   = hours.seconds();
-    // TODO: set tm_wday, tm_yday and tm_isdst fields as well
-
+    struct tm           time;
+    Ptr<ptime>::Ref     myPtime(new ptime(*ptimeParam));    // get rid of const
+    
+    TimeConversion::ptimeToTm(myPtime, time);
     xmlRpcValue = XmlRpc::XmlRpcValue(&time);
 }
 
@@ -381,8 +378,8 @@ XmlRpcTools :: scheduleEntriesToXmlRpcValue(
     while (it != scheduleEntries->end()) {
         Ptr<ScheduleEntry>::Ref     entry = *it;
         XmlRpc::XmlRpcValue         returnStruct;
-        returnStruct["id"]         = (int) (entry->getId()->getId());
-        returnStruct["playlistId"] = (int) (entry->getPlaylistId()->getId());
+        returnStruct["id"]         = std::string(*entry->getId());
+        returnStruct["playlistId"] = std::string(*entry->getPlaylistId());
 
         XmlRpc::XmlRpcValue         time;
         ptimeToXmlRpcValue(entry->getStartTime(), time);
@@ -405,16 +402,15 @@ XmlRpcTools :: extractPlayschedule(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(playtimeName)) {
-        throw std::invalid_argument("no playtime in parameter structure");
+    if (!xmlRpcValue.hasMember(playtimeName)
+        || xmlRpcValue[playtimeName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeDateTime) {
+        throw std::invalid_argument("missing or bad playtime in "
+                                        "parameter structure");
     }
 
-    struct tm       tm = (struct tm) xmlRpcValue[playtimeName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
+    struct tm       time = (struct tm) xmlRpcValue[playtimeName];
+    return TimeConversion::tmToPtime(&time);
 }
 
 
@@ -425,12 +421,14 @@ Ptr<time_duration>::Ref
 XmlRpcTools :: extractFadeIn(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(fadeInName)) {
-        throw std::invalid_argument("missing fade in argument");
+    if (!xmlRpcValue.hasMember(fadeInName)
+        || xmlRpcValue[fadeInName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeInt) {
+        throw std::invalid_argument("missing or bad 'fade in' argument");
     }
 
     Ptr<time_duration>::Ref     fadeIn(new time_duration(0,0,
-                                (int) xmlRpcValue[fadeInName], 0));
+                                        int(xmlRpcValue[fadeInName]), 0));
     return fadeIn;
 }
 
@@ -442,12 +440,14 @@ Ptr<time_duration>::Ref
 XmlRpcTools :: extractFadeOut(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(fadeOutName)) {
-        throw std::invalid_argument("missing fade out argument");
+    if (!xmlRpcValue.hasMember(fadeOutName)
+        || xmlRpcValue[fadeOutName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeInt) {
+        throw std::invalid_argument("missing or bad 'fade out' argument");
     }
 
     Ptr<time_duration>::Ref     fadeOut(new time_duration(0,0,
-                                (int) xmlRpcValue[fadeOutName], 0));
+                                        int(xmlRpcValue[fadeOutName]), 0));
     return fadeOut;
 }
 
@@ -461,7 +461,7 @@ XmlRpcTools :: scheduleEntryIdToXmlRpcValue(
                             XmlRpc::XmlRpcValue       & returnValue)
                                                 throw ()
 {
-    returnValue[scheduleEntryIdName] = int(scheduleEntryId->getId());
+    returnValue[scheduleEntryIdName] = std::string(*scheduleEntryId);
 }
 
 
@@ -474,11 +474,11 @@ XmlRpcTools :: playLogEntryToXmlRpcValue(
                     XmlRpc::XmlRpcValue           & returnValue)
                                                 throw ()
 {
-    returnValue["audioClipId"]  = int(playLogEntry->getAudioClipId()->getId());
+    returnValue["audioClipId"]  = std::string(*playLogEntry->getAudioClipId());
 
     XmlRpc::XmlRpcValue         timestamp;
     ptimeToXmlRpcValue(playLogEntry->getTimestamp(), timestamp);
-    returnValue["timestamp"] =  timestamp;
+    returnValue["timestamp"]    =  timestamp;
 }
 
 
@@ -518,11 +518,14 @@ XmlRpcTools :: extractSessionId(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(sessionIdName)) {
-        throw std::invalid_argument("missing session ID argument");
+    if (!xmlRpcValue.hasMember(sessionIdName)
+        || xmlRpcValue[sessionIdName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad session ID argument");
     }
 
-    Ptr<SessionId>::Ref id(new SessionId(xmlRpcValue[sessionIdName]));
+    Ptr<SessionId>::Ref id(new SessionId(std::string(
+                                        xmlRpcValue[sessionIdName] )));
     return id;
 }
 

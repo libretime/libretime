@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/RpcDeletePlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -193,7 +193,7 @@ RpcDeletePlaylistTest :: firstTest(void)
     XmlRpc::XmlRpcValue     result;
 
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
 
     result.clear();
     xmlRpcClient.execute("openPlaylistForEditing", parameters, result);
@@ -227,7 +227,7 @@ RpcDeletePlaylistTest :: negativeTest(void)
     XmlRpc::XmlRpcValue             result;
 
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 9999;
+    parameters["playlistId"] = "9999";
 
     result.clear();
     xmlRpcClient.execute("deletePlaylist", parameters, result);

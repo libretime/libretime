@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,70 +74,11 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class XmlRpcTools
 {
     private:
-        /**
-         *  The name of the playlistId member in the XML-RPC parameter
-         *  structure given as the input to an XmlRpcServerMethod.
-         */
-        static const std::string        playlistIdName;
-
-        /**
-         *  The name of the playlistId member in the XML-RPC parameter
-         *  structure given as the input to an XmlRpcServerMethod.
-         */
-        static const std::string        audioClipIdName;
-
-        /**
-         *  The name of the playlistId member in the XML-RPC parameter
-         *  structure given as the input to an XmlRpcServerMethod.
-         */
-        static const std::string        relativeOffsetName;
-
-        /**
-         *  The name of the from member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        fromTimeName;
-
-        /**
-         *  The name of the to member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        toTimeName;
-
-        /**
-         *  The name of the entry id member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        scheduleEntryIdName;
-
-        /**
-         *  The name of the playtime member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        playtimeName;
-
-        /**
-         *  The name of the fade in member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        fadeInName;
-
-        /**
-         *  The name of the fade out member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        fadeOutName;
-
-        /**
-         *  The name of the sessionId member in the XML-RPC parameter
-         *  structure given as the input to an XmlRpcServerMethod.
-         */
-        static const std::string        sessionIdName;
 
         /**
          *  Convert a boost::posix_time::ptime to an XmlRpcValue

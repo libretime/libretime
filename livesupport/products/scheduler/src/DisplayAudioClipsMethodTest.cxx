@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,11 +188,25 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     CPPUNIT_ASSERT(result.size() == 2);
 
     audioClip = result[0];
-    CPPUNIT_ASSERT(int(audioClip["id"]) == 0x10001);
+    CPPUNIT_ASSERT(audioClip.hasMember("id"));
+    CPPUNIT_ASSERT(audioClip["id"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(audioClip["id"]) == "0000000000010001");
+
+    CPPUNIT_ASSERT(audioClip.hasMember("playlength"));
+    CPPUNIT_ASSERT(audioClip["playlength"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeInt);
     CPPUNIT_ASSERT(int(audioClip["playlength"]) == 60 * 60);
 
     audioClip = result[1];
-    CPPUNIT_ASSERT(int(audioClip["id"]) == 0x10002);
+    CPPUNIT_ASSERT(audioClip.hasMember("id"));
+    CPPUNIT_ASSERT(audioClip["id"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(audioClip["id"]) == "0000000000010002");
+
+    CPPUNIT_ASSERT(audioClip.hasMember("playlength"));
+    CPPUNIT_ASSERT(audioClip["playlength"].getType()
+                                        == XmlRpc::XmlRpcValue::TypeInt);
     CPPUNIT_ASSERT(int(audioClip["playlength"]) == 30 * 60);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -137,39 +137,49 @@ XmlRpcToolsTest :: firstTest(void)
     XmlRpcTools :: playlistToXmlRpcValue(playlist, xmlRpcPlaylist);
     XmlRpcTools :: audioClipToXmlRpcValue(audioClip, xmlRpcAudioClip);
 
-    CPPUNIT_ASSERT(int(xmlRpcPlaylist["id"]) == 1);
+    CPPUNIT_ASSERT(xmlRpcPlaylist.hasMember("id"));
+    CPPUNIT_ASSERT(xmlRpcPlaylist["id"].getType() == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(xmlRpcPlaylist["id"]) == "0000000000000001");
+
+    CPPUNIT_ASSERT(xmlRpcPlaylist.hasMember("playlength"));
+    CPPUNIT_ASSERT(xmlRpcPlaylist["playlength"].getType() 
+                                                     == XmlRpcValue::TypeInt);
     CPPUNIT_ASSERT(int(xmlRpcPlaylist["playlength"]) == 90 * 60);
 
-    CPPUNIT_ASSERT(int(xmlRpcAudioClip["id"]) == 0x10001);
+    CPPUNIT_ASSERT(xmlRpcAudioClip.hasMember("id"));
+    CPPUNIT_ASSERT(xmlRpcAudioClip["id"].getType() == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(xmlRpcAudioClip["id"]) == "0000000000010001");
+
+    CPPUNIT_ASSERT(xmlRpcAudioClip.hasMember("playlength"));
+    CPPUNIT_ASSERT(xmlRpcAudioClip["playlength"].getType() 
+                                                      == XmlRpcValue::TypeInt);
     CPPUNIT_ASSERT(int(xmlRpcAudioClip["playlength"]) == 60 * 60);
 
     XmlRpcValue              xmlRpcPlaylistId;
-    Ptr<UniqueId>::Ref       playlistId;
-    Ptr<UniqueId>::Ref       audioClipId;
-    Ptr<time_duration>::Ref  relativeOffset;
+    Ptr<UniqueId>::Ref       playlistId(new UniqueId(rand()));
+    Ptr<UniqueId>::Ref       audioClipId(new UniqueId(rand()));
+    Ptr<time_duration>::Ref  relativeOffset(new time_duration(0,0,rand(),0));
 
-    int                 playlistIdNum = rand();
-    int                 audioClipIdNum = rand();
-    int                 relativeOffsetNum = rand();
-
-    xmlRpcPlaylistId["playlistId"] = playlistIdNum;
-    xmlRpcPlaylistId["audioClipId"] = audioClipIdNum;
-    xmlRpcPlaylistId["relativeOffset"] = relativeOffsetNum;
+    xmlRpcPlaylistId["playlistId"]      = std::string(*playlistId);
+    xmlRpcPlaylistId["audioClipId"]     = std::string(*audioClipId);
+    xmlRpcPlaylistId["relativeOffset"]  = relativeOffset->total_seconds();
 
     // run the unpacking methods
+    Ptr<UniqueId>::Ref       newPlaylistId;
+    Ptr<UniqueId>::Ref       newAudioClipId;
+    Ptr<time_duration>::Ref  newRelativeOffset;
     try {
-        playlistId     = XmlRpcTools::extractPlaylistId(xmlRpcPlaylistId);
-        audioClipId    = XmlRpcTools::extractAudioClipId(xmlRpcPlaylistId);
-        relativeOffset = XmlRpcTools::extractRelativeOffset(xmlRpcPlaylistId);
+       newPlaylistId     = XmlRpcTools::extractPlaylistId(xmlRpcPlaylistId);
+       newAudioClipId    = XmlRpcTools::extractAudioClipId(xmlRpcPlaylistId);
+       newRelativeOffset = XmlRpcTools::extractRelativeOffset(xmlRpcPlaylistId);
     }
     catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
 
-    CPPUNIT_ASSERT((int)(playlistId->getId())  == playlistIdNum);
-    CPPUNIT_ASSERT((int)(audioClipId->getId()) == audioClipIdNum);
-    CPPUNIT_ASSERT((int)(relativeOffset->total_seconds()) 
-                                               == relativeOffsetNum);
+    CPPUNIT_ASSERT(*playlistId     == *newPlaylistId);
+    CPPUNIT_ASSERT(*audioClipId    == *newAudioClipId);
+    CPPUNIT_ASSERT(*relativeOffset == *newRelativeOffset);
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -181,7 +181,7 @@ DeletePlaylistMethodTest :: firstTest(void)
 
     // set up a structure for the parameters
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 1;
+    parameter["playlistId"] = "0000000000000001";
     rootParameter[0] = parameter;
 
     result.clear();
@@ -243,7 +243,7 @@ DeletePlaylistMethodTest :: negativeTest(void)
 
     // set up a structure for the parameters
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 9999;
+    parameter["playlistId"] = "0000000000009999";
     rootParameter[0] = parameter;
 
     result.clear();

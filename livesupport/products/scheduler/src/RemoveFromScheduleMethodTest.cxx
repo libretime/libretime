@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -170,7 +170,7 @@ RemoveFromScheduleMethodTest :: firstTest(void)
 
     // first schedule (upload) a playlist
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    parameters["playlistId"] = "0000000000000001";
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
@@ -191,11 +191,13 @@ RemoveFromScheduleMethodTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
-    entryId.reset(new UniqueId(int(result["scheduleEntryId"])));
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    entryId.reset(new UniqueId(std::string(result["scheduleEntryId"])));
 
     parameters.clear();
     parameters["sessionId"]  = sessionId->getId();
-    parameters["scheduleEntryId"] = int(entryId->getId());
+    parameters["scheduleEntryId"] = std::string(*entryId);
     rootParameter[0]              = parameters;
 
     result.clear();
@@ -227,7 +229,7 @@ RemoveFromScheduleMethodTest :: negativeTest(void)
     Ptr<UniqueId>::Ref              entryId(new UniqueId(9999));
 
     parameters["sessionId"]  = sessionId->getId();
-    parameters["scheduleEntryId"] = int(entryId->getId());
+    parameters["scheduleEntryId"] = std::string(*entryId);
     rootParameter[0]              = parameters;
 
     result.clear();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcCreatePlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -196,12 +196,14 @@ RpcCreatePlaylistTest :: firstTest(void)
     xmlRpcClient.execute("createPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(((int) result["playlength"]) == 0);
+    CPPUNIT_ASSERT(result["id"].getType == XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(result.hasMember("playlength"));
+    CPPUNIT_ASSERT(result["playlength"].getType == XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(int(result["playlength"]) == 0);
 
-    int playlistId = (int) result["id"];
     parameters.clear();
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = playlistId;
+    parameters["playlistId"] = std::string(result["id"]);
 
     result.clear();
     xmlRpcClient.execute("openPlaylistForEditing", parameters, result);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
 
     result.clear();
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 275;
+    parameter["playlistId"] = "0000000000009999";
     rootParameter[0]        = parameter;
     try {
         validatePlaylistMethod->execute(rootParameter, result);
@@ -195,7 +195,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
     result.clear();
     parameter.clear();
     parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = 1;
+    parameter["playlistId"] = "0000000000000001";
     rootParameter[0]        = parameter;    
     try {
         openPlaylistMethod->execute(rootParameter, result);
@@ -244,5 +244,7 @@ ValidatePlaylistMethodTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
     CPPUNIT_ASSERT(result.hasMember("valid"));
+    CPPUNIT_ASSERT(result["valid"].getType() 
+                                          == XmlRpc::XmlRpcValue::TypeBoolean);
     CPPUNIT_ASSERT(!bool(result["valid"]));  // has a gap at the beginning
 }

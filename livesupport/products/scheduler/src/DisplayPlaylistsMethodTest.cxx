@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -171,7 +171,6 @@ DisplayPlaylistsMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue       rootParameter;
     rootParameter.setSize(1);
     XmlRpc::XmlRpcValue       result;
-    XmlRpc::XmlRpcValue       playlist;       
 
     result.clear();
     parameters["sessionId"]  = sessionId->getId();
@@ -186,8 +185,14 @@ DisplayPlaylistsMethodTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
     CPPUNIT_ASSERT(result.size() == 1);
+    XmlRpc::XmlRpcValue     playlist = result[0];
 
-    playlist = result[0];
-    CPPUNIT_ASSERT(((int) playlist["id"]) == 1);
-    CPPUNIT_ASSERT(((int) playlist["playlength"]) == (90 * 60));
+    CPPUNIT_ASSERT(playlist.hasMember("id"));
+    CPPUNIT_ASSERT(playlist["id"].getType() == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT(std::string(playlist["id"]) == "0000000000000001");
+
+    CPPUNIT_ASSERT(playlist.hasMember("playlength"));
+    CPPUNIT_ASSERT(playlist["playlength"].getType() 
+                                               == XmlRpc::XmlRpcValue::TypeInt);
+    CPPUNIT_ASSERT(int(playlist["playlength"]) == 90 * 60);
 }
