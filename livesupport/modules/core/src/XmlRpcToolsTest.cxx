@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -141,9 +141,10 @@ XmlRpcToolsTest :: firstTest(void)
     xmlpp::DomParser    parser;
     CPPUNIT_ASSERT_NO_THROW(parser.parse_memory(std::string(
                                         xmlRpcPlaylist["playlist"] )));
-    xmlpp::Element*     configElement;
+    xmlpp::Element*     configElement = 0;
     CPPUNIT_ASSERT_NO_THROW(configElement = parser.get_document()
                                                  ->get_root_node());
+    CPPUNIT_ASSERT(configElement);
     CPPUNIT_ASSERT_NO_THROW(copyOfPlaylist->configure(*configElement));
 
     CPPUNIT_ASSERT(*copyOfPlaylist->getId()     == *playlist->getId());
