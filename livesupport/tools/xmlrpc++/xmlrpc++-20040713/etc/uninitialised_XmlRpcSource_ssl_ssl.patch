@@ -1,0 +1,11 @@
+diff -Nur xmlrpc++/src/XmlRpcSource.cpp x/src/XmlRpcSource.cpp
+--- xmlrpc++/src/XmlRpcSource.cpp	2004-04-13 22:21:59.000000000 +0700
++++ x/src/XmlRpcSource.cpp	2004-07-14 12:26:28.227768848 +0700
+@@ -9,6 +9,7 @@
+   XmlRpcSource::XmlRpcSource(int fd /*= -1*/, bool deleteOnClose /*= false*/) 
+     : _fd(fd), _deleteOnClose(deleteOnClose), _keepOpen(false)
+   {
++    _ssl_ssl = NULL;
+   }
+ 
+   XmlRpcSource::~XmlRpcSource()

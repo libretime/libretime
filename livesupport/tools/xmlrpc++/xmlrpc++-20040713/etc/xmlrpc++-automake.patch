@@ -1,0 +1,239 @@
+diff -Naur -x CVS xmlrpc++/Makefile x/Makefile
+--- xmlrpc++/Makefile	2004-04-19 20:53:00.000000000 +0700
++++ x/Makefile	1970-01-01 07:00:00.000000000 +0700
+@@ -1,71 +0,0 @@
+-# makefile written for gnu make
+-CXX		= g++
+-SRC		= ./src
+-SHARED		= -shared
+-CPPFLAGS	= -I$(SRC)
+-DEBUG		= -g
+-OPTIMIZE	= -O2
+-GCCWARN		= -Wall -Wstrict-prototypes
+-CXXFLAGS	= $(DEBUG) $(GCCWARN) $(OPTIMIZE) $(INCLUDES)
+-VERSION		= 0.8
+-
+-DESTDIR		=
+-prefix		= /usr
+-MKDIR		= mkdir -p
+-CP		= cp
+-LN		= ln -s
+-
+-LIB		= ./libXmlRpc.a
+-LIBALT		= ./libxmlrpc++.a
+-SO		= ./libxmlrpc++.so.$(VERSION)
+-
+-# Add your system-dependent network libs here. These are
+-# only used to build the tests (your application will need them too).
+-# Linux: none
+-# Solaris: -lsocket -lnsl
+-#SYSTEMLIBS	= -lsocket -lnsl
+-SYSTEMLIBS	=
+-LDLIBS		= $(LIB) $(SYSTEMLIBS)
+-
+-OBJ		= $(SRC)/XmlRpcClient.o $(SRC)/XmlRpcDispatch.o \
+-		$(SRC)/XmlRpcServer.o $(SRC)/XmlRpcServerConnection.o \
+-		$(SRC)/XmlRpcServerMethod.o $(SRC)/XmlRpcSocket.o $(SRC)/XmlRpcSource.o \
+-		$(SRC)/XmlRpcUtil.o $(SRC)/XmlRpcValue.o
+-
+-all:		$(LIB) $(SO) tests
+-
+-$(LIB):		$(OBJ)
+-		$(AR) $(ARFLAGS) $(LIB) $(OBJ)
+-		cp $(LIB) $(LIBALT)
+-
+-$(SO):		$(OBJ)
+-		$(CXX) -o $(SO) $(SHARED) $(OBJ)
+-
+-
+-tests:		$(LIB)
+-		cd test && $(MAKE) CXX=$(CXX) CXXFLAGS="$(CXXFLAGS)" SYSTEMLIBS="$(SYSTEMLIBS)"
+-
+-doc doxygen:
+-		cd src && doxygen Doxyfile
+-
+-distclean: clean
+-
+-clean:
+-		rm -f $(SRC)/*.o
+-		rm -f $(SRC)/*~
+-		rm -f $(LIB) $(LIBALT) $(SO)
+-		rm -f build
+-		cd test && $(MAKE) clean
+-
+-install:
+-		$(MKDIR) $(DESTDIR)$(prefix)/lib
+-		$(CP) $(SO) $(LIB) $(DESTDIR)$(prefix)/lib
+-		$(MKDIR) $(DESTDIR)$(prefix)/include
+-		$(CP) src/*.h $(DESTDIR)$(prefix)/include
+-		( cd $(DESTDIR)$(prefix)/lib; rm -f libxmlrpc++.so; $(LN) $(SO) libxmlrpc++.so )
+-		# Does not install tests right now	
+-
+-# Debian package make target, in case you want to manually build a package
+-# from the distribution.
+-deb:
+-		dpkg-buildpackage -rfakeroot
+diff -Naur -x CVS xmlrpc++/Makefile.am x/Makefile.am
+--- xmlrpc++/Makefile.am	1970-01-01 07:00:00.000000000 +0700
++++ x/Makefile.am	2004-07-13 18:54:38.726871288 +0700
+@@ -0,0 +1,4 @@
++SUBDIRS = src
++
++EXTRA_DIST = README.html
++
+diff -Naur -x CVS xmlrpc++/autogen.sh x/autogen.sh
+--- xmlrpc++/autogen.sh	1970-01-01 07:00:00.000000000 +0700
++++ x/autogen.sh	2004-07-13 18:22:34.446406384 +0700
+@@ -0,0 +1,69 @@
++#!/bin/sh
++# Run this to set up the build system: configure, makefiles, etc.
++# (based on the version in enlightenment's cvs)
++
++package="darkice"
++
++srcdir=`dirname $0`
++test -z "$srcdir" && srcdir=.
++
++cd "$srcdir"
++DIE=0
++
++(autoheader --version) < /dev/null > /dev/null 2>&1 || {
++    echo
++    echo "You must have autoconf installed to compile $package."
++    echo "Download the appropriate package for your distribution,"
++    echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
++    DIE=1
++}
++
++(autoconf --version) < /dev/null > /dev/null 2>&1 || {
++    echo
++    echo "You must have autoconf installed to compile $package."
++    echo "Download the appropriate package for your distribution,"
++    echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
++    DIE=1
++}
++
++(automake --version) < /dev/null > /dev/null 2>&1 || {
++    echo
++    echo "You must have automake installed to compile $package."
++    echo "Download the appropriate package for your system,"
++    echo "or get the source from one of the GNU ftp sites"
++    echo "listed in http://www.gnu.org/order/ftp.html"
++    DIE=1
++}
++
++(libtool --help) < /dev/null > /dev/null 2>&1 || {
++    echo
++    echo "You must have libtool installed to compile $package."
++    echo "Download the appropriate package for your system,"
++    echo "or get the source from one of the GNU ftp sites"
++    echo "listed in http://www.gnu.org/order/ftp.html"
++    DIE=1
++}
++
++if test "$DIE" -eq 1; then
++    exit 1
++fi
++
++if test -z "$*"; then
++    echo "I am going to run ./configure with no arguments - if you wish "
++    echo "to pass any to it, please specify them on the $0 command line."
++fi
++
++echo "Generating configuration files for $package, please wait...."
++
++echo "  aclocal $ACLOCAL_FLAGS"
++aclocal $ACLOCAL_FLAGS
++echo "  autoheader"
++autoheader
++echo "  libtoolize --automake"
++libtoolize --automake
++echo "  automake --add-missing $AUTOMAKE_FLAGS"
++automake --add-missing $AUTOMAKE_FLAGS 
++echo "  autoconf"
++autoconf
++
++$srcdir/configure "$@" && echo
+diff -Naur -x CVS xmlrpc++/configure.in x/configure.in
+--- xmlrpc++/configure.in	1970-01-01 07:00:00.000000000 +0700
++++ x/configure.in	2004-07-13 19:16:10.646469656 +0700
+@@ -0,0 +1,40 @@
++dnl Process this file with autoconf to produce a configure script.
++AC_INIT(src/XmlRpc.h)
++
++XMLRPC_MAJOR_VERSION=0 
++XMLRPC_MINOR_VERSION=8
++XMLRPC_MICRO_VERSION=0 
++
++#shared library versioning
++XMLRPC_INTERFACE_AGE=0 # increment if interfaces have been added,
++                       # zero if interfaces have changed or been removed 
++XMLRPC_BINARY_AGE=0    # increment if binary-compatability is broken
++
++XMLRPC_VERSION=$XMLRPC_MAJOR_VERSION.$XMLRPC_MINOR_VERSION.$XMLRPC_MICRO_VERSION
++
++LT_RELEASE=$XMLRPC_MAJOR_VERSION.$XMLRPC_MINOR_VERSION
++LT_CURRENT=`expr $XMLRPC_MICRO_VERSION - $XMLRPC_INTERFACE_AGE`
++LT_REVISION=$XMLRPC_INTERFACE_AGE
++LT_AGE=`expr $XMLRPC_BINARY_AGE - $XMLRPC_INTERFACE_AGE`
++
++AC_SUBST(LT_RELEASE)
++AC_SUBST(LT_CURRENT)
++AC_SUBST(LT_REVISION)
++AC_SUBST(LT_AGE)
++AC_SUBST(XMLRPC_VERSION)
++
++AM_INIT_AUTOMAKE(libxmlrpc++,$XMLRPC_VERSION)
++
++AM_CONFIG_HEADER(configure.h)
++
++AC_PROG_CXX
++AC_PROG_INSTALL
++AC_PROG_LIBTOOL
++
++dnl AC_STDC_HEADERS
++AC_CHECK_LIB( socket, socket)
++AC_CHECK_LIB( nsl, gethostbyname)
++AC_CHECK_LIB( ssl, SSL_connect)
++
++AC_OUTPUT(Makefile src/Makefile)
++
+diff -Naur -x CVS xmlrpc++/src/Makefile.am x/src/Makefile.am
+--- xmlrpc++/src/Makefile.am	1970-01-01 07:00:00.000000000 +0700
++++ x/src/Makefile.am	2004-07-13 19:16:46.137074264 +0700
+@@ -0,0 +1,35 @@
++lib_LTLIBRARIES = libxmlrpc++.la
++
++libxmlrpc___la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++
++library_includedir=$(includedir)
++library_include_HEADERS = XmlRpc.h \
++                          XmlRpcServer.h \
++                          XmlRpcSocket.h \
++                          XmlRpcValue.h \
++                          XmlRpcClient.h \
++                          XmlRpcServerConnection.h \
++                          XmlRpcSource.h \
++                          XmlRpcDispatch.h \
++                          XmlRpcServerMethod.h \
++                          XmlRpcUtil.h \
++                          XmlRpcThreadedServer.h \
++                          XmlRpcException.h \
++                          XmlRpcMutex.h \
++                          XmlRpcThread.h
++
++libxmlrpc___la_SOURCES = $(library_include_HEADERS) \
++                         base64.h \
++                         XmlRpcClient.cpp \
++                         XmlRpcServerConnection.cpp \
++                         XmlRpcSource.cpp \
++                         XmlRpcDispatch.cpp \
++                         XmlRpcServerMethod.cpp \
++                         XmlRpcUtil.cpp \
++                         XmlRpcServer.cpp \
++                         XmlRpcSocket.cpp \
++                         XmlRpcValue.cpp \
++                         XmlRpcThreadedServer.cpp \
++                         XmlRpcMutex.cpp\
++                         XmlRpcThread.cpp
++
