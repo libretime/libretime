@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -151,7 +151,8 @@ int main (  int     argc,
 
     std::cerr << "using config file '" << configFileName << '\'' << std::endl;
 
-    Ptr<GLiveSupport>::Ref  gLiveSupport(new GLiveSupport());
+    Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
+                    gLiveSupport(new LiveSupport::GLiveSupport::GLiveSupport());
 
     try {
         std::auto_ptr<xmlpp::DomParser> 

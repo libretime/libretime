@@ -3,6 +3,7 @@
 
 <!ELEMENT gLiveSupport                (resourceBundle,
                                        authenticationClientFactory,
+                                       storageClientFactory,
                                        schedulerClientFactory) >
 
 <!ELEMENT resourceBundle    EMPTY >
@@ -17,6 +18,37 @@
 <!ELEMENT user EMPTY >
 <!ATTLIST user login        CDATA       #REQUIRED >
 <!ATTLIST user password     CDATA       #REQUIRED >
+
+<!ELEMENT storageClientFactory (testStorage|webStorage) >
+
+<!ELEMENT testStorage (playlist*, audioClip*) >
+<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT playlist (playlistElement*) >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+
+<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
+<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
+<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
+
+<!ELEMENT audioClip EMPTY >
+<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip uri             CDATA       #REQUIRED >
+
+<!ELEMENT fadeInfo EMPTY >
+<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
+
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
 
 <!ELEMENT schedulerClientFactory        (schedulerDaemonXmlRpcClient) >
 
@@ -36,6 +68,15 @@
             <user login="root" password="q" />
         </testAuthentication>
     </authenticationClientFactory>
+
+    <storageClientFactory>
+        <webStorage tempFiles="file:///tmp/tempPlaylist" >
+            <location server="localhost"
+                      port="80" 
+                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php"
+            />
+        </webStorage>
+    </storageClientFactory>
 
     <schedulerClientFactory>
         <schedulerDaemonXmlRpcClient    xmlRpcHost = "localhost"

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -152,9 +152,10 @@ G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 
 FSDF = ${G_LIVESUPPORT_OBJS} \
                          ${TMP_DIR}/main.o
-G_LIVESUPPORT_EXE_LIBS = -l${CORE_LIB} \
-                         -l${AUTHENTICATION_LIB} \
+G_LIVESUPPORT_EXE_LIBS = -l${AUTHENTICATION_LIB} \
+                         -l${STORAGE_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
+                         -l${CORE_LIB} \
                          -lboost_date_time-gcc \
                          -lxmlrpc++ -lssl -lxml++-1.0
 

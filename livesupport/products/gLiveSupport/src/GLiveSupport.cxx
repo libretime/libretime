@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 #include <gtkmm/main.h>
 
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 
 #include "UiTestMainWindow.h"
@@ -46,6 +47,7 @@
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
+using namespace LiveSupport::Storage;
 using namespace LiveSupport::SchedulerClient;
 using namespace LiveSupport::GLiveSupport;
 
@@ -104,17 +106,27 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
 
     authentication = acf->getAuthenticationClient();
 
+    // configure the StorageClientFactory
+    nodes = element.get_children(StorageClientFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no StorageClientFactory element");
+    }
+    Ptr<StorageClientFactory>::Ref stcf = StorageClientFactory::getInstance();
+    stcf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
+    storage = stcf->getStorageClient();
+
     // configure the SchedulerClientFactory
     nodes = element.get_children(
                                 SchedulerClientFactory::getConfigElementName());
     if (nodes.size() < 1) {
         throw std::invalid_argument("no schedulerClientFactory element");
     }
-    Ptr<SchedulerClientFactory>::Ref scf
+    Ptr<SchedulerClientFactory>::Ref schcf
                                         = SchedulerClientFactory::getInstance();
-    scf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+    schcf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
-    schedulerClient = scf->getSchedulerClient();
+    scheduler = schcf->getSchedulerClient();
 }
 
 
