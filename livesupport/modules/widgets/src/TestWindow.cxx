@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,6 @@ TestWindow :: TestWindow (void)
 
     // create a combo box
     comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());
-    //comboBoxText = widgetFactory->createComboBoxText();
     comboBoxText->append_text("item1");
     comboBoxText->append_text("long item2");
     comboBoxText->append_text("very very very long item3");
@@ -85,8 +84,8 @@ TestWindow :: TestWindow (void)
     // create a notebook
     notebook = Gtk::manage(new Notebook());
     notebook->appendPage(*button, "first page");
-    notebook->appendPage(*entryBin, "third page");
     notebook->appendPage(*comboBoxText, "second page");
+    notebook->appendPage(*entryBin, "third page");
 
     // create a blue container
     blueBin = Gtk::manage(widgetFactory->createDarkBlueBin());
@@ -95,11 +94,6 @@ TestWindow :: TestWindow (void)
     layout = Gtk::manage(new Gtk::Table());
     layout->attach(*imageButton,    0, 1, 0, 1);
     layout->attach(*notebook,       0, 1, 1, 2);
-/*
-    layout->attach(*button,         0, 1, 1, 2);
-    layout->attach(*comboBoxText,   0, 1, 2, 3);
-    layout->attach(*entryBin,       0, 1, 3, 4);
-*/
     blueBin->add(*layout);
     add(*blueBin);
     show_all();
