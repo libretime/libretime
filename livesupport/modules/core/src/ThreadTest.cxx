@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/ThreadTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,6 +88,8 @@ ThreadTest :: simpleTest(void)
 
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::created);
     thread->start();
+    // sleep to yield the thread some time to actually start
+    TimeConversion::sleep(sleepTime);
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
     TimeConversion::sleep(sleepTime);
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
