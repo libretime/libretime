@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -490,20 +490,6 @@ class Playlist : public Configurable,
          void
          setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
                      Ptr<FadeInfo>::Ref       fadeInfo)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Remove an audio clip from the playlist.
-         *  THIS IS OBSOLETE, SUPERSEDED BY removePlaylistElement().
-         *  TODO: REMOVE IT AFTER THERE ARE NO MORE REFERENCES TO IT.
-         *
-         *  @param relativeOffset the start of the audio clip, relative
-         *             to the start of the playlist
-         *  @exception std::invalid_argument if the playlist does not contain
-         *             an audio clip with the specified relative offset
-         */
-         void
-         removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
                                                 throw (std::invalid_argument);
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -131,6 +131,24 @@ class WebStorageClient :
          */
         std::string                 storageServerPath;
 
+        /**
+         *  Auxilliary method used by editPlaylist() and createPlaylist().
+         *  Opens the playlist for editing, and returns its URL.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param id the id of the playlist to return.
+         *  @param url pointer in which the URL of the playlist is returned.
+         *  @param token pointer in which the token of the playlist is returned.
+         *  @exception StorageException if there is a problem with the XML-RPC
+         *                              call or no playlist with the specified
+         *                              id exists.
+         */
+        void
+        editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
+                           Ptr<UniqueId>::Ref  id,
+                           Ptr<const std::string>::Ref& url,
+                           Ptr<const std::string>::Ref& token) const
+                                                throw (StorageException);
 
     public:
         /**
@@ -281,6 +299,10 @@ class WebStorageClient :
 
         /**
          *  Return a list of all playlists in the playlist store.
+         *
+         *  Since this makes no sense whatsoever, this method currently returns
+         *  an empty list.  It will be replaced by a method which uses
+         *  <code>locstor.searchMetadata</code>.
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -198,24 +198,6 @@ Playlist::setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
     }
 
     it->second->setFadeInfo(fadeInfo);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Remove an audio clip from the playlist.
-
-CHANGE references of THIS TO REFER TO removePlaylistElement()
-
- *----------------------------------------------------------------------------*/
-void
-Playlist::removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
-                                            throw (std::invalid_argument)
-{
-    // this returns the number of elements found and erased
-    if (!elementList->erase(*relativeOffset)) {
-        std::string eMsg = "no audio clip at the specified relative offset";
-        throw std::invalid_argument(eMsg);
-    }
 }
 
 

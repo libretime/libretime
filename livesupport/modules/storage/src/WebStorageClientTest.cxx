@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -186,7 +186,7 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
-//    Ptr<UniqueId>::Ref  audioClipId01 = uniqueIdVector->at(0);
+    Ptr<UniqueId>::Ref  audioClipId = uniqueIdVector->at(0);
 
     Ptr<SessionId>::Ref sessionId;
     try {
@@ -198,9 +198,29 @@ WebStorageClientTest :: playlistTest(void)
     CPPUNIT_ASSERT(sessionId);
 
 
-    // test ...
+    // test createPlaylist()
+    Ptr<Playlist>::Ref  playlist;
+    try{
+        playlist = wsc->createPlaylist(sessionId);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(playlist);
+    Ptr<UniqueId>::Ref  playlistIdxx = playlist->getId();
+    
+
+    // test existsPlaylist()
+    bool exists = false;
+    try {
+        exists = wsc->existsPlaylist(sessionId, playlistIdxx);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(exists);
+
     Ptr<UniqueId>::Ref  playlistId77(new UniqueId(77));
-    bool exists = true;
     try {
         exists = wsc->existsPlaylist(sessionId, playlistId77);
     }
@@ -210,10 +230,84 @@ WebStorageClientTest :: playlistTest(void)
     CPPUNIT_ASSERT(!exists);
 
 
+    // test editPlaylist()
+    try {
+        playlist = wsc->editPlaylist(sessionId, playlistIdxx);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(playlist);
+    
+    try {
+        playlist = wsc->editPlaylist(sessionId, playlistIdxx);
+        CPPUNIT_FAIL("allowed to open playlist for editing twice");
+    }
+    catch (XmlRpcMethodFaultException &e) {
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "editPlaylist() threw unexpected exception:\n";
+        CPPUNIT_FAIL(eMsg + e.what());
+    }
+    CPPUNIT_ASSERT(playlist);
+    
+    Ptr<AudioClip>::Ref     audioClip;
+    try {
+        audioClip = wsc->getAudioClip(sessionId, audioClipId);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,0,0));    
+    playlist->addAudioClip(audioClip, relativeOffset);
+    CPPUNIT_ASSERT(playlist->valid());      // WARNING: side effect; fixes the
+                                            //      playlength of the playlist
+    try {
+        Ptr<Playlist>::Ref  throwAwayPlaylist
+                            = wsc->getPlaylist(sessionId, playlistIdxx);
+        // this should be OK, get old copy
+        CPPUNIT_ASSERT(throwAwayPlaylist->getPlaylength()
+                                        ->total_seconds() == 0);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
+    try {
+        wsc->savePlaylist(sessionId, playlist);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
+    // test getPlaylist()
+    Ptr<Playlist>::Ref      newPlaylist;
+    try {
+        newPlaylist = wsc->getPlaylist(sessionId, playlistIdxx);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(newPlaylist);
+    CPPUNIT_ASSERT(newPlaylist->getPlaylength()->total_seconds() 
+                   == playlist->getPlaylength()->total_seconds());
+    // NOTE: we really ought to define == for playlists...
 
+    // test deletePlaylist()
+    try {
+        wsc->deletePlaylist(sessionId, playlistIdxx);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
+    try {
+        exists = wsc->existsPlaylist(sessionId, playlistIdxx);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!exists);
 }
 
 

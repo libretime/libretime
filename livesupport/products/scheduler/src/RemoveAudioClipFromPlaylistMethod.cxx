@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,7 +165,7 @@ RemoveAudioClipFromPlaylistMethod :: execute(
     }
 
     try {                                        // and finally, the beef
-        playlist->removeAudioClip(relativeOffset);
+        playlist->removePlaylistElement(relativeOffset);
     }
     catch(std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+6,
