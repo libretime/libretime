@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -217,14 +217,15 @@ class MetaData{
      */
     function storeXMLNode($node, $parid=NULL, $mode='insert')
     {
+        //echo $node->node_name().", ".$node->node_type().", ".$node->prefix().", $parid.\n";
         switch($node->node_type()){
             case 1:             // element
             case 2:             // attribute
                 $subjns  = (is_null($parid)? '_G'         : '_I');
                 $subject = (is_null($parid)? $this->gunid : $parid);
-                if(!isset($this->nameSpaces[$node->prefix()]))   
-                    $this->nameSpaces[$node->prefix()] = $node->namespace_uri();
-                $prefix = $node->prefix();
+                $prefix = $node->prefix(); $prefix = ($prefix === '' ? '_d' : $prefix);
+                if(!isset($this->nameSpaces[$prefix]))   
+                    $this->nameSpaces[$prefix] = $node->namespace_uri();
             break;
         }
         switch($node->node_type()){
@@ -321,16 +322,23 @@ class MetaData{
     function storeRecord($subjns, $subject, $predns, $predicate, $predxml='T',
         $objns=NULL, $object=NULL, $mode='insert')
     {
+        //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object, $mode\n";
         $predns_sql = (is_null($predns) ? "NULL":"'$predns'" );
         $objns_sql  = (is_null($objns) ? "NULL":"'$objns'" );
         $object_sql = (is_null($object)? "NULL":"'$object'");
-        if($mode == 'insert'){
-            $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
-        }else{
+        if($mode == 'update'){
             $cond = "gunid = '{$this->gunid}' AND predns=$predns_sql
                 AND predicate='$predicate'";
+            if($subjns == '_I'){
+                $cond .= " AND subjns='_I' AND subject='$subject'";
+            }
             $id = $this->dbc->getOne("SELECT id FROM {$this->mdataTable}
                 WHERE $cond");
+            //echo "$id, ".(is_null($id) ? 'null' : 'not null')."\n";
+        }
+        if(is_null($id)){ $mode = 'insert'; }
+        if($mode == 'insert'){
+            $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
         }
         if(PEAR::isError($id)) return $id;
         if($mode == 'insert'){
@@ -353,7 +361,7 @@ class MetaData{
                     objns  = $objns_sql,  object    = $object_sql
                 WHERE id='$id'
             ");
-//                WHERE $cond
+            //    WHERE $cond
         }
         if(PEAR::isError($res)) return $res;
         return $id;
@@ -408,11 +416,9 @@ class MetaData{
         ");
         if(!is_null($uri) && $uri !== ''){
             $root =& $domd->document_element();
-#            if($row['predns'] !== ''){
-            if($row['predns'] === '') $row['predns']='d';
-                $root->add_namespace($uri, $row['predns']);
-                $nxn->set_namespace($uri, $row['predns']);
-#            }
+            if($row['predns'] === '') $row['predns']='_d';
+            $root->add_namespace($uri, $row['predns']);
+            $nxn->set_namespace($uri, $row['predns']);
         }
         if($row['object'] != 'NULL'){
             $tn =& $domd->create_text_node($row['object']);
