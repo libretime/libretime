@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ LoginWindow :: LoginWindow (Ptr<ResourceBundle>::Ref    bundle)
                     : GtkLocalizedObject(bundle)
 {
     try {
-        table.reset(new Gtk::Table(2, 2, false));
+        set_title(*getResourceUstring("windowTitle"));
         loginLabel.reset(new Gtk::Label(*getResourceUstring("loginLabel")));
         passwordLabel.reset(new Gtk::Label(
                                         *getResourceUstring("passwordLabel")));
@@ -122,6 +122,7 @@ LoginWindow :: LoginWindow (Ptr<ResourceBundle>::Ref    bundle)
 
     // set up the table, which provides the layout, and place the widgets
     // inside the table
+    table.reset(new Gtk::Table(2, 2, false));
     table->set_name("table");
     table->set_row_spacings(0);
     table->set_col_spacings(0);
@@ -143,7 +144,6 @@ LoginWindow :: LoginWindow (Ptr<ResourceBundle>::Ref    bundle)
 
     // set up the window itself
     set_name("loginWindow");
-    set_title("LiveSupport login");
     set_modal(true);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     set_resizable(false);

@@ -23,7 +23,7 @@
  
     Author   : $Author: maroy $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipWindow.cxx,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -36,7 +36,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "AudioClipWindow.h"
+#include "AudioClipListWindow.h"
 
 
 using namespace Glib;
@@ -58,7 +58,8 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-AudioClipWindow :: AudioClipWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
+AudioClipListWindow :: AudioClipListWindow (
+                                    Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
                     : GtkLocalizedObject(bundle)
@@ -66,6 +67,7 @@ AudioClipWindow :: AudioClipWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     this->gLiveSupport = gLiveSupport;
 
     try {
+        set_title(*getResourceUstring("windowTitle"));
         closeButton.reset(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
@@ -78,10 +80,9 @@ AudioClipWindow :: AudioClipWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     closeButton->set_relief(Gtk::RELIEF_NORMAL);
     // Register the signal handler for the button getting clicked.
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                       &AudioClipWindow::onCloseButtonClicked));
+                                 &AudioClipListWindow::onCloseButtonClicked));
 
 
-    set_title("LiveSupport Audio Clip Window");
     set_border_width(5);
     set_default_size(400, 200);
 
@@ -128,7 +129,7 @@ AudioClipWindow :: AudioClipWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
  *  Show all audio clips
  *----------------------------------------------------------------------------*/
 void
-AudioClipWindow :: showAllAudioClips(void)                  throw ()
+AudioClipListWindow :: showAllAudioClips(void)                  throw ()
 {
     // list all audio clips
     Ptr<SessionId>::Ref                             sessionId;
@@ -166,7 +167,7 @@ AudioClipWindow :: showAllAudioClips(void)                  throw ()
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-AudioClipWindow :: ~AudioClipWindow (void)                        throw ()
+AudioClipListWindow :: ~AudioClipListWindow (void)                        throw ()
 {
 }
 
@@ -175,7 +176,7 @@ AudioClipWindow :: ~AudioClipWindow (void)                        throw ()
  *  Event handler for the close button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-AudioClipWindow :: onCloseButtonClicked (void)                  throw ()
+AudioClipListWindow :: onCloseButtonClicked (void)                  throw ()
 {
     hide();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LoginWindow.h"
-#include "AudioClipWindow.h"
+#include "AudioClipListWindow.h"
 #include "UiTestMainWindow.h"
 
 
@@ -67,8 +67,12 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 {
     this->gLiveSupport = gLiveSupport;
 
-    // set up the status label
-    statusLabel.reset(new Gtk::Label(*getResourceUstring("welcomeMsg")));
+    try {
+        set_title(*getResourceUstring("windowTitle"));
+        statusLabel.reset(new Gtk::Label(*getResourceUstring("welcomeMsg")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     // set up the time label
     timeLabel.reset(new Gtk::Label(""));
@@ -157,7 +161,11 @@ void
 UiTestMainWindow :: onLogoutButtonClicked (void)                    throw ()
 {
     gLiveSupport->logout();
-    statusLabel->set_label(*getResourceUstring("welcomeMsg"));
+    try {
+        statusLabel->set_label(*getResourceUstring("welcomeMsg"));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 
@@ -241,8 +249,8 @@ UiTestMainWindow :: onAudioClipButtonClicked (void)                 throw ()
         return;
     }
 
-    Ptr<AudioClipWindow>::Ref   audioClipWindow(
-                                    new AudioClipWindow(gLiveSupport, bundle));
+    Ptr<AudioClipListWindow>::Ref   audioClipWindow(
+                                new AudioClipListWindow(gLiveSupport, bundle));
 
     Gtk::Main::run(*audioClipWindow);
 }

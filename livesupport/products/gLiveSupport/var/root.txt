@@ -1,10 +1,13 @@
 root:table
 {
+    windowTitle:string      { "LiveSupport Test Window" }
     welcomeMsg:string       { "welcome" }
     loggedInMsg:string      { "Logged in as {0}" }
 
     loginWindow:table
     {
+        windowTitle:string     { "LiveSupport Login Window" }
+
         loginLabel:string      { "login:" }
         passwordLabel:string   { "password:" }
         okButtonLabel:string   { "OK" }
@@ -12,6 +15,8 @@ root:table
 
     audioClipWindow:table
     {
+        windowTitle:string            { "LiveSupport Audio Clip Window" }
+
         idColumnLabel:string          { "id" }
         lengthColumnLabel:string      { "length" }
         uriColumnLabel:string         { "URI" }

@@ -23,11 +23,11 @@
  
     Author   : $Author: maroy $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipWindow.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef AudioClipWindow_h
-#define AudioClipWindow_h
+#ifndef AudioClipListWindow_h
+#define AudioClipListWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  @author $Author: maroy $
  *  @version $Revision: 1.1 $
  */
-class AudioClipWindow : public Gtk::Window, public GtkLocalizedObject
+class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
 {
 
     protected:
@@ -178,14 +178,14 @@ class AudioClipWindow : public Gtk::Window, public GtkLocalizedObject
          *  @param bundle the resource bundle holding the localized
          *         resources for this window
          */
-        AudioClipWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                        Ptr<ResourceBundle>::Ref    bundle)     throw ();
+        AudioClipListWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
+                            Ptr<ResourceBundle>::Ref    bundle)     throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~AudioClipWindow(void)                                  throw ();
+        ~AudioClipListWindow(void)                                  throw ();
 };
 
 /* ================================================= external data structures */
@@ -197,5 +197,5 @@ class AudioClipWindow : public Gtk::Window, public GtkLocalizedObject
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // AudioClipWindow_h
+#endif // AudioClipListWindow_h
 
