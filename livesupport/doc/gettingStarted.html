@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>Getting started with the LiveSupport development environment</title>
-  <meta content="$Author: maroy $" name="author">
+  <meta content="$Author: tomas $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.6 $</li>
+  <li>Author: $Author: tomas $</li>
+  <li>Version: $Revision: 1.7 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -70,14 +70,14 @@ running on the development computer</li>
   <li><a href="http://www.php.net/">PHP</a> interpreter</li>
   <li><a href="http://www.php.net/">PHP</a> apache module</li>
   <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
-  <li><a href="http://pear.php.net/">PEAR</a> DB module (may be
-checked: <code>pear list</code> and installed by: <code>pear install
-DB</code>)</li>
+  <li><a href="http://pear.php.net/">PEAR</a> modules: DB, XML_Util
+    (may be checked: <code>pear list</code>
+    and installed by e.g.: <code>pear install DB</code>)</li>
 <!--  <li><a href="http:///"></a></li>-->
 </ul>
 Please, check settings in <code>var/conf.php</code> files in both
 storageServer and archiveServer modules and create two
-symlinks with name corresponding to "URL configuration" part of
+symlinks with name corresponding to 'URL configuration' part of
 <code>var/conf.php</code> files - example for default values:
 <ul>
   <li> <code>http://localhost:80/livesupportStorageServer/</code>
@@ -87,9 +87,6 @@ directory </li>
 should point to the <code>&lt;livesupport-cvs&gt;/modules/archiveServer/var</code>
 directory </li>
 </ul>
-And setup a file-uploading support as described in the <code>modules/archiveServer/doc/INSTALL</code>
-file (included with the
-sources).
 <h2>Check out the sources</h2>
 The LiveSupport development directory tree can be accessed via
 anonymous <a href="https://www.cvshome.org/">CVS</a>, using the
