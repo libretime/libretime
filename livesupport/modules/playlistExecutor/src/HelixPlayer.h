@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,7 +46,7 @@
 #include <dllacces.h>
 #include <dllpath.h>
 
-#include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 
 #include "AdviseSink.h"
 #include "ErrorSink.h"
@@ -71,12 +71,27 @@ using namespace LiveSupport::Core;
 /**
  *  A class to play audio files and SMIL files through the Helix
  *  Community Library.
+ *  This class can be configured with the following XML element.
+ *
+ *  <pre><code>
+ *  <helixPlayer dllPath = "../../usr/lib/helix"
+ *  />
+ *  <pre><code>
+ *
+ *  where the dllPath is the path to the directory containing the Helix
+ *  library shared objects.
+ *
+ *  The DTD for the above configuration is the following:
+ *
+ *  <pre><code>
+ *  <!ELEMENT helixPlayer   EMPTY >
+ *  <!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+ *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class HelixPlayer :
-                    virtual public Configurable
+class HelixPlayer : virtual public AudioPlayerInterface
 {
     friend void * eventHandlerThread(void *)      throw();
 
@@ -132,6 +147,11 @@ class HelixPlayer :
         pthread_t               eventHandlingThread;
 
         /**
+         *  Flag to indicate if this object has been initialized.
+         */
+        bool                    initialized;
+
+        /**
          *  Flag to mark if the event handling thread should be running
          *  and handling events.
          *  This is set by the HelixPlayer object, and read by the thread
@@ -150,11 +170,21 @@ class HelixPlayer :
 
     public:
         /**
+         *  Constructor.
+         */
+        HelixPlayer(void)                           throw ()
+        {
+            playing     = false;
+            initialized = false;
+        }
+
+        /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~HelixPlayer(void)                        throw ()
+        ~HelixPlayer(void)                          throw ()
         {
+            deInitialize();
         }
 
         /**
@@ -196,7 +226,7 @@ class HelixPlayer :
          *  De-initialize the Helix Player object.
          */
         virtual void
-        deInitialize(void);
+        deInitialize(void)                      throw ();
 
         /**
          *  Specify which audio resource to play.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,6 +128,10 @@ HelixPlayer :: configure(const xmlpp::Element   &  element)
 void
 HelixPlayer :: initialize(void)                 throw (std::exception)
 {
+    if (initialized) {
+        return;
+    }
+
     // open the Helix Client Core shared object
     std::string     staticLibPath(dllPath);
     staticLibPath += clntcoreName;
@@ -207,7 +211,8 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
     }
 
     // set up other variables
-    playing = false;
+    playing     = false;
+    initialized = true;
 }
 
 
@@ -215,21 +220,25 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
  *  De-initialize the Helix Player
  *----------------------------------------------------------------------------*/
 void
-HelixPlayer :: deInitialize(void)
+HelixPlayer :: deInitialize(void)                       throw ()
 {
-    // signal stop to and wait for the event handling thread to stop
-    handleEvents = false;
-    pthread_join(eventHandlingThread, 0);
+    if (initialized) {
+        // signal stop to and wait for the event handling thread to stop
+        handleEvents = false;
+        pthread_join(eventHandlingThread, 0);
 
-    // release Helix resources
-    clientContext->Release();
+        // release Helix resources
+        clientContext->Release();
 
-    clientEngine->ClosePlayer(player);
-    player->Release();
+        clientEngine->ClosePlayer(player);
+        player->Release();
 
-    closeEngine(clientEngine);
+        closeEngine(clientEngine);
 
-    dllAccess.close();
+        dllAccess.close();
+
+        initialized = false;
+    }
 }
 
 
