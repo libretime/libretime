@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/tests/transTest.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,43 +39,100 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new LocStor(&$dbc, $config);
+$tr = &new Transport(&$gb->dbc, &$gb, $gb->config);
+@unlink("{$tr->transDir}/log");
 
-$gunid     = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+$gunid     = 'a23456789abcdefa';
 $mediaFile = '../tests/ex1.mp3';
 $mdataFile = '../tests/mdata1.xml';
 
+/* ========== UPLOAD ========== */
+/*
+*/
 echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
 
 echo"#  Store: ";
-$r = $gb->storeAudioClip($sessid, $gunid, $mediaFile, $mdataFile);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo "$r\n";
-                                     
-echo"#  Upload: "; $r = $gb->uploadFile('', $gunid, $sessid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo join(', ',$r)."\n";
+$parid = $gb->_getHomeDirId($sessid);
+$oid = $gb->bsPutFile($parid, "xx1.mp3", $mediaFile, $mdataFile, $gunid, 'audioclip');
+if(PEAR::isError($oid)){ echo "ERROR: ".$oid->getMessage()."\n"; exit(1); }
+$comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
+echo "$oid\n";
 
-echo"#  Cron: "; list($r1, $r2) = $gb->cronJob();
-if(PEAR::isError($r1)){ echo "ERROR: ".$r1->getMessage()."\n"; exit(1); }
-if(PEAR::isError($r2)){ echo "ERROR: ".$r2->getMessage()."\n"; exit(1); }
-echo "$r1, $r2\n";
-
-echo"#  Delete: ";    $r = $gb->deleteAudioClip($sessid, $gunid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo "$r\n";
-
-echo"#  Download: "; $r = $gb->downloadFile($gunid, $sessid);
-if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
-echo join(', ',$r)."\n";
-
-echo"#  Cron: "; $r = $gb->cronJob();
-if(PEAR::isError($r1)){ echo "ERROR: ".$r1->getMessage()."\n"; exit(1); }
-if(PEAR::isError($r2)){ echo "ERROR: ".$r2->getMessage()."\n"; exit(1); }
-echo "$r1, $r2\n";
+echo"#  Transport uploadToArchive: ";
+$r = $tr->uploadToArchive($gunid, $sessid);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getUserInfo()."\n"; exit(1); }
+var_dump($r);
 
 echo"#  logout: "; $r = $gb->logout($sessid);
 if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
 echo "$r\n";
+
+foreach(array(1,2,3) as $nu){
+    echo"#  Transport: uploadCron: "; $r = $tr->uploadCron();
+    if(PEAR::isError($r)){
+        echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1);
+    }
+    var_dump($r);
+}
+
+echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
+echo"#  Delete: ";    $r = $gb->deleteAudioClip($sessid, $gunid);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+echo "$r\n";
+echo"#  logout: "; $r = $gb->logout($sessid);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+echo "$r\n";
+$comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
+
+#echo `tail -n 20 ../trans/log`; exit;
+
+/* === DOWNLOAD === */
+/*
+*/
+echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
+
+echo"#  Transport downloadFromArchive: ";
+$r = $tr->downloadFromArchive($gunid, $sessid);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getUserInfo()."\n"; exit(1); }
+var_dump($r);
+
+echo"#  logout: "; $r = $gb->logout($sessid);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+echo "$r\n";
+
+foreach(array(1,2,3) as $nu){
+    echo"#  Transport: downloadCron: "; $r = $tr->downloadCron();
+    if(PEAR::isError($r)){
+        echo "ERROR: ".$r->getMessage()."/".$r->getUserInfo()."\n"; exit(1);
+    }
+    var_dump($r);
+}
+$comm = "ls -l {$gb->storageDir}/a23"; echo `$comm`;
+
+echo `tail -n 20 ../trans/log`; exit;
+
+
+/*
+*/
+
+/*
+echo"#  Transport loginToArchive: "; $r = $tr->loginToArchive();
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+var_dump($r['sessid']);
+
+echo"#  Transport logoutFromArchive: "; $r = $tr->logoutFromArchive($r['sessid']);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+var_dump($r['status']);
+
+echo"#  Ping: ";
+$r = $tr->pingToArchive();
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+var_dump($r);
+
+echo"#  Delete: ";    $r = $gb->deleteAudioClip($sessid, $gunid);
+if(PEAR::isError($r)){ echo "ERROR: ".$r->getMessage()."\n"; exit(1); }
+echo "$r\n";
+*/
 
 echo "#Transport test: OK.\n\n"
 ?>
