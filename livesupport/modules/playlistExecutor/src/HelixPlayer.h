@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,12 +42,12 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
-#include <dllacces.h>
-#include <dllpath.h>
-
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/Thread.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
+
+#include <dllacces.h>
+#include <dllpath.h>
 
 #include "ErrorSink.h"
 #include "AuthenticationManager.h"
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
