@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "TestStorageClientTest.h"
 
 
+using namespace std;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Storage;
 
@@ -176,18 +177,30 @@ TestStorageClientTest :: createPlaylistTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the fake audio clips are correctly counterfeited
+ *  Testing the audio clip operations
  *----------------------------------------------------------------------------*/
 void
 TestStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<const UniqueId>::Ref  id(new UniqueId(rand()));
+    Ptr<const UniqueId>::Ref  id2(new UniqueId(10002));
+    Ptr<const UniqueId>::Ref  id7(new UniqueId(10077));
 
-        CPPUNIT_ASSERT(tsc->existsAudioClip(id));
+    CPPUNIT_ASSERT(tsc->existsAudioClip(id2));
+    CPPUNIT_ASSERT(!tsc->existsAudioClip(id7));
 
-        Ptr<AudioClip>::Ref       audioClip = tsc->getAudioClip(id);
-        CPPUNIT_ASSERT(audioClip->getId()->getId() == id->getId());
-        CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
+    Ptr<AudioClip>::Ref       audioClip = tsc->getAudioClip(id2);
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == id2->getId());
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
                                                    == 30*60);
+
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector =
+                                                 tsc->getAllAudioClips();
+    CPPUNIT_ASSERT(audioClipVector->size() == 2);
+
+    audioClip = (*audioClipVector)[0];
+    CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 10001);
+
+    tsc->deleteAudioClip(id2);
+    CPPUNIT_ASSERT(!tsc->existsAudioClip(id2));
 }

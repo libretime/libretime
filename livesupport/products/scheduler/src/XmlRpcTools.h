@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class XmlRpcTools
 {
@@ -193,6 +193,44 @@ class XmlRpcTools
                                                                      throw ();
 
         /**
+         *  Convert a vector of Playlists to an XML-RPC return value.
+         *
+         *  @param playlistVector a list of Playlists.
+         *  @param returnValue the output parameter holding an XML-RPC
+         *         representation of the list of Playlists.
+         */
+        static void
+        playlistVectorToXmlRpcValue(
+            const Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector,
+            XmlRpc::XmlRpcValue                            & returnValue)
+                                                                     throw ();
+
+        /**
+         *  Convert an AudioClip to an XmlRpcValue
+         *
+         *  @param audioClip the AudioClip to convert.
+         *  @param xmlRpcValue the output parameter holding the result of
+         *         the conversion.
+         */
+        static void
+        audioClipToXmlRpcValue(Ptr<const AudioClip>::Ref audioClip,
+                               XmlRpc::XmlRpcValue     & xmlRpcValue)
+                                                                     throw ();
+
+        /**
+         *  Convert a vector of AudioClips to an XML-RPC return value.
+         *
+         *  @param audioClipVector a list of AudioClips.
+         *  @param returnValue the output parameter holding an XML-RPC
+         *         representation of the list of Playlists.
+         */
+        static void
+        audioClipVectorToXmlRpcValue(
+            const Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector,
+            XmlRpc::XmlRpcValue                             & returnValue)
+                                                                     throw ();
+
+        /**
          *  Convert an error code, message pair to an XmlRpcValue
          *
          *  @param playlist the Playlist to convert.
@@ -214,19 +252,6 @@ class XmlRpcTools
         static void
         validStatusToXmlRpcValue(bool validStatus,
                                  XmlRpc::XmlRpcValue    & xmlRpcValue)
-                                                                     throw ();
-
-        /**
-         *  Convert a vector of Playlists to an XML-RPC return value.
-         *
-         *  @param playlistVector a list of Playlists.
-         *  @param returnValue the output parameter holding an XML-RPC
-         *         representation of the list of Playlists.
-         */
-        static void
-        playlistVectorToXmlRpcValue(
-            const Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector,
-            XmlRpc::XmlRpcValue                            & returnValue)
                                                                      throw ();
 
         /**

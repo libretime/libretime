@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -75,20 +75,31 @@ class TestStorageClient :
 {
     private:
         /**
-         *  The map type containing the playlists by their ids.
-         */
-        typedef std::map<const UniqueId::IdType, Ptr<Playlist>::Ref>
-                                                                    PlaylistMap;
-
-        /**
          *  The name of the configuration XML elmenent used by TestStorageClient
          */
         static const std::string    configElementNameStr;
 
         /**
+         *  The map type containing the playlists by their ids.
+         */
+        typedef std::map<const UniqueId::IdType, Ptr<Playlist>::Ref>
+                                                                PlaylistMap;
+
+        /**
          *  The map holding all contained playlists, by ids.
          */
         PlaylistMap                 playlistMap;
+
+        /**
+         *  The map type containing the audio clips by their ids.
+         */
+        typedef std::map<const UniqueId::IdType, Ptr<AudioClip>::Ref>
+                                                                AudioClipMap;
+
+        /**
+         *  The map holding all contained audio clips, by ids.
+         */
+        AudioClipMap                audioClipMap;
 
 
     public:
@@ -163,12 +174,10 @@ class TestStorageClient :
         /**
          *  Return a list of all playlists in the playlist store.
          *
-         *  @param (none).
          *  @return a vector containing the playlists.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(void) const         throw ();
-
 
         /**
          *  Create a new playlist.
@@ -178,22 +187,16 @@ class TestStorageClient :
         virtual Ptr<Playlist>::Ref
         createPlaylist()                    throw ();
 
-
         /**
          *  Tell if an audio clip with a given id exists.
          *
          *  @param id the id of the audio clip to check for.
          *  @return true if an audio clip with the specified id exists,
          *          false otherwise.
-         *  Note: at this point, this function always returns 'true'.
          */
         virtual const bool
         existsAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw ()
-        {
-            return true;
-        }
-
+                                            throw ();
 
         /**
          *  Return an audio clip with the specified id.
@@ -202,19 +205,29 @@ class TestStorageClient :
          *  @return the requested audio clip.
          *  @exception std::invalid_argument if no audio clip with the 
          *             specified id exists.
-         *  Note: at this point, this function returns a fake new audio
-         *        clip with play length 30 minutes.
          */
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument)
-        {
-            Ptr<UniqueId>::Ref       nonConstId(new UniqueId(id->getId()));
-            Ptr<time_duration>::Ref  length(new time_duration(0,30,0,0));
-            Ptr<AudioClip>::Ref      audioClip(new AudioClip(nonConstId,
-                                                             length));
-            return audioClip;
-        }
+                                            throw (std::invalid_argument);
+
+        /**
+         *  Delete the audio clip with the specified id.
+         *
+         *  @param id the id of the audio clip to be deleted.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists.
+         */
+        virtual void
+        deleteAudioClip(Ptr<const UniqueId>::Ref id)
+                                            throw (std::invalid_argument);
+
+        /**
+         *  Return a list of all audio clips in the playlist store.
+         *
+         *  @return a vector containing the audio clips.
+         */
+        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        getAllAudioClips(void) const         throw ();
 
 };
 

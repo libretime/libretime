@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef TestStorageClientTest_h
-#define TestStorageClientTest_h
+#ifndef DisplayAudioClipsMethodTest_h
+#define DisplayAudioClipsMethodTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -44,7 +44,10 @@
 
 
 namespace LiveSupport {
-namespace Storage {
+namespace Scheduler {
+
+using namespace LiveSupport;
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -55,27 +58,43 @@ namespace Storage {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the DisplayAudioClipsMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
- *  @see TestStorageClient
+ *  @version $Revision: 1.1 $
+ *  @see DisplayAudioClipsMethod
  */
-class TestStorageClientTest : public CPPUNIT_NS::TestFixture
+class DisplayAudioClipsMethodTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(TestStorageClientTest);
+    CPPUNIT_TEST_SUITE(DisplayAudioClipsMethodTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(getAllPlaylistsTest);
-    CPPUNIT_TEST(deletePlaylistTest);
-    CPPUNIT_TEST(createPlaylistTest);
-    CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST_SUITE_END();
 
-    private:
         /**
-         *  The TestStorageClient instance to test.
+         *  The name of the configuration file for the storage client factory.
          */
-        Ptr<TestStorageClient>::Ref     tsc;
+        static const std::string storageClientConfig;
+
+        /**
+         *  The name of the configuration file for the connection manager
+         *  factory.
+         */
+        static const std::string connectionManagerConfig;
+
+        /**
+         *  Configure a configurable with an XML file.
+         *
+         *  @param configurable configure this
+         *  @param fileName the name of the XML file to configure with.
+         *  @exception std::invalid_argument on configuration errors.
+         *  @exception xmlpp::exception on XML parsing errors.
+         */
+        void
+        configure(Ptr<Configurable>::Ref    configurable,
+                  std::string               fileName)
+                                                throw (std::invalid_argument,
+                                                       xmlpp::exception);
+
 
     protected:
 
@@ -86,38 +105,6 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing deletePlaylist().
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        deletePlaylistTest(void)
-                                                throw (CPPUNIT_NS::Exception);
-        /**
-         *  Testing getAllPlaylists().
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        getAllPlaylistsTest(void)
-                                                throw (CPPUNIT_NS::Exception);
-        /**
-         *  Testing createPlaylist().
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        createPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the audio clip operations.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        audioClipTest(void)                     throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -142,8 +129,8 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // TestStorageClientTest_h
+#endif // DisplayAudioClipsMethodTest_h
 

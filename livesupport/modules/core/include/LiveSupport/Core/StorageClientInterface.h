@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class StorageClientInterface
 {
@@ -105,7 +105,6 @@ class StorageClientInterface
         /**
          *  Return a list of all playlists in the playlist store.
          *
-         *  @param (none).
          *  @return a vector containing the playlists.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
@@ -142,6 +141,27 @@ class StorageClientInterface
         getAudioClip(Ptr<const UniqueId>::Ref id) const
                                             throw (std::invalid_argument)
                                                                         = 0;
+
+        /**
+         *  Delete an audio clip with the specified id.
+         *
+         *  @param id the id of the audio clip to be deleted.
+         *  @exception std::invalid_argument if no audio clip with the
+         *             specified id exists.
+         */
+        virtual void
+        deleteAudioClip(Ptr<const UniqueId>::Ref id)
+                                            throw (std::invalid_argument)
+                                                                        = 0;
+
+        /**
+         *  Return a list of all audio clips in the playlist store.
+         *
+         *  @return a vector containing the playlists.
+         */
+        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        getAllAudioClips(void) const         throw ()                    = 0;
+
 
 };
 

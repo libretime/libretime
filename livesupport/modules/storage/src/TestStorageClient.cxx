@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,18 +73,33 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
         throw std::invalid_argument(eMsg);
     }
 
-    // iterate through the playlist elements
-    xmlpp::Node::NodeList           nodes =
-                        element.get_children(Playlist::getConfigElementName());
-    xmlpp::Node::NodeList::iterator it    = nodes.begin();
+    // iterate through the playlist elements ...
+    xmlpp::Node::NodeList            nodes 
+                  = element.get_children(Playlist::getConfigElementName());
+    xmlpp::Node::NodeList::iterator  it 
+                                     = nodes.begin();
     playlistMap.clear();
 
     while (it != nodes.end()) {
-        Ptr<Playlist>::Ref      playlist(new Playlist());
+        Ptr<Playlist>::Ref      playlist(new Playlist);
         const xmlpp::Element  * element =
                                     dynamic_cast<const xmlpp::Element*> (*it);
         playlist->configure(*element);
         playlistMap[playlist->getId()->getId()] = playlist;
+        ++it;
+    }
+
+    // ... and the the audio clip elements
+    nodes = element.get_children(AudioClip::getConfigElementName());
+    it    = nodes.begin();
+    audioClipMap.clear();
+
+    while (it != nodes.end()) {
+        Ptr<AudioClip>::Ref     audioClip(new AudioClip);
+        const xmlpp::Element  * element =
+                                    dynamic_cast<const xmlpp::Element*> (*it);
+        audioClip->configure(*element);
+        audioClipMap[audioClip->getId()->getId()] = audioClip;
         ++it;
     }
 }
@@ -125,13 +140,10 @@ void
 TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
                                                 throw (std::invalid_argument)
 {
-    PlaylistMap::iterator   it = playlistMap.find(id->getId());
-
-    if (it == playlistMap.end()) {
+    // erase() returns the number of entries found & erased
+    if (!playlistMap.erase(id->getId())) {
         throw std::invalid_argument("no such playlist");
     }
-
-    playlistMap.erase(it);
 }
 
 
@@ -176,3 +188,66 @@ TestStorageClient :: createPlaylist()                                throw ()
 
     return playlist;   
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Tell if an audio clip exists.
+ *----------------------------------------------------------------------------*/
+const bool
+TestStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
+                                                                throw ()
+{
+    return audioClipMap.count(id->getId()) == 1 ? true : false;
+}
+ 
+
+/*------------------------------------------------------------------------------
+ *  Return an audio clip.
+ *----------------------------------------------------------------------------*/
+Ptr<AudioClip>::Ref
+TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
+                                                throw (std::invalid_argument)
+{
+    AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
+
+    if (it == audioClipMap.end()) {
+        throw std::invalid_argument("no such audio clip");
+    }
+
+    return it->second;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Delete an audio clip.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
+                                                throw (std::invalid_argument)
+{
+    // erase() returns the number of entries found & erased
+    if (!audioClipMap.erase(id->getId())) {
+        throw std::invalid_argument("no such audio clip");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a listing of all the audio clips in the audio clip store.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+TestStorageClient :: getAllAudioClips(void) const
+                                                throw ()
+{
+    AudioClipMap::const_iterator        it = audioClipMap.begin();
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+                        audioClipVector (new std::vector<Ptr<AudioClip>::Ref>);
+
+    while (it != audioClipMap.end()) {
+        audioClipVector->push_back(it->second);
+        ++it;
+    }
+
+    return audioClipVector;
+}
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,17 +124,24 @@ void
 XmlRpcToolsTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue        xmlRpcPlaylist;
-    Ptr<Playlist>::Ref playlist = Ptr<Playlist>::Ref(new Playlist);
+    XmlRpcValue                xmlRpcPlaylist;
+    XmlRpcValue                xmlRpcAudioClip;
+    Ptr<Playlist>::Ref         playlist = Ptr<Playlist>::Ref(new Playlist);
+    Ptr<const AudioClip>::Ref  audioClip;
 
     // set up a playlist instance
     configure(playlist, configFileName);
+    audioClip = playlist->begin()->second->getAudioClip();
 
-    // run the packing method
+    // run the packing methods
     XmlRpcTools :: playlistToXmlRpcValue(playlist, xmlRpcPlaylist);
+    XmlRpcTools :: audioClipToXmlRpcValue(audioClip, xmlRpcAudioClip);
 
-    CPPUNIT_ASSERT(((int) xmlRpcPlaylist["id"]) == 1);
-    CPPUNIT_ASSERT(((int) xmlRpcPlaylist["playlength"]) == (90 * 60));
+    CPPUNIT_ASSERT(int(xmlRpcPlaylist["id"]) == 1);
+    CPPUNIT_ASSERT(int(xmlRpcPlaylist["playlength"]) == 90 * 60);
+
+    CPPUNIT_ASSERT(int(xmlRpcAudioClip["id"]) == 10001);
+    CPPUNIT_ASSERT(int(xmlRpcAudioClip["playlength"]) == 60 * 60);
 
     XmlRpcValue              xmlRpcPlaylistId;
     Ptr<UniqueId>::Ref       playlistId;

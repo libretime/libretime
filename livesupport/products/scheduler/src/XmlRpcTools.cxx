@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -202,11 +202,51 @@ XmlRpcTools :: playlistVectorToXmlRpcValue(
                                                      playlistVector->begin();
     int                     arraySize = 0;
     while (it != playlistVector->end()) {
-        Ptr<Playlist>::Ref  playlist = *it;
-        XmlRpc::XmlRpcValue returnStruct;
-        returnStruct["id"]         = (int) (playlist->getId()->getId());
-        returnStruct["playlength"] = playlist->getPlaylength()->total_seconds();
-        returnValue[arraySize++]   = returnStruct;
+        Ptr<Playlist>::Ref    playlist = *it;
+        XmlRpc::XmlRpcValue   returnStruct;
+        playlistToXmlRpcValue(playlist, returnStruct);
+        returnValue[arraySize++]      = returnStruct;
+        ++it;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert an AudioClip to an XmlRpcValue
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: audioClipToXmlRpcValue(
+                            Ptr<const AudioClip>::Ref    audioClip,
+                            XmlRpc::XmlRpcValue        & xmlRpcValue)
+                                                throw ()
+{
+    xmlRpcValue["id"]         = (int) (audioClip->getId()->getId());
+    xmlRpcValue["playlength"] = audioClip->getPlaylength()->total_seconds();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a vector of AudioClips into an XML-RPC value.
+ *  This function returns an XML-RPC array of XML-RPC structures.
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: audioClipVectorToXmlRpcValue(
+             const Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector,
+             XmlRpc::XmlRpcValue                             & returnValue)
+                                                throw ()
+{
+    returnValue.setSize(audioClipVector->size());
+                            // a call to setSize() makes sure it's an XML-RPC
+                            // array
+
+    std::vector<Ptr<AudioClip>::Ref>::const_iterator  it =
+                                                     audioClipVector->begin();
+    int                     arraySize = 0;
+    while (it != audioClipVector->end()) {
+        Ptr<AudioClip>::Ref    audioClip = *it;
+        XmlRpc::XmlRpcValue    returnStruct;
+        audioClipToXmlRpcValue(audioClip, returnStruct);
+        returnValue[arraySize++]        = returnStruct;
         ++it;
     }
 }
