@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,7 +144,7 @@ SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
 /*------------------------------------------------------------------------------
  *  Return the singleton instnace.
  *----------------------------------------------------------------------------*/
-class Ptr<SchedulerDaemon>::Ref
+Ptr<SchedulerDaemon>::Ref
 SchedulerDaemon :: getInstance (void)                       throw ()
 {
     if (!schedulerDaemon) {
