@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Validator.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,11 +114,11 @@ class Validator{
         switch($predxml){
             case'T':
                 if(!$this->isChildInFormat($fname, $category))
-                    return $this->_err(113, "$category in $fname");
+                    return $this->_err(VAL_UNKNOWNE, "$category in $fname");
                 break;
             case'A':
                 if(!$this->isAttrInFormat($fname, $category))
-                    return $this->_err(114, "$category in $fname");
+                    return $this->_err(VAL_UNKNOWNA, "$category in $fname");
                 break;
             case'N':
                 return TRUE;
@@ -312,18 +312,18 @@ class Validator{
     function _err($errno, $par='')
     {
         $msg = array(
-            110=>'Wrong root element',
-            111=>'Required element missing',
-            112=>'One-of element missing',
-            113=>'Unknown element',
-            114=>'Unknown attribute',
-            115=>'Not defined',
-            116=>'Unexpected second object from one-of set',
-            117=>'Unknown format',
-            118=>'Invalid content',
-            119=>'Required attribute missing',
-            120=>'Invalid attribute format',
-            121=>'Invalid predicate type',
+            VAL_ROOT        => 'Wrong root element',
+            VAL_NOREQE      => 'Required element missing',
+            VAL_NOONEOF     => 'One-of element missing',
+            VAL_UNKNOWNE    => 'Unknown element',
+            VAL_UNKNOWNA    => 'Unknown attribute',
+            VAL_NOTDEF      => 'Not defined',
+            VAL_UNEXPONEOF  => 'Unexpected second object from one-of set',
+            VAL_FORMAT      => 'Unknown format',
+            VAL_CONTENT     => 'Invalid content',
+            VAL_NOREQA      => 'Required attribute missing',
+            VAL_ATTRIB      => 'Invalid attribute format',
+            VAL_PREDXML     => 'Invalid predicate type',
         );
         return PEAR::raiseError(
             "Validator: {$msg[$errno]} #$errno ($par, gunid={$this->gunid})",
