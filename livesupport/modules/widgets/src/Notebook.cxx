@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Notebook.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,29 +97,9 @@ Notebook :: on_size_request(Gtk::Requisition* requisition)       throw ()
 {
     *requisition = Gtk::Requisition();
 
-    Gtk::Requisition    tabBoxRequisition = tabBox->size_request();;
-
-    // get the required size from the label
-    Gtk::Requisition    tabRequisition;
-
-    // iterate through the menu elements, and get the biggest size
-    PageList::iterator      it  = pageList.begin();
-    PageList::iterator      end = pageList.end();
-    while (it != end) {
-        Page              * page            = *it;
-        Gtk::Requisition    pageRequisition = page->container->size_request();
-        if (tabRequisition.width < pageRequisition.width) {
-            tabRequisition.width = pageRequisition.width;
-        }
-        if (tabRequisition.height < pageRequisition.height) {
-            tabRequisition.height = pageRequisition.height;
-        }
-
-        ++it;
-    }
-
-    requisition->width  = tabBoxRequisition.width + tabRequisition.width;
-    requisition->height = tabBoxRequisition.height + tabRequisition.height;
+    Gtk::Requisition    layoutRequisition = layout->size_request();
+    requisition->width  = layoutRequisition.width;
+    requisition->height = layoutRequisition.height;
 }
 
 
