@@ -1,8 +1,35 @@
 <?php 
-// $Id: alibHttp.php,v 1.1 2004/07/23 00:22:13 tomas Exp $
-require_once"alib_h.php";
+/*------------------------------------------------------------------------------
 
-#header("Content-type: text/plain"); echo"GET:\n"; print_r($_GET); echo"POST:\n"; print_r($_POST); exit;
+    Copyright (c) 2004 Media Development Loan Fund
+ 
+    This file is part of the LiveSupport project.
+    http://livesupport.campware.org/
+    To report bugs, send an e-mail to bugs@campware.org
+ 
+    LiveSupport is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+  
+    LiveSupport is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License
+    along with LiveSupport; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+ 
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.2 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/example/alibHttp.php,v $
+
+------------------------------------------------------------------------------*/
+require_once "alib_h.php";
+
+#echo"<pre>\nGET:\n"; print_r($_GET); echo"POST:\n"; print_r($_POST); exit;
 
 function getPGval($vn, $dfl='')
 {
@@ -20,11 +47,15 @@ switch($act)
         if($sessid = $alib->login($_POST['login'], $_POST['pass'])){
             setcookie('alibsid', $sessid);
             $redirUrl="alibExTree.php";
-        }else{ $redirUrl="alibExLogin.php"; $_SESSION['alertMsg']='Login failed.'; }
+        }else{
+            $redirUrl="alibExLogin.php"; $_SESSION['alertMsg']='Login failed.';
+        }
     break;
     case"logout";
         $r = $alib->logout($_REQUEST['alibsid']);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage().", ".$r->getUserInfo();
+        if(PEAR::isError($r)){
+            $_SESSION['alertMsg'] = $r->getMessage().", ".$r->getUserInfo();
+        }
         setcookie('alibsid', '');
         $redirUrl="alibExLogin.php";
     break;
@@ -33,8 +64,17 @@ switch($act)
             && $_POST['type']!=''
             && $_POST['name']!=''
         ){
-            $oid = $alib->addObj($_POST['name'], $_POST['type'], $_POST['id'], $_POST['position']);
-            $alib->addPerm($userid, '_all', $oid);
+            $position = ($_POST['position']=='I' ? null : $_POST['position']);
+            $oid = $alib->addObj(
+                $_POST['name'], $_POST['type'], $_POST['id'], $position
+            );
+            if(PEAR::isError($oid)){
+                $_SESSION['alertMsg'] =
+                    $oid->getMessage().", ".$oid->getUserInfo();
+            }else $r = $alib->addPerm($userid, '_all', $oid);
+            if(PEAR::isError($r)){
+                $_SESSION['alertMsg'] = $r->getMessage().", ".$r->getUserInfo();
+            }
         }else $_SESSION['alertMsg']='Access denied.';
     break;
     case"deleteNode";
@@ -45,10 +85,14 @@ switch($act)
     case"addPerm";
         $a = $alib->isClass($_POST['id']) ? 'classes':'editPerms';
         $id = $alib->isClass($_POST['id']) ? '':$_POST['id'];
-        if($alib->checkPerm($userid, $a, $id))
-            $alib->addPerm($_POST['subj'], $_POST['permAction'], $_POST['id'], $_POST['allowDeny']);
-        else $_SESSION['alertMsg']='Access denied.';
-        $redirUrl="alibExPerms.php".(($reid=getPGval('reid', '')) ? "?id=$reid":"");
+        if($alib->checkPerm($userid, $a, $id)){
+            $alib->addPerm(
+                $_POST['subj'], $_POST['permAction'],
+                $_POST['id'], $_POST['allowDeny']
+            );
+        }else $_SESSION['alertMsg']='Access denied.';
+        $redirUrl = "alibExPerms.php".
+            (($reid=getPGval('reid', '')) ? "?id=$reid":"");
     break;
     case"removePerm";
         $a = $alib->isClass($_REQUEST['oid']) ? 'classes':'editPerms';
@@ -56,10 +100,14 @@ switch($act)
         if($alib->checkPerm($userid, $a, $oid))
             $alib->removePerm($_GET['permid']);
         else $_SESSION['alertMsg']='Access denied.';
-        $redirUrl=($_REQUEST['reurl']==plist ? "alibExPList.php":"alibExPerms.php").(($reid=getPGval('reid', '')) ? "?id=$reid":"");
+        $redirUrl =
+            ($_REQUEST['reurl']==plist ? "alibExPList.php":"alibExPerms.php").
+            (($reid=getPGval('reid', '')) ? "?id=$reid":"");
     break;
     case"checkPerm";
-        $res = $alib->checkPerm($_POST['subj'], $_POST['permAction'], $_POST['obj']);
+        $res = $alib->checkPerm(
+            $_POST['subj'], $_POST['permAction'], $_POST['obj']
+        );
         $_SESSION['alertMsg'] = ($res ? "permitted: ":"DENIED: ").
             " {$_POST['permAction']} for ".$alib->getSubjName($_POST['subj']).
             " on ".$alib->getObjName($_POST['obj']);
@@ -94,13 +142,15 @@ switch($act)
         if($alib->checkPerm($userid, 'subjects'))
             $alib->addSubj2Gr($_POST['login'], $_POST['gname']);
         else $_SESSION['alertMsg']='Access denied.';
-        $redirUrl="alibExSubj.php".(($id=getPGval('reid', '')) ? "?id=$reid":"");
+        $redirUrl = "alibExSubj.php".
+            (($id=getPGval('reid', '')) ? "?id=$reid":"");
     break;
     case"removeSubjFromGr";
         if($alib->checkPerm($userid, 'subjects'))
             $alib->removeSubjFromGr($_GET['login'], $_GET['gname']);
         else $_SESSION['alertMsg']='Access denied.';
-        $redirUrl="alibExSubj.php".(($id=getPGval('reid', '')) ? "?id=$reid":"");
+        $redirUrl = "alibExSubj.php".
+            (($id=getPGval('reid', '')) ? "?id=$reid":"");
     break;
     case"addObj2Class";
         if($alib->checkPerm($userid, 'classes'))

@@ -1,6 +1,32 @@
 <?php
-// $Id: xr_cli_test.php,v 1.1 2004/07/23 00:22:13 tomas Exp $
+/*------------------------------------------------------------------------------
 
+    Copyright (c) 2004 Media Development Loan Fund
+ 
+    This file is part of the LiveSupport project.
+    http://livesupport.campware.org/
+    To report bugs, send an e-mail to bugs@campware.org
+ 
+    LiveSupport is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+  
+    LiveSupport is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License
+    along with LiveSupport; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+ 
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.2 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/xmlrpc/xr_cli_test.php,v $
+
+------------------------------------------------------------------------------*/
 include("xmlrpc.inc");
 
 $host       = "localhost";
@@ -17,11 +43,15 @@ switch($ak){
                 new xmlrpcval($_REQUEST['sessid'], "string")));
     break;
     case"login":
-        $f=new xmlrpcmsg('alib.login', array(new xmlrpcval($_REQUEST['login'], "string"),
-            new xmlrpcval($_REQUEST['pass'], "string")));
+        $f=new xmlrpcmsg('alib.login',array(
+            new xmlrpcval($_REQUEST['login'], "string"),
+            new xmlrpcval($_REQUEST['pass'], "string")
+        ));
     break;
     case"logout":
-        $f=new xmlrpcmsg('alib.logout', array(new xmlrpcval($_REQUEST['sessid'], "string")));
+        $f=new xmlrpcmsg('alib.logout', array(
+            new xmlrpcval($_REQUEST['sessid'], "string")
+        ));
     break;
 }
 
@@ -36,11 +66,15 @@ switch($ak){
             $v=$r->value();
             $log = $v->serialize();
             if($ak=='test')
-                { $log = split('_',$log); $log="{$log[0]}\nusername: {$log[1]}\ntoken: {$log[2]}"; }
+            {
+                $log = split('_',$log);
+                $log="{$log[0]}\nusername: {$log[1]}\ntoken: {$log[2]}";
+            }
             if($ak=='login') $sessid = $v->scalarval();
             if($ak=='logout') $sessid = '';
         } else {
-        	$log = "Fault:\n Code: ".$r->faultCode()."\nReason:'".$r->faultString()."'<BR>\n";
+        	$log = "Fault:\n Code: ".$r->faultCode()."\n".
+        	    "Reason:'".$r->faultString()."'<BR>\n";
         }
     break;
 }
