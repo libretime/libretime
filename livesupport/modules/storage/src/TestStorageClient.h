@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -161,7 +161,22 @@ class TestStorageClient :
                                             throw (std::invalid_argument);
 
         /**
-         *  Release the lock on a playlist with the specified id.
+         *  Acquire the resources for the playlist
+         *  At this point, this does not do anything.
+         *
+         *  @param id the id of the playlist to release.
+         *  @return something
+         *  @exception std::invalid_argument if no playlist with the specified
+         *             specified id exists. 
+         */
+        virtual Ptr<std::string>::Ref
+        acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument,
+                                                   std::logic_error);
+
+        /**
+         *  Release the resources (audio clips, other playlists) used 
+         *  in a playlist.
          *  At this point, this does not do anything.
          *
          *  @param id the id of the playlist to release.

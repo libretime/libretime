@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/StorageServerLoginTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "StorageServerLoginTest.h"
 
 
+using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Storage;
 
@@ -97,12 +98,21 @@ StorageServerLoginTest :: firstTest(void)
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
 
-    XmlRpcClient xmlRpcClient("localhost", 80, 
-        "/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php", false);
+    XmlRpcClient xmlRpcClient("localhost", 80,
+                              "/storage/var/xmlrpc/xrLocStor.php", false);
 
+    parameters.clear();
     parameters["login"] = "root";
     parameters["pass"] = "q";
+    xmlRpcClient.execute("locstor.login", parameters, result);
 
-    xmlRpcClient.execute("test", parameters, result);
-    std::cerr << "\nstorage server response:\n###\n" << result << "\n###\n";
+    std::string     sessionId(result);
+    
+    parameters.clear();
+    parameters["sessid"] = sessionId;
+    result.clear();
+    xmlRpcClient.execute("locstor.logout", parameters, result);
+
+    std::string     byeMessage(result);
+    CPPUNIT_ASSERT(byeMessage == "Bye");
 }

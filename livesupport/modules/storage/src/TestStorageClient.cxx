@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,6 +130,19 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
     }
 
     return it->second;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Acquire resources for a playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+                                                throw (std::invalid_argument,
+                                                       std::logic_error)
+{
+    Ptr<std::string>::Ref   returnValue(new std::string("/tmp/somefile.xml"));
+    return returnValue;
 }
 
 
