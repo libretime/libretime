@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -183,6 +183,23 @@ class Playlist : public Configurable,
     public:
         /**
          *  Default constructor.
+         *
+         *  NOTE: this constructor creates a Playlist with a null pointer 
+         *  for both the ID and the playlength fields!  It is meant for
+         *  internal use only.
+         *
+         *  If you want to create an empty Playlist, use the storage client:
+         *  <pre><code>
+         *  Ptr<StorageClientFactory>::Ref
+         *          storageClientFactory = StorageClientFactory::getInstance();
+         *  Ptr<StorageClientInterface>::Ref
+         *          storageClient = storageClientFactory->getStorageClient();
+         *  Ptr<Playlist>::Ref
+         *          playlist = storageClient->createPlaylist(sessionId);
+         *  </code></pre>
+         *
+         *  @see Storage::StorageClientFactory
+         *  @see Storage::StorageClientInterface
          */
         Playlist(void)                          throw ()
                         : Playable(PlaylistType)
@@ -194,6 +211,8 @@ class Playlist : public Configurable,
 
         /**
          *  Create a playlist by specifying its ID only.
+         *
+         *  For internal use; see the note at the default constructor.
          */
         Playlist(Ptr<UniqueId>::Ref id)         throw ()
                         : Playable(PlaylistType)
@@ -207,7 +226,9 @@ class Playlist : public Configurable,
 
         /**
          *  Create a playlist by specifying all details, except the title.
-         *  This is used for testing purposes.
+         *
+         *  This is used for testing purposes; 
+         *  see the note at the default constructor.
          *
          *  @param id the id of the playlist.
          *  @param playlength the playing length of the playlist.
@@ -232,7 +253,9 @@ class Playlist : public Configurable,
 
         /**
          *  Create a playlist by specifying all details.
-         *  This is used for testing purposes.
+         *
+         *  This is used for testing purposes; 
+         *  see the note at the default constructor.
          *
          *  @param id the id of the playlist.
          *  @param playlength the playing length of the playlist.
@@ -410,6 +433,8 @@ class Playlist : public Configurable,
          *  If <code>it</code> is such an iterator, then <code>it->second</code>
          *  is the playlist element referenced by the iterator, and
          *  <code>it->first</code> is its relative offset in the playlist.
+         *  The playlist elements are listed in the order of their relative
+         *  offset (starting time).
          *
          *  @see begin(), end(), find()
          */

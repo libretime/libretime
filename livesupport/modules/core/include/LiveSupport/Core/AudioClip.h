@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -169,6 +169,12 @@ class AudioClip : public Configurable,
     public:
         /**
          *  Default constructor.
+         *
+         *  This constructor creates an AudioClip with a null pointer 
+         *  for all (ID, playlength, title, uri) fields!  It is meant for
+         *  internal use only.  If you want to upload a new audio clip to
+         *  the storage, use the constructor with (title, playlength, uri)
+         *  arguments.
          */
         AudioClip(void)                                    throw ()
                         : Playable(AudioClipType)
@@ -178,6 +184,11 @@ class AudioClip : public Configurable,
         /**
          *  Create an audio clip by specifying its unique ID.
          *  The other fields will be filled in by configure().
+         *
+         *  This constructor creates a Playlist with a null pointer 
+         *  for all fields except the ID!  It is meant for internal use only.
+         *  If you want to upload a new audio clip to the storage, 
+         *  use the constructor with (title, playlength, uri) arguments.
          *
          *  @param id the id of the audio clip.
          */
@@ -190,7 +201,10 @@ class AudioClip : public Configurable,
         /**
          *  Create an audio clip by specifying all details, except
          *  for the title.  The title is set to the empty string.
+         *  
          *  This is used for testing purposes.
+         *  If you want to upload a new audio clip to the storage, 
+         *  use the constructor with (title, playlength, uri) arguments.
          *
          *  @param id the id of the audio clip.
          *  @param playlength the playing length of the audio clip.
@@ -204,7 +218,10 @@ class AudioClip : public Configurable,
 
         /**
          *  Create an audio clip by specifying all details.
+         *
          *  This is used for testing purposes.
+         *  If you want to upload a new audio clip to the storage, 
+         *  use the constructor with (title, playlength, uri) arguments.
          *
          *  @param id the id of the audio clip.
          *  @param playlength the playing length of the audio clip.
@@ -220,8 +237,25 @@ class AudioClip : public Configurable,
         /**
          *  Create an audio clip by specifying all details which need
          *  to be set by the user.
-         *  The ID is left blank, and can be set later using setId().
-         *  This is used when a new audio clip is uploaded to storage.
+         *  The ID is left blank (i.e., a null pointer), 
+         *  and can be set later using setId().
+         *
+         *  This constructor is used when a new audio clip is uploaded to 
+         *  the storage.  For example:
+         *  <pre><code>
+         *  Ptr<StorageClientFactory>::Ref
+         *          storageClientFactory = StorageClientFactory::getInstance();
+         *  Ptr<StorageClientInterface>::Ref
+         *          storageClient = storageClientFactory->getStorageClient();
+         *  Ptr<AudioClip>::Ref
+         *          audioClip(new AudioClip(title, playlength, uri));
+         *  storageClient->storeAudioClip(sessionId, audioClip);
+         *  std::cerr << audioClip->getId()->getId();   // has been set by the
+         *                                              //   storage client
+         *  </code></pre>
+         *
+         *  @see Storage::StorageClientFactory
+         *  @see Storage::StorageClientInterface
          *
          *  @param playlength the playing length of the audio clip.
          *  @param title      the title of the audio clip.
