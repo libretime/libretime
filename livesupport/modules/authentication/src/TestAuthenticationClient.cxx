@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,6 @@
 #error "Need unistd.h"
 #endif
 
-#include <iostream>             // for testing only, REMOVE THIS later
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcClient.h>
@@ -152,7 +151,7 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
 
 
 /*------------------------------------------------------------------------------
- *  Login to the storage server.
+ *  Login to the authentication server.
  *----------------------------------------------------------------------------*/
 Ptr<SessionId>::Ref
 TestAuthenticationClient :: login(const std::string & login,
@@ -175,7 +174,7 @@ TestAuthenticationClient :: login(const std::string & login,
 
 
 /*------------------------------------------------------------------------------
- *  Logout from the storage server.
+ *  Logout from the authentication server.
  *----------------------------------------------------------------------------*/
 const bool
 TestAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)

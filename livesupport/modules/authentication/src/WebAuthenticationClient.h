@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/Attic/WebAuthenticationClient.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
 #ifndef WebAuthenticationClient_h
@@ -63,7 +63,8 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An interface to the authentication methods on the php storage server.
+ *  An interface to the authentication methods on the php authentication
+ *  server (which is currently the same as the storage server).
  *
  *  This object has to be configured with an XML configuration element
  *  called webAuthentication. This element contains a child element
@@ -92,7 +93,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.1 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,
@@ -106,17 +107,19 @@ class WebAuthenticationClient :
         static const std::string    configElementNameStr;
 
         /**
-         *  The name of the storage server, e.g. "myserver.mycompany.com".
+         *  The name of the authentication server, e.g. 
+         *  "myserver.mycompany.com".
          */
         std::string                 storageServerName;
 
         /**
-         *  The port wher the storage server is listening (default is 80).
+         *  The port wher the authentication server is listening 
+         *  (default is 80).
          */
         int                         storageServerPort;
 
         /**
-         *  The path to the storage server php page.
+         *  The path to the authentication server php page.
          */
         std::string                 storageServerPath;
 
@@ -157,7 +160,7 @@ class WebAuthenticationClient :
                                                        std::logic_error);
 
         /**
-         *  Login to the storage server, using the data read from the
+         *  Login to the authentication server, using the data read from the
          *  configuration file.
          *  Returns a new session ID; in case of an error, returns a
          *  null pointer.
@@ -169,7 +172,7 @@ class WebAuthenticationClient :
                                                 throw ();
 
         /**
-         *  Logout from the storage server.
+         *  Logout from the authentication server.
          *
          *  @param  sessionId the ID of the session to end
          *  @return true if logged out successfully, false if not

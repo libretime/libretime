@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,6 @@
 #error "Need unistd.h"
 #endif
 
-#include <iostream>             // for testing only, REMOVE THIS later
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcClient.h>
@@ -87,7 +86,7 @@ static const std::string    locationPortAttrName = "port";
 static const std::string    locationPathAttrName = "path";
 
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: login */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: login */
 
 /*------------------------------------------------------------------------------
  *  The name of the login method on the storage server
@@ -105,7 +104,7 @@ static const std::string    loginParamName = "login";
 static const std::string    passwordParamName = "pass";
 
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: logout */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: logout */
 
 /*------------------------------------------------------------------------------
  *  The name of the logout method on the storage server
@@ -163,6 +162,7 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
 
     if (!(attribute = locationConfigElement
                       ->get_attribute(locationPortAttrName))) {
+cerr << "\nmissing port #\n";
         std::string eMsg = "Missing attribute ";
         eMsg += locationPortAttrName;
         throw std::invalid_argument(eMsg);
@@ -189,7 +189,7 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
 
 
 /*------------------------------------------------------------------------------
- *  Login to the storage server.
+ *  Login to the authentication server.
  *----------------------------------------------------------------------------*/
 Ptr<SessionId>::Ref
 WebAuthenticationClient :: login(const std::string & login,
@@ -220,7 +220,7 @@ WebAuthenticationClient :: login(const std::string & login,
 
 
 /*------------------------------------------------------------------------------
- *  Logout from the storage server.
+ *  Logout from the authentication server.
  *----------------------------------------------------------------------------*/
 const bool
 WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)

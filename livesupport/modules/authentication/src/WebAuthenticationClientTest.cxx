@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ using namespace LiveSupport::Authentication;
 CPPUNIT_TEST_SUITE_REGISTRATION(WebAuthenticationClientTest);
 
 /**
- *  The name of the configuration file for the authentication client factory daemon.
+ *  The name of the configuration file for the authentication client factory.
  */
 static const std::string configFileName = "etc/webAuthentication.xml";
 

@@ -5,10 +5,10 @@
 
 <!ELEMENT location EMPTY >
 <!ATTLIST location server   CDATA       #REQUIRED >
-<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location port     NMTOKEN     "80" >
 <!ATTLIST location path     CDATA       #REQUIRED >
 ]>
 <webAuthentication>
-    <location server="localhost" port="80" 
+    <location server="localhost"
               path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
 </webAuthentication>

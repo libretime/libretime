@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -168,7 +168,7 @@ class TestAuthenticationClient :
                                                        std::logic_error);
 
         /**
-         *  Login to the storage server, using the data read from the
+         *  Login to the authentication server, using the data read from the
          *  configuration file.
          *  Returns a new session ID; in case of an error, returns a
          *  null pointer.
@@ -180,7 +180,7 @@ class TestAuthenticationClient :
                                                 throw ();
 
         /**
-         *  Logout from the storage server.
+         *  Logout from the authentication server.
          *
          *  @param  sessionId the ID of the session to end
          *  @return true if logged out successfully, false if not
