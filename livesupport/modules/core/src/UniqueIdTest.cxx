@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/UniqueIdTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,16 +114,22 @@ UniqueIdTest :: firstTest(void)
     std::string     idAsVeryLongString = "123456789abcdef0123456789abcdef0";
     id.reset(new UniqueId(idAsVeryLongString));
     CPPUNIT_ASSERT(std::string(*id)         == idAsVeryLongString);
-//  std::cout << std::endl << std::hex << UniqueId::IdType(*id) << std::endl;
+
     std::string     idAsSillyString = "this is not a number";
     id.reset(new UniqueId(idAsSillyString));
     CPPUNIT_ASSERT(std::string(*id)         == idAsSillyString);
-//  std::cout << std::hex << UniqueId::IdType(*id) << std::endl;
 
 /*  // this works fine, but please don't use
     UniqueId::IdType    idSillyNumeric = -3;
     id.reset(new UniqueId(idSillyNumeric));
     CPPUNIT_ASSERT(UniqueId::IdType(*id)    == idSillyNumeric);
     CPPUNIT_ASSERT(std::string(*id)         == "fffffffffffffffd"); */
+
+    // this is used in Postgresql classes, because Long does not get properly
+    // typedef'd to long long -- can be removed after this bug is fixed
+    std::string     idAsDecimalString = "65546";
+    id = UniqueId::fromDecimalString(idAsDecimalString);
+    CPPUNIT_ASSERT(id->getId()              == 65546);
+    CPPUNIT_ASSERT(*id->toDecimalString()   == idAsDecimalString);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/UniqueId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ namespace Core {
  *  A class representing globally unique identifiers.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class UniqueId
 {
@@ -140,6 +140,21 @@ class UniqueId
 
             Ptr<UniqueId>::Ref  uid(new UniqueId(id));
             return uid;
+        }
+
+        /**
+         *  Return the UniqueId as a string in base 10.
+         *
+         *  @return a new string containing the value of the UniqueId.
+         */
+        Ptr<std::string>::Ref
+        toDecimalString(void)                                   throw ()
+        {
+            std::stringstream idWriter;
+            idWriter << std::dec << id;
+            Ptr<std::string>::Ref   idString(new std::string(
+                                                        idWriter.str() ));
+            return idString;
         }
 
         /**
