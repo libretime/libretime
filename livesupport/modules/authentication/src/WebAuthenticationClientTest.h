@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,10 +58,10 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the WebAuthenticationClient class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see WebAuthenticationClient
  */
 class WebAuthenticationClientTest : public CPPUNIT_NS::TestFixture

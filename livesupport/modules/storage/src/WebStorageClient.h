@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,10 +65,41 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An interface to the (possibly remote) php storage server.
+ *  An interface to the php storage server.
+ *
+ *  This object has to be configured with an XML configuration element
+ *  called webStorage. This element contains a child element
+ *  specifying the location of the authentication server, and an attribute
+ *  called tempFiles which specifies where the temporary playlist files are
+ *  going to be created.  The name of the temp files will be the tempFiles
+ *  attribute value, plus a random string, plus a ".smil" extension.
+ *
+ *  A authenticationClientFactory configuration element may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;webStorage
+ *          tempFiles="file:///tmp/tempPlaylist" &gt;
+ *      &lt;location
+ *          server="localhost"
+ *          port="80" 
+ *          path="/storage/var/xmlrpc/xrLocStor.php"
+ *      /&gt;
+ *  &lt;/webStorage&gt;
+ *  </code></pre>
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT webStorage (location) &gt;
+ *  &lt;!ATTLIST webStorage tempFiles   CDATA       #REQUIRED &gt;
+ *  &lt;!ELEMENT location EMPTY &gt;
+ *  &lt;!ATTLIST location server        CDATA       #REQUIRED &gt;
+ *  &lt;!ATTLIST location port          NMTOKEN     #REQUIRED &gt;
+ *  &lt;!ATTLIST location path          CDATA       #REQUIRED &gt;
+ *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class WebStorageClient :
                     virtual public Configurable,
