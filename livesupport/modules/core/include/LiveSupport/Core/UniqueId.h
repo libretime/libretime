@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/UniqueId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,8 +59,8 @@ namespace Core {
 /**
  *  A class representing globally unique identifiers.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.5 $
  */
 class UniqueId
 {
@@ -118,6 +118,28 @@ class UniqueId
             // TODO: add error checking
             std::stringstream idReader(idAsString);
             idReader >> std::hex >> this->id;
+        }
+
+        /**
+         *  Create a UniqueId from a numeric value, which is a string
+         *  representation of the id, in base 10.
+         *  If the argument is not a valid decimal number between 0 and
+         *  2^31-1 (inclusive), the value of the UniqueId will be 
+         *  bogus.
+         *
+         *  @param strValue the id in base 10, in string from.
+         *  @return a new UniqueId with the specified ID value.
+         */
+        static Ptr<UniqueId>::Ref
+        fromDecimalString(const std::string     idStr)          throw ()
+        {
+            IdType      id;
+            // TODO: error checking
+            std::stringstream    idReader(idStr);
+            idReader >> id;
+
+            Ptr<UniqueId>::Ref  uid(new UniqueId(id));
+            return uid;
         }
 
         /**
