@@ -33,7 +33,7 @@ switch($_REQUEST['act']){
 
     case "replaceFile":
         $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
-        if ($uiHandler->delete($uiHandler->id)) {
+        if ($uiHandler->delete($uiHandler->id) === TRUE) {
             $ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->pid, $ui_fmask["uploadFile"], $ui_tmpgunid);
             $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
@@ -47,7 +47,7 @@ switch($_REQUEST['act']){
 
     case "replaceWebstream":
         $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
-        if ($uiHandler->delete($uiHandler->id)) {
+        if ($uiHandler->delete($uiHandler->id) == TRUE) {
             $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->pid, $ui_fmask['addWebstream'], $ui_tmpgunid);
             $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
@@ -149,17 +149,27 @@ switch($_REQUEST['act']){
     break;
 
     case "PL.activate":
-        $uiHandler->PLAYLIST->activate($_REQUEST['id']);
         $uiHandler->PLAYLIST->setReload();
+        if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE) {
+            $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+        }
     break;
 
-    case "PL.newUsingItem":
-        $uiHandler->PLAYLIST->newUsingItem($_REQUEST['id']);
+    case "PL.create":
         $uiHandler->PLAYLIST->setReload();
+        if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE) {
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
+        }
+
     break;
 
     case "PL.addItem":
         $uiHandler->PLAYLIST->addItem($_REQUEST['id']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case "PL.removeItem":
+        $uiHandler->PLAYLIST->removeItem($_REQUEST['id']);
         $uiHandler->PLAYLIST->setReload();
     break;
 

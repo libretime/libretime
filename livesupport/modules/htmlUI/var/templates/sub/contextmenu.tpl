@@ -6,7 +6,7 @@ onContextmenu="return menu('{$i.id}'
         {if $PLid}
             , 'PL.addItem'
         {else}
-            , 'PL.newUsingItem'
+            , 'PL.create'
         {/if}
         , 'delete'
     {/if}
@@ -19,7 +19,7 @@ onContextmenu="return menu('{$i.id}'
                 , 'PL.addItem', 'delete'
             {/if}
         {else}
-            , 'PL.activate', 'PL.newUsingItem', 'delete'
+            , 'PL.activate', 'PL.create', 'delete'
         {/if}
     {/if}
     {$moreContextAfter}

@@ -36,12 +36,16 @@ function menu(id) {
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.addItem&id="+id+"')\" "+oF+">&nbsp;Add to active Playlist&nbsp;</a></td></tr>";
             break;
 
+            case "PL.removeItem":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.removeItem&id="+id+"')\" "+oF+">&nbsp;Remove Item from Playlist&nbsp;</a></td></tr>";
+            break;
+
             case "PL.activate":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href=\"javascript: hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.activate&id="+id+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></td></tr>";
             break;
 
-            case "PL.newUsingItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.newUsingItem&id="+id+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
+            case "PL.create":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.create&id="+id+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
             break;
             case "SP.addItem":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+id+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></td></tr>";

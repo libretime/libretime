@@ -6,6 +6,7 @@
 
     {include file="script/basics.js.tpl"}
     {include file="script/contextMenue.js.tpl"}
+    {include file="script/collector.js.tpl"}
 </head>
 
 <body>

@@ -57,7 +57,7 @@ $mask = array(
             'groupit' => TRUE,
             'attributes' => array('onClick' => 'showTalk()')
         ),
-        'group' => array(
+        array(
             'group'   => array('Main', 'Music', 'Talk'),
         )
 
@@ -82,19 +82,22 @@ $mask = array(
                 'element'   => 'dc:title',
                 'type'      => 'text',
                 'label'     => 'Title',
-                'required'  => TRUE
+                'required'  => TRUE,
+                'id3'       => 'Title'
             ),
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
                 'label'     => 'Creator',
                 'required'  => TRUE,
+                'id3'       => 'Artist'
             ),
             array(
                 'element'   => 'ls:genre',
                 'type'      => 'text',
                 'label'     => 'Genre',
                 'required'  => TRUE,
+                'id3'       => 'Genre'
             ),
             array(
                 'element'   => 'dc:format',
@@ -102,17 +105,19 @@ $mask = array(
                 'label'     => 'File format',
                 'required'  => TRUE,
                 'options'   => array(
-                    ''              => '',
-                    'File'          => 'File',
-                    'live stream'   => 'Live Stream',
-                    'networked file'=> 'Networked File',
-                 )
+                                ''              => '',
+                                'File'          => 'File',
+                                'live stream'   => 'Live Stream',
+                                'networked file'=> 'Networked File',
+                               ),
+                'id3'       => FALSE
             ),
             array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
                 'label'     => 'Length',
-                'attributes'=> array('readonly' => 'on')
+                'attributes'=> array('readonly' => 'on'),
+                'id3'       => FALSE
             ),
             /*
             array(
@@ -149,167 +154,195 @@ $mask = array(
                 'element'   => 'dc:title',
                 'type'      => 'text',
                 'label'     => 'Title',
+                'id3'       => 'Title'
             ),
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
                 'label'     => 'Creator',
+                'id3'       => 'Artist'
             ),
             array(
                 'element'   => 'dc:source',
                 'type'      => 'text',
                 'label'     => 'Album',
+                'id3'       => 'Album'
             ),
             array(
                 'element'   => 'ls:year',
                 'type'      => 'date',
                 'label'     => 'Year',
                 'options'   => array(
-                    'language'      => 'en',
-                    'format'        => 'dMY',
-                    'addEmptyOption'=> TRUE,
-                    'minYear'       => 1900
-                )
+                                'language'      => 'en',
+                                'format'        => 'dMY',
+                                'addEmptyOption'=> TRUE,
+                                'minYear'       => 1900
+                               ),
+                'id3'       => 'Year'
             ),
             array(
                 'element'   => 'dc:type',
                 'type'      => 'text',
                 'label'     => 'Genre',
+                'id3'       => 'Genre'
             ),
             array(
                 'element'   => 'dc:description',
                 'type'      => 'textarea',
                 'label'     => 'Description',
+                'id3'       => 'Comment'
             ),
             array(
                 'element'   => 'dc:format',
                 'type'      => 'select',
                 'label'     => 'Format',
                 'options'   => array(
-                    ''              => '',
-                    'File'          => 'File',
-                    'live stream'   => 'Live Stream',
-                    'networked file'=> 'Networked File'
-                )
+                                ''              => '',
+                                'File'          => 'File',
+                                'live stream'   => 'Live Stream',
+                                'networked file'=> 'Networked File'
+                               ),
+                'id3'       => FALSE
             ),
             array(
                 'element'   => 'ls:bpm',
                 'type'      => 'text',
                 'label'     => 'BPM',
                 'rule'      => 'numeric',
+                'id3'       => 'BPM'
             ),
             array(
                 'element'   => 'ls:rating',
                 'type'      => 'text',
                 'label'     => 'Rating',
                 'rule'      => 'numeric',
+                'id3'       => 'Rating'
             ),
             array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
                 'label'     => 'Length',
-                'attributes'=> array('readonly' => 'on')
+                'attributes'=> array('readonly' => 'on'),
+                'id3'       => FALSE
             ),
             array(
                 'element'   => 'ls:encoded_by',
                 'type'      => 'text',
                 'label'     => 'Encoded by',
+                'id3'       => 'Encoded by'
             ),
             array(
                 'element'   => 'ls:track_num',
                 'type'      => 'select',
                 'label'     => 'Track number',
-                'options'   => _getNumArr(0, 99)
+                'options'   => _getNumArr(0, 99),
+                'id3'       => 'Track'
             ),
             array(
                 'element'   => 'ls:disc_num',
                 'type'      => 'select',
                 'label'     => 'Disc number',
-                'option'    => _getNumArr(0, 9),
+                'options'   => _getNumArr(0, 20),
+                'id3'       => 'Disk'
             ),
             array(
-                'element'   => 'Description_Mood',       ## something wrong in docu!!!
+                'element'   => 'ls:mood',
                 'type'      => 'text',
                 'label'     => 'Mood',
+                'id3'       => 'Mood'
             ),
             array(
                 'element'   => 'dc:publisher',
                 'type'      => 'text',
                 'label'     => 'Label',
+                'id3'       => 'Label'
             ),
             array(
                 'element'   => 'ls:composer',
                 'type'      => 'text',
                 'label'     => 'Composer',
+                'id3'       => 'Composer'
             ),
             array(
                 'element'   => 'ls:bitrate',
                 'type'      => 'text',
                 'label'     => 'Bitrate',
-                'rule'      => 'numeric'
+                'rule'      => 'numeric',
+                'id3'       => 'Bitrate'
             ),
             array(
                 'element'   => 'ls:channels',
                 'type'      => 'select',
                 'label'     => 'Channels',
                 'options'   => array(
-                    ''       => '',
-                    'mono'   => 'Mono',
-                    'stereo' => 'Stereo',
-                    '5.1'    => '5.1'
-                )
+                                ''       => '',
+                                'mono'   => 'Mono',
+                                'stereo' => 'Stereo',
+                                '5.1'    => '5.1'
+                               ),
+                'id3'       => 'Channels'
             ),
             array(
                 'element'   => 'ls:samplerate',
                 'type'      => 'select',
                 'label'     => 'Sample rate',
-                'options'   => array()                      ## vervollständigen!
+                'options'   => array(),                ## vervollständigen!
+                'id3'       => 'Samplerate'
             ),
             array(
                 'element'   => 'ls:encoder',
                 'type'      => 'text',
                 'label'     => 'Encoder software used',
+                'id3'       => 'Encoder'
             ),
             array(
                 'element'   => 'ls:crc',
                 'type'      => 'text',
                 'label'     => 'Checksum',
-                'rule'      => 'numeric'
+                'rule'      => 'numeric',
+                'id3'       => 'CRC'
             ),
             array(
                 'element'   => 'ls:lyrics',
                 'type'      => 'textarea',
                 'label'     => 'Lyrics',
+                'id3'       => 'Lyrics'
             ),
             array(
                 'element'   => 'ls:orchestra',
                 'type'      => 'text',
                 'label'     => 'Orchestra or band',
+                'id3'       => 'Orchestra or band'
             ),
             array(
                 'element'   => 'ls:conductor',
                 'type'      => 'text',
                 'label'     => 'Conductor',
+                'id3'       => 'Conductor'
             ),
             array(
                 'element'   => 'ls:lyricist',
                 'type'      => 'text',
                 'label'     => 'Lyricist',
+                'id3'       => 'Lyricist'
             ),
             array(
                 'element'   => 'ls:originallyricist',
                 'type'      => 'text',
                 'label'     => 'Original lyricist',
+                'id3'       => 'Original lyricist'
             ),
             array(
                 'element'   => 'ls:radiostationname',
                 'type'      => 'text',
                 'label'     => 'Radio station name',
+                'id3'       => 'Radio station name'
             ),
             array(
                 'element'   => 'ls:audiofileinfourl',
                 'type'      => 'text',
                 'label'     => 'Audio file information web page',
+                'id3'       => 'Audio file information web page'
             ),
             array(
                 'rule'      => 'regex',
@@ -321,6 +354,7 @@ $mask = array(
                 'element'   => 'ls:artisturl',
                 'type'      => 'text',
                 'label'     => 'Artist web page',
+                'id3'       => 'Artist web page'
             ),
             array(
                 'rule'      => 'regex',
@@ -332,6 +366,7 @@ $mask = array(
                 'element'   => 'ls:audiosourceurl',
                 'type'      => 'text',
                 'label'     => 'Audio source web page',
+                'id3'       => 'Audio source web page'
             ),
             array(
                 'rule'      => 'regex',
@@ -343,6 +378,7 @@ $mask = array(
                 'element'   => 'ls:radiostationurl',
                 'type'      => 'text',
                 'label'     => 'Radio station web page',
+                'id3'       => 'Radio station web page'
             ),
             array(
                 'rule'      => 'regex',
@@ -354,6 +390,7 @@ $mask = array(
                 'element'   => 'ls:buycdurl',
                 'type'      => 'text',
                 'label'     => 'Buy CD web page',
+                'id3'       => 'Buy CD webpage'
             ),
             array(
                 'rule'      => 'regex',
@@ -365,23 +402,27 @@ $mask = array(
                 'element'   => 'ls:isrcnumber',
                 'type'      => 'text',
                 'label'     => 'ISRC number',
-                'rule'      => 'numeric'
+                'rule'      => 'numeric',
+                'id3'       => 'ISRC'
             ),
             array(
                 'element'   => 'ls:catalognumber',
                 'type'      => 'text',
                 'label'     => 'Catalog number',
-                'rule'      => 'numeric'
+                'rule'      => 'numeric',
+                'id3'       => 'Catalog'
             ),
             array(
                 'element'   => 'ls:originalartist',
                 'type'      => 'text',
                 'label'     => 'Original artist',
+                'id3'       => 'Original Artist'
             ),
             array(
                 'element'   => 'dc:rights',           ## ???
                 'type'      => 'text',
                 'label'     => 'Copyright',
+                'id3'       => 'Copyright'
             ),
         ),
         'Talk'   => array(

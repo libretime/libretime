@@ -148,7 +148,7 @@ if ($uiBrowser->userid) {
         $Smarty->assign('changeStationPrefs', TRUE);
     break;
 
-    case "PL.simpleManagement":           print_r($uiBrowser->PLAYLIST->get()); 
+    case "PL.simpleManagement":         
         if ($_REQUEST['createNew']) {
             $uiBrowser->PLAYLIST->testNew();
             #$Smarty->assign('PLAYLIST',   $uiBrowser->PLAYLIST->get());

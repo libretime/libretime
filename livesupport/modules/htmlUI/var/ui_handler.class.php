@@ -161,9 +161,31 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=uploadFile&id=".$pid;
             return FALSE;
         }
-        $this->gb->replaceMetadata($r, $this->_analyzeFile($r, 'xml'), 'string', $this->sessid);
+
+        $this->transMData($r);
+
         $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
         return $r;
+    }
+
+
+    function transMData($id)
+    {
+        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        $this->gb->replaceMetadata($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
+
+        $ia = $this->gb->analyzeFile($id, $this->sessid);
+        foreach ($mask['pages'] as $key=>$val) {
+            foreach ($mask['pages'][$key] as $k=>$v) {
+                if ($v['id3'] != FALSE) {
+                    $key = strtolower($v['id3']);
+                    if ($ia['comments'][$key][0]) {
+                        $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0]);
+                        #echo "E: ".$v['element']." V: ".$ia['comments'][$key][0]."<br>";
+                    }
+                }
+            }
+        }
     }
 
 
@@ -507,7 +529,7 @@ class uiHandler extends uiBase {
         ## first remove old entrys
         $this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
-        foreach ($mask['tabs']['group']['group'] as $key) {
+        foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 $formdata[$key.'___'.$this->_formElementEncode($v['element'])] ? $mData[$this->_formElementDecode($v['element'])] = $formdata[$key.'___'.$this->_formElementEncode($v['element'])] : NULL;
             }
@@ -574,7 +596,7 @@ class uiHandler extends uiBase {
                     $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                 else
                     $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
-                    $this->STATIONPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+                #$this->STATIONPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
             }
             if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                 if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
@@ -582,7 +604,7 @@ class uiHandler extends uiBase {
                     return;
             }
         }
-
+        $this->loadStationPrefs($mask, TRUE);
         $this->_retMsg('Settings saved');
         return TRUE;
     }

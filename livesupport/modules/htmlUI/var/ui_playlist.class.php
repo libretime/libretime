@@ -19,6 +19,7 @@ class uiPlaylist
         if (!$this->activeId) {
             return FALSE;
         }
+        #print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid));
         return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
     }
 
@@ -40,7 +41,7 @@ class uiPlaylist
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $this->token);
         #$this->active = $this->Base->gb->getPlaylistArray($plid, $this->Base->sessid);
         $this->activeId = $plid;
-        $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, 'title'));
+        $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
         return TRUE;
     }
 
@@ -55,7 +56,7 @@ class uiPlaylist
             return FALSE;
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
-        $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), 'title'));
+        $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
@@ -74,55 +75,74 @@ class uiPlaylist
 
     function addItem($id)
     {
-        if (!$this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid)) {
-            $this->Base_retMsg('Cannot add File to Playlist');
+        if ($this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid) === FALSE) {
+            $this->Base_retMsg('Cannot add Item to Playlist');
             return FALSE;
         }
         return TRUE;
-
     }
 
-    function removeItem($id)
+    function removeItem($gunids)
     {
+        if (!$gunids) {
+            $this->Base->_retMsg('No Item(s) given');
+            return FALSE;
+        }
+        if (!is_array($gunids))
+            $gunids = array($gunids);
 
-
+        foreach ($gunids as $gunid) {
+            if ($this->Base->gb->delAudioClipFromPlaylist($this->token, $this->Base->gb->_idFromGunid($gunid), $this->Base->sessid) !== TRUE) {
+                $this->Base->_retMsg('Cannot remove Item from Playlist');
+                return FALSE;
+            }
+        }
+        return TRUE;
     }
 
-    function newUsingItem($id)
+    function create($id=FALSE)
     {
         # create PL
         # activate
-        # add clip
-        if ($this->testNew() === FALSE) {
+        # add clip if given
+        if (is_array($this->activeId)) {
             $this->Base->_retMsg('Already active Playlist');
             return FALSE;
         }
-        $this->addItem($id);
-        return TRUE;
-    }
-
-    function createEmpty()
-    {
-        if (!$plid = $this->Base->gb->createPlaylist($this->Base->homeid, date('Y-M-D H-i-s'), $this->Base->sessid)) {
+        $datetime = date('Y-m-d H:i:s');
+        if (!$plid = $this->Base->gb->createPlaylist($this->Base->homeid, $datetime, $this->Base->sessid)) {
             $this->Base->_retMsg('Cannot create Playlist');
             return FALSE;
         }
-        $this->Base->_setMDataValue($plid, 'dc:title', 'empty');
+        $this->Base->_setMDataValue($plid, 'dc:title', $datetime);
+        if ($this->activate($plid)===FALSE) {
+            return FALSE;
+        }
+        if ($id!==FALSE) {
+            if ($this->addItem($id)!==TRUE) {
+                return FALSE;
+            }
+        }
         return $plid;
     }
 
-    function testNew()
-    {
-        # if exists -> return false
-        # else
-            # create empty
-            # activate
 
-        if (is_array($this->activeId)) {
-            return FALSE;
+    function getFlat()
+    {
+        $this->plwalk($this->get(), 0);
+        return $this->flat;
+    }
+
+
+    function plwalk($arr, $parent)
+    {
+        foreach ($arr['children'] as $node=>$sub) {
+            if ($sub['elementname']=='playlistelement') {
+                $this->plwalk($sub, $node);
+            }
+            if ($sub['elementname']=='audioclip') {
+                $this->flat["$parent.$node"] = $sub['attrs'];
+            }
         }
-        $plid = $this->createEmpty();
-        $this->activate($plid);
-        return TRUE;
     }
 }

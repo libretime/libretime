@@ -1,7 +1,5 @@
 {*Smarty template*}
 
-{include file="script/scratchPad.js.tpl"}
-
 <div id="scratchpad">
 <center><b>%%ScratchPad%%</b>
 {if is_array($SCRATCHPAD)}
@@ -32,9 +30,9 @@
                 </tr>
             {/foreach}
             <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
-                <td><input type="checkbox" name="all" onClick="SP_switchAll()"></th>
-                <td align="center" colspan="2"><a href="#" onClick="SP_submit()">[Remove Selected]</a></th>
-                <td align="center" colspan="2"><a href="#" onClick="SP_clearAll()">[Clear]</a></th>
+                <td><input type="checkbox" name="all" onClick="form_switchAll('SP')"></th>
+                <td align="center" colspan="2"><a href="#" onClick="form_submit('SP')">[Remove Selected]</a></th>
+                <td align="center" colspan="2"><a href="#" onClick="form_clearAll('SP')">[Clear]</a></th>
             </tr>
         </table>
     </form>

@@ -110,9 +110,9 @@ class uiBase
 
 
 
-    function loadStationPrefs(&$mask)
+    function loadStationPrefs(&$mask, $reload=FALSE)
     {
-        if (!is_array($this->STATIONPREFS)) {
+        if (!is_array($this->STATIONPREFS || $reload===TRUE)) {
             foreach ($mask as $key=>$val) {
                 if ($val['isPref']) {
                     if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
@@ -254,43 +254,26 @@ class uiBase
         $s  = $ia['playtime_seconds'];
         $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
 
-        if ($format=='array') {
-            return array(
-                    'Format.Extent'             => $extent,
-                    'Format.Medium.Bitrate'     => $ia['audio']['bitrate'],
-                    'Format.Medium.Channels'    => $ia['audio']['channelmode'],
-                    'Format.Medium.Samplerate'  => $ia['audio']['sample_rate'],
-                    'Format.Medium.Encoder'     => $ia['audio']['codec'] ? $ia['audio']['codec'] : $ia['audio']['encoder'],
-                   );
-        } elseif ($format=='text') {
-            #print_r($ia);
-            return "fileformat: {$ia['fileformat']}<br>
-                    seconds: {$ia['playtime_seconds']}<br>
-                    length: $extent<br>
-                    channels: {$ia['audio']['channels']}<br>
-                    sample_rate: {$ia['audio']['sample_rate']}<br>
-                    bits_per_sample: {$ia['audio']['bits_per_sample']}<br>
-                    channelmode: {$ia['audio']['channelmode']}<br>
-                    title: {$ia['id3v1']['title']}<br>
-                    artist: {$ia['id3v1']['artist']}<br>
-                    comment: {$ia['id3v1']['comment']}";
+        if ($format=='text') {
+            return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
         } elseif ($format=='xml') {
             return
                   '<?xml version="1.0" encoding="utf-8"?>
-                  <audioClip>
-                  <metadata
+                   <audioClip>
+                   <metadata
                     xmlns="http://www.streamonthefly.org/"
                     xmlns:dc="http://purl.org/dc/elements/1.1/"
                     xmlns:dcterms="http://purl.org/dc/terms/"
                     xmlns:xbmf="http://www.streamonthefly.org/xbmf"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    >
-                  <dc:title>'.$this->_getFileTitle($id).'</dc:title>
-                  <dcterms:extent>'.date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')).'</dcterms:extent>
-                  </metadata>
-                  </audioClip>';
+                   <dc:title>'.$this->_getFileTitle($id).'</dc:title>
+                   <dcterms:extent>'.date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')).'</dcterms:extent>
+                   </metadata>
+                   </audioClip>';
 
         }
+        return FALSE;
     }
 
 
@@ -331,9 +314,9 @@ class uiBase
     {
         $data = array('id'          => $id,
                       'gunid'       => $this->gb->_gunidFromId($id),
-                      'title'       => $this->_getMDataValue($id, 'title'),
-                      'creator'     => $this->_getMDataValue($id, 'creator'),
-                      'duration'    => $this->_niceTime($this->_getMDataValue($id, 'dcterms:extent')),
+                      'title'       => $this->_getMDataValue($id, UI_MDATA_KEY_TITLE),
+                      'creator'     => $this->_getMDataValue($id, UI_MDATA_KEY_ARTIST),
+                      'duration'    => $this->_niceTime($this->_getMDataValue($id, UI_MDATA_KEY_DURATION)),
                       'type'        => $this->gb->getFileType($id),
                 );
          return ($data);
@@ -342,6 +325,9 @@ class uiBase
 
     function _niceTime($in)
     {
+        if(is_array($in)) {
+            $in = current($in);
+        }
         list ($in, $lost) = explode('.', $in);
         if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in))
             list($h, $i, $s) = explode(':', $in);

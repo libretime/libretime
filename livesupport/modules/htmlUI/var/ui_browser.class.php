@@ -133,7 +133,7 @@ class uiBrowser extends uiBase {
         }
         foreach ($data['listdata'] as $key=>$val) {
             if ($val['type'] != 'Folder')
-                $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], 'title');
+                $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], UI_MDATA_KEY_TITLE);
             else
                 $data['listdata'][$key]['title'] = $val['name'];
         }
@@ -371,7 +371,7 @@ class uiBrowser extends uiBase {
                            );
 
         ## convert element names to be unique over different forms-parts, add javascript to spread values over parts, add existing values from database
-        foreach ($mask['tabs']['group']['group'] as $key) {
+        foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
                 $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$this->_formElementEncode($v['element'])."')"));

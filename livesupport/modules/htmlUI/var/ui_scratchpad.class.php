@@ -89,10 +89,12 @@ class uiScratchPad
 
     function removeItems($ids)
     {
-        if (!$ids)
-            return FALSE;              ## empty parameter
+        if (!$ids) {
+            $this->Base->_retMsg('No Item(s) given');
+            return FALSE;
+        }
         if (!is_array($ids))
-            $ids = array($ids);  ## just single id given
+            $ids = array($ids);
 
         foreach ($ids as $id) {
             #$info = $this->Base->_getMetaInfo($id);
