@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,7 +82,6 @@ class Playlist extends StoredFile{
      *  @return array with fields:
      *  <ul>
      *   <li>plLen string - length of playlist in dcterms:extent format</li>
-     *   <li>plLenMid int - metadata record id of dcterms:extent record</li>
      *   <li>parid int - metadata record id of playlist container</li>
      *   <li>metaParid int - metadata record id of metadata container</li>
      *  </ul>
@@ -96,16 +95,13 @@ class Playlist extends StoredFile{
         if(PEAR::isError($r)){ return $r; }
         if(isset($r[0])){
             $plLen = $r[0]['value'];
-            $plLenMid = $r[0]['mid'];
         }else{
             $r = $this->md->getMetadataEl('dcterms:extent');
             if(PEAR::isError($r)){ return $r; }
             if(isset($r[0])){
                 $plLen = $r[0]['value'];
-                $plLenMid = $r[0]['mid'];
             }else{
                 $plLen = '00:00:00.000000';
-                $plLenMid = NULL;
             }
         }
         // get main playlist container
@@ -114,7 +110,7 @@ class Playlist extends StoredFile{
         // get metadata container (optionally insert it)
         $metaParid = $this->getContainer('metadata', $parid, TRUE);
         if(PEAR::isError($metaParid)){ return $metaParid; }
-        return compact('plLen', 'plLenMid', 'parid', 'metaParid');
+        return compact('plLen', 'parid', 'metaParid');
     }
     
     /**
@@ -233,12 +229,14 @@ class Playlist extends StoredFile{
      *  @param value string - value for inserted record
      *  @param parid int - parent record id
      *  @param category string - qualified name of metadata category
+     *  @param predxml string - 'A' | 'T' (attribute or tag)
      *  @return boolean
      */
-    function _setValueOrInsert($mid, $value, $parid, $category)
+    function _setValueOrInsert($mid, $value, $parid, $category, $predxml='T')
     {
         if(is_null($mid)){
-            $r = $this->md->insertMetadataEl($parid, $category, $value);
+            $r = $this->md->insertMetadataEl(
+                $parid, $category, $value, $predxml);
         }else{
             $r = $this->md->setMetadataEl($mid, $value);
         }
@@ -250,16 +248,23 @@ class Playlist extends StoredFile{
      *  Set playlist length - dcterm:extent
      *
      *  @param newPlLen string - new length in extent format
-     *  @param plLenMid int - playlist length record id
+     *  @param parid int - playlist container record id
      *  @param metaParid int - metadata container record id
      *  @return boolean
      */
-    function setPlaylistLength($newPlLen, $plLenMid, $metaParid)
+    function setPlaylistLength($newPlLen, $parid, $metaParid)
     {
+        $mid = $this->_getMidOrInsert('playlength', $parid, $newPlLen, 'A');
+        if(PEAR::isError($mid)){ return $mid; }
         $r = $this->_setValueOrInsert(
-            $plLenMid, $newPlLen, $metaParid,  'dcterms:extent');
+            $mid, $newPlLen, $parid,  'playlength', 'A');
         if(PEAR::isError($r)){ return $r; }
-        return $r;
+        $mid = $this->_getMidOrInsert('dcterms:extent', $metaParid, $newPlLen);
+        if(PEAR::isError($mid)){ return $mid; }
+        $r = $this->_setValueOrInsert(
+            $mid, $newPlLen, $metaParid,  'dcterms:extent');
+        if(PEAR::isError($r)){ return $r; }
+        return TRUE;
     }
     
     /**
@@ -280,7 +285,7 @@ class Playlist extends StoredFile{
         // get information about playlist and containers
         $plInfo = $this->getPlInfo();
         if(PEAR::isError($plInfo)){ return $plInfo; }
-        extract($plInfo);   // 'plLen', 'plLenMid', 'parid', 'metaParid'
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
     
         // insert new playlist element
         $offset = $plLen;
@@ -317,7 +322,7 @@ class Playlist extends StoredFile{
         // get information about playlist and containers
         $plInfo = $this->getPlInfo();
         if(PEAR::isError($plInfo)){ return $plInfo; }
-        extract($plInfo);   // 'plLen', 'plLenMid', 'parid', 'metaParid'
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
     
         // get array of playlist elements:
         $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
@@ -376,7 +381,7 @@ class Playlist extends StoredFile{
         // get information about playlist and containers
         $plInfo = $this->getPlInfo();
         if(PEAR::isError($plInfo)){ return $plInfo; }
-        extract($plInfo);   // 'plLen', 'plLenMid', 'parid', 'metaParid'
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
     
         // get array of playlist elements:
         $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
@@ -421,7 +426,7 @@ class Playlist extends StoredFile{
         // get information about playlist and containers
         $plInfo = $this->getPlInfo();
         if(PEAR::isError($plInfo)){ return $plInfo; }
-        extract($plInfo);   // 'plLen', 'plLenMid', 'parid', 'metaParid'
+        extract($plInfo);   // 'plLen', 'parid', 'metaParid'
         // get array of playlist elements:
         $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
         if(PEAR::isError($plElArr)){ return $plElArr; }
@@ -476,7 +481,7 @@ class Playlist extends StoredFile{
             $len = $len + $acLenS;
         }
         $newPlLen = $this->_secsToPlTime($len);
-        $r = $this->setPlaylistLength($newPlLen, $plLenMid, $metaParid);
+        $r = $this->setPlaylistLength($newPlLen, $parid, $metaParid);
         if(PEAR::isError($r)){ return $r; }
         return TRUE;
     }
