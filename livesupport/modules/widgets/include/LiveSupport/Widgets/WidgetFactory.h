@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ImageButton.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 
 
@@ -82,7 +83,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -154,6 +155,21 @@ class WidgetFactory :
          *  The corner images for the white window.
          */
         Ptr<CornerImages>::Ref          whiteWindowImages;
+
+        /**
+         *  The combo box left image.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       comboBoxLeftImage;
+
+        /**
+         *  The combo box center image.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       comboBoxCenterImage;
+
+        /**
+         *  The combo box right image.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       comboBoxRightImage;
 
         /**
          *  The default constructor.
@@ -233,6 +249,14 @@ class WidgetFactory :
         Ptr<ImageButton>::Ref
         createButton(ButtonType         type)               throw ();
 
+        /**
+         *  Create a combo box, that holds text entries.
+         *
+         *  @return a combo box, that holds text entries.
+         */
+        Ptr<ComboBoxText>::Ref
+        createComboBoxText(void)                            throw ();
+        
         /**
          *  Create and return a blue singular container.
          *

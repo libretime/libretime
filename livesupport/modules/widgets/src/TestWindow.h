@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ImageButton.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 
@@ -68,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class TestWindow : public WhiteWindow
 {
@@ -87,6 +88,11 @@ class TestWindow : public WhiteWindow
          *  A button.
          */
         Ptr<Button>::Ref            button;
+
+        /**
+         *  A combo box.
+         */
+        Ptr<ComboBoxText>::Ref      comboBoxText;
 
         /**
          *  A blue container.

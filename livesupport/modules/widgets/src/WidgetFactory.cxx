@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,6 +114,21 @@ static const std::string    deleteButtonPassiveName = "imageButton/delete.png";
  */
 static const std::string    deleteButtonRollName = "imageButton/deleteRoll.png";
 
+/**
+ *  The name of the combo box left image.
+ */
+static const std::string    comboBoxLeftName = "combo/left.png";
+
+/**
+ *  The name of the combo box center image.
+ */
+static const std::string    comboBoxCenterName = "combo/center.png";
+
+/**
+ *  The name of the combo box right image.
+ */
+static const std::string    comboBoxRightName = "combo/right.png";
+
 
 /* ===============================================  local function prototypes */
 
@@ -163,6 +178,11 @@ WidgetFactory :: configure(const xmlpp::Element & element)
     buttonRollImageCenter    = loadImage(buttonRollCenterName);
     buttonRollImageRight     = loadImage(buttonRollRightName);
 
+    // load the combo box images
+    comboBoxLeftImage        = loadImage(comboBoxLeftName);
+    comboBoxCenterImage      = loadImage(comboBoxCenterName);
+    comboBoxRightImage       = loadImage(comboBoxRightName);
+
     // load the images for the bins
     blueBinImages.reset(new CornerImages(path + blueBinPath));
     darkBlueBinImages.reset(new CornerImages(path + darkBlueBinPath));
@@ -204,6 +224,20 @@ WidgetFactory :: createButton(const Glib::ustring & label)      throw ()
                                           buttonRollImageRight));
 
     return button;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a combo box
+ *----------------------------------------------------------------------------*/
+Ptr<ComboBoxText>::Ref
+WidgetFactory :: createComboBoxText(void)                       throw ()
+{
+    Ptr<ComboBoxText>::Ref   comboBox(new ComboBoxText(comboBoxLeftImage,
+                                                       comboBoxCenterImage,
+                                                       comboBoxRightImage));
+
+    return comboBox;
 }
 
 
