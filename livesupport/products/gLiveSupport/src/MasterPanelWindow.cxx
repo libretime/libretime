@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,6 +78,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     djBagButton.reset(new Gtk::Button("dj bag"));
     simplePlaylistMgmtButton.reset(
                             new Gtk::Button("simple playlist management"));
+    schedulerButton.reset(new Gtk::Button("scheduler"));
 
     // set up the time label
     timeWidget.reset(new Gtk::Label("time"));
@@ -87,17 +88,18 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // set up the main window, and show everything
     set_border_width(10);
-    layout->attach(*lsLogoWidget,                       0, 1, 0, 2);
-    layout->attach(*timeWidget,                         1, 2, 0, 2);
-    layout->attach(*nowPlayingWidget,                   2, 3, 0, 2);
-    layout->attach(*vuMeterWidget,                      3, 4, 0, 1);
-    layout->attach(*nextPlayingWidget,                  3, 4, 1, 2);
-    layout->attach(*onAirWidget,                        4, 5, 0, 1);
-    layout->attach(*radioLogoWidget,                    5, 6, 0, 1);
-    layout->attach(*userInfoWidget,                     4, 6, 1, 2);
-    layout->attach(*uploadFileButton,                   0, 1, 2, 3);
-    layout->attach(*djBagButton,                        1, 2, 2, 3);
-    layout->attach(*simplePlaylistMgmtButton,           2, 3, 2, 3);
+    layout->attach(*lsLogoWidget,               0, 1, 0, 2);
+    layout->attach(*timeWidget,                 1, 2, 0, 2);
+    layout->attach(*nowPlayingWidget,           2, 3, 0, 2);
+    layout->attach(*vuMeterWidget,              3, 4, 0, 1);
+    layout->attach(*nextPlayingWidget,          3, 4, 1, 2);
+    layout->attach(*onAirWidget,                4, 5, 0, 1);
+    layout->attach(*radioLogoWidget,            5, 6, 0, 1);
+    layout->attach(*userInfoWidget,             4, 6, 1, 2);
+    layout->attach(*uploadFileButton,           0, 1, 2, 3);
+    layout->attach(*djBagButton,                1, 2, 2, 3);
+    layout->attach(*simplePlaylistMgmtButton,   2, 3, 2, 3);
+    layout->attach(*schedulerButton,            3, 4, 2, 3);
 
     add(*layout);
 
@@ -114,6 +116,8 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     simplePlaylistMgmtButton->signal_clicked().connect(
             sigc::mem_fun(*this,
                  &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
+    schedulerButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onSchedulerButtonClicked));
 
     // show what's there to see
     showAnonymousUI();
@@ -274,6 +278,30 @@ MasterPanelWindow :: onSimplePlaylistMgmtButtonClicked(void)        throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  The event when the Scheduler button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: onSchedulerButtonClicked(void)                 throw ()
+{
+    if (!schedulerWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("schedulerWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        schedulerWindow.reset(new SchedulerWindow(gLiveSupport, bundle));
+    }
+
+    if (!schedulerWindow->is_visible()) {
+        schedulerWindow->show();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Show only the UI components that are visible when no one is logged in
  *----------------------------------------------------------------------------*/
 void
@@ -283,6 +311,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     uploadFileButton->hide();
     djBagButton->hide();
     simplePlaylistMgmtButton->hide();
+    schedulerButton->hide();
 }
 
 

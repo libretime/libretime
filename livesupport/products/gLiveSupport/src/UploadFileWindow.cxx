@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -155,7 +155,7 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         // clean the entry fields
         nameEntry->set_text("");
         fileNameEntry->set_text("");
-    } catch (StorageException &e) {
+    } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
     }
 }

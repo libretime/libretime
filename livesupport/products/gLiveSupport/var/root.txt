@@ -35,8 +35,10 @@ root:table
         titleColumnLabel:string       { "title" }
         closeButtonLabel:string       { "close" }
 
-        removeMenuItem:string         { "_Remove" }
-        addToPlaylistMenuItem:string  { "_Add To Playlist" }
+        removeMenuItem:string           { "_Remove" }
+        addToPlaylistMenuItem:string    { "_Add To Playlist" }
+        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
+        deleteMenuItem:string           { "_Delete" }
     }
 
     playlistListWindow:table
@@ -61,6 +63,28 @@ root:table
         titleColumnLabel:string       { "title" }
         nameLabel:string              { "name" }
         saveButtonLabel:string        { "save" }
+        closeButtonLabel:string       { "close" }
+    }
+
+    schedulerWindow:table
+    {
+        windowTitle:string            { "LiveSupport Scheduler Window" }
+
+        startColumnLabel:string       { "start" }
+        titleColumnLabel:string       { "title" }
+        endColumnLabel:string         { "end" }
+
+        closeButtonLabel:string       { "close" }
+
+    }
+
+    schedulePlaylistWindow:table
+    {
+        windowTitle:string            { "LiveSupport Schedule Playlist Window" }
+
+        hourLabel:string              { "hour: " }
+        minuteLabel:string            { "minute: " }
+        scheduleButtonLabel:string    { "schedule" }
         closeButtonLabel:string       { "close" }
     }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -150,7 +150,7 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
         Glib::ustring   statusText("uploaded playlist ");
         statusText += *playlist->getTitle();
         statusBar->set_text(statusText);
-    } catch (StorageException &e) {
+    } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
     }
 }

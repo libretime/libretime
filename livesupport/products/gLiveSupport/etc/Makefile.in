@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -70,7 +70,13 @@ GENRBOPTS = --destdir ${TMP_DIR} \
 
 VPATH    = ${SRC_DIR}
 
-MODULES_DIR = ${BASE_DIR}/../../modules
+MODULES_DIR      = ${BASE_DIR}/../../modules
+PRODUCTS_DIR     = ${BASE_DIR}/../../products
+
+STORAGE_SERVER_DIR = ${MODULES_DIR}/storageServer
+
+SCHEDULER_DIR    = ${PRODUCTS_DIR}/scheduler
+SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
 
 CORE_DIR         = ${MODULES_DIR}/core
 CORE_INCLUDE_DIR = ${CORE_DIR}/include
@@ -101,6 +107,7 @@ PLAYLIST_EXECUTOR_INCLUDE_DIR = ${PLAYLIST_EXECUTOR_DIR}/include
 PLAYLIST_EXECUTOR_LIB_DIR     = ${PLAYLIST_EXECUTOR_DIR}/lib
 PLAYLIST_EXECUTOR_LIB         = livesupport_playlist_executor
 PLAYLIST_EXECUTOR_LIB_FILE    = ${PLAYLIST_EXECUTOR_LIB_DIR}/lib${PLAYLIST_EXECUTOR_LIB}.a
+
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
@@ -169,7 +176,9 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/PlaylistListWindow.o \
                      ${TMP_DIR}/UploadFileWindow.o \
                      ${TMP_DIR}/DjBagWindow.o \
-                     ${TMP_DIR}/SimplePlaylistManagementWindow.o
+                     ${TMP_DIR}/SimplePlaylistManagementWindow.o \
+                     ${TMP_DIR}/SchedulerWindow.o \
+                     ${TMP_DIR}/SchedulePlaylistWindow.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \
@@ -233,6 +242,20 @@ run_tests: ${TEST_RUNNER}
 
 run: all
 	${G_LIVESUPPORT_EXE} -c ${G_LIVESUPPORT_CFG}
+
+install: ${SCHEDULER_EXE}
+	-${MAKE} -C ${STORAGE_SERVER_DIR} db_init
+	-${MAKE} -C ${SCHEDULER_DIR} install_web
+
+start: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} start_web
+
+stop: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} stop_web
+
+uninstall: ${SCHEDULER_EXE}
+	-${MAKE} -C ${SCHEDULER_DIR} uninstall_web
+	-${MAKE} -C ${STORAGE_SERVER_DIR} db_clean
 
 
 #-------------------------------------------------------------------------------

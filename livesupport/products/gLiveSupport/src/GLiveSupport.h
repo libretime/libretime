@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -339,12 +339,12 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param title the title of the audio clip.
          *  @param fileName the full filename of the audio clip.
          *  @return the audio clip that was uploaded.
-         *  @exception StorageException on upload failures.
+         *  @exception XmlRpcException on upload failures.
          */
         Ptr<AudioClip>::Ref
         uploadFile(Ptr<const Glib::ustring>::Ref    title,
                    Ptr<const std::string>::Ref      fileName)
-                                                    throw (StorageException);
+                                                    throw (XmlRpcException);
 
         /**
          *  Return the DJ Bag contents.
@@ -385,11 +385,54 @@ class GLiveSupport : public LocalizedConfigurable,
          *
          *  @param title the title of the audio clip.
          *  @return the audio clip that was uploaded.
-         *  @exception StorageException on upload failures.
+         *  @exception XmlRpcException on upload failures.
          */
         Ptr<Playlist>::Ref
         uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
-                                                    throw (StorageException);
+                                                    throw (XmlRpcException);
+
+        
+        /**
+         *  Return the scheduled entries for a specified time interval.
+         *
+         *  @param from the start of the interval, inclusive
+         *  @param to the end of the interval, exclusive
+         *  @return a vector of the schedule entries for the time period.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        displaySchedule(Ptr<boost::posix_time::ptime>::Ref  from,
+                        Ptr<boost::posix_time::ptime>::Ref  to)
+                                                    throw (XmlRpcException)
+        {
+            return scheduler->displaySchedule(sessionId, from, to);
+        }
+
+        /**
+         *  Schedule a playlist.
+         *  This will schedule the plalyist, and show the scheduler window
+         *  at the time of the scheduled playlist.
+         *
+         *  @param playlist the playlist to schedule.
+         *  @param playtime the time for when to schedule.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual void
+        schedulePlaylist(Ptr<Playlist>::Ref                 playlist,
+                         Ptr<boost::posix_time::ptime>::Ref playtime)
+                                                    throw (XmlRpcException);
+        
+
+        /**
+         *  Delete a playable object from storage.
+         *
+         *  @param playable the playable object to delete.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual void
+        deletePlayable(Ptr<Playable>::Ref   playable)
+                                                    throw (XmlRpcException);
+         
 
 };
 

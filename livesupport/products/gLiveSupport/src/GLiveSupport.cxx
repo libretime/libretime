@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,8 @@
 #include "MasterPanelWindow.h"
 #include "GLiveSupport.h"
 
+
+using namespace boost;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
@@ -296,7 +298,7 @@ Ptr<AudioClip>::Ref
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
                            Ptr<const std::string>::Ref      fileName)
-                                                    throw (StorageException)
+                                                    throw (XmlRpcException)
 {
     // create a URI from the file name
     Ptr<std::string>::Ref   uri(new std::string("file://"));
@@ -309,7 +311,7 @@ GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
         playlength = audioPlayer->getPlaylength();
         audioPlayer->close();
     } catch (std::invalid_argument &e) {
-        throw StorageException(e.what());
+        throw XmlRpcException(e.what());
     }
 
     // create and upload an AudioClip object
@@ -360,7 +362,7 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)         throw ()
 Ptr<Playlist>::Ref
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
-                                                    throw (StorageException)
+                                                    throw (XmlRpcException)
 {
     editedPlaylist->setTitle(title);
 
@@ -371,6 +373,46 @@ GLiveSupport :: uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
     masterPanel->updateDjBagWindow();   
 
     return editedPlaylist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Schedule a playlist, then show the scheduler at that timepoint
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: schedulePlaylist(Ptr<Playlist>::Ref             playlist,
+                                 Ptr<posix_time::ptime>::Ref    playtime)
+                                                    throw (XmlRpcException)
+{
+std::cerr << "schedulePlaylist #1" << std::endl;
+    scheduler->uploadPlaylist(sessionId, playlist->getId(), playtime);
+std::cerr << "schedulePlaylist #2" << std::endl;
+    masterPanel->updateSchedulerWindow(playtime);
+std::cerr << "schedulePlaylist #3" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Delete a playable object from the storage.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: deletePlayable(Ptr<Playable>::Ref   playable)
+                                                    throw (XmlRpcException)
+{
+    switch (playable->getType()) {
+        case Playable::AudioClipType:
+            storage->deleteAudioClip(sessionId, playable->getId());
+            break;
+
+        case Playable::PlaylistType:
+            storage->deletePlaylist(sessionId, playable->getId());
+            break;
+
+        default:
+            break;
+    }
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,6 +51,7 @@
 #include "MasterPanelUserInfoWidget.h"
 #include "DjBagWindow.h"
 #include "SimplePlaylistManagementWindow.h"
+#include "SchedulerWindow.h"
 
 
 namespace LiveSupport {
@@ -83,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -155,6 +156,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Button>::Ref       simplePlaylistMgmtButton;
 
         /**
+         *  The button to invoke the Scheduler Window.
+         */
+        Ptr<Gtk::Button>::Ref       schedulerButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -168,6 +174,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  The one and only simple playlist management window.
          */
         Ptr<SimplePlaylistManagementWindow>::Ref    simplePlaylistMgmtWindow;
+
+        /**
+         *  The one and only scheduler window.
+         */
+        Ptr<SchedulerWindow>::Ref   schedulerWindow;
 
         /**
          *  Function that updates timeLabel with the current time.
@@ -215,7 +226,14 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Management button being pressed.
          */
         virtual void
-        onSimplePlaylistMgmtButtonClicked(void)       throw ();
+        onSimplePlaylistMgmtButtonClicked(void)         throw ();
+
+        /**
+         *  Function to catch the event of the Scheduler button
+         *  button being pressed.
+         */
+        virtual void
+        onSchedulerButtonClicked(void)                  throw ();
 
 
     public:
@@ -281,6 +299,32 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
             // this will create, open and display the window.
             onSimplePlaylistMgmtButtonClicked();
             simplePlaylistMgmtWindow->showContents();
+        }
+
+        /**
+         *  Update the Scheduler Window
+         */
+        void
+        updateSchedulerWindow(void)                             throw ()
+        {
+            // this will create, open and display the window.
+            onSchedulerButtonClicked();
+            schedulerWindow->showContents();
+        }
+
+        /**
+         *  Update the Scheduler Window to display a new time.
+         *
+         *  @param time the time to display in the scheduler window.
+         */
+        void
+        updateSchedulerWindow(Ptr<boost::posix_time::ptime>::Ref    time)
+                                                                    throw ()
+        {
+            // this will create, open and display the window.
+            onSchedulerButtonClicked();
+            schedulerWindow->setTime(time);
+            schedulerWindow->showContents();
         }
 
 };

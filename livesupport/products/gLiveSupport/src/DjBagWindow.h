@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  playlists.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class DjBagWindow : public Gtk::Window, public LocalizedObject
 {
@@ -80,15 +80,15 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
             public:
                 /**
-                 *  The column for the id of the audio clip or playlist.
+                 *  The column for the playable object shown in the row.
                  */
-                Gtk::TreeModelColumn<Ptr<const UniqueId>::Ref>  idColumn;
+                Gtk::TreeModelColumn<Ptr<Playable>::Ref>    playableColumn;
 
                 /**
                  *  The column for the type of the entry in the list
@@ -105,7 +105,7 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
                  */
                 ModelColumns(void)                  throw ()
                 {
-                    add(idColumn);
+                    add(playableColumn);
                     add(typeColumn);
                     add(titleColumn);
                 }
@@ -153,10 +153,16 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Button>::Ref       closeButton;
 
         /**
-         *  The right-click context menu, that comes up when right-clicking
-         *  an entry in the entry list.
+         *  The right-click context menu for audio clips,
+         *  that comes up when right-clicking an entry in the entry list.
          */
-        Ptr<Gtk::Menu>::Ref         entryMenu;
+        Ptr<Gtk::Menu>::Ref         audioClipMenu;
+
+        /**
+         *  The right-click context menu for playlists,
+         *  that comes up when right-clicking an entry in the entry list.
+         */
+        Ptr<Gtk::Menu>::Ref         playlistMenu;
 
         /**
          *  Signal handler for the close button clicked.
@@ -180,11 +186,34 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         onRemoveItem(void)                                      throw ();
 
         /**
+         *  Signal handler for the "delete" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onDeleteItem(void)                                      throw ();
+
+        /**
          *  Signal handler for the "add to playlist" menu item selected from
          *  the entry context menu.
          */
         virtual void
         onAddToPlaylist(void)                                   throw ();
+
+        /**
+         *  Signal handler for the "schedule playlist" menu item selected
+         *  from the entry context menu.
+         */
+        virtual void
+        onSchedulePlaylist(void)                                throw ();
+
+        /**
+         *  Delete an item from the storage and remove it from the dj bag.
+         *
+         *  @param playable the Playable object to delete and remove.
+         *  @exception XmlRpcException on XML-RPC errors.
+         */
+        void
+        deleteItem(Ptr<Playable>::Ref  playable)        throw (XmlRpcException);
 
 
     public:
