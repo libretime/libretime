@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gtkmm/gtkmm-2.5.5/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -50,6 +50,7 @@ export CPPFLAGS="-I$installdir/include"
 export LDFLAGS="-L$installdir/lib"
 export PKG_CONFIG_PATH="$installdir/lib/pkgconfig"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$usrdir/lib"
+export PATH="$PATH:$usrdir/bin"
 
 mkdir -p $tmpdir
 

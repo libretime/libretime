@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/libxml++/libxml++-2.8.1/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ export CPPFLAGS="-I$usrdir/include"
 export LDFLAGS="-L$usrdir/lib"
 export PKG_CONFIG_PATH="$usrdir/lib/pkgconfig"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$usrdir/lib"
-
+export PATH="$PATH:$usrdir/bin"
 
 echo "installing $product from $basedir to $installdir"
 
