@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Getting started with the LiveSupport development environment</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/gettingStarted.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes how to set up the LiveSupport development
+environment.<br>
+<h1>Introduction</h1>
+LiveSupport uses a well-defined <a
+ href="developmentEnvironment/index.html">development environment</a>.
+Most of the LiveSupport-specific files are included in the version
+control system, but some preparation and setup has to be made on system
+used to develop LiveSupport as well.<br>
+<h1>Steps<br>
+</h1>
+The following steps need to be taken for setting up the LiveSupport
+development environment.<br>
+<ul>
+  <li>set up additional system resources</li>
+  <li>check out the sources</li>
+  <li>set up tools used by LiveSupport</li>
+</ul>
+<h2>Set up additional system resources</h2>
+The LiveSupport development environment uses some system resources,
+that are not reasonable to include in the environment itself. One such
+resource is an ODBC datasource to a test database. This
+database has to be accessible for executing the test suits and
+applications within the LiveSupport development environment.<br>
+<br>
+More specifically, LiveSupport expects a <a
+ href="http://www.postgresql.org/">PostgreSQL</a> database, and an ODBC
+Data Source accessible to it through <a href="http://www.unixodbc.org/">unixODBC</a>.
+Please refer to the documentation of these tools to set them up.<br>
+<br>
+LiveSupport expects an ODBC Data Source with the following parameters:<br>
+<ul>
+  <li>DSN: <code>LiveSupport-test</code></li>
+  <li>username: <code>test</code></li>
+  <li>password: <code>test</code></li>
+</ul>
+This data source should point to a PostgreSQL instance. Only one
+developer at the time should access this datasource, as the test suites
+regularly create and destroy database tables.<br>
+<h2>Check out the sources</h2>
+The LiveSupport development directory tree can be accessed via
+anonymous <a href="https://www.cvshome.org/">CVS</a>, using the
+CVSROOT <code>:pserver:anonymous@netfinity-5.mdlf.org/home/cvs</code>.
+The repository is called livesupport, thus the following CVS command
+would check out the development tree:<br>
+<pre><code><br>cvs -z3 -d </code><code>:pserver:anonymous@netfinity-5.mdlf.org/home/cvs checkout livesupport<br><br></code></pre>
+This will check out and create the LiveSupport development <a
+ href="developmentEnvironment/directoryStructure.html">directory
+structure</a>.<br>
+<h2>Set up tools</h2>
+LiveSupport uses widely available tools for development, like the GNU
+C++ compiler, but also uses more specific tools. As these tools, or the
+exact versions of these tools are not expected to be installed on the
+development system, the LiveSupport development environment contains
+them. The tools are installed into the <code>livesupport/usr</code>
+directory, as described in the directory structure document.<br>
+<br>
+Moreover, some components in livesupport have to be set up prior to
+compilation, for example running autoconf or similar configuration
+programs. This ensures that the components compile fine on the
+development system.<br>
+<br>
+To achieve all these goals, invoke the target <code>setup</code> in
+the main <code>Makefile</code>, at the root of the LiveSupport
+directory structure, by issuing the following command in the
+livesupport directory:<br>
+<pre><code><br>cd livesupport<br>make setup<br><br></code></pre>
+The execution of this command will take a while, as all the supporting
+libraries and tools are compiled and installed to the <code>livesupport/usr</code>
+directory. Please note that nothing is installed outside of the
+LiveSupport directory structure.<br>
+<h1>Ready to roll</h1>
+With the above steps completed, the LiveSupport modules and products
+are ready to be compiled and developed further. Have fun!<br>
+<br>
+<br>
+</body>
+</html>
