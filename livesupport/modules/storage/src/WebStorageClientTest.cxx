@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "LiveSupport/Storage/WebStorageClient.h"
+#include "WebStorageClient.h"
 #include "LiveSupport/Core/SessionId.h"
 
 #include "WebStorageClientTest.h"
@@ -70,7 +70,7 @@ static const std::string storageConfigFileName = "etc/webStorage.xml";
  *  The name of the configuration file for the authentication factory.
  */
 static const std::string authenticationFactoryConfigFileName 
-                         = "etc/authenticationClient.xml";
+                         = "etc/webAuthenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -129,26 +129,26 @@ WebStorageClientTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the singleton Hello object is accessible
+ *  Test to see if we can log in to the storage server
  *----------------------------------------------------------------------------*/
 void
 WebStorageClientTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref          id77(new UniqueId(10077));
     Ptr<SessionId>::Ref         sessionId(new SessionId("bad ID"));
 
 // this does not currently work due to a bug in the storage server
 //    try {
-//        wsc->existsAudioClip(sessionId, id77);
-//        CPPUNIT_FAIL("existsAudioClip allowed operation without login");
+//        wsc->logout(sessionId);
+//        CPPUNIT_FAIL("allowed logout operation without login");
 //    }
 //    catch (std::logic_error &e) {
 //    }
 
-    CPPUNIT_ASSERT( sessionId = authentication->login("root", "q"));
-    CPPUNIT_ASSERT(!wsc->existsAudioClip(sessionId, id77));
-    CPPUNIT_ASSERT( authentication->logout(sessionId));
+    CPPUNIT_ASSERT(!(sessionId = authentication->login("noSuchUser", 
+                                                      "incorrectPassword")));
+    CPPUNIT_ASSERT( (sessionId = authentication->login("root", "q")));
+    CPPUNIT_ASSERT(  authentication->logout(sessionId));
 }
 
 
@@ -159,28 +159,35 @@ void
 WebStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-/*
     Ptr<UniqueId>::Ref  id01(new UniqueId(10001));
     Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
     Ptr<SessionId>::Ref sessionId;
 
     CPPUNIT_ASSERT( sessionId = authentication->login("root", "q"));
-//cerr << "###\n" << sessionId << "\n" << sessionId->getId() << endl;
 
-    CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, id01));
-    
-//std::cerr << "\naudio clip: <<<\n" << audioClip->getId()->getId() << ">>>\n";
+    CPPUNIT_ASSERT(!wsc->existsAudioClip(sessionId, id77));
+/*    
+    Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
+    Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));
+    Ptr<AudioClip>::Ref     audioClip(new AudioClip(id01, playlength, uri));
 
+    try {    
+        wsc->storeAudioClip(sessionId, audioClip);
+    }
+    catch (std::logic_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, id01));   
+
+    Ptr<AudioClip>::Ref     newAudioClip 
+                            = wsc->getAudioClip(sessionId, id01);
+    CPPUNIT_ASSERT(newAudioClip->getId()->getId() == id01->getId());
+    CPPUNIT_ASSERT(newAudioClip->getPlaylength()->total_seconds()
+                   == audioClip->getPlaylength()->total_seconds());
+*/
     CPPUNIT_ASSERT( authentication->logout(sessionId));
-
-    CPPUNIT_ASSERT(wsc->existsAudioClip(id2));
-    CPPUNIT_ASSERT(!wsc->existsAudioClip(id77));
-
-    Ptr<AudioClip>::Ref       audioClip = wsc->getAudioClip(id2);
-    CPPUNIT_ASSERT(audioClip->getId()->getId() == id2->getId());
-    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
-                                                   == 30*60);
-
+/*
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector =
                                                  wsc->getAllAudioClips();
     CPPUNIT_ASSERT(audioClipVector->size() == 2);

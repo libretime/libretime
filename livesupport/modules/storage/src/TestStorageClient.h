@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -313,6 +313,19 @@ class TestStorageClient :
         getAudioClip(Ptr<SessionId>::Ref sessionId,
                      Ptr<UniqueId>::Ref  id) const
                                             throw (std::invalid_argument);
+
+        /**
+         *  Store an audio clip.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param audioClip the audio clip to store.
+         *  @return true if the operation was successful.
+         *  @exception std::invalid_argument never in this implementation
+         */
+        virtual bool
+        storeAudioClip(Ptr<SessionId>::Ref sessionId,
+                       Ptr<AudioClip>::Ref audioClip)
+                                                throw (std::invalid_argument);
 
         /**
          *  Acquire the resources for the audio clip with the specified id.

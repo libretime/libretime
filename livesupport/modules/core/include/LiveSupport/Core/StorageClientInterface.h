@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class StorageClientInterface
 {
@@ -218,6 +218,21 @@ class StorageClientInterface
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<SessionId>::Ref    sessionId,
                      Ptr<UniqueId>::Ref     id) const
+                                                throw (std::logic_error)
+                                                                        = 0;
+
+        /**
+         *  Store an audio clip.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param audioClip the audio clip to store.
+         *  @return true if the operation was successful.
+         *
+         *  @exception std::logic_error if we have not logged in yet.
+         */
+        virtual bool
+        storeAudioClip(Ptr<SessionId>::Ref sessionId,
+                       Ptr<AudioClip>::Ref audioClip)
                                                 throw (std::logic_error)
                                                                         = 0;
 

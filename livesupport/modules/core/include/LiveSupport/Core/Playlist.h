@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -138,7 +138,7 @@ class Playlist : public Configurable,
          *  A map type for storing the playlist elements associated with 
          *  this playlist, indexed by their relative offsets.
          */
-        typedef std::map<const time_duration, Ptr<PlaylistElement>::Ref>
+        typedef std::map<time_duration, Ptr<PlaylistElement>::Ref>
                                                      PlaylistElementListType;
 
         /**
@@ -343,8 +343,14 @@ class Playlist : public Configurable,
                                                 throw ();
 
         /**
-         *  The iterator type for this class.
+         *  The iterator type for this class.  A Playlist::const_iterator
+         *  is a (constant) pointer to a <code>pair &lt; time_duration,
+         *  Ptr&lt;PlaylistElement&gt;::Ref &gt;</code>.
+         *  If <code>it</code> is such an iterator, then <code>it->second</code>
+         *  is the playlist element referenced by the iterator, and
+         *  <code>it->first</code> is its relative offset in the playlist.
          *
+         *  @see begin(), end(), find()
          */
         typedef PlaylistElementListType::const_iterator  const_iterator;
 
@@ -372,7 +378,7 @@ class Playlist : public Configurable,
          *  @param relativeOffset (a pointer to) the relative offset where
          *                        the playlist element is.
          *  @return a constant iterator to the playlist element if it exists,
-         *          or playlist->end() if it does not.
+         *          or <code>this->end()</code> if it does not.
          */
         const_iterator
         find(Ptr<const time_duration>::Ref relativeOffset) const

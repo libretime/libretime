@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -186,14 +186,14 @@ void
 TestStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref    id2(new UniqueId(10002));
+    Ptr<UniqueId>::Ref    id02(new UniqueId(10002));
     Ptr<UniqueId>::Ref    id77(new UniqueId(10077));
 
-    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id2));
+    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id02));
     CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id77));
 
-    Ptr<AudioClip>::Ref     audioClip = tsc->getAudioClip(dummySessionId, id2);
-    CPPUNIT_ASSERT(audioClip->getId()->getId() == id2->getId());
+    Ptr<AudioClip>::Ref     audioClip = tsc->getAudioClip(dummySessionId, id02);
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == id02->getId());
     CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
                                                    == 30*60);
 
@@ -205,8 +205,11 @@ TestStorageClientTest :: audioClipTest(void)
     audioClip = (*audioClipVector)[0];
     CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 10001);
 
-    tsc->deleteAudioClip(dummySessionId, id2);
-    CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id2));
+    tsc->deleteAudioClip(dummySessionId, id02);
+    CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id02));
+
+    tsc->storeAudioClip(dummySessionId, (*audioClipVector)[1]);
+    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id02));    
 }
 
 

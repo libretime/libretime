@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/Attic/WebStorageClient.h,v $
+    Version  : $Revision: 1.7 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
 #ifndef WebStorageClient_h
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.7 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -344,6 +344,25 @@ class WebStorageClient :
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<SessionId>::Ref sessionId,
                      Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error);
+
+        /**
+         *  Store an audio clip.  The <code>uri</code> field of the audio clip
+         *  is expected to contain the valid URI of a binary audio file.
+         *  
+         *  In this testing version, the audio clip URI is expected in the
+         *  form <code>file:relative_path/file_name.mp3</code>.  Later this
+         *  should be changed to an absolute URI.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param audioClip the audio clip to store.
+         *  @return true if the operation was successful.
+         *
+         *  @exception std::logic_error if we have not logged in yet.
+         */
+        virtual bool
+        storeAudioClip(Ptr<SessionId>::Ref sessionId,
+                       Ptr<AudioClip>::Ref audioClip)
                                                 throw (std::logic_error);
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,7 +45,7 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "LiveSupport/Storage/WebStorageClient.h"
+#include "WebStorageClient.h"
 
 using namespace boost::posix_time;
 using namespace XmlRpc;
@@ -195,6 +195,37 @@ static const std::string    getAudioClipMethodSessionIdParamName = "sessid";
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
 static const std::string    getAudioClipMethodAudioClipIdParamName = "gunid";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: storeAudioClip */
+
+/*------------------------------------------------------------------------------
+ *  The name of the store audio clip method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    storeAudioClipMethodName 
+                            = "locstor.storeAudioClip";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    storeAudioClipMethodSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip unique ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    storeAudioClipMethodAudioClipIdParamName = "gunid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the binary file name parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    storeAudioClipMethodBinaryFileParamName 
+                            = "mediaFileLP";
+
+/*------------------------------------------------------------------------------
+ *  The name of the metadata file name parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    storeAudioClipMethodMetadataFileParamName 
+                            = "mdataFileLP";
 
 
 /* ===============================================  local function prototypes */
@@ -464,12 +495,12 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
         throw std::logic_error(eMsg.str());
     }
     
-    Ptr<std::string>::Ref   xmlAudioClip = decodeString(result);
+    std::string             xmlAudioClip(result);
     Ptr<AudioClip>::Ref     audioClip;
 
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
-        parser->parse_memory(*xmlAudioClip);
+        parser->parse_memory(xmlAudioClip);
         const xmlpp::Document     * document = parser->get_document();
         const xmlpp::Element      * root     = document->get_root_node();
 
@@ -482,6 +513,81 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     }
 
     return audioClip;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Store an audio clip.
+ *----------------------------------------------------------------------------*/
+bool
+WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
+                                   Ptr<AudioClip>::Ref audioClip)
+                                                throw (std::logic_error)
+{
+    if (!audioClip || !audioClip->getUri()) {
+        throw std::logic_error("binary audio clip file not found");
+    }
+    
+    Ptr<xmlpp::Document>::Ref   metadata = audioClip->getMetadata();
+    
+    std::stringstream metadataFileName;
+    metadataFileName << localTempStorage << "-audioClipMetadata-" 
+                     << audioClip->getId()->getId()
+                     << "-" << rand() << ".xml";
+
+    metadata->write_to_file(metadataFileName.str(), "UTF-8");
+
+    // temporary hack; we will expect an absolute file name from getUri()
+    //   in the final version
+    std::string     binaryFileName = audioClip->getUri()->substr(5);
+    std::ifstream   ifs(binaryFileName.c_str());
+    if (!ifs) {
+        ifs.close();
+        throw std::logic_error("could not read audio clip");
+    }
+    ifs.close();
+    std::string     binaryFilePrefix("file://");
+    binaryFilePrefix += get_current_dir_name();     // doesn't work if current
+    binaryFilePrefix += "/";                        // dir = /, but OK for now
+    binaryFileName = binaryFilePrefix + binaryFileName;
+
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters[storeAudioClipMethodSessionIdParamName] 
+            = sessionId->getId();
+    parameters[storeAudioClipMethodAudioClipIdParamName] 
+            = int(audioClip->getId()->getId());
+    parameters[storeAudioClipMethodBinaryFileParamName] 
+            = binaryFileName;
+    parameters[storeAudioClipMethodMetadataFileParamName] 
+            = metadataFileName.str();
+
+    bool clientStatus = xmlRpcClient.execute(storeAudioClipMethodName.c_str(),
+                                             parameters, result);
+    std::remove(metadataFileName.str().substr(7).c_str());
+
+    if (!clientStatus) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += storeAudioClipMethodName;
+        eMsg += "'";
+        throw std::logic_error(eMsg);
+    }
+
+    if (xmlRpcClient.isFault() 
+                || result.getType() != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getAudioClipMethodName
+             << "' returned error message:\n"
+             << result;
+        throw std::logic_error(eMsg.str());
+    }
+    
+    return true;
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,3 +110,16 @@ AudioClip :: configure(const xmlpp::Element  & element)
         uri.reset(new std::string(uriValue));
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Create an XML element from this audio clip.
+ *----------------------------------------------------------------------------*/
+Ptr<xmlpp::Document>::Ref
+AudioClip :: getMetadata()
+                                               throw ()
+{
+    Ptr<xmlpp::Document>::Ref   metadata(new xmlpp::Document);
+    return metadata;
+}
+

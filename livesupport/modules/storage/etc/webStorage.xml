@@ -10,7 +10,7 @@
 <!ATTLIST location path     CDATA       #REQUIRED >
 
 ]>
-<webStorage tempFiles="file:///tmp/tempPlaylist" >
+<webStorage tempFiles="file:///tmp/webStorageClient" >
     <location server="localhost" port="80" 
               path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
 </webStorage>

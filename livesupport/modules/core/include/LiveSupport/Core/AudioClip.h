@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -256,6 +256,16 @@ class AudioClip : public Configurable,
         {
             this->token = token;
         }
+
+        /**
+         *  Return an XML representation of this audio clip.  This contains
+         *  the metadata fields of the audio clip, and it's roughly the
+         *  inverse of the configure() method.
+         *
+         *  @return an xmlpp::Document containing the metadata.
+         */
+        Ptr<xmlpp::Document>::Ref
+        getMetadata()                           throw ();
 };
 
 
