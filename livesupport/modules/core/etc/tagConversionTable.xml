@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tagConversionTable [
+<!ELEMENT tagConversionTable (tag*) >
+<!ELEMENT tag ((id3, dc)*) >
+<!ELEMENT id3 (CDATA) >
+<!ELEMENT dc  (CDATA) >
+]>
+
+<tagConversionTable>
+    <tag>
+        <id3>Title</id3>
+        <dc>dc:title</dc>
+    </tag>
+    <tag>
+        <id3>Artist</id3>
+        <dc>dc:creator</dc>
+    </tag>
+    <tag>
+        <id3>Length</id3>
+        <dc>dcterms:extent</dc>
+    </tag>
+</tagConversionTable>
