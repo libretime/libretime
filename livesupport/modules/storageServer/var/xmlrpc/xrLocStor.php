@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,15 +48,14 @@ ini_set("error_append_string", "</string></value>
 </methodResponse>");
 header("Content-type: text/xml");
 
-include_once "xmlrpc.inc";
-include_once "xmlrpcs.inc";
+require_once "XML/RPC/Server.php";
 require_once '../conf.php';
 require_once 'DB.php';
 require_once '../LocStor.php';
 
 function errHndl($errno, $errmsg, $filename, $linenum, $vars){
     if($errno == 8 /*E_NOTICE*/) return;
-    $xr =& new xmlrpcresp(0, 805,
+    $xr =& new XML_RPC_Response(0, 805,
         "ERROR:xrLoctor: $errno $errmsg ($filename:$linenum)");
     header("Content-type: text/xml");
     echo $xr->serialize();
@@ -85,13 +84,13 @@ class XR_LocStor extends LocStor{
                 if($struct) $r[$k]=$this->_v2xr($v);
                 else $r[]=$this->_v2xr($v);
             }
-            return new xmlrpcval($r, ($struct ? "struct" : "array"));
+            return new XML_RPC_Value($r, ($struct ? "struct" : "array"));
         }else if(is_int($var)){
-            return new xmlrpcval($var, "int");
+            return new XML_RPC_Value($var, "int");
         }else if(is_bool($var)){
-            return new xmlrpcval($var, "boolean");
+            return new XML_RPC_Value($var, "boolean");
         }else{
-            return new xmlrpcval($var, "string");
+            return new XML_RPC_Value($var, "string");
         }
     }
     /**
@@ -108,7 +107,7 @@ class XR_LocStor extends LocStor{
             while(list($k,$v) = $p->structeach()){ $r[$k] = $v->scalarval(); }
             return array(TRUE, $r);
         }
-        else return array(FALSE, new xmlrpcresp(0, 801,
+        else return array(FALSE, new XML_RPC_Response(0, 801,
             "wrong 1st parameter, struct expected."
         ));
     }
@@ -124,7 +123,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        return new xmlrpcresp($this->_v2xr(array(
+        return new XML_RPC_Response($this->_v2xr(array(
             'str'=>strtoupper($r['teststring']),
             'login'=>$this->getSessLogin($r['sessid']),
             'sessid'=>$r['sessid']
@@ -167,10 +166,10 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->authenticate($r['login'], $r['pass']);
         if(PEAR::isError($res)){
-            return new xmlrpcresp(0, 804,"xr_authenticate: database error");
+            return new XML_RPC_Response(0, 804,"xr_authenticate: database error");
         }
         $retval = ($res !== FALSE);
-        return new xmlrpcresp(new xmlrpcval($retval, "boolean"));
+        return new XML_RPC_Response(new XML_RPC_Value($retval, "boolean"));
     }
 
     /**
@@ -214,14 +213,14 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->login($r['login'], $r['pass']);
         if(PEAR::isError($res)){
-            return new xmlrpcresp(0, 804,"xr_login: database error");
+            return new XML_RPC_Response(0, 804,"xr_login: database error");
         }
         if($res === FALSE)
-            return new xmlrpcresp(0, 802,
+            return new XML_RPC_Response(0, 802,
                 "xr_login: login failed - incorrect username or password."
             );
         else
-            return new xmlrpcresp($this->_v2xr($res, false));
+            return new XML_RPC_Response($this->_v2xr($res, false));
     }
 
     /**
@@ -260,9 +259,9 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->logout($r['sessid']);
         if(!PEAR::isError($res))
-            return new xmlrpcresp($this->_v2xr('Bye', false));
+            return new XML_RPC_Response($this->_v2xr('Bye', false));
         else
-            return new xmlrpcresp(0, 803,
+            return new XML_RPC_Response(0, 803,
                 "xr_logout: logout failed - not logged."
             );
     }
@@ -306,11 +305,11 @@ class XR_LocStor extends LocStor{
         $res = $this->existsAudioClip($r['sessid'], $r['gunid']);
         #$this->debugLog($res);
         if(PEAR::isError($res))
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_existsAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
-        return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        return new XML_RPC_Response(new XML_RPC_Value($res, "boolean"));
     }
 
     /**
@@ -354,9 +353,9 @@ class XR_LocStor extends LocStor{
             $r['sessid'], $r['gunid'], $r['mediaFileLP'], $r['mdataFileLP']
         );
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "string"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "string"));
         else
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_storeAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -399,9 +398,9 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->deleteAudioClip($r['sessid'], $r['gunid']);
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "boolean"));
         else
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_deleteAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -447,9 +446,9 @@ class XR_LocStor extends LocStor{
             $r['sessid'], $r['gunid'], $r['mdataFileLP']
         );
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "boolean"));
         else
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_updateAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -496,9 +495,9 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->searchMetadata($r['sessid'], $r['criteria']);
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "boolean"));
         else
-            return new xmlrpcresp(0, 803,
+            return new XML_RPC_Response(0, 803,
                 "xr_searchAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -541,9 +540,9 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->accessRawAudioData($r['sessid'], $r['gunid']);
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "string"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "string"));
         else
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_accessRawAudioData: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -587,9 +586,9 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->releaseRawAudioData($r['sessid'], $r['tmpLink']);
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "boolean"));
         else
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_releaseRawAudioData: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -632,9 +631,9 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->getAudioClip($r['sessid'], $r['gunid']);
         if(!PEAR::isError($res))
-            return new xmlrpcresp(new xmlrpcval($res, "string"));
+            return new XML_RPC_Response(new XML_RPC_Value($res, "string"));
         else
-            return new xmlrpcresp(0, 805,
+            return new XML_RPC_Response(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
     }
@@ -665,10 +664,23 @@ $methods = array(
 $defs = array();
 foreach($methods as $method=>$description){
     $defs["locstor.$method"] = array(
-            "function" => array(&$locStor, "xr_$method"),
-            "signature" => array(array($xmlrpcStruct, $xmlrpcStruct)),
+#            "function" => array(&$locStor, "xr_$method"),
+            "function" => "\$GLOBALS['locStor']->xr_$method",
+            "signature" => array(
+                array($GLOBALS['XML_RPC_Struct'], $GLOBALS['XML_RPC_Struct'])
+            ),
             "docstring" => $description
     );
 }
-$s=new xmlrpc_server( $defs );
+$s=new XML_RPC_Server( $defs );
+
+#$s=new XML_RPC_Server( $defs , 0 );
+##var_dump($s);
+#$r = $s->parseRequest();
+#$r = $r[0];
+#var_dump($r);
+#echo ($cn = get_class($r))."\n";
+#$a = get_class_methods($cn);
+#var_dump($a);
+#echo $r->serialize();
 ?>
