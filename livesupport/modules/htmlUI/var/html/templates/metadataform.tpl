@@ -2,6 +2,7 @@
 <style type="text/css">
     .dynformelement {
         width : 270px;
+        text-align : right;
     }
 </style>
 {/literal}

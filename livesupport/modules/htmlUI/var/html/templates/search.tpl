@@ -4,7 +4,7 @@
     {literal}
     <style type="text/css">
         .dynformelement {
-            width : 470px;
+            width : 800px;
         }
     </style>
     {/literal}

@@ -6,13 +6,13 @@
 #masterpanel {
     text-align: center;
     background-color : ThreedLightShadow;
-    height: 610px;
+    height: 800px;
     font-family : monospace;
 }
 
 #statusbar {
     text-align: center;
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     height : 70px;
@@ -35,7 +35,7 @@
 
 #tree {
     text-align : left;
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 20px;
@@ -43,7 +43,7 @@
 
 #menu_top {
     text-align: center;
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
@@ -51,14 +51,14 @@
 
 #path {
     text-align: center;
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
 }
 
 #objects {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
@@ -66,28 +66,28 @@
 
 
 #permissions {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
 }
 
 #subjects {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
 }
 
 #newfileform {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
 }
 
 #searchform {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
@@ -112,14 +112,14 @@
 }
 
 #filedata {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
 }
 
 #mdataform {;
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
@@ -127,11 +127,10 @@
 
 .dynformelement {
     padding-bottom : 6px;
-    text-align : right;
 }
 
 #systemPrefs {
-    width: 610px;
+    width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;
