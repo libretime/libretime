@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@ class LocStor extends GreenBox{
     function storeAudioClipOpen($sessid, $gunid, $metadata, $chsum)
     {
         // test if specified gunid exists:
-        if(!preg_match("|^[0-9a-fA-F]{16}$|", $gunid)){
+        if(!preg_match("|^([0-9a-fA-F]{16})?$|", $gunid)){
             return PEAR::raiseError(
                 "LocStor.php: storeAudioClipOpen: Wrong gunid ($gunid)"
             );
