@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -43,15 +43,18 @@ METADATA="<?xml version=\"1.0\"?>
 <dcterms:extent>00:00:11</dcterms:extent></metadata></audioClip>"
 
 echo ""
+XRDIR=`dirname $0`
 XMLRPC=`cd var/install; php -q getXrUrl.php` || exit $?
 echo "# storageServer XMLRPC URL: $XMLRPC"
 
-TESTDIR=`dirname $0`
-XR_CLI="$TESTDIR/xr_cli_test.py -s ${XMLRPC}"
+cd $XRDIR
+#XR_CLI="./xr_cli_test.py -s ${XMLRPC}"
+XR_CLI="php -q xr_cli_test.php -s ${XMLRPC}"
 
 login() {
     echo -n "# login: "
-    SESSID=`$XR_CLI login root q` || exit $?
+    SESSID=`$XR_CLI login root q` || \
+    	{ ERN=$?; echo $SESSID; exit $ERN; }
     echo "sessid: $SESSID"
 }
 
@@ -66,7 +69,7 @@ existsAudioClip() {
 }
 
 storeAudioClip() {
-    MEDIA=var/tests/ex1.mp3
+    MEDIA=../tests/ex1.mp3
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     if [ $DEBUG_I ]; then echo "md5=$MD5"; fi
     echo -n "# storeAudioClipOpen: "
@@ -300,10 +303,11 @@ storageTest(){
 }
 
 usage(){
-    echo "Usage: $0 <command> [args]"
+    echo "Usage: $0 [<command>] [args]"
     echo -e "commands:\n test\n existsAudioClip\n accessRawAudioData"
     echo -e " storeAudioClip\n deleteAudioClip\n updateAudioClipMetadata"
     echo -e " getAudioClip\n searchMetadata\n"
+    echo -e " preferences\n playlists\n storage\n"
 }
 
 if [ "$COMM" == "test" ]; then

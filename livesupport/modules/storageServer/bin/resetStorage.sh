@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/bin/resetStorage.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -34,7 +34,11 @@ reldir=`dirname $0`/..
 WWW_ROOT=`cd $reldir/var/install; php -q getWwwRoot.php` || exit $?
 echo "# storageServer root URL: $WWW_ROOT"
 
-$reldir/var/xmlrpc/xr_cli_test.py -s $WWW_ROOT/xmlrpc/xrLocStor.php \
+#$reldir/var/xmlrpc/xr_cli_test.py -s $WWW_ROOT/xmlrpc/xrLocStor.php \
+# resetStorage || exit $?
+
+cd $reldir/var/xmlrpc
+php -q xr_cli_test.php -s $WWW_ROOT/xmlrpc/xrLocStor.php \
  resetStorage || exit $?
 
 echo "# resetStorage: OK"
