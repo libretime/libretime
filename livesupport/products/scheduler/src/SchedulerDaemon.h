@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -321,6 +321,16 @@ class SchedulerDaemon : public Installable,
          *  The resetStorageMethod the daemon is providing.
          */
         Ptr<ResetStorageMethod>::Ref    resetStorageMethod;
+
+        /**
+         *  The login to the authentication system.
+         */
+        std::string                     login;
+
+        /**
+         *  The password to the authentication system.
+         */
+        std::string                     password;
 
         /**
          *  Default constructor.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -178,8 +178,6 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     const xmlpp::Attribute    * attribute;
 
     // read in the user data
-    std::string                 login;
-    std::string                 password;
 
     nodes = element.get_children(userConfigElementName);
     if (nodes.size() < 1) {
@@ -263,15 +261,8 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
 
     // do some initialization, using the configured objects
     authentication = acf->getAuthenticationClient();
-    try {
-        sessionId      = authentication->login(login, password);
-    } catch (XmlRpcException &e) {
-        // TODO: mark error
-        std::cerr << "authentication problem: " << e.what() << std::endl;
-    }
-
-    audioPlayer = apf->getAudioPlayer();
-    playLog     = plf->getPlayLog();
+    audioPlayer    = apf->getAudioPlayer();
+    playLog        = plf->getPlayLog();
 
     Ptr<PlaylistEventContainer>::Ref    eventContainer;
     Ptr<time_duration>::Ref             granularity;
@@ -377,6 +368,13 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
 void
 SchedulerDaemon :: startup (void)                           throw ()
 {
+    try {
+        sessionId      = authentication->login(login, password);
+    } catch (XmlRpcException &e) {
+        // TODO: mark error
+        std::cerr << "authentication problem: " << e.what() << std::endl;
+    }
+
     audioPlayer->initialize();
     eventScheduler->start();
     XmlRpcDaemon::startup();
