@@ -1,0 +1,1908 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-2"
+ http-equiv="content-type">
+  <title>LiveSupport Local storage specification</title>
+  <meta content="Ákos Maróy" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/LocalStorage/index.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document contains the specification of the LiveSupport Local
+storage component.<br>
+<br>
+This document contains embedded <a
+ href="http://www.w3.org/Graphics/SVG/">SVG</a> figures, thus an SVG
+capable browser is needed to view it, or an SVG plugin like <a
+ href="http://www.adobe.com/svg/">Adobe's SVG Viewer</a>.<br>
+<h1>Requirements</h1>
+<h2>Overview<br>
+</h2>
+The purpose of the Local storage component is to store Audio Clips
+locally.<br>
+<h2>Goals</h2>
+The goal of the local storage system is to store Audio Clips locally.
+Audio Clips contain audio data bundled with metadata describing it.
+Storing locally means that the binary audio data is available not just
+as a stream, but also as random seekable file.<br>
+<h2>System functions</h2>
+The main system functions are described below. There are three
+categories for these functions:<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">function category<br>
+      </th>
+      <th valign="top">meaning<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">evident<br>
+      </td>
+      <td valign="top">Should perform, and the user should be cognizant
+that it is performed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">hidden<br>
+      </td>
+      <td valign="top">Should perform, but not visible to the users.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">frill<br>
+      </td>
+      <td valign="top">Optional<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.1<br>
+      </td>
+      <td valign="top">Store audio clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.2<br>
+      </td>
+      <td valign="top">Provide seekable access to audio data<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.3<br>
+      </td>
+      <td valign="top">Delete stored clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.4<br>
+      </td>
+      <td valign="top">Update stored clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.5<br>
+      </td>
+      <td valign="top">Search Audio clips by querying metadata<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System attributes</h2>
+Generic attributes<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">A1.1<br>
+      </td>
+      <td valign="top">operating system platform<br>
+      </td>
+      <td valign="top">Linux<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.2<br>
+      </td>
+      <td valign="top">local interface<br>
+      </td>
+      <td valign="top">locally callable API<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.4<br>
+      </td>
+      <td valign="top">supported audio formats<br>
+      </td>
+      <td valign="top">Ogg Vorbis, MP3, wav<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.5<br>
+      </td>
+      <td valign="top">file system level interface<br>
+      </td>
+      <td valign="top">adding, updated and delete from the local
+storage can be done by moving files within the file system by legacy
+tools<br>
+      </td>
+      <td valign="top">frill<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.6<br>
+      </td>
+      <td valign="top">uniquely identifiable Audio clips<br>
+      </td>
+      <td valign="top">all audio clips should be uniquely identifiable,
+even when moved among Local storage systems<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+Attributes related to system functions<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.2<br>
+      </td>
+      <td valign="top">Provide seekable access to audio data<br>
+      </td>
+      <td valign="top">A1.3<br>
+      </td>
+      <td valign="top">provide file handle<br>
+      </td>
+      <td valign="top">provide randomly seekable file level access to
+raw
+audio data<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>Essential use cases</h2>
+This section lists generic (essential) uses cases, that do not contain
+architecture-specific considerations.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="EssentialUseCases.svg" width="600" height="550"></object>
+<h3>UC-1 Store or update Audio clip<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-1 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Store or update Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To store a new Audio clip in the local storage,
+or update (replace) an already stored Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer contacts the Local
+storage with the aim
+of uploading and storing a new Audio Clip. If the uploaded Audio clip
+is already stored in Local storage (with respect of having the same
+unique id), the stored one is replaced with the uploaded one.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1, F1.4, A1.6<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the
+intention of storing an Audio clip<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents the new Audio
+clip data,
+including raw audio data and metadata<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies the received data<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.1</b><br>
+      </td>
+      <td valign="top">If the presented Audio clip does not contain a
+unique id, one is generated.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.2</b><br>
+      </td>
+      <td valign="top">If the presented Audio clip contains a unique
+id, and there already is an Audio clip stored with the same id, the
+stored one is replaced with the uploaded Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system stores the received Audio clip and
+notifies the Storage maintainer of the actions taken and the unique id
+of the stored clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 6.2:</b> if the raw audio data of the Audio clip is
+currently
+being accessed (see UC-4), it can not be deleted. the user is notified
+and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-2 Delete Audio clip<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-2 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Delete Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To delete an existing Audio clip in the local
+storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer contacts the Local
+storage with the aim
+of deleting an existing Audio Clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.3 </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the
+intention of deleting an Audio clip<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents the unique id of
+an Audio clip stored in Local storage for deletion<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system deletes the Audio clip corresponding
+to the presented unique id.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if no Audio clip is stored with the presented
+id, the Storage maintainer is notified. the use case ends.</li>
+  <li><b>action 5:</b> if the raw audio data of the Audio clip is
+currently being accessed (see UC-4), it can not be deleted. the user is
+notified and the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-3 Update Audio clip metadata<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-3 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Update Audio clip metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To update the metadata of an Audio clip, without
+uploading raw audio data again.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer contacts the Local
+storage with the aim
+of updating the metadata for an already stored Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.4 </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the
+intention of updating the metadata for an Audio clip<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents the unique id of
+an Audio clip stored in Local storage and the new metadata for that
+Audio clip<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies the clip id and the metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system replaces the metadata of the Audio
+clip with the presented one<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if no Audio clip is stored with the presented
+id, the Storage maintainer is notified. the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-4 Access raw audio data<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-4 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Access raw audio data<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Audio player<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To access raw audio of Audio clips stored in the
+Local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Audio player accesses the raw audio data
+with the ability of randomly seeking in it.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, A1.3<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Audio player connects to the Local storage with
+the
+intention of accessing raw audio data<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Audio player provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Audio player and
+grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Audio player presents the unique id of an
+Audio clip stored in Local storage that he wants to access<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The systems looks up the Audio clip, and
+provides a seekable handle to the Audio player<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Audio player accesses the raw audio data,
+including seeking in it.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Audio player closes it's access and
+disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Audio player can not be authenticated, he
+is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if no Audio clip is stored with the presented
+id, the Audio player is notified. the use case ends.</li>
+</ul>
+<br>
+<h3>UC-5 Search in metadata<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-5 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Search in metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To search in the metadata of audio clips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer searches through the
+stored Audio clips by specifying search criteria for the metadata of
+the clips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.5<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the
+intention of searching.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides a way of specifying search
+criteria with respect to the existing metadata structures<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer specifies a search
+criteria<br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system searches through the metadata of
+contained Audio clips, and presents a list of matches<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer refines his search and
+searches again<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system does a new search according to the
+refined criteria, and presents the results to the Storage maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The storage maintainer reviews the results<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The storage maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+</ul>
+<h2>
+</h2>
+<br>
+<h2>Conceptual model</h2>
+The following figure displays the semantic concepts identified for the
+Scheduler daemon, and the main associations between the concepts.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="Concepts.svg" width="650" height="600"></object>
+<br>
+<h3>Concepts</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">concept<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication</b><br>
+      </td>
+      <td valign="top">Component responsible for doing the
+authentications <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Unique Id<br>
+      </b> </td>
+      <td valign="top">A globally unique identifier used to to
+differentiate between objects that might even be created on different
+systems. Even though the whole space of Id is not known, the Ids must
+be unique.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>MetaData</b><br>
+      </td>
+      <td valign="top">Data about the AudioClip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>SearchCriteria<br>
+      </b></td>
+      <td valign="top">Describes the search parameters when doing a
+search on the MetaData<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>AudioClip</b><br>
+      </td>
+      <td valign="top">The basic unit of audio handled by Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>RawAudioData<br>
+      </b></td>
+      <td valign="top">The binary audio data contained in an Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Storage maintainer</b><br>
+      </td>
+      <td valign="top">The actor that maintains the contents of the
+Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Audio player</b><br>
+      </td>
+      <td valign="top">The actor that accesses the raw audio contained
+in the Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h3>Associations</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">source<br>
+      </th>
+      <th valign="top">association<br>
+      </th>
+      <th valign="top">target<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">Is identified by<br>
+      </td>
+      <td valign="top">UniqueId<br>
+      </td>
+      <td valign="top">This is a globally unique id for each Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">Is described by<br>
+      </td>
+      <td valign="top">MetaData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">Contains<br>
+      </td>
+      <td valign="top">RawAudioData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Storage maintainer<br>
+      </td>
+      <td valign="top">Is Authenticated by<br>
+      </td>
+      <td valign="top">Authentication<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Storage maintainer<br>
+      </td>
+      <td valign="top">Searches in<br>
+      </td>
+      <td valign="top">MetaData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Storage maintainer<br>
+      </td>
+      <td valign="top">Searches by<br>
+      </td>
+      <td valign="top">SearchCriteria<br>
+      </td>
+      <td valign="top">The storage maintainer specifies such a
+SearchCriteria when doing a search on MetaData<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Storage maintainer<br>
+      </td>
+      <td valign="top">Manages<br>
+      </td>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">This includes uploading, updating and deleting
+AudioClips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Audio player<br>
+      </td>
+      <td valign="top">Is Authenticated by<br>
+      </td>
+      <td valign="top">Authentication<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Audio player<br>
+      </td>
+      <td valign="top">Accesses<br>
+      </td>
+      <td valign="top">RawAudioData<br>
+      </td>
+      <td valign="top">This is a seekable access to raw audio data.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System behavior</h2>
+The behavior of the system as a whole as experienced from the outside
+is discussed in this section.<br>
+<h3>System sequence diagrams</h3>
+System diagrams are presented for each use case below.<br>
+<h4>UC-1 Store or update Audio clip</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Storeorupdateaudioclip_SequenceDiagram.svg" width="650"
+ height="200"></object>
+<br>
+<h4>UC-2 Delete Audio clip</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Deleteaudioclip_SequenceDiagram.svg" width="600" height="200"></object>
+<br>
+<h4>UC-3 Update Audio clip metadata</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="UpdateAudioclipmetadata_SequenceDiagram.svg" width="650"
+ height="200"></object>
+<br>
+<h4>UC-4 Access raw audio data</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Accessrawaudiodata_SequenceDiagram.svg" width="600" height="200"></object>
+<br>
+<h4>UC-5 Search in metadata</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Searchinmetadata_SequenceDiagram.svg" width="650" height="200"></object>
+<h3>System objects</h3>
+The following figure shows the system objects and their functions, as
+derived from the system sequence diagrams.<br>
+<object type="image/svg+xml" name="system behaviour"
+ data="Systembehaviour.svg" width="450" height="250"></object>
+<h3>Contracts</h3>
+For all operations exposed in the system sequence diagrams, the
+following contracts are defined.<br>
+<h4>Contract for Local storage : authenticate</h4>
+see Authentication : Authenticate<br>
+<h4>Contract for Local storage : existsAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">existsAudioClip<br>
+(audioClipId : UniqueId)<br>
+: boolean<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Check if an Audio clip
+with the specified id is stored in local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">true if an Audio clip
+with the specified id is stored in Local storage, false otherwise<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td valign="top">none<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : storeAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">storeAudioClip<br>
+(audioClip : AudioClip)<br>
+: UniqueId<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Store a new audio clip
+or replace an existing one.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-1<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if this is an AudioClip
+update, and the RawAudioData of the already existing AudioClip is is
+being accessed (see UC-4), report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">the unique id of the
+stored audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">if this is a new audio clip:</td>
+      <td valign="top">an AudioClip object is created</td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a UniqueId is generated for the new clip<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the UniqueId is associated with the AudioClip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a MetaData object is created and filled with the
+presented contents<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the MetaData is associated with the AudioClip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a RawAudioData object is created and filled with
+the presented contents<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the RawAudioData is associated with the AudioClip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">if the clip already existed:<br>
+      </td>
+      <td valign="top">the contents of MetaData for the AudioClip are
+replaced by the presented contents<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the contents of RawAudioData for the AudioClip
+are replaced by the presented contents<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : deleteAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">deleteAudioClip<br>
+(audioClipId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Delete an existing Audio
+clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-2<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip with
+the specified id exists, report as an error.<br>
+if the RawAudioData for AudioClip is being accessed (see UC-4), report
+as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the UniqueId for the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the MetaData for the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the RawAudioData for the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : updateAudioClipMetadata<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">updateAudioClipMetadata<br>
+(audioClipId : UniqueId,<br>
+newMetadata : MetaData)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Update the metadata of
+an Audio clip stored in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-3<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip with
+the specified id exists, report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the contents of MetaData for the AudioClip are
+replaced with the presented contents<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : accessRawAudioData<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">accessRawAudioData<br>
+(audioClipId : UniqueId)<br>
+: RawAudioData<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Get access to raw audio
+data of an AudioClip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-4<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip with
+the specified id exists, report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">the RawAudioData for the
+AudioClip identified with the supplied UniqueId<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the currentlyAccessing attribute for
+RawAudioData for AudioClip is increased by one<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : releaseRawAudioData<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">releaseRawAudioData<br>
+(rawAudioData : RawAudioData)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Release access for raw
+audio data<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-4<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if the specified
+RrawAudioData is not stored in Local storage, indicate as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the currentlyAccessing attribute for
+RawAudioData for AudioClip is decreased by one<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : searchMetadata<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">searchMetadata<br>
+(criteria : SearchCriteria)<br>
+: UniqueId<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Search through the
+metadata of stored AudioClips, and return all matching clip ids<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-5<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">A range of Audio clip
+ids, for which MetaData matches the supplied search criteria<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : getAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">getAudioClip<br>
+(audioClipId : UniqueId)<br>
+: AudioClip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Return the contents of
+an Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">see Playlist editor<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip by the
+specified id exists, report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">The Audio clip,
+specified by the supplied id.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+</body>
+</html>

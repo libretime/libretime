@@ -1,0 +1,500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-2"
+ http-equiv="content-type">
+  <title>LiveSupport Authentication specification</title>
+  <meta content="Ákos Maróy" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/Authentication/index.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document contains the specification of the LiveSupport
+Authentication component.<br>
+<br>
+This document contains embedded <a
+ href="http://www.w3.org/Graphics/SVG/">SVG</a> figures, thus an SVG
+capable browser is needed to view it, or an SVG plugin like <a
+ href="http://www.adobe.com/svg/">Adobe's SVG Viewer</a>.<br>
+<h1>Requirements</h1>
+<h2>Overview<br>
+</h2>
+The purpose of the Authentication component is to provide
+authentication services by receiving authentication information and
+checking these against an authentication database.
+<h2>Goals</h2>
+The authentication component is a re-usable component, which provides
+both local and remote interfaces. Different authentication methods may
+be supported, with username / password authentication being the most
+trivial.<br>
+<h2>System functions</h2>
+The main system functions are described below. There are three
+categories for these functions:<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">function category<br>
+      </th>
+      <th valign="top">meaning<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">evident<br>
+      </td>
+      <td valign="top">Should perform, and the user should be cognizant
+that it is performed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">hidden<br>
+      </td>
+      <td valign="top">Should perform, but not visible to the users.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">frill<br>
+      </td>
+      <td valign="top">Optional<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.1<br>
+      </td>
+      <td valign="top">Authenticate users<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System attributes</h2>
+Generic attributes<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">A1.1<br>
+      </td>
+      <td valign="top">operating system platform<br>
+      </td>
+      <td valign="top">Linux<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.2<br>
+      </td>
+      <td valign="top">local interface<br>
+      </td>
+      <td valign="top">locally callable API<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.3<br>
+      </td>
+      <td valign="top">remote interface<br>
+      </td>
+      <td valign="top">remote interface via some RPC method like
+XML-RPC or SOAP<br>
+      </td>
+      <td valign="top">want<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+Attributes related to system functions<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>Essential use cases</h2>
+This section lists generic (essential) uses cases, that do not contain
+architecture-specific considerations.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="EssentialUseCases.svg" width="500" height="300"></object>
+<h3>UC-1 Authenticate user<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-1 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Authenticate user </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">User </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">Authenticate a user </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The user contacts the Authentication module with
+the intention of verifying his integrity. </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1 </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">User connects to the authentication component
+with the intention of authenticating<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The User provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks the authentication information
+againts its internal database, and informs the user if the provided
+information was correct. </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+none<br>
+<br>
+<h2>Conceptual model</h2>
+The following figure displays the semantic concepts identified for the
+Scheduler daemon, and the main associations between the concepts.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="Concepts.svg" width="600" height="600"></object>
+<br>
+<h3>Concepts</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">concept<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication database</b><br>
+      </td>
+      <td valign="top">A database containing authentication
+information, against which user-sent authentication information can be
+checked.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication</b><br>
+      </td>
+      <td valign="top">Component responsible for doing the
+authentications <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication info</b><br>
+      </td>
+      <td valign="top">The information a user sends during
+authentication, provides the basis for authentication<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>User</b><br>
+      </td>
+      <td valign="top">The party that wants to authenticate<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication interface</b><br>
+      </td>
+      <td valign="top">The local or remote interface for authentications<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h3>Associations</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">source<br>
+      </th>
+      <th valign="top">association<br>
+      </th>
+      <th valign="top">target<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">Authentication<br>
+      </td>
+      <td valign="top">Checks authentication info in<br>
+      </td>
+      <td valign="top">Authentication database<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Authentication database<br>
+      </td>
+      <td valign="top">Stores<br>
+      </td>
+      <td valign="top">Authentication info<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">User<br>
+      </td>
+      <td valign="top">Contains<br>
+      </td>
+      <td valign="top">Authentication info<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">User<br>
+      </td>
+      <td valign="top">Authenticates by<br>
+      </td>
+      <td valign="top">Authentication interface<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System behavior</h2>
+The behavior of the system as a whole as experienced from the outside
+is discussed in this section.<br>
+<h3>System sequence diagrams</h3>
+System diagrams are presented for each use case below.<br>
+<h4>UC-1 Authenticate user<br>
+</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Authenticateuser_SequenceDiagram.svg" width="550" height="200"></object>
+<br>
+<h3>System objects</h3>
+The following figures shows the system objects and their functions, as
+derived from the system sequence diagrams.<br>
+<object type="image/svg+xml" name="system behaviour"
+ data="Systembehaviour.svg" width="400" height="300"></object>
+<h3>Contracts</h3>
+For all operations exposed in the system sequence diagrams, the
+following contracts are defined.<br>
+<h4>Contract for AuthenticationInterface : authenticate</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">authenticate<br>
+(authInfo : AuthenticationInfo)<br>
+: boolean<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Check if the the
+provided authentication info is recognized.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-1<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">true if the provided
+authentication is recognized, false otherwise<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td valign="top">none<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+</body>
+</html>

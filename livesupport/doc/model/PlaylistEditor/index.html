@@ -1,0 +1,4277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-2"
+ http-equiv="content-type">
+  <title>LiveSupport Playlist editor specification</title>
+  <meta content="Ákos Maróy" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/PlaylistEditor/index.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document contains the specification of the LiveSupport Playlist
+editor component.<br>
+<br>
+This document contains embedded <a
+ href="http://www.w3.org/Graphics/SVG/">SVG</a> figures, thus an SVG
+capable browser is needed to view it, or an SVG plugin like <a
+ href="http://www.adobe.com/svg/">Adobe's SVG Viewer</a>.<br>
+<h1>Requirements</h1>
+<h2>Overview<br>
+</h2>
+The purpose of the Playlist editor component is to provide a user
+interface enabling creation, editing and publishing playlists.<br>
+<h2>Goals</h2>
+The playlist editor is an easy to use user interface tool. It provides
+the possibility to create and edit playlists, made up of a sequence of
+audio clips store in Local storage or in a remote Media archive. The
+created playlist then can be uploaded to a Scheduler daemon for
+execution.<br>
+<br>
+The transition between audio clips can be visually specified though the
+user interface. The playlist editor provides an easy to use user
+interface to search the audio clips stored in Local storage or a remote
+Media archive, based on metadata criteria. The playlist editor provides
+the possibility to listen to the whole or any part of the created
+playlist.<br>
+<h2>System functions</h2>
+The main system functions are described below. There are three
+categories for these functions:<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">function category<br>
+      </th>
+      <th valign="top">meaning<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">evident<br>
+      </td>
+      <td valign="top">Should perform, and the user should be cognizant
+that it is performed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">hidden<br>
+      </td>
+      <td valign="top">Should perform, but not visible to the users.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">frill<br>
+      </td>
+      <td valign="top">Optional<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.1<br>
+      </td>
+      <td valign="top">Create and edit playlists<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.2<br>
+      </td>
+      <td valign="top">Access to Local storage<br>
+      </td>
+      <td valign="top">hidden<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.3<br>
+      </td>
+      <td valign="top">Access to Media archive<br>
+      </td>
+      <td valign="top">hidden<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.4<br>
+      </td>
+      <td valign="top">Search in Local storage or Media archive<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.5<br>
+      </td>
+      <td valign="top">Upload playlist to Scheduler daemon<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.6<br>
+      </td>
+      <td valign="top">Smooth transitions between Audio clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.7<br>
+      </td>
+      <td valign="top">Play back created playlist<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.8<br>
+      </td>
+      <td valign="top">Maintain configuration information<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System attributes</h2>
+Generic attributes<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">A1.1<br>
+      </td>
+      <td valign="top">operating system platform<br>
+      </td>
+      <td valign="top">Linux<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.2<br>
+      </td>
+      <td valign="top">easy to use user interface<br>
+      </td>
+      <td valign="top">intuitive user interface<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.3<br>
+      </td>
+      <td valign="top">supported audio formats<br>
+      </td>
+      <td valign="top">Ogg Vorbis, wav, possibly MP3<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.4<br>
+      </td>
+      <td valign="top">Playlist support for Audio clips from Local
+storage </td>
+      <td valign="top">Created playlists may include audio sources from
+Local storage </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.5<br>
+      </td>
+      <td valign="top">Playlist support for Audio clips from Media
+archive<br>
+      </td>
+      <td valign="top">Created playlists may include audio sources from
+a remote Media archive<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.6<br>
+      </td>
+      <td valign="top">Playlist support for remotely accessible audio
+files<br>
+      </td>
+      <td valign="top">Created playlists may include remotely
+accessible audio sources, e.g. audio files downloadable via HTTP<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.7<br>
+      </td>
+      <td valign="top">Playlist support for audio streams<br>
+      </td>
+      <td valign="top">Created playlists may include remotely
+accessible audio streams, e.g. icecast or shoutcast streams<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.12<br>
+      </td>
+      <td valign="top">Playlist format<br>
+      </td>
+      <td valign="top">SMIL 2.0<br>
+      </td>
+      <td valign="top">frill<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.13<br>
+      </td>
+      <td valign="top">Standalone GUI application<br>
+      </td>
+      <td valign="top">The Playlist editor is a standalone graphical
+user interface application<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.14<br>
+      </td>
+      <td valign="top">Supported audio interfaces<br>
+      </td>
+      <td valign="top">ALSA (maybe also OSS?)<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+Attributes related to system functions<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.6<br>
+      </td>
+      <td valign="top">Smooth transitions between Audio clips<br>
+      </td>
+      <td valign="top">A1.8<br>
+      </td>
+      <td valign="top">Fade-in / fade-out support<br>
+      </td>
+      <td valign="top">Support for fade-in / fade-out as a transitions,
+with customizable fade curve<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.2<br>
+      </td>
+      <td valign="top">Access to Local storage<br>
+      </td>
+      <td valign="top">A1.9<br>
+      </td>
+      <td valign="top">Full access to Local storage<br>
+      </td>
+      <td valign="top">The Playlist editor is a user interface to Local
+storage, enabling uploading, deletion and updating of Audio clips in
+Local storage<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.3<br>
+      </td>
+      <td valign="top">Access to Media archive<br>
+      </td>
+      <td valign="top">A1.10<br>
+      </td>
+      <td valign="top">Full access to Media archive<br>
+      </td>
+      <td valign="top">The Playlist editor is a user interface to Media
+archive, enabling
+uploading, deletion and updating of Audio clips in Media archive<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.7<br>
+      </td>
+      <td valign="top">Play back created playlist<br>
+      </td>
+      <td valign="top">A1.11<br>
+      </td>
+      <td valign="top">Complete and partial playback<br>
+      </td>
+      <td valign="top">The Playlist editor provides the possibility of
+complete playback, and random seeks for the whole of the playlist
+duration<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>Essential use cases</h2>
+This section lists generic (essential) uses cases, that do not contain
+architecture-specific considerations.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="EssentialUseCases.svg" width="900" height="950"></object>
+<h3>UC-1 Create a Playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-1 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Create a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To create a new, empty Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Playlist maintainer accesses the Playlist
+editor application with the purpose of creating a new, empty Playlist.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1 </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer creates a new, empty
+playlist<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system creates a new, empty playlist.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-2 Add an Audio clip to Local storage<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-2 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Add an Audio clip to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To add a new Audio clip to local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Playlist maintainer accesses the Playlist
+editor application with the purpose of adding a new audio file to the
+Local storage associated with the Playlist editor.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, A1.9<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer provides an audio file
+and corresponding metadata description.<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system receives the data, and contacts
+Local storage with the purpose of storing it.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Local storage checks for the provided
+authentication information, and grants access.<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system presents the audio data and metadata
+to the Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Local storage receives the provided audio
+file and metadata, and stores it, returning the unique id for the
+newly created Audio clip<br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system receives the new unique id from Local
+storage, and presents it to the Playlist maintainer.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 7:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 10:</b> if the system receives an error indication from
+the Local storage, it displays the error to the Playlist maintainer,
+and the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-3 Delete an Audio clip from Local storage<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-3 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Delete an Audio clip from Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To delete an Audio clip from local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of deleting an Audio clip stored in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, A1.9<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Local storage checks for the provided
+authentication information, and grants access.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip
+from the Local storage through the Playlist manager<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer indicates the selected
+Audio clip to be deleted.<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system contacts Local storage with the
+selected Audio clip to be deleted.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">Local storage deletes the specified Audio clip<br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system notifies the Playlist maintainer of
+the deletion of the selected Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 9:</b> if the Audio clip is being accessed, Local
+storage indicates an error. The system presents this error to the
+Playlist maintainer, and the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-4 Update an Audio clip in Local storage<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-4 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Update an Audio clip in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To update an already existing Audio clip in
+local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of replacing the data for an Audio clip in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, A1.9<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Local storage checks for the provided
+authentication information, and grants access.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip
+from the Local storage through the Playlist editor.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer presents the new audio
+data and metadata for the selected Audio clip.<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system receives the audio data and metadata
+for the new Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The system presents the new audio data and
+metadata for the specified Audio Clip to Local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The Local storage updates the specified Audio
+clips contents with the presented content, and notifies the system of
+this.<br>
+      </td>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">The system notifies the Playlist maintainer of
+the changes made.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 10:</b> if the system receives an error indication from
+the Local storage, it displays the error to the Playlist maintainer,
+and the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-5 Add or update an Audio clip to Media archive<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-5 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Add or update an Audio clip to Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage, Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To add or update an Audio clip to Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of adding or updating an Audio clip already in Local storage to
+the remote Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, F1.3, A1.9, A1.10<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Local storage</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Local storage checks for the provided
+authentication information, and grants access.</td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip
+from Local storage through the Playlist editor.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer indicates the selected
+Audio clip to be added to the Media archive.<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Media archive </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Media archive checks for the provided
+authentication information, and grants access. </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system transfers the Audio clip from Local
+storage to the Media archive, adding it to the Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">The Local storage provides the contents of the
+requested Audio clip to the system.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>12.</b><br>
+      </td>
+      <td valign="top">Media archive receives the Audio clip</td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>13.1</b><br>
+      </td>
+      <td valign="top">If no Audio clip with the unique id of the
+supplied clip exists in Media archive, it is stored as a new Audio
+clip. The Media archive notifies the system of the acceptance of the
+Audio clip.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>13.2</b><br>
+      </td>
+      <td valign="top">If an Audio clip with the unique id of the
+supplied clip already exists in
+Media archive, its contens are updated with that of the supplied Audio
+clip. The Media archive
+notifies the system of the acceptance of the Audio clip.</td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>14.</b><br>
+      </td>
+      <td valign="top">The system notifies the Playlist maintainer
+about the result of adding the Audio clip to the Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 9:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 11:</b> if the specified Audio clip does not exist, the
+Playlist maintainer is notified.</li>
+</ul>
+<br>
+<h3>UC-6 Search for Audio clips<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-6 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Search for Audio clips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage, Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To search for Audio clips by metadata search
+criteria in both Local storage and Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of searching for Audio clips based on some metadata search
+criteria. The list if matching Audio clips is presented, both from
+Local storage and Media archive.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, F1.3, F1.4, A1.9, A1.10<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Local storage</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Local storage checks for the provided
+authentication information, and grants access.</td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Media archive </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Media archive checks for the provided
+authentication information, and grants access. </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system provides an interface to enter search
+criteria<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer enters a search criteria.<br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system executes a search with the search
+criteria on Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">Local storage returns a list of marching Audio
+clips.<br>
+      </td>
+      <td valign="top"><b>12.</b><br>
+      </td>
+      <td valign="top">If the Media archive is accessible, the system
+executes a search on it with the search criteria<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>13.</b><br>
+      </td>
+      <td valign="top">The Media archive returns a list of matching
+Audio clips.<br>
+      </td>
+      <td valign="top"><b>14.</b><br>
+      </td>
+      <td valign="top">The system displays the list of matching Audio
+clips to the Playlist maintainer.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 7:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-7 Mirror an Audio clip from a remote Media archive in Local
+storage<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-7 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Mirror an Audio clip from a remote Media archive
+in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage, Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To mirror an Audio clip stored in Media archive
+in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of downloading and mirroring an Audio clip from the Media
+archive into Local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1, F1.2, F1.3<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Media archive checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">Local storage checks that the provided
+authentication information is correct, and grants access.</td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip
+from the Media archive, via the Playlist editor, for mirroring.<br>
+      </td>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The system accesses the Media archive,
+downloading the requested Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The Media archive presents the requested Audio
+clip<br>
+      </td>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">The system stores the downloaded Audio clip in
+Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>12.</b><br>
+      </td>
+      <td valign="top">Local storage stores the Audio clip<br>
+      </td>
+      <td valign="top"><b>13.</b><br>
+      </td>
+      <td valign="top">The system notifies the Playlist maintainer of
+the success of the operation.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 7:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-8 Add an Audio clip to a Playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-8 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Add an Audio clip to a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage, Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To add an Audio clip to a Playlist, either from
+Local storage or the Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Playlist maintainer accesses the Playlist
+editor application with the purpose of adding an Audio clip to a
+Playlist. The Audio clip may reside in Local storage or a Media archive.<br>
+The details of the added Audio clip are stored locally, even if it's
+from a remote Media archive. When adding a remote Audio clip (from
+Media archive), the possibility is given to mirror the clip in Local
+storage (see UC-7).<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1, F1.2, F1.3<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects a Playlist.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">Local storage checks that the provided
+authentication information is correct, and grants access.</td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Media archive</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Media archive checks that the provided
+authentication information is correct, and grants access.</td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip,
+to be added to the Playlist. The Playlist manager also provides an
+offset in the playlist where he wants the Audio clip to be.<br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system adds the selected Audio clip at the
+specified offset to the playlist. If this is overlapping with existing
+clips on all audio layers, the clip is added to an additional audio
+layer.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">If the added clip is from a remote Media
+archive, the Playlist editor is presented with a choice of downloading
+it to Local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>12.</b><br>
+      </td>
+      <td valign="top">The Playlist editor specifies if he wants the
+clip to be downloaded to Local storage.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 6:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+  <li><b>action 8:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-9 Move the position of an Audio clip in a Playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-9 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Move the position of an Audio clip in a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To change the offset of when an Audio clip is
+played in a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of changing the offset of an Audio clip in a Playlist.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects a Playlist.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip in
+the Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer moves the selected Audio
+clip to a new offset.<br>
+      </td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system updates the offset information for
+the selected Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer moves the Audio clip to
+another layer.<br>
+      </td>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The system moves the Audio clip to the new layer.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 9:</b> if the Audio clip is overlapping with other
+clips on the new layer, the clip is not moved..</li>
+</ul>
+<br>
+<h3>UC-10 Edit the transition of an Audio clip<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-10 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Edit the transition of an Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To change the fade-in / fade-out of an Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of changing the fade-in / fade-out of an Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects a Playlist.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects an Audio clip in
+the Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer edits the fade-in
+parameters of the Audio clip<br>
+      </td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system updates the fade-in parameters of the
+Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer edits the fade-out
+parameters of the Audio clip<br>
+      </td>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The system updated the fade-out parameters of
+the Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-11 Listen to a Playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-11 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Listen to a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To preview a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of listening to a Playlist, to verify that when it is played,
+it will have the desired effect.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.7, A1.11, A1.14<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">Local storage checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects a Playlist.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer starts to play the
+Playlist.<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system looks up the Audio clips to be played
+in the immediate future, and accesses them from Local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.1</b><br>
+      </td>
+      <td valign="top">If the requested Audio clip is contained in
+Local storage, seekable access to the raw audio data of the requested
+Audio clips is provided<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.2</b><br>
+      </td>
+      <td valign="top">If the requested Audio clip is not in Local
+storage, the system is notified.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system plays the raw audio data on the local
+audio interface if available, silence otherwise.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer seeks into the Playlist<br>
+      </td>
+      <td valign="top"><b>12.</b><br>
+      </td>
+      <td valign="top">The system updates the offset where the audio
+clips are to be played from, and continues playing from there.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>13.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer ends playing<br>
+      </td>
+      <td valign="top"><b>14.</b><br>
+      </td>
+      <td valign="top">The system release access to all accessed Audio
+clips from Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-12 Upload a Playlist to a Scheduler daemon<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-12 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Upload a Playlist to a Scheduler daemon<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer, Scheduler<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To publish a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of uploading a Playlist to a Scheduler daemon, so that it would
+be executed at a specified time.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.5<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides authentication information
+to the Scheduler<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Scheduler checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects a Playlist.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer indicates the selected
+Playlist to be uploaded to a Scheduler daemon, to be played at a
+specified time.<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system connects to the Scheduler with the
+specified Audio clip and time, and uploads the Playlist.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Scheduler receives the playlist, and
+schedules it for playing. The system is notified of this.<br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system notifies the Playlist maintainer of
+the success of the operation.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if the system can not be authenticated, the
+Playlist maintainer is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>UC-13 Maintain configuration information<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-13 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Maintain configuration information<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Playlist maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To add, update or delete the systems that the
+Playlist editor knows about.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The
+Playlist maintainer accesses the Playlist editor application with the
+purpose of reviewing and possibly changing the registered system the
+Playlist editor connects to. These include Local storage, Media archive
+and Scheduler, but also other details, like the local audio interface.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.8<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Playlist maintainer starts the Playlist editor
+application.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Playlist maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system checks that the provided
+authentication information is correct, and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects to to view the
+configuration information<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system displays the configuration
+information to the Playlist maintainer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects to add a new
+registered external system.<br>
+      </td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system verifies the new registry entry, and
+adds it to the configuration<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer selects to update a
+registered external system.<br>
+      </td>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The system verifies the new values for the
+registry entry, and updates the configuration<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The Playlist maintainer deletes a registered
+external system.<br>
+      </td>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">The system deletes the external system, if there
+remain a minimum required of such system.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Playlist maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+</ul>
+<br>
+<h3>
+</h3>
+<h3>
+</h3>
+<h2>Conceptual model</h2>
+The following figure displays the semantic concepts identified for the
+Scheduler daemon, and the main associations between the concepts.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="Concepts.svg" width="800" height="850"></object>
+<br>
+<h3>Concepts</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">concept<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>Scheduler</b><br>
+      </td>
+      <td valign="top">The Scheduler daemon, executing playlists.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Local storage</b><br>
+      </td>
+      <td valign="top">The Local storage, holding Audio clips locally.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Media archive</b><br>
+      </td>
+      <td valign="top">The remote Media archive, holding Audio clips
+remotely<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Playlist uploader</b><br>
+      </td>
+      <td valign="top">The component responsible for uploading
+Playlists to the Scheduler<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Playlist player</b><br>
+      </td>
+      <td valign="top">Plays Playlists for preview locally.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Clip retriever</b><br>
+      </td>
+      <td valign="top">Responsible for the transfer of Audio clips to
+and from Local storage and Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Playlist</b><br>
+      </td>
+      <td valign="top">A series of Audio clips, and information on how
+they come one after the other.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Playlist element</b><br>
+      </td>
+      <td valign="top">A connection object about a specific appearance
+of an Audio clip in a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Audio clip</b><br>
+      </td>
+      <td valign="top">The basic unit of audio data handled by the
+system.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Audio layer</b><br>
+      </td>
+      <td valign="top">An audio layer in the playlist, a sequence of
+non-overlapping Audio clips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>FadeInfo</b><br>
+      </td>
+      <td valign="top">The details of the transition of the specific
+instance of the Audio clip on a Playlist. Basically a fade-in and
+fade-out info<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>MetaData</b><br>
+      </td>
+      <td valign="top">The metadata associated with an Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>SearchCriteria</b><br>
+      </td>
+      <td valign="top">Criteria for searching Metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Configuration</b><br>
+      </td>
+      <td valign="top">The configuration parameters of the Playlist
+editor<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication</b><br>
+      </td>
+      <td valign="top">Component providing authentication services<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h3>Associations</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">source<br>
+      </th>
+      <th valign="top">association<br>
+      </th>
+      <th valign="top">target<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">Playlist uploader<br>
+      </td>
+      <td valign="top">Uploads to<br>
+      </td>
+      <td valign="top">Scheduler<br>
+      </td>
+      <td valign="top">The Playlist uploader uploads Playlists to the
+Scheduler<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist player<br>
+      </td>
+      <td valign="top">Accesses audio data from<br>
+      </td>
+      <td valign="top">Local storage<br>
+      </td>
+      <td valign="top">For playing on the local audio interface<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Clip retriever<br>
+      </td>
+      <td valign="top">Stores clips in<br>
+      </td>
+      <td valign="top">Local storage<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Clip retriever<br>
+      </td>
+      <td valign="top">Stores clips in<br>
+      </td>
+      <td valign="top">Media archive<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Clip retriever<br>
+      </td>
+      <td valign="top">Retrievers clips from<br>
+      </td>
+      <td valign="top">Media archive<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Local storage<br>
+      </td>
+      <td valign="top">Contains<br>
+      </td>
+      <td valign="top">Audio clip<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Media archive<br>
+      </td>
+      <td valign="top">Contains<br>
+      </td>
+      <td valign="top">Audio clip<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist uploader<br>
+      </td>
+      <td valign="top">Uploads<br>
+      </td>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist player<br>
+      </td>
+      <td valign="top">Plays<br>
+      </td>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top">Contains<br>
+      </td>
+      <td valign="top">Audio layer<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist element<br>
+      </td>
+      <td valign="top">References<br>
+      </td>
+      <td valign="top">Audio layer<br>
+      </td>
+      <td valign="top">Shows which layer the given Audio clip is on<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist element<br>
+      </td>
+      <td valign="top">Fades in with<br>
+      </td>
+      <td valign="top">FadeInfo<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist element<br>
+      </td>
+      <td valign="top">Fades out with<br>
+      </td>
+      <td valign="top">FadeInfo<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Audio clip<br>
+      </td>
+      <td valign="top">Is described by<br>
+      </td>
+      <td valign="top">MetaData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist maintainer<br>
+      </td>
+      <td valign="top">Searches by<br>
+      </td>
+      <td valign="top">SearchCriteria<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist maintainer</td>
+      <td valign="top">Creates and edits<br>
+      </td>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist maintainer</td>
+      <td valign="top">Listens to<br>
+      </td>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist maintainer</td>
+      <td valign="top">Edits<br>
+      </td>
+      <td valign="top">FadeInfo<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist maintainer</td>
+      <td valign="top">Maintains<br>
+      </td>
+      <td valign="top">Configuration<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Playlist maintainer</td>
+      <td valign="top">Is authenticated by<br>
+      </td>
+      <td valign="top">Authentication<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System behavior</h2>
+The behavior of the system as a whole as experienced from the outside
+is discussed in this section.<br>
+<h3>System sequence diagrams</h3>
+System diagrams are presented for each use case below.<br>
+<h4>UC-1 Create a Playlist</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="CreateaPlaylist_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
+<h4>UC-2 Add an Audio clip to Local storage</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="AddanAudiocliptoLocalstorage_SequenceDiagram.svg" width="800"
+ height="300"></object>
+<br>
+<h4>UC-3 Delete an Audio clip from Local storage</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="DeleteanAudioclipfromLocalstorage_SequenceDiagram.svg"
+ width="750" height="300"></object>
+<br>
+<h4>UC-4 Update an Audio clip in Local storage</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="UpdateanAudioclipinLocalstorage_SequenceDiagram.svg" width="850"
+ height="300"></object>
+<br>
+<h4>UC-5 Add or update an Audio clip to Media archive</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="AddorupdateanAudiocliptoMediaarchive_SequenceDiagram.svg"
+ width="1050" height="300"></object>
+<br>
+<h4>UC-6 Search for Audio clips</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="SearchforAudioclips_SequenceDiagram.svg" width="1000"
+ height="350"></object>
+<br>
+<h4>UC-7 Mirror an Audio clip from a remote Media archive in Local
+storage</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="MirroranAudioclipfromaremoteMediaarchiveinLocalstorage_SequenceDiagram.svg"
+ width="1000" height="350"></object>
+<br>
+<h4>UC-8 Add an Audio clip to a Playlist</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="AddanAudiocliptoaPlaylist_SequenceDiagram.svg" width="1000"
+ height="350"></object>
+<br>
+<h4>UC-9 Move the position of an Audio clip in a Playlist</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="MovethepositionofanAudioclipinaPlaylist_SequenceDiagram.svg"
+ width="600" height="250"></object>
+<br>
+<h4>UC-10 Edit the transition of an Audio clip</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="EditthetransitionofanAudioclip_SequenceDiagram.svg" width="600"
+ height="250"></object>
+<br>
+<h4>UC-11 Listen to a Playlist</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="ListentoaPlaylist_SequenceDiagram.svg" width="800" height="400"></object>
+<br>
+<h4>UC-12 Upload a Playlist to a Scheduler daemon</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="UploadaPlaylisttoaSchedulerdaemon_SequenceDiagram.svg"
+ width="750" height="300"></object>
+<br>
+<h4>UC-13 Maintain configuration information</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Maintainconfigurationinformation_SequenceDiagram.svg" width="550"
+ height="300"></object>
+<br>
+<h3>System objects</h3>
+The following figures shows the system objects and their functions, as
+derived from the system sequence diagrams.<br>
+<object type="image/svg+xml" name="system behaviour"
+ data="Systembehaviour.svg" width="650" height="400"></object>
+<br>
+<br>
+<h3>Contracts</h3>
+For all operations exposed in the system sequence diagrams, the
+following contracts are defined.<br>
+<h4>Contract for Playlist editor : authenticate</h4>
+See Authentication : authenticate<br>
+<h4>Contract for Playlist editor : createPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">createPlaylist<br>
+()<br>
+: Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Create a new, empty
+Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-1<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">a new, empty Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a Playlist is created<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : addAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">addAudioClip<br>
+(rawAudioData : RawAudioData,<br>
+metaData : MetaData)<br>
+: UniqueId<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">add an Audio Clip to
+Local storage through the Playlist editor<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-2<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">the unique id of the
+added audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : deleteAudioClipFromLocalStorage<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">deleteAudioClipFromLocalStorage<br>
+(audioClipId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">delete an Audio Clip
+from Local storage through the Playlist editor<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-3<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip exists
+in Local storage with the specified id, indicate as an error.</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : updateAudioClipInLocalStorage<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">updateAudioClipInLocalStorage<br>
+(audioClipId : UniqueId,<br>
+rawAudioData : RawAudioData,<br>
+metaData : MetaData)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">update the contents of
+an Audio Clip in Local storage through the Playlist editor<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-4<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip exists
+in Local storage with the specified id, indicate as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : addAudioClipToMediaArchive<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">addAudioClipToMediaArchive<br>
+(audioClipId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">add an Audio clip stored
+in Local storage to the Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-5<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in Local storage and Media archive.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip exists
+in Local storage with the specified id, indicate as an error.</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : searchMetadata<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">searchMetadata<br>
+(criteria : SearchCriteria)<br>
+: audioClipIds<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to search the Local
+storage and remote Media archive accessible through the Playlist editor.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-6<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in Local storage and Media archive.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">a list of Audio clip
+ids, which have metadata matching the search criteria.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : mirrorAudioClipInLocalStorage<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">mirrorAudioClipInLocalStorage<br>
+(audioClipId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to download and store an
+Audio clip in Local storage, which is available in the remote Media
+archive.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-7<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in Local storage and Media archive.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip exists
+in Media archive with the specified id, indicate as an error.</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : addAudioClipToPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">addAudioClipToPlaylist<br>
+(playlist : Playlist,<br>
+audioClipId : UniqueId,<br>
+offset : Time)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to add an Audio clip to
+a Playlist, with the specified offset<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-8<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip exists
+in either Local storage or Media archive with the specified id,
+indicate as an error.</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">create a new PlaylistElement instance<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">associate the PlaylistElement with the specified
+Playlist<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">associate the PlaylistElement with the specified
+Audio clip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">set the relativeOffset value of PlaylistElement
+to the supplied offset<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">find an Audio layer in the Playlist in which the
+new clip at specified offset does not overlap other clips<br>
+      </td>
+      <td valign="top">associate the found Audio layer with the created
+PlaylistElement<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">if the Audio clip is overlapping other clips in
+all Audio layers in the Playlist<br>
+      </td>
+      <td valign="top">create a new Audio layer<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">associate the Audio layer with the Playlist<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">associate the Audio layer with the
+PlaylistElement<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : updateAudioClipPositionInPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">updateAudioClipPositionInPlaylist<br>
+(playlist : Playlist,<br>
+playlistElement : PlaylistElement,<br>
+newOffset : Time)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to move an Audio clip
+within a playlist to an other offset<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-9<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if the new position of
+the Audio clip in its present Audio layer overlaps with other clips,
+indicate as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">set the relativeOffset value of PlaylistElement
+to the supplied offset<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : moveAudioClipToOtherLayer<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">moveAudioClipToOtherLayer<br>
+(playlist : Playlist,<br>
+playlistElement : PlaylistElement,<br>
+newLayer : Audio layer)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to move an Audio clip
+within a playlist to another Audio layer<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-9<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if the specified Audio
+layer is not associated with the specified Playlist, indicate as an
+error.<br>
+if the Audio clip overlaps other clips in the new Audio layer, indicate
+as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">remove association between the PlaylistElement
+and its current Audio layer<br>
+      </td>
+      <td valign="top">association broken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">associate PlaylistElement with the supplied
+Audio layer<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : updateFadeParameters<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">updateFadeParameters<br>
+(playlistElement : PlaylistElement,<br>
+newFadeInInfo : fadeInfo,<br>
+newFadeOutInfo : fadeInfo)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to update the fade-in
+and fade-out of an Audio clip in a Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-10<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">replace the contents of the fadeInInfo
+associated with the playlistElement with that of the supplied fadeInInfo<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">replace the contents of the fadeOutInfo
+associated with the playlistElement with that of the supplied
+fadeOutInfo </td>
+      <td valign="top">attribute modification </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : playPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">playPlaylist<br>
+(playlist : Playlist,<br>
+offset : Time)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to play a playlist on
+the local audio interface<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-11<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if offset points outside
+of playlist, report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : stopPlaying<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">stopPlaying<br>
+()<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to stop playing whatever
+is played.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-11<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if there is no Playlist
+currently playing, indicate as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : schedulePlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">schedulePlaylist<br>
+(playlist : Playlist,<br>
+schedule : Schedule)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to upload a Playlist to
+a Scheduler daemon for later execution<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-12<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">All the relevant work is
+done in the Scheduler daemon. </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : addConfiguration<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">addConfiguration<br>
+(configuration : Configuration)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to add a new
+Configuration item<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-13<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">create a new Configuration instance<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">fill the created configuration instance with the
+supplied information<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : updateConfiguration<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">updateConfiguration<br>
+(configuration : Configuration)<br>
+: void </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to update a
+Configuration item<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-13<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">fill the corresponding configuration instance
+with the supplied information<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Playlist editor : deleteConfiguration<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">deleteConfiguration<br>
+(configuration : Configuration)<br>
+: void </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">to delete a
+Configuration item<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-13<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">delete the corresponding configuration item<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+</body>
+</html>

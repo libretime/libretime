@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-2"
+ http-equiv="content-type">
+  <title>LiveSupport Software Architecture</title>
+  <meta content="Akos Maroy" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/SoftwareArchitecture/index.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes the software architecture of LiveSupport.<br>
+<br>
+This document contains embedded <a
+ href="http://www.w3.org/Graphics/SVG/">SVG</a> figures, thus an SVG
+capable browser is needed to view it, or an SVG plugin like <a
+ href="http://www.adobe.com/svg/">Adobe's SVG Viewer</a>.<br>
+<h1>Software Architecture</h1>
+The software architecture is <a href="SoftwareArchitecture.zuml">contained</a>
+in <a href="http://www.gentleware.com/products/descriptions/ce.php4">Poseidon
+2</a> format.<br>
+<h2>Scheduler</h2>
+The software architecture for the Scheduler component:<br>
+<object type="image/svg+xml" name="Scheduler Architecture"
+ data="SchedulerArchitecture.svg" width="950" height="550"></object>
+<br>
+<h2>Playlist editor</h2>
+The software architecture for the Playlist Editor:<br>
+<object type="image/svg+xml" name="PlaylistEditor Architecture"
+ data="PlaylistEditorArchitecture.svg" width="800" height="550"></object>
+<br>
+<h1>Components</h1>
+A brief summary of the software components appearing in the figures
+above:<br>
+<h2>Scheduler</h2>
+The LiveSupport Scheduler, responsible for executing playlists.<br>
+<h2>Playlist editor</h2>
+The LiveSupport Playlist editor, a graphical user interface component.<br>
+<h2>Media Archive</h2>
+The LiveSupport Media Archive component.<br>
+<h2>Local storage</h2>
+The LiveSupport Local Storage component.<br>
+<h2>Helix Client Library</h2>
+A media library developed by the <a href="https://helixcommunity.org/">Helix
+Community</a> and <a href="http://www.realnetworks.com/">Real Networks</a>.
+This library provides support for the <a
+ href="http://www.w3.org/AudioVideo/">SMIL</a> playlist format and <a
+ href="http://www.xiph.org/ogg/vorbis/">Ogg Vorbis</a> and MP3 audio
+formats.<br>
+<h2>OSS</h2>
+<a href="http://www.opensound.com/">Open Sound System</a>, a
+cross-platform low level audio API for accessing analog audio devices.
+This is the de-facto standard audio API for Linux until kernel 2.4.<br>
+<h2>ALSA</h2>
+<a href="http://www.alsa-project.org/">Advanced Linux Sound Architecture</a>,
+a more advanced low level audio API. This is the de-facto standard
+audio API for Linux since kernel 2.6.<br>
+<h2>GTK+</h2>
+<a href="http://www.gtk.org/">The GIMP Toolkit</a>, a cross-platform
+graphical user interface API.<br>
+<h1>Discussion<br>
+</h1>
+Among the software components listed above, OSS, ALSA and GTK+ are
+industry standard, and are straightforward to use. But the Helix Client
+Library is a special library, the open sourced version of Real
+Network's streaming libraries.<br>
+<br>
+Tests were made to make sure Helix indeed compiles and runs fine on the
+target platform. All libraries where successfully compiled and SMIL
+playlists were successfully played. For this, the splay command line
+sample program was used, which is part of the Helix codebase. For
+compiling helix client libraries, refer to the <a
+ href="https://common.helixcommunity.org/2004/devdocs/quickstart">Getting
+Started with the Helix Sources</a> pages. The settings used for
+successful compilation:<br>
+<br>
+<code>[0] Set BIF branch (hxclient_1_3_0_neptunex)<br>
+[1] Set Target(s) (splay)<br>
+[2] Set Profile (helix-client-all-defines)<br>
+[3] run: build<br>
+[4] Toggle make depend &amp; makefiles (-e -n)<br>
+[5] Toggle release (-trelease)<br>
+[6] Toggle 'make clean'&nbsp; (-c)<br>
+[7] Toggle clobber (Dangerous!) (-C)<br>
+[8] Toggle halt-on-error (-p green)<br>
+[9] Toggle verbose mode (-v)<br>
+[10] Toggle static build (-tnodll)<br>
+[11] Checkout source for selected target now<br>
+[12] Set Tag/Branch/Timestamp<br>
+[13] Help Page (full help in build/doc/index.html)<br>
+[14] run history: build<br>
+[Q] Quit</code><br>
+<br>
+</body>
+</html>

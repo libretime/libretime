@@ -1,0 +1,1678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-2"
+ http-equiv="content-type">
+  <title>LiveSupport Media archive specification</title>
+  <meta content="Ákos Maróy" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/MediaArchive/index.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document contains the specification of the LiveSupport Media
+archive component.<br>
+<br>
+This document contains embedded <a
+ href="http://www.w3.org/Graphics/SVG/">SVG</a> figures, thus an SVG
+capable browser is needed to view it, or an SVG plugin like <a
+ href="http://www.adobe.com/svg/">Adobe's SVG Viewer</a>.<br>
+<h1>Requirements</h1>
+<h2>Overview<br>
+</h2>
+The purpose of the Media archive is to store Audio clips with metadata
+information, and offer remote access to these clips.<br>
+<h2>Goals</h2>
+The goal of the Media storage system is to store Audio Clips and share
+them over the network. Another aim is to provide extensive search
+possibilities based on the metadata bundled with the audio clips.<br>
+<h2>System functions</h2>
+The main system functions are described below. There are three
+categories for these functions:<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">function category<br>
+      </th>
+      <th valign="top">meaning<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">evident<br>
+      </td>
+      <td valign="top">Should perform, and the user should be cognizant
+that it is performed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">hidden<br>
+      </td>
+      <td valign="top">Should perform, but not visible to the users.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">frill<br>
+      </td>
+      <td valign="top">Optional<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.1<br>
+      </td>
+      <td valign="top">Store audio clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.2<br>
+      </td>
+      <td valign="top">Provide remote access to audio data<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.3<br>
+      </td>
+      <td valign="top">Delete stored clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.4<br>
+      </td>
+      <td valign="top">Update stored clips<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F1.5<br>
+      </td>
+      <td valign="top">Search Audio clips by querying metadata<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System attributes</h2>
+Generic attributes<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">A1.1<br>
+      </td>
+      <td valign="top">operating system platform<br>
+      </td>
+      <td valign="top">Linux<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.2<br>
+      </td>
+      <td valign="top">remote interface<br>
+      </td>
+      <td valign="top">the Media archive is remotely accessible<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.3<br>
+      </td>
+      <td valign="top">supported audio formats<br>
+      </td>
+      <td valign="top">Ogg Vorbis, MP3, wav<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.4<br>
+      </td>
+      <td valign="top">uniquely identifiable Audio clips<br>
+      </td>
+      <td valign="top">all audio clips should be uniquely identifiable,
+even when moved among Media archive systems<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">A1.6<br>
+      </td>
+      <td valign="top">consistent downloads during updates<br>
+      </td>
+      <td valign="top">when an audio clip is being updated while also
+being downloaded, make sure that the downloads can continue with the
+original content<br>
+      </td>
+      <td valign="top">frill<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+Attributes related to system functions<br>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">function<br>
+      </th>
+      <th valign="top">ref#<br>
+      </th>
+      <th valign="top">attribute<br>
+      </th>
+      <th valign="top">details and constraints<br>
+      </th>
+      <th valign="top">category<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">F1.2<br>
+      </td>
+      <td valign="top">Provide remote access to audio data </td>
+      <td valign="top">A1.5<br>
+      </td>
+      <td valign="top">partial downloads<br>
+      </td>
+      <td valign="top">provide the possibility of interrupted (partial)
+downloads of raw audio data<br>
+      </td>
+      <td valign="top">must<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>Essential use cases</h2>
+This section lists generic (essential) uses cases, that do not contain
+architecture-specific considerations.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="EssentialUseCases.svg" width="600" height="550"></object>
+<h3>UC-1 Store or update Audio clip<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-1 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Store or update Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Archive maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To store a new Audio clip in the media archive,
+or update (replace) an already stored Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Archive maintainer contacts the Media
+archive with the aim
+of uploading and storing a new Audio Clip. If the uploaded Audio clip
+is already stored in Media archive (with respect of having the same
+unique id), the stored one is replaced with the uploaded one.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.1, F1.4, A1.4<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Archive maintainer connects to the Media archive
+with the
+intention of storing an Audio clip<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Archive maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Archive maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Archive maintainer presents the new Audio
+clip data,
+including raw audio data and metadata<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies the received data<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.1</b><br>
+      </td>
+      <td valign="top">If the presented Audio clip does not contain a
+unique id, one is generated.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.2</b><br>
+      </td>
+      <td valign="top">If the presented Audio clip contains a unique
+id, and there already is an Audio clip stored with the same id, the
+stored one is replaced with the uploaded Audio clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system stores the received Audio clip and
+notifies the Archive maintainer of the actions taken and the unique id
+of the stored clip.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Archive maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Archive maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 6.2:</b> TODO: handle the case of the raw audio data of
+the Audio clip is
+currently
+being downloaded (see UC-4, A1.6)<br>
+  </li>
+</ul>
+<br>
+<h3>UC-2 Delete Audio clip<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-2 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Delete Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Archive maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To delete an existing Audio clip in the media
+archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Archive maintainer contacts the Media
+archive with the aim
+of deleting an existing Audio Clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.3 </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Archive maintainer connects to the Media archive
+with the
+intention of deleting an Audio clip<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Archive maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Archive maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Archive maintainer presents the unique id of
+an Audio clip stored in Media archive for deletion<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system deletes the Audio clip corresponding
+to the presented unique id.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Archive maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Archive maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if no Audio clip is stored with the presented
+id, the Archive maintainer is notified. the use case ends.</li>
+  <li><b>action 5:</b> TODO: handle the case of the raw audio data of
+the Audio clip is
+currently
+being downloaded (see UC-4, A1.6)<br>
+  </li>
+</ul>
+<br>
+<h3>UC-3 Update Audio clip metadata<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-3 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Update Audio clip metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Archive maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To update the metadata of an Audio clip, without
+uploading raw audio data again.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Archive maintainer contacts the Media
+archive with the aim
+of updating the metadata for an already stored Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.4 </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Archive maintainer connects to the Media archive
+with the
+intention of updating the metadata for an Audio clip<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Archive maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Archive maintainer
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Archive maintainer presents the unique id of
+an Audio clip stored in Media archive and the new metadata for that
+Audio clip<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies the clip id and the metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system replaces the metadata of the Audio
+clip with the presented one<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Archive maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Archive maintainer can not be
+authenticated, he is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if no Audio clip is stored with the presented
+id, the Archive maintainer is notified. the use case ends.<br>
+  </li>
+</ul>
+<br>
+<h3>UC-4 Download raw audio data<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-4 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Download audio data<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Archive client<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To download raw audio data stored in the Media
+archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Archive client downloads the raw audio data.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.2, A1.3<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Archive client connects to the Media archive
+with
+the
+intention of downloading raw audio data<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Archive client provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Archive client and
+grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Archive client presents the unique id of an
+Audio clip stored in Media archive that he wants to download<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The systems looks up the Audio clip, and starts
+to send the raw audio content as a stream<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The Archive client receives the stream of raw
+audio data and saves it.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Archive client closes it's access and
+disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Archive client can not be authenticated,
+he
+is notified, and the use case ends.</li>
+  <li><b>action 4:</b> the Archive client specifies an offset from
+which he wants to start a partial download. the system starts to send
+raw audio data from this offset in action 5.<br>
+  </li>
+  <li><b>action 5:</b> if no Audio clip is stored with the presented
+id, the Archive client is notified. the use case ends.</li>
+</ul>
+<br>
+<h3>UC-5 Search in metadata<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-5 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Search in metadata<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Archive client<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To search in the metadata of audio clips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Archive client searches through the
+stored Audio clips by specifying search criteria for the metadata of
+the clips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F1.5<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Archive client connects to the Media archive
+with the
+intention of searching.<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Archive cleint provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Archive client
+and grants
+access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The system provides a way of specifying search
+criteria with respect to the existing metadata structures<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The Archive client specifies a search
+criteria<br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system searches through the metadata of
+contained Audio clips, and presents a list of matches<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Archive client refines his search and
+searches again<br>
+      </td>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The system does a new search according to the
+refined criteria, and presents the results to the Archive client<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Archive client reviews the results<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The Archive client disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Archive client can not be
+authenticated, he is notified, and the use case ends.</li>
+</ul>
+<h2>
+</h2>
+<br>
+<h2>Conceptual model</h2>
+The following figure displays the semantic concepts identified for the
+Scheduler daemon, and the main associations between the concepts.<br>
+<br>
+<object type="image/svg+xml" name="essential use cases"
+ data="Concepts.svg" width="650" height="600"></object>
+<br>
+<h3>Concepts</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">concept<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>Authentication</b><br>
+      </td>
+      <td valign="top">Component responsible for doing the
+authentications <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Unique Id<br>
+      </b> </td>
+      <td valign="top">A globally unique identifier used to to
+differentiate between objects that might even be created on different
+systems. Even though the whole space of Id is not known, the Ids must
+be unique.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>MetaData</b><br>
+      </td>
+      <td valign="top">Data about the AudioClip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>SearchCriteria<br>
+      </b></td>
+      <td valign="top">Describes the search parameters when doing a
+search on the MetaData<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>AudioClip</b><br>
+      </td>
+      <td valign="top">The basic unit of audio handled by Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>RawAudioData<br>
+      </b></td>
+      <td valign="top">The binary audio data contained in an Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Archive maintainer</b><br>
+      </td>
+      <td valign="top">The actor that maintains the contents of the
+Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Archive client</b><br>
+      </td>
+      <td valign="top">The actor that accesses the data stored in the
+Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h3>Associations</h3>
+<br>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th valign="top">source<br>
+      </th>
+      <th valign="top">association<br>
+      </th>
+      <th valign="top">target<br>
+      </th>
+      <th valign="top">description<br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">Is identified by<br>
+      </td>
+      <td valign="top">UniqueId<br>
+      </td>
+      <td valign="top">This is a globally unique id for each Audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">Is described by<br>
+      </td>
+      <td valign="top">MetaData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">Contains<br>
+      </td>
+      <td valign="top">RawAudioData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Archive maintainer<br>
+      </td>
+      <td valign="top">Is Authenticated by<br>
+      </td>
+      <td valign="top">Authentication<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Archive client<br>
+      </td>
+      <td valign="top">Searches in<br>
+      </td>
+      <td valign="top">MetaData<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Archive client<br>
+      </td>
+      <td valign="top">Searches by<br>
+      </td>
+      <td valign="top">SearchCriteria<br>
+      </td>
+      <td valign="top">The Archive client specifies such a
+SearchCriteria when doing a search on MetaData<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Archive maintainer<br>
+      </td>
+      <td valign="top">Manages<br>
+      </td>
+      <td valign="top">AudioClip<br>
+      </td>
+      <td valign="top">This includes uploading, updating and deleting
+AudioClips<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Archive client<br>
+      </td>
+      <td valign="top">Is Authenticated by<br>
+      </td>
+      <td valign="top">Authentication<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Archice client<br>
+      </td>
+      <td valign="top">Downloads<br>
+      </td>
+      <td valign="top">RawAudioData<br>
+      </td>
+      <td valign="top">Download RawAudioData as a binary stream.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h2>System behavior</h2>
+The behavior of the system as a whole as experienced from the outside
+is discussed in this section.<br>
+<h3>System sequence diagrams</h3>
+System diagrams are presented for each use case below.<br>
+<h4>UC-1 Store or update Audio clip</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="StoreorupdateAudioclip_SequenceDiagram.svg" width="650"
+ height="200"></object>
+<br>
+<h4>UC-2 Delete Audio clip</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="DeleteAudioclip_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
+<h4>UC-3 Update Audio clip metadata</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="UpdateAudioclipmetadata_SequenceDiagram.svg" width="750"
+ height="200"></object>
+<br>
+<h4>UC-4 Download raw audio data</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Downloadrawaudiodata_SequenceDiagram.svg" width="650"
+ height="200"></object>
+<br>
+<h4>UC-5 Search in metadata</h4>
+<object type="image/svg+xml" name="authenticate user sequence diagram"
+ data="Searchinmetadata_SequenceDiagram.svg" width="700" height="200"></object>
+<h3>System objects</h3>
+The following figures shows the system objects and their functions, as
+derived from the system sequence diagrams.<br>
+<object type="image/svg+xml" name="system behaviour"
+ data="Systembehaviour.svg" width="450" height="250"></object>
+<h3>Contracts</h3>
+For all operations exposed in the system sequence diagrams, the
+following contracts are defined.<br>
+<h4>Contract for Media archive : authenticate</h4>
+see Authentication : Authenticate<br>
+<h4>Contract for Media archive : storeAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">storeAudioClip<br>
+(audioClip : AudioClip)<br>
+: UniqueId<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Store a new audio clip
+or replace an existing one.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-1<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if this is an AudioClip
+update, and the RawAudioData of the already existing TODO: handle the
+case of the raw audio data of the Audio clip is
+currently
+being downloaded (see UC-4, A1.6) </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">the unique id of the
+stored audio clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">if this is a new audio clip:</td>
+      <td valign="top">an AudioClip object is created</td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a UniqueId is generated for the new clip<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the UniqueId is associated with the AudioClip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a MetaData object is created and filled with the
+presented contents<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the MetaData is associated with the AudioClip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">a RawAudioData object is created and filled with
+the presented contents<br>
+      </td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the RawAudioData is associated with the AudioClip<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">if the clip already existed:<br>
+      </td>
+      <td valign="top">the contents of MetaData for the AudioClip are
+replaced by the presented contents<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the contents of RawAudioData for the AudioClip
+are replaced by the presented contents<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Media archive : deleteAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">deleteAudioClip<br>
+(audioClipId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Delete an existing Audio
+clip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-2<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip with
+the specified id exists, report as an error.<br>
+TODO: handle the case of the raw audio data of the Audio clip is
+currently
+being downloaded (see UC-4, A1.6)<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the UniqueId for the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the MetaData for the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the RawAudioData for the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the AudioClip is deleted<br>
+      </td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Media archive : updateAudioClipMetadata<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">updateAudioClipMetadata<br>
+(audioClipId : UniqueId,<br>
+newMetadata : MetaData)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Update the metadata of
+an Audio clip stored in Media archive<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-3<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip with
+the specified id exists, report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the contents of MetaData for the AudioClip are
+replaced with the presented contents<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Media archive : accessRawAudioData<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">downloadRawAudioData<br>
+(audioClipId : UniqueId,<br>
+offset : int)<br>
+: RawAudioData<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Get access to raw audio
+data of an AudioClip as a data stream.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-4<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Audio clip with
+the specified id exists, report as an error.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">the RawAudioData as a
+stream for the
+AudioClip identified with the supplied UniqueId, started at the
+specified offset.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Media archive : searchMetadata<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">searchMetadata<br>
+(criteria : SearchCriteria)<br>
+: UniqueId<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Search through the
+metadata of stored AudioClips, and return all matching clip ids<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-5<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">A range of Audio clip
+ids, for which MetaData matches the supplied search criteria<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="left" valign="top">none<br>
+      </td>
+      <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+</body>
+</html>
