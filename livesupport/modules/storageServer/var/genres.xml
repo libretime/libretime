@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE options [
  <!ELEMENT options   (option*) >
- <!ELEMENT option    (label) >
+ <!ELEMENT option    (label+) >
  <!ELEMENT label     (#PCDATA) >
  <!ATTLIST option    id           CDATA   #REQUIRED >
  <!ATTLIST label     xml:lang     CDATA   #IMPLIED >
