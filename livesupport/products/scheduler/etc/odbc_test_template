@@ -1,4 +1,4 @@
-[ls_database]
+[LiveSupport-test]
 Description      = the LiveSupport database at PostgreSQL
 Driver           = PostgreSQL
 Trace            = No
