@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,7 @@
 #include <string>
 #include <libxml++/libxml++.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <unicode/unistr.h>
+#include <glibmm/ustring.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
@@ -70,7 +70,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class Playable
 {
@@ -138,7 +138,7 @@ class Playable
          *
          *  @return the title.
          */
-        virtual Ptr<UnicodeString>::Ref
+        virtual Ptr<Glib::ustring>::Ref
         getTitle(void) const                    throw () = 0;
 
         /**
@@ -147,29 +147,35 @@ class Playable
          *  @param title a new title.
          */
         virtual void
-        setTitle(Ptr<UnicodeString>::Ref title)
+        setTitle(Ptr<Glib::ustring>::Ref title)
                                                 throw () = 0;
 
 
         /**
          *  Return the value of a metadata field in this audio clip or playlist.
          *
+         *  @param  key  the name of the metadata field
+         *  @param  ns   the namespace of the metadata field (optional)
          *  @return the value of the metadata field; 0 if there is 
          *          no such field;
          */
-        virtual Ptr<UnicodeString>::Ref
-        getMetadata(const string &key) const
+        virtual Ptr<Glib::ustring>::Ref
+        getMetadata(const std::string &key, const std::string &ns = "") const
                                                 throw () = 0;
 
         /**
          *  Set the value of a metadata field in this audio clip or playlist.
          *
-         *  @param key the name of the metadata field.
          *  @param value the new value of the metadata field.
+         *  @param  key  the name of the metadata field
+         *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
-        setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+        setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key, 
+                                                   const std::string &ns = "")
                                                 throw () = 0;
+
+
 };
 
 

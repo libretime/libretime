@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,17 +97,16 @@ PlaylistElement :: configure(const xmlpp::Element & element)
     }
 
     // set id
-    const xmlpp::Attribute    * attribute;
-    std::stringstream           strStr;
-    UniqueId::IdType            idValue;
+    const xmlpp::Attribute*     attribute;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
         std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    strStr.str(attribute->get_value());
-    strStr >> idValue;
+    std::stringstream           idStream(attribute->get_value());
+    UniqueId::IdType            idValue;
+    idStream >> idValue;
     id.reset(new UniqueId(idValue));
 
     // set relative offset

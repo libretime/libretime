@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ AudioClipTest :: firstTest(void)
 {
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, false));
+                                new xmlpp::DomParser(configFileName, false));
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
         Ptr<AudioClip>::Ref     audioClip(new AudioClip());
@@ -103,12 +103,26 @@ AudioClipTest :: firstTest(void)
         audioClip->configure(*root);
 
         CPPUNIT_ASSERT(audioClip->getId()->getId() == 1);
-
         Ptr<const boost::posix_time::time_duration>::Ref  duration
                                                 = audioClip->getPlaylength();
         CPPUNIT_ASSERT(duration->hours() == 0);
         CPPUNIT_ASSERT(duration->minutes() == 18);
         CPPUNIT_ASSERT(duration->seconds() == 30);
+
+        Ptr<Glib::ustring>::Ref     title = audioClip->getTitle();
+        CPPUNIT_ASSERT(title);
+        CPPUNIT_ASSERT(*title == "File Title txt");
+
+        Ptr<Glib::ustring>::Ref     subject = audioClip
+                                        ->getMetadata("subject", "dc");
+        CPPUNIT_ASSERT(subject);
+        CPPUNIT_ASSERT(*subject == "Keywords: qwe, asd, zcx");
+
+        Ptr<Glib::ustring>::Ref     alternativeTitle = audioClip
+                                        ->getMetadata("alternative", "dcterms");
+        CPPUNIT_ASSERT(alternativeTitle);
+        CPPUNIT_ASSERT(*alternativeTitle ==
+                            "Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ");
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfo.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,16 +86,15 @@ FadeInfo :: configure(const xmlpp::Element  & element)
     }
 
     const xmlpp::Attribute    * attribute;
-    std::stringstream           strStr;
-    unsigned long int           idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
         std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    strStr.str(attribute->get_value());
-    strStr >> idValue;
+    std::stringstream           idStream(attribute->get_value());
+    UniqueId::IdType            idValue;
+    idStream >> idValue;
     id.reset(new UniqueId(idValue));
 
     if (!(attribute = element.get_attribute(fadeInAttrName))) {

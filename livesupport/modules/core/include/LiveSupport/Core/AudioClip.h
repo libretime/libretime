@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,15 @@ using namespace boost::posix_time;
  *  <code>playlength</code> attribute and the 
  *  <code>&lt;dcterms:extent&gt;</code>
  *  element are present, then the playlength is set from the attribute and 
- *  <code>&lt;dcterms:extent&gt;</code> is ignored.
+ *  <code>&lt;dcterms:extent&gt;</code> is ignored. Embedded XML elements are 
+ *  currently ignored: e.g., <pre><code>  &lt;group&gt;
+ *      &lt;member1&gt;value1&lt;/member1&gt;
+ *      &lt;member2&gt;value2&lt;/member2&gt;
+ *  &lt;/group&gt;</code></pre> produces a single metadata field 
+ *  <code>group</code> 
+ *  with an empty value,
+ *  and ignores <code>member1</code> and <code>member2</code>.
+ *  TODO: fix this?
  *
  *  The URI is not normally part of the XML element; it's only included
  *  as an optional attribute for testing purposes.
@@ -116,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -135,7 +143,7 @@ class AudioClip : public Configurable,
         /**
          *  The title of the audio clip.
          */
-        Ptr<UnicodeString>::Ref     title;
+        Ptr<Glib::ustring>::Ref     title;
 
         /**
          *  The playling length of the audio clip.
@@ -145,23 +153,17 @@ class AudioClip : public Configurable,
         /**
          *  The location of the binary audio clip sound file.
          */
-        Ptr<const string>::Ref      uri;
+        Ptr<const std::string>::Ref uri;
 
         /**
          *  The identifying token returned by the storage server.
          */
-        Ptr<const string>::Ref      token;
+        Ptr<const std::string>::Ref token;
 
         /**
-         *  The type for storing the metadata.
+         *  This audio clip in XML format.
          */
-        typedef std::map<const std::string, Ptr<UnicodeString>::Ref>
-                                    metadataType;
-
-        /**
-         *  The metadata for this audio clip.
-         */
-        metadataType                metadata;
+        Ptr<xmlpp::Document>::Ref   xmlAudioClip;
 
 
     public:
@@ -197,13 +199,7 @@ class AudioClip : public Configurable,
         AudioClip(Ptr<UniqueId>::Ref         id,
                   Ptr<time_duration>::Ref    playlength,
                   Ptr<string>::Ref           uri = Ptr<string>::Ref())
-                                                           throw ()
-        {
-            this->id         = id;
-            this->title.reset(new UnicodeString(""));
-            this->playlength = playlength;
-            this->uri        = uri;
-        }
+                                                           throw ();
 
         /**
          *  Create an audio clip by specifying all details.
@@ -215,16 +211,10 @@ class AudioClip : public Configurable,
          *             this audio clip object (optional)
          */
         AudioClip(Ptr<UniqueId>::Ref       id,
-                  Ptr<UnicodeString>::Ref  title,
+                  Ptr<Glib::ustring>::Ref  title,
                   Ptr<time_duration>::Ref  playlength,
                   Ptr<string>::Ref         uri = Ptr<string>::Ref())
-                                                           throw ()
-        {
-            this->id         = id;
-            this->title      = title;
-            this->playlength = playlength;
-            this->uri        = uri;
-        }
+                                                           throw ();
 
         /**
          *  A virtual destructor, as this class has virtual functions.
@@ -287,7 +277,7 @@ class AudioClip : public Configurable,
          *
          *  @return the URI.
          */
-        virtual Ptr<const string>::Ref
+        virtual Ptr<const std::string>::Ref
         getUri(void) const                      throw ()
         {
             return uri;
@@ -300,7 +290,7 @@ class AudioClip : public Configurable,
          *  @param uri the new URI.
          */
         virtual void
-        setUri(Ptr<const string>::Ref uri)      throw ()
+        setUri(Ptr<const std::string>::Ref uri) throw ()
         {
             this->uri = uri;
         }
@@ -311,7 +301,7 @@ class AudioClip : public Configurable,
          *
          *  @return the token.
          */
-        virtual Ptr<const string>::Ref
+        virtual Ptr<const std::string>::Ref
         getToken(void) const                    throw ()
         {
             return token;
@@ -324,7 +314,8 @@ class AudioClip : public Configurable,
          *  @param token a new token.
          */
         virtual void
-        setToken(Ptr<const string>::Ref token)  throw ()
+        setToken(Ptr<const std::string>::Ref token)
+                                                throw ()
         {
             this->token = token;
         }
@@ -335,7 +326,7 @@ class AudioClip : public Configurable,
          *
          *  @return the title.
          */
-        virtual Ptr<UnicodeString>::Ref
+        virtual Ptr<Glib::ustring>::Ref
         getTitle(void) const                    throw ()
         {
             return title;
@@ -347,31 +338,31 @@ class AudioClip : public Configurable,
          *  @param title a new title.
          */
         virtual void
-        setTitle(Ptr<UnicodeString>::Ref title)
-                                                throw ()
-        {
-            this->title = title;
-        }
-
+        setTitle(Ptr<Glib::ustring>::Ref title)
+                                                throw ();
 
         /**
          *  Return the value of a metadata field in this audio clip.
          *
+         *  @param  key  the name of the metadata field
+         *  @param  ns   the namespace of the metadata field (optional)
          *  @return the value of the metadata field; 0 if there is 
          *          no such field;
          */
-        virtual Ptr<UnicodeString>::Ref
-        getMetadata(const string &key) const
+        virtual Ptr<Glib::ustring>::Ref
+        getMetadata(const std::string &key, const std::string &ns = "") const
                                                 throw ();
 
         /**
          *  Set the value of a metadata field in this audio clip.
          *
-         *  @param key the name of the metadata field.
          *  @param value the new value of the metadata field.
+         *  @param  key  the name of the metadata field
+         *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
-        setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+        setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key, 
+                                                   const std::string &ns = "")
                                                 throw ();
 
 
@@ -383,7 +374,10 @@ class AudioClip : public Configurable,
          *  @return an xmlpp::Document containing the metadata.
          */
         Ptr<xmlpp::Document>::Ref
-        toXml()                           throw ();
+        toXml()                           throw ()
+        {
+            return xmlAudioClip;
+        }
 };
 
 

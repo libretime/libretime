@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -247,19 +247,18 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     
-/* this doesn't work yet
     Ptr<AudioClip>::Ref     newAudioClip;
     try {
-        newAudioClip = wsc->getAudioClip(sessionId, id01);
+        newAudioClip = wsc->getAudioClip(sessionId, id02);
     }
     catch (StorageException &e) {
         CPPUNIT_FAIL(e.what());
     }
     
-    CPPUNIT_ASSERT(std::string(*newAudioClip->getId()) == std::string(*id01));
+    CPPUNIT_ASSERT(std::string(*newAudioClip->getId()) == std::string(*id02));
     CPPUNIT_ASSERT(newAudioClip->getPlaylength()->total_seconds()
                    == audioClip->getPlaylength()->total_seconds());
-*/
+
     try{
         authentication->logout(sessionId);
     }

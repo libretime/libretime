@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,21 +52,6 @@ using namespace LiveSupport::Core;
 const std::string AudioClip::configElementNameStr = "audioClip";
 
 /**
- *  The name of the metadata child element.
- */
-static const std::string    metadataElementName = "metadata";
-
-/**
- *  The prefix of the extent (length) metadata element.
- */
-static const std::string    extentElementPrefix = "dcterms";
-
-/**
- *  The name of the extent (length) metadata element.
- */
-static const std::string    extentElementName = "extent";
-
-/**
  *  The name of the attribute to get the id of the audio clip.
  */
 static const std::string    idAttrName = "id";
@@ -81,11 +66,103 @@ static const std::string    uriAttrName = "uri";
  */
 static const std::string    playlengthAttrName = "playlength";
 
+/**
+ *  The name of the metadata child element.
+ */
+static const std::string    metadataElementName = "metadata";
+
+/**
+ *  The prefix of the extent (length) metadata element.
+ */
+static const std::string    extentElementPrefix = "dcterms";
+
+/**
+ *  The URI identifier for the "dcterms" prefix
+ */
+static const std::string    extentElementUri = "http://purl.org/dc/terms/";
+
+/**
+ *  The name of the extent (length) metadata element.
+ */
+static const std::string    extentElementName = "extent";
+
+/**
+ *  The prefix of the title metadata element.
+ */
+static const std::string    titleElementPrefix = "dc";
+
+/**
+ *  The URI identifier for the "dc" prefix
+ */
+static const std::string    titleElementUri ="http://purl.org/dc/elements/1.1/";
+
+/**
+ *  The name of the title metadata element.
+ */
+static const std::string    titleElementName = "title";
+
+/**
+ *  The URI identifier for the default XML namespace
+ */
+static const std::string    defaultPrefixUri ="http://www.streamonthefly.org/";
+
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  Test constructor without title.
+ *----------------------------------------------------------------------------*/
+AudioClip :: AudioClip(Ptr<UniqueId>::Ref   id,
+                  Ptr<time_duration>::Ref   playlength,
+                  Ptr<std::string>::Ref     uri)
+                                                           throw ()
+{
+    this->id         = id;
+    this->title.reset(new Glib::ustring(""));
+    this->playlength = playlength;
+    this->uri        = uri;
+    
+    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+                                        to_simple_string(*playlength) ));
+    setMetadata(playlengthString, extentElementName, extentElementPrefix);
+}
+
+/*------------------------------------------------------------------------------
+ *  Test constructor with title.
+ *----------------------------------------------------------------------------*/
+AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
+                       Ptr<Glib::ustring>::Ref  title,
+                       Ptr<time_duration>::Ref  playlength,
+                       Ptr<std::string>::Ref    uri)
+                                                           throw ()
+{
+    this->id         = id;
+    this->title      = title;
+    this->playlength = playlength;
+    this->uri        = uri;
+
+    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+                                        to_simple_string(*playlength) ));
+    setMetadata(playlengthString, extentElementName, extentElementPrefix);
+
+    setMetadata(title, titleElementName, titleElementPrefix);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of the title field.
+ *----------------------------------------------------------------------------*/
+void
+AudioClip :: setTitle(Ptr<Glib::ustring>::Ref title)
+                                                throw ()
+{
+    this->title = title;
+    setMetadata(title, titleElementName, titleElementPrefix);
+}
+
 
 /*------------------------------------------------------------------------------
  *  Create an audio clip object based on an XML element.
@@ -108,9 +185,9 @@ AudioClip :: configure(const xmlpp::Element  & element)
             eMsg += idAttrName;
             throw std::invalid_argument(eMsg);
         }
-        std::stringstream   strStr(attribute->get_value());
-        UniqueId::IdType    idValue;
-        strStr >> idValue;
+        std::stringstream           idStream(attribute->get_value());
+        UniqueId::IdType            idValue;
+        idStream >> idValue;
         id.reset(new UniqueId(idValue));
     }
 
@@ -133,26 +210,43 @@ AudioClip :: configure(const xmlpp::Element  & element)
         const xmlpp::Element    * metadataElement 
                                 = dynamic_cast<const xmlpp::Element*> (*it);
 
-        xmlpp::Node::NodeList   dataFieldList
-                                = metadataElement->get_children();
-        xmlpp::Node::NodeList::iterator listIt = dataFieldList.begin();
+        xmlAudioClip.reset(new xmlpp::Document);
+        xmlpp::Element*     root = xmlAudioClip->create_root_node("audioClip");
+        root->set_attribute("id", std::string(*id));
+        root->import_node(metadataElement, true);    // true = recursive
+
+        const xmlpp::Node::NodeList dataFieldList
+                                    = metadataElement->get_children();
+        xmlpp::Node::NodeList::const_iterator listIt = dataFieldList.begin();
 
         while (listIt != dataFieldList.end()) {
-            const xmlpp::Node * dataNode = *listIt;
-            if (!playlength 
-                    && dataNode->get_namespace_prefix() == extentElementPrefix
-                    && dataNode->get_name() == extentElementName) {
-                const xmlpp::Element
-                        * dataElement 
-                        = dynamic_cast<const xmlpp::Element*> (dataNode);
-                if (dataElement->has_child_text()) {
-                    std::stringstream strStr(dataElement->get_child_text()
-                                                        ->get_content());
-                    unsigned long int seconds;
-                    strStr >> seconds;
-                    playlength.reset(new time_duration(0,0,seconds,0));
-                }
+            const xmlpp::Node*  dataNode = *listIt;
+            std::string         prefix   = dataNode->get_namespace_prefix();
+            std::string         name     = dataNode->get_name();
+            const xmlpp::Element*
+                                dataElement 
+                              = dynamic_cast<const xmlpp::Element*> (dataNode);
+            if (!dataElement) {
+                ++listIt;
+                continue;
             }
+
+            if (!playlength && prefix  == extentElementPrefix
+                            && name    == extentElementName
+                            && dataElement->has_child_text()) {
+                playlength.reset(new time_duration(duration_from_string(
+                            dataElement->get_child_text()->get_content() )));
+            }
+
+            if (!title && prefix  == titleElementPrefix
+                       && name    == titleElementName
+                       && dataElement->has_child_text()) {
+                Glib::ustring       value = dataElement->get_child_text()
+                                                       ->get_content();
+                Ptr<Glib::ustring>::Ref ptrToValue(new Glib::ustring(value));
+                title = ptrToValue;
+            }
+
             ++listIt;
         }
         
@@ -168,27 +262,54 @@ AudioClip :: configure(const xmlpp::Element  & element)
     if (!playlength) {
         std::string eMsg = "missing attribute ";
         eMsg += playlengthAttrName;
+        eMsg += " or metadata element ";
+        eMsg += extentElementPrefix + ":" + extentElementName;
         throw std::invalid_argument(eMsg);
     }
+    
+    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+                                             to_simple_string(*playlength) ));
+    setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Return the value of a metadata field.
  *----------------------------------------------------------------------------*/
-Ptr<UnicodeString>::Ref
-AudioClip :: getMetadata(const string &key) const
+Ptr<Glib::ustring>::Ref
+AudioClip :: getMetadata(const string &key, const std::string &ns) const
                                                 throw ()
 {
-    metadataType::const_iterator  it = metadata.find(key);
+    Ptr<Glib::ustring>::Ref value;
 
-    if (it != metadata.end()) {
-        return it->second;
+    if (! xmlAudioClip) {
+        return value;
     }
-    else {
-        Ptr<UnicodeString>::Ref nullPointer;
-        return nullPointer;
+    xmlpp::Element*         rootNode = xmlAudioClip->get_root_node();
+    if (! rootNode) {
+        return value;
     }
+    xmlpp::Node::NodeList   rootList = rootNode->get_children("metadata");
+    if (rootList.size() == 0) {
+        return value;
+    }
+    
+    xmlpp::Node*            metadata = rootList.front();
+    xmlpp::Node::NodeList   nodeList = metadata->get_children(key);
+    xmlpp::Node::NodeList::iterator it = nodeList.begin();
+    
+    while (it != nodeList.end()) {
+        xmlpp::Node*        node = *it;
+        if (node->get_namespace_prefix() == ns) {
+            xmlpp::Element* element = dynamic_cast<xmlpp::Element*> (node);
+            value.reset(new Glib::ustring(element->get_child_text()
+                                                 ->get_content()));
+            return value;
+        }
+        ++it;
+    }
+
+    return value;
 }
 
 
@@ -196,23 +317,63 @@ AudioClip :: getMetadata(const string &key) const
  *  Set the value of a metadata field.
  *----------------------------------------------------------------------------*/
 void
-AudioClip :: setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+AudioClip :: setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key,
+                                                        const std::string &ns)
                                                 throw ()
 {
-    metadata[key] = value;
-}
+    if (ns == extentElementPrefix && key == extentElementName) {
+        playlength.reset(new time_duration(
+                                duration_from_string(*value) ));
+    }
+    
+    if (ns == titleElementPrefix && key == titleElementName) {
+        title = value;
+    }
 
+    if (! xmlAudioClip) {
+        xmlAudioClip.reset(new xmlpp::Document);
+    }
+    xmlpp::Element*         rootNode = xmlAudioClip->get_root_node();
+    if (! rootNode) {
+        rootNode = xmlAudioClip->create_root_node("audioClip");
+    }
+    xmlpp::Node::NodeList   rootList = rootNode->get_children("metadata");
+    xmlpp::Element*         metadata;
+    if (rootList.size() > 0) {
+        metadata = dynamic_cast<xmlpp::Element*> (rootList.front());
+    }
+    else {
+        metadata = rootNode->add_child("metadata");
+        metadata->set_namespace_declaration(defaultPrefixUri);
+        metadata->set_namespace_declaration(titleElementUri, 
+                                            titleElementPrefix);
+        metadata->set_namespace_declaration(extentElementUri, 
+                                            extentElementPrefix);
+    }
 
-/*------------------------------------------------------------------------------
- *  Create an XML document from this audio clip.
- *----------------------------------------------------------------------------*/
-Ptr<xmlpp::Document>::Ref
-AudioClip :: toXml()
-                                               throw ()
-{
-    Ptr<xmlpp::Document>::Ref   metadata(new xmlpp::Document);
-    metadata->create_root_node("metadata");
-    metadata->add_comment("some data will come here");
-    return metadata;
+    xmlpp::Node::NodeList   nodeList = metadata->get_children(key);
+    xmlpp::Node::NodeList::iterator it = nodeList.begin();
+    xmlpp::Element*         element;
+
+    while (it != nodeList.end()) {
+        xmlpp::Node*        node = *it;
+        if (node->get_namespace_prefix() == ns) {
+            element = dynamic_cast<xmlpp::Element*> (nodeList.front());
+            break;
+        }
+        ++it;
+    }
+    
+    if (it == nodeList.end()) {
+        element = metadata->add_child(key);
+        try {
+            element->set_namespace(ns);
+        }
+        catch (xmlpp::exception &e) {
+        // this namespace has not been declared; well OK, do nothing then
+        }
+    }
+    
+    element->set_child_text(*value);
 }
 

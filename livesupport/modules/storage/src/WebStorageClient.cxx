@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -588,6 +588,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
         const xmlpp::Element      * root     = document->get_root_node();
 
         audioClip->configure(*root);
+
     } catch (std::invalid_argument &e) {
         throw XmlRpcMethodResponseException(
                                     "semantic error in audio clip metafile");

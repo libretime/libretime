@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<audioClip id="1" playlength="00:18:30.000" uri="file:var/test1.mp3">
+<audioClip id="0000000000000001" 
+           playlength="00:18:30.000000" uri="file:var/test1.mp3">
     <metadata
       xmlns="http://www.streamonthefly.org/"
       xmlns:dc="http://purl.org/dc/elements/1.1/"

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -112,7 +112,7 @@ class Playlist : public Configurable,
         /**
          *  The title of the playlist.
          */
-        Ptr<UnicodeString>::Ref     title;
+        Ptr<Glib::ustring>::Ref     title;
 
         /**
          *  The playling length of the playlist.
@@ -171,7 +171,7 @@ class Playlist : public Configurable,
         /**
          *  The type for storing the metadata.
          */
-        typedef std::map<const std::string, Ptr<UnicodeString>::Ref>
+        typedef std::map<const std::string, Ptr<Glib::ustring>::Ref>
                                     metadataType;
 
         /**
@@ -206,7 +206,7 @@ class Playlist : public Configurable,
                                                 throw ()
         {
             this->id         = id;
-            this->title.reset(new UnicodeString(""));
+            this->title.reset(new Glib::ustring(""));
             this->playlength = playlength;
             this->uri        = uri;
             elementList.reset(new PlaylistElementListType);
@@ -224,7 +224,7 @@ class Playlist : public Configurable,
          *             playlist (optional)
          */
         Playlist(Ptr<UniqueId>::Ref        id,
-                 Ptr<UnicodeString>::Ref   title,
+                 Ptr<Glib::ustring>::Ref   title,
                  Ptr<time_duration>::Ref   playlength,
                  Ptr<std::string>::Ref     uri = Ptr<std::string>::Ref())
                                                 throw ()
@@ -541,7 +541,7 @@ class Playlist : public Configurable,
          *
          *  @return the title.
          */
-        virtual Ptr<UnicodeString>::Ref
+        virtual Ptr<Glib::ustring>::Ref
         getTitle(void) const                    throw ()
         {
             return title;
@@ -553,7 +553,7 @@ class Playlist : public Configurable,
          *  @param title a new title.
          */
         virtual void
-        setTitle(Ptr<UnicodeString>::Ref title)
+        setTitle(Ptr<Glib::ustring>::Ref title)
                                                 throw ()
         {
             this->title = title;
@@ -563,26 +563,29 @@ class Playlist : public Configurable,
         /**
          *  Return the value of a metadata field in this playlist.
          *
-         *  Currently, this always returns a null pointer.
-         *
+         *  @param  key  the name of the metadata field
+         *  @param  ns   the namespace of the metadata field (optional)
          *  @return the value of the metadata field; 0 if there is 
          *          no such field;
          */
-        virtual Ptr<UnicodeString>::Ref
-        getMetadata(const string &key) const
+        virtual Ptr<Glib::ustring>::Ref
+        getMetadata(const std::string &key, const std::string &ns = "") const
                                                 throw ();
 
         /**
          *  Set the value of a metadata field in this playlist.
          *
-         *  Currently, this does not do anything.
-         *
-         *  @param key the name of the metadata field.
          *  @param value the new value of the metadata field.
+         *  @param  key  the name of the metadata field
+         *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
-        setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+        setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key, 
+                                                   const std::string &ns = "")
                                                 throw ();
+
+
+
 };
 
 

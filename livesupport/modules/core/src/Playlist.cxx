@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,16 +86,15 @@ Playlist :: configure(const xmlpp::Element    & element)
     }
 
     const xmlpp::Attribute    * attribute;
-    std::stringstream           strStr;
-    unsigned long int           idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
         std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    strStr.str(attribute->get_value());
-    strStr >> idValue;
+    std::stringstream           idStream(attribute->get_value());
+    UniqueId::IdType            idValue;
+    idStream >> idValue;
     id.reset(new UniqueId(idValue));
 
     if (!(attribute = element.get_attribute(playlengthAttrName))) {
@@ -369,17 +368,18 @@ Playlist::revertToSavedCopy(void)        throw (std::invalid_argument)
 /*------------------------------------------------------------------------------
  *  Return the value of a metadata field.
  *----------------------------------------------------------------------------*/
-Ptr<UnicodeString>::Ref
-Playlist :: getMetadata(const string &key) const
+Ptr<Glib::ustring>::Ref
+Playlist :: getMetadata(const string &key, const string &ns) const
                                                 throw ()
 {
-    metadataType::const_iterator  it = metadata.find(key);
+    std::string                   completeKey = key + ns;
+    metadataType::const_iterator  it = metadata.find(completeKey);
 
     if (it != metadata.end()) {
         return it->second;
     }
     else {
-        Ptr<UnicodeString>::Ref nullPointer;
+        Ptr<Glib::ustring>::Ref nullPointer;
         return nullPointer;
     }
 }
@@ -389,9 +389,11 @@ Playlist :: getMetadata(const string &key) const
  *  Set the value of a metadata field.
  *----------------------------------------------------------------------------*/
 void
-Playlist :: setMetadata(const string &key, Ptr<UnicodeString>::Ref value)
+Playlist :: setMetadata(Ptr<Glib::ustring>::Ref value, const string &key, 
+                                                       const string &ns)
                                                 throw ()
 {
-    metadata[key] = value;
+    std::string     completeKey = key + ns;
+    metadata[completeKey] = value;
 }
 
