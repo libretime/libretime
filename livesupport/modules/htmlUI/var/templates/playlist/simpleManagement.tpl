@@ -13,7 +13,7 @@
     {include file="playlist/editor.tpl"}
 {else}                      {* no active Playlist *}
     <tr><td colspan="4">No active Playlist!</td></tr>
-    <tr><td colspan="4"><input type="button" value="Make new Playlist" onClick="hpopup('{$UI_HANDLER}?act=PL.create')"></td></tr>
+    <tr><td colspan="4"><input type="button" value="Create empty Playlist" onClick="hpopup('{$UI_HANDLER}?act=PL.create')"></td></tr>
 {/if}
 
 </table>

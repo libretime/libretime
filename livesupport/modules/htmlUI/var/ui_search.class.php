@@ -20,8 +20,8 @@ class uiSearch
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setConstants(array('id'=>$id, 'counter'=>$this->criteria['counter'] ? $this->criteria['counter'] : UI_SEARCH_MIN_ROWS));
 
-        foreach ($mask['tabs']['group']['group'] as $k=>$v) {
-            foreach ($mask['pages'][$v] as $val){
+        foreach ($mask['pages'] as $k=>$v) {
+            foreach ($mask['pages'][$k] as $val){
                 $col1[$this->Base->_formElementEncode($val['element'])] = $val['label'];
                 if (isset($val['relation']))
                     $col2[$this->Base->_formElementEncode($val['element'])] = $mask2['relations'][$val['relation']];

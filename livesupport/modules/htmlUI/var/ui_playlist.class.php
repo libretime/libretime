@@ -19,7 +19,7 @@ class uiPlaylist
         if (!$this->activeId) {
             return FALSE;
         }
-        #print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid));
+        print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid));
         return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
     }
 
@@ -38,8 +38,7 @@ class uiPlaylist
             return FALSE;
         }
         $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
-        $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $this->token);
-        #$this->active = $this->Base->gb->getPlaylistArray($plid, $this->Base->sessid);
+        $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid.':'.$this->token);
         $this->activeId = $plid;
         $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
         return TRUE;
@@ -87,11 +86,14 @@ class uiPlaylist
     }
 
 
-    function testForLooked()
+    function loadLookedFromPref()
     {
-        if(is_string($this->token = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
-            $this->Base->_retMsg('Playlist looked by You was released');
-            $this->release();
+        if(is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
+            $this->Base->_retMsg('Found Playlist looked by you');
+            #$this->release();
+            list ($this->activeId, $this->token) = explode (':', $saved);
+
+            $this->Base->redirUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
             return TRUE;
         }
         return FALSE;
@@ -106,17 +108,17 @@ class uiPlaylist
         return TRUE;
     }
 
-    function removeItem($gunids)
+    function removeItem($elemIds)
     {
-        if (!$gunids) {
+        if (!$elemIds) {
             $this->Base->_retMsg('No Item(s) given');
             return FALSE;
         }
-        if (!is_array($gunids))
-            $gunids = array($gunids);
+        if (!is_array($elemIds))
+            $elemIds = array($elemIds);
 
-        foreach ($gunids as $gunid) {
-            if ($this->Base->gb->delAudioClipFromPlaylist($this->token, $this->Base->gb->_idFromGunid($gunid), $this->Base->sessid) !== TRUE) {
+        foreach ($elemIds as $elemId) {
+            if ($this->Base->gb->delAudioClipFromPlaylist($this->token, $elemId, $this->Base->sessid) !== TRUE) {
                 $this->Base->_retMsg('Cannot remove Item from Playlist');
                 return FALSE;
             }
@@ -153,21 +155,23 @@ class uiPlaylist
 
     function getFlat()
     {
-        $this->plwalk($this->get(), 0);
+        $this->plwalk($this->get());
+        #print_r($this->flat);
         return $this->flat;
     }
 
 
-    function plwalk($arr, $parent)
+    function plwalk($arr, $parent=0, $attrs=0)
     {
         foreach ($arr['children'] as $node=>$sub) {
             if ($sub['elementname']=='playlistelement') {
-                $this->plwalk($sub, $node);
+                $this->plwalk($sub, $node, $sub['attrs']);
             }
-            if ($sub['elementname']=='audioclip' || $sub['elementname']=='webstream') {
+            if ($sub['elementname']=='audioclip') {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
                 $this->flat["$parent.$node"] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
+                $this->flat["$parent.$node"]['attrs'] = $attrs;
             }
         }
     }

@@ -4,8 +4,8 @@
 {PL->getFlat assign='FLAT'}
 {foreach from=$FLAT item='i'}
     {* {uiBrowser->_niceTime p1=$i.playlength assign='nicelength'} *}
-    <tr onMouseOver="highlight()" onMouseOut="darklight()" onContextmenu="return menu('{$i.id}', 'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
-        <td><input type="checkbox" name="{$i.id}"></td>
+    <tr onMouseOver="highlight()" onMouseOut="darklight()" onContextmenu="return menu('{$i.attrs.id}', 'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
+        <td><input type="checkbox" name="{$i.attrs.id}"></td>
         <td>{$i.title}</td>
         <td>{$i.duration}</td>
         <td>{$i.type}</td>

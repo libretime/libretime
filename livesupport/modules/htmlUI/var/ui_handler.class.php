@@ -38,8 +38,7 @@ class uiHandler extends uiBase {
      */
     function login(&$formdata, &$mask)
     {
-        session_destroy();
-        session_start();
+        #$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
             $_SESSION['retransferFormData']['login']=$formdata['login'];

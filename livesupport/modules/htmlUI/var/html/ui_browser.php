@@ -35,6 +35,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('loginform', $uiBrowser->loginform($Smarty, $ui_fmask));
                 $Smarty->display('popup/login.tpl');
             break;
+
+            case "_2PL.simpleManagement":
+                $Smarty->assign('target', 'PL.simpleManagement');
+                $Smarty->display('popup/_redirector.tpl');
+            break;
         }
     }
     die();
