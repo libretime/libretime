@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -135,8 +135,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
             eMsg += " XML element";
             throw std::invalid_argument(eMsg);
         }
-    }
-    else {
+    } else {
         childNodes  = element.get_children(playlistElementName);
         it          = childNodes.begin();
         if (it != childNodes.end()) {
@@ -153,8 +152,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
                 eMsg += " XML element";
                 throw std::invalid_argument(eMsg);
             }
-        }
-        else {
+        } else {
             std::string eMsg = "missing ";
             eMsg += audioClipElementName;
             eMsg += " or ";

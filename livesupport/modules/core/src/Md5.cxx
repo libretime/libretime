@@ -73,7 +73,7 @@ documentation and/or software.
   ------------------------------------------------------------------------------
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Md5.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -198,8 +198,7 @@ void Md5::update (uint1 *input, uint4 input_length)
             transform (input+input_index);
         }
     buffer_index = 0;  // so we can buffer remaining
-    }
-    else {
+    } else {
         input_index=0;     // so we can buffer the whole input
     }
 

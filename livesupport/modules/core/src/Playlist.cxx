@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,8 +109,7 @@ Playlist :: configure(const xmlpp::Element    & element)
 
     if ((attribute = element.get_attribute(titleAttrName))) {
         title.reset(new const Glib::ustring(attribute->get_value()));
-    }
-    else {
+    } else {
         title.reset(new const Glib::ustring(""));
     }
 
@@ -276,17 +275,14 @@ Playlist::setLockedForEditing(const bool lockStatus)
     if (lockStatus == true) {
         if (isLockedForPlaying || isLockedForEditing) {
             return false;
-        }
-        else {
+        } else {
             isLockedForEditing = true;
             return true;
         }
-    }
-    else {
+    } else {
         if (isLockedForPlaying) {
             return false;
-        }
-        else {
+        } else {
             isLockedForEditing = false;
             return true;                    // returns true also if playlist
         }                                   // was already unlocked!
@@ -304,13 +300,11 @@ Playlist::setLockedForPlaying(const bool lockStatus)
     if (lockStatus == true) {
         if (isLockedForPlaying) {
             return false;
-        }
-        else {
+        } else {
             isLockedForPlaying = true;      // preserve LockedForEditing state
             return true;
         }
-    }
-    else {
+    } else {
         isLockedForPlaying = false;         // restore LockedForEditing state;
         return true;                        // returns true also if playlist
     }                                       // was already unlocked!
@@ -337,15 +331,14 @@ Playlist::valid(void)                    throw ()
         if (playlistElement->getType() == PlaylistElement::AudioClipType) {
             audioClip = playlistElement->getAudioClip();
             *runningTime += *(audioClip->getPlaylength());
-        }
-        else if (playlistElement->getType() == PlaylistElement::PlaylistType) {
+        } else if (playlistElement->getType() 
+			                == PlaylistElement::PlaylistType) {
             playlist = playlistElement->getPlaylist();
             if (!playlist->valid()) {
                 return false;
             }
             *runningTime += *(playlist->getPlaylength());
-        }
-        else {                  // this should never happen
+        } else {                  // this should never happen
             return false;
         }
         ++it;
@@ -409,8 +402,7 @@ Playlist :: getMetadata(const string &key, const string &ns) const
     if (it != metadata.end()) {
         Ptr<Glib::ustring>::Ref data(new Glib::ustring(*it->second));
         return data;
-    }
-    else {
+    } else {
         Ptr<Glib::ustring>::Ref nullPointer;
         return nullPointer;
     }

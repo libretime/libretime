@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  An interface for authentication clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class AuthenticationClientInterface
 {
@@ -160,6 +160,29 @@ class AuthenticationClientInterface
         savePreferencesItem(Ptr<SessionId>::Ref             sessionId,
                             const Glib::ustring &           key,
                             Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Delete a `user preferences' item from the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *
+         *  @exception XmlRpcInvalidArgumentException
+         *                    bad sessionId argument
+         *  @exception XmlRpcCommunicationException
+         *                    problem with performing XML-RPC call
+         *  @exception XmlRpcMethodFaultException 
+         *                    XML-RPC method returned fault response
+         *  @exception XmlRpcMethodResponseException
+         *                    response from XML-RPC method is incorrect
+         *  @exception XmlRpcException other error 
+         *                                     (TestAuthenticationClient only)
+         */
+        virtual void
+        deletePreferencesItem(Ptr<SessionId>::Ref           sessionId,
+                              const Glib::ustring &         key)
                                                 throw (XmlRpcException)
                                                                         = 0;
 };

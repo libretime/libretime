@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -212,7 +212,7 @@ WebAuthenticationClientTest :: preferencesTest(void)
     }
     CPPUNIT_ASSERT(*newPrefValue == "страстные");
 
-    // check another normal save and load
+    // check another normal save and load ...
     prefValue.reset(new const Glib::ustring("ne dobryj"));
     try {
         wac->savePreferencesItem(sessionId, "hour", prefValue);
@@ -220,12 +220,33 @@ WebAuthenticationClientTest :: preferencesTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
+            // ... but now change session ID in the middle
+            try {
+                wac->logout(sessionId);
+                sessionId = wac->login("root", "q");
+            } catch (XmlRpcException &e) {
+                CPPUNIT_FAIL(e.what());
+            }
+
     try {
         newPrefValue = wac->loadPreferencesItem(sessionId, "hour");
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // check the delete method
+    try {
+        wac->deletePreferencesItem(sessionId, "hour");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = wac->loadPreferencesItem(sessionId, "hour");
+        CPPUNIT_FAIL("Allowed to load preference after it was deleted");
+    } catch (XmlRpcException &e) {
+    }
     
     // and log out
     try {

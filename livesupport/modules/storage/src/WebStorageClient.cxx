@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1016,8 +1016,7 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                             smilAudioClipUriAttrName, 
                             *(audioClip->getUri()) );
             ++it;
-        }
-        else if (plElement->getType() == PlaylistElement::PlaylistType) {
+        } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             Ptr<Playlist>::Ref playlist 
                             = acquirePlaylist(sessionId, plElement
                                                          ->getPlaylist()
@@ -1032,8 +1031,7 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                             smilPlaylistUriAttrName, 
                             *(playlist->getUri()) );
             ++it;
-        }
-        else {          // this should never happen
+        } else {          // this should never happen
             throw XmlRpcInvalidArgumentException(
                                            "unexpected playlist element type "
                                            "(neither audio clip nor playlist)");
@@ -1086,8 +1084,7 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                 eMsg += "\n";
             }
             ++it;
-        }
-        else if (plElement->getType() == PlaylistElement::PlaylistType) {
+        } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             try {
                 releasePlaylist(sessionId, it->second->getPlaylist());
             }
@@ -1096,8 +1093,7 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                 eMsg += "\n";
             }
             ++it;
-        }
-        else {                      // this should never happen
+        } else {                      // this should never happen
                 eMsg += "unexpected playlist element type\n";
         }        
     }

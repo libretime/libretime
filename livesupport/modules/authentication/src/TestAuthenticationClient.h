@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,10 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A dummy authentication client.
+ *  A dummy authentication client.  It only supports one user, whose name and
+ *  password are read from a configuration file.  It issues session IDs when
+ *  login() is called, and deletes these session IDs when logout() is called.
+ *  It also stores (key, value) pairs of user preferences for this one user.
  *
  *  This object has to be configured with an XML configuration element
  *  called testAuthentication. This element contains a child element
@@ -92,7 +95,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -119,12 +122,12 @@ class TestAuthenticationClient :
         *  A type for the list of sessionId's.
         */
         typedef std::set<std::string>
-                                    sessionIdListType;
+                                    SessionIdListType;
 
        /**
         *  A list of the sessionId's we have issued.
         */
-        sessionIdListType           sessionIdList;
+        SessionIdListType           sessionIdList;
 
        /**
         *  The number of the sessionId's we have issued.
@@ -135,12 +138,12 @@ class TestAuthenticationClient :
         *  A type for the list of user preferences.
         */
         typedef std::map<const Glib::ustring, Ptr<const Glib::ustring>::Ref>
-                                    preferencesType;
+                                    PreferencesType;
 
        /**
         *  A list of the user preferences items stored.
         */
-        preferencesType             preferences;
+        PreferencesType             preferences;
 
 
     public:
@@ -227,6 +230,18 @@ class TestAuthenticationClient :
         savePreferencesItem(Ptr<SessionId>::Ref             sessionId,
                             const Glib::ustring &           key,
                             Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Delete a `user preferences' item from the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *  @exception XmlRpcException invalid session ID, or no such key
+         */
+        virtual void
+        deletePreferencesItem(Ptr<SessionId>::Ref           sessionId,
+                              const Glib::ustring &         key)
                                                 throw (XmlRpcException);
 };
 

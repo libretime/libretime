@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -288,8 +288,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
                 if (dataElement->has_child_text()) {
                     playlength.reset(new time_duration(duration_from_string(
                             dataElement->get_child_text()->get_content() )));
-                }
-                else {              // or just leave blank?  bad either way
+                } else {              // or just leave blank?  bad either way
                     playlength.reset(new time_duration(0,0,0,0));
                 }
             }
@@ -299,8 +298,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
                 Glib::ustring       value;
                 if (dataElement->has_child_text()) {
                     value = dataElement->get_child_text()->get_content();
-                }
-                else {
+                } else {
                     value = "";
                 }
                 Ptr<const Glib::ustring>::Ref ptrToValue(
@@ -413,8 +411,7 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
     xmlpp::Element*         metadata;
     if (rootList.size() > 0) {
         metadata = dynamic_cast<xmlpp::Element*> (rootList.front());
-    }
-    else {
+    } else {
         metadata = rootNode->add_child("metadata");
         metadata->set_namespace_declaration(defaultPrefixUri);
         metadata->set_namespace_declaration(titleElementUri, 

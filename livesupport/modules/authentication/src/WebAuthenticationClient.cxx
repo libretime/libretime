@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -138,6 +138,11 @@ static const std::string    loadPreferencesMethodName = "locstor.loadPref";
  *  The name of the save preferences method on the server
  *----------------------------------------------------------------------------*/
 static const std::string    savePreferencesMethodName = "locstor.savePref";
+
+/*------------------------------------------------------------------------------
+ *  The name of the delete preferences method on the server
+ *----------------------------------------------------------------------------*/
+static const std::string    deletePreferencesMethodName = "locstor.delPref";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
@@ -443,6 +448,59 @@ WebAuthenticationClient :: savePreferencesItem(
         std::stringstream eMsg;
         eMsg << "XML-RPC method "
              << savePreferencesMethodName 
+             << " returned unexpected response:\n"
+             << result;
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Delete a `user preferences' item from the server.
+ *----------------------------------------------------------------------------*/
+void
+WebAuthenticationClient :: deletePreferencesItem(
+                                Ptr<SessionId>::Ref             sessionId,
+                                const Glib::ustring &           key)
+                                                throw (XmlRpcException)
+{
+    if (!sessionId) {
+        throw Core::XmlRpcInvalidArgumentException("Missing session ID.");
+    }
+
+    XmlRpcValue             parameters;
+    XmlRpcValue             result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[preferencesSessionIdParamName]   = sessionId->getId();
+    parameters[preferencesKeyParamName]         = std::string(key);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(deletePreferencesMethodName.c_str(),
+                                                        parameters, result)) {
+        throw Core::XmlRpcCommunicationException(
+                                          "Could not execute XML-RPC method.");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method "
+             << deletePreferencesMethodName 
+             << " returned fault response:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (! result.hasMember(preferencesStatusParamName)
+        || result[preferencesStatusParamName].getType() 
+                                                != XmlRpcValue::TypeBoolean
+        || ! bool(result[preferencesStatusParamName])) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method "
+             << deletePreferencesMethodName 
              << " returned unexpected response:\n"
              << result;
         throw Core::XmlRpcMethodResponseException(eMsg.str());

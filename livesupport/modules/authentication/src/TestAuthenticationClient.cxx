@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -168,8 +168,7 @@ TestAuthenticationClient :: login(const std::string & login,
         sessionIdList.insert(sessionIdStream.str());
         sessionId.reset(new SessionId(sessionIdStream.str()));
         return sessionId;
-    }
-    else {
+    } else {
         throw XmlRpcException("incorrect login or password");
     }
 }
@@ -185,8 +184,7 @@ TestAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
     // this returns the number of entries found and erased
     if (!sessionId || sessionIdList.erase(sessionId->getId())) {
         return;
-    }
-    else {
+    } else {
         throw XmlRpcException("logout() called without previous login()");
     }
 }
@@ -203,10 +201,10 @@ TestAuthenticationClient :: loadPreferencesItem(
 {
     if (!sessionId 
         || sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
-        throw XmlRpcException("loadPreferences() called before login()");
+        throw XmlRpcException("bad session ID");
     }
     
-    preferencesType::iterator   it;
+    PreferencesType::iterator   it;
 
     if ((it = preferences.find(key)) == preferences.end()) {
         throw XmlRpcException("no such user preferences item");
@@ -227,10 +225,39 @@ TestAuthenticationClient :: savePreferencesItem(
                                 Ptr<const Glib::ustring>::Ref   value)
                                                 throw (XmlRpcException)
 {
+    if (!sessionId 
+        || sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
+        throw XmlRpcException("bad session ID");
+    }
+    
     if (sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
         throw XmlRpcException("loadPreferences() called before login()");
     }
     
     preferences[key] = value;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Delete a `user preferences' item from the server.
+ *----------------------------------------------------------------------------*/
+void
+TestAuthenticationClient :: deletePreferencesItem(
+                                Ptr<SessionId>::Ref             sessionId,
+                                const Glib::ustring &           key)
+                                                throw (XmlRpcException)
+{
+    if (!sessionId 
+        || sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
+        throw XmlRpcException("bad session ID");
+    }
+
+    PreferencesType::iterator   it;
+
+    if ((it = preferences.find(key)) == preferences.end()) {
+        throw XmlRpcException("no such user preferences item");
+    }
+    
+    preferences.erase(it);
 }
 
