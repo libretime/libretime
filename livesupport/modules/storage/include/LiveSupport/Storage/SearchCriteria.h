@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/Attic/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,6 +116,7 @@ class SearchCriteria
          */
         typedef std::vector<SearchConditionType>
                                             SearchConditionListType;
+
         /**
          *  The vector of search conditions.
          */

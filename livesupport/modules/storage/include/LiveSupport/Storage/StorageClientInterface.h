@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class StorageClientInterface
 {
@@ -105,7 +105,12 @@ class StorageClientInterface
 
         /**
          *  Return a playlist with the specified id to be displayed.
-         *  If the playlist is being edited, its last saved state is returned.
+         *  If the playlist is being edited, and this method is called
+         *  by the same user who is editing the playlist,
+         *  (i.e., the method is called with the same sessionId and playlistId
+         *  that editPlaylist() was), then the working copy of the playlist
+         *  is returned.
+         *  Any other user gets the old (pre-editPlaylist()) copy from storage.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -125,6 +130,10 @@ class StorageClientInterface
          *  This puts a lock on the playlist, and nobody else can edit it
          *  until we release it using savePlaylist().
          *
+         *  This method creates a working copy of the playlist, which will
+         *  be returned by getPlaylist() if it is called with the same
+         *  sessionId and playlistId, until we call savePlaylist().
+         *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
@@ -142,6 +151,8 @@ class StorageClientInterface
          *  Save the playlist after editing.
          *  Can only be called after we obtained a lock on the playlist using
          *  editPlaylist(); this method releases the lock.
+         *
+         *  This method destroys the working copy created by editPlaylist().
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to save.
@@ -359,8 +370,8 @@ class StorageClientInterface
         /**
          *  Return the list of audio clip IDs found by the search method.
          *
-         *  (Or the list of audio clip IDs returned by the reset() method
-         *  in WebStorageClient -- used for testing.)
+         *  (Or the list of audio clip IDs returned by reset()
+         *  -- used for testing.)
          *
          *  @return a vector of UniqueId objects.
          */
@@ -371,8 +382,8 @@ class StorageClientInterface
         /**
          *  Return the list of playlist IDs found by the search method.
          *
-         *  (Or the list of playlist IDs returned by the reset() method
-         *  in WebStorageClient -- used for testing.)
+         *  (Or the list of playlist IDs returned by reset()
+         *  -- used for testing.)
          *
          *  @return a vector of UniqueId objects.
          */

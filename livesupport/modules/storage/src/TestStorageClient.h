@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -512,7 +512,7 @@ class TestStorageClient :
         /**
          *  Return the list of audio clip IDs found by the search method.
          *
-         *  (Or the list of audio clip IDs returned by the reset() method
+         *  (Or the list of audio clip IDs returned by reset()
          *  -- used for testing.)
          *
          *  @return a vector of UniqueId objects.
@@ -527,7 +527,7 @@ class TestStorageClient :
         /**
          *  Return the list of playlist IDs found by the search method.
          *
-         *  (Or the list of playlist IDs returned by the reset() method
+         *  (Or the list of playlist IDs returned by reset()
          *  -- used for testing.)
          *
          *  @return a vector of UniqueId objects.

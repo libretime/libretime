@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -185,6 +185,7 @@ TestStorageClient :: reset(void)
     xmlpp::Node::NodeList::iterator  it 
                                      = nodes.begin();
     playlistMap.clear();
+    editedPlaylists.clear();
     playlistIds.reset(new  std::vector<Ptr<UniqueId>::Ref>);
 
     while (it != nodes.end()) {
@@ -201,6 +202,7 @@ TestStorageClient :: reset(void)
     nodes = element->get_children(AudioClip::getConfigElementName());
     it    = nodes.begin();
     audioClipMap.clear();
+    audioClipUris.clear();
     audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
 
     while (it != nodes.end()) {

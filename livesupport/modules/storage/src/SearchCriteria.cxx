@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/SearchCriteria.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,13 +95,16 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
     XmlRpc::XmlRpcValue     returnValue;
     
     returnValue["filetype"] = type;
-    returnValue["operator"] = logicalOperator;
+    if (searchConditions.size() != 1) {
+        returnValue["operator"] = logicalOperator;
+    }
     
     XmlRpc::XmlRpcValue     conditionList;
     conditionList.setSize(searchConditions.size());
-    SearchConditionListType::const_iterator
-                            it = searchConditions.begin();
-    for (int i = 0; it != searchConditions.end(); ++i, ++it) {
+    SearchConditionListType::const_iterator     it, end;
+    it  = searchConditions.begin();
+    end = searchConditions.end();
+    for (int i = 0; it != end; ++i, ++it) {
         XmlRpc::XmlRpcValue condition;
         condition["cat"]    = it->key;
         condition["op"]     = it->comparisonOperator;
