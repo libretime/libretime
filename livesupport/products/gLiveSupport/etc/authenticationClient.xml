@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE authenticationClientFactory [
+
+<!ELEMENT authenticationClientFactory (testAuthentication|
+                                       webAuthentication)>
+
+<!ELEMENT webAuthentication (location) >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+]>
+<authenticationClientFactory>
+    <webAuthentication>
+        <location server="localhost" port="80"
+                  path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+    </webAuthentication>
+</authenticationClientFactory>

@@ -7,7 +7,7 @@
    xmlns:dcterms="http://purl.org/dc/terms/"
    xmlns:xml="http://www.w3.org/XML/1998/namespace"
 >
- <dc:title>one</dc:title>
- <dcterms:extent>00:00:11.000000</dcterms:extent>
+ <dc:title>three</dc:title>
+ <dcterms:extent>00:00:11.500000</dcterms:extent>
 </metadata>
 </audioClip>

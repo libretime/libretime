@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE playlist [
-
-<!ELEMENT playlist (playlistElement*) >
-<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
-<!ATTLIST playlist title        CDATA       "" >
-<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
-
-<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
-<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
-<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
-
-<!ELEMENT audioClip EMPTY >
-<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip title           CDATA       #REQUIRED >
-<!ATTLIST audioClip uri             CDATA       #IMPLIED  >
-
-<!ELEMENT fadeInfo EMPTY >
-<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
-<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
-<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
-]>
-
 <playlist id="0000000000000001" 
-          title="My First Playlist" 
-          playlength="00:00:34.000" >
+          title="My Second Playlist" 
+          playlength="00:00:29.700000" >
     <playlistElement id="0000000000000101" 
                      relativeOffset="0" >
         <audioClip   id="0000000000010001" 
@@ -55,4 +32,13 @@
                      fadeIn="00:00:03" 
                      fadeOut="00:00:03" />
     </playlistElement>
+    <metadata   xmlns="http://mdlf.org/livesupport/elements/1.0/"
+                xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dcterms="http://purl.org/dc/terms/"
+                xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+        <dc:title>My Second Playlist</dc:title>
+        <dc:creator>Nobody</dc:creator>
+        <dcterms:extent>00:00:29.700000</dcterms:extent>
+    </metadata>
 </playlist>

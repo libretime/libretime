@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.23 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.24 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -210,6 +210,7 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -lxmlrpc++ -lssl
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \
+                   ${TMP_DIR}/AudioPlayerTest.o \
                    ${TMP_DIR}/TestRunner.o 
 TEST_RUNNER_LIBS = ${G_LIVESUPPORT_EXE_LIBS} -lcppunit -ldl
 
@@ -248,7 +249,7 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/*.m4
 
-check: all ${TEST_RUNNER} run_tests
+check: all ${TEST_RUNNER} storage_server_init run_tests
 
 run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
@@ -269,6 +270,9 @@ stop: ${SCHEDULER_EXE}
 uninstall: ${SCHEDULER_EXE}
 	-${MAKE} -C ${SCHEDULER_DIR} uninstall_web
 	-${MAKE} -C ${STORAGE_SERVER_DIR} db_clean
+
+storage_server_init:
+	${MAKE} -C ${STORAGE_SERVER_DIR}
 
 
 #-------------------------------------------------------------------------------
