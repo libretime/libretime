@@ -23,13 +23,13 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
 // no remote execution
 $arr = array_diff_assoc($_SERVER, $_ENV);
-if($arr["DOCUMENT_ROOT"] != ""){
+if(isset($arr["DOCUMENT_ROOT"]) && $arr["DOCUMENT_ROOT"] != ""){
     header("HTTP/1.1 400");
     header("Content-type: text/plain; charset=UTF-8");
     echo "400 Not executable\r\n";
