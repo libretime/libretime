@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.47 $
+#   Version  : $Revision: 1.48 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -322,7 +322,7 @@ uninstall_web: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} uninstall
 
 storage_server_init:
-	${MAKE} -C ${STORAGE_SERVER_DIR} all reset
+	${MAKE} -C ${STORAGE_SERVER_DIR}
 
 kill:
 	${KILLALL} scheduler

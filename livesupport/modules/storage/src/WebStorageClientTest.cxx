@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,6 +116,7 @@ WebStorageClientTest :: setUp(void)                         throw ()
 
         wsc.reset(new WebStorageClient());
         wsc->configure(*root);
+        wsc->reset();
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in storage configuration file");
     } catch (xmlpp::exception &e) {
@@ -473,17 +474,6 @@ WebStorageClientTest :: audioClipTest(void)
     }
     CPPUNIT_ASSERT(!newAudioClip->getUri());
 
-
-    // test getAllAudioClips() [pointless]
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector;
-    try {
-        audioClipVector = wsc->getAllAudioClips(sessionId);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    CPPUNIT_ASSERT(audioClipVector->size() == 0);
-
-
     try{
         authentication->logout(sessionId);
     } catch (XmlRpcException &e) {
@@ -699,6 +689,53 @@ WebStorageClientTest :: searchTest(void)
     } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
+
+    try{
+        authentication->logout(sessionId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing getAllPlaylists() and getAllAudioClips().
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: getAllTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref sessionId;
+    try {
+        sessionId = authentication->login("root", "q");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(sessionId);
+
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref 
+                playlists = wsc->getAllPlaylists(sessionId);
+    CPPUNIT_ASSERT(playlists);
+    CPPUNIT_ASSERT(playlists->size() >= 1);
+    
+    Ptr<Playlist>::Ref  playlist = playlists->at(0);
+    CPPUNIT_ASSERT(playlist);
+    CPPUNIT_ASSERT(playlist->getId());
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref 
+                audioClips = wsc->getAllAudioClips(sessionId);
+    CPPUNIT_ASSERT(audioClips);
+    CPPUNIT_ASSERT(audioClips->size() >= 5);
+    
+    audioClips = wsc->getAllAudioClips(sessionId, 2, 1);
+    CPPUNIT_ASSERT(audioClips);
+    CPPUNIT_ASSERT(audioClips->size() == 2);
+
+    Ptr<AudioClip>::Ref audioClip = audioClips->at(0);
+    CPPUNIT_ASSERT(audioClip);
+    CPPUNIT_ASSERT(audioClip->getId());
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10002);
 
     try{
         authentication->logout(sessionId);

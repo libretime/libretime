@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -133,7 +133,7 @@ TEST_RUNNER_LIBS = -l${STORAGE_LIB} -l${CORE_LIB} -l${AUTHENTICATION_LIB} \
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all dir_setup doc clean docclean depclean distclean
+.PHONY: all dir_setup doc clean docclean depclean distclean check
 
 all: dir_setup ${STORAGE_LIB_FILE}
 
@@ -157,7 +157,7 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all storage_server_init ${TEST_RUNNER}
+check: all ${TEST_RUNNER} storage_server_init
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 

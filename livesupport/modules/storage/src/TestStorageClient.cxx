@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -146,10 +146,32 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
+    
+    savedConfigurationElement.reset(new xmlpp::Document);
+    savedConfigurationElement->create_root_node_by_import(&element, true);
+                                                    // true == recursive
+    reset();
+}
 
+
+/*------------------------------------------------------------------------------
+ *  Reset the storage to its initial state.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: reset(void)
+                                                throw (Core::XmlRpcException)
+{
+    if (!savedConfigurationElement) {
+        throw Core::XmlRpcInvalidArgumentException("storage has not been"
+                                                   " configured yet");
+    }
+
+    const xmlpp::Element      * element = savedConfigurationElement
+                                                            ->get_root_node();
+    
     const xmlpp::Attribute    * attribute;
 
-    if (!(attribute = element.get_attribute(localTempStorageAttrName))) {
+    if (!(attribute = element->get_attribute(localTempStorageAttrName))) {
         std::string eMsg = "Missing attribute ";
         eMsg += localTempStorageAttrName;
         throw std::invalid_argument(eMsg);
@@ -159,10 +181,11 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
 
     // iterate through the playlist elements ...
     xmlpp::Node::NodeList            nodes 
-                  = element.get_children(Playlist::getConfigElementName());
+                  = element->get_children(Playlist::getConfigElementName());
     xmlpp::Node::NodeList::iterator  it 
                                      = nodes.begin();
     playlistMap.clear();
+    playlistIds.reset(new  std::vector<Ptr<UniqueId>::Ref>);
 
     while (it != nodes.end()) {
         Ptr<Playlist>::Ref      playlist(new Playlist);
@@ -170,13 +193,15 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
                                     dynamic_cast<const xmlpp::Element*> (*it);
         playlist->configure(*element);
         playlistMap[playlist->getId()->getId()] = playlist;
+        playlistIds->push_back(playlist->getId());
         ++it;
     }
 
     // ... and the the audio clip elements
-    nodes = element.get_children(AudioClip::getConfigElementName());
+    nodes = element->get_children(AudioClip::getConfigElementName());
     it    = nodes.begin();
     audioClipMap.clear();
+    audioClipIds.reset(new std::vector<Ptr<UniqueId>::Ref>);
 
     while (it != nodes.end()) {
         Ptr<AudioClip>::Ref     audioClip(new AudioClip);
@@ -189,6 +214,7 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
             audioClip->setUri(nullPointer);
         }
         audioClipMap[audioClip->getId()->getId()] = audioClip;
+        audioClipIds->push_back(audioClip->getId());
         ++it;
     }
 }
@@ -518,31 +544,6 @@ TestStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
 
 
 /*------------------------------------------------------------------------------
- *  Return a listing of all the playlists in the playlist store.
- *----------------------------------------------------------------------------*/
-Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId)
-                                                                        const
-                                                throw (XmlRpcException)
-{
-    if (!sessionId) {
-        throw XmlRpcException("missing session ID argument");
-    }
-
-    PlaylistMapType::const_iterator         it = playlistMap.begin();
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-                         playlistVector (new std::vector<Ptr<Playlist>::Ref>);
-
-    while (it != playlistMap.end()) {
-        playlistVector->push_back(it->second);
-        ++it;
-    }
-
-    return playlistVector;
-}
-
-
-/*------------------------------------------------------------------------------
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
@@ -687,31 +688,6 @@ TestStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
     if (!audioClipMap.erase(id->getId())) {
         throw XmlRpcException("no such audio clip");
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Return a listing of all the audio clips in the audio clip store.
- *----------------------------------------------------------------------------*/
-Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
-                                                                        const
-                                                throw (XmlRpcException)
-{
-    if (!sessionId) {
-        throw XmlRpcException("missing session ID argument");
-    }
-
-    AudioClipMapType::const_iterator        it = audioClipMap.begin();
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-                        audioClipVector (new std::vector<Ptr<AudioClip>::Ref>);
-
-    while (it != audioClipMap.end()) {
-        audioClipVector->push_back(it->second);
-        ++it;
-    }
-
-    return audioClipVector;
 }
 
 
@@ -864,5 +840,61 @@ LiveSupport::Storage :: separateNameAndNameSpace(const std::string & key,
         prefix   = "";
         name        = key;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a list of all playlists in the storage.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
+                                     const int limit, const int offset)
+                                                throw (XmlRpcException)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("playlist"));
+    criteria->setLimit(limit);
+    criteria->setOffset(offset);
+    search(sessionId, criteria);
+    
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
+                                        new std::vector<Ptr<Playlist>::Ref>);
+    
+    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
+    it  = getPlaylistIds()->begin();
+    end = getPlaylistIds()->end();
+    while (it != end) {
+        playlists->push_back(getPlaylist(sessionId, *it));
+        ++it;
+    }
+    
+    return playlists;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a list of all audio clips in the storage.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId,
+                                      const int limit, const int offset)
+                                                throw (XmlRpcException)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("audioClip"));
+    criteria->setLimit(limit);
+    criteria->setOffset(offset);
+    search(sessionId, criteria);
+    
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
+                                        new std::vector<Ptr<AudioClip>::Ref>);
+    
+    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
+    it  = getAudioClipIds()->begin();
+    end = getAudioClipIds()->end();
+    while (it != end) {
+        audioClips->push_back(getAudioClip(sessionId, *it));
+        ++it;
+    }
+    
+    return audioClips;
 }
 

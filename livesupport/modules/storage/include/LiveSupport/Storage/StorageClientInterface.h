@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class StorageClientInterface
 {
@@ -220,20 +220,6 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return a list of all playlists in the playlist store.
-         *  This is for testing only; will be replaced by a search method.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return a vector containing the playlists.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-        getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException)
-                                                                        = 0;
-
-        /**
          *  Tell if an audio clip with a given id exists.
          *
          *  @param sessionId the session ID from the authentication client
@@ -353,20 +339,6 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return a list of all audio clips in the playlist store.
-         *  This is for testing only; will be replaced by a search method.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return a vector containing the playlists.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException)
-                                                                        = 0;
-
-        /**
          *  Search for audio clips or playlists.  The results can be read
          *  using getAudioClipIds() and getPlaylistIds().
          *
@@ -406,6 +378,57 @@ class StorageClientInterface
          */
         virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
         getPlaylistIds(void)                    throw ()                = 0;
+
+
+
+        /**
+         *  Reset the storage to its initial state.  
+         *  The audio clip and playlist IDs
+         *  can be read using getAudioClipIds() and getPlaylistIds().
+         *  Used for testing.
+         *
+         *  @exception XmlRpcException if the server returns an error.
+         */
+        virtual void
+        reset(void)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Return a list of all playlists in the storage.
+         *  It uses the search method to get a list of playlists, passing
+         *  the limit and offset parameters on to it.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param limit     the maximum number of playlists to return
+         *  @param offset    skip the first <i>offset</i> playlists
+         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        getAllPlaylists(Ptr<SessionId>::Ref sessionId,
+                        const int limit = 0, const int offset = 0)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Return a list of all audio clips in the storage.
+         *  It uses the search method to get a list of playlists, passing
+         *  the limit and offset parameters on to it.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param limit     the maximum number of audio clips to return
+         *  @param offset    skip the first <i>offset</i> audio clips
+         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        getAllAudioClips(Ptr<SessionId>::Ref sessionId,
+                        const int limit = 0, const int offset = 0)
+                                                throw (XmlRpcException)
+                                                                        = 0;
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -133,6 +133,8 @@ RpcAddAudioClipToPlaylistTest :: setUp(void)                         throw ()
         Ptr<StorageClientFactory>::Ref scf
                             = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref storage = scf->getStorageClient();
+        storage->reset();
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in storage configuration file");
     } catch (xmlpp::exception &e) {
@@ -218,5 +220,13 @@ RpcAddAudioClipToPlaylistTest :: firstTest(void)
     xmlRpcClient.execute("addAudioClipToPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
-//    xmlRpcClient.close();
+    result.clear();
+    xmlRpcClient.execute("revertEditedPlaylist", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    result.clear();
+    xmlRpcClient.execute("savePlaylist", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }

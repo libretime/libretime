@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.28 $
+ *  @version $Revision: 1.29 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -97,6 +97,11 @@ class TestStorageClient :
          *  The name of the configuration XML elmenent used by TestStorageClient
          */
         static const std::string    configElementNameStr;
+
+        /**
+         *  A copy of the configuration element stored to be used by reset()
+         */
+        Ptr<xmlpp::Document>::Ref   savedConfigurationElement;
 
         /**
          *  The map type containing the playlists by their ids.
@@ -360,18 +365,6 @@ class TestStorageClient :
 
 
         /**
-         *  Return a list of all playlists in the playlist store.
-         *  This is for testing only; will be replaced by a search method.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return a vector containing the playlists.
-         */
-        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-        getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException);
-
-
-        /**
          *  Tell if an audio clip with a given id exists.
          *
          *  @param sessionId the session ID from the authentication client
@@ -481,14 +474,16 @@ class TestStorageClient :
 
 
         /**
-         *  Return a list of all audio clips in the playlist store.
-         *  This is for testing only; will be replaced by a search method.
+         *  Reset the storage to its initial state.  
+         *  Re-initializes the storage based on the xml element which was
+         *  passed to configure() earlier; the audio clip and playlist IDs
+         *  can be read using getAudioClipIds() and getPlaylistIds().
+         *  Used for testing.
          *
-         *  @param sessionId the session ID from the authentication client
-         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if the server returns an error.
          */
-        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
+        virtual void
+        reset(void)
                                                 throw (XmlRpcException);
 
 
@@ -542,6 +537,42 @@ class TestStorageClient :
         {
             return playlistIds;
         }
+
+
+        /**
+         *  Return a list of all playlists in the storage.
+         *  It uses the search method to get a list of playlists, passing
+         *  the limit and offset parameters on to it.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param limit     the maximum number of playlists to return
+         *  @param offset    skip the first <i>offset</i> playlists
+         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        getAllPlaylists(Ptr<SessionId>::Ref sessionId,
+                        const int limit = 0, const int offset = 0)
+                                                throw (XmlRpcException);
+
+
+        /**
+         *  Return a list of all audio clips in the storage.
+         *  It uses the search method to get a list of playlists, passing
+         *  the limit and offset parameters on to it.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param limit     the maximum number of audio clips to return
+         *  @param offset    skip the first <i>offset</i> audio clips
+         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        getAllAudioClips(Ptr<SessionId>::Ref sessionId,
+                        const int limit = 0, const int offset = 0)
+                                                throw (XmlRpcException);
 };
 
 

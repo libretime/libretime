@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,12 +118,14 @@ void
 UpdateFadeInFadeOutMethodTest :: setUp(void)                         throw ()
 {
     Ptr<AuthenticationClientFactory>::Ref acf;
+    Ptr<StorageClientFactory>::Ref scf;
     try {
-        Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
+        scf = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref    storage = scf->getStorageClient();
+        storage->reset();
 
-        Ptr<ConnectionManagerFactory>::Ref cmf
+        Ptr<ConnectionManagerFactory>::Ref  cmf
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -168,27 +168,34 @@ TestStorageClientTest :: deletePlaylistTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Testing the getAllPlaylists method
+ *  Testing the reset method
  *----------------------------------------------------------------------------*/
 void
-TestStorageClientTest :: getAllPlaylistsTest(void)
+TestStorageClientTest :: resetTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector;
     try {
-        playlistVector = tsc->getAllPlaylists(dummySessionId);
+        tsc->reset();
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(playlistVector->size() == 2);
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref playlistIds
+                                               = tsc->getPlaylistIds();
+    CPPUNIT_ASSERT(playlistIds);
+    CPPUNIT_ASSERT(playlistIds->size() >= 2);
 
-    Ptr<Playlist>::Ref  playlist;
-    try {
-        playlist = (*playlistVector)[0];
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    CPPUNIT_ASSERT(int(playlist->getId()->getId()) == 1);
+    Ptr<UniqueId>::Ref  playlistId = playlistIds->at(0);
+    CPPUNIT_ASSERT(playlistId);
+    CPPUNIT_ASSERT(int(playlistId->getId()) == 1);
+
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds
+                                               = tsc->getAudioClipIds();
+    CPPUNIT_ASSERT(audioClipIds);
+    CPPUNIT_ASSERT(audioClipIds->size() >= 2);
+
+    Ptr<UniqueId>::Ref  audioClipId = audioClipIds->at(0);
+    CPPUNIT_ASSERT(audioClipId);
+    CPPUNIT_ASSERT(int(audioClipId->getId()) == 0x10001);
 }
 
 
@@ -241,16 +248,18 @@ TestStorageClientTest :: audioClipTest(void)
     CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
                                                    == 12);
 
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector;
     try {
-        audioClipVector = tsc->getAllAudioClips(dummySessionId);
+        tsc->reset();
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(audioClipVector->size() == 3);
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds
+                                               = tsc->getAudioClipIds();
+    CPPUNIT_ASSERT(audioClipIds);
+    CPPUNIT_ASSERT(audioClipIds->size() >= 3);
 
-    audioClip = (*audioClipVector)[0];
-    CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 0x10001);
+    Ptr<UniqueId>::Ref  audioClipId = audioClipIds->at(0);
+    CPPUNIT_ASSERT((int) (audioClipId->getId()) == 0x10001);
 
     try {
         tsc->deleteAudioClip(dummySessionId, id02);
@@ -442,5 +451,38 @@ TestStorageClientTest :: searchTest(void)
     } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing getAllPlaylists() and getAllAudioClips().
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: getAllTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref 
+                playlists = tsc->getAllPlaylists(dummySessionId);
+    CPPUNIT_ASSERT(playlists);
+    CPPUNIT_ASSERT(playlists->size() >= 2);
+    
+    Ptr<Playlist>::Ref  playlist = playlists->at(0);
+    CPPUNIT_ASSERT(playlist);
+    CPPUNIT_ASSERT(playlist->getId());
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref 
+                audioClips = tsc->getAllAudioClips(dummySessionId);
+    CPPUNIT_ASSERT(audioClips);
+    CPPUNIT_ASSERT(audioClips->size() >= 3);
+    
+    audioClips = tsc->getAllAudioClips(dummySessionId, 1, 1);
+    CPPUNIT_ASSERT(audioClips);
+    CPPUNIT_ASSERT(audioClips->size() == 1);
+
+    Ptr<AudioClip>::Ref audioClip = audioClips->at(0);
+    CPPUNIT_ASSERT(audioClip);
+    CPPUNIT_ASSERT(audioClip->getId());
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10002);
 }
 

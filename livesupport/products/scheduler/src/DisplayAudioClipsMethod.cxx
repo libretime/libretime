@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -112,15 +112,30 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
 
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector;
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds;
     try {
-        audioClipVector = storage->getAllAudioClips(sessionId);
+        audioClipIds = storage->getAudioClipIds();
     } catch (XmlRpcException &e) {
-        std::string eMsg = "getAllAudioClips returned error:\n";
+        std::string eMsg = "getAudioClipIds returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+2, eMsg, returnValue);
         return;
     }        
 
-    XmlRpcTools::audioClipVectorToXmlRpcValue(audioClipVector, returnValue);
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref 
+                              audioClips(new std::vector<Ptr<AudioClip>::Ref>);
+    std::vector<Ptr<UniqueId>::Ref>::const_iterator it = audioClipIds->begin();
+    while (it != audioClipIds->end()) {
+        try {
+            audioClips->push_back(storage->getAudioClip(sessionId, *it));
+        } catch (XmlRpcException &e) {
+            std::string eMsg = "audio clip not found:\n";
+            eMsg += e.what();
+            XmlRpcTools::markError(errorId+3, eMsg, returnValue);
+            return;
+        }
+        ++it;
+    }
+
+    XmlRpcTools::audioClipVectorToXmlRpcValue(audioClips, returnValue);
 }

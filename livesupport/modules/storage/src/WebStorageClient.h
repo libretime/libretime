@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -364,23 +364,6 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return a list of all playlists in the playlist store.
-         *  This is for testing only; will be replaced by a search method.
-         *
-         *  Since this makes no sense whatsoever, this method currently returns
-         *  an empty list.  It will be replaced by a method which uses
-         *  <code>locstor.searchMetadata</code>.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return a vector containing the playlists.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-        getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException);
-
-        /**
          *  Tell if an audio clip with a given id exists.
          *
          *  @param sessionId the session ID from the authentication client
@@ -498,31 +481,14 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
-         *  Return a list of all audio clips in the playlist store.
-         *  This is for testing only; will be replaced by a search method.
-         *
-         *  Since this makes no sense whatsoever, this method currently returns
-         *  an empty list.  It will be replaced by a method which uses
-         *  <code>locstor.searchMetadata</code>.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @return a vector containing the playlists.
-         *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call.
-         */
-        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException);
-
-
-        /**
          *  Reset the storage to its initial state.  
-         *  Calls locstor.resetStorage, and puts the unique IDs returned
-         *  into testAudioClipIds and testPlaylistIds.  Used for testing.
+         *  Calls locstor.resetStorage; the audio clip and playlist IDs
+         *  can be read using getAudioClipIds() and getPlaylistIds().
+         *  Used for testing.
          *
          *  @exception XmlRpcException if the server returns an error.
          */
-        void
+        virtual void
         reset(void)
                                                 throw (XmlRpcException);
 
@@ -545,6 +511,21 @@ class WebStorageClient :
                                                 throw (XmlRpcException);
 
         /**
+         *  Return the list of playlist IDs found by the search method.
+         *
+         *  (Or the list of playlist IDs returned by the reset() method
+         *  -- used for testing.)
+         *
+         *  @return a vector of UniqueId objects.
+         */
+        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        getPlaylistIds(void)                    throw ()
+        {
+            return playlistIds;
+        }
+
+
+        /**
          *  Return the list of audio clip IDs found by the search method.
          *
          *  (Or the list of audio clip IDs returned by the reset() method
@@ -560,18 +541,39 @@ class WebStorageClient :
 
 
         /**
-         *  Return the list of playlist IDs found by the search method.
+         *  Return a list of all playlists in the storage.
+         *  It uses the search method to get a list of playlists, passing
+         *  the limit and offset parameters on to it.
          *
-         *  (Or the list of playlist IDs returned by the reset() method
-         *  -- used for testing.)
-         *
-         *  @return a vector of UniqueId objects.
+         *  @param sessionId the session ID from the authentication client
+         *  @param limit     the maximum number of playlists to return
+         *  @param offset    skip the first <i>offset</i> playlists
+         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
-        virtual Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-        getPlaylistIds(void)                    throw ()
-        {
-            return playlistIds;
-        }
+        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        getAllPlaylists(Ptr<SessionId>::Ref sessionId,
+                        const int limit = 0, const int offset = 0)
+                                                throw (XmlRpcException);
+
+
+        /**
+         *  Return a list of all audio clips in the storage.
+         *  It uses the search method to get a list of playlists, passing
+         *  the limit and offset parameters on to it.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param limit     the maximum number of audio clips to return
+         *  @param offset    skip the first <i>offset</i> audio clips
+         *  @return a vector containing the playlists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        getAllAudioClips(Ptr<SessionId>::Ref sessionId,
+                        const int limit = 0, const int offset = 0)
+                                                throw (XmlRpcException);
 };
 
 

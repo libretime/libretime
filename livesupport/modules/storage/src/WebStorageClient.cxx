@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1296,19 +1296,6 @@ WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
 
 
 /*------------------------------------------------------------------------------
- *  Return a listing of all the playlists in the playlist store.
- *----------------------------------------------------------------------------*/
-Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (Core::XmlRpcException)
-{
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector(
-                                        new std::vector<Ptr<Playlist>::Ref>);
-    return playlistVector;
-}
-
-
-/*------------------------------------------------------------------------------
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
@@ -1839,20 +1826,6 @@ WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
 
 
 /*------------------------------------------------------------------------------
- *  Return a listing of all the audio clips in the audio clip store.
- *----------------------------------------------------------------------------*/
-Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
-                                                                        const
-                                                throw (Core::XmlRpcException)
-{
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector(
-                                        new std::vector<Ptr<AudioClip>::Ref>);
-    return audioClipVector;
-}
-
-
-/*------------------------------------------------------------------------------
  *  Reset the storage to its initial state.
  *----------------------------------------------------------------------------*/
 void
@@ -2042,5 +2015,61 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
 
     return int(result[searchAudioClipCountParamName])
            + int(result[searchPlaylistCountParamName]);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a list of all playlists in the storage.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId,
+                                    const int limit, const int offset)
+                                                throw (XmlRpcException)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("playlist"));
+    criteria->setLimit(limit);
+    criteria->setOffset(offset);
+    search(sessionId, criteria);
+    
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref      playlists(
+                                        new std::vector<Ptr<Playlist>::Ref>);
+    
+    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
+    it  = getPlaylistIds()->begin();
+    end = getPlaylistIds()->end();
+    while (it != end) {
+        playlists->push_back(getPlaylist(sessionId, *it));
+        ++it;
+    }
+    
+    return playlists;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a list of all audio clips in the storage.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId,
+                                     const int limit, const int offset)
+                                                throw (XmlRpcException)
+{
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("audioClip"));
+    criteria->setLimit(limit);
+    criteria->setOffset(offset);
+    search(sessionId, criteria);
+    
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClips(
+                                        new std::vector<Ptr<AudioClip>::Ref>);
+    
+    std::vector<Ptr<UniqueId>::Ref>::const_iterator it, end;
+    it  = getAudioClipIds()->begin();
+    end = getAudioClipIds()->end();
+    while (it != end) {
+        audioClips->push_back(getAudioClip(sessionId, *it));
+        ++it;
+    }
+
+    return audioClips;
 }
 

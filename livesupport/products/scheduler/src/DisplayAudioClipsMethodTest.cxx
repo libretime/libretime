@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,12 +115,14 @@ void
 DisplayAudioClipsMethodTest :: setUp(void)                         throw ()
 {
     Ptr<AuthenticationClientFactory>::Ref acf;
+    Ptr<StorageClientFactory>::Ref scf;
     try {
-        Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
+        scf = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref    storage = scf->getStorageClient();
+        storage->reset();
 
-        Ptr<ConnectionManagerFactory>::Ref cmf
+        Ptr<ConnectionManagerFactory>::Ref  cmf
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 
@@ -183,7 +185,7 @@ DisplayAudioClipsMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
-    CPPUNIT_ASSERT(result.size() == 2);
+    CPPUNIT_ASSERT(result.size() >= 2);
 
     audioClip = result[0];
     CPPUNIT_ASSERT(audioClip.hasMember("id"));

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -133,6 +133,8 @@ RpcDisplayPlaylistTest :: setUp(void)                        throw ()
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref storage = scf->getStorageClient();
+        storage->reset();
 
         acf = AuthenticationClientFactory::getInstance();
         configure(acf, authenticationClientConfigFileName);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -120,12 +120,14 @@ void
 RemoveAudioClipFromPlaylistMethodTest :: setUp(void)                         throw ()
 {
     Ptr<AuthenticationClientFactory>::Ref acf;
+    Ptr<StorageClientFactory>::Ref scf;
     try {
-        Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
+        scf = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref    storage = scf->getStorageClient();
+        storage->reset();
 
-        Ptr<ConnectionManagerFactory>::Ref cmf
+        Ptr<ConnectionManagerFactory>::Ref  cmf
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<playlist id="1" playlength="01:30:00.000000" 
+<playlist id="0000000000000001" playlength="01:30:00.000000" 
           title="My First Playlist">
-    <playlistElement id="101"    relativeOffset="0" >
-        <audioClip   id="10001"  playlength="01:00:00.000000" title="one"/>
+    <playlistElement id="0000000000000101" relativeOffset="0" >
+        <audioClip   id="0000000000010001" playlength="01:00:00.000000" 
+                                           title="one"/>
     </playlistElement>
-    <playlistElement id="102"    relativeOffset="01:00:00.000000" >
-        <audioClip   id="10002"  playlength="00:30:00.000000" title="two"/>
+    <playlistElement id="0000000000000102" relativeOffset="01:00:00.000000" >
+        <audioClip   id="0000000000010002" playlength="00:30:00.000000" 
+                                           title="two"/>
     </playlistElement>
     <metadata
       xmlns="http://www.streamonthefly.org/"

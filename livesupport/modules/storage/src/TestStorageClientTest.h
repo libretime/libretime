@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,20 +58,21 @@ namespace Storage {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see TestStorageClient
  */
 class TestStorageClientTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(TestStorageClientTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(getAllPlaylistsTest);
+    CPPUNIT_TEST(resetTest);
     CPPUNIT_TEST(deletePlaylistTest);
     CPPUNIT_TEST(createPlaylistTest);
     CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST(acquireAudioClipTest);
     CPPUNIT_TEST(acquirePlaylistTest);
     CPPUNIT_TEST(searchTest);
+    CPPUNIT_TEST(getAllTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -109,7 +110,7 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        getAllPlaylistsTest(void)
+        resetTest(void)
                                                 throw (CPPUNIT_NS::Exception);
         /**
          *  Testing createPlaylist().
@@ -150,6 +151,14 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         searchTest(void)                        throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing getAllPlaylists() and getAllAudioClips().
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        getAllTest(void)                        throw (CPPUNIT_NS::Exception);
 
 
     public:

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -132,6 +132,7 @@ PlaylistEventContainerTest :: setUp(void)                        throw ()
         scf->configure(*(parser->get_document()->get_root_node()));
 
         storage = scf->getStorageClient();
+        storage->reset();
 
         // configure the schedule factory
         scheduleFactory = ScheduleFactory::getInstance();

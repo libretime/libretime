@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,6 +118,8 @@ DisplayAudioClipMethodTest :: setUp(void)                         throw ()
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref storage = scf->getStorageClient();
+        storage->reset();
 
         Ptr<ConnectionManagerFactory>::Ref cmf
                                     = ConnectionManagerFactory::getInstance();

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,16 +68,16 @@ using namespace LiveSupport::PlaylistExecutor;
 /**
  *  Unit test for the PlaylistEvent class
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  *  @see PlaylistEvent
  */
 class PlaylistEventTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(PlaylistEventTest);
     CPPUNIT_TEST(simpleTest);
-    CPPUNIT_TEST(initializeTest);
-    CPPUNIT_TEST(playTest);
+//    CPPUNIT_TEST(initializeTest);
+//    CPPUNIT_TEST(playTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:

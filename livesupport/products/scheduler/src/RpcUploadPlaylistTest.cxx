@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "LiveSupport/Core/UniqueId.h"
 #include "SchedulerDaemon.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "LiveSupport/Storage/StorageClientFactory.h"
 #include "RpcUploadPlaylistTest.h"
 
 using namespace std;
@@ -55,6 +56,7 @@ using namespace XmlRpc;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::Authentication;
+using namespace LiveSupport::Storage;
 
 
 /* ===================================================  local data structures */
@@ -70,10 +72,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION(RpcUploadPlaylistTest);
 static const std::string configFileName = "etc/scheduler.xml";
 
 /**
+ *  The name of the configuration file for the storage client factory.
+ */
+static const std::string storageClientConfig =
+                                            "etc/storageClient.xml";
+/**
  *  The name of the configuration file for the authentication client factory.
  */
 static const std::string authenticationClientConfigFileName =
-                                          "etc/authenticationClient.xml";
+                                            "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -125,6 +132,12 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
 
     Ptr<AuthenticationClientFactory>::Ref acf;
     try {
+        Ptr<StorageClientFactory>::Ref scf
+                                        = StorageClientFactory::getInstance();
+        configure(scf, storageClientConfig);
+        Ptr<StorageClientInterface>::Ref storage = scf->getStorageClient();
+        storage->reset();
+
         acf = AuthenticationClientFactory::getInstance();
         configure(acf, authenticationClientConfigFileName);
 

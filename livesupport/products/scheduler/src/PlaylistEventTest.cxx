@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,6 +111,7 @@ PlaylistEventTest :: setUp(void)                        throw ()
         scf->configure(*(parser->get_document()->get_root_node()));
 
         storage = scf->getStorageClient();
+        storage->reset();
 
         // get an authentication client
         Ptr<AuthenticationClientFactory>::Ref acf;
