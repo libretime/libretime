@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ using namespace LiveSupport::Core;
  *
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class XmlRpcDaemon
 {
@@ -371,7 +371,7 @@ class XmlRpcDaemon
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
          */
-        void
+        virtual void
         start (void)                                throw (std::logic_error);
 
         /**
@@ -392,7 +392,7 @@ class XmlRpcDaemon
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
          */
-        void
+        virtual void
         stop (void)                                 throw (std::logic_error);
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class PostgresqlSchedule : public Configurable,
                            public ScheduleInterface
@@ -126,6 +126,12 @@ class PostgresqlSchedule : public Configurable,
          *  The SQL statement for getting the schedules for a time interval
          */
         static const std::string    getScheduleEntriesStmt;
+
+        /**
+         *  The SQL statement for getting the next schedule entry after a
+         *  timepoint.
+         */
+        static const std::string    getNextEntryStmt;
 
         /**
          *  The SQL statement for telling if a schedule entry exists.
@@ -257,6 +263,18 @@ class PostgresqlSchedule : public Configurable,
         virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
+                                                            throw ();
+
+        /**
+         *  Return the next schedule entry, after (but not including)
+         *  the specified timepoint.
+         *
+         *  @param fromTime the start of the time of the interval queried,
+         *          inclusive
+         *  @return the first schedule entry, after the specified timepoint.
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getNextEntry(Ptr<ptime>::Ref  fromTime)
                                                             throw ();
 
         /**

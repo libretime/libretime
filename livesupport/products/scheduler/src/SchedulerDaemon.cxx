@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,12 +51,19 @@
 #include <fstream>
 #include <cstdio>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "ScheduleFactory.h"
 #include "SchedulerDaemon.h"
+#include "PlaylistEventContainer.h"
 
 
+using namespace boost::posix_time;
+
+using namespace LiveSupport;
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
@@ -87,6 +94,20 @@ static const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  The default constructor.
+ *----------------------------------------------------------------------------*/
+SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
+                        : XmlRpcDaemon()
+{
+    uploadPlaylistMethod.reset(new UploadPlaylistMethod());
+    displayScheduleMethod.reset(new DisplayScheduleMethod());
+    displayPlaylistMethod.reset(new DisplayPlaylistMethod());
+    removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
+    rescheduleMethod.reset(new RescheduleMethod());
+}
+
 
 /*------------------------------------------------------------------------------
  *  Return the singleton instnace.
@@ -136,6 +157,14 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     Ptr<StorageClientFactory>::Ref scf = StorageClientFactory::getInstance();
     scf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
+    // configure the AudioPlayerFactory
+    nodes = element.get_children(AudioPlayerFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no audioPlayer element");
+    }
+    Ptr<AudioPlayerFactory>::Ref    apf = AudioPlayerFactory::getInstance();
+    apf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
     // configure the ScheduleFactory
     nodes = element.get_children(ScheduleFactory::getConfigElementName());
     if (nodes.size() < 1) {
@@ -151,6 +180,21 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     }
     configureXmlRpcDaemon( *((const xmlpp::Element*) *(nodes.begin())) );
 
+
+    // do some initialization, using the configured objects
+    audioPlayer = apf->getAudioPlayer();
+
+    Ptr<PlaylistEventContainer>::Ref    eventContainer;
+    Ptr<time_duration>::Ref             granularity;
+    eventContainer.reset(new PlaylistEventContainer(scf->getStorageClient(),
+                                                    sf->getSchedule(),
+                                                    audioPlayer));
+    // TODO: read granularity from config file
+    granularity.reset(new time_duration(seconds(30)));
+
+    eventScheduler.reset(
+            new LiveSupport::EventScheduler::EventScheduler(eventContainer,
+                                                            granularity));
 }
 
 
@@ -191,6 +235,35 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
     // TODO: check if we have already been configured
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
     sf->uninstall();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Start the scheduler daemon.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemon :: start(void)                  throw (std::logic_error)
+{
+    std::cerr << "SchedulerDaemon::start #1" << std::endl;
+    audioPlayer->initialize();
+    std::cerr << "SchedulerDaemon::start #2" << std::endl;
+    eventScheduler->start();
+    std::cerr << "SchedulerDaemon::start #3" << std::endl;
+    XmlRpcDaemon::start();
+    std::cerr << "SchedulerDaemon::start #4" << std::endl;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Stop the scheduler daemon.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemon :: stop(void)                   throw (std::logic_error)
+{
+    eventScheduler->stop();
+    audioPlayer->deInitialize();
+
+    XmlRpcDaemon::stop();
 }
 
 

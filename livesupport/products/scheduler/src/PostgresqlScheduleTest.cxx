@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -293,6 +293,58 @@ PostgresqlScheduleTest :: getScheduleEntriesTest(void)
         CPPUNIT_ASSERT(*(entry->getStartTime()) == *from);
         to.reset(new ptime(time_from_string("2004-07-23 13:00:00")));
         CPPUNIT_ASSERT(*(entry->getEndTime()) == *to);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  See if getNextEntry() returns correct entry
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlScheduleTest :: getNextEntryTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // create a 1 hour long playlist
+    Ptr<UniqueId>::Ref      playlistId = UniqueId::generateId();
+    Ptr<time_duration>::Ref playlength(new time_duration(1, 0, 0));
+    Ptr<Playlist>::Ref      playlist(new Playlist(playlistId, playlength));
+
+    Ptr<ptime>::Ref             from;
+    Ptr<ScheduleEntry>::Ref     entry;
+
+    try {
+        // schedule our playlist for 2004-07-23, 10 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        schedule->schedulePlaylist(playlist, from);
+
+        // schedule our playlist for 2004-07-23, 12 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 12:00:00")));
+        schedule->schedulePlaylist(playlist, from);
+
+        // schedule our playlist for 2004-07-23, 14 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 14:00:00")));
+        schedule->schedulePlaylist(playlist, from);
+
+        // see what gives after 2004-07-23 09:00:00
+        from.reset(new ptime(time_from_string("2004-07-23 09:00:00")));
+        entry = schedule->getNextEntry(from);
+        CPPUNIT_ASSERT(entry.get());
+        // see that it is a single entry starting from 10 to 11 o'clock
+        CPPUNIT_ASSERT(*(entry->getPlaylistId()) == *(playlist->getId()));
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        CPPUNIT_ASSERT(*(entry->getStartTime()) == *from);
+
+        // see what gives after 2004-07-23 10:00:00
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        entry = schedule->getNextEntry(from);
+        CPPUNIT_ASSERT(entry.get());
+        // see that it is a single entry starting from 10 to 11 o'clock
+        CPPUNIT_ASSERT(*(entry->getPlaylistId()) == *(playlist->getId()));
+        from.reset(new ptime(time_from_string("2004-07-23 12:00:00")));
+        CPPUNIT_ASSERT(*(entry->getStartTime()) == *from);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }

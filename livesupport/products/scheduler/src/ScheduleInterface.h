@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class ScheduleInterface : virtual public Installable
 {
@@ -114,6 +114,19 @@ class ScheduleInterface : virtual public Installable
         virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
+                                                            throw ()
+                                                                    = 0;
+
+        /**
+         *  Return the next schedule entry, after (but not including)
+         *  the specified timepoint.
+         *
+         *  @param fromTime the start of the time of the interval queried,
+         *          inclusive
+         *  @return the first schedule entry, after the specified timepoint.
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getNextEntry(Ptr<ptime>::Ref  fromTime)
                                                             throw ()
                                                                     = 0;
 

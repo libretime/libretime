@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,6 +60,8 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
+#include "LiveSupport/EventScheduler/EventScheduler.h"
 #include "UploadPlaylistMethod.h"
 #include "DisplayScheduleMethod.h"
 #include "DisplayPlaylistMethod.h"
@@ -71,7 +73,9 @@
 namespace LiveSupport {
 namespace Scheduler {
 
+using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::PlaylistExecutor;
 
 /* ================================================================ constants */
 
@@ -120,7 +124,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
@@ -136,6 +140,16 @@ class SchedulerDaemon : public Installable,
          *  The singleton instance of the scheduler daemon.
          */
         static Ptr<SchedulerDaemon>::Ref    schedulerDaemon;
+
+        /**
+         *  The event scheduler.
+         */
+        Ptr<EventScheduler::EventScheduler>::Ref        eventScheduler;
+
+        /**
+         *  The audio player.
+         */
+        Ptr<AudioPlayerInterface>::Ref      audioPlayer;
 
         /**
          *  The UploadPlaylistMethod the daemon is providing.
@@ -165,15 +179,8 @@ class SchedulerDaemon : public Installable,
         /**
          *  Default constructor.
          */
-        SchedulerDaemon (void)                          throw ()
-                    : XmlRpcDaemon()
-        {
-            uploadPlaylistMethod.reset(new UploadPlaylistMethod());
-            displayScheduleMethod.reset(new DisplayScheduleMethod());
-            displayPlaylistMethod.reset(new DisplayPlaylistMethod());
-            removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
-            rescheduleMethod.reset(new RescheduleMethod());
-        }
+        SchedulerDaemon (void)                          throw ();
+
 
     protected:
 
@@ -237,6 +244,25 @@ class SchedulerDaemon : public Installable,
          */
         virtual void
         uninstall(void)                         throw (std::exception);
+
+        /**
+         *  Start the daemon.
+         *
+         *  @exception std::logic_error if the daemon has not
+         *             yet been configured.
+         */
+        virtual void
+        start (void)                                throw (std::logic_error);
+
+        /**
+         *  Stop the daemon.
+         *
+         *  @exception std::logic_error if the daemon has not
+         *             yet been configured.
+         */
+        virtual void
+        stop (void)                                 throw (std::logic_error);
+
 };
 
 

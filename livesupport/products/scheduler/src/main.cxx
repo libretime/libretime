@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -161,21 +161,21 @@ int main (  int     argc,
 
             case 'h':
                 printUsage(argv[0], std::cout);
-                return 0;
+                exit(EXIT_SUCCESS);
 
             case 'v':
                 printVersion(std::cout);
-                return 0;
+                exit(EXIT_SUCCESS);
 
             default:
                 printUsage(argv[0], std::cout);
-                return 1;
+                exit(EXIT_FAILURE);
         }
     }
 
     if (optind != argc - 1) {
         printUsage(argv[0], std::cout);
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     std::cerr << "using config file '" << configFileName << '\'' << std::endl;
@@ -190,11 +190,11 @@ int main (  int     argc,
     } catch (std::invalid_argument &e) {
         std::cerr << "semantic error in configuration file" << std::endl
                   << e.what() << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     } catch (xmlpp::exception &e) {
         std::cerr << "error parsing configuration file" << std::endl
                   << e.what() << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     daemon->setBackground(!debugMode);
@@ -213,10 +213,10 @@ int main (  int     argc,
         daemon->uninstall();
     } else {
         printUsage(argv[0], std::cout);
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 

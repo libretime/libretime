@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,6 +122,17 @@ const std::string PostgresqlSchedule::reschedulePlaylistStmt =
 const std::string PostgresqlSchedule::getScheduleEntriesStmt =
     "SELECT id, playlist, starts, ends FROM schedule WHERE "
     "(? <= starts) AND (starts < ?) "
+    "ORDER BY starts";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for querying the next scheduled entry from the
+ *  specified timepoint.
+ *  The parameters for this call are: from
+ *  and returns the properties: id, playlist, starts, ends for the next
+ *  schedule entry after the specified timepoint
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::getNextEntryStmt =
+    "SELECT id, playlist, starts, ends FROM schedule WHERE ? < starts "
     "ORDER BY starts";
 
 /*------------------------------------------------------------------------------
@@ -334,6 +345,51 @@ PostgresqlSchedule :: getScheduleEntries(
                                                             startTime,
                                                             endTime));
             result->push_back(entry);
+        }
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        // TODO: report error
+        return result;
+    }
+
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the next schedule entry after a specified timepoint
+ *----------------------------------------------------------------------------*/
+Ptr<ScheduleEntry>::Ref
+PostgresqlSchedule :: getNextEntry(Ptr<ptime>::Ref  fromTime)
+                                                                throw ()
+{
+    Ptr<Connection>::Ref        conn;
+    Ptr<ScheduleEntry>::Ref     result;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<Timestamp>::Ref         timestamp;
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                            getNextEntryStmt));
+        timestamp = Conversion::ptimeToTimestamp(fromTime);
+        pstmt->setTimestamp(1, *timestamp);
+
+        Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
+        if (rs->next()) {
+            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getInt(1)));
+            Ptr<UniqueId>::Ref      playlistId(new UniqueId(rs->getInt(2)));
+
+            *timestamp = rs->getTimestamp(3);
+            Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
+
+            *timestamp = rs->getTimestamp(4);
+            Ptr<ptime>::Ref endTime = Conversion::timestampToPtime(timestamp);
+
+            result.reset(new ScheduleEntry(id, playlistId, startTime, endTime));
         }
 
         cm->returnConnection(conn);

@@ -2,7 +2,7 @@
 <!DOCTYPE scheduler [
 
 <!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
-                     scheduleFactory,xmlRpcDaemon) >
+                     scheduleFactory,audioPlayer,xmlRpcDaemon) >
 
 <!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
 
@@ -22,6 +22,11 @@
 <!ELEMENT scheduleFactory (postgresqlSchedule) >
 
 <!ELEMENT postgresqlSchedule EMPTY >
+
+<!ELEMENT audioPlayer   (helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
 
 <!ELEMENT xmlRpcDaemon EMPTY >
 <!ATTLIST xmlRpcDaemon xmlRpcHost   CDATA          #REQUIRED >
@@ -47,6 +52,10 @@
     <scheduleFactory>
         <postgresqlSchedule/>
     </scheduleFactory>
+
+    <audioPlayer>
+        <helixPlayer dllPath = "../../usr/lib/helix"/>
+    </audioPlayer>
 
     <xmlRpcDaemon xmlRpcHost  = "localhost"
                   xmlRpcPort  = "3344"
