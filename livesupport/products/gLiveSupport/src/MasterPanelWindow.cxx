@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -163,24 +163,18 @@ MasterPanelWindow :: resetTimer(void)                                throw ()
 bool
 MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 {
-    Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
+    Ptr<const ptime>::Ref   now = gLiveSupport->getScheduler()
+                                              ->getSchedulerTime();
+    
+    if (now.get()) {
+        time_duration           dayTime = now->time_of_day();
+        // get the time of day, only up to a second precision
+        time_duration           dayTimeSec(dayTime.hours(),
+                                           dayTime.minutes(),
+                                           dayTime.seconds(),
+                                           0);
 
-    if (sessionId.get()) {
-        Ptr<const ptime>::Ref   now = gLiveSupport->getScheduler()
-                                                  ->getSchedulerTime(sessionId);
-        
-        if (now.get()) {
-            time_duration           dayTime = now->time_of_day();
-            // get the time of day, only up to a second precision
-            time_duration           dayTimeSec(dayTime.hours(),
-                                               dayTime.minutes(),
-                                               dayTime.seconds(),
-                                               0);
-
-            timeWidget->set_text(to_simple_string(dayTimeSec));
-        }
-    } else {
-        timeWidget->set_text("time");
+        timeWidget->set_text(to_simple_string(dayTimeSec));
     }
 
     return true;
