@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.14 $
+#   Version  : $Revision: 1.15 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -163,7 +163,7 @@ searchMetadata() {
     $XR_CLI searchMetadata $SESSID 'John %' || exit $?
 }
 
-PLID="123456789abcdef2"
+PLID="123456789abcdef8"
 
 createPlaylist() {
     echo -n "# createPlaylist: "
@@ -205,6 +205,7 @@ editPlaylist() {
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
+#    deletePlaylist
     if [ $DEBUG_I ]; then echo $URL; fi
     if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     if [ $DEBUG_I ]; then echo " Playlist:"; echo $PLAYLIST; fi
