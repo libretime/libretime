@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -162,7 +162,6 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
 
     if (!(attribute = locationConfigElement
                       ->get_attribute(locationPortAttrName))) {
-cerr << "\nmissing port #\n";
         std::string eMsg = "Missing attribute ";
         eMsg += locationPortAttrName;
         throw std::invalid_argument(eMsg);

@@ -5,7 +5,7 @@
 
 <!ELEMENT location EMPTY >
 <!ATTLIST location server   CDATA       #REQUIRED >
-<!ATTLIST location port     NMTOKEN     "80" >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
 <!ATTLIST location path     CDATA       #REQUIRED >
 ]>
 <webAuthentication>
