@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,17 +57,13 @@ using namespace LiveSupport::Widgets;
  *----------------------------------------------------------------------------*/
 TestWindow :: TestWindow (void)
                                                                     throw ()
+          : WhiteWindow(0xffffff,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners())
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
     // init the imageButton
-    Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
-    Glib::RefPtr<Gdk::Pixbuf>   rollImage;
-
-    passiveImage = Gdk::Pixbuf::create_from_file("var/delete.png");
-    rollImage    = Gdk::Pixbuf::create_from_file("var/delete_roll.png");
-
-    imageButton.reset(new ImageButton(passiveImage, rollImage));
+    imageButton = widgetFactory->createButton(WidgetFactory::deleteButton);
 
     // create a button
     button = widgetFactory->createButton("Hello, World!");

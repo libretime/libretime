@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,9 @@
 
 #include "LiveSupport/Core/Configurable.h"
 
+#include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/Button.h"
+#include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 
 
@@ -80,11 +82,18 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class WidgetFactory :
                         virtual public Configurable
 {
+    public:
+        /**
+         *  The types of available buttons.
+         */
+        typedef enum { deleteButton } ButtonType;
+
+
     private:
         /**
          *  The name of the configuration XML elmenent used by this object.
@@ -132,84 +141,19 @@ class WidgetFactory :
         Glib::RefPtr<Gdk::Pixbuf>   buttonRollImageRight;
 
         /**
-         *  The top left image of the border for BlueBin.
+         *  The corner images for the blue bin.
          */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinTopLeftImage;
+        Ptr<CornerImages>::Ref          blueBinImages;
 
         /**
-         *  The left image of the border for BlueBin.
+         *  The corner images for the dark blue bin.
          */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinLeftImage;
+        Ptr<CornerImages>::Ref          darkBlueBinImages;
 
         /**
-         *  The top image of the border for BlueBin.
+         *  The corner images for the white window.
          */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinTopImage;
-
-        /**
-         *  The top right image of the border for BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinTopRightImage;
-
-        /**
-         *  The right image of the border for BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinRightImage;
-
-        /**
-         *  The bottom left image of the border for BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinBottomLeftImage;
-
-        /**
-         *  The bottom image of the border for BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinBottomImage;
-
-        /**
-         *  The bottom right image of the border for BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       blueBinBottomRightImage;
-
-        /**
-         *  The top left image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinTopLeftImage;
-
-        /**
-         *  The left image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinLeftImage;
-
-        /**
-         *  The top image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinTopImage;
-
-        /**
-         *  The top right image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinTopRightImage;
-
-        /**
-         *  The right image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinRightImage;
-
-        /**
-         *  The bottom left image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinBottomLeftImage;
-
-        /**
-         *  The bottom image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinBottomImage;
-
-        /**
-         *  The bottom right image of the border for dark BlueBin.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinBottomRightImage;
+        Ptr<CornerImages>::Ref          whiteWindowImages;
 
         /**
          *  The default constructor.
@@ -282,16 +226,39 @@ class WidgetFactory :
         createButton(const Glib::ustring      & label)      throw ();
 
         /**
+         *  Create a stock button.
+         *
+         *  @param type the type of the button.
+         */
+        Ptr<ImageButton>::Ref
+        createButton(ButtonType         type)               throw ();
+
+        /**
          *  Create and return a blue singular container.
+         *
+         *  @return a blue singular container.
          */
         Ptr<BlueBin>::Ref
         createBlueBin(void)                                 throw ();
 
         /**
          *  Create and return a dark blue singular container.
+         *
+         *  @return a dark blue singular container.
          */
         Ptr<BlueBin>::Ref
         createDarkBlueBin(void)                             throw ();
+
+        /**
+         *  Return the images for the white window.
+         *
+         *  @return the corner images for the white window.
+         */
+        Ptr<CornerImages>::Ref
+        getWhiteWindowCorners(void)                         throw ()
+        {
+            return whiteWindowImages;
+        }
 };
 
 

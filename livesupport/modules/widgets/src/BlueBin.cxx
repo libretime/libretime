@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <iostream>
 
 #include "LiveSupport/Widgets/BlueBin.h"
 
@@ -49,32 +51,17 @@ using namespace LiveSupport::Widgets;
 
 
 /* =============================================================  module code */
-#include <iostream>
 
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BlueBin :: BlueBin(unsigned int                backgroundColor,
-                   Glib::RefPtr<Gdk::Pixbuf>   topLeftImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   leftImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   topImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   topRightImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   rightImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   bottomLeftImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   bottomImage,
-                   Glib::RefPtr<Gdk::Pixbuf>   bottomRightImage)
+BlueBin :: BlueBin(unsigned int                 backgroundColor,
+                   Ptr<CornerImages>::Ref       cornerImages)
                                                                     throw ()
 {
     set_flags(Gtk::NO_WINDOW);
 
-    this->topLeftImage     = topLeftImage;
-    this->leftImage        = leftImage;
-    this->topImage         = topImage;
-    this->topRightImage    = topRightImage;
-    this->rightImage       = rightImage;
-    this->bottomLeftImage  = bottomLeftImage;
-    this->bottomImage      = bottomImage;
-    this->bottomRightImage = bottomRightImage;
+    this->cornerImages = cornerImages;
 
     child = 0;
     
@@ -114,11 +101,11 @@ BlueBin :: on_size_request(Gtk::Requisition* requisition)       throw ()
     }
 
     requisition->width  = width
-                        + leftImage->get_width()
-                        + rightImage->get_width();
+                        + cornerImages->leftImage->get_width()
+                        + cornerImages->rightImage->get_width();
     requisition->height = height
-                        + topImage->get_height()
-                        + bottomImage->get_height();
+                        + cornerImages->topImage->get_height()
+                        + cornerImages->bottomImage->get_height();
 }
 
 
@@ -142,14 +129,14 @@ BlueBin :: on_size_allocate(Gtk::Allocation& allocation)        throw ()
     if (child) {
         Gtk::Allocation     childAlloc;
 
-        childAlloc.set_x(leftImage->get_width());
-        childAlloc.set_y(topImage->get_height());
+        childAlloc.set_x(cornerImages->leftImage->get_width());
+        childAlloc.set_y(cornerImages->topImage->get_height());
         childAlloc.set_width(allocation.get_width()
-                           - leftImage->get_width()
-                           - rightImage->get_width());
+                           - cornerImages->leftImage->get_width()
+                           - cornerImages->rightImage->get_width());
         childAlloc.set_height(allocation.get_height()
-                            - topImage->get_height()
-                            - bottomImage->get_height());
+                            - cornerImages->topImage->get_height()
+                            - cornerImages->bottomImage->get_height());
 
         child->size_allocate(childAlloc);
     }
@@ -160,7 +147,6 @@ BlueBin :: on_size_allocate(Gtk::Allocation& allocation)        throw ()
 
 /*------------------------------------------------------------------------------
  *  Execute a function on all the children.
- *  As this widget has no children, don't do anything.
  *----------------------------------------------------------------------------*/
 void
 BlueBin :: forall_vfunc(gboolean    includeInternals,
@@ -175,7 +161,6 @@ BlueBin :: forall_vfunc(gboolean    includeInternals,
 
 /*------------------------------------------------------------------------------
  *  Handle the add child widget event.
- *  As this widget has no children, don't do anything.
  *----------------------------------------------------------------------------*/
 void
 BlueBin :: on_add(Gtk::Widget* child)                           throw ()
@@ -189,7 +174,6 @@ BlueBin :: on_add(Gtk::Widget* child)                           throw ()
 
 /*------------------------------------------------------------------------------
  *  Handle the remove child widget event.
- *  As this widget has no children, don't do anything.
  *----------------------------------------------------------------------------*/
 void
 BlueBin :: on_remove(Gtk::Widget* child)                        throw ()
@@ -207,7 +191,6 @@ BlueBin :: on_remove(Gtk::Widget* child)                        throw ()
 
 /*------------------------------------------------------------------------------
  *  Return what kind of widgets can be added to this container.
- *  As this widget has no children, return G_TYPE_NONE always.
  *----------------------------------------------------------------------------*/
 GtkType
 BlueBin :: child_type_vfunc() const                             throw ()
@@ -313,109 +296,55 @@ BlueBin :: on_expose_event(GdkEventExpose* event)           throw ()
         int     y;
         int     maxY;
 
-        topLeftImage->render_to_drawable(gdkWindow,
-                                         get_style()->get_black_gc(),
-                                         0, 0,
-                                         0,
-                                         0,
-                                         topLeftImage->get_width(),
-                                         topLeftImage->get_height(),
-                                         Gdk::RGB_DITHER_NONE,
-                                         0, 0);
+        renderImage(cornerImages->topLeftImage, 0, 0);
 
         // draw the top side as many times as necessary
-        x    = topLeftImage->get_width();
-        maxX = width - topRightImage->get_width();
+        x    = cornerImages->topLeftImage->get_width();
+        maxX = width - cornerImages->topRightImage->get_width();
         while (x < maxX) {
-            topImage->render_to_drawable(gdkWindow,
-                                         get_style()->get_black_gc(),
-                                         0, 0,
-                                         x,
-                                         0,
-                                         topImage->get_width(),
-                                         topImage->get_height(),
-                                         Gdk::RGB_DITHER_NONE,
-                                         0, 0);
-            x += topImage->get_width();
+            renderImage(cornerImages->topImage, x, 0);
+            x += cornerImages->topImage->get_width();
         }
 
-        topRightImage->render_to_drawable(gdkWindow,
-                                         get_style()->get_black_gc(),
-                                         0, 0,
-                                         width - topRightImage->get_width(),
-                                         0,
-                                         topRightImage->get_width(),
-                                         topRightImage->get_height(),
-                                         Gdk::RGB_DITHER_NONE,
-                                         0, 0);
+        renderImage(cornerImages->topRightImage,
+                    width - cornerImages->topRightImage->get_width(),
+                    0);
 
         // draw the left side as many times as necessary
-        y    = topLeftImage->get_height();
-        maxY = height - bottomLeftImage->get_height();
+        y    = cornerImages->topLeftImage->get_height();
+        maxY = height - cornerImages->bottomLeftImage->get_height();
         while (y < maxY) {
-            leftImage->render_to_drawable(gdkWindow,
-                                          get_style()->get_black_gc(),
-                                          0, 0,
-                                          0,
-                                          y,
-                                          leftImage->get_width(),
-                                          leftImage->get_height(),
-                                          Gdk::RGB_DITHER_NONE,
-                                          0, 0);
-            y += leftImage->get_height();
+            renderImage(cornerImages->leftImage, 0, y);
+            y += cornerImages->leftImage->get_height();
         }
 
-        bottomLeftImage->render_to_drawable(gdkWindow,
-                                            get_style()->get_black_gc(),
-                                            0, 0,
-                                            0,
-                                         height - bottomLeftImage->get_height(),
-                                            bottomLeftImage->get_width(),
-                                            bottomLeftImage->get_height(),
-                                            Gdk::RGB_DITHER_NONE,
-                                            0, 0);
+        renderImage(cornerImages->bottomLeftImage,
+                    0,
+                    height - cornerImages->bottomLeftImage->get_height());
 
         // draw the right side as many times as necessary
-        y    = topRightImage->get_height();
-        maxY = height - bottomRightImage->get_height();
+        y    = cornerImages->topRightImage->get_height();
+        maxY = height - cornerImages->bottomRightImage->get_height();
         while (y < maxY) {
-            rightImage->render_to_drawable(gdkWindow,
-                                           get_style()->get_black_gc(),
-                                           0, 0,
-                                           width - rightImage->get_width(),
-                                           y,
-                                           rightImage->get_width(),
-                                           rightImage->get_height(),
-                                           Gdk::RGB_DITHER_NONE,
-                                           0, 0);
-            y += rightImage->get_height();
+            renderImage(cornerImages->rightImage,
+                        width - cornerImages->rightImage->get_width(),
+                        y);
+            y += cornerImages->rightImage->get_height();
         }
 
         // draw the bottom side as many times as necessary
-        x    = bottomLeftImage->get_width();
-        maxX = width - bottomRightImage->get_width();
+        x    = cornerImages->bottomLeftImage->get_width();
+        maxX = width - cornerImages->bottomRightImage->get_width();
         while (x < maxX) {
-            bottomImage->render_to_drawable(gdkWindow,
-                                            get_style()->get_black_gc(),
-                                            0, 0,
-                                            x,
-                                            height - bottomImage->get_height(),
-                                            bottomImage->get_width(),
-                                            bottomImage->get_height(),
-                                            Gdk::RGB_DITHER_NONE,
-                                            0, 0);
-            x += bottomImage->get_width();
+            renderImage(cornerImages->bottomImage,
+                        x,
+                        height - cornerImages->bottomImage->get_height());
+            x += cornerImages->bottomImage->get_width();
         }
 
-        bottomRightImage->render_to_drawable(gdkWindow,
-                                             get_style()->get_black_gc(),
-                                             0, 0,
-                                        width - bottomRightImage->get_width(),
-                                        height - bottomRightImage->get_height(),
-                                             bottomRightImage->get_width(),
-                                             bottomRightImage->get_height(),
-                                             Gdk::RGB_DITHER_NONE,
-                                             0, 0);
+        renderImage(cornerImages->bottomRightImage,
+                    width - cornerImages->bottomRightImage->get_width(),
+                    height - cornerImages->bottomRightImage->get_height());
     }
 
     Gtk::Bin::on_expose_event(event);
@@ -423,4 +352,23 @@ BlueBin :: on_expose_event(GdkEventExpose* event)           throw ()
     return false;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Render an image
+ *----------------------------------------------------------------------------*/
+void
+BlueBin :: renderImage(Glib::RefPtr<Gdk::Pixbuf>   image,
+                       int                         x,
+                       int                         y)          throw ()
+{
+    image->render_to_drawable(gdkWindow,
+                              get_style()->get_black_gc(),
+                              0, 0,
+                              x,
+                              y,
+                              image->get_width(),
+                              image->get_height(),
+                              Gdk::RGB_DITHER_NONE,
+                              0, 0);
+}
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,88 +90,29 @@ static const std::string    buttonRollCenterName = "button/centerRoll.png";
 static const std::string    buttonRollRightName = "button/rightRoll.png";
 
 /**
- *  The name of the top left image for BlueBin.
+ *  The relative path for the blue bin images.
  */
-static const std::string    blueBinTopLeftName = "blueBin/topLeft.png";
+static const std::string    blueBinPath = "blueBin/";
 
 /**
- *  The name of the left image for BlueBin.
+ *  The relative path for the dark blue bin images.
  */
-static const std::string    blueBinLeftName = "blueBin/left.png";
+static const std::string    darkBlueBinPath = "darkBlueBin/";
 
 /**
- *  The name of the top image for BlueBin.
+ *  The relative path for the white window images.
  */
-static const std::string    blueBinTopName = "blueBin/top.png";
+static const std::string    whiteWindowPath = "whiteWindow/";
 
 /**
- *  The name of the top right image for BlueBin.
+ *  The name of the passive image for the delete button.
  */
-static const std::string    blueBinTopRightName = "blueBin/topRight.png";
+static const std::string    deleteButtonPassiveName = "imageButton/delete.png";
 
 /**
- *  The name of the right image for BlueBin.
+ *  The name of the rollover image for the delete button.
  */
-static const std::string    blueBinRightName = "blueBin/right.png";
-
-/**
- *  The name of the bottom left image for BlueBin.
- */
-static const std::string    blueBinBottomLeftName = "blueBin/bottomLeft.png";
-
-/**
- *  The name of the bottom image for BlueBin.
- */
-static const std::string    blueBinBottomName = "blueBin/bottom.png";
-
-/**
- *  The name of the bottom right image for BlueBin.
- */
-static const std::string    blueBinBottomRightName = "blueBin/bottomRight.png";
-
-
-/**
- *  The name of the top left image for dark BlueBin.
- */
-static const std::string    darkBlueBinTopLeftName = "darkBlueBin/topLeft.png";
-
-/**
- *  The name of the left image for dark BlueBin.
- */
-static const std::string    darkBlueBinLeftName = "darkBlueBin/left.png";
-
-/**
- *  The name of the top image for dark BlueBin.
- */
-static const std::string    darkBlueBinTopName = "darkBlueBin/top.png";
-
-/**
- *  The name of the top right image for dark BlueBin.
- */
-static const std::string    darkBlueBinTopRightName
-                                                = "darkBlueBin/topRight.png";
-
-/**
- *  The name of the right image for dark BlueBin.
- */
-static const std::string    darkBlueBinRightName = "darkBlueBin/right.png";
-
-/**
- *  The name of the bottom left image for dark BlueBin.
- */
-static const std::string    darkBlueBinBottomLeftName =
-                                                "darkBlueBin/bottomLeft.png";
-
-/**
- *  The name of the bottom image for dark BlueBin.
- */
-static const std::string    darkBlueBinBottomName = "darkBlueBin/bottom.png";
-
-/**
- *  The name of the bottom right image for dark BlueBin.
- */
-static const std::string    darkBlueBinBottomRightName
-                                                = "darkBlueBin/bottomRight.png";
+static const std::string    deleteButtonRollName = "imageButton/deleteRoll.png";
 
 
 /* ===============================================  local function prototypes */
@@ -222,26 +163,12 @@ WidgetFactory :: configure(const xmlpp::Element & element)
     buttonRollImageCenter    = loadImage(buttonRollCenterName);
     buttonRollImageRight     = loadImage(buttonRollRightName);
 
-    // load the blue bin images.
-    blueBinTopLeftImage     = loadImage(blueBinTopLeftName);
-    blueBinLeftImage        = loadImage(blueBinLeftName);
-    blueBinTopImage         = loadImage(blueBinTopName);
-    blueBinTopRightImage    = loadImage(blueBinTopRightName);
-    blueBinRightImage       = loadImage(blueBinRightName);
-    blueBinBottomLeftImage  = loadImage(blueBinBottomLeftName);
-    blueBinBottomImage      = loadImage(blueBinBottomName);
-    blueBinBottomRightImage = loadImage(blueBinBottomRightName);
+    // load the images for the bins
+    blueBinImages.reset(new CornerImages(path + blueBinPath));
+    darkBlueBinImages.reset(new CornerImages(path + darkBlueBinPath));
 
-    // load the dark blue bin images.
-    darkBlueBinTopLeftImage     = loadImage(darkBlueBinTopLeftName);
-    darkBlueBinLeftImage        = loadImage(darkBlueBinLeftName);
-    darkBlueBinTopImage         = loadImage(darkBlueBinTopName);
-    darkBlueBinTopRightImage    = loadImage(darkBlueBinTopRightName);
-    darkBlueBinRightImage       = loadImage(darkBlueBinRightName);
-    darkBlueBinBottomLeftImage  = loadImage(darkBlueBinBottomLeftName);
-    darkBlueBinBottomImage      = loadImage(darkBlueBinBottomName);
-    darkBlueBinBottomRightImage = loadImage(darkBlueBinBottomRightName);
-
+    // load the white window corner images
+    whiteWindowImages.reset(new CornerImages(path + whiteWindowPath));
 }
 
 
@@ -286,15 +213,7 @@ WidgetFactory :: createButton(const Glib::ustring & label)      throw ()
 Ptr<BlueBin>::Ref
 WidgetFactory :: createBlueBin(void)                            throw ()
 {
-    Ptr<BlueBin>::Ref   blueBin(new BlueBin(0xcfdee7,
-                                            blueBinTopLeftImage,
-                                            blueBinLeftImage,
-                                            blueBinTopImage,
-                                            blueBinTopRightImage,
-                                            blueBinRightImage,
-                                            blueBinBottomLeftImage,
-                                            blueBinBottomImage,
-                                            blueBinBottomRightImage));
+    Ptr<BlueBin>::Ref   blueBin(new BlueBin(0xcfdee7, blueBinImages));
 
     return blueBin;
 }
@@ -306,17 +225,30 @@ WidgetFactory :: createBlueBin(void)                            throw ()
 Ptr<BlueBin>::Ref
 WidgetFactory :: createDarkBlueBin(void)                        throw ()
 {
-    Ptr<BlueBin>::Ref   blueBin(new BlueBin(0x99cdff,
-                                            darkBlueBinTopLeftImage,
-                                            darkBlueBinLeftImage,
-                                            darkBlueBinTopImage,
-                                            darkBlueBinTopRightImage,
-                                            darkBlueBinRightImage,
-                                            darkBlueBinBottomLeftImage,
-                                            darkBlueBinBottomImage,
-                                            darkBlueBinBottomRightImage));
+    Ptr<BlueBin>::Ref   blueBin(new BlueBin(0x99cdff, darkBlueBinImages));
 
     return blueBin;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Create a stock button
+ *----------------------------------------------------------------------------*/
+Ptr<ImageButton>::Ref
+WidgetFactory :: createButton(ButtonType    type)               throw ()
+{
+    Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
+    Glib::RefPtr<Gdk::Pixbuf>   rollImage;
+
+    switch (type) {
+        case deleteButton:
+        default:
+            passiveImage = loadImage(deleteButtonPassiveName);
+            rollImage    = loadImage(deleteButtonRollName);
+    }
+
+    Ptr<ImageButton>::Ref   button(new ImageButton(passiveImage, rollImage));
+
+    return button;
+}
 

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/BlueBin.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_BlueBin_h
-#define LiveSupport_Widgets_BlueBin_h
+#ifndef LiveSupport_Widgets_WhiteWindow_h
+#define LiveSupport_Widgets_WhiteWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,10 +40,15 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/bin.h>
+#include <gtkmm/label.h>
+#include <gtkmm/table.h>
+#include <gtkmm/alignment.h>
+#include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/ImageButton.h"
+#include "LiveSupport/Widgets/BlueBin.h"
 
 
 namespace LiveSupport {
@@ -63,54 +68,68 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.1 $
  */
-class BlueBin : public Gtk::Bin
+class WhiteWindow : public Gtk::Window
 {
     private:
         /**
-         *  The Gdk::Window object, used to draw inside this button.
+         *  The rounded container for the window.
          */
-        Glib::RefPtr<Gdk::Window>       gdkWindow;
+        Ptr<BlueBin>::Ref               blueBin;
 
         /**
-         *   The Graphics Context, used to draw.
+         *  The layout of the window.
          */
-        Glib::RefPtr<Gdk::GC>           gc;
+        Ptr<Gtk::Table>::Ref            layout;
 
         /**
-         *  The widget contained inside this container.
+         *  The left alignment contaner for the title.
          */
-        Gtk::Widget                   * child;
+        Ptr<Gtk::Alignment>::Ref        titleAlignment;
 
         /**
-         *  The background color of the widget.
+         *  The title of the window.
          */
-        Gdk::Color                      bgColor;
+        Ptr<Gtk::Label>::Ref            title;
 
         /**
-         *  The corner images.
+         *  The right alignment contaner for the close button.
          */
-        Ptr<CornerImages>::Ref          cornerImages;
+        Ptr<Gtk::Alignment>::Ref        closeButtonAlignment;
+
+        /**
+         *  The close button.
+         */
+        Ptr<ImageButton>::Ref           closeButton;
+
+        /**
+         *  Just a container for the main content of the window.
+         */
+        Ptr<Gtk::Alignment>::Ref        childContainer;
+
+        /**
+         *  The event handler for the title being clicked on.
+         *
+         *  @param event the button click event.
+         *  @return true if the the event was handled, false otherwise.
+         */
+        bool
+        onTitleClicked(GdkEventButton     * event)          throw ();
+
+        /**
+         *  Signal handler for the close button clicked.
+         */
+        virtual void
+        onCloseButtonClicked(void)                          throw ();
 
         /**
          *  Default constructor.
          */
-        BlueBin(void)                                   throw ()
+        WhiteWindow(void)                                   throw ()
         {
         }
 
-        /**
-         *  Render an image.
-         *
-         *  @param image the image to render
-         *  @param x the x coordinate to render to
-         *  @param y the y coordinate to render to
-         */
-        void
-        renderImage(Glib::RefPtr<Gdk::Pixbuf>   image,
-                    int                         x,
-                    int                         y)          throw ();
 
     protected:
         /**
@@ -206,20 +225,20 @@ class BlueBin : public Gtk::Bin
 
     public:
         /**
-         *  Constructor, with only one state.
+         *  Constructor.
          *
          *  @param backgroundColor the RGB value for the background color.
          *  @param cornerImages the corner images.
          */
-        BlueBin(unsigned int                backgroundColor,
-                Ptr<CornerImages>::Ref      cornerImages)
+        WhiteWindow(unsigned int                backgroundColor,
+                    Ptr<CornerImages>::Ref      cornerImages)
                                                             throw ();
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~BlueBin(void)                                  throw ();
+        ~WhiteWindow(void)                                  throw ();
 };
 
 
@@ -232,5 +251,5 @@ class BlueBin : public Gtk::Bin
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_BlueBin_h
+#endif // LiveSupport_Widgets_WhiteWindow_h
 

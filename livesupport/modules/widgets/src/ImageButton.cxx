@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ImageButton.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -218,6 +218,12 @@ ImageButton :: on_realize()                                         throw ()
         unset_flags(Gtk::NO_WINDOW);
         set_window(gdkWindow);
 
+        Gdk::Color  bgColor;
+        bgColor.set_rgb(0xffff, 0xffff, 0xffff);
+        Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
+        colormap->alloc_color(bgColor);
+        modify_bg(Gtk::STATE_NORMAL, bgColor);
+
         // make the widget receive expose events
         gdkWindow->set_user_data(gobj());
         
@@ -271,7 +277,7 @@ ImageButton :: on_expose_event(GdkEventExpose* event)           throw ()
         int y = (get_height() - image->get_height()) / 2;
 
         image->render_to_drawable(gdkWindow,
-                                  get_style()->get_black_gc(),
+                                  get_style()->get_white_gc(),
                                   0, 0,
                                   x,
                                   y,
