@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -331,7 +331,7 @@ PostgresqlSchedule :: getScheduleEntries(
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         while (rs->next()) {
-            Ptr<UniqueId>::Ref  id = UniqueId::fromDecimalString(
+            Ptr<UniqueId>::Ref  id         = UniqueId::fromDecimalString(
                                                             rs->getString(1));
             Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
                                                             rs->getString(2));
@@ -382,8 +382,10 @@ PostgresqlSchedule :: getNextEntry(Ptr<ptime>::Ref  fromTime)
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         if (rs->next()) {
-            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getLong(1)));
-            Ptr<UniqueId>::Ref      playlistId(new UniqueId(rs->getLong(2)));
+            Ptr<UniqueId>::Ref  id         = UniqueId::fromDecimalString(
+                                                            rs->getString(1));
+            Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
+                                                            rs->getString(2));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
@@ -492,8 +494,10 @@ PostgresqlSchedule :: getScheduleEntry(Ptr<UniqueId>::Ref   entryId)
         if (rs->next()) {
             Ptr<Timestamp>::Ref     timestamp(new Timestamp());
 
-            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getLong(1)));
-            Ptr<UniqueId>::Ref      playlistId(new UniqueId(rs->getLong(2)));
+            Ptr<UniqueId>::Ref  id         = UniqueId::fromDecimalString(
+                                                            rs->getString(1));
+            Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
+                                                            rs->getString(2));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
