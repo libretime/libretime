@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,15 +84,6 @@ PlaylistTest :: setUp(void)                         throw ()
 
         playlist->configure(*root);
 
-        CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
-        Ptr<const boost::posix_time::time_duration>::Ref  duration
-                                                = playlist->getPlaylength();
-        CPPUNIT_ASSERT(duration->hours() == 1);
-        CPPUNIT_ASSERT(duration->minutes() == 30);
-        CPPUNIT_ASSERT(duration->seconds() == 0);
-
-        CPPUNIT_ASSERT(playlist->valid());
-
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
@@ -117,13 +108,22 @@ void
 PlaylistTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Playlist::const_iterator       it = playlist->begin();
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    Ptr<const boost::posix_time::time_duration>::Ref  duration
+                                            = playlist->getPlaylength();
+    CPPUNIT_ASSERT(duration->total_seconds() == 34);
+
+    CPPUNIT_ASSERT(playlist->valid());
+
+    Playlist::const_iterator        it = playlist->begin();
     CPPUNIT_ASSERT(it != playlist->end());
-    Ptr<PlaylistElement>::Ref      playlistElement = it->second;
+    Ptr<PlaylistElement>::Ref       playlistElement = it->second;
     CPPUNIT_ASSERT(playlistElement->getId()->getId() == 101);
-    Ptr<const time_duration>::Ref  relativeOffset 
-                                   = playlistElement->getRelativeOffset();
+    Ptr<const time_duration>::Ref   relativeOffset 
+                                    = playlistElement->getRelativeOffset();
     CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 0);
+    CPPUNIT_ASSERT(playlistElement->getType() 
+                                    == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
                                                      == 10001);
 
@@ -132,12 +132,14 @@ PlaylistTest :: firstTest(void)
     playlistElement  = it->second;
     CPPUNIT_ASSERT(playlistElement->getId()->getId() == 102);
     relativeOffset   = playlistElement->getRelativeOffset();
-    CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 60 * 60);
+    CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 11);
+    CPPUNIT_ASSERT(playlistElement->getType() 
+                                    == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
                                                      == 10002);
     
     ++it;
-    CPPUNIT_ASSERT(it == playlist->end());
+//    CPPUNIT_ASSERT(it == playlist->end());
 }
 
 
@@ -192,13 +194,21 @@ PlaylistTest :: audioClipTest(void)
         CPPUNIT_FAIL(eMsg);
     }
 
-    CPPUNIT_ASSERT(!playlist->valid());    // overlapping audio clips
+    CPPUNIT_ASSERT(!playlist->valid());    // big gap in playlist
 
     Playlist::const_iterator       it = playlist->begin();
     CPPUNIT_ASSERT(it != playlist->end());
 
     ++it;
-    Ptr<PlaylistElement>::Ref      playlistElement = it->second;
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    
+    Ptr<PlaylistElement>::Ref   playlistElement = it->second;
+    CPPUNIT_ASSERT(playlistElement->getType() 
+                                == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
                                                              == 20001);
 
@@ -207,16 +217,13 @@ PlaylistTest :: audioClipTest(void)
     CPPUNIT_ASSERT(otherRelativeOffset->total_seconds() == 10*60);
 
     ++it;
-    CPPUNIT_ASSERT(it != playlist->end());
-
-    ++it;
     CPPUNIT_ASSERT(it == playlist->end());
 
     try {
-        playlist->removeAudioClip(relativeOffset);
+        playlist->removePlaylistElement(relativeOffset);
     }
     catch (std::invalid_argument &e) {
-        string eMsg = "removeAudioClip returned with error: ";
+        string eMsg = "removePlaylistElement returned with error: ";
         eMsg += e.what(); 
         CPPUNIT_FAIL(eMsg);
     }
@@ -226,18 +233,19 @@ PlaylistTest :: audioClipTest(void)
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
     ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
     CPPUNIT_ASSERT(it == playlist->end());
 
     Ptr<const time_duration>::Ref  phonyRelativeOffset(
                                    new time_duration(0,0,1,0));
     try {
-        playlist->removeAudioClip(phonyRelativeOffset);
+        playlist->removePlaylistElement(phonyRelativeOffset);
+        CPPUNIT_FAIL("removePlaylistElement allowed to remove "
+                     "non-existent audio clip");
     }
     catch (std::invalid_argument &e) {
-    return;
     }
-    CPPUNIT_FAIL("removeAudioClip allowed to remove "
-                 "non-existent audio clip");
 }
 
 
@@ -256,10 +264,12 @@ PlaylistTest :: savedCopyTest(void)
     }
 
     playlist->createSavedCopy();
-    playlist->removeAudioClip(Ptr<time_duration>::Ref(
+    playlist->removePlaylistElement(Ptr<time_duration>::Ref(
                               new time_duration(0,0,0,0)));
-    playlist->removeAudioClip(Ptr<time_duration>::Ref(
-                              new time_duration(1,0,0,0)));
+    playlist->removePlaylistElement(Ptr<time_duration>::Ref(
+                              new time_duration(0,0,11,0)));
+    playlist->removePlaylistElement(Ptr<time_duration>::Ref(
+                              new time_duration(0,0,23,0)));
     CPPUNIT_ASSERT(playlist->begin() == playlist->end());
 
     try {
@@ -273,7 +283,13 @@ PlaylistTest :: savedCopyTest(void)
     CPPUNIT_ASSERT(it != playlist->end());
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
-    CPPUNIT_ASSERT(it->second->getAudioClip()->getId()->getId() == 10002);
+    Ptr<PlaylistElement>::Ref   playlistElement = it->second;
+    CPPUNIT_ASSERT(playlistElement->getType() 
+                                    == PlaylistElement::AudioClipType);
+    CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
+                                    == 10002);
+    ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
     ++it;
     CPPUNIT_ASSERT(it == playlist->end());
 
@@ -308,18 +324,28 @@ PlaylistTest :: fadeInfoTest(void)
                                   ->total_milliseconds() == 1500);
     
     ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
     CPPUNIT_ASSERT(it == playlist->end());
 
-    Ptr<time_duration>::Ref relativeOffset (new time_duration(0,0,0,0));
     Ptr<time_duration>::Ref fadeIn (new time_duration(0,0,3,200000));
     Ptr<time_duration>::Ref fadeOut(new time_duration(0,0,4,0));
     Ptr<FadeInfo>::Ref      fadeInfo(new FadeInfo(fadeIn, fadeOut));
 
+    Ptr<time_duration>::Ref relativeOffset (new time_duration(0,0,0,0));
     try {
         playlist->setFadeInfo(relativeOffset, fadeInfo);
     }
     catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("could not add new fade info");
+    }
+
+    relativeOffset.reset(new time_duration(0,0,11,0));
+    try {
+        playlist->setFadeInfo(relativeOffset, fadeInfo);
+    }
+    catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("could not update fade info");
     }
 
     it = playlist->begin();
@@ -328,16 +354,6 @@ PlaylistTest :: fadeInfoTest(void)
                                   ->total_milliseconds() == 3200);
     CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
                                   ->total_milliseconds() == 4000);
-    
-    relativeOffset.reset(new time_duration(1,00,0,0));
-
-    try {
-        playlist->setFadeInfo(relativeOffset, fadeInfo);
-    }
-    catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("could not update fade info");
-    }
-
     ++it;
     playlistElement  = it->second;
     CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
@@ -345,7 +361,7 @@ PlaylistTest :: fadeInfoTest(void)
     CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
                                   ->total_milliseconds() == 4000);
 
-    relativeOffset.reset(new time_duration(0,18,0,0));
+    relativeOffset.reset(new time_duration(0,0,7,0));
 
     try {
         playlist->setFadeInfo(relativeOffset, fadeInfo);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 class Playlist : public Configurable
 {
@@ -115,7 +115,12 @@ class Playlist : public Configurable
         /**
          *  The uri of the SMIL file generated from this playlist (if any).
          */
-        Ptr<std::string>::Ref uri;
+        Ptr<const std::string>::Ref uri;
+
+        /**
+         *  The token given to this playlist by the storage server.
+         */
+        Ptr<const std::string>::Ref token;
 
         /**
          *  Flag set if playlist is currently playing.
@@ -238,31 +243,52 @@ class Playlist : public Configurable
          *
          *  @return the playling length of this playlist, in microseconds.
          */
-        Ptr<const time_duration>::Ref
+        Ptr<time_duration>::Ref
         getPlaylength(void) const                throw ()
         {
             return playlength;
         }
 
         /**
-         *  Return the uri of the playlist.
+         *  Return the URI of the SMIL file generated from this playlist.
          *
          *  @return the uri of the playlist.
          */
         Ptr<const std::string>::Ref
-        getUri(void) const                       throw ()
+        getUri(void) const                                  throw ()
         {
             return uri;
         }
 
         /**
-         *  Set the uri of the playlist.
+         *  Set the URI of the SMIL file generated from this playlist.
          *
          */
         void
-        setUri(Ptr<std::string>::Ref uri)        throw ()
+        setUri(Ptr<const std::string>::Ref uri)             throw ()
         {
             this->uri = uri;
+        }
+
+        /**
+         *  Return the token given to this playlist by the storage server.
+         *
+         *  @return the uri of the playlist.
+         */
+        Ptr<const std::string>::Ref
+        getToken(void) const                                throw ()
+        {
+            return token;
+        }
+
+        /**
+         *  Set the token given to this playlist by the storage server.
+         *
+         */
+        void
+        setToken(Ptr<const std::string>::Ref token)         throw ()
+        {
+            this->token = token;
         }
 
         /**
@@ -355,12 +381,29 @@ class Playlist : public Configurable
          *             to the start of the playlist
          *  @param fadeInfo the fade in / fade out info (optional)
          *  @exception std::invalid_argument if the playlist already contains
-         *             an audio clip with the same relative offset
+         *             a playlist element with the same relative offset
          */
          void
          addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                       Ptr<time_duration>::Ref  relativeOffset,
                       Ptr<FadeInfo>::Ref       fadeInfo
+                                               = Ptr<FadeInfo>::Ref())
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Add a new sub-playlist to the playlist.
+         *
+         *  @param playlist the sub-playlist to be added
+         *  @param relativeOffset the start of the sub-playlist, relative
+         *             to the start of the containing playlist
+         *  @param fadeInfo the fade in / fade out info (optional)
+         *  @exception std::invalid_argument if the playlist already contains
+         *             a playlist element with the same relative offset
+         */
+         void
+         addPlaylist(Ptr<Playlist>::Ref       playlist,
+                     Ptr<time_duration>::Ref  relativeOffset,
+                     Ptr<FadeInfo>::Ref       fadeInfo
                                                = Ptr<FadeInfo>::Ref())
                                                 throw (std::invalid_argument);
 
@@ -380,6 +423,8 @@ class Playlist : public Configurable
 
         /**
          *  Remove an audio clip from the playlist.
+         *  THIS IS OBSOLETE, SUPERSEDED BY removePlaylistElement().
+         *  TODO: REMOVE IT AFTER THERE ARE NO MORE REFERENCES TO IT.
          *
          *  @param relativeOffset the start of the audio clip, relative
          *             to the start of the playlist
@@ -388,6 +433,18 @@ class Playlist : public Configurable
          */
          void
          removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Remove a playlist element from the playlist.
+         *
+         *  @param relativeOffset the start of the playlist element, relative
+         *             to the start of the playlist
+         *  @exception std::invalid_argument if the playlist does not contain
+         *             a playlist element at the specified relative offset
+         */
+         void
+         removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
                                                 throw (std::invalid_argument);
 
         /**

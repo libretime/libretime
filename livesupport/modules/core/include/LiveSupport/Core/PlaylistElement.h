@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,6 +61,8 @@ using namespace boost::posix_time;
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
 
+// forward declaration to avoid circular reference
+class Playlist;
 
 /* ================================================================ constants */
 
@@ -71,7 +73,7 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An item in a Playlist, consisting of an AudioClip 
+ *  An item in a Playlist, consisting of an AudioClip or another Playlist
  *  and optional FadeInfo (fade in / fade out information).
  *
  *  This object has to be configured with an XML configuration element
@@ -90,16 +92,23 @@ using namespace LiveSupport::Core;
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT playlistElement (audioClip, fadeInfo?) &gt;
+ *  &lt;!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) &gt;
  *  &lt;!ATTLIST playlistElement  id              NMTOKEN   #REQUIRED  &gt;
  *  &lt;!ATTLIST playlistElement  relativeOffset  NMTOKEN   #REQUIRED  &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class PlaylistElement : public Configurable 
 {
+    public:
+        /**
+         *  The possible types of the playlist element (audio clip or
+         *  sub-playlist).
+         */
+        enum Type { AudioClipType, PlaylistType };
+
     private:
         /**
          *  The name of the configuration XML element used by Playlist.
@@ -117,9 +126,19 @@ class PlaylistElement : public Configurable
         Ptr<time_duration>::Ref     relativeOffset;
 
         /**
+         *  The type of the entry (audio clip or sub-playlist).
+         */
+        Type                        type;
+
+        /**
          *  The audio clip associated with the entry.
          */
         Ptr<AudioClip>::Ref         audioClip;
+
+        /**
+         *  The playlist associated with the entry.
+         */
+        Ptr<Playlist>::Ref          playlist;
 
         /**
          *  The fade in / fade out info associated with the entry.
@@ -161,7 +180,7 @@ class PlaylistElement : public Configurable
         }
 
         /**
-         *  Create a new playlist element, with a new UniqueId,
+         *  Create a new audio clip playlist element, with a new UniqueId,
          *  to be added to a playlist.
          *
          *  @param relativeOffset the start time of this element, relative to 
@@ -180,6 +199,30 @@ class PlaylistElement : public Configurable
             this->relativeOffset = relativeOffset;
             this->audioClip      = audioClip;
             this->fadeInfo       = fadeInfo;
+            this->type           = AudioClipType;
+        }
+
+        /**
+         *  Create a new sub-playlist playlist element, with a new UniqueId,
+         *  to be added to a playlist.
+         *
+         *  @param relativeOffset the start time of this element, relative to 
+         *                                        the start of the playlist.
+         *  @param playlist       (a pointer to) the sub-playlist associated 
+         *                                        with the playlist element.
+         *  @param fadeInfo       fade in / fade out information (optional)
+         */
+        PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
+                        Ptr<Playlist>::Ref       playlist,
+                        Ptr<FadeInfo>::Ref       fadeInfo 
+                                                 = Ptr<FadeInfo>::Ref())
+                                                           throw ()
+        {
+            this->id             = UniqueId::generateId();
+            this->relativeOffset = relativeOffset;
+            this->playlist       = playlist;
+            this->fadeInfo       = fadeInfo;
+            this->type           = PlaylistType;
         }
 
         /**
@@ -231,10 +274,21 @@ class PlaylistElement : public Configurable
          *
          *  @return the relative offset of the element.
          */
-        Ptr<const time_duration>::Ref
+        Ptr<time_duration>::Ref
         getRelativeOffset(void) const                      throw ()
         {
             return relativeOffset;
+        }
+
+        /**
+         *  Return the type of this playlist element.
+         *
+         *  @return either AudioClipType or PlaylistType.
+         */
+        Type
+        getType(void) const                                throw ()
+        {
+            return type;
         }
 
         /**
@@ -246,6 +300,17 @@ class PlaylistElement : public Configurable
         getAudioClip(void) const                           throw ()
         {
             return audioClip;
+        }
+
+        /**
+         *  Return the sub-playlist associated with the playlist element.
+         *
+         *  @return the sub-playlist associated with the element.
+         */
+        Ptr<Playlist>::Ref
+        getPlaylist(void) const                            throw ()
+        {
+            return playlist;
         }
 
         /**
@@ -264,7 +329,7 @@ class PlaylistElement : public Configurable
          *
          *  @return the fade info associated with the element.
          */
-        Ptr<const FadeInfo>::Ref
+        Ptr<FadeInfo>::Ref
         getFadeInfo(void) const                            throw ()
         {
             return fadeInfo;

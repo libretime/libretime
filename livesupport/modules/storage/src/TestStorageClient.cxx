@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,6 +115,16 @@ static const std::string    smilAudioClipNodeName = "audio";
  *  The name of the attribute containing the URI of the audio clip element.
  *----------------------------------------------------------------------------*/
 static const std::string    smilAudioClipUriAttrName = "src";
+
+/*------------------------------------------------------------------------------
+ *  The name of the sub-playlist element node in the SMIL file.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilPlaylistNodeName = "audio";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute containing the URI of the sub-playlist element.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilPlaylistUriAttrName = "src";
 
 
 /* ===============================================  local function prototypes */
@@ -252,8 +262,7 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
     }
 
     Ptr<Playlist>::Ref      oldPlaylist = playlistMapIt->second;
-    Ptr<time_duration>::Ref playlength(new time_duration(
-                                       *(oldPlaylist->getPlaylength()) ));
+    Ptr<time_duration>::Ref playlength = oldPlaylist->getPlaylength();
     Ptr<Playlist>::Ref      newPlaylist(new Playlist(UniqueId::generateId(),
                                                      playlength));
     Ptr<xmlpp::Document>::Ref
@@ -273,28 +282,46 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
     Playlist::const_iterator it = oldPlaylist->begin();
 
     while (it != oldPlaylist->end()) {
-        Ptr<AudioClip>::Ref audioClip 
-                            = acquireAudioClip(sessionId, it->second
-                                                            ->getAudioClip()
-                                                            ->getId());
-        Ptr<time_duration>::Ref relativeOffset(new time_duration(
-                                    *(it->second->getRelativeOffset()) ));
-        Ptr<const FadeInfo>::Ref    oldFadeInfo = it->second->getFadeInfo();
-        Ptr<FadeInfo>::Ref          newFadeInfo;
-        if (oldFadeInfo) {                      // careful: fadeInfo may be 0
-            newFadeInfo.reset(new FadeInfo(*oldFadeInfo));
-        } 
+        Ptr<PlaylistElement>::Ref   plElement = it->second;
+        Ptr<FadeInfo>::Ref          fadeInfo = plElement->getFadeInfo();
 
-        newPlaylist->addAudioClip(audioClip,
-                                  relativeOffset,
-                                  newFadeInfo);
+        if (plElement->getType() == PlaylistElement::AudioClipType) {
+            Ptr<AudioClip>::Ref audioClip 
+                            = acquireAudioClip(sessionId, plElement
+                                                          ->getAudioClip()
+                                                          ->getId());
+            Ptr<time_duration>::Ref relativeOffset
+                            = plElement->getRelativeOffset();
+            newPlaylist->addAudioClip(audioClip, relativeOffset, fadeInfo);
 
-        xmlpp::Element    * smilAudioClipNode
+            xmlpp::Element* smilAudioClipNode
                             = smilSeqNode->add_child(smilAudioClipNodeName);
-        smilAudioClipNode->set_attribute(
-                    smilAudioClipUriAttrName, 
-                    *(audioClip->getUri()) );
-        ++it;
+            smilAudioClipNode->set_attribute(
+                            smilAudioClipUriAttrName, 
+                            *(audioClip->getUri()) );
+            ++it;
+        }
+        else if (plElement->getType() == PlaylistElement::PlaylistType) {
+            Ptr<Playlist>::Ref playlist 
+                            = acquirePlaylist(sessionId, plElement
+                                                         ->getPlaylist()
+                                                         ->getId());
+            Ptr<time_duration>::Ref relativeOffset
+                            = plElement->getRelativeOffset();
+            newPlaylist->addPlaylist(playlist, relativeOffset, fadeInfo);
+
+            xmlpp::Element* smilPlaylistNode
+                            = smilSeqNode->add_child(smilPlaylistNodeName);
+            smilPlaylistNode->set_attribute(
+                            smilPlaylistUriAttrName, 
+                            *(playlist->getUri()) );
+            ++it;
+        }
+        else {          // this should never happen
+            Ptr<Playlist>::Ref  nullPointer;
+            return nullPointer;
+        }
+        
     }
 
     std::stringstream fileName;
@@ -330,25 +357,40 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
 
     std::remove(playlist->getUri()->substr(7).c_str());
    
-    int                         badAudioClips = 0;
+    int  badPlaylistElements = 0;
     Playlist::const_iterator    it = playlist->begin();
     while (it != playlist->end()) {
-        try {
-            releaseAudioClip(sessionId, it->second->getAudioClip());
+        Ptr<PlaylistElement>::Ref   plElement = it->second;
+        if (plElement->getType() == PlaylistElement::AudioClipType) {
+            try {
+                releaseAudioClip(sessionId, it->second->getAudioClip());
+            }
+            catch (std::invalid_argument &e) {
+                ++badPlaylistElements;
+            }
+            ++it;
         }
-        catch (std::invalid_argument &e) {
-            ++badAudioClips;
+        else if (plElement->getType() == PlaylistElement::PlaylistType) {
+            try {
+                releasePlaylist(sessionId, it->second->getPlaylist());
+            }
+            catch (std::invalid_argument &e) {
+                ++badPlaylistElements;
+            }
+            ++it;
         }
-        ++it;
+        else {                      // this should never happen
+            ++badPlaylistElements;
+        }        
     }
 
     Ptr<std::string>::Ref   nullPointer;
     playlist->setUri(nullPointer);
 
-    if (badAudioClips) {
+    if (badPlaylistElements) {
         std::stringstream eMsg;
-        eMsg << "could not release " << badAudioClips 
-             << " audio clips in playlist";
+        eMsg << "could not release " << badPlaylistElements 
+             << " playlist elements in playlist";
         throw std::logic_error(eMsg.str());
     }
 }

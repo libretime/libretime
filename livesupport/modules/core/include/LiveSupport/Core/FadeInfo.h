@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/FadeInfo.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class FadeInfo : public Configurable
 {
@@ -203,7 +203,7 @@ class FadeInfo : public Configurable
          *
          *  @return the length of the fade in period, in microseconds.
          */
-        Ptr<const time_duration>::Ref
+        Ptr<time_duration>::Ref
         getFadeIn(void) const                   throw ()
         {
             return fadeIn;
@@ -214,7 +214,7 @@ class FadeInfo : public Configurable
          *
          *  @return the length of the fade in period, in microseconds.
          */
-        Ptr<const time_duration>::Ref
+        Ptr<time_duration>::Ref
         getFadeOut(void) const                  throw ()
         {
             return fadeOut;

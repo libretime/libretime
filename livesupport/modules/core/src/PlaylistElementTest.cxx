@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,24 +105,47 @@ PlaylistElementTest :: firstTest(void)
 
         playlistElement->configure(*root);
 
-        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 707);
+        // the playlist element
+        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 103);
         Ptr<const time_duration>::Ref  relativeOffset
                                        = playlistElement->getRelativeOffset();
-        CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 12*60 + 34);
-        CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
-                                                         == 10001);
+        CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 11);
+
         CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getId()->getId()
                                                          == 9901);
         Ptr<const time_duration>::Ref   fadeIn
                                         = playlistElement->getFadeInfo()
                                                          ->getFadeIn();
         CPPUNIT_ASSERT(fadeIn->total_milliseconds()  == 2000);
-
         Ptr<const time_duration>::Ref   fadeOut
                                         = playlistElement->getFadeInfo()
                                                          ->getFadeOut();
         CPPUNIT_ASSERT(fadeOut->total_milliseconds() == 1500);
 
+        CPPUNIT_ASSERT(playlistElement->getType() 
+                                        == PlaylistElement::PlaylistType);
+                                        
+        // the playlist inside the playlist element
+        CPPUNIT_ASSERT(playlistElement->getPlaylist()->getId()->getId()
+                                                         == 2);
+        Ptr<Playlist>::Ref       playlist   = playlistElement->getPlaylist();
+        Playlist::const_iterator it         = playlist->begin();
+        CPPUNIT_ASSERT(it != playlist->end());
+        playlistElement = it->second;
+        ++it;
+        CPPUNIT_ASSERT(it == playlist->end());
+
+        // the playlist element inside the playlist
+        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 111);
+        relativeOffset = playlistElement->getRelativeOffset();
+        CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 0);
+        
+        CPPUNIT_ASSERT(playlistElement->getType() 
+                                        == PlaylistElement::AudioClipType);
+                                        
+        // and the audio clip inside the playlist element
+        CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
+                                                         == 10003);
     } catch (std::invalid_argument &e) {
         std::string eMsg = "semantic error in configuration file:\n";
         eMsg += e.what();

@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <sstream>
 
+#include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/PlaylistElement.h"
 
 using namespace boost::posix_time;
@@ -65,6 +66,11 @@ static const std::string    relativeOffsetAttrName = "relativeOffset";
  *  The name of the audio clip child element of the playlist element.
  */
 static const std::string    audioClipElementName = "audioClip";
+
+/**
+ *  The name of the playlist child element of the playlist element.
+ */
+static const std::string    playlistElementName = "playlist";
 
 /**
  *  The name of the fade info child element of the playlist element.
@@ -118,24 +124,46 @@ PlaylistElement :: configure(const xmlpp::Element & element)
                                 = element.get_children(audioClipElementName);
     xmlpp::Node::NodeList::iterator it = childNodes.begin();
 
-    if (it == childNodes.end()) {
-        std::string eMsg = "missing ";
-        eMsg += audioClipElementName;
-        eMsg += " XML element";
-        throw std::invalid_argument(eMsg);
-    }
-
-    const xmlpp::Element      * audioClipElement 
-                                = dynamic_cast<const xmlpp::Element*> (*it);
-    audioClip.reset(new AudioClip);
-    audioClip->configure(*audioClipElement);        // may throw exception
-    
-    ++it;
     if (it != childNodes.end()) {
-        std::string eMsg = "more than one ";
-        eMsg += audioClipElementName;
-        eMsg += " XML element";
-        throw std::invalid_argument(eMsg);
+        const xmlpp::Element      * audioClipElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
+        type = AudioClipType;
+        audioClip.reset(new AudioClip);
+        audioClip->configure(*audioClipElement);        // may throw exception
+        
+        ++it;
+        if (it != childNodes.end()) {
+            std::string eMsg = "more than one ";
+            eMsg += audioClipElementName;
+            eMsg += " XML element";
+            throw std::invalid_argument(eMsg);
+        }
+    }
+    else {
+        childNodes  = element.get_children(playlistElementName);
+        it          = childNodes.begin();
+        if (it != childNodes.end()) {
+            const xmlpp::Element      * playlistElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
+            type = PlaylistType;
+            playlist.reset(new Playlist);
+            playlist->configure(*playlistElement);      // may throw exception
+            ++it;
+            if (it != childNodes.end()) {
+                std::string eMsg = "more than one ";
+                eMsg += playlistElementName;
+                eMsg += " XML element";
+                throw std::invalid_argument(eMsg);
+            }
+        }
+        else {
+            std::string eMsg = "missing ";
+            eMsg += audioClipElementName;
+            eMsg += " or ";
+            eMsg += playlistElementName;
+            eMsg += " XML element in PlaylistElement configuration";
+            throw std::invalid_argument(eMsg);
+        }
     }
 
     // set fade info

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,8 +109,6 @@ AudioClipTest :: firstTest(void)
         CPPUNIT_ASSERT(duration->hours() == 0);
         CPPUNIT_ASSERT(duration->minutes() == 18);
         CPPUNIT_ASSERT(duration->seconds() == 30);
-
-//        CPPUNIT_ASSERT(*(audioClip->getTitle()) == "The_Sounds_of_Silence");
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");

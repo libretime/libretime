@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -153,12 +153,32 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                                             throw (std::invalid_argument)
 {
     if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "two audio clips at the same relative offset";
+        std::string eMsg = "two playlist elements at the same relative offset";
         throw std::invalid_argument(eMsg);
     }
 
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
                                    relativeOffset, audioClip, fadeInfo));
+    (*elementList)[*relativeOffset] = playlistElement;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a new sub-playlist to the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
+                      Ptr<time_duration>::Ref  relativeOffset,
+                      Ptr<FadeInfo>::Ref       fadeInfo)
+                                            throw (std::invalid_argument)
+{
+    if (elementList->find(*relativeOffset) != elementList->end()) {
+        std::string eMsg = "two playlist elements at the same relative offset";
+        throw std::invalid_argument(eMsg);
+    }
+
+    Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
+                                   relativeOffset, playlist, fadeInfo));
     (*elementList)[*relativeOffset] = playlistElement;
 }
 
@@ -174,7 +194,7 @@ Playlist::setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
     PlaylistElementListType::iterator it = elementList->find(*relativeOffset);
 
     if (it == elementList->end()) {
-        std::string eMsg = "no audio clip at this relative offset";
+        std::string eMsg = "no playlist element at this relative offset";
         throw std::invalid_argument(eMsg);
     }
 
@@ -184,6 +204,9 @@ Playlist::setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
 
 /*------------------------------------------------------------------------------
  *  Remove an audio clip from the playlist.
+
+CHANGE references of THIS TO REFER TO removePlaylistElement()
+
  *----------------------------------------------------------------------------*/
 void
 Playlist::removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
@@ -192,6 +215,22 @@ Playlist::removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
     // this returns the number of elements found and erased
     if (!elementList->erase(*relativeOffset)) {
         std::string eMsg = "no audio clip at the specified relative offset";
+        throw std::invalid_argument(eMsg);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove a playlist element from the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
+                                            throw (std::invalid_argument)
+{
+    // this returns the number of elements found and erased
+    if (!elementList->erase(*relativeOffset)) {
+        std::string eMsg = "no playlist element found "
+                           "at the specified relative offset";
         throw std::invalid_argument(eMsg);
     }
 }
@@ -254,9 +293,10 @@ Playlist::setLockedForPlaying(const bool lockStatus)
 bool
 Playlist::valid(void)                    throw ()
 {
-    Ptr<time_duration>::Ref            runningTime(new time_duration(0,0,0,0));
-    Ptr<const PlaylistElement>::Ref    playlistElement;
-    Ptr<const AudioClip>::Ref          audioClip;
+    Ptr<time_duration>::Ref     runningTime(new time_duration(0,0,0,0));
+    Ptr<PlaylistElement>::Ref   playlistElement;
+    Ptr<AudioClip>::Ref         audioClip;
+    Ptr<Playlist>::Ref          playlist;
 
     PlaylistElementListType::const_iterator  it = elementList->begin();
     while (it != elementList->end()) {
@@ -264,11 +304,23 @@ Playlist::valid(void)                    throw ()
         if (*runningTime != *(playlistElement->getRelativeOffset())) {
             return false;
         }
-        audioClip = playlistElement->getAudioClip();
-        *runningTime += *(audioClip->getPlaylength());
+        if (playlistElement->getType() == PlaylistElement::AudioClipType) {
+            audioClip = playlistElement->getAudioClip();
+            *runningTime += *(audioClip->getPlaylength());
+        }
+        else if (playlistElement->getType() == PlaylistElement::PlaylistType) {
+            playlist = playlistElement->getPlaylist();
+            if (!playlist->valid()) {
+                return false;
+            }
+            *runningTime += *(playlist->getPlaylength());
+        }
+        else {                  // this should never happen
+            return false;
+        }
         ++it;
     }
-    playlength = runningTime;    // fix playlength, if everything else is OK
+    playlength = runningTime;   // fix playlength, if everything else is OK
     return true;
 }
 

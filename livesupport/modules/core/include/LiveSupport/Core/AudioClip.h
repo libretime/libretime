@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -77,9 +77,12 @@ using namespace boost::posix_time;
  *  <pre><code>
  *  &lt;audioClip id="1" 
  *             playlength="00:18:30.000000"
- *             uri="file:var/test1.mp3" &gt;
+ *             uri="file:var/test1.mp3"
  *  &lt;/audioClip&gt;
  *  </code></pre>
+ *
+ *  The URI is not normally part of the XML element; it's only included
+ *  as an optional attribute for testing purposes.
  *
  *  The DTD for the above element is:
  *
@@ -87,11 +90,11 @@ using namespace boost::posix_time;
  *  &lt;!ELEMENT audioClip EMPTY &gt;
  *  &lt;!ATTLIST audioClip  id           NMTOKEN     #REQUIRED  &gt;
  *  &lt;!ATTLIST audioClip  playlength   NMTOKEN     #REQUIRED  &gt;
- *  &lt;!ATTLIST audioClip  uri          CDATA       #REQUIRED  &gt;
+ *  &lt;!ATTLIST audioClip  uri          CDATA       #IMPLIED   &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class AudioClip : public Configurable
 {
@@ -112,9 +115,14 @@ class AudioClip : public Configurable
         Ptr<time_duration>::Ref     playlength;
 
         /**
-         *  The location of the audio clip.
+         *  The location of the binary audio clip sound file.
          */
-        Ptr<string>::Ref            uri;
+        Ptr<const string>::Ref      uri;
+
+        /**
+         *  The identifying token returned by the storage server.
+         */
+        Ptr<const string>::Ref      token;
 
 
     public:
@@ -193,14 +201,14 @@ class AudioClip : public Configurable
          *
          *  @return the playing length of this audio clip, in microseconds.
          */
-        Ptr<const time_duration>::Ref
+        Ptr<time_duration>::Ref
         getPlaylength(void) const               throw ()
         {
             return playlength;
         }
 
         /**
-         *  Return the URI of this audio clip.
+         *  Return the URI of the binary sound file of this audio clip.
          *
          *  @return the URI of this audio clip.
          */
@@ -211,14 +219,36 @@ class AudioClip : public Configurable
         }
 
         /**
-         *  Change the URI of this audio clip.  This is only used in testing.
+         *  Set the URI of the binary sound file of this audio clip.
          *
          *  @return the URI of this audio clip.
          */
         void
-        setUri(Ptr<string>::Ref uri)            throw ()
+        setUri(Ptr<const string>::Ref uri)      throw ()
         {
             this->uri = uri;
+        }
+
+        /**
+         *  Return the token returned by the storage server.
+         *
+         *  @return the token of this audio clip.
+         */
+        Ptr<const string>::Ref
+        getToken(void) const                    throw ()
+        {
+            return token;
+        }
+
+        /**
+         *  Set the token returned by the storage server.
+         *
+         *  @return the token of this audio clip.
+         */
+        void
+        setToken(Ptr<const string>::Ref token)  throw ()
+        {
+            this->token = token;
         }
 };
 

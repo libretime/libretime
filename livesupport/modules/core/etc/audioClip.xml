@@ -4,6 +4,6 @@
 <!ELEMENT audioClip EMPTY >
 <!ATTLIST audioClip id           NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip playlength   NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip uri          CDATA       #REQUIRED >
+<!ATTLIST audioClip uri          CDATA       #IMPLIED  >
 ]>
 <audioClip id="1" playlength="00:18:30.000" uri="file:var/test1.mp3" />

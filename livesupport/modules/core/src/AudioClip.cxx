@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,14 +97,6 @@ AudioClip :: configure(const xmlpp::Element  & element)
     strStr >> idValue;
     id.reset(new UniqueId(idValue));
 
-    if (!(attribute = element.get_attribute(uriAttrName))) {
-        std::string eMsg = "Missing attribute ";
-        eMsg += uriAttrName;
-        throw std::invalid_argument(eMsg);
-    }
-    std::string  uriValue = attribute->get_value();
-    uri.reset(new std::string(uriValue));
-
     if (!(attribute = element.get_attribute(playlengthAttrName))) {
         std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
@@ -112,4 +104,9 @@ AudioClip :: configure(const xmlpp::Element  & element)
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
+
+    if (attribute = element.get_attribute(uriAttrName)) {
+        std::string  uriValue = attribute->get_value();
+        uri.reset(new std::string(uriValue));
+    }
 }
