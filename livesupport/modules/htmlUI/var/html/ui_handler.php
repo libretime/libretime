@@ -144,8 +144,23 @@ switch($_REQUEST['act']){
         $uiHandler->SEARCH->setOffset($_REQUEST['page']);
     break;
 
-    case "activatePL":
+    case "PL.activate":
         $uiHandler->PLAYLIST->activate($_REQUEST['id']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case "PL.newUsingItem":
+        $uiHandler->PLAYLIST->newUsingItem($_REQUEST['id']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case "PL.addItem":
+        $uiHandler->PLAYLIST->addItem($_REQUEST['id']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case "PL.release":
+        $uiHandler->PLAYLIST->release();
         $uiHandler->PLAYLIST->setReload();
     break;
 

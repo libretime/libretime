@@ -280,7 +280,11 @@ class uiHandler extends uiBase {
             return FALSE;
         }
 
-        $r = $this->gb->deleteFile($id, $this->sessid);
+        if ($this->gb->getFileType($id)=='playlist') {
+            $r = $this->gb->deletePlaylist($id, $this->sessid);
+        } else {
+            $r = $this->gb->deleteFile($id, $this->sessid);
+        }
         if(PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             return FALSE;

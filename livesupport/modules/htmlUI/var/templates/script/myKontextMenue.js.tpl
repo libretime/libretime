@@ -8,7 +8,7 @@ nn6=(document.getElementById && !document.all)?1:0;
 menuStatus = 0;
 document.onmouseup = hideMenu;
 document.write('<div id="menucontainer"></div>');
-menuWidth  = 160,
+menuWidth  = 180,
 menuHeight = 0;
 
 function menu(id) {
@@ -24,26 +24,43 @@ function menu(id) {
 
     for (var i = 1; i < menu.arguments.length; ++i) {
         switch (menu.arguments[i]) {
-            case "PL.activate":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"{/literal}javascript: hpopup('{$UI_HANDLER}?act=activatePL&id="+id+"', 'activatePL'){literal}\""+oF+">&nbsp; Activate this Playlist &nbsp;</a></td></tr>";
-            break;
             case "PL.display":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"{/literal}{$UI_BROWSER}?act=PL.display&id="+id+"{literal}\""+oF+">&nbsp; Display this Playlist &nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"{/literal}{$UI_BROWSER}{literal}?act=PL.display&id="+id+"\" "+oF+">&nbsp;Display this Playlist&nbsp;</a></td></tr>";
             break;
-            case "PL.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.addItem&id="+id+"', '2SP')\""+oF+">&nbsp; Add File to Playlist &nbsp;</a></td></tr>";
-            break;
+            {/literal}
+            {if $PLAYLIST.id}
+
+                    {literal}
+                    case "PL.release":
+                        menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.release')\" "+oF+">&nbsp;Release Playlist&nbsp;</a></td></tr>";
+                    break;
+                    {/literal}
+
+                    {literal}
+                    case "PL.addItem":
+                        menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.addItem&id="+id+"')\" "+oF+">&nbsp;Add Item to active Playlist&nbsp;</a></td></tr>";
+                    break;
+                    {/literal}
+
+            {else}
+                {literal}
+                case "PL.activate":
+                    menuHtml = menuHtml + "<tr><td><a class='menu' href=\"javascript: hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.activate&id="+id+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></td></tr>";
+                break;
+                {/literal}
+            {/if}
+            {literal}
             case "PL.newUsingItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#'"+oF+">&nbsp; New Playlist using File &nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.newUsingItem&id="+id+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
             break;
             case "SP.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+id+"', '2SP')\""+oF+">&nbsp; Add File to ScratchPad &nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+id+"')\" "+oF+">&nbsp;Add Item to ScratchPad&nbsp;</a></td></tr>";
             break;
             case "SP.removeItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+id+"', '2SP')\""+oF+">&nbsp; Remove &nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+id+"')\" "+oF+">&nbsp;Remove&nbsp;</a></td></tr>";
             break;
             case "delete":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+id+"'"+oF+">&nbsp; !Delete File! &nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+id+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></td></tr>";
             break;
         }
     }

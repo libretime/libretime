@@ -14,8 +14,16 @@
             <tr bgcolor="{cycle values='#eeeeee, #dadada"'}"
                     onMouseOver="highlight()" onMouseOut="darklight()"
                     onContextmenu="return menu('{$i.id}'
-                        {if $i.type == ('audioclip' || 'webstream')}
+                        {if ($i.type == 'audioclip' || $i.type == 'webstream')}
                             ,'PL.addItem', 'PL.newUsingItem', 'SP.addItem', 'delete'
+                        {/if}
+                        {if ($i.type == 'playlist')}
+                            ,'PL.activate'
+                            {if $PLAYLIST.id == $i.id}
+                                ,'PL.release'
+                            {else}
+                                ,'PL.addItem', 'SP.addItem', 'delete'
+                            {/if}
                         {/if}
                         )"
             >

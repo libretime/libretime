@@ -16,14 +16,14 @@ $ui_fmask = array(
             'element'   => 'stationMaxfilesize',
             'isPref'    => TRUE,
             'type'      => 'text',
-            'label'     => 'Maximum File Size for Upload',
-            'required'  => TRUE,
+            'label'     => 'Reduce Upload Filesize<br><small>(must be smaller than ' .ini_get('upload_max_filesize').')</small>',
             'rule'      => 'numeric',
+            /*
             'attributes'   => array(
                                 'onClick'  => 'alert ("Note: System Maximum is set to '.
                                                 strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'))
                                                 .' in php.ini\n You cannot override this here.")'
-                           )
+                           )  */
         ),
         array(
             'rule'      => 'nopunctuation',

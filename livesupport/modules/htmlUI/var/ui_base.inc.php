@@ -91,6 +91,7 @@ class uiBase
         $this->pid      = $this->gb->getparent($this->id) != 1 ? $this->gb->getparent($this->id) : FALSE;
         $this->type     = $this->gb->getFileType($this->id);
         $this->fid      = $this->type=='Folder' ? $this->id : $this->pid;
+        $this->homeid   = $this->gb->getObjId($this->login, $this->gb->storId);
         $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
                                                'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
         $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
@@ -113,9 +114,13 @@ class uiBase
                     }
                 }
             }
+            if (!$this->STATIONPREFS['stationMaxfilesize'])
+                $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
+            /*
             if ($miss && $this->login) {
                 $this->_retMsg('Note: Station Preferences not setup.');
             }
+            */
         }
     }
 
