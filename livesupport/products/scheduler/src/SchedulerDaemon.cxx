@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -244,9 +244,9 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
 void
 SchedulerDaemon :: start(void)                  throw (std::logic_error)
 {
+    XmlRpcDaemon::start();
     audioPlayer->initialize();
     eventScheduler->start();
-    XmlRpcDaemon::start();
 }
 
 
