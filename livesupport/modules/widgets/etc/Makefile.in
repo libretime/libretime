@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -151,6 +151,8 @@ distclean: clean docclean
 
 run: all ${TEST_EXE}
 	${TEST_EXE} -c ${TEST_CFG}
+
+check: all
 
 
 #-------------------------------------------------------------------------------
