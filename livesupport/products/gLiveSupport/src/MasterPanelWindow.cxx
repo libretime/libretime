@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -250,10 +250,12 @@ MasterPanelWindow :: onDjBagButtonClicked(void)                     throw ()
 
         djBagWindow.reset(new DjBagWindow(gLiveSupport, bundle));
     }
-    
+
     if (!djBagWindow->is_visible()) {
         djBagWindow->show();
     }
+
+    djBagWindow->showContents();
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,6 +85,12 @@ static const std::string localeAttrName = "locale";
  *  The name of the attribute for the name for a supported language
  *----------------------------------------------------------------------------*/
 static const std::string nameAttrName = "name";
+
+/*------------------------------------------------------------------------------
+ *  The name of the user preference for storing DJ Bag contents
+ *----------------------------------------------------------------------------*/
+static const std::string djBagContentsKey = "djBagContents";
+
 
 
 /* ===============================================  local function prototypes */
@@ -246,8 +252,12 @@ GLiveSupport :: login(const std::string & login,
                       const std::string & password)          throw ()
 {
     sessionId = authentication->login(login, password);
-
-    return sessionId.get() != 0;
+    if (sessionId.get()) {
+        loadDjBagContents();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -259,8 +269,90 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: logout(void)                                throw ()
 {
     if (sessionId.get() != 0) {
+        storeDjBagContents();
+        djBagContents->clear();
         authentication->logout(sessionId);
         sessionId.reset();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Store the DJ Bag contents as a user preference
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: storeDjBagContents(void)                    throw ()
+{
+    // just store this as a space-delimited list of ids
+    std::ostringstream                      prefsString;
+    GLiveSupport::PlayableList::iterator    it;
+    GLiveSupport::PlayableList::iterator    end;
+    Ptr<Playable>::Ref                      playable;
+
+    it  = djBagContents->begin();
+    end = djBagContents->end();
+    while (it != end) {
+        playable  = *it;
+        prefsString << playable->getId()->getId() << " ";
+
+        ++it;
+    }
+
+    Ptr<Glib::ustring>::Ref  prefsUstring(new Glib::ustring(prefsString.str()));
+    try {
+        authentication->savePreferencesItem(sessionId,
+                                            djBagContentsKey,
+                                            prefsUstring);
+    } catch (XmlRpcException &e) {
+        // TODO: signal error
+        std::cerr << "error saving user preferences: " << e.what() << std::endl;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Load the DJ Bag contents from a user preference
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: loadDjBagContents(void)                     throw ()
+{
+    Ptr<Glib::ustring>::Ref     prefsUstring;
+
+    try {
+        prefsUstring = authentication->loadPreferencesItem(sessionId,
+                                                           djBagContentsKey);
+    } catch (XmlRpcException &e) {
+        // TODO: signal error
+        std::cerr << "error loading user preferences: " << e.what()
+                  << std::endl;
+        return;
+    }
+
+    // just store this as a space-delimited list of ids
+    std::istringstream          prefsString(prefsUstring->raw());
+    Ptr<Playable>::Ref          playable;
+
+    while (!prefsString.eof()) {
+        UniqueId::IdType        idValue;
+        Ptr<UniqueId>::Ref      id;
+
+        prefsString >> idValue;
+        if (prefsString.fail()) {
+            break;
+        }
+        id.reset(new UniqueId(idValue));
+
+        // now we have the id, get the corresponding playlist or audio clip from
+        // the storage
+        if (storage->existsPlaylist(sessionId, id)) {
+            Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id);
+            djBagContents->push_back(playlist);
+        } else if (storage->existsAudioClip(sessionId, id)) {
+            Ptr<AudioClip>::Ref clip = storage->getAudioClip(sessionId, id);
+            djBagContents->push_back(clip);
+        }
     }
 }
 

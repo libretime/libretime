@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -183,6 +183,18 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         configSupportedLanguages(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Store the contents of the DJ Bag as a user preference.
+         */
+        void
+        storeDjBagContents(void)                            throw ();
+
+        /**
+         *  Load the contents of the DJ Bag as a user preference.
+         */
+        void
+        loadDjBagContents(void)                             throw ();
 
 
     public:

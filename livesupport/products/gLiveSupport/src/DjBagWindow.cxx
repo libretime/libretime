@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -338,8 +338,8 @@ void
 DjBagWindow :: deleteItem(Ptr<Playable>::Ref    playable)
                                                         throw (XmlRpcException)
 {
-    gLiveSupport->deletePlayable(playable);
     removeItem(playable->getId());
+    gLiveSupport->deletePlayable(playable);
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -287,7 +287,6 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         {
             // this will create, open and display the window.
             onDjBagButtonClicked();
-            djBagWindow->showContents();
         }
 
         /**
