@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef WebStorageClientTest_h
-#define WebStorageClientTest_h
+#ifndef AuthenticationClientFactoryTest_h
+#define AuthenticationClientFactoryTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -42,14 +42,12 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
 namespace LiveSupport {
-namespace Storage {
+namespace Authentication {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -60,29 +58,17 @@ using namespace LiveSupport::Authentication;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the AuthenticationClientFactory class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
- *  @see WebStorageClient
+ *  @version $Revision: 1.1 $
+ *  @see AuthenticationClientFactory
  */
-class WebStorageClientTest : public CPPUNIT_NS::TestFixture
+class AuthenticationClientFactoryTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(WebStorageClientTest);
+    CPPUNIT_TEST_SUITE(AuthenticationClientFactoryTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST_SUITE_END();
-
-    private:
-        /**
-         *  An AuthenticationClient instance to login an logout.
-         */
-        Ptr<AuthenticationClientInterface>::Ref     authentication;
-
-        /**
-         *  The WebStorageClient instance to test.
-         */
-        Ptr<WebStorageClient>::Ref                  wsc;
 
     protected:
 
@@ -93,15 +79,6 @@ class WebStorageClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the audio clip operations.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        audioClipTest(void)                     throw (CPPUNIT_NS::Exception);
-
 
     public:
         
@@ -125,8 +102,8 @@ class WebStorageClientTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace Authentication
 } // namespace LiveSupport
 
-#endif // WebStorageClientTest_h
+#endif // AuthenticationClientFactoryTest_h
 

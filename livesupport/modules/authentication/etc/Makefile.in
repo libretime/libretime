@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -99,9 +99,10 @@ AUTHENTICATION_LIB_OBJS = ${TMP_DIR}/AuthenticationClientFactory.o \
                           ${TMP_DIR}/TestAuthenticationClient.o \
                           ${TMP_DIR}/WebAuthenticationClient.o
 
-TEST_RUNNER_OBJS = ${TMP_DIR}/WebAuthenticationClientTest.o \
+TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/TestAuthenticationClientTest.o \
-                   ${TMP_DIR}/TestRunner.o
+                   ${TMP_DIR}/WebAuthenticationClientTest.o \
+                   ${TMP_DIR}/AuthenticationClientFactoryTest.o
 
 TEST_RUNNER_LIBS = -l${AUTHENTICATION_LIB} -l${CORE_LIB} -lxml++-1.0 \
                    -lcppunit -ldl -lxmlrpc++ -lssl

@@ -23,11 +23,11 @@
  
     Author   : $Author: fgerlits $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/AuthenticationClientInterface.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/StorageClientFactoryTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Core_AuthenticationClientInterface_h
-#define LiveSupport_Core_AuthenticationClientInterface_h
+#ifndef StorageClientFactoryTest_h
+#define StorageClientFactoryTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,16 +40,11 @@
 #include "configure.h"
 #endif
 
-#include <stdexcept>
+#include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
-namespace Core {
-
-using namespace LiveSupport::Core;
-
+namespace Storage {
 
 /* ================================================================ constants */
 
@@ -60,38 +55,42 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An interface for authentication clients.
+ *  Unit test for the StorageClientFactory class.
  *
  *  @author  $Author: fgerlits $
  *  @version $Revision: 1.1 $
+ *  @see StorageClientFactory
  */
-class AuthenticationClientInterface
+class StorageClientFactoryTest : public CPPUNIT_NS::TestFixture
 {
-    public:
-        /**
-         *  Login to the authentication server.
-         *  Returns a new session ID; in case of an error, returns a
-         *  null pointer.
-         *
-         *  @param  login     the login to the server
-         *  @param  password  the password to the server
-         *  @return the new session ID
-         */
-        virtual Ptr<SessionId>::Ref
-        login(const std::string &login, const std::string &password)
-                                                throw ()
-                                                                        = 0;
+    CPPUNIT_TEST_SUITE(StorageClientFactoryTest);
+    CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST_SUITE_END();
+
+    protected:
 
         /**
-         *  Logout from the authentication server.
+         *  A simple test.
          *
-         *  @param  sessionId the ID of the session to end
-         *  @return true if logged out successfully, false if not
+         *  @exception CPPUNIT_NS::Exception on test failures.
          */
-        virtual const bool
-        logout(Ptr<SessionId>::Ref sessionId)
-                                                throw ()
-                                                                        = 0;
+        void
+        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+
+    public:
+        
+        /**
+         *  Set up the environment for the test case.
+         */
+        void
+        setUp(void)                                     throw ();
+
+        /**
+         *  Clean up the environment after the test case.
+         */
+        void
+        tearDown(void)                                  throw ();
 };
 
 
@@ -101,8 +100,8 @@ class AuthenticationClientInterface
 /* ====================================================== function prototypes */
 
 
-} // namespace Core
+} // namespace Storage
 } // namespace LiveSupport
 
-#endif // LiveSupport_Core_AuthenticationClientInterface_h
+#endif // StorageClientFactoryTest_h
 

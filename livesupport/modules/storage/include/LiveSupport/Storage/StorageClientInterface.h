@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Core_StorageClientInterface_h
-#define LiveSupport_Core_StorageClientInterface_h
+#ifndef LiveSupport_Storage_StorageClientInterface_h
+#define LiveSupport_Storage_StorageClientInterface_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -48,7 +48,9 @@
 
 
 namespace LiveSupport {
-namespace Core {
+namespace Storage {
+
+using namespace Core;
 
 /* ================================================================ constants */
 
@@ -62,7 +64,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.1 $
  */
 class StorageClientInterface
 {
@@ -299,8 +301,8 @@ class StorageClientInterface
 /* ====================================================== function prototypes */
 
 
-} // namespace Core
+} // namespace Storage
 } // namespace LiveSupport
 
-#endif // LiveSupport_Core_StorageClientInterface_h
+#endif // LiveSupport_Storage_StorageClientInterface_h
 

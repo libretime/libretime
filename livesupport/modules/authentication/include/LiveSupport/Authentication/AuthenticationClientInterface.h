@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.h,v $
+    Version  : $Revision: 1.3 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef WebStorageClientTest_h
-#define WebStorageClientTest_h
+#ifndef LiveSupport_Authentication_AuthenticationClientInterface_h
+#define LiveSupport_Authentication_AuthenticationClientInterface_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,16 +40,16 @@
 #include "configure.h"
 #endif
 
-#include <cppunit/extensions/HelperMacros.h>
+#include <stdexcept>
 
-#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
-#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
-namespace Storage {
+namespace Authentication {
 
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Authentication;
+
 
 /* ================================================================ constants */
 
@@ -60,62 +60,38 @@ using namespace LiveSupport::Authentication;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  An interface for authentication clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
- *  @see WebStorageClient
+ *  @version $Revision: 1.3 $
  */
-class WebStorageClientTest : public CPPUNIT_NS::TestFixture
+class AuthenticationClientInterface
 {
-    CPPUNIT_TEST_SUITE(WebStorageClientTest);
-    CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(audioClipTest);
-    CPPUNIT_TEST_SUITE_END();
-
-    private:
-        /**
-         *  An AuthenticationClient instance to login an logout.
-         */
-        Ptr<AuthenticationClientInterface>::Ref     authentication;
-
-        /**
-         *  The WebStorageClient instance to test.
-         */
-        Ptr<WebStorageClient>::Ref                  wsc;
-
-    protected:
-
-        /**
-         *  A simple test.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the audio clip operations.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        audioClipTest(void)                     throw (CPPUNIT_NS::Exception);
-
-
     public:
-        
         /**
-         *  Set up the environment for the test case.
+         *  Login to the authentication server.
+         *  Returns a new session ID; in case of an error, returns a
+         *  null pointer.
+         *
+         *  @param  login     the login to the server
+         *  @param  password  the password to the server
+         *  @return the new session ID
          */
-        void
-        setUp(void)                                     throw ();
+        virtual Ptr<SessionId>::Ref
+        login(const std::string &login, const std::string &password)
+                                                throw ()
+                                                                        = 0;
 
         /**
-         *  Clean up the environment after the test case.
+         *  Logout from the authentication server.
+         *
+         *  @param  sessionId the ID of the session to end
+         *  @return true if logged out successfully, false if not
          */
-        void
-        tearDown(void)                                  throw ();
+        virtual const bool
+        logout(Ptr<SessionId>::Ref sessionId)
+                                                throw ()
+                                                                        = 0;
 };
 
 
@@ -125,8 +101,8 @@ class WebStorageClientTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace Authentication
 } // namespace LiveSupport
 
-#endif // WebStorageClientTest_h
+#endif // LiveSupport_Authentication_AuthenticationClientInterface_h
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,8 +46,8 @@
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Core/StorageClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 
 
 namespace LiveSupport {
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class WebStorageClient :
                     virtual public Configurable,

@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -106,9 +106,10 @@ STORAGE_LIB_OBJS = ${TMP_DIR}/StorageClientFactory.o \
                    ${TMP_DIR}/TestStorageClient.o \
                    ${TMP_DIR}/WebStorageClient.o
 
-TEST_RUNNER_OBJS = ${TMP_DIR}/TestStorageClientTest.o \
-                   ${TMP_DIR}/WebStorageClientTest.o \
-                   ${TMP_DIR}/TestRunner.o
+TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                   ${TMP_DIR}/StorageClientFactoryTest.o \
+                   ${TMP_DIR}/TestStorageClientTest.o \
+                   ${TMP_DIR}/WebStorageClientTest.o                   
 
 TEST_RUNNER_LIBS = -l${STORAGE_LIB} -l${CORE_LIB} -l${AUTHENTICATION_LIB} \
                    -lxml++-1.0 -lcppunit -ldl -lxmlrpc++ -lssl

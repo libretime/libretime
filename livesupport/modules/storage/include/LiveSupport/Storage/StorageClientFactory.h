@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 
 
 namespace LiveSupport {
@@ -98,8 +98,8 @@ using namespace LiveSupport::Core;
  *  <!ELEMENT storageClientFactory (testStorage|webStorage) >
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.6 $
  *  @see TestStorageClient
  *  @see WebStorageClient
  */
