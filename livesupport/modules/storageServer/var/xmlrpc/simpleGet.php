@@ -23,10 +23,32 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
+
+/**
+ *  simpleGet.php is remote callable script through HTTP GET method.
+ *
+ *  This script accepts following HTTP GET parameters:
+ *  <ul>
+ *      <li>sessid : string, session ID</li>
+ *      <li>id : string, global unique ID of requested file</li>
+ *  </ul>
+ *
+ *  On success, returns HTTP return code 200 and requested file.
+ *
+ *  On errors, returns HTTP return code &gt;200
+ *  The possible error codes are:
+ *  <ul>
+ *      <li> 400    -  Incorrect parameters passed to method</li>
+ *      <li> 403    -  Access denied</li>
+ *      <li> 404    -  File not found</li>
+ *      <li> 500    -  Application error</li>
+ *  </ul>
+ *
+ */
 
 require_once 'DB.php';
 require_once '../conf.php';
@@ -45,11 +67,23 @@ function http_error($code, $err){
     exit;
 }
 
-$sessid = $_REQUEST['sessid'];
-$gunid = $_REQUEST['id'];
+if(preg_match("|^[0-9a-f]{32}$|", $_REQUEST['sessid'])){
+    $sessid = $_REQUEST['sessid'];
+}else{
+    http_error(400, "Error on sessid parameter. ({$_REQUEST['sessid']})");
+}
+if(preg_match("|^[0-9a-f]{32}$|", $_REQUEST['id'])){
+    $gunid = $_REQUEST['id'];
+}else{
+    http_error(400, "Error on id parameter. ({$_REQUEST['id']})");
+}
 
-$res = $locStor->existsAudioClip($sessid, $gunid);
-if(PEAR::isError($res)){ http_error(500, $res->getMessage()); }
+$ex = $locStor->existsAudioClip($sessid, $gunid);
+if(PEAR::isError($ex)){
+    if($ex->getCode() == GBERR_DENY){ http_error(403, $ex->getMessage()); }
+    else{ http_error(500, $ex->getMessage()); }
+}
+if(!$ex){ http_error(404, "File not found"); }
 $ac =& StoredFile::recallByGunid(&$locStor, $gunid);
 if(PEAR::isError($ac)){ http_error(500, $ac->getMessage()); }
 $realFname  = $ac->_getRealRADFname();
