@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <gtkmm/button.h>
 #include <gtkmm/table.h>
+#include <gtkmm/image.h>
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -58,6 +59,7 @@ namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -72,19 +74,21 @@ using namespace LiveSupport::Core;
  *
  *  The layout of the window is roughly the following:
  *  <pre><code>
- *  +--- master panel --------------------------------------------------------+
- *  | + LS logo + + time + + now ----+ + VU meter + + on-air + + radio logo + |
- *  | |         | |      | | playing | |          | |        | |            | |
- *  | |         | |      | |         | +----------+ +--------+ +------------+ |
- *  | |         | |      | |         | + next ----+ + user info ------------+ |
- *  | |         | |      | |         | | playing  | |                       | |
- *  | +---------+ +------+ +---------+ +----------+ +-----------------------+ |
- *  | +-- button bar -------------------------------------------------------+ |
- *  +-------------------------------------------------------------------------+
+ *  +--- master panel ---------------------------------+
+ *  | + time + + now ----+ + VU meter + + radio logo + |
+ *  | |      | | playing | |          | |            | |
+ *  | |      | |         | +----------+ |            | |
+ *  | |      | |         | + next ----+ |            | |
+ *  | |      | |         | | playing  | |            | |
+ *  | +------+ +---------+ +----------+ +------------+ |
+ *  | +-- bottom bar --------------------------------+ |
+ *  | | +-- button bar -----------+ +-- user info -+ | |
+ *  | +----------------------------------------------+ |
+ *  +--------------------------------------------------+
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -95,9 +99,14 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Table>::Ref        layout;
 
         /**
-         *  The LiveSupport logo
+         *  The background color.
          */
-        Ptr<Gtk::Widget>::Ref       lsLogoWidget;
+        Gdk::Color                  bgColor;
+
+        /**
+         *  The container for the time widget
+         */
+        Ptr<BlueBin>::Ref           timeBin;
 
         /**
          *  The time display
@@ -111,9 +120,19 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<sigc::connection>::Ref  timer;
 
         /**
+         *  The container for the now playing widget
+         */
+        Ptr<BlueBin>::Ref           nowPlayingBin;
+
+        /**
          *  The 'now playing' display.
          */
         Ptr<Gtk::Widget>::Ref       nowPlayingWidget;
+
+        /**
+         *  The container for the VU meter widget
+         */
+        Ptr<BlueBin>::Ref           vuMeterBin;
 
         /**
          *  The VU meter display.
@@ -121,14 +140,19 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Widget>::Ref       vuMeterWidget;
 
         /**
+         *  The container for the next playing widget.
+         */
+        Ptr<BlueBin>::Ref           nextPlayingBin;
+
+        /**
          *  The 'next playing' display.
          */
         Ptr<Gtk::Widget>::Ref       nextPlayingWidget;
 
         /**
-         *  The on-air indicator.
+         *  The user info alignment helper.
          */
-        Ptr<Gtk::Widget>::Ref       onAirWidget;
+        Ptr<Gtk::Alignment>::Ref    userInfoAlignment;
 
         /**
          *  The user info widget.
@@ -138,27 +162,42 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The radio logo.
          */
-        Ptr<Gtk::Widget>::Ref       radioLogoWidget;
+        Ptr<Gtk::Image>::Ref        radioLogoWidget;
+
+        /**
+         *  The bottom bar.
+         */
+        Ptr<Gtk::Table>::Ref        bottomBar;
+
+        /**
+         *  The button bar alignment helper
+         */
+        Ptr<Gtk::Alignment>::Ref    buttonBarAlignment;
+
+        /**
+         *  The button bar.
+         */
+        Ptr<Gtk::Table>::Ref        buttonBar;
 
         /**
          *  The button to invoke the upload file window.
          */
-        Ptr<Gtk::Button>::Ref       uploadFileButton;
+        Ptr<Button>::Ref            uploadFileButton;
 
         /**
          *  The button to invoke the DJ Bag window.
          */
-        Ptr<Gtk::Button>::Ref       djBagButton;
+        Ptr<Button>::Ref            djBagButton;
 
         /**
          *  The button to invoke the Simple Playlist Management Window.
          */
-        Ptr<Gtk::Button>::Ref       simplePlaylistMgmtButton;
+        Ptr<Button>::Ref            simplePlaylistMgmtButton;
 
         /**
          *  The button to invoke the Scheduler Window.
          */
-        Ptr<Gtk::Button>::Ref       schedulerButton;
+        Ptr<Button>::Ref            schedulerButton;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.

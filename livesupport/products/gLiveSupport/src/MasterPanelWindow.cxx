@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include "MasterPanelWindow.h"
 
 
+using namespace LiveSupport;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -67,36 +68,70 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 {
     this->gLiveSupport = gLiveSupport;
 
-    lsLogoWidget.reset(new Gtk::Label("lsLogo"));
-    nowPlayingWidget.reset(new Gtk::Label("now playing"));
-    vuMeterWidget.reset(new Gtk::Label("VU meter"));
-    nextPlayingWidget.reset(new Gtk::Label("next playing"));
-    onAirWidget.reset(new Gtk::Label("on air"));
-    radioLogoWidget.reset(new Gtk::Label("radio logo"));
-    userInfoWidget.reset(new MasterPanelUserInfoWidget(gLiveSupport, bundle));
+    Ptr<WidgetFactory>::Ref widgetFactory = WidgetFactory::getInstance();
+
+    // TODO: remove hard-coded station logo path reference
+    radioLogoWidget.reset(new Gtk::Image("var/stationLogo.png"));
 
     // set up the layout, which is a button box
     layout.reset(new Gtk::Table());
 
-    // set the localized resources
-    changeLanguage(bundle);
-
     // set up the time label
     timeWidget.reset(new Gtk::Label("time"));
+    timeBin = widgetFactory->createBlueBin();
+    timeBin->add(*timeWidget);
+
+    // set up the now playing widget
+    nowPlayingWidget.reset(new Gtk::Label("now playing"));
+    nowPlayingBin = widgetFactory->createDarkBlueBin();
+    nowPlayingBin->add(*nowPlayingWidget);
+
+    // set up the VU meter widget
+    vuMeterWidget.reset(new Gtk::Label("VU meter"));
+    vuMeterBin = widgetFactory->createBlueBin();
+    vuMeterBin->add(*vuMeterWidget);
+
+    // set up the next playing widget
+    nextPlayingWidget.reset(new Gtk::Label("next playing"));
+    nextPlayingBin = widgetFactory->createBlueBin();
+    nextPlayingBin->add(*nextPlayingWidget);
+
+    // create the bottom bar
+    bottomBar.reset(new Gtk::Table());
+    buttonBar.reset(new Gtk::Table());
+    buttonBarAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_LEFT,
+                                                Gtk::ALIGN_CENTER,
+                                                0, 0));
+    buttonBarAlignment->add(*buttonBar);
+    userInfoWidget.reset(new MasterPanelUserInfoWidget(gLiveSupport, bundle));
+    userInfoAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+                                               Gtk::ALIGN_CENTER,
+                                               0, 0));
+    userInfoAlignment->add(*userInfoWidget);
+    bottomBar->attach(*buttonBarAlignment, 0, 1, 0, 1);
+    bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1);
 
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
     set_border_width(10);
-    layout->attach(*lsLogoWidget,               0, 1, 0, 2);
-    layout->attach(*timeWidget,                 1, 2, 0, 2);
-    layout->attach(*nowPlayingWidget,           2, 3, 0, 2);
-    layout->attach(*vuMeterWidget,              3, 4, 0, 1);
-    layout->attach(*nextPlayingWidget,          3, 4, 1, 2);
-    layout->attach(*onAirWidget,                4, 5, 0, 1);
-    layout->attach(*radioLogoWidget,            5, 6, 0, 1);
-    layout->attach(*userInfoWidget,             4, 6, 1, 2);
+    layout->attach(*timeBin,                    0, 1, 0, 2);
+    layout->attach(*nowPlayingBin,              1, 2, 0, 2);
+    layout->attach(*vuMeterBin,                 2, 3, 0, 1);
+    layout->attach(*nextPlayingBin,             2, 3, 1, 2);
+    layout->attach(*radioLogoWidget,            3, 4, 0, 2);
+    layout->attach(*bottomBar,                  0, 4, 2, 3);
 
     add(*layout);
+
+    // set the background to white
+    bgColor = Gdk::Color();
+    bgColor.set_rgb(0xffff, 0xffff, 0xffff);
+    Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
+    colormap->alloc_color(bgColor);
+    modify_bg(Gtk::STATE_NORMAL, bgColor);
+
+    // set the localized resources
+    changeLanguage(bundle);
 
     // show what's there to see
     showAnonymousUI();
@@ -127,14 +162,16 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     try {
         set_title(*getResourceUstring("windowTitle"));
 
-        uploadFileButton.reset(new Gtk::Button(
-                                *getResourceUstring("uploadFileButtonLabel")));
-        djBagButton.reset(new Gtk::Button(
-                                *getResourceUstring("djBagButtonLabel")));
-        simplePlaylistMgmtButton.reset(new Gtk::Button(
-                        *getResourceUstring("simplePlaylistMgmtButtonLabel")));
-        schedulerButton.reset(new Gtk::Button(
-                                *getResourceUstring("schedulerButtonLabel")));
+        Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance();
+
+        uploadFileButton = wf->createButton(
+                                *getResourceUstring("uploadFileButtonLabel"));
+        djBagButton = wf->createButton(
+                                *getResourceUstring("djBagButtonLabel"));
+        simplePlaylistMgmtButton = wf->createButton(
+                        *getResourceUstring("simplePlaylistMgmtButtonLabel"));
+        schedulerButton = wf->createButton(
+                                *getResourceUstring("schedulerButtonLabel"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -142,10 +179,10 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     userInfoWidget->changeLanguage(bundle);
 
     // re-attach the localized widgets to the layout
-    layout->attach(*uploadFileButton,           0, 1, 2, 3);
-    layout->attach(*djBagButton,                1, 2, 2, 3);
-    layout->attach(*simplePlaylistMgmtButton,   2, 3, 2, 3);
-    layout->attach(*schedulerButton,            3, 4, 2, 3);
+    buttonBar->attach(*uploadFileButton,           0, 1, 0, 1);
+    buttonBar->attach(*djBagButton,                1, 2, 0, 1);
+    buttonBar->attach(*simplePlaylistMgmtButton,   2, 3, 0, 1);
+    buttonBar->attach(*schedulerButton,            3, 4, 0, 1);
 
     // re-bind events to the buttons
     uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -315,6 +352,7 @@ void
 MasterPanelWindow :: showAnonymousUI(void)                          throw ()
 {
     show_all();
+    buttonBar->hide();
     uploadFileButton->hide();
     djBagButton->hide();
     simplePlaylistMgmtButton->hide();

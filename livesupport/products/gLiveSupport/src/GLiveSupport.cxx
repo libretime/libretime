@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -145,12 +145,20 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     // configure the StorageClientFactory
     nodes = element.get_children(StorageClientFactory::getConfigElementName());
     if (nodes.size() < 1) {
-        throw std::invalid_argument("no StorageClientFactory element");
+        throw std::invalid_argument("no storageClientFactory element");
     }
     Ptr<StorageClientFactory>::Ref stcf = StorageClientFactory::getInstance();
     stcf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     storage = stcf->getStorageClient();
+
+    // configure the WidgetFactory
+    nodes = element.get_children(WidgetFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no widgetFactory element");
+    }
+    widgetFactory = WidgetFactory::getInstance();
+    widgetFactory->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     // configure the SchedulerClientFactory
     nodes = element.get_children(

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include "MasterPanelUserInfoWidget.h"
 
 
+using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -68,7 +69,7 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
     this->gLiveSupport = gLiveSupport;
     loggedIn           = false;
 
-    logInOutButton.reset(new Gtk::Button());
+    logInOutButton = WidgetFactory::getInstance()->createButton("");
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));

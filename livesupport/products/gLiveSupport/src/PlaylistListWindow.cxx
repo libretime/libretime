@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ PlaylistListWindow :: PlaylistListWindow (
         set_title(*getResourceUstring("windowTitle"));
         listBoxLabel.set_text(*getResourceUstring("listBoxLabel"));
         detailBoxLabel.set_text(*getResourceUstring("detailBoxLabel"));
-        closeButton.reset(new Button(
+        closeButton.reset(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;

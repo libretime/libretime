@@ -3,6 +3,7 @@
 
 <!ELEMENT gLiveSupport                (resourceBundle,
                                        supportedLanguages,
+                                       widgetFactory,
                                        authenticationClientFactory,
                                        storageClientFactory,
                                        schedulerClientFactory,
@@ -17,6 +18,9 @@
 <!ELEMENT language          EMPTY >
 <!ATTLIST language          locale          CDATA #REQUIRED >
 <!ATTLIST language          name            CDATA #REQUIRED >
+
+<!ELEMENT widgetFactory   EMPTY >
+<!ATTLIST widgetFactory   path        CDATA   #REQUIRED >
 
 <!ELEMENT authenticationClientFactory (testAuthentication|
                                        webAuthentication)>
@@ -83,6 +87,8 @@
         <language locale="en" name="English"/>
         <language locale="hu" name="Magyar"/>
     </supportedLanguages>
+
+    <widgetFactory    path = "var/widgets/" />
 
     <authenticationClientFactory>
         <webAuthentication>

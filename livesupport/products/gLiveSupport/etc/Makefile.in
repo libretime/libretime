@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.22 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.23 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -108,6 +108,12 @@ PLAYLIST_EXECUTOR_LIB_DIR     = ${PLAYLIST_EXECUTOR_DIR}/lib
 PLAYLIST_EXECUTOR_LIB         = livesupport_playlist_executor
 PLAYLIST_EXECUTOR_LIB_FILE    = ${PLAYLIST_EXECUTOR_LIB_DIR}/lib${PLAYLIST_EXECUTOR_LIB}.a
 
+WIDGETS_DIR         = ${MODULES_DIR}/widgets
+WIDGETS_INCLUDE_DIR = ${WIDGETS_DIR}/include
+WIDGETS_LIB_DIR     = ${WIDGETS_DIR}/lib
+WIDGETS_LIB         = livesupport_widgets
+WIDGETS_LIB_FILE    = ${WIDGETS_LIB_DIR}/lib${WIDGETS_LIB}.a
+
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
@@ -149,6 +155,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${STORAGE_INCLUDE_DIR} \
+                             -I${WIDGETS_INCLUDE_DIR} \
                              -I${SCHEDULER_CLIENT_INCLUDE_DIR} \
                              -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
                              -I${TMP_DIR}
@@ -163,6 +170,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
                      -L${STORAGE_LIB_DIR} \
+                     -L${WIDGETS_LIB_DIR} \
                      -L${SCHEDULER_CLIENT_LIB_DIR} \
                      -L${PLAYLIST_EXECUTOR_LIB_DIR}
 
@@ -194,6 +202,7 @@ FSDF = ${G_LIVESUPPORT_OBJS} \
 G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${AUTHENTICATION_LIB} \
                          -l${STORAGE_LIB} \
+                         -l${WIDGETS_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
                          ${HELIX_LIBS} \
@@ -231,6 +240,7 @@ docclean:
 depclean: clean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} clean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} clean
+	${MAKE} -C ${WIDGETS_DIR} clean
 	${MAKE} -C ${STORAGE_DIR} clean
 	${MAKE} -C ${AUTHENTICATION_DIR} clean
 	${MAKE} -C ${CORE_DIR} clean
@@ -267,6 +277,7 @@ uninstall: ${SCHEDULER_EXE}
 ${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} \
                       ${AUTHENTICATION_LIB_FILE} \
                       ${STORAGE_LIB_FILE} \
+                      ${WIDGETS_LIB_FILE} \
                       ${SCHEDULER_CLIENT_LIB_FILE} \
                       ${PLAYLIST_EXECUTOR_LIB_FILE} \
                       ${G_LIVESUPPORT_OBJS} ${G_LIVESUPPORT_EXE_OBJS}
@@ -281,6 +292,7 @@ ${DOXYGEN_DIR}:
 ${TEST_RUNNER}: ${CORE_LIB_FILE} \
                 ${AUTHENTICATION_LIB_FILE} \
                 ${STORAGE_LIB_FILE} \
+                ${WIDGETS_LIB_FILE} \
                 ${SCHEDULER_CLIENT_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
@@ -293,6 +305,9 @@ ${AUTHENTICATION_LIB_FILE}:
 
 ${STORAGE_LIB_FILE}:
 	${MAKE} -C ${STORAGE_DIR}
+
+${WIDGETS_LIB_FILE}:
+	${MAKE} -C ${WIDGETS_DIR}
 
 ${SCHEDULER_CLIENT_LIB_FILE}:
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR}

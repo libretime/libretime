@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,7 @@
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
+#include "LiveSupport/Widgets/WidgetFactory.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -61,6 +62,7 @@ using namespace LiveSupport::SchedulerClient;
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::PlaylistExecutor;
+using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -83,9 +85,12 @@ class MasterPanelWindow;
  *
  *  <pre><code>
  *  <!ELEMENT gLiveSupport                (resourceBundle,
+ *                                         supportedLanguages,
+ *                                         widgetFactory,
  *                                         authenticationClientFactory,
  *                                         storageClientFactory,
- *                                         schedulerClientFactory) >
+ *                                         schedulerClientFactory,
+ *                                         audioPlayer) >
  *  </code></pre>
  *
  *  For a description of the <code>resourceBundle</code>,
@@ -95,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -136,6 +141,11 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The storage client used by the application.
          */
         Ptr<StorageClientInterface>::Ref            storage;
+
+        /**
+         *  The widget factory, containing our own widgets.
+         */
+        Ptr<WidgetFactory>::Ref                     widgetFactory;
 
         /**
          *  The scheduler client, used to access the scheduler daemon.
