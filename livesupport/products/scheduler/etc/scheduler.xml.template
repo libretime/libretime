@@ -97,14 +97,14 @@
     <authenticationClientFactory>
         <webAuthentication>
             <location server="ls_php_host" port="ls_php_port"
-                      path="ls_php_urlPrefix/ls_alib_xmlRpcPrefix"/>
+                      path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
         </webAuthentication>
     </authenticationClientFactory>
 
     <storageClientFactory>
         <webStorage tempFiles="file:///ls_install_dir/tmp/webStorageClient" >
             <location server="ls_php_host" port="ls_php_port"
-                      path="ls_php_urlPrefix/ls_storage_xmlRpcPrefix"/>
+                      path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
         </webStorage>
     </storageClientFactory>
 
@@ -117,7 +117,7 @@
     </playLogFactory>
 
     <audioPlayer>
-        <helixPlayer dllPath = "ls_install_dir/usr/lib/helix"/>
+        <helixPlayer dllPath = "ls_install_dir/lib/helix"/>
     </audioPlayer>
 
     <xmlRpcDaemon xmlRpcHost  = "ls_scheduler_host"
