@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,6 +85,12 @@ $config = array(
     'archiveUrlPort'        => 80,
     'archiveAccountLogin'   => 'root',
     'archiveAccountPass'    => 'q',
+
+    /* ============================================== scheduler configuration */
+    'schedulerUrlPath'        => '',
+    'schedulerXMLRPC'         => 'RC2',
+    'schedulerUrlHost'        => 'localhost',
+    'schedulerUrlPort'        => 3344,
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
