@@ -76,14 +76,11 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Maximun length of ScratchPad',
             'options'   => array(
-                            '4' => '4',
-                            '5' => '5',
-                            '6' => '6',
-                            '7' => '7',
-                            '8' => '8',
-                            '9' => '9',
-                            '10'=>'10'
-                            )
+                            0   => '--',
+                            5   => 5,
+                            10  => 10,
+                            20  => 20
+                           )
         ),
         array(
             'element'   => 'upload',

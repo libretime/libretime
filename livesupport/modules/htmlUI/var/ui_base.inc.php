@@ -52,6 +52,14 @@ function _getDArr($format)
     return $arr;
 }
 
+function _getNumArr($start, $end, $step=1)
+{
+    for($n=$start; $n<=$end; $n=$n+$step) {
+        $arr[$n] = $n;
+    }
+    return $arr;
+}
+
 
 /**
  *  uiBase class

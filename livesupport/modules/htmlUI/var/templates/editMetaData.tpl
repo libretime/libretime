@@ -33,11 +33,9 @@ function switchMDataLang()
 
 function spread(element, name)
 {
-    if (document.forms['editMetaData'].elements['Main___' + name])           document.forms['editMetaData'].elements['Main___' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Music_Basic___' + name])    document.forms['editMetaData'].elements['Music_Basic___' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Music_Advanced___' + name]) document.forms['editMetaData'].elements['Music_Advanced___' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Talk_Basic___' + name])     document.forms['editMetaData'].elements['Talk_Basic___' + name].value = element.value;
-    if (document.forms['editMetaData'].elements['Talk_Advanced___' + name])  document.forms['editMetaData'].elements['Talk_Advanced___' + name].value = element.value;
+    if (document.forms['editMetaData'].elements['Main___' + name])     document.forms['editMetaData'].elements['Main___' + name].value  = element.value;
+    if (document.forms['editMetaData'].elements['Music___' + name])    document.forms['editMetaData'].elements['Music___' + name].value = element.value;
+    if (document.forms['editMetaData'].elements['Talk___' + name])     document.forms['editMetaData'].elements['Talk___' + name].value  = element.value;
 }
 
 function showMain()
@@ -46,74 +44,32 @@ function showMain()
     document.getElementById('masterpanel').style.height=600;
     document.getElementById('div_Main').style.visibility='';
     document.getElementById('div_Main').style.height='';
-    document.getElementById('div_Music_Basic').style.visibility='hidden';
-    document.getElementById('div_Music_Basic').style.height='0';
-    document.getElementById('div_Music_Advanced').style.visibility='hidden';
-    document.getElementById('div_Music_Advanced').style.height='0';
-    document.getElementById('div_Talk_Basic').style.visibility='hidden';
-    document.getElementById('div_Talk_Basic').style.height='0';
-    document.getElementById('div_Talk_Advanced').style.visibility='hidden';
-    document.getElementById('div_Talk_Advanced').style.height='0';
+    document.getElementById('div_Music').style.visibility='hidden';
+    document.getElementById('div_Music').style.height='0';
+    document.getElementById('div_Talk').style.visibility='hidden';
+    document.getElementById('div_Talk').style.height='0';
 }
-function showMusic_Basic()
+function showMusic()
 {
-    document.getElementById('metadataform').style.height=600;
-    document.getElementById('masterpanel').style.height=800;
+    document.getElementById('metadataform').style.height=1600;
+    document.getElementById('masterpanel').style.height=1800;
     document.getElementById('div_Main').style.visibility='hidden';
     document.getElementById('div_Main').style.height='0';
-    document.getElementById('div_Music_Basic').style.visibility='';
-    document.getElementById('div_Music_Basic').style.height='';
-    document.getElementById('div_Music_Advanced').style.visibility='hidden';
-    document.getElementById('div_Music_Advanced').style.height='0';
-    document.getElementById('div_Talk_Basic').style.visibility='hidden';
-    document.getElementById('div_Talk_Basic').style.height='0';
-    document.getElementById('div_Talk_Advanced').style.visibility='hidden';
-    document.getElementById('div_Talk_Advanced').style.height='0';
+    document.getElementById('div_Music').style.visibility='';
+    document.getElementById('div_Music').style.height='';
+    document.getElementById('div_Talk').style.visibility='hidden';
+    document.getElementById('div_Talk').style.height='0';
 }
-function showMusic_Advanced()
+function showTalk()
 {
-    document.getElementById('metadataform').style.height=1300;
-    document.getElementById('masterpanel').style.height=1500;
+    document.getElementById('metadataform').style.height=800;
+    document.getElementById('masterpanel').style.height=1000;
     document.getElementById('div_Main').style.visibility='hidden';
     document.getElementById('div_Main').style.height='0';
-    document.getElementById('div_Music_Basic').style.visibility='hidden';
-    document.getElementById('div_Music_Basic').style.height='0';
-    document.getElementById('div_Music_Advanced').style.visibility='';
-    document.getElementById('div_Music_Advanced').style.height='';
-    document.getElementById('div_Talk_Basic').style.visibility='hidden';
-    document.getElementById('div_Talk_Basic').style.height='0';
-    document.getElementById('div_Talk_Advanced').style.visibility='hidden';
-    document.getElementById('div_Talk_Advanced').style.height='0';
-}
-function showTalk_Basic()
-{
-    document.getElementById('metadataform').style.height=400;
-    document.getElementById('masterpanel').style.height=600;
-    document.getElementById('div_Main').style.visibility='hidden';
-    document.getElementById('div_Main').style.height='0';
-    document.getElementById('div_Music_Basic').style.visibility='hidden';
-    document.getElementById('div_Music_Basic').style.height='0';
-    document.getElementById('div_Music_Advanced').style.visibility='hidden';
-    document.getElementById('div_Music_Advanced').style.height='0';
-    document.getElementById('div_Talk_Basic').style.visibility='';
-    document.getElementById('div_Talk_Basic').style.height='';
-    document.getElementById('div_Talk_Advanced').style.visibility='hidden';
-    document.getElementById('div_Talk_Advanced').style.height='0';
-}
-function showTalk_Advanced()
-{
-    document.getElementById('metadataform').style.height=400;
-    document.getElementById('masterpanel').style.height=600;
-    document.getElementById('div_Main').style.visibility='hidden';
-    document.getElementById('div_Main').style.height='0';
-    document.getElementById('div_Music_Basic').style.visibility='hidden';
-    document.getElementById('div_Music_Basic').style.height='0';
-    document.getElementById('div_Music_Advanced').style.visibility='hidden';
-    document.getElementById('div_Music_Advanced').style.height='0';
-    document.getElementById('div_Talk_Basic').style.visibility='hidden';
-    document.getElementById('div_Talk_Basic').style.height='0';
-    document.getElementById('div_Talk_Advanced').style.visibility='';
-    document.getElementById('div_Talk_Advanced').style.height='';
+    document.getElementById('div_Music').style.visibility='hidden';
+    document.getElementById('div_Music').style.height='0';
+    document.getElementById('div_Talk').style.visibility='';
+    document.getElementById('div_Talk').style.height='';
 }
 showMain();
 {/literal}

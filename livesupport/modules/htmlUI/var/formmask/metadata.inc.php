@@ -44,35 +44,21 @@ $mask = array(
             'attributes' => array('onClick' => 'showMain()')
         ),
         array(
-            'element' => 'Music_Basic',
+            'element' => 'Music',
             'type'    => 'button',
-            'label'   => 'Music_Basic',
+            'label'   => 'Music',
             'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showMusic_Basic()')
+            'attributes' => array('onClick' => 'showMusic()')
         ),
         array(
-            'element' => 'Music_Advanced',
+            'element' => 'Talk',
             'type'    => 'button',
-            'label'   => 'Music_Advanced',
+            'label'   => 'Talk',
             'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showMusic_Advanced()')
-        ),
-        array(
-            'element' => 'Talk_Basic',
-            'type'    => 'button',
-            'label'   => 'Talk_Basic',
-            'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showTalk_Basic()')
-        ),
-        array(
-            'element' => 'Talk_Advanced',
-            'type'    => 'button',
-            'label'   => 'Talk_Advanced',
-            'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showTalk_Advanced()')
+            'attributes' => array('onClick' => 'showTalk()')
         ),
         'group' => array(
-            'group'   => array('Main', 'Music_Basic', 'Music_Advanced', 'Talk_Basic', 'Talk_Advanced'),
+            'group'   => array('Main', 'Music', 'Talk'),
         )
 
     ),
@@ -99,25 +85,24 @@ $mask = array(
                 'required'  => TRUE
             ),
             array(
-                'element'   => 'Creator',
+                'element'   => 'dc:creator',
                 'type'      => 'text',
                 'label'     => 'Creator',
-                #'required'  => TRUE,
+                'required'  => TRUE,
             ),
             array(
-                'element'   => 'Type_Genre',
+                'element'   => 'ls:genre',
                 'type'      => 'text',
-                'label'     => 'Type_Genre',
-                #'required'  => TRUE,
+                'label'     => 'Genre',
+                'required'  => TRUE,
             ),
             array(
                 'element'   => 'dc:format',
                 'type'      => 'select',
-                'label'     => 'Format',
-                #'required'  => TRUE,
+                'label'     => 'File format',
+                'required'  => TRUE,
                 'options'   => array(
                     ''              => '',
-                    'audio/mpeg'    => 'audio/mpeg',
                     'File'          => 'File',
                     'live stream'   => 'Live Stream',
                     'networked file'=> 'Networked File',
@@ -126,8 +111,8 @@ $mask = array(
             array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
-                'label'     => 'Extent',
-                #'attributes'=> array('readonly' => 'on')
+                'label'     => 'Length',
+                'attributes'=> array('readonly' => 'on')
             ),
             /*
             array(
@@ -159,7 +144,7 @@ $mask = array(
                 #'howmany'   => 1
             ), */
         ),
-        'Music_Basic'  => array(
+        'Music'  => array(
             array(
                 'element'   => 'dc:title',
                 'type'      => 'text',
@@ -171,15 +156,14 @@ $mask = array(
                 'label'     => 'Creator',
             ),
             array(
-                'element'   => 'Source_Album',
+                'element'   => 'dc:source',
                 'type'      => 'text',
-                'label'     => 'Source_Album',
+                'label'     => 'Album',
             ),
-            /*
             array(
-                'element'   => 'Source_Year',
+                'element'   => 'ls:year',
                 'type'      => 'date',
-                'label'     => 'Source_Year',
+                'label'     => 'Year',
                 'options'   => array(
                     'language'      => 'en',
                     'format'        => 'dMY',
@@ -187,11 +171,10 @@ $mask = array(
                     'minYear'       => 1900
                 )
             ),
-            */
             array(
-                'element'   => 'Type_Genre',
+                'element'   => 'dc:type',
                 'type'      => 'text',
-                'label'     => 'Type_Genre',
+                'label'     => 'Genre',
             ),
             array(
                 'element'   => 'dc:description',
@@ -204,74 +187,71 @@ $mask = array(
                 'label'     => 'Format',
                 'options'   => array(
                     ''              => '',
-                    'audio/mpeg'    => 'audio/mpeg',
                     'File'          => 'File',
                     'live stream'   => 'Live Stream',
                     'networked file'=> 'Networked File'
                 )
             ),
             array(
-                'element'   => 'Type_BPM',
+                'element'   => 'ls:bpm',
                 'type'      => 'text',
-                'label'     => 'Type_BPM',
+                'label'     => 'BPM',
                 'rule'      => 'numeric',
             ),
             array(
-                'element'   => 'Description_Rating',
+                'element'   => 'ls:rating',
                 'type'      => 'text',
-                'label'     => 'Description_Rating',
+                'label'     => 'Rating',
                 'rule'      => 'numeric',
             ),
             array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
-                'label'     => 'Extent',
+                'label'     => 'Length',
                 'attributes'=> array('readonly' => 'on')
             ),
-        ),
-        'Music_Advanced'=> array(
             array(
-                'element'   => 'Creator_Role_Encoder',
+                'element'   => 'ls:encoded_by',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_Encoder',
+                'label'     => 'Encoded by',
             ),
             array(
-                'element'   => 'Source_Album_TrackNumber',
-                'type'      => '',
-                'label'     => 'Source_Album_TrackNumber',
-                'rule'      => 'numeric',
+                'element'   => 'ls:track_num',
+                'type'      => 'select',
+                'label'     => 'Track number',
+                'options'   => _getNumArr(0, 99)
             ),
             array(
-                'element'   => 'Source_Album_DiscNumber',
-                'type'      => 'text',
-                'label'     => 'Source_Album_DiscNumber',
-                'rule'      => 'numeric',
+                'element'   => 'ls:disc_num',
+                'type'      => 'select',
+                'label'     => 'Disc number',
+                'option'    => _getNumArr(0, 9),
             ),
             array(
-                'element'   => 'Description_Mood',
+                'element'   => 'Description_Mood',       ## something wrong in docu!!!
                 'type'      => 'text',
-                'label'     => 'Description_Mood',
+                'label'     => 'Mood',
             ),
             array(
-                'element'   => 'Publisher',
+                'element'   => 'dc:publisher',
                 'type'      => 'text',
-                'label'     => 'Publisher',
+                'label'     => 'Label',
             ),
             array(
-                'element'   => 'Creator_Role_Composer',
+                'element'   => 'ls:composer',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_Composer',
+                'label'     => 'Composer',
             ),
             array(
-                'element'   => 'Format_Medium_Bitrate',
+                'element'   => 'ls:bitrate',
                 'type'      => 'text',
-                'label'     => 'Format_Medium_Bitrate',
+                'label'     => 'Bitrate',
                 'rule'      => 'numeric'
             ),
             array(
-                'element'   => 'Format_Medium_Channels',
+                'element'   => 'ls:channels',
                 'type'      => 'select',
-                'label'     => 'Format_Medium_Channels',
+                'label'     => 'Channels',
                 'options'   => array(
                     ''       => '',
                     'mono'   => 'Mono',
@@ -280,110 +260,150 @@ $mask = array(
                 )
             ),
             array(
-                'element'   => 'Format_Medium_Samplerate',
+                'element'   => 'ls:samplerate',
+                'type'      => 'select',
+                'label'     => 'Sample rate',
+                'options'   => array()                      ## vervollständigen!
+            ),
+            array(
+                'element'   => 'ls:encoder',
                 'type'      => 'text',
-                'label'     => 'Format_Medium_Samplerate',
+                'label'     => 'Encoder software used',
+            ),
+            array(
+                'element'   => 'ls:crc',
+                'type'      => 'text',
+                'label'     => 'Checksum',
                 'rule'      => 'numeric'
             ),
             array(
-                'element'   => 'Format_Medium_Encoder',
-                'type'      => 'text',
-                'label'     => 'Format_Medium_Encoder',
-            ),
-            array(
-                'element'   => 'Format_CRC',
-                'type'      => 'text',
-                'label'     => 'Format_CRC',
-                'rule'      => 'numeric'
-            ),
-            array(
-                'element'   => 'Description_Lyrics',
+                'element'   => 'ls:lyrics',
                 'type'      => 'textarea',
-                'label'     => 'Description_Lyrics',
+                'label'     => 'Lyrics',
             ),
             array(
-                'element'   => 'Creator_Role_Orchestra',
+                'element'   => 'ls:orchestra',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_Orchestra',
+                'label'     => 'Orchestra or band',
             ),
             array(
-                'element'   => 'Creator_Role_Conductor',
+                'element'   => 'ls:conductor',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_Conductor',
+                'label'     => 'Conductor',
             ),
             array(
-                'element'   => 'Creator_Role_Lyricist',
+                'element'   => 'ls:lyricist',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_Lyricist',
+                'label'     => 'Lyricist',
             ),
             array(
-                'element'   => 'Creator_Role_OriginalLyricist',
+                'element'   => 'ls:originallyricist',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_OriginalLyricist',
+                'label'     => 'Original lyricist',
             ),
             array(
-                'element'   => 'Creator_Role_RadioStationName',
+                'element'   => 'ls:radiostationname',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_RadioStationName',
+                'label'     => 'Radio station name',
             ),
             array(
-                'element'   => 'Description_AudioFileInfoURL',
+                'element'   => 'ls:audiofileinfourl',
                 'type'      => 'text',
-                'label'     => 'Description_AudioFileInfoURL',
+                'label'     => 'Audio file information web page',
             ),
             array(
-                'element'   => 'Description_ArtistURL',
-                'type'      => 'text',
-                'label'     => 'Description_ArtistURL',
+                'rule'      => 'regex',
+                'element'   => 'ls:audiofileinfourl',
+                'format'    => UI_REGEX_URL,
+                'rulemsg'   => 'Audio file information web page seems not to be valid URL'
             ),
             array(
-                'element'   => 'Description_AudioSourceURL',
+                'element'   => 'ls:artisturl',
                 'type'      => 'text',
-                'label'     => 'Description_AudioSourceURL',
+                'label'     => 'Artist web page',
             ),
             array(
-                'element'   => 'Description_RadioStationURL',
-                'type'      => 'text',
-                'label'     => 'Description_RadioStationURL',
+                'rule'      => 'regex',
+                'element'   => 'ls:artisturl',
+                'format'    => UI_REGEX_URL,
+                'rulemsg'   => 'Artist web page seems not to be valid URL'
             ),
             array(
-                'element'   => 'Description_BuyCDURL',
+                'element'   => 'ls:audiosourceurl',
                 'type'      => 'text',
-                'label'     => 'Description_BuyCDURL',
+                'label'     => 'Audio source web page',
             ),
             array(
-                'element'   => 'Identifier_ISRCNumber',
+                'rule'      => 'regex',
+                'element'   => 'ls:audiosourceurl',
+                'format'    => UI_REGEX_URL,
+                'rulemsg'   => 'Audio source web page seems not to be valid URL'
+            ),
+            array(
+                'element'   => 'ls:radiostationurl',
                 'type'      => 'text',
-                'label'     => 'Identifier_ISRCNumber',
+                'label'     => 'Radio station web page',
+            ),
+            array(
+                'rule'      => 'regex',
+                'element'   => 'ls:radiostationurl',
+                'format'    => UI_REGEX_URL,
+                'rulemsg'   => 'Radio station web page seems not to be valid URL'
+            ),
+            array(
+                'element'   => 'ls:buycdurl',
+                'type'      => 'text',
+                'label'     => 'Buy CD web page',
+            ),
+            array(
+                'rule'      => 'regex',
+                'element'   => 'ls:buycdurl',
+                'format'    => UI_REGEX_URL,
+                'rulemsg'   => 'Buy CD web page seems not to be valid URL'
+            ),
+            array(
+                'element'   => 'ls:isrcnumber',
+                'type'      => 'text',
+                'label'     => 'ISRC number',
                 'rule'      => 'numeric'
             ),
             array(
-                'element'   => 'Identifier_CatalogNumber',
+                'element'   => 'ls:catalognumber',
                 'type'      => 'text',
-                'label'     => 'Identifier_CatalogNumber',
+                'label'     => 'Catalog number',
                 'rule'      => 'numeric'
             ),
             array(
-                'element'   => 'Creator_Role_OriginalArtist',
+                'element'   => 'ls:originalartist',
                 'type'      => 'text',
-                'label'     => 'Creator_Role_OriginalArtist',
+                'label'     => 'Original artist',
             ),
             array(
-                'element'   => 'Rights_Copyright',
+                'element'   => 'dc:rights',           ## ???
                 'type'      => 'text',
-                'label'     => 'Rights_Copyright',
+                'label'     => 'Copyright',
             ),
         ),
-        'Talk_Basic'   => array(
+        'Talk'   => array(
             array(
                 'element'   => 'dc:title',
                 'type'      => 'text',
                 'label'     => 'Title',
             ),
             array(
-                'element'   => 'Coverage',
+                'element'   => 'dcterms:temporal',      ## time/date!!
                 'type'      => 'text',
-                'label'     => 'Coverage',
+                'label'     => 'Report date/time',
+            ),
+            array(
+                'element'   => 'dcterms:spatial',      ## menu
+                'type'      => 'textarea',
+                'label'     => 'Report location',
+            ),
+            array(
+                'element'   => 'dcterms:entity',
+                'type'      => 'textarea',
+                'label'     => 'Report organizations',
             ),
             array(
                 'element'   => 'dc:description',
@@ -391,19 +411,19 @@ $mask = array(
                 'label'     => 'Description',
             ),
             array(
-                'element'   => 'Creator',
+                'element'   => 'dc:creator',       ## menu??
                 'type'      => 'text',
                 'label'     => 'Creator',
             ),
             array(
-                'element'   => 'Subject',
+                'element'   => 'dc:subject',
                 'type'      => 'text',
                 'label'     => 'Subject',
             ),
             array(
-                'element'   => 'Type_Genre',
+                'element'   => 'dc:type',            ## menu
                 'type'      => 'text',
-                'label'     => 'Type_Genre',
+                'label'     => 'Genre',
             ),
             array(
                 'element'   => 'dc:format',
@@ -411,28 +431,25 @@ $mask = array(
                 'label'     => 'Format',
                 'options'   => array(
                     ''              => '',
-                    'audio/mpeg'    => 'audio/mpeg',
                     'File'          => 'File',
                     'live stream'   => 'Live Stream',
                     'networked file'=> 'Networked File',
                 )
             ),
-        ),
-        'Talk_Advanced' => array(
             array(
-                'element'   => 'Contributor',
+                'element'   => 'dc:contributor',
                 'type'      => 'text',
                 'label'     => 'Contributor',
             ),
             array(
-                'element'   => 'Language',
+                'element'   => 'dc:language',       ##menu
                 'type'      => 'text',
                 'label'     => 'Language',
             ),
             array(
-                'element'   => 'Rights',
+                'element'   => 'dc:rights',
                 'type'      => 'text',
-                'label'     => 'Rights',
+                'label'     => 'Copyright',
             ),
         )
     )
