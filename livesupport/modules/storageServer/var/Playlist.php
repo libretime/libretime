@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,12 +37,26 @@ class Playlist extends StoredFile{
     
     /**
      *  Create instace of Playlist object and recall existing file
+     *  by gunid.<br/>
+     *
+     *  @param gb reference to GreenBox object
+     *  @param gunid string, global unique id
+     *  @param className string, optional classname to recall
+     *  @return instace of Playlist object
+     */
+    function recallByGunid(&$gb, $gunid, $className='Playlist')
+    {
+        return parent::recallByGunid($gb, $gunid, $className);
+    }
+
+    /**
+     *  Create instace of Playlist object and recall existing file
      *  by access token.<br/>
      *
      *  @param gb reference to GreenBox object
      *  @param token string, access token
      *  @param className string, optional classname to recall
-     *  @return instace of StoredFile object
+     *  @return instace of Playlist object
      */
     function recallByToken(&$gb, $token, $className='Playlist')
     {
@@ -552,6 +566,103 @@ class Playlist extends StoredFile{
         $r = $this->setPlaylistLength($newPlLen, $parid, $metaParid);
         if(PEAR::isError($r)){ return $r; }
         return TRUE;
+    }
+    
+    
+    /**
+     *  Find info about clip at specified offset in playlist.
+     *
+     *  @param offset string, current playtime (hh:mm:ss.ssssss)
+     *  @param distance int, 0=current clip; 1=next clip ...
+     *  @return array of matching clip info:
+     *   <ul>
+     *      <li>gunid string, global unique id of clip</li>
+     *      <li>elapsed string, already played time of clip</li>
+     *      <li>remaining string, remaining time of clip</li>
+     *      <li>duration string, total playlength of clip </li>
+     *   </ul>
+     */
+    function displayPlaylistClipAtOffset($offset, $distance=0)
+    {
+        $offsetS = $this->_plTimeToSecs($offset);
+#        echo "\nOFFSET: $offset, SECS=$offsetS, DISTANCE=$distance\n";
+        $plGunid = $this->gunid;
+        $arr = $this->md->genPhpArray();
+#        var_dump($arr); exit;
+        if(PEAR::isError($arr)){ return $arr; }
+        $plArr = array('els'=>array());
+        foreach($arr[children] as $i=>$plEl){
+            switch($plEl['elementname']){
+            case"playlistelement":
+                $plInfo = array(
+                    'acLen'   => '00:00:00.000000', 'acLenS'   => 0,
+                    'fadein'  => '00:00:00.000000', 'fadeinS'  => 0,
+                    'fadeout' => '00:00:00.000000', 'fadeoutS' => 0,
+                );
+                $plInfo['elOffset']  = $pom = $plEl['attrs']['relativeoffset'];
+                $plInfo['elOffsetS'] = $this->_plTimeToSecs($pom);
+                foreach($plEl[children] as $j=>$acFi){
+                    switch($acFi['elementname']){
+                    case"audioclip":
+                        $plInfo['acLen'] = $pom = $acFi['attrs']['playlength'];
+                        $plInfo['acLenS'] = $this->_plTimeToSecs($pom);
+                        $plInfo['acGunid'] = $pom = $acFi['attrs']['id'];
+                        break;
+                    case"fadeinfo":
+                        $plInfo['fadein'] = $pom = $acFi['attrs']['fadein'];
+                        $plInfo['fadeinS'] = $this->_plTimeToSecs($pom);
+                        $plInfo['fadeout'] = $pom = $acFi['attrs']['fadeout'];
+                        $plInfo['fadeoutS'] = $this->_plTimeToSecs($pom);
+                        break;
+                    }
+                }
+                $plArr['els'][] = $plInfo;
+                break;
+            case"metadata":
+                foreach($plEl[children] as $j=>$ch){
+                    switch($ch['elementname']){
+                    case"dcterms:extent":
+                        $plArr['length'] = $pom = $ch['content'];
+                        $plArr['lengthS'] = $this->_plTimeToSecs($pom);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if(isset($arr['attrs']['playlength'])){
+            $plArr['length'] = $pom = $arr['attrs']['playlength'];
+            $plArr['lengthS'] = $this->_plTimeToSecs($pom);
+        }
+#        var_dump($plArr); exit;
+        
+        $res  = array('gunid'=>NULL, 'elapsed'=>NULL,
+            'remaining'=>NULL, 'duration'=>NULL);
+        $dd = -1;
+        foreach($plArr['els'] as $el){
+#            var_dump($el);
+            extract($el);
+#            echo "     ### $offsetS, $elOffsetS, ".($elOffsetS+$acLenS)."\n";
+            if($offsetS > $elOffsetS &&
+                $offsetS < ($elOffsetS + $acLenS) &&
+                $dd<0
+            ) $dd=0;
+            if($dd == $distance){
+                $playedS = $offsetS - $elOffsetS;
+                if($playedS < 0) $playedS = 0;
+                $remainS = $acLenS - $playedS;
+#                echo "    X $acGunid, $playedS, $remainS, $acLenS\n";
+                $res  = array('gunid'=>$acGunid,
+                    'elapsed'   => $this->_secsToPlTime($playedS),
+                    'remaining' => $this->_secsToPlTime($remainS),
+                    'duration'  => $this->_secsToPlTime($acLenS),
+                );
+                return $res;
+            }
+#            echo " * elOffset: $elOffset, secs=$elOffsetS, playLength:$acLen\n";
+            if($dd >= 0) $dd++;
+        }
+        return $res;
     }
     
     /**

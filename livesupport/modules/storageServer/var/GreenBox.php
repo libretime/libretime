@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.54 $
+    Version  : $Revision: 1.55 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.54 $
+ *  @version $Revision: 1.55 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -557,10 +557,10 @@ class GreenBox extends BasicStor{
     }
 
     /**
-     *  <span style="color:green">Move audioClip to the new position in the playlist</span>
+     *  Move audioClip to the new position in the playlist.
      *
-     *  <span style="color:green">This method may change id attributes
-     *      of playlistElements and/or fadeInfo</span>
+     *  This method may change id attributes of playlistElements and/or
+     *  fadeInfo.
      *
      *  @param token string, playlist access token
      *  @param plElGunid string, global id of deleted playlistElement
@@ -618,6 +618,31 @@ class GreenBox extends BasicStor{
         return $lc->deletePlaylist($sessid, $gunid);
     }
 
+    /**
+     *  <span style="color:red">Find info about clip at specified offset in playlist.</span>
+     *
+     *  @param sessid string, session id
+     *  @param plid string, playlist global unique id
+     *  @param offset string, current playtime (hh:mm:ss.ssssss)
+     *  @param distance int, 0=current clip; 1=next clip ...
+     *  @return array of matching clip info:
+     *   <ul>
+     *      <li>gunid string, global unique id of clip</li>
+     *      <li>elapsed string, already played time of clip</li>
+     *      <li>remaining string, remaining time of clip</li>
+     *      <li>duration string, total playlength of clip </li>
+     *   </ul>
+     */
+    function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0)
+    {
+        require_once"Playlist.php";
+        $pl =& Playlist::recallByGunid($this, $plid);
+        if(PEAR::isError($pl)) return $pl;
+        $res = $pl->displayPlaylistClipAtOffset($offset, $distance);
+        if(PEAR::isError($res)) return $res;
+        return $res;
+    }
+    
     /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
