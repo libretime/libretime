@@ -2,6 +2,7 @@
 <!DOCTYPE gLiveSupport [
 
 <!ELEMENT gLiveSupport                (resourceBundle,
+                                       supportedLanguages,
                                        authenticationClientFactory,
                                        storageClientFactory,
                                        schedulerClientFactory) >
@@ -9,6 +10,12 @@
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
 <!ATTLIST resourceBundle    locale  CDATA   #REQUIRED >
+
+<!ELEMENT supportedLanguages    (language+) >
+
+<!ELEMENT language          EMPTY >
+<!ATTLIST language          locale          CDATA #REQUIRED >
+<!ATTLIST language          name            CDATA #REQUIRED >
 
 <!ELEMENT authenticationClientFactory (testAuthentication|
                                        webAuthentication)>
@@ -62,6 +69,11 @@
     <resourceBundle path   = "./tmp/gLiveSupport"
                     locale = "en"
     />
+
+    <supportedLanguages>
+        <language locale="en" name="English"/>
+        <language locale="hu" name="Magyar"/>
+    </supportedLanguages>
 
     <authenticationClientFactory>
         <testAuthentication>

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -34,18 +34,17 @@
 package="Scheduler"
 
 # assume we're in $basedir/bin
-basedir=`dirname $0`/..
+reldir=`dirname $0`/..
+basedir=`cd $reldir; pwd; cd -`
 test -z "$basedir" && basedir=.
+usrdir=`cd $basedir/../../usr; pwd; cd -`
 
+bindir=$basedir/bin
+etcdir=$basedir/etc
 tmpdir=$basedir/tmp
 
 cd "$tmpdir"
 DIE=0
-
-# look at all other directories as seen from ${basedir}/tmp
-tmpdir=.
-bindir=../bin
-etcdir=../etc
 
 (autoheader --version) < /dev/null > /dev/null 2>&1 || {
     echo
@@ -76,12 +75,21 @@ echo "Generating configuration files for $package, please wait...."
 
 configure_ac=${etcdir}/configure.ac
 configure=${tmpdir}/configure
+aclocal_m4=${tmpdir}/aclocal.m4
 
-#echo "  aclocal $ACLOCAL_FLAGS"
-#aclocal $ACLOCAL_FLAGS
+# run aclocal in etc, as it's blind, only sees files in the current directory
+ACLOCAL_FLAGS="--output=${aclocal_m4}"
+echo "  aclocal $ACLOCAL_FLAGS"
+cd ${etcdir} && aclocal $ACLOCAL_FLAGS ; cd ${tmpdir}
 echo "  autoheader ${configure_ac}"
 autoheader ${configure_ac}
-echo "  autoconf -o ${configure} ${configure_ac}"
-autoconf -o ${configure} ${configure_ac}
+echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
+autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
+
+export CPPFLAGS="-I$usrdir/include"
+export LDFLAGS="-L$usrdir/lib"
+export PKG_CONFIG_PATH="$usrdir/lib/pkgconfig"
+export LD_LIBRARY_PATH="$usrdir/lib"
 
 ${configure} "$@" && echo
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,8 +40,8 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 
+#include "GtkLocalizedObject.h"
 #include "MasterPanelWindow.h"
-#include "LoginWindow.h"
 #include "GLiveSupport.h"
 
 
@@ -62,6 +62,26 @@ using namespace LiveSupport::GLiveSupport;
  *----------------------------------------------------------------------------*/
 const std::string LiveSupport :: GLiveSupport ::
                   GLiveSupport :: configElementNameStr = "gLiveSupport";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element for the list of supported languages
+ *----------------------------------------------------------------------------*/
+static const std::string supportedLanguagesElementName = "supportedLanguages";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element for a supported language.
+ *----------------------------------------------------------------------------*/
+static const std::string languageElementName = "language";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute for the locale id for a supported language
+ *----------------------------------------------------------------------------*/
+static const std::string localeAttrName = "locale";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute for the name for a supported language
+ *----------------------------------------------------------------------------*/
+static const std::string nameAttrName = "name";
 
 
 /* ===============================================  local function prototypes */
@@ -85,6 +105,13 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     }
 
     xmlpp::Node::NodeList   nodes;
+
+    // read the list of supported languages
+    nodes = element.get_children(supportedLanguagesElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no supportedLanguages element");
+    }
+    configSupportedLanguages(*((const xmlpp::Element*) *(nodes.begin())) );
 
     // configure the resource bundle
     nodes = element.get_children(LocalizedObject::getConfigElementName());
@@ -130,6 +157,43 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
 }
 
 
+/*------------------------------------------------------------------------------
+ *  Configure the list of supported languages
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: configSupportedLanguages(const xmlpp::Element & element)
+                                                throw (std::invalid_argument)
+{
+    xmlpp::Node::NodeList               nodes;
+    xmlpp::Node::NodeList::iterator     begin;
+    xmlpp::Node::NodeList::iterator     end;
+
+    supportedLanguages.reset(
+                         new std::map<std::string, Ptr<UnicodeString>::Ref>());
+
+    // read the list of supported languages
+    nodes = element.get_children(languageElementName);
+    begin = nodes.begin();
+    end   = nodes.end();
+
+    while (begin != end) {
+        xmlpp::Element    * elem = (xmlpp::Element *) *begin;
+        xmlpp::Attribute  * localeAttr = elem->get_attribute(localeAttrName);
+        xmlpp::Attribute  * nameAttr   = elem->get_attribute(nameAttrName);
+
+        std::string             locale = localeAttr->get_value().raw();
+        Ptr<Glib::ustring>::Ref uName(new Glib::ustring(nameAttr->get_value()));
+        Ptr<UnicodeString>::Ref name   = 
+                            GtkLocalizedObject::ustringToUnicodeString(uName);
+
+        supportedLanguages->insert(std::make_pair(locale, name));
+
+        begin++;
+    }
+}
+
+ 
 /*------------------------------------------------------------------------------
  *  Show the main window.
  *----------------------------------------------------------------------------*/

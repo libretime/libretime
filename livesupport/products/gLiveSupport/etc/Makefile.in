@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -54,7 +54,6 @@ USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_BIN_DIR     = ${USR_DIR}/bin
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
-LIBXMLPP_INCLUDE_DIR = ${USR_INCLUDE_DIR}/libxml++-1.0
 
 GENRB     = ${USR_BIN_DIR}/genrb
 GENRBOPTS = --destdir ${TMP_DIR} \
@@ -90,6 +89,9 @@ SCHEDULER_CLIENT_LIB_DIR     = ${SCHEDULER_CLIENT_DIR}/lib
 SCHEDULER_CLIENT_LIB         = livesupport_scheduler_client
 SCHEDULER_CLIENT_LIB_FILE = ${SCHEDULER_CLIENT_LIB_DIR}/lib${SCHEDULER_CLIENT_LIB}.a
 
+LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
+LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
+
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
 
@@ -117,10 +119,10 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${ICU_CFLAGS} \
+                             ${LIBXMLPP_CFLAGS} \
                              ${GTKMM_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
-                             -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${STORAGE_INCLUDE_DIR} \
@@ -128,6 +130,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${ICU_LIBS} \
+                     ${LIBXMLPP_LIBS} \
                      ${GTKMM_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
@@ -161,7 +164,7 @@ G_LIVESUPPORT_EXE_LIBS = -l${AUTHENTICATION_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
                          -lboost_date_time-gcc \
-                         -lxmlrpc++ -lssl -lxml++-1.0
+                         -lxmlrpc++ -lssl
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \
                    ${TMP_DIR}/TestRunner.o 

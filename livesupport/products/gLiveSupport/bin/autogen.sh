@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ aclocal_m4=${tmpdir}/aclocal.m4
 # run aclocal in etc, as it's blind, only sees files in the current directory
 ACLOCAL_FLAGS="--output=${aclocal_m4}"
 echo "  aclocal $ACLOCAL_FLAGS"
-cd ${etcdir} && aclocal $ACLOCAL_FLAGS && cd ${tmpdir}
+cd ${etcdir} && aclocal $ACLOCAL_FLAGS ; cd ${tmpdir}
 echo "  autoheader ${configure_ac}"
 autoheader ${configure_ac}
 echo "  autoconf -o ${configure} ${configure_ac}"

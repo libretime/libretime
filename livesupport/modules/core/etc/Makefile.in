@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.14 $
+#   Version  : $Revision: 1.15 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -57,7 +57,6 @@ USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_BIN_DIR     = ${USR_DIR}/bin
 USR_LIB_DIR     = ${USR_DIR}/lib
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
-LIBXMLPP_INCLUDE_DIR = ${USR_INCLUDE_DIR}/libxml++-1.0
 
 GENRB     = ${USR_BIN_DIR}/genrb
 GENRBOPTS = --destdir ${TMP_DIR} \
@@ -66,6 +65,9 @@ GENRBOPTS = --destdir ${TMP_DIR} \
             --strict
 
 VPATH    = ${SRC_DIR}
+
+LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
+LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
 # TODO: move ICU flag determination to configure script
 ICU_CFLAGS=
@@ -91,11 +93,15 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${ICU_CFLAGS} \
+                             ${LIBXMLPP_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
-                             -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
-LDFLAGS  = @LDFLAGS@ -pthread -L${USR_LIB_DIR} -L${LIB_DIR}
+LDFLAGS  = @LDFLAGS@ -pthread \
+                     ${ICU_LIBS} \
+                     ${LIBXMLPP_LIBS} \
+                     -L${USR_LIB_DIR} \
+                     -L${LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -125,7 +131,7 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_hu.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_jp.res
 
-TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} -lxml++-1.0 -lboost_date_time-gcc \
+TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} -lboost_date_time-gcc \
                    -lcppunit -ldl
 
 

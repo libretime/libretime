@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 #endif
 
 #include <string>
+#include <map>
 #include <boost/enable_shared_from_this.hpp>
 #include <unicode/resbund.h>
 
@@ -86,8 +87,8 @@ using namespace LiveSupport::Storage;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author $Author: maroy $
+ *  @version $Revision: 1.8 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -126,6 +127,24 @@ class GLiveSupport : public Configurable,
          *  The session id for the user.
          */
         Ptr<SessionId>::Ref         sessionId;
+
+        /**
+         *  The map of supported language.
+         */
+        Ptr<std::map<std::string, Ptr<UnicodeString>::Ref> >::Ref
+                                                    supportedLanguages;
+
+        /**
+         *  Read a supportedLanguages configuration element,
+         *  and fill the supportedLanguages map with its contents.
+         *
+         *  @param element a supportedLanguages element
+         *  @exception std::invalid_argument if the supplied XML element
+         *             is wrong
+         */
+        void
+        configSupportedLanguages(const xmlpp::Element    & element)
+                                                throw (std::invalid_argument);
 
 
     public:

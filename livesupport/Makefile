@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.21 $
+#   Version  : $Revision: 1.22 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ TOOLS_DIR  = ${BASE_DIR}/tools
 BOOST_DIR         = ${TOOLS_DIR}/boost
 BOOST_VERSION     = boost-1.31
 LIBXMLXX_DIR      = ${TOOLS_DIR}/libxml++
-LIBXMLXX_VERSION  = libxml++-1.0.4
+LIBXMLXX_VERSION  = libxml++-2.8.0
 CXXUNIT_DIR       = ${TOOLS_DIR}/cppunit
 CXXUNIT_VERSION   = cppunit-1.10.2
 LIBODBCXX_DIR     = ${TOOLS_DIR}/libodbc++
@@ -155,7 +155,6 @@ recompile: distclean modules_setup products_setup compile
 
 tools_setup:
 	${BOOST_DIR}/${BOOST_VERSION}/bin/install.sh
-	${LIBXMLXX_DIR}/${LIBXMLXX_VERSION}/bin/install.sh
 	${CXXUNIT_DIR}/${CXXUNIT_VERSION}/bin/install.sh
 	${LIBODBCXX_DIR}/${LIBODBCXX_VERSION}/bin/install.sh
 	${XMLRPCXX_DIR}/${XMLRPCXX_VERSION}/bin/install.sh
@@ -163,6 +162,7 @@ tools_setup:
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
 	${GTK_DIR}/${GTK_VERSION}/bin/install.sh
 	${GTKMM_DIR}/${GTKMM_VERSION}/bin/install.sh
+	${LIBXMLXX_DIR}/${LIBXMLXX_VERSION}/bin/install.sh
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 
 doxytag_setup:
