@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -197,7 +197,7 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
 /*------------------------------------------------------------------------------
  *  Create a new playlist.
  *----------------------------------------------------------------------------*/
-Ptr<Playlist>::Ref
+Ptr<UniqueId>::Ref
 TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw ()
 {
@@ -214,7 +214,7 @@ TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 
     playlistMap[playlistId->getId()] = playlist;
 
-    return getPlaylist(sessionId, playlistId); // return a copy of the playlist
+    return playlist->getId();
 }
 
 

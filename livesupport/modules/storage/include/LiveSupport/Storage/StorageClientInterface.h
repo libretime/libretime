@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class StorageClientInterface
 {
@@ -76,11 +76,11 @@ class StorageClientInterface
          *  savePlaylist(). 
          *
          *  @param sessionId the session ID from the authentication client
-         *  @return the newly created playlist.
+         *  @return the ID of the newly created playlist.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Playlist>::Ref
+        virtual Ptr<UniqueId>::Ref
         createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw (XmlRpcException)
                                                                         = 0;

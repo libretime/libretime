@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1180,7 +1180,7 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
 /*------------------------------------------------------------------------------
  *  Create a new playlist.
  *----------------------------------------------------------------------------*/
-Ptr<Playlist>::Ref
+Ptr<UniqueId>::Ref
 WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw (Core::XmlRpcException)
 {
@@ -1243,7 +1243,7 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     token.reset();
     playlist->setToken(token);
     
-    return playlist;
+    return playlist->getId();
 }
 
 

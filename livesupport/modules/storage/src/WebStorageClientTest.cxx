@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -200,14 +200,13 @@ WebStorageClientTest :: playlistTest(void)
 
 
     // test createPlaylist()
-    Ptr<Playlist>::Ref  playlist;
+    Ptr<UniqueId>::Ref  playlistIdxx;
     try{
-        playlist = wsc->createPlaylist(sessionId);
+        playlistIdxx = wsc->createPlaylist(sessionId);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(playlist);
-    Ptr<UniqueId>::Ref  playlistIdxx = playlist->getId();
+    CPPUNIT_ASSERT(playlistIdxx);
     
 
     // test existsPlaylist()
@@ -229,6 +228,7 @@ WebStorageClientTest :: playlistTest(void)
 
 
     // test editPlaylist()
+    Ptr<Playlist>::Ref  playlist;
     try {
         playlist = wsc->editPlaylist(sessionId, playlistIdxx);
     } catch (XmlRpcException &e) {
@@ -507,16 +507,16 @@ WebStorageClientTest :: simplePlaylistTest(void)
 
 
     // test createPlaylist()
-    Ptr<Playlist>::Ref  playlist;
+    Ptr<UniqueId>::Ref  playlistId;
     try{
-        playlist = wsc->createPlaylist(sessionId);
+        playlistId = wsc->createPlaylist(sessionId);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(playlist);
-    Ptr<UniqueId>::Ref  playlistId = playlist->getId();
+    CPPUNIT_ASSERT(playlistId);
     
     // test editPlaylist()
+    Ptr<Playlist>::Ref  playlist;
     try {
         playlist = wsc->editPlaylist(sessionId, playlistId);
     } catch (XmlRpcException &e) {

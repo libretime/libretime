@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -431,8 +431,7 @@ GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
     releaseEditedPlaylist();
 
     if (!playlistId.get()) {
-        editedPlaylist = storage->createPlaylist(sessionId);
-        playlistId     = editedPlaylist->getId();
+        playlistId     = storage->createPlaylist(sessionId);
     }
 
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);

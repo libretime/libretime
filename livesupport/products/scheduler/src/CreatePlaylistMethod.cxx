@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,9 +122,9 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
 
-    Ptr<Playlist>::Ref  playlist;
+    Ptr<UniqueId>::Ref  playlistId;
     try {
-        playlist = storage->createPlaylist(sessionId);
+        playlistId = storage->createPlaylist(sessionId);
     } catch (XmlRpcException &e) {
         std::string eMsg = "could not create playlist:\n";
         eMsg += e.what();
@@ -134,7 +134,7 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         return;
     }
 
-    Ptr<UniqueId>::Ref  playlistId = playlist->getId();
+    Ptr<Playlist>::Ref  playlist;
     try {
         playlist = storage->editPlaylist(sessionId, playlistId);
     } catch (XmlRpcException &e) {

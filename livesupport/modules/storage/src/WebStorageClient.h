@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -190,11 +190,11 @@ class WebStorageClient :
          *  savePlaylist(). 
          *
          *  @param sessionId the session ID from the authentication client
-         *  @return the newly created playlist.
+         *  @return the ID of the newly created playlist.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */
-        virtual Ptr<Playlist>::Ref
+        virtual Ptr<UniqueId>::Ref
         createPlaylist(Ptr<SessionId>::Ref sessionId)
                                                 throw (XmlRpcException);
 

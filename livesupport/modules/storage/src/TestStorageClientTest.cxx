@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -198,15 +198,15 @@ void
 TestStorageClientTest :: createPlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<Playlist>::Ref  playlist;
+    Ptr<UniqueId>::Ref  playlistId;
     try {
-        playlist = tsc->createPlaylist(dummySessionId);
+        playlistId = tsc->createPlaylist(dummySessionId);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
-        CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, playlist->getId()));
+        CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, playlistId));
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
