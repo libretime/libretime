@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,11 +88,12 @@ using namespace LiveSupport::Core;
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT authenticationClientFactory (webAuthentication) &gt;
+ *  &lt;!ELEMENT authenticationClientFactory (testAuthentication|
+ *                                         webAuthentication) &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see TestAuthenticationClient
  *  @see WebAuthenticationClient
  */
