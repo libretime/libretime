@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Thread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,11 +40,7 @@
 #include "configure.h"
 #endif
 
-#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#else
-#error need pthread.h
-#endif
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/RunnableInterface.h"
@@ -66,7 +62,7 @@ namespace Core {
  *  A generic thread executor class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see RunnableInterface
  */
 class Thread

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.13 $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -88,14 +88,14 @@ export LD_LIBRARY_PATH=${USR_LIB_DIR}
 #  	Configuration parameters
 #-------------------------------------------------------------------------------
 CPPFLAGS = @CPPFLAGS@
-CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
+CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${ICU_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
-LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${LIB_DIR}
+LDFLAGS  = @LDFLAGS@ -pthread -L${USR_LIB_DIR} -L${LIB_DIR}
 
 
 #-------------------------------------------------------------------------------

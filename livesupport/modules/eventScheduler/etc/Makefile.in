@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -80,14 +80,14 @@ DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 #  	Configuration parameters
 #-------------------------------------------------------------------------------
 CPPFLAGS = @CPPFLAGS@
-CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
+CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -Wall -Wno-long-long \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
-LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
+LDFLAGS  = @LDFLAGS@ -pthread -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
