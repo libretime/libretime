@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -158,7 +158,6 @@ Playlist :: configure(const xmlpp::Element    & element)
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
 
-    elementList.reset(new PlaylistElementListType);
     xmlpp::Node::NodeList  childNodes 
                            = element.get_children(elementListAttrName);
     xmlpp::Node::NodeList::iterator it = childNodes.begin();
@@ -212,7 +211,6 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
 
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
                                    relativeOffset, audioClip, fadeInfo));
-
     (*elementList)[*relativeOffset] = playlistElement;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class Playlist : public Configurable
 {
@@ -90,6 +90,11 @@ class Playlist : public Configurable
          *  The playling length of the playlist.
          */
         Ptr<time_duration>::Ref     playlength;
+
+        /**
+         *  The uri of the SMIL file generated from this playlist (if any).
+         */
+        Ptr<std::string>::Ref uri;
 
         /**
          *  Flag set if playlist is currently playing.
@@ -136,6 +141,7 @@ class Playlist : public Configurable
          */
         Playlist(void)                          throw ()
         {
+            elementList.reset(new PlaylistElementListType);
             this->isLockedForPlaying = false;
             this->isLockedForEditing = false;
         }
@@ -148,10 +154,14 @@ class Playlist : public Configurable
          *  @param playlength the playing length of the playlist.
          */
         Playlist(Ptr<UniqueId>::Ref         id,
-                 Ptr<time_duration>::Ref    playlength)     throw ()
+                 Ptr<time_duration>::Ref    playlength,
+                 Ptr<std::string>::Ref      uri = Ptr<std::string>::Ref())
+                                                throw ()
         {
             this->id         = id;
             this->playlength = playlength;
+            this->uri        = uri;
+            elementList.reset(new PlaylistElementListType);
             this->isLockedForPlaying = false;
             this->isLockedForEditing = false;
         }
@@ -209,6 +219,27 @@ class Playlist : public Configurable
         getPlaylength(void) const                throw ()
         {
             return playlength;
+        }
+
+        /**
+         *  Return the uri of the playlist.
+         *
+         *  @return the uri of the playlist.
+         */
+        Ptr<const std::string>::Ref
+        getUri(void) const                       throw ()
+        {
+            return uri;
+        }
+
+        /**
+         *  Set the uri of the playlist.
+         *
+         */
+        void
+        setUri(Ptr<std::string>::Ref uri)        throw ()
+        {
+            this->uri = uri;
         }
 
         /**

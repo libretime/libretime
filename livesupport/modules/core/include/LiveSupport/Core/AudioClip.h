@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace boost::posix_time;
  *  in a Playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class AudioClip : public Configurable
 {
@@ -115,7 +115,8 @@ class AudioClip : public Configurable
          */
         AudioClip(Ptr<UniqueId>::Ref         id,
                   Ptr<time_duration>::Ref    playlength,
-                  Ptr<string>::Ref           uri = Ptr<string>::Ref())     throw ()
+                  Ptr<string>::Ref           uri = Ptr<string>::Ref())
+                                                           throw ()
         {
             this->id         = id;
             this->playlength = playlength;
@@ -188,6 +189,16 @@ class AudioClip : public Configurable
             return uri;
         }
 
+        /**
+         *  Change the URI of this audio clip.  This is only used in testing.
+         *
+         *  @return the URI of this audio clip.
+         */
+        void
+        setUri(Ptr<string>::Ref uri)            throw ()
+        {
+            this->uri = uri;
+        }
 };
 
 
