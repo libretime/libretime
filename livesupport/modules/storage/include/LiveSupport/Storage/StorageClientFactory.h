@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,6 +76,7 @@ using namespace LiveSupport::Core;
  *          ...
  *      &lt;/testStorage&gt;
  *  &lt;/storageClientFactory&gt;
+ *  </code></pre>
  *
  *  For detais of the testStorage element, see the documentation for the
  *  TestStorageClient class.
@@ -87,7 +88,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see TestStorageClient
  */
 class StorageClientFactory :

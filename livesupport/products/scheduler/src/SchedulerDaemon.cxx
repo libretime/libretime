@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -163,6 +163,8 @@ SchedulerDaemon :: registerXmlRpcFunctions(
                                                     throw (std::logic_error)
 {
     xmlRpcServer->addMethod(uploadPlaylistMethod.get());
+    xmlRpcServer->addMethod(displayScheduleMethod.get());
+    xmlRpcServer->addMethod(displayPlaylistMethod.get());
 }
 
 

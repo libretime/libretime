@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/include/LiveSupport/Db/Conversion.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayPlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Db_Conversion_h
-#define LiveSupport_Db_Conversion_h
+#ifndef SchedulerDaemonDisplayPlaylistTest_h
+#define SchedulerDaemonDisplayPlaylistTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,20 +40,13 @@
 #include "configure.h"
 #endif
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <odbc++/types.h>
-
-#include "LiveSupport/Core/Ptr.h"
+#include <cppunit/extensions/HelperMacros.h>
 
 
 namespace LiveSupport {
-namespace Db {
-
-using namespace boost;
+namespace Scheduler {
 
 using namespace LiveSupport;
-using namespace LiveSupport::Core;
-
 
 /* ================================================================ constants */
 
@@ -64,41 +57,50 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A helper object holding static conversion functions, that are
- *  helpful when accessing databases.
+ *  Unit test to test the displayPlaylist XML-RPC call.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
+ *  @see SchedulerDaemon
  */
-class Conversion
+class SchedulerDaemonDisplayPlaylistTest : public CPPUNIT_NS::TestFixture
 {
-    private:
-        /**
-         *  The default constructor.
-         */
-        Conversion(void)                            throw ()
-        {
-        }
+    CPPUNIT_TEST_SUITE(SchedulerDaemonDisplayPlaylistTest);
+    CPPUNIT_TEST(simpleTest);
+    CPPUNIT_TEST(negativeTest);
+    CPPUNIT_TEST_SUITE_END();
 
+    protected:
+
+        /**
+         *  Simple smoke test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Simple negative test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        negativeTest(void)                  throw (CPPUNIT_NS::Exception);
 
     public:
+        
         /**
-         *  Convert a boost::ptime to a odbc::Timestamp.
-         *
-         *  @param ptime the boost ptime to convert.
-         *  @return an odbc::Timestamp, holding the same time.
+         *  Set up the environment for the test case.
          */
-        static Ptr<odbc::Timestamp>::Ref
-        ptimeToTimestamp(Ptr<const posix_time::ptime>::Ref   ptime)  throw ();
+        void
+        setUp(void)                                     throw ();
 
         /**
-         *  Convert an odbc::Timestamp to a  boost::ptime.
-         *
-         *  @param timestamp an odbc::Timestamp to convert.
-         *  @return a boost ptime, holding the same time.
+         *  Clean up the environment after the test case.
          */
-        static Ptr<posix_time::ptime>::Ref
-        timestampToPtime(Ptr<odbc::Timestamp>::Ref   timestamp)     throw ();
+        void
+        tearDown(void)                                  throw ();
 };
 
 
@@ -108,8 +110,8 @@ class Conversion
 /* ====================================================== function prototypes */
 
 
-} // namespace Db
+} // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // LiveSupport_Db_Conversion_h
+#endif // SchedulerDaemonDisplayPlaylistTest_h
 

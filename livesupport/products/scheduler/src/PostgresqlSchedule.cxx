@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,6 +95,19 @@ const std::string PostgresqlSchedule::isTimeframaAvailableStmt =
  *----------------------------------------------------------------------------*/
 const std::string PostgresqlSchedule::schedulePlaylistStmt =
     "INSERT INTO schedule(id, playlist, starts, ends) VALUES(?, ?, ?, ?)";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for querying scheduled entries for a time interval
+ *  The parameters for this call are: from, to
+ *  and returns the properties: id, playlist, starts, ends for all
+ *  schedule entries between from and to, ordered by starts.
+ *  TODO: the below query only lists entries starting inside [from:to[
+ *        but what about entries starting before, but flowing into [from:to[ ?
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::getScheduleEntriesStmt =
+    "SELECT id, playlist, starts, ends FROM schedule WHERE "
+    "(? <= starts) AND (starts < ?) "
+    "ORDER BY starts";
 
 
 /* ===============================================  local function prototypes */
@@ -224,12 +237,12 @@ PostgresqlSchedule :: schedulePlaylist(
                                                         schedulePlaylistStmt));
         id = UniqueId::generateId();
         pstmt->setInt(1, id->getId());
-        
+
         pstmt->setInt(2, playlist->getId()->getId());
-        
+ 
         timestamp = Conversion::ptimeToTimestamp(playtime);
         pstmt->setTimestamp(3, *timestamp);
-        
+
         ends.reset(new ptime((*playtime) + *(playlist->getPlaylength())));
         timestamp = Conversion::ptimeToTimestamp(ends);
         pstmt->setTimestamp(4, *timestamp);
@@ -247,5 +260,59 @@ PostgresqlSchedule :: schedulePlaylist(
     if (!result) {
         throw std::invalid_argument("couldn't insert into database");
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the scheduled entries for a given timepoint
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+PostgresqlSchedule :: getScheduleEntries(
+                                    Ptr<ptime>::Ref  fromTime,
+                                    Ptr<ptime>::Ref  toTime)
+                                                                throw ()
+{
+    Ptr<Connection>::Ref                                conn;
+    Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     result(
+                                    new std::vector<Ptr<ScheduleEntry>::Ref>());
+
+    try {
+        conn = cm->getConnection();
+        Ptr<Timestamp>::Ref         timestamp;
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                            getScheduleEntriesStmt));
+        timestamp = Conversion::ptimeToTimestamp(fromTime);
+        pstmt->setTimestamp(1, *timestamp);
+        timestamp = Conversion::ptimeToTimestamp(toTime);
+        pstmt->setTimestamp(2, *timestamp);
+
+        Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
+        while (rs->next()) {
+            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getInt(1)));
+            Ptr<UniqueId>::Ref      playlistId(new UniqueId(rs->getInt(2)));
+
+            *timestamp = rs->getTimestamp(3);
+            Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
+
+            *timestamp = rs->getTimestamp(4);
+            Ptr<ptime>::Ref endTime = Conversion::timestampToPtime(timestamp);
+
+            Ptr<ScheduleEntry>::Ref entry(new ScheduleEntry(id,
+                                                            playlistId,
+                                                            startTime,
+                                                            endTime));
+            result->push_back(entry);
+        }
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        // TODO: report error
+        return result;
+    }
+
+    return result;
 }
 

@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -48,7 +48,8 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "ScheduleFactory.h"
 #include "UploadPlaylistMethod.h"
-#include "UploadPlaylistMethodTest.h"
+#include "DisplayScheduleMethod.h"
+#include "DisplayScheduleMethodTest.h"
 
 
 using namespace LiveSupport::Db;
@@ -60,24 +61,24 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(UploadPlaylistMethodTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(DisplayScheduleMethodTest);
 
 /**
  *  The name of the configuration file for the storage client factory.
  */
-const std::string UploadPlaylistMethodTest::storageClientConfig =
+const std::string DisplayScheduleMethodTest::storageClientConfig =
                                                     "etc/storageClient.xml";
 
 /**
  *  The name of the configuration file for the connection manager factory.
  */
-const std::string UploadPlaylistMethodTest::connectionManagerConfig =
+const std::string DisplayScheduleMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
 
 /**
  *  The name of the configuration file for the schedule factory.
  */
-const std::string UploadPlaylistMethodTest::scheduleConfig =
+const std::string DisplayScheduleMethodTest::scheduleConfig =
                                             "etc/scheduleFactory.xml";
 
 
@@ -90,7 +91,7 @@ const std::string UploadPlaylistMethodTest::scheduleConfig =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: configure(
+DisplayScheduleMethodTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string           fileName)
                                                 throw (std::invalid_argument,
@@ -108,7 +109,7 @@ UploadPlaylistMethodTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: setUp(void)                         throw ()
+DisplayScheduleMethodTest :: setUp(void)                         throw ()
 {
     try {
         Ptr<StorageClientFactory>::Ref scf
@@ -124,6 +125,8 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
 
         schedule = sf->getSchedule();
         schedule->install();
+
+        insertEntries();
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
@@ -138,7 +141,7 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: tearDown(void)                      throw ()
+DisplayScheduleMethodTest :: tearDown(void)                      throw ()
 {
     schedule->uninstall();
 }
@@ -148,37 +151,43 @@ UploadPlaylistMethodTest :: tearDown(void)                      throw ()
  *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: firstTest(void)
+DisplayScheduleMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
+    Ptr<DisplayScheduleMethod>::Ref method(new DisplayScheduleMethod());
     XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
     // set up a structure for the parameters
-    parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
     time.tm_mday = 12;
     time.tm_hour = 18;
     time.tm_min  = 31;
-    time.tm_sec  = 1;
-    parameters["playtime"] = &time;
+    time.tm_sec  =  1;
+    parameters["from"] = &time;
+    time.tm_year = 2001;
+    time.tm_mon  = 11;
+    time.tm_mday = 12;
+    time.tm_hour = 19;
+    time.tm_min  = 31;
+    time.tm_sec  =  1;
+    parameters["to"] = &time;
     rootParameter[0] = parameters;
 
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
+    CPPUNIT_ASSERT(result.size() == 0);
 }
 
 
 /*------------------------------------------------------------------------------
- *  Try to upload overlapping playlists, and see them fail.
+ *  Insert some entries into the schedule
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: overlappingPlaylists(void)
-                                                throw (CPPUNIT_NS::Exception)
+DisplayScheduleMethodTest :: insertEntries(void)
+                                                            throw ()
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
     XmlRpc::XmlRpcValue             rootParameter;
@@ -186,61 +195,168 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
-    // load the first playlist, this will succeed
+    // insert a playlist for 2004-07-31, at 10 o'clock
     parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
     time.tm_hour = 10;
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
     rootParameter[0] = parameters;
-
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
 
-    // try to load the same one, but in an overlapping time region
-    // (we know that playlist with id 1 in 1 hour long)
+    // insert a playlist for 2004-07-31, at 12 o'clock
     parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 10;
-    time.tm_min  = 30;
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour = 12;
+    time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
     rootParameter[0] = parameters;
-
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
 
-    // try to load the same one, but now in good timing
+    // insert a playlist for 2004-07-31, at 14 o'clock
     parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 11;
-    time.tm_min  = 30;
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour = 14;
+    time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
     rootParameter[0] = parameters;
-
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
-
-    // try to load the same one, this time overlapping both previos instnaces
-    parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 10;
-    time.tm_min  = 45;
-    time.tm_sec  =  0;
-    parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
-
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
 }
+
+ 
+/*------------------------------------------------------------------------------
+ *  Look at some intervals and check against test data
+ *----------------------------------------------------------------------------*/
+void
+DisplayScheduleMethodTest :: intervalTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<DisplayScheduleMethod>::Ref method(new DisplayScheduleMethod());
+    XmlRpc::XmlRpcValue             rootParameter;
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             result;
+    struct tm                       time;
+
+    // check for the interval 2004-07-31 between 9 and 11 o'clock
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour =  9;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["from"] = &time;
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour = 11;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["to"] = &time;
+    rootParameter[0] = parameters;
+    result           = XmlRpc::XmlRpcValue();
+    method->execute(rootParameter, result);
+
+    // check the returned values
+    CPPUNIT_ASSERT(result.size() == 1);
+    CPPUNIT_ASSERT((int)(result[0]["playlistId"]) == 1);
+    time = result[0]["start"];
+    CPPUNIT_ASSERT(time.tm_year == 2004);
+    CPPUNIT_ASSERT(time.tm_mon == 7);
+    CPPUNIT_ASSERT(time.tm_mday == 31);
+    CPPUNIT_ASSERT(time.tm_hour == 10);
+    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_sec == 0);
+    time = result[0]["end"];
+    CPPUNIT_ASSERT(time.tm_year == 2004);
+    CPPUNIT_ASSERT(time.tm_mon == 7);
+    CPPUNIT_ASSERT(time.tm_mday == 31);
+    CPPUNIT_ASSERT(time.tm_hour == 11);
+    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_sec == 0);
+
+    // check for the interval 2004-07-31 between 9 and 13 o'clock
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour =  9;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["from"] = &time;
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour = 13;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["to"] = &time;
+    rootParameter[0] = parameters;
+    result           = XmlRpc::XmlRpcValue();
+    method->execute(rootParameter, result);
+
+    // check the returned values
+    CPPUNIT_ASSERT(result.size() == 2);
+    CPPUNIT_ASSERT((int)(result[0]["playlistId"]) == 1);
+    time = result[0]["start"];
+    CPPUNIT_ASSERT(time.tm_year == 2004);
+    CPPUNIT_ASSERT(time.tm_mon == 7);
+    CPPUNIT_ASSERT(time.tm_mday == 31);
+    CPPUNIT_ASSERT(time.tm_hour == 10);
+    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_sec == 0);
+    time = result[0]["end"];
+    CPPUNIT_ASSERT(time.tm_year == 2004);
+    CPPUNIT_ASSERT(time.tm_mon == 7);
+    CPPUNIT_ASSERT(time.tm_mday == 31);
+    CPPUNIT_ASSERT(time.tm_hour == 11);
+    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_sec == 0);
+
+    CPPUNIT_ASSERT((int)(result[1]["playlistId"]) == 1);
+    time = result[1]["start"];
+    CPPUNIT_ASSERT(time.tm_year == 2004);
+    CPPUNIT_ASSERT(time.tm_mon == 7);
+    CPPUNIT_ASSERT(time.tm_mday == 31);
+    CPPUNIT_ASSERT(time.tm_hour == 12);
+    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_sec == 0);
+    time = result[1]["end"];
+    CPPUNIT_ASSERT(time.tm_year == 2004);
+    CPPUNIT_ASSERT(time.tm_mon == 7);
+    CPPUNIT_ASSERT(time.tm_mday == 31);
+    CPPUNIT_ASSERT(time.tm_hour == 13);
+    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_sec == 0);
+
+    // check for the interval 2004-07-31 between 8 and 9 o'clock
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour =  8;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["from"] = &time;
+    time.tm_year = 2004;
+    time.tm_mon  =  7;
+    time.tm_mday = 31;
+    time.tm_hour =  9;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["to"] = &time;
+    rootParameter[0] = parameters;
+    result           = XmlRpc::XmlRpcValue();
+    method->execute(rootParameter, result);
+
+    // check the returned values
+    CPPUNIT_ASSERT(result.size() == 0);
+}
+
 

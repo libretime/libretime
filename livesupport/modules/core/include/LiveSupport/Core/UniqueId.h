@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/UniqueId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  A class representing globally unique identifiers.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class UniqueId
 {
@@ -91,6 +91,19 @@ class UniqueId
         UniqueId(const IdType    id)            throw ()
         {
             this->id = id;
+        }
+
+        /**
+         *  Compare this is with an other one.
+         *
+         *  @param otherId the other unqiue id to compare to.
+         *  @return true if this an otherId have the same ID value,
+         *          false otherwise.
+         */
+        bool
+        operator==(const UniqueId & otherId) const          throw ()
+        {
+            return this->id == otherId.id;
         }
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/Conversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,5 +69,22 @@ Conversion :: ptimeToTimestamp(Ptr<const posix_time::ptime>::Ref ptime)
                                                               hours.minutes(),
                                                               hours.seconds()));
     return timestamp;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert an odbc::Timestamp to a boost::ptime
+ *----------------------------------------------------------------------------*/
+Ptr<posix_time::ptime>::Ref
+Conversion :: timestampToPtime(Ptr<odbc::Timestamp>::Ref   timestamp)
+                                                                    throw()
+{
+    // don't convert through the time_t format, as probably because of
+    // timezone settings, boost::posix_time::from_time_t() ruins the
+    // actual value
+    std::string                     timeStr = timestamp->toString();
+    Ptr<posix_time::ptime>::Ref     ptime(new posix_time::ptime(
+                                        posix_time::time_from_string(timeStr)));
+    return ptime;
 }
 

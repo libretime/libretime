@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -46,9 +46,8 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
-#include "ScheduleFactory.h"
-#include "UploadPlaylistMethod.h"
-#include "UploadPlaylistMethodTest.h"
+#include "DisplayPlaylistMethod.h"
+#include "DisplayPlaylistMethodTest.h"
 
 
 using namespace LiveSupport::Db;
@@ -60,25 +59,19 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(UploadPlaylistMethodTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(DisplayPlaylistMethodTest);
 
 /**
  *  The name of the configuration file for the storage client factory.
  */
-const std::string UploadPlaylistMethodTest::storageClientConfig =
+const std::string DisplayPlaylistMethodTest::storageClientConfig =
                                                     "etc/storageClient.xml";
 
 /**
  *  The name of the configuration file for the connection manager factory.
  */
-const std::string UploadPlaylistMethodTest::connectionManagerConfig =
+const std::string DisplayPlaylistMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
-
-/**
- *  The name of the configuration file for the schedule factory.
- */
-const std::string UploadPlaylistMethodTest::scheduleConfig =
-                                            "etc/scheduleFactory.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -90,7 +83,7 @@ const std::string UploadPlaylistMethodTest::scheduleConfig =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: configure(
+DisplayPlaylistMethodTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string           fileName)
                                                 throw (std::invalid_argument,
@@ -108,7 +101,7 @@ UploadPlaylistMethodTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: setUp(void)                         throw ()
+DisplayPlaylistMethodTest :: setUp(void)                         throw ()
 {
     try {
         Ptr<StorageClientFactory>::Ref scf
@@ -119,11 +112,6 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
                                     = ConnectionManagerFactory::getInstance();
         configure(cmf, connectionManagerConfig);
 
-        Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-        configure(sf, scheduleConfig);
-
-        schedule = sf->getSchedule();
-        schedule->install();
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
@@ -138,9 +126,8 @@ UploadPlaylistMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: tearDown(void)                      throw ()
+DisplayPlaylistMethodTest :: tearDown(void)                      throw ()
 {
-    schedule->uninstall();
 }
 
 
@@ -148,99 +135,41 @@ UploadPlaylistMethodTest :: tearDown(void)                      throw ()
  *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: firstTest(void)
+DisplayPlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
+    Ptr<DisplayPlaylistMethod>::Ref method(new DisplayPlaylistMethod());
     XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
-    struct tm                       time;
 
     // set up a structure for the parameters
     parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 18;
-    time.tm_min  = 31;
-    time.tm_sec  = 1;
-    parameters["playtime"] = &time;
     rootParameter[0] = parameters;
 
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
+    CPPUNIT_ASSERT(((int) result["id"]) == 1);
+    CPPUNIT_ASSERT(((int) result["playlength"]) == (60 * 60));
 }
 
 
 /*------------------------------------------------------------------------------
- *  Try to upload overlapping playlists, and see them fail.
+ *  A very simple negative test
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethodTest :: overlappingPlaylists(void)
+DisplayPlaylistMethodTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
+    Ptr<DisplayPlaylistMethod>::Ref method(new DisplayPlaylistMethod());
     XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
-    struct tm                       time;
 
-    // load the first playlist, this will succeed
-    parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 10;
-    time.tm_min  =  0;
-    time.tm_sec  =  0;
-    parameters["playtime"] = &time;
+    // set up a structure for the parameters
+    parameters["playlistId"] = 9999;
     rootParameter[0] = parameters;
 
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
-
-    // try to load the same one, but in an overlapping time region
-    // (we know that playlist with id 1 in 1 hour long)
-    parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 10;
-    time.tm_min  = 30;
-    time.tm_sec  =  0;
-    parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
-
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
-
-    // try to load the same one, but now in good timing
-    parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 11;
-    time.tm_min  = 30;
-    time.tm_sec  =  0;
-    parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
-
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
-
-    // try to load the same one, this time overlapping both previos instnaces
-    parameters["playlistId"] = 1;
-    time.tm_year = 2001;
-    time.tm_mon  = 11;
-    time.tm_mday = 12;
-    time.tm_hour = 10;
-    time.tm_min  = 45;
-    time.tm_sec  =  0;
-    parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
-
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
+    CPPUNIT_ASSERT(((bool)result) == false);
 }
 

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef PostgresqlScheduleTest_h
-#define PostgresqlScheduleTest_h
+#ifndef DisplayScheduleMethodTest_h
+#define DisplayScheduleMethodTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -42,14 +42,11 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Db/ConnectionManagerInterface.h"
-
 
 namespace LiveSupport {
 namespace Scheduler {
 
 using namespace LiveSupport;
-using namespace LiveSupport::Db;
 using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
@@ -61,36 +58,66 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the PostgresqlSchedule class.
+ *  Unit test for the DisplayScheduleMethod class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
- *  @see PostgresqlSchedule
+ *  @version $Revision: 1.1 $
+ *  @see DisplayScheduleMethod
  */
-class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
+class DisplayScheduleMethodTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(PostgresqlScheduleTest);
+    CPPUNIT_TEST_SUITE(DisplayScheduleMethodTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(simpleScheduleTest);
-    CPPUNIT_TEST(scheduleAndQueryTest);
-    CPPUNIT_TEST(getScheduleEntriesTest);
+    CPPUNIT_TEST(intervalTest);
     CPPUNIT_TEST_SUITE_END();
 
-    private:
         /**
-         *  The connection manager used for testing.
+         *  The name of the configuration file for the storage client factory.
          */
-        Ptr<ConnectionManagerInterface>::Ref    cm;
+        static const std::string storageClientConfig;
 
         /**
-         *  The schedule used for testing.
+         *  The name of the configuration file for the connection manager
+         *  factory.
          */
-        Ptr<PostgresqlSchedule>::Ref                    schedule;
+        static const std::string connectionManagerConfig;
+
+        /**
+         *  The name of the configuration file for the schedule factory.
+         */
+        static const std::string scheduleConfig;
+
+        /**
+         *  The schedule used during the test.
+         */
+        Ptr<ScheduleInterface>::Ref     schedule;
+
+        /**
+         *  Configure a configurable with an XML file.
+         *
+         *  @param configurable configure this
+         *  @param fileName the name of the XML file to configure with.
+         *  @exception std::invalid_argument on configuration errors.
+         *  @exception xmlpp::exception on XML parsing errors.
+         */
+        void
+        configure(Ptr<Configurable>::Ref    configurable,
+                  std::string               fileName)
+                                                throw (std::invalid_argument,
+                                                       xmlpp::exception);
+
+
+        /**
+         *  Insert some entries into the schedule to provide test data.
+         */
+        void
+        insertEntries(void)                                 throw ();
+
 
     protected:
 
         /**
-         *  Test for an available timeframe in an empty schedule database.
+         *  A simple test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
@@ -98,30 +125,12 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Schedule a single playlist.
+         *  Look at some intervals, and check them against the test data.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        simpleScheduleTest(void)                throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Schedule a single playlist, and then query for available timeframes
-         *  around it.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        scheduleAndQueryTest(void)              throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Schedule some playlists, then get the list of scheduled playlists
-         *  for different time intervals.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        getScheduleEntriesTest(void)            throw (CPPUNIT_NS::Exception);
+        intervalTest(void)                      throw (CPPUNIT_NS::Exception);
 
     public:
         
@@ -148,5 +157,5 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // PostgresqlScheduleTest_h
+#endif // DisplayScheduleMethodTest_h
 

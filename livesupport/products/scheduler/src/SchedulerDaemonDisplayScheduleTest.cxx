@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonUploadTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -45,7 +45,7 @@
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
-#include "SchedulerDaemonUploadTest.h"
+#include "SchedulerDaemonDisplayScheduleTest.h"
 
 
 using namespace XmlRpc;
@@ -56,7 +56,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonUploadTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonDisplayScheduleTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.
@@ -73,7 +73,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: setUp(void)                        throw ()
+SchedulerDaemonDisplayScheduleTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -102,7 +102,7 @@ SchedulerDaemonUploadTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: tearDown(void)                     throw ()
+SchedulerDaemonDisplayScheduleTest :: tearDown(void)                     throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -112,10 +112,10 @@ SchedulerDaemonUploadTest :: tearDown(void)                     throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test a simple upload.
+ *  Test a simple query, resulting in an empty result set.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonUploadTest :: simpleTest(void)
+SchedulerDaemonDisplayScheduleTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcValue                 parameters;
@@ -124,17 +124,25 @@ SchedulerDaemonUploadTest :: simpleTest(void)
 
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    // try to schedule playlist #1 for the time below
-    parameters["playlistId"] = 1;
-    time.tm_year = 2001;
+    // list the schedules for an interval (as the database is empty,
+    // it's going to return an empty result set)
+    time.tm_year = 2004;
     time.tm_mon  = 11;
     time.tm_mday = 12;
     time.tm_hour = 10;
     time.tm_min  =  0;
     time.tm_sec  =  0;
-    parameters["playtime"] = &time;
+    parameters["from"] = &time;
+    time.tm_year = 2004;
+    time.tm_mon  = 11;
+    time.tm_mday = 12;
+    time.tm_hour = 11;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["to"] = &time;
 
-    xmlRpcClient.execute("uploadPlaylist", parameters, result);
-    CPPUNIT_ASSERT(result);
+    xmlRpcClient.execute("displaySchedule", parameters, result);
+    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(result.size() == 0);
 }
 

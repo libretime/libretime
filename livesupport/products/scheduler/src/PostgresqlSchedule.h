@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class PostgresqlSchedule : public Configurable,
                            public ScheduleInterface
@@ -111,6 +111,11 @@ class PostgresqlSchedule : public Configurable,
          *  The SQL statement for scheduling a playlist.
          */
         static const std::string    schedulePlaylistStmt;
+
+        /**
+         *  The SQL statement for getting the schedules for a time interval
+         */
+        static const std::string    getScheduleEntriesStmt;
 
         /**
          *  The database connection manager to use for connecting the
@@ -218,6 +223,20 @@ class PostgresqlSchedule : public Configurable,
         schedulePlaylist(Ptr<Playlist>::Ref     playlist,
                          Ptr<ptime>::Ref        playtime)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Return the list of scheduled entries for a specified time interval.
+         *
+         *  @param fromTime the start of the time of the interval queried,
+         *          inclusive
+         *  @param toTime to end of the time of the interval queried,
+         *          non-inclusive
+         *  @return a vector of the scheduled entries for the time region.
+         */
+        virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        getScheduleEntries(Ptr<ptime>::Ref  fromTime,
+                           Ptr<ptime>::Ref  toTime)
+                                                            throw ();
 };
 
 

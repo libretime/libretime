@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,10 +58,10 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the UploadPlaylistMethod class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see UploadPlaylistMethod
  */
 class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef UploadPlaylistMethod_h
-#define UploadPlaylistMethod_h
+#ifndef DisplayScheduleMethod_h
+#define DisplayScheduleMethod_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -42,16 +42,19 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/UniqueId.h"
+#include "ScheduleEntry.h"
 
 
 namespace LiveSupport {
 namespace Scheduler {
+
+using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
@@ -65,22 +68,34 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An XML-RPC method object to accept a playlist for upload,
- *  and schedule it in the scheduler.
+ *  An XML-RPC method object to return the schedule for a specified
+ *  time interval.
  *
- *  The name of the method when called through XML-RPC is "uploadPlaylist".
+ *  The name of the method when called through XML-RPC is "displaySchedule".
  *  The expected parameter is an XML-RPC structure, with the following
- *  members:
+ *  member:
  *  <ul>
- *      <li>playlistId - int, the id of the playlist to upload</li>
- *      <li>playtime - the time when the playlist should be scheduled,
- *                     an ISO 8601 DateTime field</li>
+ *      <li>from - datetime - the start of the interval to list schedule from,
+ *          inclusive.</li>
+ *      <li>to  - datetime - the end of the interval to list schedule from,
+ *          non-inclusive.</li>
+ *  </ul>
+ *
+ *  The XML-RPC function returns an XML-RPC array, containing a structure
+ *  for each scheduled item in the interval. An array of size 0 means there
+ *  are not scheduled entries. Each structure is as follows:
+ *  <ul>
+ *      <li>id - int - the id of the scheduled entry</li>
+ *      <li>playlistId - int - the id of the playlist associated with the entry
+ *      </li>
+ *      <li>start - datetime - the start of the scheduled item</li>
+ *      <li>end - datetime - the end of the scheduled item</li>
  *  </ul>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.1 $
  */
-class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
+class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
     private:
         /**
@@ -90,47 +105,71 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         static const std::string        methodName;
 
         /**
-         *  The name of the playlist id member in the XML-RPC parameter
+         *  The name of the from member in the XML-RPC parameter
          *  structure.
          */
-        static const std::string        playlistIdName;
+        static const std::string        fromName;
 
         /**
-         *  The name of the playtime member in the XML-RPC parameter
+         *  The name of the to member in the XML-RPC parameter
          *  structure.
          */
-        static const std::string        playtimeName;
+        static const std::string        toName;
 
         /**
-         *  Extract the playlist id from the XML-RPC parameters.
+         *  Extract the from time parameter from the XML-RPC parameters.
          *
          *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return a UniqueId that was found in the XML-RPC parameter.
-         *  @exception std::invalid_argument if there was no UniqueId
-         *             in xmlRpcValue
-         */
-        Ptr<UniqueId>::Ref
-        extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Extract the playtime from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the playing time, as stored in the XML-RPC parameter
-         *  @exception std::invalid_argument if there was no playtime
+         *  @return the time value for the from parameter
+         *  @exception std::invalid_argument if there was no from parameter
          *             in xmlRpcValue
          */
         Ptr<boost::posix_time::ptime>::Ref
-        extractPlayschedule(XmlRpc::XmlRpcValue & xmlRpcValue)
+        extractFrom(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument);
 
+        /**
+         *  Extract the to parameter from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the time value for the to parameter
+         *  @exception std::invalid_argument if there was no to parameter
+         *             in xmlRpcValue
+         */
+        Ptr<boost::posix_time::ptime>::Ref
+        extractTo(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Convert a boost::posix_time::ptime to an XmlRpcValue
+         *
+         *  @param ptime the ptime to convert
+         *  @param xmlRpcValue the output parameter holding the value of
+         *         the conversion.
+         */
+        static void
+        ptimeToXmlRpcValue(Ptr<const ptime>::Ref   ptime,
+                           XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                                    throw ();
+
+        /**
+         *  Convert a vector of ScheduleEntries to an XML-RPC return value.
+         *
+         *  @param scheduleEntries a list of ScheduleEntries.
+         *  @param returnValue the output parameter holding an XML-RPC
+         *         representation of the suppied schedule entires.
+         */
+        void
+        scheduleEntriesToXmlRpcValue(
+                Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref scheduleEntries,
+                XmlRpc::XmlRpcValue                           & returnValue)
+                                                                    throw ();
 
     public:
         /**
          *  A default constructor, for testing purposes.
          */
-        UploadPlaylistMethod(void)                      throw ()
+        DisplayScheduleMethod(void)                                 throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -140,12 +179,12 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          *
          *  @param xmlRpcServer the XML-RPC server to register with.
          */
-        UploadPlaylistMethod(
+        DisplayScheduleMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
                                                                     throw ();
 
         /**
-         *  Execute the upload playlist command on the Scheduler daemon.
+         *  Execute the display schedule command on the Scheduler daemon.
          *
          *  @param parameters XML-RPC function call parameters
          *  @param returnValue the return value of the call (out parameter)
@@ -165,5 +204,5 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // UploadPlaylistMethod_h
+#endif // DisplayScheduleMethod_h
 

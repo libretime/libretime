@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Playlist.h"
+#include "ScheduleEntry.h"
 
 
 namespace LiveSupport {
@@ -69,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ScheduleInterface : virtual public Installable
 {
@@ -99,6 +100,21 @@ class ScheduleInterface : virtual public Installable
                          Ptr<ptime>::Ref        playtime)
                                                 throw (std::invalid_argument)
                                                                         = 0;
+
+        /**
+         *  Return the list of scheduled entries for a specified time interval.
+         *
+         *  @param fromTime the start of the time of the interval queried,
+         *          inclusive
+         *  @param toTime to end of the time of the interval queried,
+         *          non-inclusive
+         *  @return a vector of the scheduled entries for the time region.
+         */
+        virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        getScheduleEntries(Ptr<ptime>::Ref  fromTime,
+                           Ptr<ptime>::Ref  toTime)
+                                                            throw ()
+                                                                    = 0;
 };
 
 
