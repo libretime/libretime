@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ class StoredFile{
             : "gunid=x'$gunid'::bigint"
         );
         $row = $gb->dbc->getRow("
-            SELECT id, to_hex(gunid)as gunid, mime, name
+            SELECT id, to_hex(gunid)as gunid, mime, name, ftype
             FROM {$gb->filesTable} WHERE $cond
         ");
         if(PEAR::isError($row)) return $row;
@@ -177,6 +177,7 @@ class StoredFile{
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id   = $row['id'];
+        $ac->md->setFormat($row['ftype']);
         return $ac;
     }
 

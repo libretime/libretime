@@ -23,14 +23,12 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
 define('DEBUG', FALSE);
 #define('DEBUG', TRUE);
-define('VALIDATE', FALSE);
-#define('VALIDATE', TRUE);
 define('MODIFY_LAST_MATCH', TRUE);
 
 require_once "XML/Util.php";
@@ -56,6 +54,7 @@ class MetaData{
      */
     function MetaData(&$gb, $gunid, $resDir)
     {
+        $this->config     =& $gb->config;
         $this->dbc        =& $gb->dbc;
         $this->mdataTable = $gb->mdataTable;
         $this->gunid      = $gunid;
@@ -83,7 +82,8 @@ class MetaData{
         if($this->exists) return FALSE;
         $tree =& $this->parse($mdata, $loc);
         if(PEAR::isError($tree)) return $tree;
-        $res = $this->validate($tree, $format);
+        $this->format = $format;
+        $res = $this->validate($tree);
         if(PEAR::isError($res)) return $res;
         $res = $this->storeDoc($tree);
         if(PEAR::isError($res)) return $res;
@@ -215,6 +215,25 @@ class MetaData{
      */
     function setMetadataEl($mid, $value=NULL)
     {
+        $info = $this->dbc->getRow("
+            SELECT parmd.predns as parns, parmd.predicate as parname,
+                md.predxml, md.predns as chns, md.predicate as chname
+            FROM {$this->mdataTable} parmd
+            INNER JOIN {$this->mdataTable} md
+                ON parmd.id=md.subject AND md.subjns='_I'
+            WHERE md.id=$mid
+        ");
+        if(PEAR::isError($info)) return $info;
+        if(is_null($info)){
+            return PEAR::raiseError(
+                "MetaData::setMetadataEl: parent container not found"
+            );
+        }
+        extract($info);
+        $parname = ($parns ? "$parns:" : '').$parname;
+        $category = ($chns ? "$chns:" : '').$chname;
+        $r = $this->validateOneValue($parname, $category, $predxml, $value);
+        if(PEAR::isError($r)) return $r;
         if(!is_null($value)){
             $sql = "
                 UPDATE {$this->mdataTable}
@@ -240,17 +259,22 @@ class MetaData{
      */
     function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
     {
-        $cnt = $this->dbc->getOne("
-            SELECT count(*) FROM {$this->mdataTable}
+        $category = strtolower($category);
+        $parent = $this->dbc->getRow("
+            SELECT predns, predicate, predxml FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint AND id=$parid
         ");
-        if(PEAR::isError($cnt)) return $cnt;
-        if($cnt < 1){
+        if(PEAR::isError($parent)) return $parent;
+        if(is_null($parent)){
             return PEAR::raiseError(
                 "MetaData::insertMetadataEl: container not found"
             );
         }
-        $a     = XML_Util::splitQualifiedName(strtolower($category));
+        $parNs = ($parent['predns'] ? "{$parent['predns']}:" : '');
+        $parName = $parNs.$parent['predicate'];
+        $r = $this->validateOneValue($parName, $category, $predxml, $value);
+        if(PEAR::isError($r)) return $r;
+        $a     = XML_Util::splitQualifiedName($category);
         if(PEAR::isError($a)) return $a;
         $catNs = $a['namespace'];
         $cat   = $a['localPart'];
@@ -397,6 +421,14 @@ class MetaData{
     }
     
     /**
+     *  Set the metadata format to the object instance
+     */
+    function setFormat($format=NULL)
+    {
+        $this->format = $format;
+    }
+    
+    /**
      *  Check if there are any file's metadata in database
      *
      *  @param gunid string, global unique id
@@ -458,20 +490,34 @@ class MetaData{
      *  Validate parsed metadata
      *
      *  @param tree array, parsed tree
-     *  @param format string, metadata format for validation
-     *      ('audioclip' | 'playlist' | 'webstream' | NULL)
-     *      (NULL = no validation)
      *  @return true or PEAR::error
      */
-    function validate(&$tree, $format=NULL)
+    function validate(&$tree)
     {
-        //echo"<pre>";var_dump($tree);exit;
-        if(VALIDATE && !is_null($format)){
+        if($this->config['validate'] && !is_null($this->format)){
             require_once"Validator.php";
-            $val =& new Validator($format, $this->gunid);
+            $val =& new Validator($this->format, $this->gunid);
             if(PEAR::isError($val)) return $val;
             $res = $val->validate($tree);
             if(PEAR::isError($res)) return $res;
+        }
+        return TRUE;
+    }
+    
+    /**
+     *  Validate one metadata value (on insert/update)
+     *
+     *  @param
+     *  @return true or PEAR::error
+     */
+    function validateOneValue($parName, $category, $predxml, $value)
+    {
+        if($this->config['validate'] && !is_null($this->format)){
+            require_once"Validator.php";
+            $val =& new Validator($this->format, $this->gunid);
+            if(PEAR::isError($val)) return $val;
+            $r = $val->validateOneValue($parName, $category, $predxml, $value);
+            if(PEAR::isError($r)) return $r;
         }
         return TRUE;
     }

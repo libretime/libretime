@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,15 +89,24 @@ class Playlist extends StoredFile{
      */
     function getPlInfo()
     {
+        $parid = $this->getContainer('playlist');
+        if(PEAR::isError($parid)){ return $parid; }
         // get playlist length and record id:
-        $r = $this->md->getMetadataEl('dcterms:extent');
+        $r = $this->md->getMetadataEl('playlength', $parid);
         if(PEAR::isError($r)){ return $r; }
         if(isset($r[0])){
             $plLen = $r[0]['value'];
             $plLenMid = $r[0]['mid'];
         }else{
-            $plLen = '00:00:00.000000';
-            $plLenMid = NULL;
+            $r = $this->md->getMetadataEl('dcterms:extent');
+            if(PEAR::isError($r)){ return $r; }
+            if(isset($r[0])){
+                $plLen = $r[0]['value'];
+                $plLenMid = $r[0]['mid'];
+            }else{
+                $plLen = '00:00:00.000000';
+                $plLenMid = NULL;
+            }
         }
         // get main playlist container
         $parid = $this->getContainer('playlist');
@@ -277,7 +286,7 @@ class Playlist extends StoredFile{
         $offset = $plLen;
         $plElInfo = $this->insertPlaylistElement($parid, $offset,
             $acGunid, $acLen, $acTit, $fadeIn, $fadeOut);
-        if(PEAR::isError($plElInfo)){ return $plElnfo; }
+        if(PEAR::isError($plElInfo)){ return $plElInfo; }
         extract($plElInfo); // 'plElId', 'plElGunid', 'fadeInId', 'fadeOutId'
 
         /* commented - maybe useless (C++ part doesn't do it)

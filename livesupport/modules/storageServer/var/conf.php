@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,17 +40,22 @@
  *   <dt>dsn<dd> datasource setting
  *   <dt>tblNamePrefix <dd>prefix for table names in the database
  *   <dt>authCookieName <dd>secret token cookie name
+ *   <dt>StationPrefsGr <dd>name of station preferences group
+ *   <dt>AllGr <dd>name of 'all users' group
  *   <dt>storageDir <dd>main directory for storing binary media files
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
  *   <dt>isArchive <dd>local/central flag
+ *   <dt>validate <dd>enable/disable validator
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
  *   <dt>storageUrlHost, storageUrlPort<dd>host and port of storageServer
  *   <dt>archiveUrlPath<dd>path-URL-part of archiveServer base dir
  *   <dt>archiveXMLRPC<dd>XMLRPC server script address relative to archiveUrlPath
  *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
+ *   <dt>archiveAccountLogin, archiveAccountPass <dd>account info
+ *           for login to archive
  *  </dl>
  */
 $config = array(
@@ -71,6 +76,7 @@ $config = array(
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
     'isArchive'     =>  FALSE,
+    'validate'      =>  TRUE,
 
     /* ==================================================== URL configuration */
     'storageUrlPath'        => '/livesupportStorageServer',
