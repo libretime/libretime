@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -375,7 +375,12 @@ SchedulerDaemon :: startup (void)                           throw ()
         std::cerr << "authentication problem: " << e.what() << std::endl;
     }
 
-    audioPlayer->initialize();
+    try {
+        audioPlayer->initialize();
+    } catch (std::exception &e) {
+        // TODO: mark error
+        std::cerr << "Helix initialization problem: " << e.what() << std::endl;
+    }
     eventScheduler->start();
     XmlRpcDaemon::startup();
 }
