@@ -133,7 +133,7 @@ class uiScheduler extends uiCalendar
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
             );
         }
-        print_r($items);
+        #print_r($items);
         return $items;
     }
 
@@ -149,7 +149,7 @@ class uiScheduler extends uiCalendar
             $arr[$key]['pos']       = $this->_datetime2timestamp($val['start']);
             $arr[$key]['span']      = date('H', $this->_datetime2timestamp($val['end'])) - date('H', $this->_datetime2timestamp($val['start'])) +1;
         }
-        print_r($arr);
+        #print_r($arr);
         return $arr;
     }
 
