@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlPerms.php,v 1.1 2004/09/21 00:43:22 tomas Exp $
+// $Id: gbHtmlPerms.php,v 1.2 2004/09/29 01:37:40 tomas Exp $
 require_once"gbHtml_h.php";
 require_once"gbHtmlTestAuth.php";
 
@@ -29,7 +29,7 @@ $tpldata['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
 // template follows:
 ?>
 <html><head>
-<title>Storage - permission editor</title>
+<title>Archive - permission editor</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="default.css">
 <style type="text/css">

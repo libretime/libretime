@@ -23,18 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/Archive.php,v $
 
 ------------------------------------------------------------------------------*/
 require_once "../../../storageServer/var/LocStor.php";
-
-$config['archiveUrlPath'] = '/livesupport/modules/archiveServer/var';
-$config['archiveXMLRPC'] = 'xmlrpc/xrArchive.php';
-$config['archiveUrlHost'] = 'localhost';
-$config['archiveUrlPort'] = 80;
-$config['archiveAccountLogin'] = 'root';
-$config['archiveAccountPass']  = 'q';
 
 /**
  *  Extension to StorageServer to act as ArchiveServer
@@ -42,111 +35,183 @@ $config['archiveAccountPass']  = 'q';
 class Archive extends LocStor{
 
     /**
-     *  Open download 
+     *  Constructor
      */
-    function downloadOpen($sessid, $gunid)
+    function Archive(&$dbc, $config)
     {
-        // access
-        $lnk = $this->accessRawAudioData($sessid, $gunid);
-        if(PEAR::isError($lnk)) return $lnk;
-        // return tmpurl, fname, md5h
-    	$url = $this->_lnk2url($lnk);
-        $md5h = $this->_md5sum($lnk);
-        return array('url'=>$url, 'md5h'=>$md5h, 'fname'=>basename($lnk));
+        parent::LocStor(&$dbc, $config);
+        $this->transDir  = $config['transDir'];
     }
-
-
+    
+    /* ======================================================= upload methods */
+    
     /**
-     *  Close download
+     *  Open file upload
+     *
+     *  @param sessid string - session id
+     *  @param trid string - transport id
+     *  @param type string - media|metadata|search
+     *  @return array(url string) or error
      */
-    function downloadClose($sessid, $url)
+    function uploadOpen($sessid, $trid, $type)
     {
-    	// release
-    	$lnk = $this->_url2lnk($url);
-    	$res = $this->releaseRawAudioData($sessid, $lnk);
-        return $res;
-    }
-
-
-    /**
-     *  Open upload
-     */
-    function uploadOpen($sessid, $gunid)
-    {
-        $fname = "{$this->storageDir}/buffer/$gunid";
-        if(!$fp = fopen($fname, 'w')) return PEAR::raiseError(
+        $file = "{$this->transDir}/$trid";
+        if(!$fp = fopen($file, 'w')) return PEAR::raiseError(
             "Archive::uploadOpen: unable to create blank file"
         );
         fclose($fp);
-        $res = $this->storeAudioClip($sessid, $gunid, $fname, '');
-        if(PEAR::isError($res)) return $res;
-        $lnk = $this->accessRawAudioData($sessid, $gunid);
-        if(PEAR::isError($lnk)) return $lnk;
-    	$url = $this->_lnk2url($lnk);
+        $host = $this->config['archiveUrlHost'];
+        $port = $this->config['archiveUrlPort'];
+        $path = $this->config['archiveUrlPath'];
+        $url = "http://$host:$port$path/trans/".basename($file);
         return array('url'=>$url);
     }
 
-
     /**
-     *  Abort upload
-     */
-    function uploadAbort($sessid, $url)
-    {
-    	$lnk = $this->_url2lnk($url);
-    	$res = $this->releaseRawAudioData($sessid, $lnk);
-    	return $res;
-    }
-
-
-    /**
-     *  Check upload
+     *  Check uploaded file
+     *
+     *  @param sessid string - session id
+     *  @param url string
+     *  @return array(md5h string, size int, url string)
      */
     function uploadCheck($sessid, $url)
     {
-    	$lnk = $this->_url2lnk($url);
-        $md5h = $this->_md5sum($lnk);
-        $size = filesize($lnk);
+        $file = "{$this->transDir}/".basename($url);
+        $md5h = $this->_md5sum($file);
+        $size = filesize($file);
         return array('md5h'=>$md5h, 'size'=>$size, 'url'=>$url);
     }
 
 
     /**
-     *  Close upload
+     *  Close file upload
+     *
+     *  @param sessid string - session id
+     *  @param url string
+     *  @param type string - media|metadata|search
+     *  @param gunid string - global unique id
+     *  @return boolean or error
      */
-    function uploadClose($sessid, $url, $type='file')
+    function uploadClose($sessid, $url, $type, $gunid)
+    {
+        $file = "{$this->transDir}/".basename($url);
+        $res = $this->processUploaded($sessid, $file, $type, $gunid);
+        return $res;
+    }
+
+    /**
+     *  Process uploaded file - insert to the storage
+     *
+     *  @param sessid string - session id
+     *  @param file string - absolute local pathname
+     *  @param type string - media|metadata|search
+     *  @param gunid string - global unique id
+     *  @return boolean or error
+     */
+    function processUploaded($sessid, $file, $type, $gunid='X')
     {
         switch($type){
-            default: // case"file":
-                	// release
-                	$lnk = $this->_url2lnk($url);
-                	$res = $this->releaseRawAudioData($sessid, $lnk);
-                    return $res;
+            case 'media':
+                if(!file_exists($file)) break;
+                $res = $this->storeAudioClip($sessid, $gunid,
+                    $file, '');
+                if(PEAR::isError($res)) return $res;
+                @unlink($file);
                 break;
-            case"search":
-                    // localSearch
-                    // return results
+            case 'metadata':
+            case 'mdata':
+                if(!file_exists($file)) break;
+                $res = $this->updateAudioClipMetadata($sessid, $gunid,
+                    $file);
+                if(PEAR::isError($res)){
+                    // catch valid exception
+                    if($res->getCode() == GBERR_FOBJNEX){
+                        $res2 = $this->storeAudioClip($sessid, $gunid,
+                            '', $file);
+                        if(PEAR::isError($res2)) return $res2;
+                    }else return $res;
+                }
+                @unlink($file);
+                break;
+            case 'search':
+                return PEAR::raiseError("Archive::processUploaded: search not implemented");
+                /*
+                rename($file, $file."_");
+                $criteria = unserialize(file_get_contents($file_));
+                $res = $this->searchMetadata($sessid, $criteria);
+                $fh = fopen($file, "w");
+                fwrite($fh, serialize($res));
+                fclose($fh); 
+                @unlink($file."_");
+                */
+                break;
+            default:
+                return PEAR::raiseError("Archive::processUploaded: unknown type ($type)");
                 break;
         }
+        return TRUE;
     }
 
+    /* ===================================================== download methods */
     /**
-     *  Translate local symlink to URL
+     *  Open file download 
      *
+     *  @param sessid string - session id
+     *  @param type string media|metadata|search
+     *  @param par string - depends on type
      */
-    function _lnk2url($lnk)
+    function downloadOpen($sessid, $type, $par)
     {
-        return "http://{$this->config['archiveUrlHost']}:{$this->config['archiveUrlPort']}".
-            "{$this->config['archiveUrlPath']}/access/".basename($lnk);
+        switch($type){
+            case 'media':
+            case 'metadata':
+                $gunid = $par;
+                $res = $this->prepareForTransport('', $gunid, $sessid);
+                if(PEAR::isError($res)) return $res;  
+                list($mediaFile, $mdataFile, $gunid) = $res;
+            default:
+        }
+        switch($type){
+            case 'media':
+                $fname = $mediaFile;
+                break;
+            case 'metadata':
+                $fname = $mdataFile;
+                break;
+            default:
+        }
+        $file = "{$this->transDir}/$fname";
+        $host = $this->config['archiveUrlHost'];
+        $port = $this->config['archiveUrlPort'];
+        $path = $this->config['archiveUrlPath'];
+        $url = "http://$host:$port$path/trans/$fname";
+        $md5h = $this->_md5sum($file);
+        return array('url'=>$url, 'md5h'=>$md5h, 'fname'=>$fname);
     }
 
+
     /**
-     *  Traslate URL to local symlink
+     *  Close file download
      *
+     *  @param sessid string - session id
+     *  @param url string
+     *  @return boolean
      */
-    function _url2lnk($url)
+    function downloadClose($sessid, $url)
     {
-        return $this->accessDir."/".basename($url);
+        $file = "{$this->transDir}/".basename($url);
+        @unlink($file);
+        return TRUE;
     }
+
+    /* ==================================================== auxiliary methods */
+
+    /**
+     *  Returns md5 hash of external file
+     *
+     *  @param fpath string - local path to file
+     *  @return string
+     */
     function _md5sum($fpath)
     {
         $md5h = `md5sum $fpath`;

@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlSubj.php,v 1.1 2004/09/21 00:43:24 tomas Exp $
+// $Id: gbHtmlSubj.php,v 1.2 2004/09/29 01:37:40 tomas Exp $
 require_once"gbHtml_h.php";
 require_once"gbHtmlTestAuth.php";
 
@@ -43,7 +43,7 @@ $d['msg'] = $_SESSION['alertMsg']; unset($_SESSION['alertMsg']);
 // template follows:
 ?>
 <html><head>
-<title>Storage - user and roles editor</title>
+<title>Archive - user and roles editor</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="default.css">
 <style type="text/css">

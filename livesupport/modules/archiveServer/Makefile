@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -62,13 +62,15 @@ USR_LIB_DIR     = ${USR_DIR}/lib
 
 DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
 
-HTTP_GROUP   = apache
-#HTTP_GROUP   = nobody
+GET_GNAME   = install/getGname.php
+WWW_ROOT   := $(shell cd ../storageServer/var/install; php -q getWwwRoot.php)
+HTTP_GROUP := $(shell curl -s ${WWW_ROOT}/${GET_GNAME})
 
 PHP_DIR 	= ${BASE_DIR}/var
 INSTALL_DIR = ${PHP_DIR}/install
 STOR_DIR 	= ${PHP_DIR}/stor
 ACCESS_DIR 	= ${PHP_DIR}/access
+TRANS_DIR 	= ${PHP_DIR}/trans
 BUFF_DIR 	= ${STOR_DIR}/buffer
 TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
@@ -95,12 +97,15 @@ TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
 all: dir_setup db_init
 
-dir_setup: ${DOXYGEN_DIR} ${STOR_DIR} ${ACCESS_DIR}
+dir_setup: ${DOXYGEN_DIR} ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR}
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
 
 clean: db_clean
+	${RMDIR} ${STOR_DIR}
+	${RMDIR} ${ACCESS_DIR}
+	${RMDIR} ${TRANS_DIR}
 
 docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
@@ -140,6 +145,11 @@ ${ACCESS_DIR}:
 	${MKDIR} ${ACCESS_DIR}
 	chown .${HTTP_GROUP} ${ACCESS_DIR}
 	chmod g+ws ${ACCESS_DIR}
+
+${TRANS_DIR}:
+	${MKDIR} ${TRANS_DIR}
+	chown .${HTTP_GROUP} ${TRANS_DIR}
+	chmod g+ws ${TRANS_DIR}
 
 ${BUFF_DIR}:
 	${MKDIR} ${BUFF_DIR}

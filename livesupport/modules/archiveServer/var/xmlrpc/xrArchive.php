@@ -23,12 +23,12 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xrArchive.php,v $
 
 ------------------------------------------------------------------------------*/
-include_once "xmlrpc.inc";
-include_once "xmlrpcs.inc";
+include_once "../../../storageServer/var/xmlrpc/xmlrpc.inc";
+include_once "../../../storageServer/var/xmlrpc/xmlrpcs.inc";
 require_once '../conf.php';
 require_once 'DB.php';
 require_once "../Archive.php";
@@ -41,82 +41,83 @@ $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
  *  XMLRPC layer for Archive module
  */
 class XR_Archive extends Archive{
+
     /**
-     *  Simple ping method - return strtouppered string
+     *  Call LocStor::authenticate
+     *
+     *  @param input XMLRPC struct
      */
-    function xr_ping($input)
+    function xr_authenticate($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        return new xmlrpcresp(new xmlrpcval(strtoupper($r['par']), "string"));
+        $res = $this->authenticate($r['login'], $r['pass']);
+        return new xmlrpcresp(new xmlrpcval($res, "boolean"));
     }
 
     /**
-     *  Open download
+     *  Call LocStor::existsAudioClip
+     *
+     *  @param input XMLRPC struct
      */
-    function xr_downloadOpen($input)
+    function xr_existsAudioClip($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->downloadOpen($r['sessid'], $r['gunid']);
+        #$this->debugLog(join(', ', $r));
+        $res = $this->existsAudioClip($r['sessid'], $r['gunid']);
+        #$this->debugLog($res);
         if(PEAR::isError($res))
             return new xmlrpcresp(0, 803,
-                "xr_downloadOpen: ".$res->getMessage().
+                "xr_existsAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
-        return new xmlrpcresp(xmlrpc_encoder($res));
+        return new xmlrpcresp(new xmlrpcval($res, "boolean"));
     }
 
     /**
-     *  Close download
+     *  Call LocStor::deleteAudioClip
+     *
+     *  @param input XMLRPC struct
      */
-    function xr_downloadClose($input)
+    function xr_deleteAudioClip($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->downloadClose($r['sessid'], $r['url']);
-        if(PEAR::isError($res))
+        $res = $this->deleteAudioClip($r['sessid'], $r['gunid']);
+        if(!PEAR::isError($res))
+            return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        else
             return new xmlrpcresp(0, 803,
-                "xr_downloadOpen: ".$res->getMessage().
+                "xr_deleteAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
-        return new xmlrpcresp(xmlrpc_encoder($res));
     }
 
+    /* ======================================================= upload methods */
+
     /**
-     *  Open upload
+     *  Open general file upload
+     *
+     *  @param input XMLRPC struct
      */
     function xr_uploadOpen($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->uploadOpen($r['sessid'], $r['gunid']);
+        $res = $this->uploadOpen($r['sessid'], $r['trid'], $r['type']);
         if(PEAR::isError($res))
             return new xmlrpcresp(0, 803,
-                "xr_downloadOpen: ".$res->getMessage().
+                "xr_uploadOpen: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         return new xmlrpcresp(xmlrpc_encoder($res));
     }
 
     /**
-     *  Abort upload
-     */
-    function xr_uploadAbort($input)
-    {
-        list($ok, $r) = $this->_xr_getPars($input);
-        if(!$ok) return $r;
-        $res = $this->uploadAbort($r['sessid'], $r['url']);
-        if(PEAR::isError($res))
-            return new xmlrpcresp(0, 803,
-                "xr_downloadOpen: ".$res->getMessage().
-                " ".$res->getUserInfo()
-            );
-        return new xmlrpcresp(xmlrpc_encoder($res));
-    }
-
-    /**
-     *  Check upload
+     *  Check general file upload
+     *
+     *  @param input XMLRPC struct
      */
     function xr_uploadCheck($input)
     {
@@ -125,20 +126,42 @@ class XR_Archive extends Archive{
         $res = $this->uploadCheck($r['sessid'], $r['url']);
         if(PEAR::isError($res))
             return new xmlrpcresp(0, 803,
-                "xr_downloadOpen: ".$res->getMessage().
+                "xr_uploadCheck: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         return new xmlrpcresp(xmlrpc_encoder($res));
     }
 
+
     /**
-     *  Close upload
+     *  Close general file upload
+     *
+     *  @param input XMLRPC struct
      */
     function xr_uploadClose($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->uploadClose($r['sessid'], $r['url']);
+        $res = $this->uploadClose($r['sessid'], $r['url'], $r['type'], $r['gunid']);
+        if(PEAR::isError($res))
+            return new xmlrpcresp(0, 803,
+                "xr_uploadClose: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        return new xmlrpcresp(xmlrpc_encoder($res));
+    }
+
+    /* ===================================================== download methods */
+    /**
+     *  Open general file download 
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_downloadOpen($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->downloadOpen($r['sessid'], $r['type'], $r['par']);
         if(PEAR::isError($res))
             return new xmlrpcresp(0, 803,
                 "xr_downloadOpen: ".$res->getMessage().
@@ -148,6 +171,25 @@ class XR_Archive extends Archive{
     }
 
 
+    /**
+     *  Close general file download
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_downloadClose($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->downloadClose($r['sessid'], $r['url']);
+        if(PEAR::isError($res))
+            return new xmlrpcresp(0, 803,
+                "xr_downloadClose: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        return new xmlrpcresp(xmlrpc_encoder($res));
+    }
+
+    /* =============================================== authentication methods */
     /**
      *  Call Archive::login
      *
@@ -181,6 +223,20 @@ class XR_Archive extends Archive{
             return new xmlrpcresp(0, 803,
                 "xr_logout: logout failed - not logged."
             );
+    }
+
+    /* ==================================================== auxiliary methods */
+
+    /**
+     *  Simple ping method - return strtouppered string
+     *
+     *  @param input XMLRPC struct
+     */
+    function xr_ping($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        return new xmlrpcresp(new xmlrpcval(strtoupper($r['par']), "string"));
     }
 
     /**
@@ -232,12 +288,12 @@ $methods = array(
     'login'                   => 'Login to storage.',
     'logout'                  => 'Logout from storage.',
     'ping'              =>'Echo request',
-    'downloadOpen'      =>'Open download channel',
-    'downloadClose'     =>'Close download channel',
-    'uploadOpen'        =>'Open upload channel',
-    'uploadAbort'       =>'Close upload channel',
-    'uploadCheck'       =>'Check size and checksum of uploaded file',
-    'uploadClose'       =>'Close upload channel'
+
+    'uploadOpen'      =>'Open file upload',
+    'uploadCheck'     =>'Check size and md5 uploaded file',
+    'uploadClose'     =>'Close file upload',
+    'downloadOpen'    =>'Open file download',
+    'downloadClose'   =>'Close file download',
 );
 
 $defs = array();

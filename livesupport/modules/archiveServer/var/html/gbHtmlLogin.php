@@ -1,5 +1,5 @@
 <?php
-// $Id: gbHtmlLogin.php,v 1.1 2004/09/21 00:43:21 tomas Exp $
+// $Id: gbHtmlLogin.php,v 1.2 2004/09/29 01:37:40 tomas Exp $
 require_once"gbHtml_h.php";
 
 // prefill data structure for template
@@ -24,7 +24,7 @@ unset($_SESSION['lastPost']);
 // template follows:
 ?>
 <html><head>
-<title>Storage - login</title>
+<title>Archive - login</title>
 <link rel="stylesheet" type="text/css" href="default.css">
 <style type="text/css">
 <!--
@@ -51,7 +51,7 @@ unset($_SESSION['lastPost']);
  </ul>
 </div>
 
-<h1>Storage - login</h1>
+<h1>Archive - login</h1>
 
 <form action="gbHttp.php" method="post" id="loginform">
 <table>

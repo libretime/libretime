@@ -8,7 +8,7 @@ Install steps for file uploading (do it with appropriate changes):
 2) move put.cgi there from var subdir
 3) add to apache2 config (i.g. commonapache2.conf):
 
-<Location /livesupport/modules/archiveServer/var/access>
+<Location /livesupport/modules/archiveServer/var/trans>
   Script PUT /cgi-bin-put/put.cgi
 </Location>
 ScriptAlias /cgi-bin-put/ "/usr/local/apache2/cgi-bin-put/"

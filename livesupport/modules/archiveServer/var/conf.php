@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,7 +38,7 @@ $config = array(
     ),
     'tblNamePrefix' => 'as_',
     'authCookieName'=> 'assid',
-    'RootNode'	    => 'RootNode',
+    'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
     'objtypes'      => array(
         'RootNode'      => array('Folder'),
@@ -58,6 +58,20 @@ $config = array(
         'editPrivs', 'write', 'read', 'classes', 'subjects'
     ),
     'storageDir'    =>  dirname(getcwd()).'/stor',
+    'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
+    'transDir'      =>  dirname(getcwd()).'/trans',
     'accessDir'     =>  dirname(getcwd()).'/access',
+
+// on central archive side storage=archive
+    'storageUrlPath'        => '/livesupport/modules/archiveServer/var',
+    'storageXMLRPC'         => 'xmlrpc/xrArchive.php',
+    'storageUrlHost'        => 'localhost',
+    'storageUrlPort'        => 80,
+// only for returning right URLs:
+    'archiveUrlPath'        => '/livesupport/modules/archiveServer/var',
+    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
+    'archiveUrlHost'        => 'localhost',
+    'archiveUrlPort'        => 80,
+
 );
 ?>
