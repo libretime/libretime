@@ -1,4 +1,32 @@
 <?php
+/*------------------------------------------------------------------------------
+
+    Copyright (c) 2004 Media Development Loan Fund
+ 
+    This file is part of the LiveSupport project.
+    http://livesupport.campware.org/
+    To report bugs, send an e-mail to bugs@campware.org
+ 
+    LiveSupport is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+  
+    LiveSupport is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License
+    along with LiveSupport; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+ 
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.3 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/XmlParser.php,v $
+
+------------------------------------------------------------------------------*/
 require_once "XML/Util.php";
 
 /* ================================================================== Element */
@@ -131,6 +159,7 @@ class XmlParser {
         }
         xml_parser_free($xml_parser);
     }
+
     /**
      *  Start tag handler
      *
@@ -156,6 +185,7 @@ class XmlParser {
         $el = new XmlElement($fullname, $attrs, $nSpaces);
         array_push($this->stack, $el);
     }
+
     /**
      *  End tag handler
      *
@@ -172,6 +202,7 @@ class XmlParser {
             $this->tree = $this->stack[0];
         }
     }
+
     /**
      *  Character data handler
      *
@@ -183,6 +214,7 @@ class XmlParser {
         $cnt = count($this->stack);
         if(trim($data)!=''){ $this->stack[$cnt-1]->content .= $data; }
     }
+
     /**
      *  Default handler
      *
@@ -199,6 +231,7 @@ class XmlParser {
             $this->stack[$cnt-1]->content .= "*** $data ***";
         //}
     }
+
     /**
      *  Return result tree
      *
@@ -207,6 +240,7 @@ class XmlParser {
     function getTree(){
         return $this->tree;
     }
+
     /**
      *  Return error string
      *
@@ -215,6 +249,7 @@ class XmlParser {
     function isError(){
         return $this->err[0];
     }
+
     /**
      *  Return error string
      *
@@ -223,14 +258,8 @@ class XmlParser {
     function getError(){
         return $this->err[1];
     }
-    /**
-     *  Debug dump of tree
-     *
-     *  @return hash, tree structure
-     */
-    function dump(){
-        var_dump($this->tree);
-    }
+
+    /* ----------------------------------- auxiliary methos for serialization */
     /**
      *  Serialize metadata of one file
      *
@@ -242,6 +271,7 @@ class XmlParser {
         $res .= "\n";
         return $res;
     }
+
     /**
      *  Serialize one metadata element
      *
@@ -265,51 +295,16 @@ class XmlParser {
         $res .= "</{$fullName}>";
         return $res;
     }
-}
-/*
-class md{
-    var $tree = NULL;
-    function md(&$tree){
-        $this->tree =& $tree;
-    }
-    function store(){
-        $this->storeNode($this->tree);
-    }
-    function storeNode($node, $parid=NULL, $nameSpaces=array()){
-        $nameSpaces = array_merge($nameSpaces, $node->nSpaces);
-        $subjns  = (is_null($parid)? '_G'         : '_I');
-        $subject = (is_null($parid)? 'this->gunid' : $parid);
-        $id = $this->storeRecord($subjns, $subject,
-            "{$node->ns}/{$nameSpaces[$node->ns]}", $node->name, 'T', '_blank', NULL);
-#            $node->ns, $node->name, 'T', '_blank', NULL);
-        foreach($node->attrs as $atn=>$ato){
-            $this->storeRecord('_I', $id,
-                "{$ato->ns}/{$nameSpaces[$ato->ns]}", $ato->name, 'A', '_L', $ato->val);
-#                $ato->ns, $ato->name, 'A', '_L', $ato->val);
-        }
-        foreach($node->children as $ch){
-            $this->storeNode($ch, $id, $nameSpaces);
-        }
-    }
-    function storeRecord($subjns, $subject,
-            $predns, $predicate, $predxml='T', $objns=NULL, $object=NULL){
-        $id = $GLOBALS['i']++;
-        $res = "$id, ".
-            "$subjns, $subject, ".
-            "$predns, $predicate, $predxml, ".
-            "$objns, $object".
-        "\n";
-        echo $res;
-        return $id;
-    }
-}
 
-$file = "ex3.xml";
-$p =& new XmlParser(file_get_contents($file));
-#echo $p->serialize();
-#echo $p->dump();
-$tree = $p->getTree();
-$md = new md($tree);
-$md->store();
-*/
+    /* -------------------------------------------------------- debug methods */
+    /**
+     *  Debug dump of tree
+     *
+     *  @return hash, tree structure
+     */
+    function dump(){
+        var_dump($this->tree);
+    }
+
+}
 ?>
