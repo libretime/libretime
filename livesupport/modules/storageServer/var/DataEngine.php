@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -272,7 +272,6 @@ class DataEngine{
         $brFldNs=NULL, $brFld=NULL)
     {
         $filetype   = $this->filetypes[strtolower($criteria['filetype'])];
-#        if(is_null($filetype)) $filetype = 
         $operator   = strtolower($criteria['operator']);
         $whereArr   = $this->_makeWhereArr($criteria['conditions']);
         $browse     = !is_null($brFld);

@@ -193,11 +193,11 @@ class XmlParser {
     function defaultHandler($parser, $data)
     {
         $cnt = count($this->stack);
-#        if(substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";"){
-#            $this->stack[$cnt-1]->content .= trim($data);
-#        }else{
+        //if(substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";"){
+        //    $this->stack[$cnt-1]->content .= trim($data);
+        //}else{
             $this->stack[$cnt-1]->content .= "*** $data ***";
-#        }
+        //}
     }
     /**
      *  Return result tree
