@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -627,8 +627,8 @@ class MetaData{
         }else{
             $node = $this->genXMLNode($row, FALSE);
             if(PEAR::isError($node)) return $node;
+            $res = $node;
         }
-        $res = $node;
         return $res;
     }
 
