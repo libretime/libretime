@@ -14,6 +14,7 @@ define('UI_INPUT_STANDARD_SIZE', 20);
 define('UI_INPUT_STANDARD_MAXLENGTH', 50);
 define('UI_TEXTAREA_STANDART_ROWS', 5);
 define('UI_TEXTAREA_STANDART_COLS', 17);
+define('UI_BUTTON_STYLE', 'button');
 define('UI_QFORM_REQUIRED',     '../templates/sub/form_required.tpl');
 define('UI_QFORM_REQUIREDNOTE', '../templates/sub/form_requirednote.tpl');
 define('UI_QFORM_ERROR',        '../templates/sub/form_error.tpl');

@@ -53,7 +53,7 @@ class uiSearch
             $sel->setOptions(array($col1, $col2));
             $group[] = &$sel;
             $group[] = &$form->createElement('text', "row_$n".'[2]', NULL);
-            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "SearchForm_dropRow('$n')"));
+            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "SearchForm_dropRow('$n')", 'class' => UI_BUTTON_STYLE));
             $form->addGroup($group);
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }

@@ -1,3 +1,243 @@
+body { 
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #2C2C2C;
+    margin: 10px;
+}
+
+img { 
+    border: none;
+}
+
+form { font-size: 12px;
+    margin: 15px 0 15px 0;
+}
+
+.clearer { font-size: 12px;
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+}
+
+.container { font-size: 12px;
+    width: 100%;
+}
+
+.button { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.button_large { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.button_small { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    cursor: pointer;
+    width: 34px;
+}
+
+input, select { font-size: 12px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 12px;
+    border-top: 1px solid #C7CCCC;
+    border-left: 1px solid #C7CCCC;
+    border-bottom: 1px solid #A4A9A9;
+    border-right: 1px solid #A4A9A9;
+}
+
+.checkbox { font-size: 12px;
+    border: none;
+}
+
+.input { font-size: 12px;
+    height: 16px;
+}
+
+.input[class] { font-size: 12px;
+    height: 15px;
+}
+
+
+
+/* #################################### CONTENTAREA ############################### */
+
+
+.content {
+    margin: 19px;
+    margin-top: 0;
+    float: left;
+}
+
+.container_elements { font-size: 12px;
+    border: 1px solid #cfcfcf;
+    padding: 6px;
+    margin-bottom: 21px;
+}
+
+.container_elements h1 { font-size: 12px;
+    font-size: 18px;
+    margin: 0 0 4px 0;
+    color: #666;
+}
+
+.head { font-size: 12px;
+    background-color: #5286ba;
+    font-weight: bold;
+    color: #FFF;
+}
+
+.head .left { font-size: 12px;
+    padding: 5px 0 3px 10px;
+    float: left;
+    width: 330px;
+}
+
+.head .right { font-size: 12px;
+    padding: 5px 10px 3px 0;
+    float: left;
+    text-align: right;
+    width: 224px;
+}
+
+.container_table { font-size: 12px;
+    /*height: 275px;*/
+    overflow: auto;
+}
+
+
+table { font-size: 12px;
+    border-collapse: collapse;
+}
+
+table td { font-size: 12px;
+    padding: 0 6px 0 12px;
+    border-right: 1px solid #333;
+    height: 19px;
+    vertical-align: top;
+}
+
+table tr.blue_head td { font-size: 12px;
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+
+}
+
+A#blue_head { font-size: 12px;
+    color:#fff;
+}
+
+table tr.blue1 td { font-size: 12px;
+    color: #000;
+    background-color: #d5e2ee;
+}
+
+table tr.blue2 td { font-size: 12px;
+    color: #000;
+    background-color: #f5f5f5;
+}
+
+table tr.red td { font-size: 12px;
+    background-color: #FBAAAA;
+}
+
+.footer { font-size: 12px;
+    padding: 4px 5px 5px 0;
+    background-color: #8baed1;
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.container_button { font-size: 12px;
+    margin-top: 4px;
+}
+
+.container_search {
+    margin-bottom: 4px;
+}
+
+.comment { font-size: 12px;
+    float: left;
+    font-size: 10px;
+    margin: 5px 0 0 10px;
+}
+
+.select_width_comment { font-size: 12px;
+    float:left;
+    margin-left: 3px;
+}
+
+.select_width_comment[class] { font-size: 12px;
+    margin-left: 0;
+}
+
+
+.tablebottom { font-size: 12px;
+    float: left;
+    margin-left: 0px;
+    background-color: #8baed1;
+}
+
+.counter { font-size: 12px;
+    float: left;
+    margin-left: 7px;
+    font-weight: bold;
+    background-color: #8baed1;
+}
+
+.counter[class] { font-size: 12px;
+    margin-left: 15px;
+}
+
+.container_browse {
+    width: 170px;
+    float: left;
+    margin: 0px 0px 10px 0px;
+}
+
+.area_browse {
+    width: 174px;
+    height: 100px;
+}
+
+.area_browse[class] {
+    width: 180px;
+}
+
+.comment_browse {
+    font-size: 10px;
+}
+
+.container_button_upload { font-size: 12px;
+    margin: 20px 0 0 204px;
+}
+
+.container_button_upload[class] { font-size: 12px;
+    margin-left: 200px;
+}
+
+label { 
+    display: block;
+    float: left;
+    width: 100px;
+}
+
+
+=======
 body { font-size: 12px;
     font-family: Arial, Verdana, Helvetica, sans-serif;
     font-size: 12px;
@@ -235,4 +475,3 @@ label { font-size: 12px;
     float: left;
     width: 200px;
 }
-

@@ -14,7 +14,16 @@ form { font-size: 12px;
     margin: 15px 0 15px 0;
 }
 
-.clearer { font-size: 12px;
+
+.copyright {
+    font-size: 9px;
+    clear: both;
+    margin: 0;
+    padding: 0;
+    padding-left: 25px;
+}
+
+.clearer {
     clear: both;
     height: 0;
     line-height: 0;
@@ -314,7 +323,7 @@ input, select { font-size: 12px;
     position: absolute;
     top: 175px;
     left: 20px;
-    z-index: 1;
+    z-index: 0;
 }
 
 #tabnav ul {
@@ -357,7 +366,7 @@ input, select { font-size: 12px;
     position: absolute;
     top: 175px;
     left: 20px;
-    z-index: 1;
+    z-index: 0;
 }
 
 #tabnavsmall ul {
@@ -375,7 +384,7 @@ input, select { font-size: 12px;
     font-weight: bold;
     text-decoration: none;
     width: 50px;
-    margin-right: 10px;
+    margin-right: 5px;
     text-align: center;
 }
 
@@ -403,7 +412,7 @@ input, select { font-size: 12px;
     float: left;
 }
 
-.container_elements { font-size: 12px;
+.container_elements {
     border: 1px solid #cfcfcf;
     padding: 6px;
     margin-bottom: 21px;
