@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -277,8 +277,8 @@ class LocStor extends BasicStor{
         if($filetype=='all'){
             $criteriaAC = $criteria;    $criteriaAC['filetype'] = 'audioclip';
             $criteriaPL = $criteria;    $criteriaPL['filetype'] = 'playlist';
-            $resAC = $this->localSearch($criteriaAC);
-            $resPL = $this->localSearch($criteriaPL);
+            $resAC = $this->bsLocalSearch($criteriaAC);
+            $resPL = $this->bsLocalSearch($criteriaPL);
             return array(
                 'audioClipResults'  => $resAC['results'],
                 'playlistResults'   => $resPL['results']
@@ -501,7 +501,7 @@ class LocStor extends BasicStor{
      *  @param sessid string, session ID
      *  @param playlistToken string, playlist access token
      *  @param newPlaylist string, new playlist as XML string
-     *  @return boolean
+     *  @return string, playlistId
      */
     function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
@@ -511,7 +511,7 @@ class LocStor extends BasicStor{
         $res = $ac->replaceMetaData($newPlaylist, $mdataLoc='string');
         if(PEAR::isError($res)){ return $res; }
         $this->_setEditFlag($playlistId, FALSE);
-        return TRUE;
+        return $playlistId;
     }
 
     /**
