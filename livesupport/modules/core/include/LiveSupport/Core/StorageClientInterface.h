@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class StorageClientInterface
 {
@@ -82,7 +82,7 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Return a playlist with the specified id.
+         *  Return a playlist with the specified id, to be displayed.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
@@ -93,6 +93,35 @@ class StorageClientInterface
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<SessionId>::Ref sessionId,
                     Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
+                                                                        = 0;
+
+        /**
+         *  Return a playlist with the specified id, to be edited.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param id the id of the playlist to return.
+         *  @return the requested playlist.
+         *  @exception std::logic_error if no playlist with the specified
+         *             id exists.
+         */
+        virtual Ptr<Playlist>::Ref
+        editPlaylist(Ptr<SessionId>::Ref sessionId,
+                     Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
+                                                                        = 0;
+
+        /**
+         *  Save the playlist after editing.
+         *
+         *  @param sessionId the session ID from the authentication client
+         *  @param playlist the playlist to save.
+         *  @exception std::logic_error if the playlist has not been previously
+         *             opened by getPlaylist() 
+         */
+        virtual void
+        savePlaylist(Ptr<SessionId>::Ref sessionId,
+                     Ptr<Playlist>::Ref  playlist) const
                                                 throw (std::logic_error)
                                                                         = 0;
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -191,7 +191,7 @@ TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
  
 
 /*------------------------------------------------------------------------------
- *  Return a playlist.
+ *  Return a playlist to be displayed.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
@@ -205,6 +205,35 @@ TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
     }
 
     return it->second;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a playlist to be edited.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
+                                  Ptr<UniqueId>::Ref  id) const
+                                                throw (std::invalid_argument)
+{
+    PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
+
+    if (it == playlistMap.end()) {
+        throw std::invalid_argument("no such playlist");
+    }
+
+    return it->second;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save a playlist after editing.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
+                                  Ptr<Playlist>::Ref  playlist) const
+                                                throw (std::logic_error)
+{
 }
 
 

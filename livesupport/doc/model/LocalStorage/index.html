@@ -14,7 +14,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.2 $</li>
+  <li>Version: $Revision: 1.3 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/LocalStorage/index.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -1553,8 +1553,14 @@ Scheduler daemon, and the main associations between the concepts.<br>
 authentications <br>
       </td>
     </tr>
+      <td valign="top"><b>Session ID</b><br>
+      </td>
+      <td valign="top">An identifier issued by Authentication, to be
+used by subsequent operations.<br>
+      </td>
+    </tr>
     <tr>
-      <td valign="top"><b>Unique Id<br>
+      <td valign="top"><b>Unique ID<br>
       </b> </td>
       <td valign="top">A globally unique identifier used to to
 differentiate between objects that might even be created on different
@@ -1606,6 +1612,19 @@ in the Local storage<br>
       </td>
       <td valign="top">A metafile containing AudioClip IDs and some
 extra (fade in / fade out) information<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>URL</b><br>
+      </td>
+      <td valign="top">The location of a metafile (in the local filesystem)<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Token</b><br>
+      </td>
+      <td valign="top">An identifier used to match the parts of two-part 
+operations, e.g., access--release or edit--save<br>
       </td>
     </tr>
     <tr>
@@ -1744,6 +1763,25 @@ AudioClips<br>
 accessing Playlists<br>
       </td>
     </tr>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top">Is associated with<br>
+      </td>
+      <td valign="top">URL<br>
+      </td>
+      <td valign="top">The path of (a copy of) the playlist metafile<br>
+      </td>
+    </tr>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top">Is associated with<br>
+      </td>
+      <td valign="top">Token<br>
+      </td>
+      <td valign="top">An identifier issued by access operations, to be
+used for identification by release operations<br>
+      </td>
+    </tr>
     <tr>
       <td valign="top"><br>
       </td>
@@ -1818,7 +1856,8 @@ see Authentication : Authenticate<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">existsAudioClip<br>
-(audioClipId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+audioClipId : UniqueId)<br>
 : boolean<br>
       </td>
     </tr>
@@ -1891,7 +1930,8 @@ with the specified id is stored in Local storage, false otherwise<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">storeAudioClip<br>
-(audioClip : AudioClip)<br>
+(sessionId  : SessionId, <br>
+audioClip : AudioClip)<br>
 : UniqueId<br>
       </td>
     </tr>
@@ -2041,7 +2081,8 @@ are replaced by the presented contents<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">deleteAudioClip<br>
-(audioClipId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+audioClipId : UniqueId)<br>
 : void<br>
       </td>
     </tr>
@@ -2149,7 +2190,8 @@ as an error.<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">updateAudioClipMetadata<br>
-(audioClipId : UniqueId,<br>
+(sessionId  : SessionId, <br>
+audioClipId : UniqueId,<br>
 newMetadata : MetaData)<br>
 : void<br>
       </td>
@@ -2233,7 +2275,8 @@ replaced with the presented contents<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">accessRawAudioData<br>
-(audioClipId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+audioClipId : UniqueId)<br>
 : RawAudioData<br>
       </td>
     </tr>
@@ -2317,7 +2360,8 @@ RawAudioData for AudioClip is increased by one<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">releaseRawAudioData<br>
-(rawAudioData : RawAudioData)<br>
+(sessionId   : SessionId, <br>
+rawAudioData : RawAudioData)<br>
 : void<br>
       </td>
     </tr>
@@ -2400,7 +2444,8 @@ RawAudioData for AudioClip is decreased by one<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">searchMetadata<br>
-(criteria : SearchCriteria)<br>
+(sessionId  : SessionId, <br>
+criteria : SearchCriteria)<br>
 : UniqueId<br>
       </td>
     </tr>
@@ -2474,7 +2519,8 @@ ids, for which MetaData matches the supplied search criteria<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">getAudioClip<br>
-(audioClipId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+audioClipId : UniqueId)<br>
 : AudioClip<br>
       </td>
     </tr>
@@ -2549,7 +2595,8 @@ specified by the supplied id.<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">createPlaylist<br>
-(playlistId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+playlistId : UniqueId)<br>
 : void<br>
       </td>
     </tr>
@@ -2638,8 +2685,9 @@ not being edited<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">editPlaylist<br>
-(playlistId : UniqueId)<br>
-: Playlist<br>
+(sessionId  : SessionId, <br>
+playlistId : UniqueId)<br>
+: { playlistURL : URL, playlistToken: Token }<br>
       </td>
     </tr>
     <tr>
@@ -2729,7 +2777,9 @@ associated with the token returned<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">savePlaylist<br>
-(playlist : Playlist)<br>
+(sessionId  : SessionId, <br>
+playlistToken : Token, <br>
+newPlaylistURL : URL)<br>
 : void<br>
       </td>
     </tr>
@@ -2755,15 +2805,13 @@ metafile in place of the old one.<br>
     <tr>
       <td valign="top"><b>Notes</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">'playlist' is two arguments, 
-really: the URL of a (new) Playlist metafile, 
-and the token returned previously by editPlaylist()<br>
+      <td colspan="2" rowspan="1" valign="top">none<br>
       </td>
     </tr>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">if the playlist token argument 
+      <td colspan="2" rowspan="1" valign="top">if the playlistToken argument 
 does not match a token generated earlier in this session by editPlaylist(),
 report as an error<br>
       </td>
@@ -2799,8 +2847,8 @@ not being edited<br>
     </tr>
     <tr>
       <td valign="top"></td>
-      <td valign="top">the token and the URL returned earlier by 
-editPlaylist() together with it are no longer valid</td>
+      <td valign="top">the playlistToken token and the URL returned earlier
+by editPlaylist() together with it are no longer valid</td>
       <td valign="top">association broken<br>
       </td>
     </tr>
@@ -2823,7 +2871,8 @@ editPlaylist() together with it are no longer valid</td>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">deletePlaylist<br>
-(playlistId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+playlistId : UniqueId)<br>
 : void<br>
       </td>
     </tr>
@@ -2904,8 +2953,9 @@ being edited, report as an error<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">accessPlaylist<br>
-(playlistId : UniqueId)<br>
-: Playlist<br>
+(sessionId  : SessionId, <br>
+playlistId : UniqueId)<br>
+: { playlistURL : URL, playlistToken : Token }<br>
       </td>
     </tr>
     <tr>
@@ -2988,7 +3038,8 @@ associated with the token returned<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">releasePlaylist<br>
-(playlist : Playlist)<br>
+(sessionId  : SessionId, <br>
+playlistToken : Token)<br>
 : void<br>
       </td>
     </tr>
@@ -3014,14 +3065,13 @@ obtained earlier by accessPlaylist().<br>
     <tr>
       <td valign="top"><b>Notes</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">here 'playlist' is just one
-argument (sorry!), a token returned previously by accessPlaylist()<br>
+      <td colspan="2" rowspan="1" valign="top">none<br>
       </td>
     </tr>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">if the playlist token argument 
+      <td colspan="2" rowspan="1" valign="top">if the playlistToken argument 
 does not match a token generated earlier in this session by accessPlaylist(),
 report as an error<br>
       </td>
@@ -3047,8 +3097,8 @@ report as an error<br>
     </tr>
     <tr>
       <td valign="top"></td>
-      <td valign="top">the token and the URL returned earlier by 
-accessPlaylist() together with it are no longer valid</td>
+      <td valign="top">the playlistToken token and the URL returned earlier
+by accessPlaylist() together with it are no longer valid</td>
       <td valign="top">association broken<br>
       </td>
     </tr>
@@ -3071,7 +3121,8 @@ accessPlaylist() together with it are no longer valid</td>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">existsPlaylist<br>
-(playlistId : UniqueId)<br>
+(sessionId  : SessionId, <br>
+playlistId : UniqueId)<br>
 : bool<br>
       </td>
     </tr>
@@ -3133,6 +3184,79 @@ metafile with the given playlist ID exists.<br>
   </tbody>
 </table>
 <br>
+<h4>Contract for Local storage : playlistIsAvailable<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">playlistIsAvailable<br>
+(sessionId  : SessionId, <br>
+playlistId : UniqueId)<br>
+: bool<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Check whether a Playlist
+metafile with the given playlist ID is available for editing, i.e., exists
+and has not been opened for editing yet.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-7<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">true if the playlist exists
+and is available; false if either condition fails<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
 <h4>Contract for Local storage : accessAudioClip<br>
 </h4>
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -3141,8 +3265,9 @@ metafile with the given playlist ID exists.<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">accessAudioClip<br>
-(audioClipId : UniqueId)<br>
-: AudioClip<br>
+(sessionId  : SessionId, <br>
+audioClipId : UniqueId)<br>
+: { audioClipURL : URL, audioClipToken : Token }<br>
       </td>
     </tr>
     <tr>
@@ -3223,7 +3348,8 @@ associated with the token returned<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">releaseAudioClip<br>
-(audioClip : AudioClip)<br>
+(sessionId  : SessionId, <br>
+audioClipToken : Token)<br>
 : void<br>
       </td>
     </tr>
@@ -3249,14 +3375,13 @@ obtained earlier by accessAudioClip().<br>
     <tr>
       <td valign="top"><b>Notes</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">here 'audioClip' is just one
-argument (sorry!), a token returned previously by accessAudioClip()<br>
+      <td colspan="2" rowspan="1" valign="top">none<br>
       </td>
     </tr>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">if the playlist token argument 
+      <td colspan="2" rowspan="1" valign="top">if the audioClipToken argument 
 does not match a token generated earlier in this session by accessAudioClip(),
 report as an error<br>
       </td>
@@ -3282,8 +3407,8 @@ report as an error<br>
     </tr>
     <tr>
       <td valign="top"></td>
-      <td valign="top">the token and the URL returned earlier by 
-accessAudioClip() together with it are no longer valid</td>
+      <td valign="top">the audioClipToken token and the URL returned earlier
+by accessAudioClip() together with it are no longer valid</td>
       <td valign="top">association broken<br>
       </td>
     </tr>

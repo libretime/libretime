@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -112,7 +112,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         sessionId = XmlRpcTools::extractSessionId(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+22, 
+        XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
         return;
@@ -158,15 +158,10 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         playlist = storage->getPlaylist(sessionId, playlistId);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+5, "playlist not found", 
-                               returnValue);
-        return;
-    }
-
-    if (!playlist->canBeEdited()) {
-        XmlRpcTools::markError(errorId+6, 
-                               "playlist has not been opened for editing", 
-                               returnValue);
+        std::string eMsg = "AddAudioClipToPlaylistlaylist: ";
+        eMsg += "storage.getPlaylist() error:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+5, eMsg, returnValue);
         return;
     }
 
@@ -175,18 +170,32 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         audioClip = storage->getAudioClip(sessionId, audioClipId);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+7, "audio clip does not exist", 
-                               returnValue);
+        std::string eMsg = "AddAudioClipToPlaylistlaylist: ";
+        eMsg += "storage.getAudioClip() error:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+7, eMsg, returnValue);
         return;
     }
 
-    try {                                        // and finally, the beef
+    try {
         playlist->addAudioClip(audioClip, relativeOffset);
     }
     catch(std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+8,
-                               "two audio clips at the same relative offset",
-                               returnValue);
+        std::string eMsg = "AddAudioClipToPlaylistlaylist: ";
+        eMsg += "playlist.addAudioClip() error:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+8, eMsg, returnValue);
+        return;
+    }
+
+    try {
+        storage->savePlaylist(sessionId, playlist);
+    }
+    catch (std::invalid_argument &e) {
+        std::string eMsg = "AddAudioClipToPlaylistlaylist: ";
+        eMsg += "storage.savePlaylist() error:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+10, eMsg, returnValue);
         return;
     }
 }

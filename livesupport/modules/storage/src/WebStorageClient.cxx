@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -288,7 +288,7 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
  
 
 /*------------------------------------------------------------------------------
- *  Return a playlist.
+ *  Return a playlist to be displayed.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
@@ -297,6 +297,30 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a playlist to be edited.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
+                                 Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
+{
+    Ptr<Playlist>::Ref  playlist(new Playlist);
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save a playlist after editing.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
+                                 Ptr<Playlist>::Ref  playlist) const
+                                                throw (std::logic_error)
+{
 }
 
 
