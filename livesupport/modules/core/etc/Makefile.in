@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.9 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -88,15 +88,18 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/AudioClip.o \
                 ${TMP_DIR}/FadeInfo.o \
                 ${TMP_DIR}/PlaylistElement.o \
-                ${TMP_DIR}/Playlist.o
+                ${TMP_DIR}/Playlist.o \
+                ${TMP_DIR}/TimeConversion.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/AudioClipTest.o \
                    ${TMP_DIR}/FadeInfoTest.o \
                    ${TMP_DIR}/PlaylistElementTest.o \
                    ${TMP_DIR}/PlaylistTest.o \
+                   ${TMP_DIR}/TimeConversionTest.o \
                    ${TMP_DIR}/TestRunner.o
 
-TEST_RUNNER_LIBS = -l${CORE_LIB} -lxml++-1.0 -lcppunit -ldl
+TEST_RUNNER_LIBS = -l${CORE_LIB} -lxml++-1.0 -lboost_date_time-gcc \
+                   -lcppunit -ldl
 
 
 #-------------------------------------------------------------------------------
