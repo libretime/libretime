@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.43 $
+    Version  : $Revision: 1.44 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.43 $
+ *  @version $Revision: 1.44 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -485,9 +485,14 @@ class GreenBox extends BasicStor{
      *  @param token string, playlist access token
      *  @param acId string, local ID of added file
      *  @param sessid string, session ID
+     *  <span style="color:red">
+     *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
+     *  @param fadeOut string, dtto
+     *  </span>
      *  @return string, generated playlistElement gunid
      */
-    function addAudioClipToPlaylist($token, $acId, $sessid)
+    function addAudioClipToPlaylist($token, $acId, $sessid,
+        $fadeIn=NULL, $fadeOut=NULL)
     {
         $acGunid = $this->_gunidFromId($acId);
         if(PEAR::isError($acGunid)) return $acGunid;
@@ -551,6 +556,7 @@ class GreenBox extends BasicStor{
         $r = $pl->md->insertMetadataEl(
             $plElId, 'relativeOffset', $plLen, 'A');
         if(PEAR::isError($r)){ return $r; }
+        // insert audioClip element into playlistElement
         $r = $pl->md->insertMetadataEl($plElId, 'audioClip');
         if(PEAR::isError($r)){ return $r; }
         $acId = $r;
@@ -560,6 +566,19 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($r)){ return $r; }
         $r = $pl->md->insertMetadataEl($acId, 'title', $acTit, 'A');
         if(PEAR::isError($r)){ return $r; }
+        if(!is_null($fadeIn) || !is_null($fadeOut)){
+            // insert fadeInfo element into playlistElement
+            $r = $pl->md->insertMetadataEl($plElId, 'fadeInfo');
+            if(PEAR::isError($r)){ return $r; }
+            $fiId = $r;
+            $fiGunid = StoredFile::_createGunid();
+            $r = $pl->md->insertMetadataEl($fiId, 'id', $fiGunid, 'A');
+            if(PEAR::isError($r)){ return $r; }
+            $r = $pl->md->insertMetadataEl($fiId, 'fadeIn', $fadeIn, 'A');
+            if(PEAR::isError($r)){ return $r; }
+            $r = $pl->md->insertMetadataEl($fiId, 'fadeOut', $fadeOut, 'A');
+            if(PEAR::isError($r)){ return $r; }
+        }
         // calculate and insert total length:
         $newPlLen = $this->_secsToPlTime(
             $this->_plTimeToSecs($plLen) + $this->_plTimeToSecs($acLen)
