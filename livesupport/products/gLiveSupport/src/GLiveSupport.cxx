@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -477,7 +477,7 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
         openPlaylistForEditing();
     }
 
-    // for some wierd reason, the storage functions won't accept
+    // for some weird reason, the storage functions won't accept
     // Ptr<const UniqueId>::Ref, just a non-const version
     Ptr<UniqueId>::Ref  uid(new UniqueId(id->getId()));
 
@@ -572,40 +572,85 @@ GLiveSupport :: deletePlayable(Ptr<Playable>::Ref   playable)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: play(Ptr<Playable>::Ref   playable)
-                                                    throw (XmlRpcException,
-                                                           std::runtime_error)
+GLiveSupport :: playAudio(Ptr<Playable>::Ref playable)
+                                                throw (XmlRpcException,
+                                                        std::invalid_argument,
+                                                        std::logic_error,
+                                                        std::runtime_error)
 {
-    Ptr<AudioClip>::Ref     tempAudioClip;
-    Ptr<Playlist>::Ref      tempPlaylist;
-    Ptr<time_duration>::Ref sleepT(new time_duration(microseconds(10)));
-
+    if (audioPlayerIsPaused) {
+        audioPlayer->start();
+        audioPlayerIsPaused = false;
+        return;
+    }    
+    
+    stopAudio();        // stop the audio player and release old resources
+    
     switch (playable->getType()) {
         case Playable::AudioClipType:
-            tempAudioClip = storage->acquireAudioClip(sessionId, 
-                                                            playable->getId());
-            audioPlayer->open(*tempAudioClip->getUri());
+            itemPlayingNow = storage->acquireAudioClip(sessionId, 
+                                                       playable->getId());
+            audioPlayer->open(*itemPlayingNow->getUri());
             audioPlayer->start();
-            while (audioPlayer->isPlaying()) {
-                TimeConversion::sleep(sleepT);
-            }
-            audioPlayer->close();
-            storage->releaseAudioClip(sessionId, tempAudioClip);
             break;
 
         case Playable::PlaylistType:
-            tempPlaylist = storage->acquirePlaylist(sessionId, 
-                                                            playable->getId());
-            audioPlayer->openAndStart(tempPlaylist);
-            while (audioPlayer->isPlaying()) {
-                TimeConversion::sleep(sleepT);
-            }
-            audioPlayer->close();
-            storage->releasePlaylist(sessionId, tempPlaylist);
+            itemPlayingNow = storage->acquirePlaylist(sessionId, 
+                                                      playable->getId());
+            audioPlayer->openAndStart(itemPlayingNow->getPlaylist());
             break;
 
-        default:
+        default:        // this never happens
             break;
+    }
+    
+    audioPlayerIsPaused = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Stop the audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: stopAudio(void)
+                                                    throw (XmlRpcException,
+                                                           std::logic_error)
+{
+    audioPlayer->close();
+
+    if (itemPlayingNow) {
+        switch (itemPlayingNow->getType()) {
+            case Playable::AudioClipType:
+                storage->releaseAudioClip(sessionId, 
+                                          itemPlayingNow->getAudioClip());
+                itemPlayingNow.reset();
+                break;
+            case Playable::PlaylistType:
+                storage->releasePlaylist(sessionId, 
+                                         itemPlayingNow->getPlaylist());
+                itemPlayingNow.reset();
+                break;
+            default:    // this never happens
+                break;
+        }
+    }
+
+    audioPlayerIsPaused = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Pause the audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: pauseAudio(void)
+                                                    throw (std::logic_error)
+{
+    if (audioPlayer->isPlaying()) {
+        audioPlayer->pause();
+        audioPlayerIsPaused = true;
     }
 }
 

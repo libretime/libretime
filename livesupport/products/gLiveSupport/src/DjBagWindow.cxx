@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,6 +70,10 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         set_title(*getResourceUstring("windowTitle"));
         playButton.reset(new Gtk::Button(
                                     *getResourceUstring("playButtonLabel")));
+        pauseButton.reset(new Gtk::Button(
+                                    *getResourceUstring("pauseButtonLabel")));
+        stopButton.reset(new Gtk::Button(
+                                    *getResourceUstring("stopButtonLabel")));
         closeButton.reset(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
@@ -82,7 +86,23 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     playButton->set_relief(Gtk::RELIEF_NORMAL);
     // Register the signal handler for the button getting clicked.
     playButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                          &DjBagWindow::onPlayItem));
+                                          &DjBagWindow::onPlayButtonClicked));
+
+    // set up the pause button
+    pauseButton->set_name("pauseButton");
+    pauseButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
+    pauseButton->set_relief(Gtk::RELIEF_NORMAL);
+    // Register the signal handler for the button getting clicked.
+    pauseButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                          &DjBagWindow::onPauseButtonClicked));
+
+    // set up the stop button
+    stopButton->set_name("stopButton");
+    stopButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
+    stopButton->set_relief(Gtk::RELIEF_NORMAL);
+    // Register the signal handler for the button getting clicked.
+    stopButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                          &DjBagWindow::onStopButtonClicked));
 
     // set up the close button
     closeButton->set_name("closeButton");
@@ -108,6 +128,14 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     vBox.pack_start(buttonBox, Gtk::PACK_SHRINK);
 
     playButtonBox.pack_start(*playButton, Gtk::PACK_SHRINK);
+    playButtonBox.set_border_width(5);
+    playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
+
+    playButtonBox.pack_start(*pauseButton, Gtk::PACK_SHRINK);
+    playButtonBox.set_border_width(5);
+    playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
+
+    playButtonBox.pack_start(*stopButton, Gtk::PACK_SHRINK);
     playButtonBox.set_border_width(5);
     playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
 
@@ -555,8 +583,59 @@ DjBagWindow :: onPlayItem(void)                               throw ()
         if (iter) {
             Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
 
-            gLiveSupport->play(playable);
+            try {
+                gLiveSupport->playAudio(playable);
+            } catch (XmlRpcException &e) {
+                std::cerr << "GLiveSupport::playAudio() error:" << std::endl
+                          << e.what() << std::endl;
+            } catch (std::exception &e) {
+                std::cerr << "GLiveSupport::playAudio() error:" << std::endl
+                          << e.what() << std::endl;
+            }
         }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Play button getting clicked
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onPlayButtonClicked(void)                      throw ()
+{
+    onPlayItem();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Pause button getting clicked
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onPauseButtonClicked(void)                      throw ()
+{
+    try {
+        gLiveSupport->pauseAudio();
+    } catch (std::logic_error &e) {
+        std::cerr << "GLiveSupport::pauseAudio() error:" << std::endl
+                    << e.what() << std::endl;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Stop button getting clicked
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onStopButtonClicked(void)                      throw ()
+{
+    try {
+        gLiveSupport->stopAudio();
+    } catch (XmlRpcException &e) {
+        std::cerr << "GLiveSupport::stopAudio() error:" << std::endl
+                    << e.what() << std::endl;
+    } catch (std::logic_error &e) {
+        std::cerr << "GLiveSupport::stopAudio() error:" << std::endl
+                    << e.what() << std::endl;
     }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -112,7 +112,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -337,6 +337,18 @@ class HelixPlayer : virtual public Configurable,
          */
         virtual void
         start(void)                             throw (std::logic_error);
+
+        /**
+         *  Pause the player.
+         *  Playing can be resumed by calling start().
+         *
+         *  @exception std::logic_error if there was no previous call to
+         *             open().
+         *  @see #open
+         *  @see #start
+         */
+        virtual void
+        pause(void)                             throw (std::logic_error);
 
         /**
          *  Tell if we're currently playing.

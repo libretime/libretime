@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -181,6 +181,16 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The one and only playlist that may be edited at any one time.
          */
         Ptr<Playlist>::Ref              editedPlaylist;
+
+        /**
+         *  The playlist or audio clip that is being played (may be null).
+         */
+        Ptr<Playable>::Ref              itemPlayingNow;
+
+        /**
+         *  True if the audio player has been paused.
+         */
+        bool                            audioPlayerIsPaused;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -511,13 +521,37 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Play a Playable object using the audio player.
          *
          *  @param playable the Playable object to play.
-         *  @exception XmlRpcException in case of XML-RPC errors.
+         *  @exception XmlRpcException in case of storage server errors.
+         *  @exception std::invalid_argument in case of audio player errors.
+         *  @exception std::logic_error in case of audio player errors.
          *  @exception std::runtime_error in case of audio player errors.
          */
         virtual void
-        play(Ptr<Playable>::Ref   playable)
-                                                    throw (XmlRpcException,
-                                                           std::runtime_error);
+        playAudio(Ptr<Playable>::Ref   playable)
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument,
+                                                       std::logic_error,
+                                                       std::runtime_error);
+
+        /**
+         *  Stop the audio player.
+         *
+         *  @exception XmlRpcException in case of storage server errors.
+         *  @exception std::logic_error in case of audio player errors.
+         */
+        virtual void
+        stopAudio(void)
+                                                throw (XmlRpcException,
+                                                       std::logic_error);
+
+        /**
+         *  Pause the audio player.
+         *
+         *  @exception std::logic_error in case of audio player errors.
+         */
+        virtual void
+        pauseAudio(void)
+                                                throw (std::logic_error);
 
 };
 

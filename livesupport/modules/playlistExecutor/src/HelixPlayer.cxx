@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -326,6 +326,20 @@ HelixPlayer :: start(void)                      throw (std::logic_error)
     }
     player->Begin();
     playing = true;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Pause the player
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: pause(void)                      throw (std::logic_error)
+{
+    if (player->GetSourceCount() == 0) {
+        throw std::logic_error("HelixPlayer::open() not called yet");
+    }
+    player->Pause();
+    playing = false;    // Is this what we want?
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class AudioPlayerInterface
 {
@@ -135,16 +135,29 @@ class AudioPlayerInterface
         /**
          *  Start playing.
          *  This call will start playing the active playlist, which was
-         *  set by a previous call to playThis().
+         *  set by a previous call to open().
          *  Playing can be stopped by calling stop().
          *
          *  @exception std::logic_error if there was no previous call to
          *             playThis().
-         *  @see #playThis
+         *  @see #open
          *  @see #stop
          */
         virtual void
         start(void)                             throw (std::logic_error)
+                                                                      = 0;
+
+        /**
+         *  Pause the player.
+         *  Playing can be resumed by calling start().
+         *
+         *  @exception std::logic_error if there was no previous call to
+         *             open().
+         *  @see #open
+         *  @see #start
+         */
+        virtual void
+        pause(void)                             throw (std::logic_error)
                                                                       = 0;
 
         /**

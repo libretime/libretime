@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class DjBagWindow : public Gtk::Window, public LocalizedObject
 {
@@ -80,7 +80,7 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.6 $
+         *  @version $Revision: 1.7 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -153,6 +153,16 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Button>::Ref       playButton;
 
         /**
+         *  The pause button.
+         */
+        Ptr<Gtk::Button>::Ref       pauseButton;
+
+        /**
+         *  The stop button.
+         */
+        Ptr<Gtk::Button>::Ref       stopButton;
+
+        /**
          *  The box containing the close button.
          */
         Gtk::HButtonBox             buttonBox;
@@ -173,6 +183,24 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  that comes up when right-clicking an entry in the entry list.
          */
         Ptr<Gtk::Menu>::Ref         playlistMenu;
+
+        /**
+         *  Signal handler for the play button clicked.
+         */
+        virtual void
+        onPlayButtonClicked(void)                               throw ();
+
+        /**
+         *  Signal handler for the pause button clicked.
+         */
+        virtual void
+        onPauseButtonClicked(void)                              throw ();
+
+        /**
+         *  Signal handler for the stop button clicked.
+         */
+        virtual void
+        onStopButtonClicked(void)                               throw ();
 
         /**
          *  Signal handler for the close button clicked.
