@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,72 +62,73 @@ static const std::string    pathAttrName = "path";
 /**
  *  The name of the left passive image for the button.
  */
-static const std::string    buttonPassiveLeftName = "button_left.png";
+static const std::string    buttonPassiveLeftName = "button/left.png";
 
 /**
  *  The name of the center passive image for the button.
  */
-static const std::string    buttonPassiveCenterName = "button_centre.png";
+static const std::string    buttonPassiveCenterName = "button/center.png";
 
 /**
  *  The name of the right passive image for the button.
  */
-static const std::string    buttonPassiveRightName = "button_right.png";
+static const std::string    buttonPassiveRightName = "button/right.png";
 
 /**
  *  The name of the left rollover image for the button.
  */
-static const std::string    buttonRollLeftName = "button_left_roll.png";
+static const std::string    buttonRollLeftName = "button/leftRoll.png";
 
 /**
  *  The name of the center rollover image for the button.
  */
-static const std::string    buttonRollCenterName = "button_centre_roll.png";
+static const std::string    buttonRollCenterName = "button/centerRoll.png";
 
 /**
  *  The name of the right rollover image for the button.
  */
-static const std::string    buttonRollRightName = "button_right_roll.png";
+static const std::string    buttonRollRightName = "button/rightRoll.png";
 
 /**
  *  The name of the top left image for BlueBin.
  */
-static const std::string    blueBinTopLeftName = "corner_topleft.png";
+static const std::string    blueBinTopLeftName = "blueBin/topLeft.png";
 
 /**
  *  The name of the left image for BlueBin.
  */
-static const std::string    blueBinLeftName = "corner_leftside.png";
+static const std::string    blueBinLeftName = "blueBin/left.png";
 
 /**
  *  The name of the top image for BlueBin.
  */
-static const std::string    blueBinTopName = "corner_topcentre.png";
+static const std::string    blueBinTopName = "blueBin/top.png";
 
 /**
  *  The name of the top right image for BlueBin.
  */
-static const std::string    blueBinTopRightName = "corner_topright.png";
+static const std::string    blueBinTopRightName = "blueBin/topRight.png";
 
 /**
  *  The name of the right image for BlueBin.
  */
-static const std::string    blueBinRightName = "corner_rightside.png";
+static const std::string    blueBinRightName = "blueBin/right.png";
 
 /**
  *  The name of the bottom left image for BlueBin.
  */
-static const std::string    blueBinBottomLeftName = "corner_botleft.png";
+static const std::string    blueBinBottomLeftName = "blueBin/bottomLeft.png";
 
 /**
  *  The name of the bottom image for BlueBin.
  */
-static const std::string    blueBinBottomName = "corner_botcentre.png";
+static const std::string    blueBinBottomName = "blueBin/bottom.png";
 
 /**
  *  The name of the bottom right image for BlueBin.
  */
-static const std::string    blueBinBottomRightName = "corner_botright.png";
+static const std::string    blueBinBottomRightName = "blueBin/bottomRight.png";
+
 
 /* ===============================================  local function prototypes */
 
