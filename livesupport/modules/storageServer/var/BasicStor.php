@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,12 +37,14 @@ define('GBERR_AOBJNEX', 46);
 define('GBERR_NOTF', 47);
 define('GBERR_SESS', 48);
 define('GBERR_PREF', 49);
+define('GBERR_TOKEN', 50);
+define('GBERR_PUT', 51);
 
-define('GBERR_NOTIMPL', 50);
+define('GBERR_NOTIMPL', 69);
 
 require_once "../../../alib/var/alib.php";
 require_once "StoredFile.php";
-#require_once "Transport.php";
+require_once "Transport.php";
 
 /**
  *  BasicStor class
@@ -50,7 +52,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -111,16 +113,17 @@ class BasicStor extends Alib{
      *  @param mdataFileLP string, local path of metadata file
      *  @param gunid string, global unique id OPTIONAL
      *  @param ftype string, internal file type
+     *  @param mdataLoc string 'file'|'string' (optional)
      *  @return int
      *  @exception PEAR::error
      */
-    function bsPutFile($parid, $fileName,
-        $mediaFileLP, $mdataFileLP, $gunid=NULL, $ftype='unKnown')
+    function bsPutFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
+        $gunid=NULL, $ftype='unKnown', $mdataLoc='file')
     {
         $name   = "$fileName";
         $id = $this->addObj($name , 'File', $parid);
         $ac =&  StoredFile::insert(
-            &$this, $id, $name, $mediaFileLP, $mdataFileLP, 'file',
+            &$this, $id, $name, $mediaFileLP, $mdataFileLP, $mdataLoc,
             $gunid, $ftype
         );
         if(PEAR::isError($ac)){
@@ -236,11 +239,12 @@ class BasicStor extends Alib{
      *  Delete file
      *
      *  @param id int, virt.file's local id
+     *  @param forced boolean, unconditional delete
      *  @return true or PEAR::error
      */
-    function bsDeleteFile($id)
+    function bsDeleteFile($id, $forced=FALSE)
     {
-        $res = $this->removeObj($id);
+        $res = $this->removeObj($id, $forced);
         return $res;
     }
 
@@ -353,7 +357,8 @@ class BasicStor extends Alib{
      *
      *  @param id int, virt.file's local id
      *  @param part string, 'media'|'metadata'
-     *  @return array with: downloadable URL, download token
+     *  @return array with strings:
+     *      downloadable URL, download token, chsum, size, filename
      */
     function bsOpenDownload($id, $part='media')
     {
@@ -361,18 +366,31 @@ class BasicStor extends Alib{
         if(PEAR::isError($ac)) return $ac;
         $gunid      = $ac->gunid;
         switch($part){
-        case"media":
-            $fname  = $ac->_getRealRADFname();
-            $ext    = $ac->_getExt();
-            break;
-        case"metadata":
-            $fname  = $ac->_getRealMDFname();
-            $ext    = "xml";
-            break;
+            case"media":
+                $realfile  = $ac->_getRealRADFname();
+                $ext       = $ac->_getExt();
+                $filename  = $ac->_getFileName();
+                break;
+            case"metadata":
+                $realfile  = $ac->_getRealMDFname();
+                $ext       = "xml";
+                $filename  = $ac->_getFileName();
+                break;
+            default:
+                return PEAR::raiseError(
+                 "BasicStor::bsOpenDownload: unknown part ($part)"
+                );
         }
-        $acc = $this->bsAccess($fname, $ext, $gunid, 'download');
+        $acc = $this->bsAccess($realfile, $ext, $gunid, 'download');
+        if(PEAR::isError($acc)){ return $acc; }
         $url = $this->getUrlPart()."access/".basename($acc['fname']);
-        return array('url'=>$url, 'token'=>$acc['token']);
+        $chsum = md5_file($realfile);
+        $size = filesize($realfile);
+        return array(
+            'url'=>$url, 'token'=>$acc['token'],
+            'chsum'=>$chsum, 'size'=>$size,
+            'filename'=>$filename
+        );
     }
 
     /**
@@ -404,6 +422,10 @@ class BasicStor extends Alib{
         $ext    = '';
         $token  = StoredFile::_createGunid();
         $res    = $this->dbc->query("
+            DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
+        ");
+        if(PEAR::isError($res)){ return $res; }
+        $res    = $this->dbc->query("
             INSERT INTO {$this->accessTable}
                 (gunid, token, ext, chsum, type, ts)
             VALUES
@@ -426,9 +448,11 @@ class BasicStor extends Alib{
      */
     function bsClosePut($token)
     {
+        $token = StoredFile::_normalizeGunid($token);
         if(!$this->bsCheckToken($token, 'put')){
             return PEAR::raiseError(
-             "BasicStor::bsClosePut: invalid token ($token)"
+             "BasicStor::bsClosePut: invalid token ($token)",
+             GBERR_TOKEN
             );
         }
         $chsum = $this->dbc->getOne("
@@ -444,10 +468,45 @@ class BasicStor extends Alib{
         if($chsum != $md5sum){
             if(file_exists($fname)) @unlink($fname);
             return PEAR::raiseError(
-             "BasicStor::bsClosePut: md5sum does not match (token=$token)"
+             "BasicStor::bsClosePut: md5sum does not match (token=$token)",
+             GBERR_PUT
             );
         }
         return $fname;
+    }
+
+    /**
+     *  Check uploaded file
+     *
+     *  @param token string, put token
+     *  @return hash, (
+     *      status: boolean,
+     *      size: int - filesize
+     *      expectedsum: string - expected checksum
+     *      realsum: string - checksum of uploaded file
+     *   )
+     */
+    function bsCheckPut($token)
+    {
+        if(!$this->bsCheckToken($token, 'put')){
+            return PEAR::raiseError(
+             "BasicStor::bsClosePut: invalid token ($token)"
+            );
+        }
+        $chsum = $this->dbc->getOne("
+            SELECT chsum FROM {$this->accessTable}
+            WHERE token=x'{$token}'::bigint
+        ");
+        if(PEAR::isError($chsum)){ return $chsum; }
+        $fname = "{$this->accessDir}/$token";
+        $md5sum = md5_file($fname);
+        $size = filesize($fname);
+        $status = ($chsum == $md5sum);
+        return array(
+            'status'=>$status, 'size'=>$size,
+            'expectedsum'=>$chsum,
+            'realsum'=>$md5sum,
+        );
     }
 
     /**
@@ -644,7 +703,7 @@ class BasicStor extends Alib{
             if($v['type'] == 'File'){
                 $gunid = $this->_gunidFromId($v['id']);
                 $listArr[$i]['type'] =
-                    StoredFile::_getType($gunid);
+                    $this->_getType($gunid);
                 $listArr[$i]['gunid'] = $gunid;
                 if(StoredFIle::_getState($gunid) == 'incomplete')
                     unset($listArr[$i]);
@@ -725,11 +784,46 @@ class BasicStor extends Alib{
         $type = $this->getObjName($oid, 'type');
         if($type == 'File'){
             $ftype =
-                StoredFile::_getType($this->_gunidFromId($oid));
+                $this->_getType($this->_gunidFromId($oid));
             if(!is_null($ftype)) $type=$ftype;
         }
         return $type;
     }
+    
+    /**
+     *  Add new user with home folder
+     *
+     *  @param login string
+     *  @param pass string OPT
+     *  @return int/err
+     */
+    function addSubj($login, $pass=NULL)
+    {
+        $uid = parent::addSubj($login, $pass);
+        if(PEAR::isError($uid)) return $uid;
+        $fid = $this->bsCreateFolder($this->storId, $login);
+        if(PEAR::isError($fid)) return $fid;
+        $res = $this->addPerm($uid, '_all', $fid, 'A');
+        if(PEAR::isError($res)) return $res;
+        return $uid;
+    }
+    /**
+     *  Remove user and his home folder
+     *
+     *  @param login string
+     *  @param uid int OPT
+     *  @return boolean/err
+     */
+    function removeSubj($login, $uid=NULL)
+    {
+        $res = parent::removeSubj($login, $pass);
+        if(PEAR::isError($res)) return $res;
+        $id = $this->getObjId($login, $this->storId);
+        if(PEAR::isError($id)) return $id;
+        $res = $this->bsDeleteFile($id);
+        if(PEAR::isError($res)) return $res;
+        return TRUE;
+    }  
     
     /* ==================================================== "private" methods */
     /**
@@ -767,6 +861,10 @@ class BasicStor extends Alib{
         $parid = $this->getObjId(
             $this->getSessLogin($sessid), $this->storId
         );
+        if(is_null($parid)){
+            return PEAR::raiseError("BasicStor::_getHomeDirId: ".
+                "homedir not found", GBERR_NOTF);
+        }
         return $parid;
     }
     
@@ -799,6 +897,21 @@ class BasicStor extends Alib{
         if(PEAR::isError($gunid)) return $gunid;
         if(is_null($gunid)) return NULL;
         return StoredFile::_normalizeGunid($gunid);
+    }
+
+    /**
+     *  Get storage-internal file type
+     *
+     *  @param gunid string, global unique id of file
+     *  @return string, see install()
+     */
+    function _getType($gunid)
+    {
+        $ftype = $this->dbc->getOne("
+            SELECT ftype FROM {$this->filesTable}
+            WHERE gunid=x'$gunid'::bigint
+        ");
+        return $ftype;
     }
 
     /* ------------------------------------------ redefined "private" methods */
@@ -845,21 +958,22 @@ class BasicStor extends Alib{
      *  Redefined from parent class.
      *
      *  @param id int, local id of removed object
+     *  @param forced boolean, unconditional delete
      *  @return true or PEAR::error
      */
-    function removeObj($id)
+    function removeObj($id, $forced=FALSE)
     {
         switch($ot = $this->getObjType($id)){
             case"audioclip":
             case"playlist":
                 $ac =& StoredFile::recall(&$this, $id);
                 if(PEAR::isError($ac)) return $ac;
-                if($ac->isEdited()){
+                if($ac->isEdited() && !$forced){
                     return PEAR::raiseError(
                         'BasicStor.php: removeObj: is edited'
                     );
                 }
-                if($ac->isAccessed()){
+                if($ac->isAccessed() && !$forced){
                     return PEAR::raiseError(
                         'BasicStor.php: removeObj: is accessed'
                     );
@@ -923,7 +1037,7 @@ class BasicStor extends Alib{
 //        $this->dbc->query("DELETE FROM {$this->filesTable}");
         $ids = $this->dbc->getAll("SELECT id FROM {$this->filesTable}");
         if(is_array($ids)) foreach($ids as $i=>$item){
-            $this->bsDeleteFile($item['id']);
+            $this->bsDeleteFile($item['id'], TRUE);
         }
         parent::deleteData();
         $this->initData();

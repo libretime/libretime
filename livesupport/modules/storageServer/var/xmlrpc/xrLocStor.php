@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,6 +117,10 @@ $methods = array(
     'loadPref'                => 'Load user preference value.',
     'savePref'                => 'Save user preference value.',
     'delPref'                 => 'Delete user preference record.',
+
+    'uploadToArchive'         => 'Starts upload audioclip to remote archive.',
+    'downloadFromArchive'     => 'Starts download audioclip from remote archive.',
+    'getTransportInfo'        => 'Checking status of transported file.',
 );
 
 $defs = array();

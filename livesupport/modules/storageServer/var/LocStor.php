@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,9 @@ class LocStor extends BasicStor{
      *  @param chsum string, md5 checksum of media file
      *  @return struct {url:writable URL for HTTP PUT, token:access token
      */
-    function storeAudioClipOpen($sessid, $gunid, $metadata, $fname, $chsum)
+    function storeAudioClipOpen(
+        $sessid, $gunid, $metadata, $fname, $chsum, $ftype='audioclip'
+    )
     {
         // test if specified gunid exists:
         if(!preg_match("|^([0-9a-fA-F]{16})?$|", $gunid)){
@@ -59,8 +61,9 @@ class LocStor extends BasicStor{
         $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(!PEAR::isError($ac)){
             // gunid exists - do replace
+            $oid = $ac->getId();
             if(($res = $this->_authorize(
-                'write', $ac->getId(), $sessid
+                'write', $oid, $sessid
             )) !== TRUE) return $res;
             if($ac->isAccessed()){
                 return PEAR::raiseError(
@@ -68,7 +71,7 @@ class LocStor extends BasicStor{
                 );
             }
             $res = $ac->replace(
-                $ac->getId(), $ac->name, '', $metadata, 'string'
+                $oid, $ac->name, '', $metadata, 'string'
             );
             if(PEAR::isError($res)) return $res;
         }else{
@@ -82,7 +85,7 @@ class LocStor extends BasicStor{
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
                 &$this, $oid, '', '', $metadata, 'string',
-                $gunid, 'audioclip'
+                $gunid, $ftype
             );
             if(PEAR::isError($ac)){
                 $res = $this->removeObj($oid);
@@ -119,6 +122,17 @@ class LocStor extends BasicStor{
         $res = $ac->setState('ready');
         if(PEAR::isError($res)) return $res;
         return $ac->gunid;
+    }
+
+    /**
+     *  Check uploaded file
+     *
+     *  @param token string, put token
+     *  @return hash, (status: boolean, size: int - filesize)
+     */
+    function uploadCheck($token)
+    {
+        return $this->bsCheckPut($token);
     }
 
     /* --------------------------------------------------------------- access */
@@ -158,16 +172,18 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session id
      *  @param gunid string, global unique id
-     *  @return array with: downloadable URL, download token
+     *  @return array with strings:
+     *      downloadable URL, download token, chsum, size, filename
      */
     function downloadRawAudioDataOpen($sessid, $gunid)
     {
-        $res = $this->existsAudioClip($sessid, $gunid);
-        if(PEAR::isError($res)) return $res;
+        $ex = $this->existsAudioClip($sessid, $gunid);
+        if(PEAR::isError($ex)) return $ex;
         $id = $this->_idFromGunid($gunid);
-        if(is_null($id)){
+        if(is_null($id) || !$ex){
             return PEAR::raiseError(
-             "LocStor::downloadRawAudioDataOpen: gunid not found ($gunid)"
+                "LocStor::downloadRawAudioDataOpen: gunid not found ($gunid)",
+                GBERR_NOTF
             );
         }
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
@@ -191,12 +207,13 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session id
      *  @param gunid string, global unique id
-     *  @return array with: downloadable URL, download token
+     *  @return array with strings:
+     *      downloadable URL, download token, chsum, filename
      */
     function downloadMetadataOpen($sessid, $gunid)
     {
-        $res = $this->existsAudioClip($sessid, $gunid);
-        if(PEAR::isError($res)) return $res;
+#        $res = $this->existsAudioClip($sessid, $gunid);
+#        if(PEAR::isError($res)) return $res;
         $id = $this->_idFromGunid($gunid);
         if(is_null($id)){
             return PEAR::raiseError(
@@ -205,7 +222,9 @@ class LocStor extends BasicStor{
         }
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsOpenDownload($id, 'metadata');
+        $res = $this->bsOpenDownload($id, 'metadata');
+        #unset($res['filename']);
+        return $res;
     }
 
     /**
@@ -350,7 +369,7 @@ class LocStor extends BasicStor{
                 default: return $ac;
             }
         }
-        if(!is_null($ftype) && ($ac->_getType() != $ftype)) return FALSE;
+        if(!is_null($ftype) && ($this->_getType($gunid) != $ftype)) return FALSE;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
         return TRUE;
@@ -399,6 +418,10 @@ class LocStor extends BasicStor{
     function resetStorage($input='')
     {
         $this->deleteData();
+        if(!$this->config['isArchive']){
+            $tr =& new Transport($this->dbc, $this, $this->config);
+            $tr->resetData();
+        }
         $rootHD = $this->getObjId('root', $this->storId);
         include"../tests/sampleData.php";
         $res = array('audioclips'=>array(), 'playlists'=>array());
@@ -483,7 +506,8 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
-     *  @return struct {url:readable URL for HTTP GET, token:access token}
+     *  @return struct
+     *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
      */
     function editPlaylist($sessid, $playlistId)
     {
@@ -505,6 +529,7 @@ class LocStor extends BasicStor{
         $res = $this->bsOpenDownload($id, 'metadata');
         if(PEAR::isError($res)){ return $res; }
         $this->_setEditFlag($playlistId, TRUE);
+        unset($res['filename']);
         return $res;
     }
 
@@ -557,7 +582,8 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
-     *  @return struct {url:readable URL for HTTP GET, token:access token
+     *  @return struct
+     *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
      */
     function accessPlaylist($sessid, $playlistId)
     {
@@ -565,13 +591,16 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
             return PEAR::raiseError(
-                'LocStor.php: accessPlaylist: playlist not found'
+                "LocStor.php: accessPlaylist: playlist not found ($playlistId)",
+                GBERR_NOTF
             );
         }
         $id = $this->_idFromGunid($playlistId);
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsOpenDownload($id, 'metadata');
+        $res = $this->bsOpenDownload($id, 'metadata');
+        unset($res['filename']);
+        return $res;
     }
 
     /**

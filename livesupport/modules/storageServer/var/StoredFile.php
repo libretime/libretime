@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ class StoredFile{
         $ac->mime = "unKnown";
         $emptyState = TRUE;
         if($ac->name=='') $ac->name=$ac->gunid;
-        $this->dbc->query("BEGIN");
+        $ac->dbc->query("BEGIN");
         $res = $ac->dbc->query("
             INSERT INTO {$ac->filesTable}
                 (id, name, gunid, mime, state, ftype)
@@ -101,7 +101,7 @@ class StoredFile{
                 ('$oid', '{$ac->name}', x'{$ac->gunid}'::bigint,
                     '{$ac->mime}', 'incomplete', '$ftype')
         ");
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        if(PEAR::isError($res)){ $ac->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
         if($metadata != ''){
             if($mdataLoc=='file' && !file_exists($metadata))
@@ -111,7 +111,7 @@ class StoredFile{
             }
             $res = $ac->md->insert($metadata, $mdataLoc);
             if(PEAR::isError($res)){
-                $this->dbc->query("ROLLBACK"); return $res;
+                $ac->dbc->query("ROLLBACK"); return $res;
             }
             $emptyState = FALSE;
         }
@@ -124,7 +124,7 @@ class StoredFile{
             }
             $res = $ac->rmd->insert($mediaFileLP);
             if(PEAR::isError($res)){
-                $this->dbc->query("ROLLBACK"); return $res;
+                $ac->dbc->query("ROLLBACK"); return $res;
             }
             $mime = $ac->rmd->getMime();
             //$gb->debugLog("gunid={$ac->gunid}, mime=$mime");
@@ -140,8 +140,8 @@ class StoredFile{
             $res = $ac->setState('ready');
             if(PEAR::isError($res)){ $ac->dbc->query("ROLLBACK"); return $res; }
         }
-        $res = $this->dbc->query("COMMIT");
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        $res = $ac->dbc->query("COMMIT");
+        if(PEAR::isError($res)){ $ac->dbc->query("ROLLBACK"); return $res; }
         return $ac;
     }
 
@@ -224,7 +224,7 @@ class StoredFile{
     {
         $ac =& StoredFile::insert(
             &$src->gb, $nid, $src->name, $src->_getRealRADFname(),
-            '', '', NULL, $src->_getType()
+            '', '', NULL, $src->gb->_getType($src->gunid)
         );
         if(PEAR::isError($ac)) return $ac;
         $ac->md->replace($src->md->getMetaData(), 'string');
@@ -256,7 +256,7 @@ class StoredFile{
             $this->dbc->query("ROLLBACK"); return $res;
         }
         if($metadata != ''){        // metadata
-            $res = $this->md->replace($metadata, $mdataLoc);
+            $res = $this->replaceMetaData($metadata, $mdataLoc);
         }else{
             $res = $this->md->delete();
         }
@@ -495,6 +495,7 @@ class StoredFile{
             SELECT to_hex(gunid) FROM {$this->filesTable}
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
+        if(PEAR::isError($indb)) return $indb;
         return (!is_null($indb) && $this->rmd->exists());
     }    
     
@@ -586,22 +587,6 @@ class StoredFile{
     }
 
     /**
-     *  Get storage-internal file type
-     *
-     *  @param gunid string, optional, global unique id of file
-     *  @return string, see install()
-     */
-    function _getType($gunid=NULL)
-    {
-        if(is_null($gunid)) $gunid = $this->gunid;
-        $ftype = $this->dbc->getOne("
-            SELECT ftype FROM {$this->filesTable}
-            WHERE gunid=x'$gunid'::bigint
-        ");
-        return $ftype;
-    }
-
-    /**
      *  Get storage-internal file state
      *
      *  @param gunid string, optional, global unique id of file
@@ -639,8 +624,9 @@ class StoredFile{
     function _getResDir()
     {
         $resDir="{$this->gb->storageDir}/".substr($this->gunid, 0, 3);
+        #$this->gb->debugLog("$resDir");
         // see Transport::_getResDir too for resDir name create code
-        if(!file_exists($resDir)){ mkdir($resDir, 02775); chmod($resDir, 02775); }
+        if(!is_dir($resDir)){ mkdir($resDir, 02775); chmod($resDir, 02775); }
         return $resDir;
     }
 
@@ -671,6 +657,7 @@ class StoredFile{
      */
     function _getAccessFname($token, $ext='EXT')
     {
+        $token = StoredFile::_normalizeGunid($token);
         return "{$this->accessDir}/$token.$ext";
     }
 }

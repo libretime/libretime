@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,6 +122,15 @@ $infos = array(
         'p'=>array('sessid', 'key', 'value'), 'r'=>'status'),
     "delPref"       => array('m'=>"locstor.delPref",
         'p'=>array('sessid', 'key'), 'r'=>'status'),
+
+    "uploadToArchive"       => array('m'=>"locstor.uploadToArchive",
+        'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),
+    "downloadFromArchive"       => array('m'=>"locstor.downloadFromArchive",
+        'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),
+    "getTransportInfo"       => array('m'=>"locstor.getTransportInfo",
+        'p'=>array('sessid', 'trtok'), 
+        'r'=>array('state', 'realsize', 'realsum', 'expectedsize', 'expectedsum')),
+
     "openPut"       => array('m'=>"locstor.openPut", 'p'=>array()),
     "closePut"      => array('m'=>"locstor.closePut", 'p'=>array()),
 );

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -278,41 +278,6 @@ class GreenBox extends BasicStor{
     
     /* ---------------------------------------------------- redefined methods */
 
-    /**
-     *  Add new user with home folder
-     *
-     *  @param login string
-     *  @param pass string OPT
-     *  @return int/err
-     */
-    function addSubj($login, $pass=NULL)
-    {
-        $uid = parent::addSubj($login, $pass);
-        if(PEAR::isError($uid)) return $uid;
-        $fid = $this->bsCreateFolder($this->storId, $login);
-        if(PEAR::isError($fid)) return $fid;
-        $res = $this->addPerm($uid, '_all', $fid, 'A');
-        if(PEAR::isError($res)) return $res;
-        return $uid;
-    }
-    /**
-     *  Remove user and his home folder
-     *
-     *  @param login string
-     *  @param uid int OPT
-     *  @return boolean/err
-     */
-    function removeSubj($login, $uid=NULL)
-    {
-        $res = parent::removeSubj($login, $pass);
-        if(PEAR::isError($res)) return $res;
-        $id = $this->getObjId($login, $this->storId);
-        if(PEAR::isError($id)) return $id;
-        $res = $this->bsDeleteFile($id);
-        if(PEAR::isError($res)) return $res;
-        return TRUE;
-    }  
-    
     /**
      *  Get file's path in virtual filesystem
      *
