@@ -132,7 +132,7 @@ $tpldata['showMenu']=true;
  <a href="gbHtmlBrowse.php?act=getHomeDir" class="button">Home directory</a>
  <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&act=newfile" class="button"><span class="hidden">[</span>Upload&nbsp;new&nbsp;file<span class="hidden">]</span></a>
  <a href="javascript:newFolder()" class="button"><span class="hidden">[</span>Create&nbsp;new&nbsp;folder<span class="hidden">]</span></a>
- <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&act=sform" class="button"><span class="hidden">[</span>Search<span class="hidden">]</span></a>
+<!-- <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&act=sform" class="button"><span class="hidden">[</span>Search<span class="hidden">]</span></a>-->
 </h3>
 <?php }?>
 

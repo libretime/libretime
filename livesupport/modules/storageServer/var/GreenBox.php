@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -446,10 +446,10 @@ class GreenBox extends Alib{
     function localSearch($searchData, $sessid='')
     {
         $ftsrch = $searchData;
-        $res = $this->dbc->getAll("SELECT md.gunid as gunid
+        $res = $this->dbc->getCol("SELECT md.gunid as gunid
             FROM {$this->filesTable} f, {$this->mdataTable} md
             WHERE f.gunid=md.gunid AND md.objns='_L' AND
-                md.object like '$ftsrch'
+                md.object like '%$ftsrch%'
             GROUP BY md.gunid
         ");
         if(!is_array($res)) $res = array();

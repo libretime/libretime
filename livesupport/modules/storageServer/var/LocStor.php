@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -208,6 +208,28 @@ class LocStor extends GreenBox{
         $md = $this->getMdata($ac->getId(), $sessid);
         if(PEAR::isError($md)) return $md;
         return $md;
+    }
+    /**
+     *  Reset storageServer for debugging.
+     *
+     *  @param input string
+     */
+    function resetStorage($input='')
+    {
+        $this->deleteData();
+        $rootHD = $this->getObjId('root', $this->storId);
+        $this->login('root', $this->config['tmpRootPass']);
+        $s = $this->sessid;
+        include"../tests/sampleData.php";
+        $res = array();
+        foreach($sampleData as $k=>$it){
+            list($media, $meta) = $it;
+            $r = $this->putFile($rootHD, "file".($k+1), $media, $meta, $s);
+            if(PEAR::isError($r)){ return $r; }
+            $res[] = $this->_gunidFromId($r);
+        }
+        $this->logout($this->sessid);
+        return $res;
     }
 }
 ?>

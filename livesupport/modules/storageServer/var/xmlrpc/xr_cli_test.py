@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.2 $
+#    Version  : $Revision: 1.3 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -105,6 +105,8 @@ try:
         print server.locstor.releaseRawAudioData({'sessid':pars[0], 'tmpLink':pars[1]})
     elif method=="getAudioClip":
         print server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
+    elif method=="resetStorage":
+        print server.locstor.resetStorage({})
     else:
         print "Unknown command: "+method
         sys.exit(1)

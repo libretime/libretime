@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,7 +56,7 @@ require_once '../LocStor.php';
 function errHndl($errno, $errmsg, $filename, $linenum, $vars){
     if($errno == 8 /*E_NOTICE*/) return;
     $xr =& new XML_RPC_Response(0, 805,
-        "ERROR:xrLoctor: $errno $errmsg ($filename:$linenum)");
+        "ERROR:xrLocStor: $errno $errmsg ($filename:$linenum)");
     header("Content-type: text/xml");
     echo $xr->serialize();
     exit($errno);
@@ -495,7 +495,7 @@ class XR_LocStor extends LocStor{
         if(!$ok) return $r;
         $res = $this->searchMetadata($r['sessid'], $r['criteria']);
         if(!PEAR::isError($res))
-            return new XML_RPC_Response(new XML_RPC_Value($res, "boolean"));
+            return new XML_RPC_Response(XML_RPC_encode($res));
         else
             return new XML_RPC_Response(0, 803,
                 "xr_searchAudioClip: ".$res->getMessage().
@@ -637,6 +637,45 @@ class XR_LocStor extends LocStor{
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
     }
+
+    /**
+     *  Reset storageServer for debugging.
+     *
+     *  The XML-RPC name of this method is "locstor.resetStorage".
+     *
+     *  There are no input parameters
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> array - array with gunids of inserted files </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_getAudioClip:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return string
+     *  @see LocStor::getAudioClip
+     */
+    function xr_resetStorage($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->resetStorage();
+        if(!PEAR::isError($res))
+            return new XML_RPC_Response(XML_RPC_encode($res));
+        else
+            return new XML_RPC_Response(0, 805,
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+    }
 }
 
 $locStor = &new XR_LocStor(&$dbc, $config);
@@ -658,7 +697,8 @@ $methods = array(
                                   'AudioClips, return all matching clip ids.',
     'accessRawAudioData'      => 'Get access to raw audio data.',
     'releaseRawAudioData'     => 'Release access to raw audio data.',
-    'getAudioClip'            => 'Return the contents of an Audio clip.'
+    'getAudioClip'            => 'Return the contents of an Audio clip.',
+    'resetStorage'            => 'Reset storageServer for debugging.',
 );
 
 $defs = array();
