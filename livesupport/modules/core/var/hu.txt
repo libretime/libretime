@@ -1,0 +1,9 @@
+hu:table
+{
+    section1:table
+    {
+        foo:string      { "fú" }
+        bar:string      { "bár" }
+    }
+}
+

@@ -1,0 +1,9 @@
+jp:table
+{
+    section1:table
+    {
+        foo:string      { "ふ" }
+        bar:string      { "ばる" }
+    }
+}
+

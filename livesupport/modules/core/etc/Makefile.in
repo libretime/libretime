@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.12 $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -39,6 +39,8 @@ DOXYGEN = doxygen
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
 #-------------------------------------------------------------------------------
+PACKAGE_NAME = @PACKAGE_NAME@
+
 BASE_DIR     = @builddir@
 DOC_DIR      = ${BASE_DIR}/doc
 DOXYGEN_DIR  = ${DOC_DIR}/doxygen
@@ -48,14 +50,26 @@ INCLUDE_DIR  = ${BASE_DIR}/include
 LIB_DIR      = ${BASE_DIR}/lib
 SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
+VAR_DIR      = ${BASE_DIR}/var
 
 USR_DIR         = ${BASE_DIR}/../../usr
 USR_INCLUDE_DIR = ${USR_DIR}/include
+USR_BIN_DIR     = ${USR_DIR}/bin
 USR_LIB_DIR     = ${USR_DIR}/lib
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
 LIBXMLPP_INCLUDE_DIR = ${USR_INCLUDE_DIR}/libxml++-1.0
 
+GENRB     = ${USR_BIN_DIR}/genrb
+GENRBOPTS = --destdir ${TMP_DIR} \
+            --encoding utf-8 \
+            --package-name ${PACKAGE_NAME} \
+            --strict
+
 VPATH    = ${SRC_DIR}
+
+# TODO: move ICU flag determination to configure script
+ICU_CFLAGS=
+ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags-toolutil --ldflags-icuio`
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
@@ -67,6 +81,8 @@ TEST_RUNNER   = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
+export LD_LIBRARY_PATH=${USR_LIB_DIR}
+
 
 #-------------------------------------------------------------------------------
 #  	Configuration parameters
@@ -74,6 +90,7 @@ DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
                              -pedantic -Wall -Wno-long-long \
+                             ${ICU_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
@@ -90,7 +107,8 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/PlaylistElement.o \
                 ${TMP_DIR}/Playlist.o \
                 ${TMP_DIR}/TimeConversion.o \
-                ${TMP_DIR}/Thread.o
+                ${TMP_DIR}/Thread.o \
+                ${TMP_DIR}/LocalizedObject.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/AudioClipTest.o \
@@ -99,9 +117,15 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/PlaylistTest.o \
                    ${TMP_DIR}/TimeConversionTest.o \
                    ${TMP_DIR}/TestRunnable.o \
-                   ${TMP_DIR}/ThreadTest.o
+                   ${TMP_DIR}/ThreadTest.o \
+                   ${TMP_DIR}/LocalizedObjectTest.o
 
-TEST_RUNNER_LIBS = -l${CORE_LIB} -lxml++-1.0 -lboost_date_time-gcc \
+TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
+                  ${TMP_DIR}/${PACKAGE_NAME}_en.res \
+                  ${TMP_DIR}/${PACKAGE_NAME}_hu.res \
+                  ${TMP_DIR}/${PACKAGE_NAME}_jp.res
+
+TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} -lxml++-1.0 -lboost_date_time-gcc \
                    -lcppunit -ldl
 
 
@@ -119,7 +143,7 @@ doc:
 
 clean:
 	${RM} ${CORE_LIB_OBJS} ${CORE_LIB_FILE}
-	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
+	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER_RES} ${TEST_RUNNER}
 	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
 docclean:
@@ -132,9 +156,8 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: ${TEST_RUNNER}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
-                                   -o ${TEST_RESULTS} -s ${TEST_XSLT}
+check: ${TEST_RUNNER} ${TEST_RUNNER_RES}
+	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 
 #-------------------------------------------------------------------------------
@@ -158,4 +181,7 @@ ${TEST_RUNNER}: ${TEST_RUNNER_OBJS} ${CORE_LIB_FILE}
 #-------------------------------------------------------------------------------
 ${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx
 	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $<
+
+${TMP_DIR}/${PACKAGE_NAME}_%.res : ${VAR_DIR}/%.txt
+	${GENRB} ${GENRBOPTS} $^
 

@@ -1,0 +1,9 @@
+root:table
+{
+    section1:table
+    {
+        foo:string      { "foo" }
+        bar:string      { "bar" }
+    }
+}
+
