@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,8 +73,8 @@ using namespace LiveSupport::Core;
  *  and XmlRpcValues.  Used by almost all XmlRpcServerMethod subclasses
  *  in the Scheduler.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.2 $
  */
 class XmlRpcTools
 {
@@ -115,6 +115,18 @@ class XmlRpcTools
          */
         static Ptr<UniqueId>::Ref
         extractScheduleEntryId(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the generic 'id' from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a UniqueId that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no playlistId
+         *             member in xmlRpcValue
+         */
+        static Ptr<UniqueId>::Ref
+        extractId(XmlRpc::XmlRpcValue  & xmlRpcValue)
                                                 throw (std::invalid_argument);
 
         /**
@@ -233,10 +245,10 @@ class XmlRpcTools
                                                                      throw ();
 
         /**
-         *  Extract the from time parameter from the XML-RPC parameters.
+         *  Extract the 'from' time parameter from the XML-RPC parameters.
          *
          *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the time value for the from parameter
+         *  @return the time value for the 'from' parameter
          *  @exception std::invalid_argument if there was no from parameter
          *             in xmlRpcValue
          */
@@ -245,16 +257,66 @@ class XmlRpcTools
                                                 throw (std::invalid_argument);
 
         /**
-         *  Extract the to parameter from the XML-RPC parameters.
+         *  Extract the 'to' parameter from the XML-RPC parameters.
          *
          *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the time value for the to parameter
+         *  @return the time value for the 'to' parameter
          *  @exception std::invalid_argument if there was no to parameter
          *             in xmlRpcValue
          */
         static Ptr<boost::posix_time::ptime>::Ref
         extractToTime(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Extract the 'start' parameter from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the time value for the 'start' parameter
+         *  @exception std::invalid_argument if there was no to parameter
+         *             in xmlRpcValue
+         */
+        static Ptr<boost::posix_time::ptime>::Ref
+        extractStartTime(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the 'end' parameter from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the time value for the 'end' parameter
+         *  @exception std::invalid_argument if there was no to parameter
+         *             in xmlRpcValue
+         */
+        static Ptr<boost::posix_time::ptime>::Ref
+        extractEndTime(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Add a 'from' time value to an XmlRpcValue.
+         *
+         *  @param from the 'from' time value to add.
+         *  @param returnValue an output parameter, which has the
+         *         'from' time added after the function returns.
+         */
+        static void
+        fromTimeToXmlRpcValue(
+                Ptr<const boost::posix_time::ptime>::Ref    from,
+                XmlRpc::XmlRpcValue                       & xmlRpcValue)
+                                                                    throw ();
+
+        /**
+         *  Add a 'to' time value to an XmlRpcValue.
+         *
+         *  @param to the 'to' time value to add.
+         *  @param returnValue an output parameter, which has the
+         *         'to' time added after the function returns.
+         */
+        static void
+        toTimeToXmlRpcValue(
+                Ptr<const boost::posix_time::ptime>::Ref    to,
+                XmlRpc::XmlRpcValue                       & xmlRpcValue)
+                                                                    throw ();
 
         /**
          *  Extract the playtime from the XML-RPC parameters.
@@ -306,6 +368,19 @@ class XmlRpcTools
                                                                     throw ();
 
         /**
+         *  Convert an XmlRpcValue array, holding schedule entries,
+         *  to a vector of ScheduleEntry object references.
+         *
+         *  @param xmlRpcValue the XML-RPC array holding the schedule entry
+         *         data
+         *  @return a vector of ScheduleEntry object references, holding
+         *          the same data.
+         */
+        static Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        extractScheduleEntries(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                                    throw ();
+
+        /**
          *  Convert a schedule entry ID (a UniqueId) to an XmlRpcValue
          *
          *  @param scheduleEntryId the UniqueId to convert.
@@ -316,6 +391,43 @@ class XmlRpcTools
         scheduleEntryIdToXmlRpcValue(
                 Ptr<const UniqueId>::Ref scheduleEntryId,
                 XmlRpc::XmlRpcValue    & returnValue)               throw ();
+
+        /**
+         *  Add a session id to an XmlRpcValue
+         *
+         *  @param sessionId the session id to add to the XmlRpcValue
+         *  @param returnValue an output parameter, which has the 
+         *         session id added after the function returns.
+         */
+        static void
+        sessionIdToXmlRpcValue(
+                Ptr<const SessionId>::Ref sessionId,
+                XmlRpc::XmlRpcValue     & returnValue)              throw ();
+
+        /**
+         *  Add a playlist id to an XmlRpcValue
+         *
+         *  @param playlist the playlist idt o add to the XmlRpcValue
+         *  @param returnValue an output parameter, which has the 
+         *         playlist id added after the function returns.
+         */
+        static void
+        playlistIdToXmlRpcValue(
+                Ptr<const UniqueId>::Ref  playlistId,
+                XmlRpc::XmlRpcValue     & returnValue)              throw ();
+
+        /**
+         *  Add a playtime value to an XmlRpcValue.
+         *
+         *  @param playtime the playtime to add to the XmlRpcValue
+         *  @param returnValue an output parameter, which has the 
+         *         playtime added after the function returns.
+         */
+        static void
+        playtimeToXmlRpcValue(
+                Ptr<const boost::posix_time::ptime>::Ref   playtime,
+                XmlRpc::XmlRpcValue                      & returnValue)
+                                                                    throw ();
 
         /**
          *  Convert a vector of PlayLogEntries to an XML-RPC return value.
