@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -177,12 +177,17 @@ SchedulerWindow :: showContents(void)                           throw ()
 
     dateLabel->set_text(to_simple_string(*selectedDate));
 
+    Ptr<StorageClientInterface>::Ref                    storage;
+    Ptr<SessionId>::Ref                                 sessionId;
     Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
     std::vector<Ptr<ScheduleEntry>::Ref>::iterator      it;
     std::vector<Ptr<ScheduleEntry>::Ref>::iterator      end;
     Ptr<posix_time::ptime>::Ref                         from;
     Ptr<posix_time::ptime>::Ref                         to;
     Ptr<posix_time::time_duration>::Ref                 midnight;
+
+    storage   = gLiveSupport->getStorage();
+    sessionId = gLiveSupport->getSessionId();
 
     // we're interested from midnight, selectedDate, to midnight, the next day
     midnight.reset(new posix_time::time_duration(0, 0, 0, 0));
@@ -195,14 +200,24 @@ SchedulerWindow :: showContents(void)                           throw ()
     end     = entries->end();
     entriesModel->clear();
     while (it != end) {
-        Ptr<ScheduleEntry>::Ref     entry = *it;
+        Ptr<Playlist>::Ref      playlist;
+        Ptr<ScheduleEntry>::Ref entry = *it;
+        Ptr<UniqueId>::Ref      playlistId(new UniqueId(
+                                             entry->getPlaylistId()->getId()));
+
+        if (!storage->existsPlaylist(sessionId, playlistId)) {
+            ++it;
+            continue;
+        }
+
+        playlist = storage->getPlaylist(sessionId, playlistId);
+
         Gtk::TreeModel::Row         row   = *(entriesModel->append());
 
         row[entryColumns->idColumn]    = entry->getId();
         row[entryColumns->startColumn] =
                                       to_simple_string(*entry->getStartTime());
-        // TODO: get the title
-        row[entryColumns->titleColumn] = "title here";
+        row[entryColumns->titleColumn] = *playlist->getTitle();
         row[entryColumns->endColumn]   = to_simple_string(*entry->getEndTime());
 
         ++it;
