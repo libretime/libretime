@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -244,6 +244,7 @@ switch($_REQUEST['act']){
         header("Content-type: text/plain");
         $ia = $gb->analyzeFile($id, $sessid);
         echo"fileformat: {$ia['fileformat']}\n";
+        echo"mime: {$ia['mime_type']}\n";
         echo"channels: {$ia['audio']['channels']}\n";
         echo"sample_rate: {$ia['audio']['sample_rate']}\n";
         echo"bits_per_sample: {$ia['audio']['bits_per_sample']}\n";

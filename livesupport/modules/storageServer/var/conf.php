@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,12 +88,16 @@ $config = array(
         'Storage'       => array('Folder', 'File', 'Replica'),
         'Folder'        => array('Folder', 'File', 'Replica'),
         'File'          => array(),
+        'audioclip'     => array(),
+        'playlist'      => array(),
         'Replica'       => array(),
     ),
     'allowedActions'=> array(
         'RootNode'      => array('classes', 'subjects'),
         'Folder'        => array('editPrivs', 'write', 'read'),
         'File'          => array('editPrivs', 'write', 'read'),
+        'audioclip'     => array('editPrivs', 'write', 'read'),
+        'playlist'      => array('editPrivs', 'write', 'read'),
         'Replica'       => array('editPrivs', 'write', 'read'),
         '_class'        => array('editPrivs', 'write', 'read'),
     ),

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -107,7 +107,7 @@ class StoredFile{
             if($mdataLoc=='file' && !file_exists($metadata))
             {
                 return PEAR::raiseError("StoredFile::insert: ".
-                    "metadata file doesn't exists ($metadata)");
+                    "metadata file not found ($metadata)");
             }
             $res = $ac->md->insert($metadata, $mdataLoc);
             if(PEAR::isError($res)){
@@ -120,7 +120,7 @@ class StoredFile{
             if(!file_exists($mediaFileLP))
             {
                 return PEAR::raiseError("StoredFile::insert: ".
-                    "media file doesn't exists ($mediaFileLP)");
+                    "media file not found ($mediaFileLP)");
             }
             $res = $ac->rmd->insert($mediaFileLP);
             if(PEAR::isError($res)){
@@ -550,11 +550,18 @@ class StoredFile{
      */
     function _getExt()
     {
-        switch($this->mime){
-            case"audio/mpeg": $ext="mp3"; break;
-            case"audio/x-wave": $ext="wav"; break;
-            case"application/x-ogg": $ext="ogg"; break;
-            default: $ext="bin"; break;
+        switch(strtolower($this->mime)){
+            case"audio/mpeg":
+                $ext="mp3"; break;
+            case"audio/x-wav":
+            case"audio/x-wave":
+                $ext="wav"; break;
+            case"audio/x-ogg":
+            case"application/x-ogg":
+            case"application/x-ogg":
+                $ext="ogg"; break;
+            default:
+                $ext="bin"; break;
         }
         return $ext;
     }

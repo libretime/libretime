@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/RawMediaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,10 @@ class RawMediaData{
         $this->gunid  = $gunid;
         $this->resDir = $resDir;
         $this->fname  = $this->makeFname();
-        $this->exists = file_exists($this->fname);
+        $this->exists     =
+            is_file($this->fname) &&
+            is_readable($this->fname)
+        ;
     }
 
     /**
@@ -116,41 +119,6 @@ class RawMediaData{
         return $this->fname;
     }
     
-/*
-    /**
-     *  Make access symlink to the media file
-     *
-     *  @param accLinkName string, access symlink name
-     *  @return string, access symlink name
-     * /
-    function access($accLinkName)
-    {
-        if(!$this->exists) return FALSE;
-        if(file_exists($accLinkName))   return $accLinkName;
-        if(@symlink($this->fname, $accLinkName)){
-            return $accLinkName;
-        }else return PEAR::raiseError(
-            "RawMediaData::access: symlink create failed ($accLinkName)",
-            GBERR_FILEIO
-        );
-    }
-    
-    /**
-     *  Delete access symlink
-     *
-     *  @param accLinkName string, access symlink name
-     *  @return boolean or PEAR::error
-     * /
-    function release($accLinkName)
-    {
-        if(!$this->exists) return FALSE;
-        if(@unlink($accLinkName)) return TRUE;
-        else return PEAR::raiseError(
-            "RawMediaData::release: unlink failed ($accLinkName)", GBERR_FILEIO
-        );
-    }
-*/
-
     /**
      *  Delete media file from filesystem
      *

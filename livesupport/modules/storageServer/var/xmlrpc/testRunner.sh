@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.10 $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -220,7 +220,7 @@ existsPlaylist() {
 }
 
 deletePlaylist() {
-    echo -n "# deletePlaylist: "
+    echo -n "# deletePlaylist (${PLID}): "
     $XR_CLI deletePlaylist $SESSID $PLID
     # || exit $?
     echo "#  status: $?"
@@ -280,7 +280,7 @@ elif [ "$COMM" == "playlists" ]; then
     accessPlaylist
     editPlaylist
     accessPlaylist
-#    deletePlaylist
+    deletePlaylist
     existsPlaylist
     logout
     echo "#XMLRPC: playlists: OK."

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -184,9 +184,9 @@ class BasicStor extends Alib{
      */
     function bsCopyFile($id, $did)
     {
-        if($this->getObjType($did)!=='Folder')
+        if($this->getObjType($did) !== 'Folder')
             return PEAR::raiseError(
-                'GreenBox::copyFile: destination is not folder', GBERR_WRTYPE
+                'BasicStor::bsCopyFile: destination is not folder', GBERR_WRTYPE
             );
         return $this->_copySubtree($id, $did);
     }
@@ -424,12 +424,12 @@ class BasicStor extends Alib{
     function bsCreateReplica($id, $did, $replicaName)
     {
         return PEAR::raiseError(
-            'GreenBox::createVersion: not implemented', GBERR_NOTIMPL
+            'BasicStor::bsCreateReplica: not implemented', GBERR_NOTIMPL
         );
         // ---
-        if($this->getObjType($did)!=='Folder')
+        if($this->getObjType($did) !== 'Folder')
             return PEAR::raiseError(
-                'GreenBox::createReplica: dest is not folder', GBERR_WRTYPE
+                'BasicStor::bsCreateReplica: dest is not folder', GBERR_WRTYPE
             );
         if($replicaName=='') $replicaName = $this->getObjName($id);
         while(($exid = $this->getObjId($replicaName, $did))<>'')
@@ -452,7 +452,7 @@ class BasicStor extends Alib{
     function bsCreateVersion($id, $did, $versionLabel)
     {
         return PEAR::raiseError(
-            'GreenBox::createVersion: not implemented', GBERR_NOTIMPL
+            'BasicStor::bsCreateVersion: not implemented', GBERR_NOTIMPL
         );
     }
 
@@ -562,9 +562,9 @@ class BasicStor extends Alib{
      */
     function bsListFolder($id)
     {
-        if($this->getObjType($id)!=='Folder')
+        if($this->getObjType($id) !== 'Folder')
             return PEAR::raiseError(
-                'GreenBox::listFolder: not a folder', GBERR_NOTF
+                'BasicStor::bsListFolder: not a folder', GBERR_NOTF
             );
         $a = $this->getDir($id, 'id, name, type, param as target', 'name');
         return $a;
@@ -580,7 +580,7 @@ class BasicStor extends Alib{
     function getObjIdFromRelPath($id, $relPath='.')
     {
         $a = split('/', $relPath);
-        if($this->getObjType($id)!=='Folder') $nid = $this->getparent($id);
+        if($this->getObjType($id) !== 'Folder') $nid = $this->getparent($id);
         else $nid = $id;
         foreach($a as $i=>$item){
             switch($item){
@@ -700,7 +700,7 @@ class BasicStor extends Alib{
         $this->test_dump = $this->dumpTree($this->storId);
         if($this->test_dump==$this->test_correct)
             { $this->test_log.="storageServer: OK\n"; return true; }
-        else PEAR::raiseError('GreenBox::test:', 1, PEAR_ERROR_DIE, '%s'.
+        else PEAR::raiseError('BasicStor::test:', 1, PEAR_ERROR_DIE, '%s'.
             "<pre>\ncorrect:\n.{$this->test_correct}.\n".
             "dump:\n.{$this->test_dump}.\n</pre>\n");
     }

@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -123,6 +123,8 @@ testonly: ${TEST_RUNNER}
 #	$(MAKE) transtest
 
 check: all testonly
+
+recheck: clean check
 
 #-------------------------------------------------------------------------------
 #   Specific targets

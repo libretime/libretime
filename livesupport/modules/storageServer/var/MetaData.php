@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
  *  LiveSupport file storage support class.<br>
  *  Store metadata tree in relational database.<br>
  *  <b>requires DOMXML support in PHP!</b>
+ *  TODO: use SAX parser instead of DOMXML
  *
  *  @see StoredFile
  */
@@ -53,7 +54,11 @@ class MetaData{
         $this->gunid      = $gunid;
         $this->resDir     = $resDir;
         $this->fname      = $this->makeFname();
-        $this->exists     = $this->dbCheck($gunid) && file_exists($this->fname);
+        $this->exists     =
+            $this->dbCheck($gunid) &&
+            is_file($this->fname) &&
+            is_readable($this->fname)
+        ;
     }
     /**
      *  Parse and store metadata from XML file or XML string
@@ -213,9 +218,14 @@ class MetaData{
     {
         switch($loc){
         case"file":
-            if(!file_exists($mdata)){
+            if(!is_file($mdata)){
                 return PEAR::raiseError(
                     "MetaData::storeXMLDoc: metadata file not found ($mdata)"
+                );
+            }
+            if(!is_readable($mdata)){
+                return PEAR::raiseError(
+                    "MetaData::storeXMLDoc: can't read metadata file ($mdata)"
                 );
             }
             $xml = domxml_open_file($mdata);

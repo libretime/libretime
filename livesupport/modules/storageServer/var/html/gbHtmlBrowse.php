@@ -100,22 +100,22 @@ $tpldata['showMenu']=true;
  function fmove(id, relPath){
     var newPath=prompt('Destination folder (relative path):', relPath);
     if(newPath==null) return;
-    location.href='gbHttp.php?id='+id+'&act=move&newPath='+newPath;
+    location.href='gbHttp.php?id='+id+'&amp;act=move&amp;newPath='+newPath;
  }
  function fcopy(id, relPath){
     var newPath=prompt('Destination folder (relative path):', relPath);
     if(newPath==null) return;
-    location.href='gbHttp.php?id='+id+'&act=copy&newPath='+newPath;
+    location.href='gbHttp.php?id='+id+'&amp;act=copy&amp;newPath='+newPath;
  }
  function freplicate(name, id){
     var np=prompt('Destination folder (relative path):', id);
     if(np==null) return;
-    location.href='gbHttp.php?id='+id+'&act=repl&newparid='+np;
+    location.href='gbHttp.php?id='+id+'&amp;act=repl&amp;newparid='+np;
  }
  function newFolder(){
     var nn=prompt('New folder name:');
     if(nn==null) return;
-    location.href='gbHttp.php?id=<?php echo$tpldata['id']?>&act=newFolder&newname='+nn;
+    location.href='gbHttp.php?id=<?php echo$tpldata['id']?>&amp;act=newFolder&amp;newname='+nn;
  }
 -->
 </script>
@@ -130,15 +130,15 @@ $tpldata['showMenu']=true;
 <?php if($tpldata['showMenu']){?>
 <h3>
  <a href="gbHtmlBrowse.php?act=getHomeDir" class="button">Home directory</a>
- <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&act=newfile" class="button"><span class="hidden">[</span>Upload&nbsp;new&nbsp;file<span class="hidden">]</span></a>
+ <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&amp;act=newfile" class="button"><span class="hidden">[</span>Upload&nbsp;new&nbsp;file<span class="hidden">]</span></a>
  <a href="javascript:newFolder()" class="button"><span class="hidden">[</span>Create&nbsp;new&nbsp;folder<span class="hidden">]</span></a>
-<!-- <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&act=sform" class="button"><span class="hidden">[</span>Search<span class="hidden">]</span></a>-->
+<!-- <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&amp;act=sform" class="button"><span class="hidden">[</span>Search<span class="hidden">]</span></a>-->
 </h3>
 <?php }?>
 
 <?php if($tpldata['showPath']){?>
  <h3>
-    <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&tree=Y" class="button">Tree</a>&nbsp;&nbsp;
+    <a href="gbHtmlBrowse.php?id=<?php echo$tpldata['id']?>&amp;tree=Y" class="button">Tree</a>&nbsp;&nbsp;
     <?php foreach($tpldata['pathdata'] as $o){?>
         <a href="gbHtmlBrowse.php?id=<?php echo urlencode($o['id'])?>"><?php echo$o['name']?></a>
         <?php if($o['type']=='Folder'){?><span class="slash b">/</span><?php }?>
@@ -157,13 +157,16 @@ $tpldata['showMenu']=true;
  <?php }?>
 <?php }else{?>
  <table border="0">
+    <tr><th>fname</th><th>gunid</th><th>actions</th></tr>
  <?php foreach($tpldata['listdata'] as $o){?>
     <tr><td valign="top">
     <?php echo str_repeat('&nbsp;', ($tpldata['tree']?intval($o['level']):3)*2)?><span id="ID<?php echo$o['id']?>"
     ><a <?php if($o['type']=='Folder'){?>href="gbHtmlBrowse.php?id=<?php echo$o['id']?>"<?php }?>><?php echo$o['name']?></a
     ></span>
+    </td><td valign="top">
+    <i>(<?php echo$o['gunid']?>)</i>
     </td><td>
-    <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R'); echo$a[$o['type']]?>
+    <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R', 'audioclip'=>'A', 'playlist'=>'P'); echo$a[$o['type']]?>
     &nbsp;<a href="javascript:frename('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">rename</a>
     &nbsp;<a href="javascript:fmove('<?php echo$o['id']?>', '.')" class="button">move</a>
     &nbsp;<a href="javascript:fcopy('<?php echo$o['id']?>', '.')" class="button">copy</a>
@@ -171,12 +174,15 @@ $tpldata['showMenu']=true;
     &nbsp;<a href="javascript:freplicate('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">replicate</a>
 <?php */?>
     &nbsp;<a href="gbHtmlPerms.php?id=<?php echo$o['id']?>" class="button">permissions</a>
-    &nbsp;<a href="gbHttp.php?act=delete&id=<?php echo$o['id']?>" class="button"
+    &nbsp;<a href="gbHttp.php?act=delete&amp;id=<?php echo$o['id']?>" class="button"
         onClick="return confirm('Delete object &quot;<?php echo$o['name']?>&quot;?')">DEL</a>
-    <?php if($o['type']=='File'){?>
-    &nbsp;<a href="gbHttp.php?act=getFile&id=<?php echo$o['id']?>" class="button">Access</a>
-    &nbsp;<a href="gbHttp.php?act=getInfo&id=<?php echo$o['id']?>" class="button">Analyze</a>
-    &nbsp;<a href="gbHttp.php?act=getMdata&id=<?php echo$o['id']?>" class="button">MetaData</a>
+    <?php if($o['type']=='File' || $o['type']=='audioclip'){?>
+    &nbsp;<a href="../xmlrpc/simpleGet.php?sessid=<?php echo$sessid?>&amp;id=<?php echo$o['gunid']?>" class="button">simpleGet</a>
+    &nbsp;<a href="gbHttp.php?act=getInfo&amp;id=<?php echo$o['id']?>" class="button">Analyze</a>
+    &nbsp;<a href="gbHttp.php?act=getMdata&amp;id=<?php echo$o['id']?>" class="button">MetaData</a>
+    <?php }?>
+    <?php if($o['type']=='playlist'){?>
+    &nbsp;<a href="gbHttp.php?act=getMdata&amp;id=<?php echo$o['id']?>" class="button">MetaData</a>
     <?php }?>
     <?php if($o['type']=='Replica'){?>
     &nbsp; (-&gt;<?php echo$o['target']?>)
@@ -228,7 +234,7 @@ $tpldata['showMenu']=true;
 <?php if($tpldata['showSRes']){?>
 <ul>
 <?php  if(is_array($tpldata['search'])) foreach($tpldata['search'] as $k=>$v){?>
- <li><a href="gbHttp.php?act=getMdata&id=<?php echo$gb->_idFromGunid($v['gunid'])?>"><?php echo$v['gunid']?></a>
+ <li><a href="gbHttp.php?act=getMdata&amp;id=<?php echo$gb->_idFromGunid($v['gunid'])?>"><?php echo$v['gunid']?></a>
 <?php  }else{?>
  No items found
 <?php  }?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -290,7 +290,16 @@ class GreenBox extends BasicStor{
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsListFolder($id);
+        $listArr = $this->bsListFolder($id);
+        foreach($listArr as $i=>$v){
+            if($v['type'] == 'File'){
+                $gunid = $this->_gunidFromId($v['id']);
+                $listArr[$i]['type'] =
+                    StoredFile::_getType($gunid);
+                $listArr[$i]['gunid'] = $gunid;
+            }
+        }
+        return $listArr;
     }
     
     /* ---------------------------------------------------- redefined methods */
@@ -362,6 +371,23 @@ class GreenBox extends BasicStor{
         return $pa;
     }
 
+    /**
+     *  Get object type by id.
+     *  (RootNode, Folder, File, )
+     *
+     *  @param oid int, local object id
+     *  @return string/err
+     */
+    function getObjType($oid)
+    {
+        $type = $this->getObjName($oid, 'type');
+        if($type == 'File'){
+            $type =
+                StoredFile::_getType($this->_gunidFromId($oid));
+        }
+        return $type;
+    }
+    
     /* ==================================================== "private" methods */
 
     /**
@@ -373,10 +399,15 @@ class GreenBox extends BasicStor{
     function copyObj($id, $newParid, $after='')
     {
         $nid = parent::copyObj($id, $newParid, $after='');
-        if($this->getObjType($id)==='File'){
-            $ac =& StoredFile::recall(&$this, $id);
-            if(PEAR::isError($ac)){ return $ac; }
-            $ac2 =& StoredFile::copyOf(&$ac, $nid);
+        switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+            case"File":
+                $ac =& StoredFile::recall(&$this, $id);
+                if(PEAR::isError($ac)){ return $ac; }
+                $ac2 =& StoredFile::copyOf(&$ac, $nid);
+                break;
+            default:
         }
         return $nid;
     }
@@ -403,6 +434,8 @@ class GreenBox extends BasicStor{
     function removeObj($id)
     {
         switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
             case"File":
                 $ac =& StoredFile::recall(&$this, $id);
                 if(!PEAR::isError($ac)){
