@@ -1,0 +1,18 @@
+[ls_database]
+Description      = the LiveSupport database at PostgreSQL
+Driver           = PostgreSQL
+Trace            = No
+TraceFile        = /tmp/sql.log
+Database         = ls_database
+Servername       = ls_dbserver
+Username         =
+Password         =
+Port             = 5432
+Protocol         = 6.4
+ReadOnly         = No
+RowVersioning    = No
+ShowSystemTables = No
+ShowOidColumn    = No
+FakeOidIndex     = No
+ConnSettings     =
+

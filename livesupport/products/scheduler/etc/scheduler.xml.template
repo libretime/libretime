@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE scheduler [
+
+<!ELEMENT scheduler (user,
+                     connectionManagerFactory,
+                     authenticationClientFactory,
+                     storageClientFactory,
+                     scheduleFactory,
+                     playLogFactory,
+                     audioPlayer,
+                     xmlRpcDaemon,
+                     tagConversionTable) >
+
+<!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
+
+<!ELEMENT simpleConnectionManager   EMPTY >
+<!ATTLIST simpleConnectionManager   dsn         CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
+
+<!ELEMENT authenticationClientFactory (testAuthentication|
+                                       webAuthentication)>
+
+<!ELEMENT testAuthentication (user) >
+
+<!ELEMENT user EMPTY >
+<!ATTLIST user login        CDATA       #REQUIRED >
+<!ATTLIST user password     CDATA       #REQUIRED >
+
+<!ELEMENT webAuthentication (location) >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+
+<!ELEMENT storageClientFactory (testStorage|webStorage) >
+
+<!ELEMENT testStorage (playlist*, audioClip*) >
+<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT playlist (playlistElement*) >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+
+<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
+<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
+<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
+
+<!ELEMENT audioClip EMPTY >
+<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip title           CDATA       #REQUIRED >
+<!ATTLIST audioClip uri             CDATA       #REQUIRED >
+
+<!ELEMENT fadeInfo EMPTY >
+<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
+
+<!ELEMENT scheduleFactory (postgresqlSchedule) >
+<!ELEMENT postgresqlSchedule EMPTY >
+
+<!ELEMENT playLogFactory (postgresqlPlayLog) >
+<!ELEMENT postgresqlPlayLog EMPTY >
+
+<!ELEMENT audioPlayer   (helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+
+<!ELEMENT xmlRpcDaemon EMPTY >
+<!ATTLIST xmlRpcDaemon xmlRpcHost   CDATA          #REQUIRED >
+<!ATTLIST xmlRpcDaemon xmlRpcPort   NMTOKEN        #REQUIRED >
+<!ATTLIST xmlRpcDaemon pidFileName  CDATA          #REQUIRED >
+<!ATTLIST xmlRpcDaemon background   (true|false)   "true"    >
+
+<!ELEMENT tagConversionTable (tag*) >
+<!ELEMENT tag (id3+, dc) >
+<!ELEMENT id3 (#PCDATA) >
+<!ELEMENT dc  (#PCDATA) >
+
+]>
+<scheduler>
+    <user login="root" password="q" />
+
+    <connectionManagerFactory>
+        <simpleConnectionManager    dsn      = "ls_database"
+                                    userName = "ls_dbuser"
+                                    password = "ls_dbpassword"
+        />
+    </connectionManagerFactory>
+
+    <authenticationClientFactory>
+        <webAuthentication>
+            <location server="ls_php_host" port="ls_php_port"
+                      path="ls_php_urlPrefix/ls_alib_xmlRpcPrefix"/>
+        </webAuthentication>
+    </authenticationClientFactory>
+
+    <storageClientFactory>
+        <webStorage tempFiles="file:///ls_install_dir/tmp/webStorageClient" >
+            <location server="ls_php_host" port="ls_php_port"
+                      path="ls_php_urlPrefix/ls_storage_xmlRpcPrefix"/>
+        </webStorage>
+    </storageClientFactory>
+
+    <scheduleFactory>
+        <postgresqlSchedule/>
+    </scheduleFactory>
+
+    <playLogFactory>
+        <postgresqlPlayLog/>
+    </playLogFactory>
+
+    <audioPlayer>
+        <helixPlayer dllPath = "ls_install_dir/usr/lib/helix"/>
+    </audioPlayer>
+
+    <xmlRpcDaemon xmlRpcHost  = "ls_scheduler_host"
+                  xmlRpcPort  = "ls_scheduler_port"
+                  pidFileName = "ls_install_dir/tmp/scheduler.pid"
+    />
+        
+    <tagConversionTable>
+        <tag>
+            <id3>Title</id3>
+            <id3>TIT2</id3>
+            <dc>dc:title</dc>
+        </tag>
+        <tag>
+            <id3>TPE1</id3>
+            <id3>Artist</id3>
+            <dc>dc:creator</dc>
+        </tag>
+        <tag>
+            <id3>Length</id3>
+            <id3>TLEN</id3>
+            <dc>dcterms:extent</dc>
+        </tag>
+        <tag>
+            <!-- beats per minute -->
+            <id3>TBPM</id3>
+            <dc>ourdcextension:bpm</dc>
+        </tag>
+    </tagConversionTable>
+</scheduler>
+
