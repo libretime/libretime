@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -237,7 +237,6 @@ class Playlist extends StoredFile{
     /**
      *  Remove audioclip from playlist
      *
-     *  @param token string, playlist access token
      *  @param plElGunid string, global id of deleted playlistElement
      *  @return boolean
      */
