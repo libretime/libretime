@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -97,7 +97,7 @@ class Alib extends Subjects{
      */
     function logout($sessid)
     {
-        $ct = $this->checkToken($sessid);
+        $ct = $this->checkAuthToken($sessid);
         if($ct === FALSE)
             return PEAR::raiseError('Alib::logout: not logged ($ct)',
                 ALIBERR_NOTLOGGED, PEAR_ERROR_RETURN);
@@ -120,7 +120,7 @@ class Alib extends Subjects{
      *   @param sessid string
      *   @return boolean/err
      */
-    function checkToken($sessid)
+    function checkAuthToken($sessid)
     {
         $c = $this->dbc->getOne("SELECT count(*) as cnt FROM {$this->sessTable}
             WHERE sessid='$sessid'");
@@ -133,12 +133,12 @@ class Alib extends Subjects{
      *   @param sessid string
      *   @return boolean/err
      */
-    function setToken($sessid)
+    function setAuthToken($sessid)
     {
-        $r = checkToken($sessid);
+        $r = checkAuthToken($sessid);
         if(PEAR::isError($r)) return $r;
         if(!$r)
-            return PEAR::raiseError("ALib::setToken: invalid token ($sessid)");
+            return PEAR::raiseError("ALib::setAuthToken: invalid token ($sessid)");
         $this->sessid = $sessid;
         return TRUE;
     }
@@ -217,7 +217,7 @@ class Alib extends Subjects{
             $r1 = $this->dbc->getRow("SELECT lft, rgt, level
                 FROM {$this->treeTable} WHERE id=$oid");
             if(is_null($r1))
-                return PEAR::raiseError('Alib::checkPerm: object not exists',
+                return PEAR::raiseError("Alib::checkPerm: object not exists ($oid)",
                     ALIBERR_NOTEXISTS, PEAR_ERROR_RETURN
                 );
             if(PEAR::isError($r1)) return($r1);
