@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.2 $
+dnl Version  : $Revision: 1.3 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(Storage, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.2 $)
+AC_REVISION($Revision: 1.3 $)
 
 AC_CONFIG_SRCDIR(../src/StorageClientFactory.cxx)
 
@@ -43,6 +43,23 @@ AC_CONFIG_HEADERS(configure.h)
 AC_PROG_CXX()
 
 AC_CHECK_HEADERS(getopt.h)
+
+dnl-----------------------------------------------------------------------------
+dnl enable compilaton for code coverage data
+dnl-----------------------------------------------------------------------------
+AC_SUBST(COVERAGE_CXXFLAGS)
+
+AC_ARG_ENABLE( coverage,
+[  --enable-coverage       enable code coverage data generaton (no) ],
+    ENABLE_COVERAGE=${enableval}, ENABLE_COVERAGE="no" )
+
+if test "x${ENABLE_COVERAGE}" == "xyes" ; then
+    COVERAGE_CXXFLAGS="-fprofile-arcs -ftest-coverage"
+    AC_MSG_RESULT([compiling in code coverage mode])
+else
+    AC_MSG_RESULT([not compiling in code coverage mode])
+fi
+
 
 AC_CONFIG_FILES(../Makefile:../etc/Makefile.in)
 
