@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.26 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.27 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -111,6 +111,8 @@ SCHEDULER_CFG = ${ETC_DIR}/scheduler.xml
 TEST_RUNNER   = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
+
+export LD_LIBRARY_PATH=${USR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -252,25 +254,27 @@ distclean: clean docclean
 check: all ${TEST_RUNNER} storage_server_init start run_tests stop
 
 run_tests: ${TEST_RUNNER}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
-                                   -o ${TEST_RESULTS} -s ${TEST_XSLT}
+	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 install: ${SCHEDULER_EXE}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} install
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} install
 
 start: ${SCHEDULER_EXE}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} start
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} start
 	sleep 2
 
 stop: ${SCHEDULER_EXE}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
 
 status: ${SCHEDULER_EXE}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} status
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} status
 
 uninstall: ${SCHEDULER_EXE}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} \
-                                                                      uninstall
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} uninstall
+
+run: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} --debug start
+	sleep 2
 
 storage_server_init:
 #	${MAKE} -C ${STORAGE_SERVER_DIR}
