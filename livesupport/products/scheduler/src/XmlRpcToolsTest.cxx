@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -42,25 +42,32 @@
 
 #include <string>
 #include <iostream>
+#include <XmlRpcValue.h>
 
-#include "TestStorageClient.h"
-#include "TestStorageClientTest.h"
+#include "LiveSupport/Db/ConnectionManagerFactory.h"
+#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "XmlRpcTools.h"
+#include "XmlRpcToolsTest.h"
 
 
-using namespace LiveSupport::Core;
+using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
+using namespace LiveSupport::Scheduler;
+
+using namespace std;
+using namespace XmlRpc;
 
 /* ===================================================  local data structures */
 
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(TestStorageClientTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(XmlRpcToolsTest);
 
 /**
- *  The name of the configuration file for the storage client factory daemon.
+ *  The name of the configuration file for the playlist.
  */
-static const std::string configFileName = "etc/testStorage.xml";
+const std::string configFileName = "etc/playlist.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -69,10 +76,13 @@ static const std::string configFileName = "etc/testStorage.xml";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Set up the test environment
+ *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClientTest :: setUp(void)                         throw ()
+XmlRpcToolsTest :: configure(
+            Ptr<Configurable>::Ref      configurable,
+            const std::string           fileName)
+                                                throw (CPPUNIT_NS::Exception)
 {
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(
@@ -80,8 +90,7 @@ TestStorageClientTest :: setUp(void)                         throw ()
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
 
-        tsc.reset(new TestStorageClient());
-        tsc->configure(*root);
+        configurable->configure(*root);
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
@@ -89,87 +98,75 @@ TestStorageClientTest :: setUp(void)                         throw ()
     }
 }
 
+                      
+/*------------------------------------------------------------------------------
+ *  Set up the test environment
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcToolsTest :: setUp(void)                         throw ()
+{
+}
+
 
 /*------------------------------------------------------------------------------
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-TestStorageClientTest :: tearDown(void)                      throw ()
+XmlRpcToolsTest :: tearDown(void)                      throw ()
 {
-    tsc.reset();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the singleton Hello object is accessible
+ *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-TestStorageClientTest :: firstTest(void)
+XmlRpcToolsTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<UniqueId>::Ref      id1(new UniqueId(1));
-        Ptr<UniqueId>::Ref      id2(new UniqueId(2));
+    XmlRpcValue        xmlRpcPlaylist;
+    Ptr<Playlist>::Ref playlist = Ptr<Playlist>::Ref(new Playlist);
 
-        CPPUNIT_ASSERT(tsc->existsPlaylist(id1));
-        CPPUNIT_ASSERT(!tsc->existsPlaylist(id2));
+    // set up a playlist instance
+    configure(playlist, configFileName);
 
-        Ptr<Playlist>::Ref      playlist = tsc->getPlaylist(id1);
-        CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
+    // run the packing method
+    XmlRpcTools :: playlistToXmlRpcValue(playlist, xmlRpcPlaylist);
+
+    CPPUNIT_ASSERT(((int) xmlRpcPlaylist["id"]) == 1);
+    CPPUNIT_ASSERT(((int) xmlRpcPlaylist["playlength"]) == (90 * 60));
+
+    XmlRpcValue         xmlRpcPlaylistId;
+    Ptr<UniqueId>::Ref  playlistId;
+    int                 randomNumber = rand();
+
+    xmlRpcPlaylistId["playlistId"] = randomNumber;
+
+    // run the unpacking method
+    try {
+        playlistId = XmlRpcTools :: extractPlaylistId(xmlRpcPlaylistId);
+    }
+    catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    CPPUNIT_ASSERT((int)(playlistId->getId()) == randomNumber);
 }
 
 
 /*------------------------------------------------------------------------------
- *  Testing the deletePlaylist method
+ *  Testint markError()
  *----------------------------------------------------------------------------*/
 void
-TestStorageClientTest :: deletePlaylistTest(void)
+XmlRpcToolsTest :: errorTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<UniqueId>::Ref      id1(new UniqueId(1));
-        Ptr<UniqueId>::Ref      id2(new UniqueId(2));
+    XmlRpcValue  xmlRpcValue;
 
-        try {
-            tsc->deletePlaylist(id2);
-            CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (std::invalid_argument &e) {
-        }
-        try {
-            tsc->deletePlaylist(id1);
-        } catch (std::invalid_argument &e) {
-            CPPUNIT_FAIL("cannot delete existing playlist");
-        }
-        try {
-            tsc->deletePlaylist(id1);
-            CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (std::invalid_argument &e) {
-        }
+    XmlRpcTools :: markError(42, "this is an error", xmlRpcValue);
+    CPPUNIT_ASSERT((int) xmlRpcValue["errorCode"] == 42);
+    CPPUNIT_ASSERT((const std::string) xmlRpcValue["errorMessage"] == 
+                                       "this is an error");
 }
 
 
-/*------------------------------------------------------------------------------
- *  Testing the getAllPlaylists method
- *----------------------------------------------------------------------------*/
-void
-TestStorageClientTest :: getAllPlaylistsTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector =
-                                                tsc->getAllPlaylists();
-    CPPUNIT_ASSERT(playlistVector->size() == 1);
-
-    Ptr<Playlist>::Ref playlist = (*playlistVector)[0];
-    CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 1);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Testing the createPlaylist method
- *----------------------------------------------------------------------------*/
-void
-TestStorageClientTest :: createPlaylistTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    Ptr<Playlist>::Ref playlist = tsc->createPlaylist();
-
-    CPPUNIT_ASSERT(tsc->existsPlaylist(playlist->getId()));
-}

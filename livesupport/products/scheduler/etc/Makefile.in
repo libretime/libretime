@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.10 $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -111,6 +111,7 @@ LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} \
 SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/XmlRpcDaemon.o \
                  ${TMP_DIR}/SchedulerDaemon.o \
+                 ${TMP_DIR}/XmlRpcTools.o \
                  ${TMP_DIR}/UploadPlaylistMethod.o \
                  ${TMP_DIR}/DisplayScheduleMethod.o \
                  ${TMP_DIR}/DisplayPlaylistMethod.o \
@@ -119,7 +120,9 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/ScheduleFactory.o \
                  ${TMP_DIR}/PostgresqlSchedule.o \
                  ${TMP_DIR}/DeletePlaylistMethod.o \
-                 ${TMP_DIR}/DisplayPlaylistsMethod.o
+                 ${TMP_DIR}/DisplayPlaylistsMethod.o \
+                 ${TMP_DIR}/CreatePlaylistMethod.o \
+                 ${TMP_DIR}/OpenPlaylistForEditingMethod.o
 
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
                      ${TMP_DIR}/main.o
@@ -134,6 +137,7 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/SchedulerDaemonDisplayPlaylistTest.o \
                    ${TMP_DIR}/SchedulerDaemonRemoveFromScheduleTest.o \
                    ${TMP_DIR}/SchedulerDaemonRescheduleTest.o \
+                   ${TMP_DIR}/XmlRpcToolsTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayScheduleMethodTest.o \
                    ${TMP_DIR}/DisplayPlaylistMethodTest.o \
@@ -142,6 +146,8 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/PostgresqlScheduleTest.o \
                    ${TMP_DIR}/DeletePlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayPlaylistsMethodTest.o \
+                   ${TMP_DIR}/CreatePlaylistMethodTest.o \
+                   ${TMP_DIR}/OpenPlaylistForEditingMethodTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 

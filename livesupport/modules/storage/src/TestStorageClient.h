@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -168,6 +168,15 @@ class TestStorageClient :
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(void) const             throw ();
+
+
+        /**
+         *  Create a new playlist.
+         *
+         *  @return the newly created playlist.
+         */
+        virtual Ptr<Playlist>::Ref
+        createPlaylist()                    throw ();
 
 };
 

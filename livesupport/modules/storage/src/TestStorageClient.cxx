@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,8 +33,11 @@
 #include "configure.h"
 #endif
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "TestStorageClient.h"
 
+using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Storage;
@@ -144,9 +147,32 @@ TestStorageClient :: getAllPlaylists(void) const
                          playlistVector (new std::vector<Ptr<Playlist>::Ref>);
 
     while (it != playlistMap.end()) {
-        playlistVector->push_back(it->second);    // TODO: check this
+        playlistVector->push_back(it->second);
         ++it;
     }
 
     return playlistVector;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a new playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+TestStorageClient :: createPlaylist()                                throw ()
+{
+    // generate a new UniqueId -- TODO: fix UniqueId to make sure
+    //     this is really unique; not checked here!
+    Ptr<UniqueId>::Ref       playlistId = 
+                     Ptr<UniqueId>::Ref(UniqueId :: generateId());
+
+    Ptr<time_duration>::Ref  playLength = 
+                     Ptr<time_duration>::Ref(new time_duration(0,0,0));
+
+    Ptr<Playlist>::Ref       playlist =
+                     Ptr<Playlist>::Ref(new Playlist(playlistId, playLength));
+
+    playlistMap[playlistId->getId()] = playlist;
+
+    return playlist;   
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class StorageClientInterface
 {
@@ -110,6 +110,15 @@ class StorageClientInterface
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(void) const         throw ()                    = 0;
+
+
+        /**
+         *  Create a new playlist.
+         *
+         *  @return the newly created playlist.
+         */
+        virtual Ptr<Playlist>::Ref
+        createPlaylist()                    throw ()                    = 0;
 
 };
 
