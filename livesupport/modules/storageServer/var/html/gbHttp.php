@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -210,21 +210,6 @@ switch($_REQUEST['act']){
         $r = $gb->deleteFile($id, $sessid);
         if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$parid";
-    break;
-/**
- *  getFile
- *
- *  Call access method and show access path.
- *  Example only - not really useable.
- *  TODO: resource should be released by release method call
- *
- *  @param id int, local id of accessed file
- */
-    case"getFile":
-        $r = $gb->access($id, $sessid);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
-        else echo $r;
-        exit;
     break;
 /**
  *  getMdata
