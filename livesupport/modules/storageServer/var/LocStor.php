@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,7 +79,8 @@ class LocStor extends GreenBox{
             $oid = $this->addObj($tmpid , 'File', $parid);
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
-                &$this, $oid, '', '', $metadata, 'string', $gunid
+                &$this, $oid, '', '', $metadata, 'string',
+                $gunid, 'audioclip'
             );
             if(PEAR::isError($ac)){
                 $res = $this->removeObj($oid);
@@ -256,6 +257,20 @@ class LocStor extends GreenBox{
      */
     function existsAudioClip($sessid, $gunid)
     {
+        return LocStor::existsFile($sessid, $gunid, 'audioclip');
+    }
+
+    /**
+     *  Check if file exists in the storage
+     *
+     *  @param sessid string
+     *  @param gunid string
+     *  @param ftype string, internal file type
+     *  @return boolean
+     *  @see GreenBox
+     */
+    function existsFile($sessid, $gunid, $ftype=NULL)
+    {
         $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)){
             // catch some exceptions
@@ -267,6 +282,7 @@ class LocStor extends GreenBox{
                 default: return $ac;
             }
         }
+        if(!is_null($ftype) && $ac->_getType() != $ftype) return FALSE;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
         return $ac->exists();

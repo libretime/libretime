@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.8 $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -32,6 +32,9 @@
 COMM=$1
 shift
 GUNID=$1
+
+METADATA="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<metadata><title>ěščřžé</title></metadata>"
 
 echo ""
 XMLRPC=`cd var/install; php -q getXrUrl.php` || exit $?
@@ -52,7 +55,7 @@ test() {
 }
 
 existsAudioClip() {
-    echo "# existsAudioClip: "
+    echo -n "# existsAudioClip (${GUNID}): "
     $XR_CLI existsAudioClip $SESSID $GUNID || exit $?
 }
 
@@ -60,23 +63,20 @@ storeAudioClip() {
 #    echo -n "# storeAudioClip: "
 #    MEDIA=../tests/ex1.mp3
     MEDIA=var/tests/ex1.mp3
-#    METADATA=var/tests/mdata4.xml
-#    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"` || \
-#    	{ ERN=$?; echo $RGUNID; exit $ERN; }
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     echo "md5=$MD5"
     echo -n "# storeAudioClipOpen: "
-    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' '<metadata><title>ěščřžé</title></metadata>' "$MD5"` || \
+    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' "$METADATA" "$MD5"` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
     echo $URL
-    if [ $DEBUG ]; then echo -n "Pres a key ..."; read KEY; fi
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl (PUT): "
     curl -C 0 -T $MEDIA $URL || { ERN=$?; echo $RGUNID; exit $ERN; }
     echo "status: $?"
-    if [ $DEBUG ]; then echo -n "Pres a key ..."; read KEY; fi
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# storeAudioClipClose: "
     RGUNID=`$XR_CLI storeAudioClipClose "$SESSID" "$TOKEN"` || \
     	{ ERN=$?; echo $RGUNID; exit $ERN; }
@@ -91,7 +91,7 @@ accessRawAudioData() {
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
     echo $URL
-    if [ $DEBUG ]; then echo -n "Pres a key ..."; read KEY; fi
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# releaseRawAudioData: "
     $XR_CLI releaseRawAudioData $SESSID $TOKEN || exit $?
 }
@@ -104,7 +104,7 @@ downloadRAD() {
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
     echo $URL
-    if [ $DEBUG ]; then echo -n "Pres a key ..."; read KEY; fi
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl: "
     curl -Ifs $URL > /dev/null || { ERN=$?; echo $RES; exit $ERN; }
     echo "status: $?"
@@ -120,12 +120,21 @@ downloadMeta() {
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
     echo $URL
-    if [ $DEBUG ]; then echo -n "Pres a key ..."; read KEY; fi
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl: "
-    if [ $DEBUG ]; then lynx -source $URL; else
-     curl -Ifs $URL > /dev/null || { ERN=$?; echo $RES; exit $ERN; }
+#     curl -Ifs $URL > /dev/null || { ERN=$?; echo $RES; exit $ERN; }
+    METAOUT=`curl -fs $URL;` || { ERN=$?; echo $RES; exit $ERN; }
+    echo "OK"
+    if [ $DEBUG ]; then echo $METAOUT; echo -n "Press enter ..."; read KEY; fi
+    echo -n "#  metadata check:"
+    if [ "x$METAOUT" != "x$METADATA" ] ; then
+        echo " NOT MATCH"
+        echo " Expected:"; echo $METADATA
+        echo " Downloaded:"; echo $METAOUT
+        exit 1
+    else
+        echo " OK"
     fi
-    echo "status: $?"
     echo -n "# downloadMetadataClose: "
     $XR_CLI downloadMetadataClose $SESSID $TOKEN || exit $?
 }
@@ -199,10 +208,12 @@ elif [ "x$COMM" == "x" ]; then
     login
     storeAudioClip
     GUNID=$RGUNID
+    existsAudioClip
     accessRawAudioData
     downloadRAD
     downloadMeta
     deleteAudioClip
+    existsAudioClip
     logout
     echo "#XMLRPC tests: OK."
     echo ""

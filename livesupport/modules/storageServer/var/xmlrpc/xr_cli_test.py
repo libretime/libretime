@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.7 $
+#    Version  : $Revision: 1.8 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ try:
     elif method=="deleteAudioClip":
         print server.locstor.deleteAudioClip({'sessid':pars[0], 'gunid':pars[1]})
     elif method=="existsAudioClip":
-        print server.locstor.existsAudioClip({'sessid':pars[0], 'gunid':pars[1]} )['exists']
+        print server.locstor.existsAudioClip({'sessid':pars[0], 'gunid':pars[1]})
     elif method=="updateAudioClipMetadata":
         print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'mdataFileLP':pars[2]})
     elif method=="searchMetadata":

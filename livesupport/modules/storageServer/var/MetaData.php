@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -386,7 +386,7 @@ class MetaData{
         $row = $this->dbc->getRow("
             SELECT * FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint
-                AND subjns='_G' AND subject=x'{$this->gunid}'::bigint
+                AND subjns='_G' AND subject='{$this->gunid}'
         ");
         if(PEAR::isError($row)) return $row;
         if(is_null($row)){

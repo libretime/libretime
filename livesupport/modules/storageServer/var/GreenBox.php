@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -67,16 +67,18 @@ class GreenBox extends BasicStor{
      *  @param mdataFileLP string, local path of metadata file
      *  @param sessid string, session id
      *  @param gunid string, global unique id OPTIONAL
+     *  @param ftype string, internal file type
      *  @return int
      *  @exception PEAR::error
      */
     function putFile($parid, $fileName,
-         $mediaFileLP, $mdataFileLP, $sessid='', $gunid=NULL)
+         $mediaFileLP, $mdataFileLP, $sessid='',
+         $gunid=NULL, $ftype='audioclip')
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
         return $this->bsPutFile(
-            $parid, $fileName, $mediaFileLP, $mdataFileLP, $gunid
+            $parid, $fileName, $mediaFileLP, $mdataFileLP, $gunid, $ftype
         );
     }
 

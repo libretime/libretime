@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -108,16 +108,18 @@ class BasicStor extends Alib{
      *  @param mediaFileLP string, local path of media file
      *  @param mdataFileLP string, local path of metadata file
      *  @param gunid string, global unique id OPTIONAL
+     *  @param ftype string, internal file type
      *  @return int
      *  @exception PEAR::error
      */
     function bsPutFile($parid, $fileName,
-        $mediaFileLP, $mdataFileLP, $gunid=NULL)
+        $mediaFileLP, $mdataFileLP, $gunid=NULL, $ftype='unKnown')
     {
         $name   = "$fileName";
         $id = $this->addObj($name , 'File', $parid);
         $ac =&  StoredFile::insert(
-            &$this, $id, $name, $mediaFileLP, $mdataFileLP, 'file', $gunid
+            &$this, $id, $name, $mediaFileLP, $mdataFileLP, 'file',
+            $gunid, $ftype
         );
         if(PEAR::isError($ac)) return $ac;
         return $id;
@@ -971,16 +973,24 @@ class BasicStor extends Alib{
      *      <li>ready</li>
      *      <li>edited</li>
      *  </ul>
+
+     *  file types:
+     *  <ul>
+     *      <li>audioclip</li>
+     *      <li>playlist</li>
+     *      <li>preferences</li>
+     *  </ul>
      */
     function install()
     {
         parent::install();
-        echo "{$this->filesTable}\n";
+        #echo "{$this->filesTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->filesTable} (
             id int not null,
             gunid bigint not null,             -- global unique ID
             name varchar(255) not null default'',       -- human file id ;)
-            type varchar(255) not null default'',       -- mime type
+            mime varchar(255) not null default'',       -- mime type
+            ftype varchar(128) not null default'',       -- file type
             state varchar(128) not null default'empty', -- file state
             currentlyAccessing int not null default 0   -- access counter
         )");
@@ -992,7 +1002,7 @@ class BasicStor extends Alib{
         $this->dbc->query("CREATE INDEX {$this->filesTable}_name_idx
             ON {$this->filesTable} (name)");
 
-        echo "{$this->mdataTable}\n";
+        #echo "{$this->mdataTable}\n";
         $this->dbc->createSequence("{$this->mdataTable}_id_seq");
         $r = $this->dbc->query("CREATE TABLE {$this->mdataTable} (
             id int not null,
@@ -1015,7 +1025,7 @@ class BasicStor extends Alib{
         $this->dbc->query("CREATE INDEX {$this->mdataTable}_pred_idx
             ON {$this->mdataTable} (predns, predicate)");
 
-        echo "{$this->accessTable}\n";
+        #echo "{$this->accessTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->accessTable} (
             gunid bigint,
             sessid char(32) not null default'',

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,21 +83,22 @@ class StoredFile{
      *  @return instace of StoredFile object
      */
     function insert(&$gb, $oid, $name,
-        $mediaFileLP='', $metadata='', $mdataLoc='file', $gunid=NULL)
+        $mediaFileLP='', $metadata='', $mdataLoc='file',
+        $gunid=NULL, $type=NULL)
     {
         $ac =& new StoredFile(&$gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
         $ac->id   = $oid;
-        $ac->type = "unKnown";
+        $ac->mime = "unKnown";
         $emptyState = TRUE;
         if($ac->name=='') $ac->name=$ac->gunid;
         $this->dbc->query("BEGIN");
         $res = $ac->dbc->query("
             INSERT INTO {$ac->filesTable}
-                (id, name, gunid, type, state)
+                (id, name, gunid, mime, state, ftype)
             VALUES
                 ('$oid', '{$ac->name}', x'{$ac->gunid}'::bigint,
-                    '{$ac->type}', 'incomplete')
+                    '{$ac->mime}', 'incomplete', '$type')
         ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
@@ -159,7 +160,7 @@ class StoredFile{
             : "gunid=x'$gunid'::bigint"
         );
         $row = $gb->dbc->getRow("
-            SELECT id, to_hex(gunid)as gunid, type, name
+            SELECT id, to_hex(gunid)as gunid, mime, name
             FROM {$gb->filesTable} WHERE $cond
         ");
         if(PEAR::isError($row)) return $row;
@@ -171,7 +172,7 @@ class StoredFile{
         }
         $gunid = StoredFile::_normalizeGunid($row['gunid']);
         $ac =& new StoredFile(&$gb, $gunid);
-        $ac->type = $row['type'];
+        $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id   = $row['id'];
         return $ac;
@@ -220,7 +221,10 @@ class StoredFile{
      */
     function copyOf(&$src, $nid)
     {
-        $ac =& StoredFile::insert(&$src->gb, $nid, $src->name, $src->_getRealRADFname(), '');
+        $ac =& StoredFile::insert(
+            &$src->gb, $nid, $src->name, $src->_getRealRADFname(),
+            '', '', NULL, $src->_getType()
+        );
         if(PEAR::isError($ac)) return $ac;
         $ac->md->replace($src->md->getMetaData(), 'xml');
         return $ac;
@@ -441,13 +445,13 @@ class StoredFile{
     /**
      *  Set mime-type of virtual file
      *
-     *  @param type string, mime-type
+     *  @param mime string, mime-type
      *  @return boolean or error
      */
-    function setType($type)
+    function setType($mime)
     {
         $res = $this->dbc->query("
-            UPDATE {$this->filesTable} SET type='$type'
+            UPDATE {$this->filesTable} SET mime='$mime'
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
@@ -576,7 +580,7 @@ class StoredFile{
      */
     function _getExt()
     {
-        switch($this->type){
+        switch($this->mime){
             case"audio/mpeg": $ext="mp3"; break;
             case"audio/x-wave": $ext="wav"; break;
             case"application/x-ogg": $ext="ogg"; break;
@@ -586,14 +590,46 @@ class StoredFile{
     }
 
     /**
-     *  Get filetype from global id
+     *  Get mime-type from global id
      *
      *  @param gunid string, optional, global unique id of file
+     *  @return string, mime-type
      */
-    function _getType($gunid)
+    function _getMime($gunid=NULL)
     {
+        if(is_null($gunid)) $gunid = $this->gunid;
         return $this->dbc->getOne("
-            SELECT type FROM {$this->filesTable}
+            SELECT mime FROM {$this->filesTable}
+            WHERE gunid=x'$gunid'::bigint
+        ");
+    }
+
+    /**
+     *  Get storage-internal file type
+     *
+     *  @param gunid string, optional, global unique id of file
+     *  @return string, see install()
+     */
+    function _getType($gunid=NULL)
+    {
+        if(is_null($gunid)) $gunid = $this->gunid;
+        return $this->dbc->getOne("
+            SELECT ftype FROM {$this->filesTable}
+            WHERE gunid=x'$gunid'::bigint
+        ");
+    }
+
+    /**
+     *  Get storage-internal file state
+     *
+     *  @param gunid string, optional, global unique id of file
+     *  @return string, see install()
+     */
+    function _getState($gunid=NULL)
+    {
+        if(is_null($gunid)) $gunid = $this->gunid;
+        return $this->dbc->getOne("
+            SELECT state FROM {$this->filesTable}
             WHERE gunid=x'$gunid'::bigint
         ");
     }
