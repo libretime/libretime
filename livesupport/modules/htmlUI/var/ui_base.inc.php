@@ -113,7 +113,7 @@ class uiBase
 
     function loadStationPrefs(&$mask, $reload=FALSE)
     {
-        if (!is_array($this->STATIONPREFS || $reload===TRUE)) {
+        if (!is_array($this->STATIONPREFS) || $reload===TRUE) {
             foreach ($mask as $key=>$val) {
                 if ($val['isPref']) {
                     if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
@@ -126,8 +126,8 @@ class uiBase
             if (!$this->STATIONPREFS['stationMaxfilesize'])
                 $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
 
-            if ($miss && $this->login) {
-                $this->_retMsg('Note: Station Preferences not setup.');
+            if ($miss && $this->gb->getSessLogin($this->sessid)) {
+                $this->_retMsg('Note: Station Preferences not setup proberly.');
             }
 
         }

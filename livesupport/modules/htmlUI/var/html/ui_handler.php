@@ -5,7 +5,7 @@ switch($_REQUEST['act']){
 
     case "login":
         if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE) {
-            #$uiHandler->checkSystemPrefs();
+            $uiHandler->loadStationPrefs($ui_fmask['stationPrefs'], TRUE);
             $uiHandler->PLAYLIST->loadLookedFromPref();
         }
     break;
@@ -45,7 +45,7 @@ switch($_REQUEST['act']){
         if ($_REQUEST['id']) {
             $uiHandler->editWebstream($_REQUEST, $ui_fmask['webstream']);
         } else {
-            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);
+            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);  
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
     break;

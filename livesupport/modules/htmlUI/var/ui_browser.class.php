@@ -289,7 +289,7 @@ class uiBrowser extends uiBase {
     function addGroupMember($id)
     {
         $g = $this->groupMembers($id);
-        foreach($g['subj'] as $s) {
+        foreach($g['subj'] as $s) {  
             $this->logins[($s['login'])]=$s['login'];
         }
         $form = new HTML_QuickForm('addGroupMember', UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -299,7 +299,7 @@ class uiBrowser extends uiBase {
         $form->addElement('hidden', 'act');
         $form->addElement('hidden', 'reid');
         $form->addElement('hidden', 'gname');
-        $s =& $form->createElement('select', 'login', 'Add Group: ');
+        $s =& $form->createElement('select', 'login', 'Add Member: ');
         $s->loadArray($this->logins, NULL);
         $form->addElement($s);
         $form->addElement('submit', NULL, tra('Do'));
@@ -365,7 +365,7 @@ class uiBrowser extends uiBase {
      *  @return string (html)
      */
     function metaDataForm($parms, $get=FALSE, $data=NULL)
-    {     
+    {
         extract ($parms);
 
         include dirname(__FILE__).'/formmask/metadata.inc.php';
