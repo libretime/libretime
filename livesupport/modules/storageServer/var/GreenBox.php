@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.39 $
+ *  @version $Revision: 1.40 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -99,7 +99,9 @@ class GreenBox extends BasicStor{
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        if(!file_exists($mdataFileLP)){ $mdataFileLP = dirname(__FILE__).'/emptyMdata.xml'; }
+        if(!file_exists($mdataFileLP)){
+            $mdataFileLP = dirname(__FILE__).'/emptyMdata.xml';
+        }
         $oid = $this->bsPutFile(
             $parid, $fileName, '', $mdataFileLP, $gunid, 'webstream'
         );
