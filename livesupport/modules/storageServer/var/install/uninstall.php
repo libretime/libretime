@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,10 +54,14 @@ if(PEAR::isError($dbc)){
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox(&$dbc, $config);
-
 #    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
-echo "# Trying to uninstall storageServer ...\n";
-$gb->uninstall();
+
+echo "# Uninstall Prefs submodule\n";
+require_once "../Prefs.php";
+$pr =& new Prefs(&$gb);
+$r = $pr->uninstall();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+echo "\n";
 
 echo "# Uninstall Transport submodule ...\n";
 require_once "../Transport.php";
@@ -66,12 +70,8 @@ $r = $tr->uninstall();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 echo "\n";
 
-echo "# Uninstall Prefs submodule\n";
-require_once "../Prefs.php";
-$pr =& new Prefs(&$gb);
-$r = $pr->uninstall();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
-echo "\n";
+echo "# StorageServer uninstall ...\n";
+$gb->uninstall();
 
 $dbc->disconnect();
 ?>
