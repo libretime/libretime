@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.18 $
+#   Version  : $Revision: 1.19 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -188,7 +188,7 @@ distclean:
 	${MAKE} -C ${STORAGE_DIR} distclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} distclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} distclean
-	${MAKE} -C ${SCHDULER_CLIENT_DIR} distclean
+	${MAKE} -C ${SCHEDULER_CLIENT_DIR} distclean
 	${MAKE} -C ${SCHEDULER_DIR} distclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} distclean
 
