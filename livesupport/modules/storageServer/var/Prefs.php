@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Prefs.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,7 @@ class Prefs{
     }
 
     /* ======================================================= public methods */
+    /* ----------------------------------------------------- user preferences */
     /**
      *  Read preference record by session id
      *
@@ -125,11 +126,75 @@ class Prefs{
         return TRUE;
     }
 
+    /* ---------------------------------------------------- group preferences */
+    /**
+     *  Read group preference record
+     *
+     *  @param sessid string, session id
+     *  @param grname string, group name
+     *  @param key string, preference key
+     *  @return string, preference value
+     */
+    function loadGroupPref($sessid, $grname, $key)
+    {
+        $subjid = $this->gb->getSubjId($grname);
+        if(PEAR::isError($subjid)) return $subjid;
+        if(is_null($subjid)){
+            return PEAR::raiseError(
+                "Prefs::loadGroupPref: invalid group name", ALIBERR_NOTGR);
+        }
+        $val = $this->readVal($subjid, $key);
+        if(PEAR::isError($val)) return $val;
+        if($val === FALSE){
+            return PEAR::raiseError(
+                "Prefs::loadGroupPref: invalid preference key", GBERR_PREF);
+        }
+        return $val;
+    }
+
+    /**
+     *  Save group preference record
+     *
+     *  @param sessid string, session id
+     *  @param grname string, group name
+     *  @param key string, preference key
+     *  @param value string, preference value
+     *  @return boolean
+     */
+    function saveGroupPref($sessid, $grname, $key, $value)
+    {
+        $uid = $this->gb->getSessUserId($sessid);
+        if(PEAR::isError($uid)) return $uid;
+        if(is_null($uid)){
+            return PEAR::raiseError(
+                "Prefs::loadGroupPref: invalid session id", GBERR_SESS);
+        }
+        $gid = $this->gb->getSubjId($grname);
+        if(PEAR::isError($gid)) return $gid;
+        if(is_null($gid)){
+            return PEAR::raiseError(
+                "Prefs::saveGroupPref: invalid group name", GBERR_SESS);
+        }
+        $memb = $this->gb->isMemberOf($uid, $gid);
+        if(PEAR::isError($memb)) return $memb;
+        if(!$memb){
+            return PEAR::raiseError(
+                "Prefs::saveGroupPref: access denied", GBERR_DENY);
+        }
+        $r = $this->update($gid, $key, $value);
+        if(PEAR::isError($r)) return $r;
+        if($r === FALSE){
+            $r = $this->insert($gid, $key, $value);
+            if(PEAR::isError($r)) return $r;
+        }
+        return TRUE;
+    }
+
     /* ===================================================== gb level methods */
     /**
      *  Insert of new preference record
      *
-     *  @param subjid int, local user id
+     *  @param subjid int, local user/group id
      *  @param keystr string, preference key
      *  @param valstr string, preference value
      *  @return int, local user id
@@ -151,7 +216,7 @@ class Prefs{
     /**
      *  Read value of preference record
      *
-     *  @param subjid int, local user id
+     *  @param subjid int, local user/group id
      *  @param keystr string, preference key
      *  @return string, preference value
      */
@@ -169,7 +234,7 @@ class Prefs{
     /**
      *  Update value of preference record
      *
-     *  @param subjid int, local user id
+     *  @param subjid int, local user/group id
      *  @param keystr string, preference key
      *  @param newvalstr string, new preference value
      *  @return boolean
@@ -189,7 +254,7 @@ class Prefs{
     /**
      *  Delete preference record
      *
-     *  @param subjid int, local user id
+     *  @param subjid int, local user/group id
      *  @param keystr string, preference key
      *  @return boolean
      */
@@ -252,6 +317,9 @@ class Prefs{
             ON {$this->prefTable} (subjid, keystr)");
         $this->dbc->query("CREATE INDEX {$this->prefTable}_subjid_idx
             ON {$this->prefTable} (subjid)");
+        $stPrefGr = $this->gb->getSubjId('StationPrefs');
+        $r = $this->insert($stPrefGr, 'stationName', "Radio Station 1");
+        if(PEAR::isError($r)) echo $r->getMessage()."\n";
         return TRUE;
     }
 

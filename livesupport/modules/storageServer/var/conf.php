@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,6 +63,7 @@ $config = array(
     ),
     'tblNamePrefix' => 'ls_',
     'authCookieName'=> 'lssid',
+    'StationPrefsGr'=> 'StationPrefs',
     'storageDir'    =>  dirname(getcwd()).'/stor',
     'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
     'transDir'      =>  dirname(getcwd()).'/trans',

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1166,9 +1166,14 @@ class XR_LocStor extends LocStor{
      *   <ul>
      *      <li>audioClipResults : array with gunid strings
      *          of audioClips have been found</li>
+     *      <li>audioClipCnt : int - number of audioClips matching
+     *          the criteria</li>
      *      <li>playlistResults : array with gunid strings
      *          of playlists have been found</li>
+     *      <li>playlistCnt : int - number of playlists matching
+     *          the criteria</li>
      *   </ul>
+     *  (cnt values may be greater than size of arrays - see limit param)
      *
      *  On errors, returns an XML-RPC error response.
      *  The possible error codes and error message are:
@@ -1196,7 +1201,23 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode($res));
+#        return new XML_RPC_Response(XML_RPC_encode($res));
+        $xv = new XML_RPC_Value;
+        $xv->addStruct(array(
+            'audioClipCnt'      => XML_RPC_encode($res['audioClipCnt']),
+            'playlistCnt'       => XML_RPC_encode($res['playlistCnt']),
+            'audioClipResults'  =>
+                (count($res['audioClipResults'])==0
+                    ? new XML_RPC_Value(array(), 'array')
+                    : XML_RPC_encode($res['audioClipResults'])
+                ),
+            'playlistResults'   =>
+                (count($res['playlistResults'])==0
+                    ? new XML_RPC_Value(array(), 'array')
+                    : XML_RPC_encode($res['playlistResults'])
+            ),
+        ));
+        return $xv;
     }
 
     /* ---------------------------------------------- methods for preferences */
@@ -1351,6 +1372,114 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
     }
 
+    /**
+     *  Read group preference record
+     *
+     *  The XML-RPC name of this method is "locstor.loadGroupPref".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> group : string - group name </li>
+     *      <li> key : string - preference key </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> value : string - preference value </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_loadGroupPref:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 820  -  invalid group name.</li>
+     *      <li> 848  -  invalid session id.</li>
+     *      <li> 849  -  invalid preference key.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Pref::loadGroupPref
+     */
+    function xr_loadGroupPref($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs(&$this);
+        $res = $pr->loadGroupPref($r['sessid'], $r['group'], $r['key']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = (
+                $ec0 == GBERR_SESS || $ec0 == GBERR_PREF || $ec0==ALIBERR_NOTGR
+                ? 800+$ec0 : 805 
+            );
+            return new XML_RPC_Response(0, $ec,
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+                
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('value'=>$res)));
+    }
+
+    /**
+     *  Save group preference record
+     *
+     *  The XML-RPC name of this method is "locstor.saveGroupPref".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> group : string - group name </li>
+     *      <li> key : string - preference key </li>
+     *      <li> value : string - preference value </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> status : boolean</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_saveGroupPref:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 820  -  invalid group name.</li>
+     *      <li> 848  -  invalid session id.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see Pref::saveGroupPref
+     */
+    function xr_saveGroupPref($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs(&$this);
+        $res = $pr->saveGroupPref($r['sessid'], $r['group'], $r['key'], $r['value']);
+        if(PEAR::isError($res)){
+            $ec0 = intval($res->getCode());
+            $ec  = ($ec0==GBERR_SESS || $ec0==ALIBERR_NOTGR ? 800+$ec0 : 805 );
+            return new XML_RPC_Response(0, $ec,
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
+    }
+
     /* -------------------------------------------- remote repository methods */
     /**
      *  Starts upload audioclip to remote archive
@@ -1466,7 +1595,8 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *     <li>trtype: string - audioclip | playlist</li>
      *     <li>direction: string - up | down</li>
-     *     <li>status: boolean</li>
+     *     <li>status: boolean - true if file have been
+     *              succesfully transported</li>
      *     <li>expectedsize: int - expected size</li>
      *     <li>realsize: int - size of transported  file</li>
      *     <li>expectedsum: string - expected checksum</li>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,9 @@ if($pars[0] == '-v'){ $verbose = TRUE; array_shift($pars); }
 if($pars[0] == '-s'){
     array_shift($pars);
     $serverPath = array_shift($pars);
-}else $serverPath = 'http://localhost:80/livesupportStorageServer/xmlrpc/xrLocStor.php';
+}else{
+    $serverPath = 'http://localhost:80/livesupportStorageServer/xmlrpc/xrLocStor.php';
+}
 
 #$serverPath = "http://localhost:80/livesupportStorageServerCVS/xmlrpc/xrLocStor.php";
 
@@ -122,6 +124,10 @@ $infos = array(
         'p'=>array('sessid', 'key', 'value'), 'r'=>'status'),
     "delPref"       => array('m'=>"locstor.delPref",
         'p'=>array('sessid', 'key'), 'r'=>'status'),
+    "loadGroupPref"      => array('m'=>"locstor.loadGroupPref",
+        'p'=>array('sessid', 'group', 'key'), 'r'=>'value'),
+    "saveGroupPref"      => array('m'=>"locstor.saveGroupPref",
+        'p'=>array('sessid', 'group', 'key', 'value'), 'r'=>'status'),
 
     "uploadToArchive"       => array('m'=>"locstor.uploadToArchive",
         'p'=>array('sessid', 'gunid'), 'r'=>'trtok'),

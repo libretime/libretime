@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.17 $
+#   Version  : $Revision: 1.18 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -231,9 +231,9 @@ deletePlaylist() {
 prefTest() {
     PREFKEY="testKey"
     PREFVAL="test preference value"
-    echo -n "# savePref: "
+    echo -n "# savePref ($PREFKEY): "
     $XR_CLI savePref $SESSID "$PREFKEY" "$PREFVAL"|| exit $?
-    echo -n "# loadPref: "
+    echo -n "# loadPref ($PREFKEY): "
     VAL=`$XR_CLI loadPref $SESSID "$PREFKEY"` || \
     	{ ERN=$?; echo $VAL; exit $ERN; }
     echo "$VAL  "
@@ -255,6 +255,28 @@ prefTest() {
     fi
 }
 
+groupPrefTest() {
+    PREFKEY="Station frequency"
+    PREFVAL="89.5 FM"
+    GR="StationPrefs"
+    echo -n "# saveGroupPref ($PREFKEY): "
+    $XR_CLI saveGroupPref $SESSID "$GR" "$PREFKEY" "$PREFVAL"|| exit $?
+    echo -n "# loadGroupPref ($PREFKEY): "
+    VAL=`$XR_CLI loadGroupPref $SESSID "$GR" "$PREFKEY"` || \
+    	{ ERN=$?; echo $VAL; exit $ERN; }
+    echo "$VAL  "
+    if [ "x$VAL" != "x$PREFVAL" ] ; then
+        echo " NOT MATCH"
+        echo " Expected:"; echo $PREFVAL
+        echo " Returned:"; echo $VAL
+        exit 1
+    else
+        echo "# pref value check: OK"
+    fi
+    echo -n "# saveGroupPref (clear it): "
+    $XR_CLI saveGroupPref $SESSID "$GR" "$PREFKEY" ""|| exit $?
+}
+
 logout() {
     echo -n "# logout: "
     $XR_CLI logout $SESSID || exit $?
@@ -264,6 +286,7 @@ preferenceTest(){
     echo "#XMLRPC preference test"
     login
     prefTest
+    groupPrefTest
     logout
     echo "#XMLRPC: preference: OK."
     echo ""
