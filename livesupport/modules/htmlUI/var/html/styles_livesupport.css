@@ -43,6 +43,14 @@ form { font-size: 12px;
     width: 100px;
 }
 
+.button_wide { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 150px;
+}
 .button_large { font-size: 12px;
     font-weight: bold;
     color: #666;

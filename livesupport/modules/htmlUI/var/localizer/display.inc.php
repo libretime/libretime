@@ -86,7 +86,7 @@ class Display {
                 }
 
                 $html .= "<input name='data[$nr][key]' type='hidden' value=\"$displKey\">";
-                $html .= "<input name='data[$nr][value]' type='text' size='50' value=\"$insval\">";
+                $html .= "<input name='data[$nr][value]' type='text' size='100' value=\"$insval\">";
                 $html .= "</td><td>\n";
 
                 if ($target[Id] == _DEFAULT_LANG_) {     // default language => can change keys

@@ -14,7 +14,7 @@
         *}
 
         <div class="clearer">&nbsp;</div>
-        <p>{$SCHEDULER->curr.week}. ##KW## {$SCHEDULER->curr.year}</p>
+        <p>{$SCHEDULER->curr.week}. ##calendar week## {$SCHEDULER->curr.year}</p>
 
         <table class="scheduler_week">
             <tr>

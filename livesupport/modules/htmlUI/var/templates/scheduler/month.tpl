@@ -25,10 +25,12 @@
         {/if}
 
             <td {if $_Day.isToday} class="today"{/if}>
-                <p><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&year={$_Day.year}&month={$_Day.month}&day={$_Day.day}')">{$_Day.day}</a></p>
+                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&year={$_Day.year}&month={$_Day.month}&day={$_Day.day}')">
+                <p>{$_Day.day}</p>
                 <div class="scala">
                     <div class="scala_in" style="width: {$percentage}px;"></div> <!-- fullsize 96px, multiple of 24 -->
                 </div>
+                </a>
             </td>
 
         {if $_Day.isLast}

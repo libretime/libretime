@@ -34,7 +34,7 @@ $ui_fmask = array(
             'element'   => 'stationLogoPath',
             'isPref'    => TRUE,
             'type'      => 'hidden',
-            'label'     => 'Station Logo path',
+            'label'     => 'Station Logo Path',
             'default'   => 'img/stationlogo.image',
             'required'  => TRUE,
         ),
@@ -42,7 +42,7 @@ $ui_fmask = array(
             'rule'      => 'regex',
             'element'   => 'stationLogoPath',
             'format'    => '/^img\/[a-z0-9.-_]*$/',
-            'rulemsg'   => 'Path seems invalid'
+            'rulemsg'   => 'Path appears invalid'
         ),
         array(
             'element'   => 'stationURL',
@@ -74,7 +74,7 @@ $ui_fmask = array(
             'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,
             'isPref'    => TRUE,
             'type'      => 'select',
-            'label'     => 'Maximun length of ScratchPad',
+            'label'     => 'Maximum length of ScratchPad',
             'options'   => array(
                             5   => 5,
                             10  => 10,
@@ -85,12 +85,11 @@ $ui_fmask = array(
             'element'   => 'stationMaxfilesize',
             'isPref'    => TRUE,
             'type'      => 'text',
-            'label'     => 'Reduce Upload Filesize<br><small>(must be smaller than ' .ini_get('upload_max_filesize').')</small>',
+            'label'     => 'Reduce Upload Filesize',
             'rule'      => 'numeric',
             'attributes'   => array(
-                                'onClick'  => 'alert ("Note: System Maximum is set to '.
-                                                ini_get('upload_max_filesize')
-                                                .' in php.ini\n You can just reduce this amount here.")'
+                                'onFocus'  => 'alert ("'.tra('Note: System Maximum is set to $1 in php.ini. You can just reduce this amount here.',
+                                                            ini_get('upload_max_filesize')).'")'
                            )
         ),
         array(
@@ -131,7 +130,7 @@ $ui_fmask = array(
         array(
             'rule'      => 'compare',
             'element'   => array('pass','pass2'),
-            'rulemsg'   => 'The Passwords do not match'
+            'rulemsg'   => 'The passwords do not match'
         ),
         array(
             'element'   =>'Submit',
@@ -156,7 +155,7 @@ $ui_fmask = array(
         array(
             'element'   =>'pass',
             'type'      =>'password',
-            'label'     =>'Users Password',
+            'label'     =>'User Password',
             'required'  =>TRUE
         ),
         array(
@@ -168,7 +167,7 @@ $ui_fmask = array(
         array(
             'rule'      =>'compare',
             'element'   =>array('pass','pass2'),
-            'rulemsg'   =>'The Passwords do not match'
+            'rulemsg'   =>'The passwords do not match'
         ),
         array(
             'element'   =>'Submit',
@@ -244,16 +243,16 @@ $ui_fmask = array(
         array(
             'element'   => 'mediafile',
             'type'      => 'file',
-            'label'     => 'Mediafile',
+            'label'     => 'Media File',
             'required'  => TRUE,
-            'requiredmsg'=> 'please select Media file'
+            'requiredmsg'=> 'Please select media file'
         ),
         array(
             'element'   => 'mdatafile',
             'type'      => 'file',
             'label'     => 'Metadata',
             'required'  => TRUE,
-            'requiredmsg'=> 'please select Metadata file'
+            'requiredmsg'=> 'Please select metadata file'
         ),
         array(
             'element'   => 'Submit',
@@ -278,9 +277,9 @@ $ui_fmask = array(
         array(
             'element'   => 'mediafile',
             'type'      => 'file',
-            'label'     => 'Mediafile',
+            'label'     => 'Media File',
             'required'  => TRUE,
-            'requiredmsg'=> 'please select Media file'
+            'requiredmsg'=> 'please select media file'
         ),
         array(
             'element'   => 'cancel',
@@ -337,7 +336,7 @@ $ui_fmask = array(
         array(
             'element'   => 'length',
             'type'      => 'date',
-            'label'     => 'Length<br><small>Leave zero for Live Stream</small>',
+            'label'     => 'Length<br><small>Enter zero for Live Stream</small>',
             'options'   => array('format' => 'His'),
         ),
         array(
@@ -389,11 +388,11 @@ $ui_fmask = array(
         array(
             'element'   => 'filetype',
             'type'      => 'select',
-            'label'     => 'Filetype',
+            'label'     => 'File type',
             'options'   => array(
                             'File'      => '*',
-                            'audioclip' => 'Audioclip',
-                            'webstream' => 'Webstream',
+                            'audioclip' => 'Audio Clip',
+                            'webstream' => 'Web Stream',
                             'playlist'  => 'Playlist'
                             )
         ),
@@ -418,7 +417,7 @@ $ui_fmask = array(
         array(
             'element'   => 'addrow',
             'type'      => 'button',
-            'label'     => 'One more Row',
+            'label'     => 'Add Criteria',
             'attributes'  => array('onClick' => 'SearchForm_addRow()'),
             'groupit'   => TRUE,
         ),
@@ -459,11 +458,11 @@ $ui_fmask = array(
                 'label'    => 'Language',
                 'options'  => array(
                                 'en.English'    => 'English',
-                                'nl.Dutch'      => 'Dutch',
-                                'cz.Czech'      => 'Czech',
-                                'de.German'     => 'German',
-                                'hu.Hungarian'  => 'Hungarian',
-                                'sr.Serbian'    => 'Serbian'
+                                'nl.Dutch'      => 'Nederlaands',
+                                'cz.Czech'      => 'Cesky',
+                                'de.German'     => 'Deutsch',
+                                'hu.Hungarian'  => 'Magyar',
+                                'sr.Serbian'    => 'Srpski'
                               )
             )
     ),
@@ -511,11 +510,11 @@ $ui_fmask = array(
         array(
             'element'   => 'filetype',
             'type'      => 'select',
-            'label'     => 'Filetype',
+            'label'     => 'File Type',
             'options'   => array(
                             'File'      => '*',
-                            'audioclip' => 'Audioclip',
-                            'webstream' => 'Webstream',
+                            'audioclip' => 'Audio Clip',
+                            'webstream' => 'Web Stream',
                             'playlist'  => 'Playlist'
                             ),
             'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act=BROWSE.setFiletype&filetype=" + this.form.filetype.value)')
@@ -523,7 +522,7 @@ $ui_fmask = array(
         array(
             'element'   => 'limit',
             'type'      => 'select',
-            'label'     => 'Rows per Page',
+            'label'     => 'Rows Per Page',
             'options'   => array(
                             10  => 10,
                             25  => 25,
@@ -543,7 +542,7 @@ $ui_fmask = array(
         array(
             'element'   => 'simplesearch',
             'type'      => 'header',
-            'label'     => 'Library Search',
+            'label'     => 'Search Library',
         ),
         array(
             'element'   => 'criterium',
