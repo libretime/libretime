@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,10 +159,19 @@ void
 WebStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref  id01(new UniqueId(10001));
+    Ptr<UniqueId>::Ref  id01;
     Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
     Ptr<SessionId>::Ref sessionId;
 
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector = wsc->reset();
+/*
+    NOTE: this is incorrect, as WebStorageClient fakes the UniqueId's
+    TODO: fix!!!
+    std::cout << "\nReset storage result:\n";
+    for (unsigned i=0; i<uniqueIdVector->size(); i++) {
+        std::cout << uniqueIdVector->at(i)->getId() << std::endl;
+    }
+*/    
     CPPUNIT_ASSERT( sessionId = authentication->login("root", "q"));
 
     CPPUNIT_ASSERT(!wsc->existsAudioClip(sessionId, id77));

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,6 +159,20 @@ static const std::string    errorCodeParamName = "faultCode";
 static const std::string    errorMessageParamName = "faultString";
 
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: resetStorage */
+
+/*------------------------------------------------------------------------------
+ *  The name of the reset storage method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    resetStorageMethodName 
+                            = "locstor.resetStorage";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    resetStorageMethodResultParamName = "gunids";
+
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsAudioClip */
 
 /*------------------------------------------------------------------------------
@@ -176,6 +190,11 @@ static const std::string    existsAudioClipMethodSessionIdParamName = "sessid";
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
 static const std::string    existsAudioClipMethodAudioClipIdParamName = "gunid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    existsAudioClipMethodResultParamName = "exists";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getAudioClip */
@@ -196,8 +215,15 @@ static const std::string    getAudioClipMethodSessionIdParamName = "sessid";
  *----------------------------------------------------------------------------*/
 static const std::string    getAudioClipMethodAudioClipIdParamName = "gunid";
 
+/*------------------------------------------------------------------------------
+ *  The name of the result parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipMethodResultParamName = "metadata";
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: storeAudioClip */
+
+// TODO: fix; this method does not exist any more
 
 /*------------------------------------------------------------------------------
  *  The name of the store audio clip method on the storage server
@@ -444,8 +470,10 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
         throw std::logic_error(eMsg);
     }
     
-    if (xmlRpcClient.isFault() 
-                || result.getType() != XmlRpcValue::TypeBoolean) {
+    if (xmlRpcClient.isFault()
+                || ! result.hasMember(existsAudioClipMethodResultParamName) 
+                || result[existsAudioClipMethodResultParamName].getType() 
+                                                != XmlRpcValue::TypeBoolean) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
              << existsAudioClipMethodName
@@ -454,7 +482,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
         throw std::logic_error(eMsg.str());
     }
     
-    return bool(result);
+    return bool(result[existsAudioClipMethodResultParamName]);
 }
  
 
@@ -486,7 +514,9 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     }
 
     if (xmlRpcClient.isFault() 
-                || result.getType() != XmlRpcValue::TypeString) {
+                || ! result.hasMember(getAudioClipMethodResultParamName)
+                || result[getAudioClipMethodResultParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
              << getAudioClipMethodName
@@ -495,8 +525,8 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
         throw std::logic_error(eMsg.str());
     }
     
-    std::string             xmlAudioClip(result);
-    Ptr<AudioClip>::Ref     audioClip;
+    std::string         xmlAudioClip(result[getAudioClipMethodResultParamName]);
+    Ptr<AudioClip>::Ref audioClip;
 
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
@@ -644,58 +674,57 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
 
 
 /*------------------------------------------------------------------------------
- *  Convert a hex digit to an int.  This is used by decodeString().
+ *  Reset the storage to its initial state.
  *----------------------------------------------------------------------------*/
-int
-WebStorageClient :: hexDigitToChar(const char &hexDigit) const
-                                                throw ()
+Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+WebStorageClient :: reset(void)
+                                                throw (std::logic_error)
 {
-    if (hexDigit >= '0' && hexDigit <= '9') {
-        return hexDigit - '0';
-    }
-    else if (hexDigit >= 'a' && hexDigit <= 'f') {
-        return hexDigit - 'a' + 10;
-    }
-    else if (hexDigit >= 'A' && hexDigit <= 'F') {
-        return hexDigit - 'A' + 10;
-    }
-    else {
-        return 0;
-    }
-}
-    
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
 
-/*------------------------------------------------------------------------------
- *  Decode an escaped string.
- *----------------------------------------------------------------------------*/
-Ptr<std::string>::Ref
-WebStorageClient :: decodeString(const std::string &inputString) const
-                                                throw ()
-{
-    Ptr<std::string>::Ref   outputString(new std::string);
-    char                    nextChar;
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters["dummy_param"] = "dummy_value"; 
     
-    std::string::const_iterator it = inputString.begin();
-    while (it != inputString.end()) {
-        nextChar = *(it++);
-        if (nextChar == '%') {
-            if (it == inputString.end()) {
-                    nextChar = '?';
-               }
-            else {
-                nextChar = hexDigitToChar(*(it++));
-                if (it == inputString.end()) {
-                    nextChar = '?';
-                }
-                else {
-                    nextChar *= 16;
-                    nextChar += hexDigitToChar(*(it++));
-                }
-            }
-        }
-        outputString->push_back(nextChar);
+    if (!xmlRpcClient.execute(resetStorageMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += resetStorageMethodName;
+        eMsg += "'";
+        throw std::logic_error(eMsg);
+    }
+
+    if (xmlRpcClient.isFault() 
+                || ! result.hasMember(resetStorageMethodResultParamName)
+                || result[resetStorageMethodResultParamName].getType() 
+                                                != XmlRpcValue::TypeArray) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << resetStorageMethodName
+             << "' returned error message:\n"
+             << result;
+        throw std::logic_error(eMsg.str());
     }
     
-    return outputString;
+    XmlRpcValue uniqueIdArray = result[resetStorageMethodResultParamName];
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref returnValue(
+                                        new std::vector<Ptr<UniqueId>::Ref>);
+    
+    for (int i=0; i < uniqueIdArray.size(); i++) {
+        if (uniqueIdArray[i].getType() != XmlRpcValue::TypeString) {
+            std::stringstream eMsg;
+            eMsg << "Non-string gunid returned by XML-RPC method '" 
+                 << resetStorageMethodName
+                 << "':\n"
+                 << result;
+            throw std::logic_error(eMsg.str());
+        }            
+        Ptr<UniqueId>::Ref  uniqueId(new UniqueId(10001 + i));  // TODO: fix!!!
+        returnValue->push_back(uniqueId);
+    }
+    
+    return returnValue;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -131,25 +131,6 @@ class WebStorageClient :
          */
         std::string                 storageServerPath;
 
-        /**
-         *  Decode an escaped %73%74%72%69%6E%67 to a normal string.
-         *  This is really bad and low-level; to be replaced later.
-         *  
-         *  @return a pointer to a newly allocated string which contains
-         *          the decoded value.
-         */
-        Ptr<std::string>::Ref
-        decodeString(const std::string &inputString) const
-                                                throw ();
-        /**
-         *  Convert a hex digit 0..9 | a..f | A..F to an int.
-         *  This is used in decodeString().
-         *  
-         *  @return an int with the converted value.
-         */
-        int
-        hexDigitToChar(const char &hexDigit) const
-                                                throw ();
 
     public:
         /**
@@ -425,6 +406,16 @@ class WebStorageClient :
         getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
                                                 throw (std::logic_error);
 
+        /**
+         *  Reset the storage to its initial state.  Used for testing.
+         *
+         *  @return a vector containing the UniqueId's of the audio clips 
+         *          in the storage after the reset.
+         *  @exception std::logic_error if the server returns an error.
+         */
+        Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+        reset(void)
+                                                throw (std::logic_error);
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -103,6 +103,11 @@ static const std::string    loginParamName = "login";
  *----------------------------------------------------------------------------*/
 static const std::string    passwordParamName = "pass";
 
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    outputSessionIdParamName = "sessid";
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: logout */
 
@@ -114,7 +119,12 @@ static const std::string    logoutMethodName = "locstor.logout";
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
  *----------------------------------------------------------------------------*/
-static const std::string    sessionIdParamName = "sessid";
+static const std::string    inputSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the status parameter in the output structure
+ *----------------------------------------------------------------------------*/
+static const std::string    statusParamName = "status";
 
 
 /* ===============================================  local function prototypes */
@@ -209,11 +219,15 @@ WebAuthenticationClient :: login(const std::string & login,
         return sessionId;
     }
 
-    if (result.getType() != XmlRpcValue::TypeString) {
+    if (! result.hasMember(outputSessionIdParamName)) {
         return sessionId;
     }
-    
-    sessionId.reset(new SessionId(result));
+
+    if (result[outputSessionIdParamName].getType() != XmlRpcValue::TypeString) {
+        return sessionId;
+    }
+
+    sessionId.reset(new SessionId(result[outputSessionIdParamName]));
     return sessionId;
 }
 
@@ -231,7 +245,7 @@ WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
-    parameters[sessionIdParamName] = sessionId->getId().c_str();
+    parameters[inputSessionIdParamName] = sessionId->getId().c_str();
     
     if (!xmlRpcClient.execute(logoutMethodName.c_str(), parameters, result)) {
         return false;
@@ -239,6 +253,18 @@ WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
 
     if (xmlRpcClient.isFault()) {
         return false;
+    }
+    
+    if (! result.hasMember(statusParamName)) {
+        return sessionId;
+    }
+
+    if (result[statusParamName].getType() != XmlRpcValue::TypeBoolean) {
+        return sessionId;
+    }
+
+    if (!(bool(result[statusParamName]))) {
+        return sessionId;
     }
 
     return true;
