@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -465,7 +465,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
-     *      <li> status : boolean</li>
+     *      <li> gunid : string - global unique ID</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -493,7 +493,7 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
+        return new XML_RPC_Response(XML_RPC_encode(array('gunid'=>$res)));
     }
 
     /* ---------------------------------------------------- download metadata */
@@ -558,7 +558,7 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
-     *      <li> status : boolean</li>
+     *      <li> gunid : string - global unique ID</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -586,7 +586,7 @@ class XR_LocStor extends LocStor{
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
+        return new XML_RPC_Response(XML_RPC_encode(array('gunid'=>$res)));
     }
 
     /* --------------------------------------------------------------- delete */
