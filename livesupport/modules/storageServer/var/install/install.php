@@ -23,10 +23,19 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
+// no remote execution
+$arr = array_diff_assoc($_SERVER, $_ENV);
+if($arr["DOCUMENT_ROOT"] != ""){
+    header("HTTP/1.1 400");
+    header("Content-type: text/plain; charset=UTF-8");
+    echo "400 Not executable\r\n";
+    exit;
+}
+
 require_once '../conf.php';
 require_once 'DB.php';
 require_once '../GreenBox.php';
