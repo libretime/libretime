@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -147,6 +147,7 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
     }
     
     sessionIdList.clear();
+    sessionCounter = 0;
 }
 
 
@@ -162,8 +163,10 @@ TestAuthenticationClient :: login(const std::string & login,
 
     if (login == userLogin && password == userPassword) {
         std::stringstream   sessionIdStream;
-        sessionIdStream << dummySessionIdString;
-        sessionIdStream << rand();
+        sessionIdStream << dummySessionIdString
+                        << sessionCounter++
+                        << '-'
+                        << rand();
         sessionIdList.insert(sessionIdStream.str());
         sessionId.reset(new SessionId(sessionIdStream.str()));
     }
@@ -178,6 +181,7 @@ const bool
 TestAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
                                                 throw ()
 {
+    // this returns the number of entries found and erased
     if (sessionIdList.erase(sessionId->getId())) {
         return true;
     }

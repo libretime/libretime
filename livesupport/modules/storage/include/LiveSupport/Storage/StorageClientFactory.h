@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,12 +61,12 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  The factory to create appropriate StorageClient objects.
+ *  The factory to create StorageClientInterface objects.
  *
  *  This object has to be configured with an XML configuration element
  *  called storageClientFactory. This element contains a child element
  *  specifying and configuring the kind of StorageClient that the
- *  factory builds. Currently on the TestStorageClient is supported.
+ *  factory builds. Currently only the TestStorageClient is supported.
  *
  *  A storageClientFactory configuration element may look like the following:
  *
@@ -87,8 +87,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ELEMENT storageClientFactory (testStorage) &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  *  @see TestStorageClient
  */
 class StorageClientFactory :

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/Attic/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,7 +76,7 @@ using namespace LiveSupport::Core;
  *      &lt;location
  *          server="localhost"
  *          port="80" 
- *          path="/storage/var/xmlrpc/xrLocStor.php"
+ *          path="/livesupportStorageServer/xmlrpc/xrLocStor.php"
  *      /&gt;
  *  &lt;/webAuthentication&gt;
  *  </code></pre>
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,
@@ -161,8 +161,6 @@ class WebAuthenticationClient :
          *  configuration file.
          *  Returns a new session ID; in case of an error, returns a
          *  null pointer.
-         *
-         *  For testing, use the login "root" with the password "q".
          *
          *  @return the new session ID
          */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/FadeInfo.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,11 +66,30 @@ using namespace boost::posix_time;
 
 /**
  *  A class representing fade in / fade out information of a playlist element.
- *  These are contained in a PlaylistElement, a list of which, in turn, is
+ *  This is contained in a PlaylistElement, a list of which, in turn, is
  *  contained in a Playlist.
  *
+ *  This object has to be configured with an XML configuration element
+ *  called fadeInfo. This may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;fadeInfo id="9901" 
+ *            fadeIn="00:00:02.000000"
+ *            fadeOut="00:00:01.500000" &gt;
+ *  &lt;/fadeInfo&gt;
+ *  </code></pre>
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT fadeInfo EMPTY &gt;
+ *  &lt;!ATTLIST fadeInfo id         NMTOKEN     #REQUIRED  &gt;
+ *  &lt;!ATTLIST fadeInfo fadeIn     NMTOKEN     #REQUIRED  &gt;
+ *  &lt;!ATTLIST fadeInfo fadeIn     NMTOKEN     #REQUIRED  &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class FadeInfo : public Configurable
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -125,6 +125,11 @@ class TestAuthenticationClient :
         *  A list of the sessionId's we have issued.
         */
         sessionIdListType           sessionIdList;
+
+       /**
+        *  The number of the sessionId's we have issued.
+        */
+        int                         sessionCounter;
 
 
     public:
@@ -167,8 +172,6 @@ class TestAuthenticationClient :
          *  configuration file.
          *  Returns a new session ID; in case of an error, returns a
          *  null pointer.
-         *
-         *  For testing, use the login "root" with the password "q".
          *
          *  @return the new session ID
          */

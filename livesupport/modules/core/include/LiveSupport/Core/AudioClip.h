@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,12 +67,31 @@ using namespace boost::posix_time;
 /**
  *  A class representing an audio clip.
  *  AudioClips contain the basic information about the audio clip.
- *  They are contained in PlaylistElements, which provide the relative offset
- *  and fade in/fade out info.  PlaylistElements, in turn, are contained
- *  in a Playlist.
+ *  An AudioClip is contained in a PlaylistElement, which provides the 
+ *  relative offset and fade in/fade out information.  A PlaylistElement, 
+ *  in turn, is contained in a Playlist.
+ *
+ *  This object has to be configured with an XML configuration element
+ *  called audioClip. This may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;audioClip id="1" 
+ *             playlength="00:18:30.000000"
+ *             uri="file:var/test1.mp3" &gt;
+ *  &lt;/audioClip&gt;
+ *  </code></pre>
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT audioClip EMPTY &gt;
+ *  &lt;!ATTLIST audioClip  id           NMTOKEN     #REQUIRED  &gt;
+ *  &lt;!ATTLIST audioClip  playlength   NMTOKEN     #REQUIRED  &gt;
+ *  &lt;!ATTLIST audioClip  uri          CDATA       #REQUIRED  &gt;
+ *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class AudioClip : public Configurable
 {
@@ -112,6 +131,8 @@ class AudioClip : public Configurable
          *
          *  @param id the id of the audio clip.
          *  @param playlength the playing length of the audio clip.
+         *  @param uri the location of the sound file corresponding to
+         *             this audio clip object (optional)
          */
         AudioClip(Ptr<UniqueId>::Ref         id,
                   Ptr<time_duration>::Ref    playlength,

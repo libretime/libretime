@@ -10,5 +10,5 @@
 ]>
 <webAuthentication>
     <location server="localhost" port="80" 
-              path="/storage/var/xmlrpc/xrLocStor.php" />
+              path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
 </webAuthentication>

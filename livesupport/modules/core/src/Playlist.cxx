@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ Playlist :: configure(const xmlpp::Element    & element)
 
     if (!(attribute = element.get_attribute(playlengthAttrName))) {
         std::string eMsg = "missing attribute ";
-        eMsg += idAttrName;
+        eMsg += playlengthAttrName;
         throw std::invalid_argument(eMsg);
     }
     playlength.reset(new time_duration(

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -270,7 +270,7 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
 
     std::stringstream fileName;
     fileName << localTempStorage << newPlaylist->getId()->getId()
-             << "#" << std::rand() << ".smil";
+             << "-" << std::rand() << ".smil";
 
     smilDocument->write_to_file(fileName.str(), "UTF-8");
    

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,14 +61,17 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  The factory to create appropriate AuthenticationClient objects.
+ *  The factory to create AuthenticationClientInterface objects.
  *
  *  This object has to be configured with an XML configuration element
  *  called authenticationClientFactory. This element contains a child element
  *  specifying and configuring the kind of AuthenticationClient that the
- *  factory builds. Currently only the WebAuthenticationClient is supported.
+ *  factory builds. This client is either a TestAuthenticationClient or
+ *  a WebAuthenticationClient, and the child element name is either
+ *  testAuthentication or webAuthentication, correspondingly.
  *
- *  A authenticationClientFactory configuration element may look like the following:
+ *  An authenticationClientFactory configuration element may look like 
+ *  the following:
  *
  *  <pre><code>
  *  &lt;authenticationClientFactory&gt;
@@ -78,8 +81,9 @@ using namespace LiveSupport::Core;
  *  &lt;/authenticationClientFactory&gt;
  *  </code></pre>
  *
- *  For detais of the testAuthentication element, see the documentation for the
- *  WebAuthenticationClient class.
+ *  For detais of the testAuthentication and webAuthentication elements, see the 
+ *  documentation for the TestAuthenticationClient and WebAuthenticationClient
+ *  classes.
  *
  *  The DTD for the above element is:
  *
@@ -88,8 +92,9 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see TestAuthenticationClient
+ *  @see WebAuthenticationClient
  */
 class AuthenticationClientFactory :
                         virtual public Configurable

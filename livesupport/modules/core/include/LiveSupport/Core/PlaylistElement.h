@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,10 +71,32 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An item in a playlist.
+ *  An item in a Playlist, consisting of an AudioClip 
+ *  and optional FadeInfo (fade in / fade out information).
+ *
+ *  This object has to be configured with an XML configuration element
+ *  called playlistElement. This may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;playlistElement id="707" relativeOffset="00:12:34.000000" &gt;
+ *      &lt;audioClip&gt; ... &lt;/audioClip&gt;
+ *      &lt;fadeInfo&gt; ... &lt;/fadeInfo&gt;
+ *  &lt;/playlist&gt;
+ *  </code></pre>
+ *
+ *  For detais of the audioClip and fadeInfo elements, see the documentation 
+ *  for the AudioClip and FadeInfo classes.
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT playlistElement (audioClip, fadeInfo?) &gt;
+ *  &lt;!ATTLIST playlistElement  id              NMTOKEN   #REQUIRED  &gt;
+ *  &lt;!ATTLIST playlistElement  relativeOffset  NMTOKEN   #REQUIRED  &gt;
+ *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -123,6 +145,7 @@ class PlaylistElement : public Configurable
          *                                        the start of the playlist.
          *  @param audioClip      (a pointer to) the audio clip associated 
          *                                        with the playlist element.
+         *  @param fadeInfo       fade in / fade out information (optional)
          */
         PlaylistElement(Ptr<UniqueId>::Ref       id,
                         Ptr<time_duration>::Ref  relativeOffset,
@@ -145,6 +168,7 @@ class PlaylistElement : public Configurable
          *                                        the start of the playlist.
          *  @param audioClip      (a pointer to) the audio clip associated 
          *                                        with the playlist element.
+         *  @param fadeInfo       fade in / fade out information (optional)
          */
         PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
                         Ptr<AudioClip>::Ref      audioClip,

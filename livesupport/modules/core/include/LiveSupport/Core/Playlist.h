@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,8 +70,29 @@ using namespace boost::posix_time;
  *  information of when and how each audio clip is played inside
  *  the playlist.
  *
+ *  This object has to be configured with an XML configuration element
+ *  called playlist. This may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;playlist id="1" playlength="00:18:30.000000" &gt;
+ *      &lt;playlistElement&gt; ... &lt;/playlistElement&gt;
+ *      ...
+ *  &lt;/playlist&gt;
+ *  </code></pre>
+ *
+ *  For detais of the playlistElement element, see the documentation 
+ *  for the PlaylistElement class.
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT playlist (playlistElement*) &gt;
+ *  &lt;!ATTLIST playlist  id           NMTOKEN    #REQUIRED  &gt;
+ *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #REQUIRED  &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class Playlist : public Configurable
 {
@@ -152,6 +173,8 @@ class Playlist : public Configurable
          *
          *  @param id the id of the playlist.
          *  @param playlength the playing length of the playlist.
+         *  @param uri the location of the SMIL file representing this
+         *             playlist (optional)
          */
         Playlist(Ptr<UniqueId>::Ref         id,
                  Ptr<time_duration>::Ref    playlength,

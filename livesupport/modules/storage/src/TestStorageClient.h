@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,8 +67,30 @@ using namespace LiveSupport::Core;
 /**
  *  A dummy storage client, only used for test purposes.
  *
+ *  This object has to be configured with an XML configuration element
+ *  called testStorage. This may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;testStorage tempFiles="file:///tmp/tempPlaylist" &gt;
+ *      &lt;playlist&gt; ... &lt;/playlist&gt;
+ *      ...
+ *      &lt;audioClip&gt; ... &lt;/audioClip&gt;
+ *      ...
+ *  &lt;/testStorage&gt;
+ *  </code></pre>
+ *
+ *  For detais of the playlist and audioClip elements, see the documentation 
+ *  for the Core::Playlist and Core::AudioClip classes.
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT testStorage (playlist*, audioClip*) &gt;
+ *  &lt;!ATTLIST testStorage tempFiles CDATA       #REQUIRED &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class TestStorageClient :
                     virtual public Configurable,

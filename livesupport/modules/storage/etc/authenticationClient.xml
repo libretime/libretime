@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE authenticationClientFactory [
 
-<!ELEMENT authenticationClientFactory (testAuthentication?,
-                                       webAuthentication?)>
+<!ELEMENT authenticationClientFactory (testAuthentication)>
 
 <!ELEMENT testAuthentication (user) >
 
@@ -10,20 +9,9 @@
 <!ATTLIST user login        CDATA       #REQUIRED >
 <!ATTLIST user password     CDATA       #REQUIRED >
 
-<!ELEMENT webAuthentication (location) >
-
-<!ELEMENT location EMPTY >
-<!ATTLIST location server   CDATA       #REQUIRED >
-<!ATTLIST location port     NMTOKEN     #REQUIRED >
-<!ATTLIST location path     CDATA       #REQUIRED >
-
 ]>
 <authenticationClientFactory>
     <testAuthentication>
         <user login="root" password="q" />
     </testAuthentication>
-    <webAuthentication>
-        <location server="localhost" port="80" 
-                  path="/storage/var/xmlrpc/xrLocStor.php" />
-    </webAuthentication>
 </authenticationClientFactory>
