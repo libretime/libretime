@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -124,6 +124,8 @@ testonly: ${TEST_RUNNER}
 #	$(MAKE) transtest
 
 check: all testonly
+
+localcheck: local testonly
 
 recheck: clean check
 
