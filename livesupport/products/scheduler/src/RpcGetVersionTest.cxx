@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonGetVersionTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -45,7 +45,7 @@
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
-#include "SchedulerDaemonGetVersionTest.h"
+#include "RpcGetVersionTest.h"
 
 using namespace std;
 using namespace XmlRpc;
@@ -58,7 +58,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonGetVersionTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RpcGetVersionTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.
@@ -80,7 +80,7 @@ static const std::string versionPrefix = "LiveSupport Scheduler Daemon";
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonGetVersionTest :: configure(
+RpcGetVersionTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string         & fileName)
                                                 throw (std::invalid_argument,
@@ -98,7 +98,7 @@ SchedulerDaemonGetVersionTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonGetVersionTest :: setUp(void)                        throw ()
+RpcGetVersionTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -124,7 +124,7 @@ SchedulerDaemonGetVersionTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonGetVersionTest :: tearDown(void)                     throw ()
+RpcGetVersionTest :: tearDown(void)                     throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -137,7 +137,7 @@ SchedulerDaemonGetVersionTest :: tearDown(void)                     throw ()
  *  Test a simple upload.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonGetVersionTest :: simpleTest(void)
+RpcGetVersionTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     XmlRpcValue                 parameters;

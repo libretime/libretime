@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.30 $
+#   Version  : $Revision: 1.31 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -195,7 +195,7 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RpcRescheduleTest.o \
                    ${TMP_DIR}/XmlRpcToolsTest.o \
                    ${TMP_DIR}/GetVersionMethodTest.o \
-                   ${TMP_DIR}/SchedulerDaemonGetVersionTest.o \
+                   ${TMP_DIR}/RpcGetVersionTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayScheduleMethodTest.o \
                    ${TMP_DIR}/DisplayPlaylistMethodTest.o \

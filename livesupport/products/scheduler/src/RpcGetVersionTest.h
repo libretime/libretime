@@ -23,11 +23,11 @@
  
     Author   : $Author: maroy $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonGetVersionTest.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef SchedulerDaemonGetVersionTest_h
-#define SchedulerDaemonGetVersionTest_h
+#ifndef RpcGetVersionTest_h
+#define RpcGetVersionTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,9 +64,9 @@ using namespace LiveSupport::Core;
  *  @version $Revision: 1.1 $
  *  @see SchedulerDaemon
  */
-class SchedulerDaemonGetVersionTest : public CPPUNIT_NS::TestFixture
+class RpcGetVersionTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(SchedulerDaemonGetVersionTest);
+    CPPUNIT_TEST_SUITE(RpcGetVersionTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -120,5 +120,5 @@ class SchedulerDaemonGetVersionTest : public CPPUNIT_NS::TestFixture
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // SchedulerDaemonGetVersionTest_h
+#endif // RpcGetVersionTest_h
 
