@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <sstream>
 
 #include "HelixDefs.h"
 
@@ -77,20 +79,29 @@ static const std::string    dllPathName = "dllPath";
 static const std::string    audioDeviceName = "audioDevice";
 
 /**
+ *  The name of the audio stream timeout attribute.
+ */
+static const std::string    audioStreamTimeoutName = "audioStreamTimeout";
+
+/**
+ *  The default value of the audio stream timeout attribute.
+ */
+static const int            audioStreamTimeoutDefault = 5;
+
+/**
+ *  The name of the fade look ahead time attribute.
+ */
+static const std::string    fadeLookAheadTimeName = "fadeLookAheadTime";
+
+/**
+ *  The default value of the fade look ahead time attribute.
+ */
+static const int            fadeLookAheadTimeDefault = 2500;
+/**
  *  The name of the client core shared object, as found under dllPath
  */
 static const std::string    clntcoreName = "/clntcore.so";
 
-
-/**
- *  Magic number #1: max time to wait for an audio stream, in milliseconds
- */
-static const int            getAudioStreamTimeOut = 5;
-
-/**
- *  Magic number #2: schedule fading this many milliseconds in advance
- */
-static const int            lookAheadTime = 2500;
 
 /* ===============================================  local function prototypes */
 
@@ -122,6 +133,20 @@ HelixPlayer :: configure(const xmlpp::Element   &  element)
 
     if ((attribute = element.get_attribute(audioDeviceName))) {
         setAudioDevice(attribute->get_value());
+    }
+
+    if ((attribute = element.get_attribute(audioStreamTimeoutName))) {
+        std::stringstream   timeoutStream(attribute->get_value());
+        timeoutStream >> audioStreamTimeout;
+    } else {
+        audioStreamTimeout = audioStreamTimeoutDefault;
+    }
+
+    if ((attribute = element.get_attribute(fadeLookAheadTimeName))) {
+        std::stringstream   lookAheadStream(attribute->get_value());
+        lookAheadStream >> fadeLookAheadTime;
+    } else {
+        fadeLookAheadTime = fadeLookAheadTimeDefault;
     }
 }
 
@@ -436,7 +461,7 @@ HelixPlayer :: openAndStart(Ptr<Playlist>::Ref  playlist)
         audioStream[i] = audioPlayer->GetAudioStream(i);
         int counter = 0;
         while (!audioStream[i]) {
-            if (counter > getAudioStreamTimeOut * 100) {
+            if (counter > audioStreamTimeout * 100) {
                 std::stringstream   eMsg;
                 eMsg << "can't get audio stream number " << i;
                 throw std::runtime_error(eMsg.str());
@@ -544,7 +569,7 @@ HelixPlayer :: implementFading(unsigned long    position)
             it = fadeDataList->erase(it);
             continue;
 
-        } else if (fadeAt < position + lookAheadTime) {     // we are on time
+        } else if (fadeAt < position + fadeLookAheadTime) { // we are on time
 
             IHXAudioPlayer* audioPlayer = 0;
             if (player->QueryInterface(IID_IHXAudioPlayer, 

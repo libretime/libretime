@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,16 +89,30 @@ using namespace LiveSupport::Core;
  *  library shared objects.  The optional audioDevice argument sets the
  *  AUDIO environment variable which is read by the Helix client.
  *
+ *  There are two parameters which are only there because the current version
+ *  of the Helix client does not handle animation tags in SMIL files properly.
+ *  They will be removed from later versions.
+ *  <ul>
+ *      <li>audioStreamTimeOut (milliseconds) - the time to wait for each
+ *          GetAudioStream() operation before a timeout occurs; 
+ *          the default is 5;</li>
+ *      <li>fadeLookAheadTime  (milliseconds) - each fade-in or fade-out is
+ *          scheduled (using IHXAudioCrossFade::CrossFade()) this
+ *          much time before it is to happen; the default is 2500. </li>
+ *  </ul>
+ *  
  *  The DTD for the above configuration is the following:
  *
  *  <pre><code>
  *  <!ELEMENT helixPlayer   EMPTY >
  *  <!ATTLIST helixPlayer   dllPath      CDATA   #REQUIRED >
  *  <!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
+ *  <!ATTLIST helixPlayer   audioStreamTimeout   #IMPLIED >
+ *  <!ATTLIST helixPlayer   fadeLookAheatTime    #IMPLIED >
  *  </pre></code>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -114,6 +128,16 @@ class HelixPlayer : virtual public Configurable,
          *  The full path to the Helix library shared objects.
          */
         std::string             dllPath;
+
+        /**
+         *  Max time to wait for an audio stream, in milliseconds.
+         */
+        int                     audioStreamTimeout;
+
+        /**
+         *  Schedule fading this many milliseconds in advance.
+         */
+        int                     fadeLookAheadTime;
 
         /**
          *  The shared object access point.

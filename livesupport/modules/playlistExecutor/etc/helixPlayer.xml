@@ -4,7 +4,11 @@
 <!ELEMENT helixPlayer   EMPTY >
 <!ATTLIST helixPlayer   dllPath      CDATA   #REQUIRED >
 <!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
+<!ATTLIST helixPlayer   audioStreamTimeout   NMTOKEN   #IMPLIED >
+<!ATTLIST helixPlayer   fadeLookAheadTime    NMTOKEN   #IMPLIED >
 ]>
 <helixPlayer dllPath = "../../usr/lib/helix"
              audioDevice = "/dev/sound/dsp"
+             audioStreamTimeout="6"
+             fadeLookAheadTime="2510"
 />

@@ -4,7 +4,10 @@
 <!ELEMENT audioPlayer   (helixPlayer) >
 
 <!ELEMENT helixPlayer   EMPTY >
-<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+<!ATTLIST helixPlayer   dllPath      CDATA   #REQUIRED >
+<!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
+<!ATTLIST helixPlayer   audioStreamTimeout   NMTOKEN   #IMPLIED >
+<!ATTLIST helixPlayer   fadeLookAheatTime    NMTOKEN   #IMPLIED >
 ]>
 <audioPlayer>
     <helixPlayer dllPath = "../../usr/lib/helix"
