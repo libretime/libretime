@@ -34,7 +34,7 @@ class uiBrowser extends uiBase {
             include ( $actionFunctionFileName ) ;
             if ( method_exists( $actionFunctionName ) )
             {
-                $actionFunctionName( &$this, $params ) ;
+                $actionFunctionName( $this, $params ) ;
             }
         }
     }
