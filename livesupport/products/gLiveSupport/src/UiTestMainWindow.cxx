@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,6 +38,7 @@
 #include <gtkmm/main.h>
 #include <gtkmm/messagedialog.h>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LoginWindow.h"
 #include "UiTestMainWindow.h"
 
@@ -68,6 +69,9 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // set up the status label
     statusLabel.reset(new Gtk::Label(*getResourceUstring("welcomeMsg")));
 
+    // set up the time label
+    timeLabel.reset(new Gtk::Label(""));
+
     // set up the login button
     loginButton.reset(new Gtk::Button("loginWindow"));
     loginButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -89,6 +93,7 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // set up the main window, and show everything
     set_border_width(10);
     layout->add(*statusLabel);
+    layout->add(*timeLabel);
     layout->add(*loginButton);
     layout->add(*logoutButton);
     layout->add(*quitButton);
@@ -96,11 +101,15 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // show everything
     statusLabel->show();
+    timeLabel->show();
     loginButton->show();
     logoutButton->show();
     quitButton->show();
     layout->show();
     show();
+
+    // set the timer, that will update timeLabel
+    setTimer();
 }
 
 
@@ -109,6 +118,34 @@ UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
  *----------------------------------------------------------------------------*/
 UiTestMainWindow :: ~UiTestMainWindow (void)                        throw ()
 {
+    resetTimer();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the timer
+ *----------------------------------------------------------------------------*/
+void
+UiTestMainWindow :: setTimer(void)                                  throw ()
+{
+    sigc::slot<bool>    slot = sigc::bind(sigc::mem_fun(*this,
+                                              &UiTestMainWindow::onUpdateTime),
+                                              0);
+
+    // set the timer to active once a second
+    timer.reset(new sigc::connection(
+                                  Glib::signal_timeout().connect(slot, 1000)));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Clear the timer
+ *----------------------------------------------------------------------------*/
+void
+UiTestMainWindow :: resetTimer(void)                                throw ()
+{
+    timer->disconnect();
+    timer.reset();
 }
 
 
@@ -165,4 +202,27 @@ UiTestMainWindow :: onLoginButtonClicked (void)                     throw ()
         statusLabel->set_label(*msg);
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Update the timeLabel display, with the current time
+ *----------------------------------------------------------------------------*/
+bool
+UiTestMainWindow :: onUpdateTime(int   dummy)                       throw ()
+{
+    // TODO: read current time from scheduler server, via the gLiveSupport
+    // object
+    Ptr<ptime>::Ref     now = TimeConversion::now();
+    time_duration       dayTime = now->time_of_day();
+    // get the time of day, only up to a second precision
+    time_duration       dayTimeSec(dayTime.hours(),
+                                   dayTime.minutes(),
+                                   dayTime.seconds(),
+                                   0);
+
+    timeLabel->set_text(to_simple_string(dayTimeSec));
+
+    return true;
+}
+
 

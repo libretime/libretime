@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -80,6 +80,17 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
          *  A label to display the status of the user.
          */
         Ptr<Gtk::Label>::Ref        statusLabel;
+
+        /**
+         *  A label showing the current time, with second precision.
+         */
+        Ptr<Gtk::Label>::Ref        timeLabel;
+
+        /**
+         *  The signal connection, that is notified by the GTK timer each
+         *  second, and will update timeLabel on each wakeup.
+         */
+        Ptr<sigc::connection>::Ref  timer;
 
         /**
          *  The to quit the applicaiton.
@@ -118,6 +129,33 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
          */
         virtual void
         onLogoutButtonClicked(void)                          throw ();
+
+        /**
+         *  Function that updates timeLabel with the current time.
+         *  This is called by GTK at regular intervals.
+         *
+         *  @param param a dummy, unused parameter
+         *  @return true if the timer should call this function again,
+         *          false if the timer should be canceled
+         */
+        virtual bool
+        onUpdateTime(int  dummy)                            throw ();
+
+        /**
+         *  Register onUpdateTime with the GTK timer.
+         *
+         *  @see #resetTimer
+         */
+        virtual void
+        setTimer(void)                                      throw ();
+
+        /**
+         *  Stop the timer, which was set by setTimer().
+         *
+         *  @see #setTimer
+         */
+        virtual void
+        resetTimer(void)                                    throw ();
 
 
     public:
