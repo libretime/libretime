@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -275,9 +275,8 @@ PostgresqlSchedule :: schedulePlaylist(
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         schedulePlaylistStmt));
         id = UniqueId::generateId();
-        pstmt->setString(1, *id->toDecimalString());
-
-        pstmt->setString(2, *playlist->getId()->toDecimalString());
+        pstmt->setLong(1, id->getId());
+        pstmt->setLong(2, playlist->getId()->getId());
  
         timestamp = Conversion::ptimeToTimestamp(playtime);
         pstmt->setTimestamp(3, *timestamp);
@@ -329,10 +328,8 @@ PostgresqlSchedule :: getScheduleEntries(
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         while (rs->next()) {
-            Ptr<UniqueId>::Ref  id         = UniqueId::fromDecimalString(
-                                                            rs->getString(1));
-            Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
-                                                            rs->getString(2));
+            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(1)));
+            Ptr<UniqueId>::Ref  playlistId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
@@ -380,10 +377,8 @@ PostgresqlSchedule :: getNextEntry(Ptr<ptime>::Ref  fromTime)
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         if (rs->next()) {
-            Ptr<UniqueId>::Ref  id         = UniqueId::fromDecimalString(
-                                                            rs->getString(1));
-            Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
-                                                            rs->getString(2));
+            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(2)));
+            Ptr<UniqueId>::Ref  playlistId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
@@ -422,7 +417,7 @@ PostgresqlSchedule :: scheduleEntryExists(
         conn = cm->getConnection();
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                     scheduleEntryExistsStmt));
-        pstmt->setString(1, *entryId->toDecimalString());
+        pstmt->setLong(1, entryId->getId());
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         result = (rs->next()) ? (rs->getLong(1) == 1) : false;
@@ -454,7 +449,7 @@ PostgresqlSchedule :: removeFromSchedule(
         conn = cm->getConnection();
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                     removeFromScheduleStmt));
-        pstmt->setString(1, *entryId->toDecimalString());
+        pstmt->setLong(1, entryId->getId());
 
         result = pstmt->executeUpdate() == 1;
 
@@ -486,16 +481,14 @@ PostgresqlSchedule :: getScheduleEntry(Ptr<UniqueId>::Ref   entryId)
         conn = cm->getConnection();
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         getScheduleEntryStmt));
-        pstmt->setString(1, *entryId->toDecimalString());
+        pstmt->setLong(1, entryId->getId());
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         if (rs->next()) {
             Ptr<Timestamp>::Ref     timestamp(new Timestamp());
 
-            Ptr<UniqueId>::Ref  id         = UniqueId::fromDecimalString(
-                                                            rs->getString(1));
-            Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
-                                                            rs->getString(2));
+            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(1)));
+            Ptr<UniqueId>::Ref  playlistId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
@@ -555,7 +548,7 @@ PostgresqlSchedule :: reschedule(Ptr<UniqueId>::Ref   entryId,
         timestamp = Conversion::ptimeToTimestamp(ends);
         pstmt->setTimestamp(2, *timestamp);
 
-        pstmt->setString(3, *entryId->toDecimalString());
+        pstmt->setLong(3, entryId->getId());
 
         result = pstmt->executeUpdate() == 1;
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLog.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -181,9 +181,9 @@ PostgresqlPlayLog :: addPlayLogEntry(
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         addPlayLogEntryStmt));
         id = UniqueId::generateId();
-        pstmt->setString(1, *id->toDecimalString());
+        pstmt->setLong(1, id->getId());
 
-        pstmt->setString(2, *audioClipId->toDecimalString());
+        pstmt->setLong(2, audioClipId->getId());
  
         timestamp = Conversion::ptimeToTimestamp(clipTimestamp);
         pstmt->setTimestamp(3, *timestamp);
@@ -231,10 +231,8 @@ PostgresqlPlayLog :: getPlayLogEntries(
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         while (rs->next()) {
-            Ptr<UniqueId>::Ref      id = UniqueId::fromDecimalString(
-                                                            rs->getString(1));
-            Ptr<UniqueId>::Ref      audioClipId = UniqueId::fromDecimalString(
-                                                            rs->getString(2));
+            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getLong(1)));
+            Ptr<UniqueId>::Ref      audioClipId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref clipTimestamp 
