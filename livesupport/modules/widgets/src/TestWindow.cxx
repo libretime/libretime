@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,6 +55,7 @@ using namespace LiveSupport::Widgets;
 TestWindow :: TestWindow (void)
                                                                     throw ()
 {
+    // init the imageButton
     Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
     Glib::RefPtr<Gdk::Pixbuf>   rollImage;
 
@@ -63,8 +64,35 @@ TestWindow :: TestWindow (void)
 
     imageButton.reset(new ImageButton(passiveImage, rollImage));
 
+    // init the button
+    Glib::RefPtr<Gdk::Pixbuf>   passiveImageLeft;
+    Glib::RefPtr<Gdk::Pixbuf>   passiveImageCenter;
+    Glib::RefPtr<Gdk::Pixbuf>   passiveImageRight;
+    Glib::RefPtr<Gdk::Pixbuf>   rollImageLeft;
+    Glib::RefPtr<Gdk::Pixbuf>   rollImageCenter;
+    Glib::RefPtr<Gdk::Pixbuf>   rollImageRight;
+
+    passiveImageLeft   = Gdk::Pixbuf::create_from_file("var/button_left.png");
+    passiveImageCenter = Gdk::Pixbuf::create_from_file("var/button_centre.png");
+    passiveImageRight  = Gdk::Pixbuf::create_from_file("var/button_right.png");
+    rollImageLeft   = Gdk::Pixbuf::create_from_file("var/button_left_roll.png");
+    rollImageCenter = Gdk::Pixbuf::create_from_file(
+                                                  "var/button_centre_roll.png");
+    rollImageRight  = Gdk::Pixbuf::create_from_file(
+                                                  "var/button_right_roll.png");
+
+    button.reset(new Button("Hello, World!",
+                            passiveImageLeft,
+                            passiveImageCenter,
+                            passiveImageRight,
+                            rollImageLeft,
+                            rollImageCenter,
+                            rollImageRight));
+
+    // create and set up the layout
     layout.reset(new Gtk::Table());
     layout->attach(*imageButton,    0, 1, 0, 1);
+    layout->attach(*button,         0, 1, 1, 2);
     
     add(*layout);
     show_all();
