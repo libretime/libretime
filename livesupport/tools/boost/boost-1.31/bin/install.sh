@@ -22,11 +22,11 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/boost/boost-1.31/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-# Run this script to install cppunit into the development system usr
+# Run this script to install C++ Boost into the development system usr
 # environment.
 # For more information on Boost, see http://www.boost.org/
 #-------------------------------------------------------------------------------
