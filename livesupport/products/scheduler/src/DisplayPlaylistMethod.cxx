@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,10 +71,9 @@ using namespace LiveSupport::Scheduler;
 const std::string DisplayPlaylistMethod::methodName = "displayPlaylist";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlistId member in the XML-RPC parameter
- *  structure.
+ *  The ID of this method for error reporting purposes.
  *----------------------------------------------------------------------------*/
-const std::string DisplayPlaylistMethod::playlistIdName = "playlistId";
+const int DisplayPlaylistMethod::errorId = 1000;
 
 
 /* ===============================================  local function prototypes */
@@ -96,39 +95,42 @@ DisplayPlaylistMethod :: DisplayPlaylistMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                  XmlRpc::XmlRpcValue  & returnValue)
                                                                     throw ()
 {
-    try {
-        if (!parameters.valid()) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<UniqueId>::Ref  id = XmlRpcTools::extractPlaylistId(parameters[0]);
-
-        Ptr<StorageClientFactory>::Ref      scf;
-        Ptr<StorageClientInterface>::Ref    storage;
-
-        scf     = StorageClientFactory::getInstance();
-        storage = scf->getStorageClient();
- 
-        if (!storage->existsPlaylist(id)) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<Playlist>::Ref  playlist = storage->getPlaylist(id);
-
-        XmlRpcTools::playlistToXmlRpcValue(playlist, returnValue);
-
-    } catch (std::invalid_argument &e) {
-        // TODO: mark error
-        returnValue = XmlRpc::XmlRpcValue(false);
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
         return;
     }
-}
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<UniqueId>::Ref id;
+    try{
+        id = XmlRpcTools::extractPlaylistId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+2, "argument is not a Playlist ID",
+                               returnValue);
+        return;
+    }
+
+    Ptr<StorageClientFactory>::Ref      scf;
+    Ptr<StorageClientInterface>::Ref    storage;
+
+    scf     = StorageClientFactory::getInstance();
+    storage = scf->getStorageClient();
+ 
+    Ptr<Playlist>::Ref playlist;
+    try {
+        playlist = storage->getPlaylist(id);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, "playlist not found", 
+                               returnValue);
+        return;
+    }
+
+    XmlRpcTools::playlistToXmlRpcValue(playlist, returnValue);
+}

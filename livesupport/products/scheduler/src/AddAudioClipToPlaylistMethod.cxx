@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,22 +96,24 @@ AddAudioClipToPlaylistMethod :: AddAudioClipToPlaylistMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                         XmlRpc::XmlRpcValue  & returnValue)
-                                                                       throw ()
+                                                                    throw ()
 {
-    if (!parameters.valid()) {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
                                returnValue);
         return;
     }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
     Ptr<UniqueId>::Ref       playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+2, e.what(), returnValue);
+        XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
+                               returnValue);
         return;
     }
 
@@ -120,7 +122,8 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         audioClipId = XmlRpcTools::extractAudioClipId(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, e.what(), returnValue);
+        XmlRpcTools::markError(errorId+3, "missing audio clip ID argument",
+                               returnValue);
         return;
     }
 
@@ -129,7 +132,8 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+4, e.what(), returnValue);
+        XmlRpcTools::markError(errorId+4, "missing relative offset argument",
+                               returnValue);
         return;
     }
 
@@ -143,7 +147,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         playlist = storage->getPlaylist(playlistId);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+5, "playlist does not exist", 
+        XmlRpcTools::markError(errorId+5, "playlist not found", 
                                returnValue);
         return;
     }

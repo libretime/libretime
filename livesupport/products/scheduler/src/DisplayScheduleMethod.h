@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,8 +92,21 @@ using namespace LiveSupport::Core;
  *      <li>end - datetime - the end of the scheduled item</li>
  *  </ul>
  *
+ *  If there is an error, an XML-RPC structure is returned, with the following
+ *  fields:
+ *  <ul>
+ *      <li>errorCode - int - a numerical code for the error</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>1101 - invalid argument format </li>
+ *     <li>1102 - missing or invalid 'from' argument </li>
+ *     <li>1103 - missing or invalid 'to' argument </li>
+ *  </ul>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -103,6 +116,11 @@ class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
+
+        /**
+         *  The ID of this method for error reporting purposes.
+         */
+        static const int                errorId;
 
 
     public:

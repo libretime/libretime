@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RevertEditedPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -151,38 +151,42 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
                             saveMethod(new SavePlaylistMethod);
     Ptr<RevertEditedPlaylistMethod>::Ref 
                             revertMethod(new RevertEditedPlaylistMethod);
-    XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    parameter["playlistId"]     = 1;
-    parameter["relativeOffset"] = 0;
+    parameters["playlistId"]     = 1;
+    parameters["relativeOffset"] = 0;
+    rootParameter[0]        = parameters;
 
-    revertMethod->execute(parameter, result);
+    result.clear();
+    revertMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT(int(result["errorCode"]) == 804);    // no saved copy yet
 
     result.clear();
-    openMethod->execute(parameter, result);
+    openMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    removeMethod->execute(parameter, result);
+    removeMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    removeMethod->execute(parameter, result);
+    removeMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));      // can't remove it twice
 
     result.clear();
-    revertMethod->execute(parameter, result);
+    revertMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    removeMethod->execute(parameter, result);
+    removeMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));     // but now we can again
 
     result.clear();
-    saveMethod->execute(parameter, result);
+    saveMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    revertMethod->execute(parameter, result);
+    revertMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));      // saved copy has been
     CPPUNIT_ASSERT(int(result["errorCode"]) == 804);    //   discarded
 }

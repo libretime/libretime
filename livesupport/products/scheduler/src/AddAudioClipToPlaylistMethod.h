@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,13 +91,14 @@ using namespace LiveSupport::Core;
  *     <li>302 - missing playlist ID argument </li>
  *     <li>303 - missing audio clip ID argument </li>
  *     <li>304 - missing relative offset argument </li>
- *     <li>305 - playlist does not exist </li>
+ *     <li>305 - playlist not found </li>
  *     <li>306 - playlist has not been opened for editing </li>
  *     <li>307 - audio clip does not exist </li>
  *     <li>308 - two audio clips at the same relative offset</li>
  *  </ul>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,6 +67,11 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string DisplayScheduleMethod::methodName = "displaySchedule";
 
+/*------------------------------------------------------------------------------
+ *  The ID of this method for error reporting purposes.
+ *----------------------------------------------------------------------------*/
+const int DisplayScheduleMethod::errorId = 1100;
+
 
 /* ===============================================  local function prototypes */
 
@@ -87,35 +92,42 @@ DisplayScheduleMethod :: DisplayScheduleMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                  XmlRpc::XmlRpcValue  & returnValue)
                                                                     throw ()
 {
-    try {
-        if (!parameters.valid()) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<ptime>::Ref     fromTime    
-                            = XmlRpcTools::extractFromTime(parameters[0]);
-        Ptr<ptime>::Ref     toTime      
-                            = XmlRpcTools::extractToTime(parameters[0]);
-
-        Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-        Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
-
-        Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref  scheduleEntries
-                            = schedule->getScheduleEntries(fromTime, toTime);
-
-        XmlRpcTools::scheduleEntriesToXmlRpcValue(scheduleEntries, 
-                                                  returnValue);
-
-    } catch (std::invalid_argument &e) {
-        // TODO: mark error
-        returnValue = XmlRpc::XmlRpcValue(false);
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
         return;
     }
-}
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<ptime>::Ref     fromTime;
+    try {
+        fromTime = XmlRpcTools::extractFromTime(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+2, "missing or invalid 'from' argument", 
+                               returnValue);
+        return;
+    }
+
+    Ptr<ptime>::Ref     toTime;
+    try {
+        toTime = XmlRpcTools::extractToTime(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, "missing or invalid 'to' argument", 
+                               returnValue);
+        return;
+    }
+
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
+
+    Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref  scheduleEntries
+                            = schedule->getScheduleEntries(fromTime, toTime);
+
+    XmlRpcTools::scheduleEntriesToXmlRpcValue(scheduleEntries, returnValue);
+}

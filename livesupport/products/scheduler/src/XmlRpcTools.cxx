@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -399,5 +399,18 @@ XmlRpcTools :: extractPlayschedule(
     Ptr<ptime>::Ref ptime(new ptime(date, hours));
 
     return ptime;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a schedule entry ID (a UniqueId) to an XmlRpcValue
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: scheduleEntryIdToXmlRpcValue(
+                            Ptr<const UniqueId>::Ref    scheduleEntryId,
+                            XmlRpc::XmlRpcValue       & returnValue)
+                                                throw ()
+{
+    returnValue[scheduleEntryIdName] = int(scheduleEntryId->getId());
 }
 

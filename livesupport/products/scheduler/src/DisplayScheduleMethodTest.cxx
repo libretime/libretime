@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,6 +51,7 @@
 #include "DisplayScheduleMethod.h"
 #include "DisplayScheduleMethodTest.h"
 
+using namespace std;
 
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
@@ -155,8 +156,9 @@ DisplayScheduleMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DisplayScheduleMethod>::Ref method(new DisplayScheduleMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
@@ -177,6 +179,7 @@ DisplayScheduleMethodTest :: firstTest(void)
     parameters["to"] = &time;
     rootParameter[0] = parameters;
 
+    result.clear();
     method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.size() == 0);
 }
@@ -190,8 +193,9 @@ DisplayScheduleMethodTest :: insertEntries(void)
                                                             throw ()
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
@@ -205,6 +209,8 @@ DisplayScheduleMethodTest :: insertEntries(void)
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
     rootParameter[0] = parameters;
+
+    result.clear();
     method->execute(rootParameter, result);
 
     // insert a playlist for 2004-07-31, at 12 o'clock
@@ -217,6 +223,8 @@ DisplayScheduleMethodTest :: insertEntries(void)
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
     rootParameter[0] = parameters;
+
+    result.clear();
     method->execute(rootParameter, result);
 
     // insert a playlist for 2004-07-31, at 14 o'clock
@@ -229,6 +237,8 @@ DisplayScheduleMethodTest :: insertEntries(void)
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
     rootParameter[0] = parameters;
+
+    result.clear();
     method->execute(rootParameter, result);
 }
 
@@ -241,8 +251,9 @@ DisplayScheduleMethodTest :: intervalTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DisplayScheduleMethod>::Ref method(new DisplayScheduleMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
@@ -262,7 +273,8 @@ DisplayScheduleMethodTest :: intervalTest(void)
     time.tm_sec  =  0;
     parameters["to"] = &time;
     rootParameter[0] = parameters;
-    result           = XmlRpc::XmlRpcValue();
+
+    result.clear();
     method->execute(rootParameter, result);
 
     // check the returned values
@@ -299,7 +311,8 @@ DisplayScheduleMethodTest :: intervalTest(void)
     time.tm_sec  =  0;
     parameters["to"] = &time;
     rootParameter[0] = parameters;
-    result           = XmlRpc::XmlRpcValue();
+
+    result.clear();
     method->execute(rootParameter, result);
 
     // check the returned values
@@ -352,7 +365,8 @@ DisplayScheduleMethodTest :: intervalTest(void)
     time.tm_sec  =  0;
     parameters["to"] = &time;
     rootParameter[0] = parameters;
-    result           = XmlRpc::XmlRpcValue();
+
+    result.clear();
     method->execute(rootParameter, result);
 
     // check the returned values

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -143,29 +143,35 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
     Ptr<OpenPlaylistForEditingMethod>::Ref 
                             method(new OpenPlaylistForEditingMethod());
     XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
     parameter["playlistId"] = 1;
+    rootParameter[0]        = parameter;
 
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT((int) result["id"] == 1);
     CPPUNIT_ASSERT((int) result["playlength"] == (90 * 60));
 
     parameter.clear();
-    result.clear();
     parameter["playlistId"] = 6376;
+    rootParameter[0]        = parameter;
 
     // no such playlist
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT((int) result["errorCode"] == 104);
     CPPUNIT_ASSERT((const std::string) result["errorMessage"] ==
                                               "playlist not found");
     parameter.clear();
-    result.clear();
     parameter["playlistId"] = 1;
+    rootParameter[0]        = parameter;
 
     // should not allow to open the same playlist for editing again
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT((int) result["errorCode"] == 105);
     CPPUNIT_ASSERT((const std::string) result["errorMessage"] ==
                                               "could not open playlist");

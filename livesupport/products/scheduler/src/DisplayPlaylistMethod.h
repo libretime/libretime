@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,10 +81,22 @@ using namespace LiveSupport::Core;
  *      <li>playlength - int - the playlist length of the playlist, in seconds
  *      </li>
  *  </ul>
- *  In case of an error, a simple false value is returned.
+ *
+ *  If there is an error, an XML-RPC structure is returned, with the following
+ *  fields:
+ *  <ul>
+ *      <li>errorCode - int - a numerical code for the error</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>1001 - invalid argument format </li>
+ *     <li>1002 - argument is not a playlist ID </li>
+ *     <li>1003 - playlist not found </li>
+ *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class DisplayPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -96,10 +108,9 @@ class DisplayPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         static const std::string        methodName;
 
         /**
-         *  The name of the playlistId member in the XML-RPC parameter
-         *  structure.
+         *  The ID of this method for error reporting purposes.
          */
-        static const std::string        playlistIdName;
+        static const int                errorId;
 
 
     public:

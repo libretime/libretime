@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "SchedulerDaemonDisplayPlaylistTest.h"
 
 
+using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Scheduler;
 
@@ -125,8 +126,9 @@ SchedulerDaemonDisplayPlaylistTest :: simpleTest(void)
 
     parameters["playlistId"] = 1;
 
+    result.clear();
     xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     CPPUNIT_ASSERT(((int) result["id"]) == 1);
     CPPUNIT_ASSERT(((int) result["playlength"]) == (60 * 60));
 }
@@ -146,8 +148,8 @@ SchedulerDaemonDisplayPlaylistTest :: negativeTest(void)
 
     parameters["playlistId"] = 9999;
 
+    result.clear();
     xmlRpcClient.execute("displayPlaylist", parameters, result);
     CPPUNIT_ASSERT(result.valid());
-    CPPUNIT_ASSERT(((bool)result) == false);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
 }
-

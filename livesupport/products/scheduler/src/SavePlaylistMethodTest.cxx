@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -145,23 +145,28 @@ SavePlaylistMethodTest :: firstTest(void)
                                  openMethod(new OpenPlaylistForEditingMethod());
     Ptr<SavePlaylistMethod>::Ref saveMethod(new SavePlaylistMethod());
     XmlRpc::XmlRpcValue          parameter;
+    XmlRpc::XmlRpcValue          rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue          result;
 
     parameter["playlistId"] = 9999;
+    rootParameter[0]        = parameter;
 
-    saveMethod->execute(parameter, result);
+    result.clear();
+    saveMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT(int(result["errorCode"]) == 703);    // playlist not found
 
     parameter["playlistId"] = 1;
+    rootParameter[0]        = parameter;
     result.clear();
-    openMethod->execute(parameter, result);
+    openMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    saveMethod->execute(parameter, result);
+    saveMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));     // open then save OK
 
     result.clear();
-    openMethod->execute(parameter, result);
+    openMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));     // save then open OK
 }

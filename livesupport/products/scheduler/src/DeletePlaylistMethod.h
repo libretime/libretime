@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,14 +74,23 @@ using namespace LiveSupport::Core;
  *                                                   to be deleted.</li>
  *  </ul>
  *
- *  The XML-RPC function returns the XML-RPC value:
+ *  If there is an error, an XML-RPC structure is returned, with the following
+ *  fields:
  *  <ul>
- *      <li>true if the operation completed successfully,</li>
- *      <li>false if playlist is not found or there was some other error.</li>
+ *      <li>errorCode - int - a numerical code for the error</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>901 - invalid argument format </li>
+ *     <li>902 - missing playlist ID argument </li>
+ *     <li>903 - playlist not found </li>
+ *     <li>904 - playlist is locked </li>
+ *     <li>905 - playlist could not be deleted </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -93,10 +102,9 @@ class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
         static const std::string        methodName;
 
         /**
-         *  The name of the playlistId member in the XML-RPC parameter
-         *  structure.
+         *  The ID of this method for error reporting purposes.
          */
-        static const std::string        playlistIdName;
+        static const int                errorId;
 
 
     public:

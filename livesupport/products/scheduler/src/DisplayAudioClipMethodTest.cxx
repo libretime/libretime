@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,12 +140,16 @@ DisplayAudioClipMethodTest :: firstTest(void)
 {
     Ptr<DisplayAudioClipMethod>::Ref method(new DisplayAudioClipMethod());
     XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
     // set up a structure for the parameter
     parameter["audioClipId"] = 10001;
+    rootParameter[0] = parameter;
 
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(int(result["id"]) == 10001);
     CPPUNIT_ASSERT(int(result["playlength"]) == (60 * 60));
 }
@@ -160,12 +164,16 @@ DisplayAudioClipMethodTest :: negativeTest(void)
 {
     Ptr<DisplayAudioClipMethod>::Ref method(new DisplayAudioClipMethod());
     XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
     // set up a structure for the parameter
     parameter["audioClipId"] = 9999;
+    rootParameter[0] = parameter;
 
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT(int(result["errorCode"]) == 603);    // audio clip not found
 }

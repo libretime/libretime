@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,15 +95,16 @@ DisplayAudioClipMethod :: DisplayAudioClipMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-DisplayAudioClipMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
-                                 XmlRpc::XmlRpcValue   & returnValue)
+DisplayAudioClipMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
+                                  XmlRpc::XmlRpcValue  & returnValue)
                                                                     throw ()
 {
-    if (!parameters.valid()) {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
                                returnValue);
         return;
     }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
     Ptr<UniqueId>::Ref id;
     try{

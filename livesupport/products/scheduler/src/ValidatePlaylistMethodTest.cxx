@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,29 +152,35 @@ ValidatePlaylistMethodTest :: firstTest(void)
     Ptr<ValidatePlaylistMethod>::Ref 
                validatePlaylistMethod(new ValidatePlaylistMethod());
     XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
+    result.clear();
     parameter["playlistId"] = 275;
-    validatePlaylistMethod->execute(parameter, result);
+    rootParameter[0]        = parameter;    
+    validatePlaylistMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT(int(result["errorCode"]) == 503);  // no such playlist
 
     result.clear();
     parameter.clear();
     parameter["playlistId"] = 1;
-    openPlaylistMethod->execute(parameter, result);
+    rootParameter[0]        = parameter;    
+    openPlaylistMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    validatePlaylistMethod->execute(parameter, result);
+    validatePlaylistMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("valid"));
     CPPUNIT_ASSERT(bool(result["valid"]));
 
     result.clear();
     parameter["relativeOffset"] = 0;
-    removeAudioClipMethod->execute(parameter, result);
+    rootParameter[0]            = parameter;    
+    removeAudioClipMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     result.clear();
-    validatePlaylistMethod->execute(parameter, result);
+    validatePlaylistMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("valid"));
     CPPUNIT_ASSERT(!bool(result["valid"]));  // has a gap at the beginning
 }

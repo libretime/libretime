@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,6 +144,7 @@ DisplayPlaylistsMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue       result;
     XmlRpc::XmlRpcValue       playlist;       
 
+    result.clear();
     method->execute(parameters, result);
     CPPUNIT_ASSERT(result.size() == 1);
 

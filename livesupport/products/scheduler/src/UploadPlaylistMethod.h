@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,11 +76,32 @@ using namespace LiveSupport::Core;
  *      <li>playtime - the time when the playlist should be scheduled,
  *                     an ISO 8601 DateTime field</li>
  *  </ul>
- *  The return value is an int, the id of the schedule entry created
- *  by uploading, or a boolean false, if there were errors.
+ *
+ *  If the upload is successful, the method returns an XML-RPC structure with
+ *  the following members:
+ *  <ul>
+ *      <li>scheduleEntryId - int - the id of the schedule entry created
+ *                                  by the upload </li>
+ *  </ul>
+ *
+ *  In case of an error, an XML-RPC structure is returned with the following
+ *  members:
+ *  <ul>
+ *      <li>errorCode - int - the id of the error condition</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>1401 - invalid argument format </li>
+ *     <li>1402 - missing playlist ID argument </li>
+ *     <li>1403 - missing playtime argument </li>
+ *     <li>1404 - playlist not found </li>
+ *     <li>1405 - timeframe not available </li>
+ *     <li>1406 - could not schedule playlist </li>
+ *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -90,6 +111,11 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
+
+        /**
+         *  The ID of this method for error reporting purposes.
+         */
+        static const int                errorId;
 
 
     public:

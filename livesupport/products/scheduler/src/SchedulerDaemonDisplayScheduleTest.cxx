@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@
 #include "SchedulerDaemon.h"
 #include "SchedulerDaemonDisplayScheduleTest.h"
 
-
+using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Scheduler;
 
@@ -126,22 +126,24 @@ SchedulerDaemonDisplayScheduleTest :: simpleTest(void)
 
     // list the schedules for an interval (as the database is empty,
     // it's going to return an empty result set)
-    time.tm_year = 2004;
+    time.tm_year = 2044;
     time.tm_mon  = 11;
     time.tm_mday = 12;
     time.tm_hour = 10;
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["from"] = &time;
-    time.tm_year = 2004;
+    time.tm_year = 2044;
     time.tm_mon  = 11;
     time.tm_mday = 12;
     time.tm_hour = 11;
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["to"] = &time;
+
+    result.clear();
     xmlRpcClient.execute("displaySchedule", parameters, result);
-    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
     CPPUNIT_ASSERT(result.size() == 0);
 }
 

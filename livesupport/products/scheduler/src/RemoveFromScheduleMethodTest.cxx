@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,16 +129,17 @@ RemoveFromScheduleMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<UploadPlaylistMethod>::Ref  uploadMethod(
-                                        new UploadPlaylistMethod());
+                                    new UploadPlaylistMethod());
     Ptr<RemoveFromScheduleMethod>::Ref  removeMethod(
-                                            new RemoveFromScheduleMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
+                                    new RemoveFromScheduleMethod());
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
     Ptr<UniqueId>::Ref              entryId;
 
-    // first schedule (upload) a playlist)
+    // first schedule (upload) a playlist
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -147,18 +148,20 @@ RemoveFromScheduleMethodTest :: firstTest(void)
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;
 
+    result.clear();
     uploadMethod->execute(rootParameter, result);
-    entryId.reset(new UniqueId((int) result));
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+    entryId.reset(new UniqueId(int(result["scheduleEntryId"])));
 
     parameters.clear();
-    result.clear();
-    parameters["scheduleEntryId"] = (int) entryId->getId();
-    rootParameter[0] = parameters;
+    parameters["scheduleEntryId"] = int(entryId->getId());
+    rootParameter[0]              = parameters;
 
+    result.clear();
     removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 }
 
 
@@ -170,16 +173,18 @@ RemoveFromScheduleMethodTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<RemoveFromScheduleMethod>::Ref  removeMethod(
-                                            new RemoveFromScheduleMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
+                                        new RemoveFromScheduleMethod());
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     Ptr<UniqueId>::Ref              entryId(new UniqueId(9999));
 
-    parameters["scheduleEntryId"] = (int) entryId->getId();
-    rootParameter[0] = parameters;
+    parameters["scheduleEntryId"] = int(entryId->getId());
+    rootParameter[0]              = parameters;
 
+    result.clear();
     removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
 }
 

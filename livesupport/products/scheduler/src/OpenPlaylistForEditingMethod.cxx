@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,15 +96,16 @@ OpenPlaylistForEditingMethod :: OpenPlaylistForEditingMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                         XmlRpc::XmlRpcValue  & returnValue)
-                                                                       throw ()
+                                                                    throw ()
 {
-    if (!parameters.valid()) {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
                                returnValue);
         return;
     }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
     Ptr<UniqueId>::Ref id;
     try{

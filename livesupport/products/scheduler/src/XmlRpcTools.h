@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class XmlRpcTools
 {
@@ -302,6 +302,18 @@ class XmlRpcTools
                 Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref scheduleEntries,
                 XmlRpc::XmlRpcValue                           & returnValue)
                                                                     throw ();
+
+        /**
+         *  Convert a schedule entry ID (a UniqueId) to an XmlRpcValue
+         *
+         *  @param scheduleEntryId the UniqueId to convert.
+         *  @param xmlRpcValue the output parameter holding the result of
+         *         the conversion.
+         */
+        static void
+        scheduleEntryIdToXmlRpcValue(
+                Ptr<const UniqueId>::Ref scheduleEntryId,
+                XmlRpc::XmlRpcValue    & returnValue)               throw ();
 
 };
 

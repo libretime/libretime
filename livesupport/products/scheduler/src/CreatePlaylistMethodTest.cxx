@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -142,19 +142,24 @@ CreatePlaylistMethodTest :: firstTest(void)
 {
     Ptr<XmlRpcServerMethod>::Ref    method(new CreatePlaylistMethod());
     XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("id"));
     CPPUNIT_ASSERT(((int) result["playlength"]) == 0);
 
     int playlistId = (int) result["id"];
     method.reset(new OpenPlaylistForEditingMethod());
     parameter.clear();
-    result.clear();
     parameter["playlistId"] = playlistId;
+    rootParameter[0]        = parameter;
 
     // should not allow to open the same playlist for editing again
-    method->execute(parameter, result);
+    result.clear();
+    method->execute(rootParameter, result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT((int) result["errorCode"] == 105);
 }

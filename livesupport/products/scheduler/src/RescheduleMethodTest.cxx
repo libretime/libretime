@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -133,8 +133,9 @@ RescheduleMethodTest :: firstTest(void)
 {
     Ptr<UploadPlaylistMethod>::Ref  uploadMethod(new UploadPlaylistMethod());
     Ptr<RescheduleMethod>::Ref      rescheduleMethod(new RescheduleMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
     Ptr<UniqueId>::Ref              entryId;
@@ -148,15 +149,16 @@ RescheduleMethodTest :: firstTest(void)
     time.tm_min  = 31;
     time.tm_sec  = 1;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;
 
+    result.clear();
     uploadMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.valid());
-    entryId.reset(new UniqueId((int) result));
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+    entryId.reset(new UniqueId(int(result["scheduleEntryId"])));
 
     // now let's reschedule it
     parameters.clear();
-    result.clear();
     parameters["scheduleEntryId"] = (int) entryId->getId();
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -165,15 +167,14 @@ RescheduleMethodTest :: firstTest(void)
     time.tm_min  = 31;
     time.tm_sec  = 1;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;
 
+    result.clear();
     rescheduleMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.valid());
-    CPPUNIT_ASSERT((bool) result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 
     // now let's reschedule unto itself, should fail
     parameters.clear();
-    result.clear();
     parameters["scheduleEntryId"] = (int) entryId->getId();
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -182,10 +183,12 @@ RescheduleMethodTest :: firstTest(void)
     time.tm_min  = 51;
     time.tm_sec  = 1;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;
 
+    result.clear();
     rescheduleMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.valid());
-    CPPUNIT_ASSERT(!((bool) result));
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 1305);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -151,25 +151,33 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
                addAudioClipMethod(new AddAudioClipToPlaylistMethod());
     Ptr<RemoveAudioClipFromPlaylistMethod>::Ref 
                removeAudioClipMethod(new RemoveAudioClipFromPlaylistMethod());
-    XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    parameter["playlistId"] = 1;
-    parameter["audioClipId"] = 10001;
-    parameter["relativeOffset"] = 90*60;
+    parameters["playlistId"]     = 1;
+    parameters["audioClipId"]    = 10001;
+    parameters["relativeOffset"] = 90*60;
+    rootParameter[0]             = parameters;
 
-    removeAudioClipMethod->execute(parameter, result);
+    result.clear();
+    removeAudioClipMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT((int)(result["errorCode"]) == 405);  // not open for editing
 
     result.clear();
-    openPlaylistMethod->execute(parameter, result);
-    removeAudioClipMethod->execute(parameter, result);
+    openPlaylistMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    result.clear();
+    removeAudioClipMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT((int)(result["errorCode"]) == 406);  // no audio clip at
                                                         //  this rel offset
     result.clear();
-    addAudioClipMethod->execute(parameter, result);
-    removeAudioClipMethod->execute(parameter, result);
+    addAudioClipMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    result.clear();
+    removeAudioClipMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 }

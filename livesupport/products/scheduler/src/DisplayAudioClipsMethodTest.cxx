@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,6 +144,7 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     XmlRpc::XmlRpcValue       result;
     XmlRpc::XmlRpcValue       audioClip;       
 
+    result.clear();
     method->execute(parameter, result);
     CPPUNIT_ASSERT(result.size() == 2);
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonRemoveFromScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "SchedulerDaemonRemoveFromScheduleTest.h"
 
 
+using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Scheduler;
 
@@ -134,16 +135,17 @@ SchedulerDaemonRemoveFromScheduleTest :: simpleTest(void)
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
 
+    result.clear();
     xmlRpcClient.execute("uploadPlaylist", parameters, result);
-    CPPUNIT_ASSERT(result.valid());
-
-    Ptr<UniqueId>::Ref  entryId(new UniqueId((int) result));
-
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+ 
+    Ptr<UniqueId>::Ref  entryId(new UniqueId(int(result["scheduleEntryId"])));
     parameters["scheduleEntryId"] = (int) entryId->getId();
 
+    result.clear();
     xmlRpcClient.execute("removeFromSchedule", parameters, result);
-    CPPUNIT_ASSERT(result.valid());
-    CPPUNIT_ASSERT(((bool)result) == true);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 }
 
 
@@ -161,8 +163,8 @@ SchedulerDaemonRemoveFromScheduleTest :: negativeTest(void)
 
     parameters["scheduleEntryId"] = 9999;
 
+    result.clear();
     xmlRpcClient.execute("removeFromSchedule", parameters, result);
-    CPPUNIT_ASSERT(result.valid());
-    CPPUNIT_ASSERT(((bool)result) == false);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
 }
 

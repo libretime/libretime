@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,6 +70,11 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string UploadPlaylistMethod::methodName = "uploadPlaylist";
 
+/*------------------------------------------------------------------------------
+ *  The ID of this method for error reporting purposes.
+ *----------------------------------------------------------------------------*/
+const int UploadPlaylistMethod::errorId = 1400;
+
 
 /* ===============================================  local function prototypes */
 
@@ -90,56 +95,73 @@ UploadPlaylistMethod :: UploadPlaylistMethod (
  *  Execute the upload playlist method XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                 XmlRpc::XmlRpcValue  & returnValue)
                                                                     throw ()
 {
-    try {
-        if (!parameters.valid()) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<UniqueId>::Ref  id           
-                            = XmlRpcTools::extractPlaylistId(parameters[0]);
-        Ptr<ptime>::Ref     playschedule 
-                            = XmlRpcTools::extractPlayschedule(parameters[0]);
-        Ptr<UniqueId>::Ref  scheduleEntryId;
-
-        Ptr<StorageClientFactory>::Ref      scf;
-        Ptr<StorageClientInterface>::Ref    storage;
-
-        scf     = StorageClientFactory::getInstance();
-        storage = scf->getStorageClient();
- 
-        if (!storage->existsPlaylist(id)) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<Playlist>::Ref  playlist = storage->getPlaylist(id);
-        Ptr<ptime>::Ref     until(new ptime(*playschedule
-                                          + *(playlist->getPlaylength())));
-
-        Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-        Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
-
-        if (!schedule->isTimeframeAvailable(playschedule, until)) {
-            // TODO: mark error;
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        scheduleEntryId = schedule->schedulePlaylist(playlist, playschedule);
-
-        returnValue = XmlRpc::XmlRpcValue((int) scheduleEntryId->getId());
-
-    } catch (std::invalid_argument &e) {
-        // TODO: mark error
-        returnValue = XmlRpc::XmlRpcValue(false);
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
         return;
     }
-}
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
+    Ptr<UniqueId>::Ref       playlistId;
+    try {
+        playlistId = XmlRpcTools::extractPlaylistId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
+                               returnValue);
+        return;
+    }
+
+    Ptr<ptime>::Ref     playschedule;
+    try {
+        playschedule = XmlRpcTools::extractPlayschedule(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, "missing playtime argument",
+                               returnValue);
+        return;
+    }
+    
+    Ptr<StorageClientFactory>::Ref   scf
+                                     = StorageClientFactory::getInstance();
+    Ptr<StorageClientInterface>::Ref storage
+                                     = scf->getStorageClient();
+
+    Ptr<Playlist>::Ref  playlist;
+    try {
+        playlist = storage->getPlaylist(playlistId);
+    }
+    catch (std::invalid_argument &e)  {
+        XmlRpcTools::markError(errorId+4, "playlist not found",
+                               returnValue);
+        return;
+    }
+
+    Ptr<ptime>::Ref     until(new ptime(*playschedule
+                                      + *(playlist->getPlaylength())));
+
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
+
+    if (!schedule->isTimeframeAvailable(playschedule, until)) {
+        XmlRpcTools::markError(errorId+5, "timeframe not available",
+                               returnValue);
+        return;
+    }
+
+    Ptr<const UniqueId>::Ref  scheduleEntryId;
+    try {
+        scheduleEntryId = schedule->schedulePlaylist(playlist, playschedule);
+    }
+    catch (std::invalid_argument &e)  {
+        XmlRpcTools::markError(errorId+6, e.what(),
+                               returnValue);
+        return;
+    }
+
+    XmlRpcTools::scheduleEntryIdToXmlRpcValue(scheduleEntryId, returnValue);
+}

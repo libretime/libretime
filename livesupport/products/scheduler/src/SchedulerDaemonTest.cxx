@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemonTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-//CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonTest);
+// CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.

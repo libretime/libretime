@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -139,17 +139,19 @@ DisplayPlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DisplayPlaylistMethod>::Ref method(new DisplayPlaylistMethod());
+    XmlRpc::XmlRpcValue             parameter;
     XmlRpc::XmlRpcValue             rootParameter;
-    XmlRpc::XmlRpcValue             parameters;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    // set up a structure for the parameters
-    parameters["playlistId"] = 1;
-    rootParameter[0] = parameters;
+    // set up a structure for the parameter
+    parameter["playlistId"] = 1;
+    rootParameter[0] = parameter;
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(((int) result["id"]) == 1);
-    CPPUNIT_ASSERT(((int) result["playlength"]) == (90 * 60));
+    CPPUNIT_ASSERT(int(result["id"]) == 1);
+    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
 }
 
 
@@ -161,15 +163,18 @@ DisplayPlaylistMethodTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DisplayPlaylistMethod>::Ref method(new DisplayPlaylistMethod());
+    XmlRpc::XmlRpcValue             parameter;
     XmlRpc::XmlRpcValue             rootParameter;
-    XmlRpc::XmlRpcValue             parameters;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    // set up a structure for the parameters
-    parameters["playlistId"] = 9999;
-    rootParameter[0] = parameters;
+    // set up a structure for the parameter
+    parameter["playlistId"] = 9999;
+    rootParameter[0] = parameter;
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(((bool)result) == false);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 1003);    // playlist not found
 }
 

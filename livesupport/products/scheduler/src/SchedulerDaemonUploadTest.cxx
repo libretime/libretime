@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonUploadTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,10 +44,13 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
+#include "XmlRpcTools.h"
+#include "LiveSupport/Core/UniqueId.h"
 #include "SchedulerDaemon.h"
 #include "SchedulerDaemonUploadTest.h"
 
 
+using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Scheduler;
 
@@ -134,7 +137,8 @@ SchedulerDaemonUploadTest :: simpleTest(void)
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
 
+    result.clear();
     xmlRpcClient.execute("uploadPlaylist", parameters, result);
-    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 }
 

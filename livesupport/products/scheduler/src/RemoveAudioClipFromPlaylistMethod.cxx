@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,15 +96,17 @@ RemoveAudioClipFromPlaylistMethod :: RemoveAudioClipFromPlaylistMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-RemoveAudioClipFromPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
-                                        XmlRpc::XmlRpcValue  & returnValue)
+RemoveAudioClipFromPlaylistMethod :: execute(
+                                XmlRpc::XmlRpcValue  & rootParameter,
+                                XmlRpc::XmlRpcValue  & returnValue)
                                                                        throw ()
 {
-    if (!parameters.valid()) {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
                                returnValue);
         return;
     }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
     Ptr<UniqueId>::Ref       playlistId;
     try{

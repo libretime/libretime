@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -147,23 +147,31 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
                    openPlaylistMethod(new OpenPlaylistForEditingMethod());
     Ptr<AddAudioClipToPlaylistMethod>::Ref 
                    addAudioClipMethod(new AddAudioClipToPlaylistMethod());
-    XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    parameter["playlistId"] = 1;
-    parameter["audioClipId"] = 10001;
-    parameter["relativeOffset"] = 60*60;
+    parameters["playlistId"]     = 1;
+    parameters["audioClipId"]    = 10001;
+    parameters["relativeOffset"] = 60*60;
+    rootParameter[0]             = parameters;
 
-    openPlaylistMethod->execute(parameter, result);
-    addAudioClipMethod->execute(parameter, result);
+    result.clear();
+    openPlaylistMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    result.clear();
+    addAudioClipMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
     CPPUNIT_ASSERT((int)(result["errorCode"]) == 308);
 
-    parameter.clear();
+    parameters.clear();
+    parameters["playlistId"]     = 1;
+    parameters["audioClipId"]    = 10001;
+    parameters["relativeOffset"] = 90*60;
+    rootParameter[0]             = parameters;
+
     result.clear();
-    parameter["playlistId"] = 1;
-    parameter["audioClipId"] = 10001;
-    parameter["relativeOffset"] = 90*60;
-    addAudioClipMethod->execute(parameter, result);
+    addAudioClipMethod->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 }

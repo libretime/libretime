@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,8 +152,9 @@ UploadPlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
@@ -166,10 +167,11 @@ UploadPlaylistMethodTest :: firstTest(void)
     time.tm_min  = 31;
     time.tm_sec  = 1;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]        = parameters;    
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 }
 
 
@@ -181,8 +183,9 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
@@ -195,13 +198,14 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]        = parameters;    
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 
     // try to load the same one, but in an overlapping time region
-    // (we know that playlist with id 1 in 1 hour long)
+    // (we know that playlist with id 1 is 1 hour long)
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -210,10 +214,12 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  = 30;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;    
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 1405); // timeframe not available
 
     // try to load the same one, but now in good timing
     parameters["playlistId"] = 1;
@@ -224,12 +230,13 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  = 30;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;    
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.valid());
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 
-    // try to load the same one, this time overlapping both previos instnaces
+    // try to load the same one, this time overlapping both previos instances
     parameters["playlistId"] = 1;
     time.tm_year = 2001;
     time.tm_mon  = 11;
@@ -238,9 +245,10 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     time.tm_min  = 45;
     time.tm_sec  =  0;
     parameters["playtime"] = &time;
-    rootParameter[0] = parameters;
+    rootParameter[0]       = parameters;    
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 1405); // timeframe not available
 }
-

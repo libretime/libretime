@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,11 +75,24 @@ using namespace LiveSupport::Core;
  *      </li>
  *      <li>playtime - datetime - the new playing time for the entry</li>
  *  </ul>
- *  The return value is true if all went well,
- *  or a boolean false, if there were errors.
+ *
+ *  In case of an error, an XML-RPC structure is returned, with the following
+ *  fields:
+ *  <ul>
+ *      <li>errorCode - int - the id of the error condition</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>1301 - invalid argument format </li>
+ *     <li>1302 - missing schedule entry ID argument </li>
+ *     <li>1303 - missing playtime argument </li>
+ *     <li>1304 - schedule entry not found </li>
+ *     <li>1305 - could not reschedule entry </li>
+ *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -89,6 +102,11 @@ class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
+
+        /**
+         *  The ID of this method for error reporting purposes.
+         */
+        static const int                errorId;
 
 
     public:

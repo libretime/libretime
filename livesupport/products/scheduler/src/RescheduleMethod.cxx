@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,6 +67,11 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string RescheduleMethod::methodName = "reschedule";
 
+/*------------------------------------------------------------------------------
+ *  The ID of this method for error reporting purposes.
+ *----------------------------------------------------------------------------*/
+const int RescheduleMethod::errorId = 1300;
+
 
 /* ===============================================  local function prototypes */
 
@@ -87,40 +92,54 @@ RescheduleMethod :: RescheduleMethod (
  *  Execute the upload playlist method XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-RescheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+RescheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                             XmlRpc::XmlRpcValue  & returnValue)
-                                                                    throw ()
+                                                                       throw ()
 {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
+        return;
+    }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+
+    Ptr<UniqueId>::Ref  entryId;
     try {
-        if (!parameters.valid()) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        Ptr<UniqueId>::Ref  entryId     
-                          = XmlRpcTools::extractScheduleEntryId(parameters[0]);
-        Ptr<ptime>::Ref     playschedule 
-                          = XmlRpcTools::extractPlayschedule(parameters[0]);
-        Ptr<UniqueId>::Ref  scheduleEntryId;
-
-        Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-        Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
-
-        if (!schedule->scheduleEntryExists(entryId)) {
-            // TODO: mark error;
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        schedule->reschedule(entryId, playschedule);
-
-    } catch (std::invalid_argument &e) {
-        // TODO: mark error
-        returnValue = XmlRpc::XmlRpcValue(false);
+        entryId = XmlRpcTools::extractScheduleEntryId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+2, "missing schedule entry ID argument",
+                               returnValue);
         return;
     }
 
-    returnValue = XmlRpc::XmlRpcValue(true);
+    Ptr<ptime>::Ref     playschedule;
+    try {
+        playschedule = XmlRpcTools::extractPlayschedule(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, "missing playtime argument",
+                               returnValue);
+        return;
+    }
+
+    Ptr<UniqueId>::Ref  scheduleEntryId;
+
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
+
+    if (!schedule->scheduleEntryExists(entryId)) {
+        XmlRpcTools::markError(errorId+4, "schedule entry not found",
+                               returnValue);
+        return;
+    }
+    try {
+        schedule->reschedule(entryId, playschedule);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+5, e.what(),
+                               returnValue);
+        return;
+    }
 }
 

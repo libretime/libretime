@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,8 +74,21 @@ using namespace LiveSupport::Core;
  *      <li>scheduleEntryId - int - the id of the scheduled entry to remove</li>
  *  </ul>
  *
+ *  In case of an error, an XML-RPC structure is returned, with the following
+ *  fields:
+ *  <ul>
+ *      <li>errorCode - int - the id of the error condition</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
+ *  The possible error codes are:
+ *  <ul>
+ *     <li>1201 - invalid argument format </li>
+ *     <li>1202 - missing argument </li>
+ *     <li>1203 -  not found </li>
+ *  </ul>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -85,6 +98,11 @@ class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
+
+        /**
+         *  The ID of this method for error reporting purposes.
+         */
+        static const int                errorId;
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,9 @@
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "OpenPlaylistForEditingMethod.h"
+#include "SavePlaylistMethod.h"
+
 #include "DeletePlaylistMethod.h"
 #include "DeletePlaylistMethodTest.h"
 
@@ -138,17 +141,37 @@ void
 DeletePlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<DeletePlaylistMethod>::Ref method(new DeletePlaylistMethod());
-    XmlRpc::XmlRpcValue             rootParameter;
-    XmlRpc::XmlRpcValue             parameters;
-    XmlRpc::XmlRpcValue             result;
+    Ptr<OpenPlaylistForEditingMethod>::Ref
+                            openMethod  (new OpenPlaylistForEditingMethod);
+    Ptr<SavePlaylistMethod>::Ref
+                            saveMethod  (new SavePlaylistMethod);
+    Ptr<DeletePlaylistMethod>::Ref 
+                            deleteMethod(new DeletePlaylistMethod);
+    XmlRpc::XmlRpcValue     parameter;
+    XmlRpc::XmlRpcValue     rootParameter;
+    rootParameter.setSize(1);
+    XmlRpc::XmlRpcValue     result;
 
     // set up a structure for the parameters
-    parameters["playlistId"] = 1;
-    rootParameter[0] = parameters;
+    parameter["playlistId"] = 1;
+    rootParameter[0] = parameter;
 
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(((bool) result) == true);
+    result.clear();
+    openMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+
+    result.clear();
+    deleteMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 904);   // playlist is locked
+
+    result.clear();
+    saveMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+
+    result.clear();
+    deleteMethod->execute(rootParameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));    // OK
 }
 
 
@@ -160,15 +183,18 @@ DeletePlaylistMethodTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<DeletePlaylistMethod>::Ref method(new DeletePlaylistMethod());
+    XmlRpc::XmlRpcValue             parameter;
     XmlRpc::XmlRpcValue             rootParameter;
-    XmlRpc::XmlRpcValue             parameters;
+    rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
     // set up a structure for the parameters
-    parameters["playlistId"] = 9999;
-    rootParameter[0] = parameters;
+    parameter["playlistId"] = 9999;
+    rootParameter[0] = parameter;
 
+    result.clear();
     method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(((bool)result) == false);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 903);   // playlist not found
 }
 

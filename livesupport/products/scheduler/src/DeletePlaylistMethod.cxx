@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,10 +61,9 @@ using namespace LiveSupport::Scheduler;
 const std::string DeletePlaylistMethod::methodName = "deletePlaylist";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlistId member in the XML-RPC parameter
- *  structure.
+ *  The ID of this method for error reporting purposes.
  *----------------------------------------------------------------------------*/
-const std::string DeletePlaylistMethod::playlistIdName = "playlistId";
+const int DeletePlaylistMethod::errorId = 900;
 
 
 /* ===============================================  local function prototypes */
@@ -87,48 +86,53 @@ DeletePlaylistMethod :: DeletePlaylistMethod (
  *  (Overrides 'execute' in XmlRpcServerMethod.)
  *----------------------------------------------------------------------------*/
 void
-DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                 XmlRpc::XmlRpcValue  & returnValue)
                                                                     throw ()
 {
+    if (!rootParameter.valid() || rootParameter.size() != 1) {
+        XmlRpcTools::markError(errorId+1, "invalid argument format", 
+                               returnValue);
+        return;
+    }
+    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+
+    Ptr<UniqueId>::Ref       playlistId;
+    try{
+        playlistId = XmlRpcTools::extractPlaylistId(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
+                               returnValue);
+        return;
+    }
+
+    Ptr<StorageClientFactory>::Ref     scf
+                                       = StorageClientFactory::getInstance();
+    Ptr<StorageClientInterface>::Ref   storage
+                                       = scf->getStorageClient(); 
+    Ptr<Playlist>::Ref playlist;
     try {
-        if (!parameters.valid()) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
+        playlist = storage->getPlaylist(playlistId);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, "playlist not found", 
+                               returnValue);
+        return;
+    }
 
-        Ptr<UniqueId>::Ref  id = XmlRpcTools::extractPlaylistId(parameters[0]);
+    if (playlist->isLocked()) {
+        XmlRpcTools::markError(errorId+4, "playlist is locked", 
+                               returnValue);
+        return;
+    }
 
-        Ptr<StorageClientFactory>::Ref      scf;
-        Ptr<StorageClientInterface>::Ref    storage;
-
-        scf     = StorageClientFactory::getInstance();
-        storage = scf->getStorageClient();
- 
-        Ptr<Playlist>::Ref                  playlist;
-        try {
-            playlist = storage->getPlaylist(id);
-        }
-        catch (std::invalid_argument &e) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        if (playlist->isLocked()) {
-            // TODO: mark error
-            returnValue = XmlRpc::XmlRpcValue(false);
-            return;
-        }
-
-        storage->deletePlaylist(id);
-
-        returnValue = XmlRpc::XmlRpcValue(true);
-
-    } catch (std::invalid_argument &e) {
-        // TODO: mark error
-        returnValue = XmlRpc::XmlRpcValue(false);
+    try {
+        storage->deletePlaylist(playlistId);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+5, "playlist could not be deleted", 
+                               returnValue);
         return;
     }
 }
