@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -69,11 +69,11 @@ switch($_REQUEST['act']){
  */
     case"login";
         $sessid = $gb->login($_REQUEST['login'], $_REQUEST['pass']);
-        if($sessid && !PEAR::isError($sessid)){
+        if($sessid && !$dbc->isError($sessid)){
             setcookie($config['authCookieName'], $sessid);
             $redirUrl="gbHtmlBrowse.php";
             $fid = $gb->getObjId($_REQUEST['login'], $gb->storId);
-            if(!PEAR::isError($fid)) $redirUrl.="?id=$fid";
+            if(!$dbc->isError($fid)) $redirUrl.="?id=$fid";
         }else{
             $redirUrl="gbHtmlLogin.php"; $_SESSION['alertMsg']='Login failed.';
         }
@@ -117,7 +117,7 @@ switch($_REQUEST['act']){
             }
         }
         $r = $gb->putFile($id, $_REQUEST['filename'], $ntmp, $mdtmp, $sessid);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
+        if($dbc->isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         else{
             @unlink($ntmp);
             @unlink($mdtmp);
@@ -134,7 +134,7 @@ switch($_REQUEST['act']){
  */
     case"newFolder":
         $r = $gb->createFolder($id, $_REQUEST['newname'], $sessid);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
+        if($dbc->isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$id";
     break;
 /**
@@ -148,7 +148,7 @@ switch($_REQUEST['act']){
     case"rename":
         $parid = $gb->getParent($id);
         $r = $gb->renameFile($id, $_REQUEST['newname'], $sessid);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
+        if($dbc->isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$parid";
     break;
 /**
@@ -163,14 +163,14 @@ switch($_REQUEST['act']){
     case"move":
         $newPath = urlencode($_REQUEST['newPath']);
         $did = $gb->getObjIdFromRelPath($id, $newPath);
-        if(PEAR::isError($did)){
+        if($dbc->isError($did)){
             $_SESSION['alertMsg'] = $did->getMessage();
             $redirUrl = BROWSER."?id=$parid";
             break;
         }
         $parid = $gb->getParent($id);
         $r = $gb->moveFile($id, $did, $sessid);
-        if(PEAR::isError($r)){
+        if($dbc->isError($r)){
             $_SESSION['alertMsg'] = $r->getMessage();
             $redirUrl = BROWSER."?id=$parid";
             break;
@@ -191,7 +191,7 @@ switch($_REQUEST['act']){
         $did = $gb->getObjIdFromRelPath($id, $newPath);
         $parid = $gb->getParent($id);
         $r = $gb->copyFile($id, $did, $sessid);
-        if(PEAR::isError($r)){
+        if($dbc->isError($r)){
             $_SESSION['alertMsg'] = $r->getMessage();
             #$_SESSION['alertMsg'] = $r->getMessage()." ".$r->getUserInfo();
             $redirUrl = BROWSER."?id=$parid";
@@ -208,7 +208,7 @@ switch($_REQUEST['act']){
     case"delete":
         $parid = $gb->getParent($id);
         $r = $gb->deleteFile($id, $sessid);
-        if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
+        if($dbc->isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$parid";
     break;
 /**
@@ -265,7 +265,7 @@ switch($_REQUEST['act']){
             $_SESSION['alertMsg']='Access denied.';
             break;
         }
-        if(PEAR::isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
+        if($dbc->isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
     break;
 /**
  *  removeSubj
@@ -282,7 +282,7 @@ switch($_REQUEST['act']){
             $_SESSION['alertMsg']='Access denied.';
             break;
         }
-        if(PEAR::isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
+        if($dbc->isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
     break;
 /**
  *  addSubj2
@@ -300,7 +300,7 @@ switch($_REQUEST['act']){
             $_SESSION['alertMsg']='Access denied.';
             break;
         }
-        if(PEAR::isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
+        if($dbc->isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
     break;
 /**
  *  removeSubjFromGr
@@ -318,7 +318,7 @@ switch($_REQUEST['act']){
             $_SESSION['alertMsg']='Access denied.';
             break;
         }
-        if(PEAR::isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
+        if($dbc->isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
     break;
 /**
  *  passwd
@@ -370,7 +370,7 @@ switch($_REQUEST['act']){
         }
         $res = $gb->addPerm($_REQUEST['subj'], $_REQUEST['permAction'],
             $_REQUEST['id'], $_REQUEST['allowDeny']);
-        if(PEAR::isError($res)){
+        if($dbc->isError($res)){
             $_SESSION['alertMsg'] = $res->getMessage()." (".$res->getCode().")";
         }
     break;
