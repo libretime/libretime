@@ -392,7 +392,10 @@ class uiBrowser extends uiBase {
                 $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
                 $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$this->_formElementEncode($v['element'])."')"));
                 ## load data from GreenBox
-                $mask['pages'][$key][$k]['default'] = $this->_getMDataValue($id, $v['element'], $langid);
+                if ($getval = $this->_getMDataValue($id, $v['element'], $langid)) {
+                    $mask['pages'][$key][$k]['default']                 = $getval;
+                    $mask['pages'][$key][$k]['attributes']['onFocus']   = 'MData_confirmChange(this)';
+                }
             }
             $form->addElement('static', NULL, NULL, "<div id='div_$key'>");
             $this->_parseArr2Form($form, $mask['pages'][$key]);

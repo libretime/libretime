@@ -368,7 +368,10 @@ class uiPlaylist
 
         foreach ($mask['playlist'] as $k=>$v) {
             $mask['playlist'][$k]['element'] = $this->Base->_formElementEncode($v['element']);
-            $mask['playlist'][$k]['default'] = $this->Base->_getMDataValue($id, $v['element'], $langid);
+            if ($getval = $this->Base->_getMDataValue($id, $v['element'], $langid)) {
+                $mask['playlist'][$k]['default']                = $getval;
+                $mask['playlist'][$k]['attributes']['onFocus']  = 'MData_confirmChange(this)';
+            };
         }
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask['basics']);
@@ -401,7 +404,7 @@ class uiPlaylist
         $id             = $this->activeId;
         $curr_langid    = $formdata['curr_langid'];
         $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
-        
+
         foreach ($mask['playlist'] as $k=>$v) {
             $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;
         }

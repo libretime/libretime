@@ -8,6 +8,15 @@
 
 <script type="text/javascript">
 {literal}
+
+var MData_confirmChangeVisited = false;
+function MData_confirmChange(element)
+{
+    //if (MData_confirmChangeVisited) return true;
+    MData_confirmChangeVisited = true;
+    if (confirm("Are you sure you want to change this information?") == false) element.blur();
+}
+
 function MData_submit()
 {
     if (validate_editMetaData(document.forms["editMetaData"])) {
