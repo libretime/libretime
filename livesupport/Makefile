@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.17 $
+#   Version  : $Revision: 1.18 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -92,6 +92,7 @@ DB_DIR                = ${MODULES_DIR}/db
 STORAGE_DIR           = ${MODULES_DIR}/storage
 PLAYLIST_EXECUTOR_DIR = ${MODULES_DIR}/playlistExecutor
 EVENT_SCHEDULER_DIR   = ${MODULES_DIR}/eventScheduler
+SCHEDULER_CLIENT_DIR  = ${MODULES_DIR}/schedulerClient
 
 PRODUCTS_DIR  = ${BASE_DIR}/products
 SCHEDULER_DIR = ${PRODUCTS_DIR}/scheduler
@@ -140,6 +141,7 @@ flawfinder:
                   ${PLAYLIST_EXECUTOR_DIR}/include \
                   ${PLAYLIST_EXECUTOR_DIR}/src \
                   ${EVENT_SCHEDULER_DIR}/include ${EVENT_SCHEDULER_DIR}/src \
+                  ${SCHEDULER_CLIENT_DIR}/include ${SCHEDULER_CLIENT_DIR}/src \
                   ${SCHEDULER_DIR}/src > ${FLAWFINDER_FILE} \
                   ${GLIVESUPPORT_DIR}/src > ${FLAWFINDER_FILE} \
 
@@ -173,6 +175,7 @@ modules_setup:
 	${STORAGE_DIR}/bin/autogen.sh
 	${PLAYLIST_EXECUTOR_DIR}/bin/autogen.sh
 	${EVENT_SCHEDULER_DIR}/bin/autogen.sh
+	${SCHEDULER_CLIENT_DIR}/bin/autogen.sh
 
 products_setup:
 	${SCHEDULER_DIR}/bin/autogen.sh
@@ -185,6 +188,7 @@ distclean:
 	${MAKE} -C ${STORAGE_DIR} distclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} distclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} distclean
+	${MAKE} -C ${SCHDULER_CLIENT_DIR} distclean
 	${MAKE} -C ${SCHEDULER_DIR} distclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} distclean
 
@@ -195,6 +199,7 @@ depclean:
 	${MAKE} -C ${STORAGE_DIR} depclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} depclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} depclean
+	${MAKE} -C ${SCHEDULER_CLIENT_DIR} depclean
 	${MAKE} -C ${SCHEDULER_DIR} depclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} depclean
 
@@ -205,6 +210,7 @@ compile:
 	${MAKE} -C ${STORAGE_DIR} all
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} all
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} all
+	${MAKE} -C ${SCHEDULER_CLIENT_DIR} all
 	${MAKE} -C ${SCHEDULER_DIR} all
 	${MAKE} -C ${GLIVESUPPORT_DIR} all
 
@@ -215,6 +221,7 @@ check:
 	-${MAKE} -C ${STORAGE_DIR} check
 	-${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} check
 	-${MAKE} -C ${EVENT_SCHEDULER_DIR} check
+	-${MAKE} -C ${SCHEDULER_CLIENT_DIR} check
 	-${MAKE} -C ${SCHEDULER_DIR} check
 	-${MAKE} -C ${GLIVESUPPORT_DIR} check
 

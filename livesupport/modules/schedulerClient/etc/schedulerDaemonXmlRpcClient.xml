@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE schedulerDaemonXmlRpcClient [
+
+<!ELEMENT schedulerDaemonXmlRpcClient   EMPTY >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcHost    CDATA       #REQUIRED >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcPort    NMTOKEN     #REQUIRED >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
+
+]>
+<schedulerDaemonXmlRpcClient    xmlRpcHost = "localhost"
+                                xmlRpcPort = "3344"
+                                xmlRpcUri  = "/RC2"
+/>
