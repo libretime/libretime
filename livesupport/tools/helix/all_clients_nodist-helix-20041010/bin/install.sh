@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/helix/all_clients_nodist-helix-20041010/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -48,6 +48,9 @@ unzip $tar
 cd $product
 
 # usr the Helix build tool to compile the libraries
+# for some reason, despite the -k flag, this script will try to connect
+# to the Helix CVS server.
+# see https://bugs.helixcommunity.org/show_bug.cgi?id=3309
 ./build/bin/build -m helix -trelease -k -P helix-client-all-defines-nodist splay
 
 # copy all the necessary files manually
