@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -498,14 +498,16 @@ GLiveSupport :: savePlaylist(void)
     storage->savePlaylist(sessionId, editedPlaylist);
 
     Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId,
-                                                editedPlaylist->getId());
+                                                    editedPlaylist->getId());
 
     // add the saved playlist to the DJ Bag, and update it
     // TODO: if already in the DJ bag, don't add, just pop it to the front
-    djBagContents->push_front(editedPlaylist);
+    djBagContents->push_front(playlist);
     masterPanel->updateDjBagWindow();   
 
-    return editedPlaylist;
+    editedPlaylist.reset();
+
+    return playlist;
 }
 
 

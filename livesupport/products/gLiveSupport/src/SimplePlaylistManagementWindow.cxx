@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -164,6 +164,10 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
         statusBar->set_text(*statusText);
 
         gLiveSupport->releaseEditedPlaylist();
+
+        // clean the entry fields
+        nameEntry->set_text("");
+        entriesModel->clear();
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
     }
