@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -717,7 +717,7 @@ class GreenBox extends Alib{
             $ac =& StoredFile::recallFromLink(&$this, $acf['tmplink'], $sessid);
             $ac->releaseRawMediaData($sessid);
         }
-        parent::logout($sessid);
+        return parent::logout($sessid);
     }
 
     /**
@@ -1000,7 +1000,7 @@ class GreenBox extends Alib{
 ";
         $this->test_dump = $this->dumpTree($this->storId);
         if($this->test_dump==$this->test_correct)
-            { $this->test_log.="Storage: OK\n"; return true; }
+            { $this->test_log.="storageServer: OK\n"; return true; }
         else PEAR::raiseError('GreenBox::test:', 1, PEAR_ERROR_DIE, '%s'.
             "<pre>\ncorrect:\n.{$this->test_correct}.\n".
             "dump:\n.{$this->test_dump}.\n</pre>\n");

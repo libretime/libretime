@@ -23,17 +23,17 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/getXrUrl.php,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/getGname.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
- *  This script returns storage XMLRPC root URL
+ *  This (web-callable) script returns group running httpd
  *----------------------------------------------------------------------------*/
 
  header("Content-type: text/plain");
- require "../conf.php";
- echo "http://{$config['storageUrlHost']}:{$config['storageUrlPort']}".
-             "{$config['storageUrlPath']}/{$config['storageXMLRPC']}";
+ $egid = posix_getegid();
+ $info = posix_getgrgid($egid);
+ echo $info['name'];
 ?>

@@ -23,17 +23,17 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/getXrUrl.php,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/getWwwRoot.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
- *  This script returns storage XMLRPC root URL
+ *  This script returns storage root URL
  *----------------------------------------------------------------------------*/
 
  header("Content-type: text/plain");
  require "../conf.php";
  echo "http://{$config['storageUrlHost']}:{$config['storageUrlPort']}".
-             "{$config['storageUrlPath']}/{$config['storageXMLRPC']}";
+             "{$config['storageUrlPath']}";
 ?>

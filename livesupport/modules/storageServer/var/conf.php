@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,13 +63,13 @@ $config = array(
     'accessDir'     =>  dirname(getcwd()).'/access',
 
     /* ==================================================== URL configuration */
-    'storageUrlPath'        => '/livesupport/modules/storageServer/var',
+    'storageUrlPath'        => '/livesupportStorageServer',
     'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
     'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
 
     /* ================================================ archive configuration */
-    'archiveUrlPath'        => '/livesupport/modules/archiveServer/var',
+    'archiveUrlPath'        => '/livesupportArchiveServer',
     'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
     'archiveUrlHost'        => 'localhost',
     'archiveUrlPort'        => 80,

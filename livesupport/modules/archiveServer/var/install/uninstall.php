@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,8 +36,9 @@ function errCallback($err)
     if(assert_options(ASSERT_ACTIVE)==1) return;
     echo "ERROR:\n";
     echo "request: "; print_r($_REQUEST);
-    echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo()."\nui:\n".$err->getUserInfo()."\n</pre>\n";
-    exit;
+    echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
+        "\nui:\n".$err->getUserInfo()."\n</pre>\n";
+    exit(1);
 }
 
 
@@ -45,16 +46,17 @@ PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){
     echo "Database connection problem.\n";
-    echo "Check if database '{$config['dsn']['database']}' exists with corresponding permissions.\n";
+    echo "Check if database '{$config['dsn']['database']}' exists".
+        " with corresponding permissions.\n";
     echo "Database access is defined by 'dsn' values in conf.php.\n";
-    exit;
+    exit(1);
 }
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox(&$dbc, $config);
 
 #    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
-echo "Trying to uninstall Archive ...\n";
+echo "# Trying to uninstall archiveServer ...\n";
 $gb->uninstall();
 
 $dbc->disconnect();

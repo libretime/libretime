@@ -6,6 +6,10 @@
 - setup var/conf.php - at least "basic configuration" part
    (follow comments in the source - or use doxygen and its output)
 - setup archiveServer/var/conf.php too - test scripts will use archive
+- create symlink with name corresponding to "URL configuration" part
+  of var/conf.php file - example for default values:
+  http://localhost:80/livesupportStorageServer/ should point to
+  <livesupport-cvs>/modules/storageServer/var directory
 - configure apache for archiveServer file upload
    (as described in archiveServer/doc/INSTALL)
 - run 'make check' to: setup directories, create db tables and run test scripts

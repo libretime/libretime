@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,51 +36,53 @@ function errCallback($err)
     if(assert_options(ASSERT_ACTIVE)==1) return;
     echo "ERROR:\n";
     echo "request: "; print_r($_REQUEST);
-    echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo()."\nui:\n".$err->getUserInfo()."\n</pre>\n";
-    exit;
+    echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
+        "\nui:\n".$err->getUserInfo()."\n</pre>\n";
+    exit(1);
 }
-
 
 PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){
     echo "Database connection problem.\n";
-    echo "Check if database '{$config['dsn']['database']}' exists with corresponding permissions.\n";
-    echo "Database access is defined by 'dsn' values in conf.php.\n";
-    exit;
+    echo "Check if database '{$config['dsn']['database']}' exists".
+        " with corresponding permissions.\n";
+    echo "Database access is defined by 'dsn' values in var/conf.php.\n";
+    exit(1);
 }
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox(&$dbc, $config);
 
-echo "Archive: Install ...\n";
+echo "\n# archiveServer: Install ...\n";
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $gb->uninstall();
 PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 $gb->install();
 
-echo " Testing ...\n";
+echo "#  Testing ...\n";
 $gb->test();
 $log = $gb->test_log;
-echo " TESTS:\n$log\n---\n";
+echo " TESTS:\n{$log}";
 
-#echo " Reinstall + testdata insert ...\n";
+#echo "#  Reinstall + testdata insert ...\n";
 #$gb->reinstall();
 #$gb->sessid = $gb->login('root', $gb->config['tmpRootPass']);
 #$gb->testData();
 #$gb->logout($gb->sessid); unset($gb->sessid);
 
-echo " TREE DUMP:\n";
-echo $gb->dumpTree();
+#echo "#  TREE DUMP:\n";
+#echo $gb->dumpTree();
 
-echo " Delete test data ...\n";
+echo "#  Delete test data ...\n";
 $gb->deleteData();
 
 if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w')))
-    echo "\n<b>!!! make {$config['storageDir']} dir webdaemon-writeable !!!</b>\nand run install again\n\n";
+    echo "\n<b>make {$config['storageDir']} dir webdaemon-writeable</b>".
+        "\nand run install again\n\n";
 else{
     fclose($fp); unlink($config['storageDir']."/_writeTest");
-    echo "\nArchive is probably installed OK\n";
+    echo "#archiveServer install: OK\n\n";
 }
 
 $dbc->disconnect();

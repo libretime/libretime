@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -62,17 +62,13 @@ USR_LIB_DIR     = ${USR_DIR}/lib
 
 DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
 
-GET_GNAME   = install/getGname.php
-WWW_ROOT   := $(shell cd var/install; php -q getWwwRoot.php)
-HTTP_GROUP := $(shell curl -s ${WWW_ROOT}/${GET_GNAME})
-
-PHP_DIR 	= ${BASE_DIR}/var
-INSTALL_DIR = ${PHP_DIR}/install
-STOR_DIR 	= ${PHP_DIR}/stor
-ACCESS_DIR 	= ${PHP_DIR}/access
-TRANS_DIR 	= ${PHP_DIR}/trans
-BUFF_DIR 	= ${STOR_DIR}/buffer
-TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
+PHP_DIR		= ${BASE_DIR}/var
+INSTALL_DIR	= ${PHP_DIR}/install
+STOR_DIR	= ${PHP_DIR}/stor
+ACCESS_DIR	= ${PHP_DIR}/access
+TRANS_DIR	= ${PHP_DIR}/trans
+BUFF_DIR	= ${STOR_DIR}/buffer
+TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
 #-------------------------------------------------------------------------------
 #  	Configuration parameters
@@ -97,9 +93,10 @@ TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
   db_init db_clean transtest
 
 all: dir_setup db_init
-	$(MAKE) -C ../archiveServer all
+#	$(MAKE) -C ../archiveServer all
 
-dir_setup: ${DOXYGEN_DIR} ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR}
+dir_setup: ${DOXYGEN_DIR}
+	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
@@ -113,7 +110,7 @@ docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
 
 depclean: clean
-	$(MAKE) -C ../archiveServer clean
+#	$(MAKE) -C ../archiveServer clean
 
 dist:
 	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
@@ -122,19 +119,15 @@ distclean: clean docclean
 
 check: all ${TEST_RUNNER}
 	${TEST_RUNNER}
-	$(MAKE) transtest
+#	$(MAKE) transtest
 
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
 transtest:
-	@echo "Transfer module test (needs ArchiveServer installed):"
 	cd var/tests; php -q transTest.php
 
 db_init:
-	@echo "Settings:"
-	@echo "Http daemon group: ${HTTP_GROUP}"
-	@echo "WWW root: ${WWW_ROOT}"
 	cd var/install; php -q install.php
 
 db_clean:
@@ -146,28 +139,10 @@ ${TMP_DIR}:
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
-${STOR_DIR}:
-	@echo "Http daemon group: ${HTTP_GROUP}"
-	@echo "You should be in this group for easy testing"
-	${MKDIR} ${STOR_DIR}
-	chown .${HTTP_GROUP} ${STOR_DIR}
-	chmod g+ws ${STOR_DIR}
-
-${ACCESS_DIR}:
-	${MKDIR} ${ACCESS_DIR}
-	chown .${HTTP_GROUP} ${ACCESS_DIR}
-	chmod g+ws ${ACCESS_DIR}
-
-${TRANS_DIR}:
-	${MKDIR} ${TRANS_DIR}
-	chown .${HTTP_GROUP} ${TRANS_DIR}
-	chmod g+ws ${TRANS_DIR}
-
-${BUFF_DIR}:
-	${MKDIR} ${BUFF_DIR}
-	chmod g+w ${BUFF_DIR}
-
 ${TEST_RUNNER}:
+
+testonly: ${TEST_RUNNER}
+	${TEST_RUNNER}
 
 #-------------------------------------------------------------------------------
 #   Pattern rules

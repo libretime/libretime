@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -62,17 +62,13 @@ USR_LIB_DIR     = ${USR_DIR}/lib
 
 DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
 
-GET_GNAME   = install/getGname.php
-WWW_ROOT   := $(shell cd ../storageServer/var/install; php -q getWwwRoot.php)
-HTTP_GROUP := $(shell curl -s ${WWW_ROOT}/${GET_GNAME})
-
-PHP_DIR 	= ${BASE_DIR}/var
-INSTALL_DIR = ${PHP_DIR}/install
-STOR_DIR 	= ${PHP_DIR}/stor
-ACCESS_DIR 	= ${PHP_DIR}/access
-TRANS_DIR 	= ${PHP_DIR}/trans
-BUFF_DIR 	= ${STOR_DIR}/buffer
-TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
+PHP_DIR		= ${BASE_DIR}/var
+INSTALL_DIR	= ${PHP_DIR}/install
+STOR_DIR	= ${PHP_DIR}/stor
+ACCESS_DIR	= ${PHP_DIR}/access
+TRANS_DIR	= ${PHP_DIR}/trans
+BUFF_DIR	= ${STOR_DIR}/buffer
+TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
 #-------------------------------------------------------------------------------
 #  	Configuration parameters
@@ -93,11 +89,13 @@ TEST_RUNNER 	= ${PHP_DIR}/xmlrpc/testRunner.sh
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all dir_setup doc clean docclean depclean distclean dist db_init db_clean
+.PHONY: all dir_setup doc clean docclean depclean distclean dist \
+  db_init db_clean
 
 all: dir_setup db_init
 
-dir_setup: ${DOXYGEN_DIR} ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR}
+dir_setup: ${DOXYGEN_DIR}
+	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
@@ -120,7 +118,8 @@ distclean: clean docclean
 #check: all ${TEST_RUNNER}
 #	${TEST_RUNNER}
 check: all
-
+#	$(MAKE) -C ../storageServer transtest
+	
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
@@ -135,25 +134,6 @@ ${TMP_DIR}:
 
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
-
-${STOR_DIR}:
-	${MKDIR} ${STOR_DIR}
-	chown .${HTTP_GROUP} ${STOR_DIR}
-	chmod g+ws ${STOR_DIR}
-
-${ACCESS_DIR}:
-	${MKDIR} ${ACCESS_DIR}
-	chown .${HTTP_GROUP} ${ACCESS_DIR}
-	chmod g+ws ${ACCESS_DIR}
-
-${TRANS_DIR}:
-	${MKDIR} ${TRANS_DIR}
-	chown .${HTTP_GROUP} ${TRANS_DIR}
-	chmod g+ws ${TRANS_DIR}
-
-${BUFF_DIR}:
-	${MKDIR} ${BUFF_DIR}
-	chmod g+w ${BUFF_DIR}
 
 ${TEST_RUNNER}:
 

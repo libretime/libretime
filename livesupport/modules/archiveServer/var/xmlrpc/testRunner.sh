@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -31,8 +31,8 @@ COMM=$1
 shift
 GUNID=$1
 
-XMLRPC=http://localhost:80/livesupport/modules/archiveServer/var/xmlrpc/xrArchive.php
-echo "XMLRPC server URL (check it in troubles):"
+XMLRPC=`cd var/install; php -q getXrUrl.php` || exit $?
+echo " archiveServer XMLRPC URL:"
 echo $XMLRPC
 
 TESTDIR=`dirname $0`

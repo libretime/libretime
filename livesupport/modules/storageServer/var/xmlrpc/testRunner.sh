@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -31,74 +31,73 @@ COMM=$1
 shift
 GUNID=$1
 
-#XMLRPC=http://localhost:80/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php
-XMLRPC=`cd var/install; php -q getXrUrl.php`
-echo "XMLRPC server URL (check it in troubles):"
-echo $XMLRPC
+echo ""
+XMLRPC=`cd var/install; php -q getXrUrl.php` || exit $?
+echo "# storageServer XMLRPC URL: $XMLRPC"
 
 TESTDIR=`dirname $0`
-XR_CLI="$TESTDIR/xr_cli_test.py -s $XMLRPC"
+XR_CLI="$TESTDIR/xr_cli_test.py -s ${XMLRPC}"
 
 login() {
-    echo "login:"
-    SESSID=`$XR_CLI login root q`
+    echo -n "# login: "
+    SESSID=`$XR_CLI login root q` || exit $?
     echo "sessid: $SESSID"
 }
 
 test() {
-    echo "test:"
-    $XR_CLI test $SESSID stringForUppercase
+    echo "# test: "
+    $XR_CLI test $SESSID stringForUppercase || exit $?
 }
 
 existsAudioClip() {
-    echo "existsAudioClip:"
-    $XR_CLI existsAudioClip $SESSID $GUNID
+    echo "# existsAudioClip: "
+    $XR_CLI existsAudioClip $SESSID $GUNID || exit $?
 }
 
 accessRawAudioData() {
-    echo "accessRawAudioData:"
-    FPATH=`$XR_CLI accessRawAudioData $SESSID $GUNID`
+    echo "# accessRawAudioData: "
+    FPATH=`$XR_CLI accessRawAudioData $SESSID $GUNID` || exit $?
     FPATH="<?echo urldecode(\"$FPATH\")?>"
     FPATH=`echo "$FPATH" | php -q`
     echo $FPATH
-    ls -l $FPATH
-    echo "releaseRawAudioData:"
-    $XR_CLI releaseRawAudioData $SESSID $FPATH
+#    ls -l $FPATH
+    echo -n "# releaseRawAudioData: "
+    $XR_CLI releaseRawAudioData $SESSID $FPATH || exit $?
 #$XR_CLI getAudioClip $SESSID $GUNID
 }
 
 storeAudioClip() {
-    echo "storeAudioClip:"
+    echo -n "# storeAudioClip: "
     MEDIA=../tests/ex1.mp3
     METADATA=../tests/testStorage.xml
-    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"`
+    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"` || exit $?
     echo $RGUNID
 }
 
 deleteAudioClip() {
-    echo "deleteAudioClip:"
-    $XR_CLI deleteAudioClip $SESSID $GUNID
+    echo -n "# deleteAudioClip: "
+    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
 }
 
 updateAudioClipMetadata() {
-    echo "updateAudioClipMetadata:"
-    $XR_CLI updateAudioClipMetadata $SESSID $GUNID '../tests/mdata3.xml'
+    echo -n "#updateAudioClipMetadata: "
+    $XR_CLI updateAudioClipMetadata $SESSID $GUNID '../tests/mdata3.xml' || exit $?
 }
 
 getAudioClip() {
-    echo "getAudioClip:"
-    $XR_CLI getAudioClip $SESSID $GUNID | $TESTDIR/urldecode
+    echo -n "#getAudioClip: "
+    $XR_CLI getAudioClip $SESSID $GUNID | $TESTDIR/urldecode || exit $?
 }
 
 searchMetadata() {
-    echo "searchMetadata:"
-#    $XR_CLI searchMetadata $SESSID '../tests/srch_cri1.xml'
-    $XR_CLI searchMetadata $SESSID 'John %'
+    echo -n "# searchMetadata: "
+#    $XR_CLI searchMetadata $SESSID '../tests/srch_cri1.xml' || exit $?
+    $XR_CLI searchMetadata $SESSID 'John %' || exit $?
 }
 
 logout() {
-    echo "logout:"
-    $XR_CLI logout $SESSID
+    echo -n "# logout: "
+    $XR_CLI logout $SESSID || exit $?
 }
 
 usage(){
@@ -147,6 +146,8 @@ elif [ "x$COMM" == "x" ]; then
     accessRawAudioData
     deleteAudioClip
     logout
+    echo "#XMLRPC tests: OK."
+    echo ""
 elif [ "$COMM" == "help" ]; then
     usage
 else

@@ -23,8 +23,8 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/getXrUrl.php,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/getXrUrl.php,v $
 
 ------------------------------------------------------------------------------*/
 
