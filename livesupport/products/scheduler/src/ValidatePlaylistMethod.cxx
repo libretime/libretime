@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@
 #include "ScheduleFactory.h"
 #include "XmlRpcTools.h"
 
-#include "AddAudioClipToPlaylistMethod.h"
+#include "ValidatePlaylistMethod.h"
 
 
 using namespace boost;
@@ -68,13 +68,13 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of this XML-RPC method.
  *----------------------------------------------------------------------------*/
-const std::string AddAudioClipToPlaylistMethod::methodName 
-                                                = "addAudioClipToPlaylist";
+const std::string ValidatePlaylistMethod::methodName 
+                                                = "validatePlaylist";
 
 /*------------------------------------------------------------------------------
  *  The ID of this method for error reporting purposes.
  *----------------------------------------------------------------------------*/
-const int AddAudioClipToPlaylistMethod::errorId = 300;
+const int ValidatePlaylistMethod::errorId = 500;
 
 
 /* ===============================================  local function prototypes */
@@ -85,7 +85,7 @@ const int AddAudioClipToPlaylistMethod::errorId = 300;
 /*------------------------------------------------------------------------------
  *  Construct the method and register it right away.
  *----------------------------------------------------------------------------*/
-AddAudioClipToPlaylistMethod :: AddAudioClipToPlaylistMethod (
+ValidatePlaylistMethod :: ValidatePlaylistMethod (
                         Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)   throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
 {
@@ -96,7 +96,7 @@ AddAudioClipToPlaylistMethod :: AddAudioClipToPlaylistMethod (
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
+ValidatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
                                         XmlRpc::XmlRpcValue  & returnValue)
                                                                        throw ()
 {
@@ -111,25 +111,9 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+2, e.what(), returnValue);
-        return;
-    }
-
-    Ptr<UniqueId>::Ref       audioClipId;
-    try{
-        audioClipId = XmlRpcTools::extractAudioClipId(parameters);
-    }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, e.what(), returnValue);
-        return;
-    }
-
-    Ptr<time_duration>::Ref  relativeOffset;
-    try{
-        relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
-    }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+4, e.what(), returnValue);
+        XmlRpcTools::markError(errorId+2, 
+                               "missing playlist ID argument",
+                                returnValue);
         return;
     }
 
@@ -143,35 +127,20 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         playlist = storage->getPlaylist(playlistId);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+5, "playlist does not exist", 
+        XmlRpcTools::markError(errorId+3, "playlist does not exist", 
                                returnValue);
         return;
     }
 
     if (!playlist->getIsLockedForEditing()) {
-        XmlRpcTools::markError(errorId+6, 
+        XmlRpcTools::markError(errorId+4, 
                                "playlist has not been opened for editing", 
                                returnValue);
         return;
     }
+                                
+    bool valid = playlist->valid();    // and finally, the beef
 
-    Ptr<AudioClip>::Ref audioClip;
-    try {
-        audioClip = storage->getAudioClip(audioClipId);
-    }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+7, "audio clip does not exist", 
-                               returnValue);
-        return;
-    }
-
-    try {                                        // and finally, the beef
-        playlist->addAudioClip(audioClip, relativeOffset);
-    }
-    catch(std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+8,
-                               "two audio clips at the same relative offset",
-                               returnValue);
-        return;
-    }
+    XmlRpcTools::validStatusToXmlRpcValue(valid, returnValue);
 }
+

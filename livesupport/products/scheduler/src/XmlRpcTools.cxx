@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ XmlRpcTools :: extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
     if (!xmlRpcValue.hasMember(playlistIdName)) {
-        throw std::invalid_argument("missing playlist ID");
+        throw std::invalid_argument("missing playlist ID argument");
     }
 
     Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
@@ -103,7 +103,7 @@ XmlRpcTools :: extractAudioClipId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
     if (!xmlRpcValue.hasMember(audioClipIdName)) {
-        throw std::invalid_argument("missing audio clip ID");
+        throw std::invalid_argument("missing audio clip ID argument");
     }
 
     Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[audioClipIdName]));
@@ -119,7 +119,7 @@ XmlRpcTools :: extractRelativeOffset(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
     if (!xmlRpcValue.hasMember(relativeOffsetName)) {
-        throw std::invalid_argument("missing relative offset");
+        throw std::invalid_argument("missing relative offset argument");
     }
 
     Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,
@@ -153,3 +153,17 @@ XmlRpcTools :: markError(int errorCode, const std::string errorMessage,
     xmlRpcValue["errorCode"]    = errorCode;
     xmlRpcValue["errorMessage"] = errorMessage;
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Convert the valid status of a playlist to an XmlRpcValue
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: validStatusToXmlRpcValue(
+                            bool validStatus,
+                            XmlRpc::XmlRpcValue    & xmlRpcValue)
+                                                throw ()
+{
+    xmlRpcValue["valid"] = XmlRpc::XmlRpcValue(validStatus);
+}
+

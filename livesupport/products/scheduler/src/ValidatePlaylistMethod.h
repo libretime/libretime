@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef AddAudioClipToPlaylistMethod_h
-#define AddAudioClipToPlaylistMethod_h
+#ifndef ValidatePlaylistMethod_h
+#define ValidatePlaylistMethod_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,19 +64,20 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  An XML-RPC method object to add an audio clip (specified by its ID) 
- *  to a playlist (also specified by its ID).
+ *  An XML-RPC method object to validate a playlist (specified by its ID).
  *
  *  The name of the method when called through XML-RPC is 
- *  "addAudioClipToPlaylist".
+ *  "validatePlaylist".
  *  The expected parameter is an XML-RPC structure, with the following
- *  members:
+ *  member:
  *  <ul>
  *      <li>playlistId - int - the unique id of the playlist.</li>
- *      <li>audioClipId - int - the unique id of the audio clip to
- *                              be added.</li>
- *      <li>relativeOffset - int - the number of seconds between the
- *                start of the playlist and the start of the audio clip.</li>
+ *  </ul>
+ *
+ *  The XML-RPC function returns an XML-RPC structure, containing the following
+ *  fields:
+ *  <ul>
+ *      <li>valid - bool - true if the playlist is valid, false otherwise</li>
  *  </ul>
  *
  *  In case of an error, an XML-RPC structure is returned, with the following
@@ -87,19 +88,15 @@ using namespace LiveSupport::Core;
  *  </ul>
  *  The possible error codes are:
  *  <ul>
- *     <li>301 - invalid argument format </li>
- *     <li>302 - missing playlist ID argument </li>
- *     <li>303 - missing audio clip ID argument </li>
- *     <li>304 - missing relative offset argument </li>
- *     <li>305 - playlist does not exist </li>
- *     <li>306 - playlist has not been opened for editing </li>
- *     <li>307 - audio clip does not exist </li>
- *     <li>308 - two audio clips at the same relative offset</li>
+ *     <li>501 - invalid argument format </li>
+ *     <li>502 - missing playlist ID argument </li>
+ *     <li>503 - playlist does not exist </li>
+ *     <li>504 - playlist has not been opened for editing </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.1 $
  */
-class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
+class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
     private:
         /**
@@ -118,7 +115,7 @@ class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        AddAudioClipToPlaylistMethod(void)                          throw ()
+        ValidatePlaylistMethod(void)                          throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -128,7 +125,7 @@ class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          *
          *  @param xmlRpcServer the XML-RPC server to register with.
          */
-        AddAudioClipToPlaylistMethod(
+        ValidatePlaylistMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
                                                                     throw ();
 
@@ -153,5 +150,5 @@ class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 } // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // AddAudioClipToPlaylistMethod_h
+#endif // ValidatePlaylistMethod_h
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class XmlRpcTools
 {
@@ -131,7 +131,7 @@ class XmlRpcTools
          *  Convert a Playlist to an XmlRpcValue
          *
          *  @param playlist the Playlist to convert.
-         *  @param xmlRpcValue the output parameter holding the value of
+         *  @param xmlRpcValue the output parameter holding the result of
          *         the conversion.
          */
         static void
@@ -143,7 +143,7 @@ class XmlRpcTools
          *  Convert an error code, message pair to an XmlRpcValue
          *
          *  @param playlist the Playlist to convert.
-         *  @param xmlRpcValue the output parameter holding the value of
+         *  @param xmlRpcValue the output parameter holding the result of
          *         the conversion.
          */
         static void
@@ -151,6 +151,17 @@ class XmlRpcTools
                   XmlRpc::XmlRpcValue            & xmlRpcValue)
                                                                      throw ();
 
+        /**
+         *  Convert the valid status of a playlist to an XmlRpcValue
+         *
+         *  @param validStatus true if the playlist is valid, false otherwise.
+         *  @param xmlRpcValue the output parameter holding the result of
+         *         the conversion.
+         */
+        static void
+        validStatusToXmlRpcValue(bool validStatus,
+                                 XmlRpc::XmlRpcValue    & xmlRpcValue)
+                                                                     throw ();
 };
 
 /* ================================================= external data structures */

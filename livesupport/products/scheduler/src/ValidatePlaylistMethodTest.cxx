@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -49,8 +49,10 @@
 #include "XmlRpcTools.h"
 
 #include "OpenPlaylistForEditingMethod.h"
-#include "AddAudioClipToPlaylistMethod.h"
-#include "AddAudioClipToPlaylistMethodTest.h"
+#include "RemoveAudioClipFromPlaylistMethod.h"
+#include "ValidatePlaylistMethod.h"
+
+#include "ValidatePlaylistMethodTest.h"
 
 
 using namespace std;
@@ -64,18 +66,18 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(AddAudioClipToPlaylistMethodTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(ValidatePlaylistMethodTest);
 
 /**
  *  The name of the configuration file for the storage client factory.
  */
-const std::string AddAudioClipToPlaylistMethodTest::storageClientConfig =
+const std::string ValidatePlaylistMethodTest::storageClientConfig =
                                                     "etc/storageClient.xml";
 
 /**
  *  The name of the configuration file for the connection manager factory.
  */
-const std::string AddAudioClipToPlaylistMethodTest::connectionManagerConfig =
+const std::string ValidatePlaylistMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
 
 
@@ -88,7 +90,7 @@ const std::string AddAudioClipToPlaylistMethodTest::connectionManagerConfig =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: configure(
+ValidatePlaylistMethodTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string           fileName)
                                                 throw (std::invalid_argument,
@@ -106,7 +108,7 @@ AddAudioClipToPlaylistMethodTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
+ValidatePlaylistMethodTest :: setUp(void)                         throw ()
 {
     try {
         Ptr<StorageClientFactory>::Ref scf
@@ -131,7 +133,7 @@ AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: tearDown(void)                      throw ()
+ValidatePlaylistMethodTest :: tearDown(void)                      throw ()
 {
 }
 
@@ -140,30 +142,39 @@ AddAudioClipToPlaylistMethodTest :: tearDown(void)                      throw ()
  *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: firstTest(void)
+ValidatePlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<OpenPlaylistForEditingMethod>::Ref 
-                   openPlaylistMethod(new OpenPlaylistForEditingMethod());
-    Ptr<AddAudioClipToPlaylistMethod>::Ref 
-                   addAudioClipMethod(new AddAudioClipToPlaylistMethod());
+               openPlaylistMethod(new OpenPlaylistForEditingMethod());
+    Ptr<RemoveAudioClipFromPlaylistMethod>::Ref 
+               removeAudioClipMethod(new RemoveAudioClipFromPlaylistMethod());
+    Ptr<ValidatePlaylistMethod>::Ref 
+               validatePlaylistMethod(new ValidatePlaylistMethod());
     XmlRpc::XmlRpcValue             parameter;
     XmlRpc::XmlRpcValue             result;
 
-    parameter["playlistId"] = 1;
-    parameter["audioClipId"] = 20002;
-    parameter["relativeOffset"] = 60*60;
-
-    openPlaylistMethod->execute(parameter, result);
-    addAudioClipMethod->execute(parameter, result);
+    parameter["playlistId"] = 275;
+    validatePlaylistMethod->execute(parameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int)(result["errorCode"]) == 308);
+    CPPUNIT_ASSERT(int(result["errorCode"]) == 503);  // no such playlist
 
-    parameter.clear();
     result.clear();
+    parameter.clear();
     parameter["playlistId"] = 1;
-    parameter["audioClipId"] = 20003;
-    parameter["relativeOffset"] = 90*60;
-    addAudioClipMethod->execute(parameter, result);
+    openPlaylistMethod->execute(parameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    result.clear();
+    validatePlaylistMethod->execute(parameter, result);
+    CPPUNIT_ASSERT(result.hasMember("valid"));
+    CPPUNIT_ASSERT(bool(result["valid"]));
+
+    result.clear();
+    parameter["relativeOffset"] = 0;
+    removeAudioClipMethod->execute(parameter, result);
+    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    result.clear();
+    validatePlaylistMethod->execute(parameter, result);
+    CPPUNIT_ASSERT(result.hasMember("valid"));
+    CPPUNIT_ASSERT(!bool(result["valid"]));  // has a gap at the beginning
 }

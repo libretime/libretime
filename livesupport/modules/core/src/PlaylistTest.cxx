@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,6 +90,9 @@ PlaylistTest :: setUp(void)                         throw ()
         CPPUNIT_ASSERT(duration->hours() == 1);
         CPPUNIT_ASSERT(duration->minutes() == 30);
         CPPUNIT_ASSERT(duration->seconds() == 0);
+
+        CPPUNIT_ASSERT(playlist->valid());
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
@@ -162,10 +165,10 @@ PlaylistTest :: lockTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if we can add a new audio clip
+ *  Test to see if we can add or remove an audio clip
  *----------------------------------------------------------------------------*/
 void
-PlaylistTest :: addAudioClipTest(void)
+PlaylistTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<UniqueId>::Ref       clipId(new UniqueId(20001));
@@ -182,6 +185,8 @@ PlaylistTest :: addAudioClipTest(void)
         eMsg += e.what(); 
         CPPUNIT_FAIL(eMsg);
     }
+
+    CPPUNIT_ASSERT(!playlist->valid());    // overlapping audio clips
 
     Playlist::const_iterator       it = playlist->begin();
     CPPUNIT_ASSERT(it != playlist->end());
@@ -200,4 +205,31 @@ PlaylistTest :: addAudioClipTest(void)
 
     ++it;
     CPPUNIT_ASSERT(it == playlist->end());
+
+    try {
+        playlist->removeAudioClip(relativeOffset);
+    }
+    catch (std::invalid_argument &e) {
+        string eMsg = "removeAudioClip returned with error: ";
+        eMsg += e.what(); 
+        CPPUNIT_FAIL(eMsg);
+    }
+
+    it = playlist->begin();
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
+    CPPUNIT_ASSERT(it == playlist->end());
+
+    Ptr<const time_duration>::Ref  phonyRelativeOffset(
+                                   new time_duration(0,0,1,0));
+    try {
+        playlist->removeAudioClip(phonyRelativeOffset);
+    }
+    catch (std::invalid_argument &e) {
+    return;
+    }
+    CPPUNIT_FAIL("removeAudioClip allowed to remove "
+                 "non-existent audio clip");
 }

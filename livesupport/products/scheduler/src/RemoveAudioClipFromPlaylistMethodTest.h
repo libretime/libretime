@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef PlaylistTest_h
-#define PlaylistTest_h
+#ifndef RemoveAudioClipFromPlaylistMethodTest_h
+#define RemoveAudioClipFromPlaylistMethodTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -44,7 +44,10 @@
 
 
 namespace LiveSupport {
-namespace Core {
+namespace Scheduler {
+
+using namespace LiveSupport;
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -55,26 +58,42 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the RemoveAudioClipFromPlaylistMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
- *  @see Playlist
+ *  @version $Revision: 1.1 $
+ *  @see RemoveAudioClipFromPlaylistMethod
  */
-class PlaylistTest : public CPPUNIT_NS::TestFixture
+class RemoveAudioClipFromPlaylistMethodTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(PlaylistTest);
+    CPPUNIT_TEST_SUITE(RemoveAudioClipFromPlaylistMethodTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(lockTest);
-    CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST_SUITE_END();
 
-    private:
+        /**
+         *  The name of the configuration file for the storage client factory.
+         */
+        static const std::string storageClientConfig;
 
         /**
-         *  A playlist to play with.
+         *  The name of the configuration file for the connection manager
+         *  factory.
          */
-        Ptr<Playlist>::Ref  playlist;
+        static const std::string connectionManagerConfig;
+
+        /**
+         *  Configure a configurable with an XML file.
+         *
+         *  @param configurable configure this
+         *  @param fileName the name of the XML file to configure with.
+         *  @exception std::invalid_argument on configuration errors.
+         *  @exception xmlpp::exception on XML parsing errors.
+         */
+        void
+        configure(Ptr<Configurable>::Ref    configurable,
+                  std::string               fileName)
+                                                throw (std::invalid_argument,
+                                                       xmlpp::exception);
 
     protected:
 
@@ -85,22 +104,6 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the locks.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        lockTest(void)                          throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Trying to add a new audio clip.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        audioClipTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -125,8 +128,8 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Core
+} // namespace Scheduler
 } // namespace LiveSupport
 
-#endif // PlaylistTest_h
+#endif // RemoveAudioClipFromPlaylistMethodTest_h
 

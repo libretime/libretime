@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -153,7 +153,7 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                                             throw (std::invalid_argument)
 {
     if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "two playlist elements at the same relative offset";
+        std::string eMsg = "two audio clips at the same relative offset";
         throw std::invalid_argument(eMsg);
     }
 
@@ -165,10 +165,25 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
 
 
 /*------------------------------------------------------------------------------
+ *  Remove an audio clip from the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
+                                            throw (std::invalid_argument)
+{
+    // this returns the number of elements found and erased
+    if (!elementList->erase(*relativeOffset)) {
+        std::string eMsg = "no audio clip at the specified relative offset";
+        throw std::invalid_argument(eMsg);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Lock or unlock the playlist for editing.
  *----------------------------------------------------------------------------*/
 bool
-Playlist::setLockedForEditing(bool lockStatus)
+Playlist::setLockedForEditing(const bool lockStatus)
                                             throw ()
 {
     if (lockStatus == true) {
@@ -196,7 +211,7 @@ Playlist::setLockedForEditing(bool lockStatus)
  *  Lock or unlock the playlist for playing.
  *----------------------------------------------------------------------------*/
 bool
-Playlist::setLockedForPlaying(bool lockStatus)
+Playlist::setLockedForPlaying(const bool lockStatus)
                                             throw ()
 {
     if (lockStatus == true) {
@@ -214,3 +229,27 @@ Playlist::setLockedForPlaying(bool lockStatus)
     }                                       // was already unlocked!
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Validate the playlist.
+ *----------------------------------------------------------------------------*/
+bool
+Playlist::valid(void)                    throw ()
+{
+    Ptr<time_duration>::Ref            runningTime(new time_duration(0,0,0,0));
+    Ptr<const PlaylistElement>::Ref    playlistElement;
+    Ptr<const AudioClip>::Ref          audioClip;
+
+    PlaylistElementListType::const_iterator  it = elementList->begin();
+    while (it != elementList->end()) {
+        playlistElement = it->second;
+        if (*runningTime != *(playlistElement->getRelativeOffset())) {
+            return false;
+        }
+        audioClip = playlistElement->getAudioClip();
+        *runningTime += *(audioClip->getPlaylength());
+        ++it;
+    }
+    playlength = runningTime;    // fix playlength, if everything else is OK
+    return true;
+}

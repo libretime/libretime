@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class Playlist : public Configurable
 {
@@ -166,7 +166,7 @@ class Playlist : public Configurable
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                      throw ()
+        getConfigElementName(void)               throw ()
         {
             return configElementNameStr;
         }
@@ -182,7 +182,7 @@ class Playlist : public Configurable
          */
         virtual void
         configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument);
+                                                 throw (std::invalid_argument);
 
         /**
          *  Return the id of the playlist.
@@ -190,7 +190,7 @@ class Playlist : public Configurable
          *  @return the unique id of the playlist.
          */
         Ptr<const UniqueId>::Ref
-        getId(void) const                       throw ()
+        getId(void) const                        throw ()
         {
             return id;
         }
@@ -201,7 +201,7 @@ class Playlist : public Configurable
          *  @return the playling length of this playlist, in milliseconds.
          */
         Ptr<const time_duration>::Ref
-        getPlaylength(void) const               throw ()
+        getPlaylength(void) const                throw ()
         {
             return playlength;
         }
@@ -209,12 +209,14 @@ class Playlist : public Configurable
         /**
          *  Test whether the playlist is locked for editing.
          *
-         *  @return true if playlist is locked, false if not
+         *  @return true if playlist is currently being edited;
+         *      false if not, or if the editing has been suspended
+         *      because the playlist is being played
          */
         bool
-        getIsLockedForEditing()                 throw ()
+        getIsLockedForEditing() const            throw ()
         {
-            return isLockedForEditing;
+            return isLockedForEditing && !isLockedForPlaying;
         }
 
         /**
@@ -223,7 +225,7 @@ class Playlist : public Configurable
          *  @return true if playlist is locked, false if not
          */
         bool
-        getIsLockedForPlaying()                 throw ()
+        getIsLockedForPlaying() const            throw ()
         {
             return isLockedForPlaying;
         }
@@ -235,7 +237,7 @@ class Playlist : public Configurable
          *          false otherwise.
          */
         bool
-        setLockedForEditing(bool lockStatus)
+        setLockedForEditing(const bool lockStatus)
                                                 throw ();
 
         /**
@@ -245,7 +247,7 @@ class Playlist : public Configurable
          *          false otherwise.
          */
         bool
-        setLockedForPlaying(bool lockStatus)
+        setLockedForPlaying(const bool lockStatus)
                                                 throw ();
 
         /**
@@ -256,7 +258,6 @@ class Playlist : public Configurable
 
         /**
          *  Get an iterator pointing to the first playlist element.
-         *
          */
         const_iterator
         begin() const                           throw ()
@@ -266,7 +267,6 @@ class Playlist : public Configurable
 
         /**
          *  Get an iterator pointing to one after the last playlist element.
-         *
          */
         const_iterator
         end() const                             throw ()
@@ -287,6 +287,27 @@ class Playlist : public Configurable
          addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                       Ptr<time_duration>::Ref  relativeOffset)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Remove an audio clip from the playlist.
+         *
+         *  @param relativeOffset the start of the audio clip, relative
+         *             to the start of the playlist
+         *  @exception std::invalid_argument if the playlist does not contain
+         *             an audio clip with the specified relative offset
+         */
+         void
+         removeAudioClip(Ptr<const time_duration>::Ref  relativeOffset)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Validate the playlist: check that there are no overlaps or gaps.
+         *  If the playlength is the only thing amiss, playlist is considered
+         *  valid, and the playlength is fixed.  (Hence no 'const'.)
+         */
+         bool
+         valid(void)                            throw ();
+
 };
 
 

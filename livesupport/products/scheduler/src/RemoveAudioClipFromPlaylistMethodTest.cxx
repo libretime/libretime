@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -50,7 +50,9 @@
 
 #include "OpenPlaylistForEditingMethod.h"
 #include "AddAudioClipToPlaylistMethod.h"
-#include "AddAudioClipToPlaylistMethodTest.h"
+#include "RemoveAudioClipFromPlaylistMethod.h"
+
+#include "RemoveAudioClipFromPlaylistMethodTest.h"
 
 
 using namespace std;
@@ -64,18 +66,18 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(AddAudioClipToPlaylistMethodTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RemoveAudioClipFromPlaylistMethodTest);
 
 /**
  *  The name of the configuration file for the storage client factory.
  */
-const std::string AddAudioClipToPlaylistMethodTest::storageClientConfig =
+const std::string RemoveAudioClipFromPlaylistMethodTest::storageClientConfig =
                                                     "etc/storageClient.xml";
 
 /**
  *  The name of the configuration file for the connection manager factory.
  */
-const std::string AddAudioClipToPlaylistMethodTest::connectionManagerConfig =
+const std::string RemoveAudioClipFromPlaylistMethodTest::connectionManagerConfig =
                                           "etc/connectionManagerFactory.xml";
 
 
@@ -88,7 +90,7 @@ const std::string AddAudioClipToPlaylistMethodTest::connectionManagerConfig =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: configure(
+RemoveAudioClipFromPlaylistMethodTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string           fileName)
                                                 throw (std::invalid_argument,
@@ -106,7 +108,7 @@ AddAudioClipToPlaylistMethodTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
+RemoveAudioClipFromPlaylistMethodTest :: setUp(void)                         throw ()
 {
     try {
         Ptr<StorageClientFactory>::Ref scf
@@ -131,7 +133,7 @@ AddAudioClipToPlaylistMethodTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: tearDown(void)                      throw ()
+RemoveAudioClipFromPlaylistMethodTest :: tearDown(void)                      throw ()
 {
 }
 
@@ -140,30 +142,34 @@ AddAudioClipToPlaylistMethodTest :: tearDown(void)                      throw ()
  *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-AddAudioClipToPlaylistMethodTest :: firstTest(void)
+RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<OpenPlaylistForEditingMethod>::Ref 
-                   openPlaylistMethod(new OpenPlaylistForEditingMethod());
+               openPlaylistMethod(new OpenPlaylistForEditingMethod());
     Ptr<AddAudioClipToPlaylistMethod>::Ref 
-                   addAudioClipMethod(new AddAudioClipToPlaylistMethod());
+               addAudioClipMethod(new AddAudioClipToPlaylistMethod());
+    Ptr<RemoveAudioClipFromPlaylistMethod>::Ref 
+               removeAudioClipMethod(new RemoveAudioClipFromPlaylistMethod());
     XmlRpc::XmlRpcValue             parameter;
     XmlRpc::XmlRpcValue             result;
 
     parameter["playlistId"] = 1;
     parameter["audioClipId"] = 20002;
-    parameter["relativeOffset"] = 60*60;
-
-    openPlaylistMethod->execute(parameter, result);
-    addAudioClipMethod->execute(parameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int)(result["errorCode"]) == 308);
-
-    parameter.clear();
-    result.clear();
-    parameter["playlistId"] = 1;
-    parameter["audioClipId"] = 20003;
     parameter["relativeOffset"] = 90*60;
+
+    removeAudioClipMethod->execute(parameter, result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT((int)(result["errorCode"]) == 405);  // not open for editing
+
+    result.clear();
+    openPlaylistMethod->execute(parameter, result);
+    removeAudioClipMethod->execute(parameter, result);
+    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    CPPUNIT_ASSERT((int)(result["errorCode"]) == 406);  // no such audio clip
+
+    result.clear();
     addAudioClipMethod->execute(parameter, result);
+    removeAudioClipMethod->execute(parameter, result);
     CPPUNIT_ASSERT(!result.hasMember("errorCode"));
 }
