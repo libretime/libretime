@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Ptr.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,15 +60,12 @@ namespace Core {
  *  not be templated. For a discussion on the issue, see
  *  http://www.gotw.ca/gotw/079.htm
  *
- *  The smart pointers here are typedefs to different configurations
- *  of the Loki library pointers Andrei Alexandrescu, author of the
- *  book Modern C++ Design. For references, see
- *  http://www.moderncppdesign.com/ ,
- *  http://www.informit.com/articles/article.asp?p=25264&redir=1 and
- *  http://sourceforge.net/projects/loki-lib/
+ *  The smart pointers here are typedefs to the smart pointers in the
+ *  boost library. For documentation of the boost smart pointers,
+ *  see  http://www.boost.org/libs/smart_ptr/
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 template <class T>
 class Ptr
