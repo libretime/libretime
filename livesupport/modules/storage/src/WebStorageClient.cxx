@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,7 +45,7 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "WebStorageClient.h"
+#include "LiveSupport/Storage/WebStorageClient.h"
 
 using namespace boost::posix_time;
 using namespace XmlRpc;
