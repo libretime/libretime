@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ $gb = &new GreenBox(&$dbc, $config);
 echo "# Trying to uninstall storageServer ...\n";
 $gb->uninstall();
 
-echo "# Uninstall Tranport submodule ...\n";
+echo "# Uninstall Transport submodule ...\n";
 require_once "../Transport.php";
 $tr =& new Transport(&$dbc, $config);
 $r = $tr->uninstall();

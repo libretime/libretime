@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -70,7 +70,8 @@ storeAudioClip() {
     echo -n "# storeAudioClip: "
     MEDIA=../tests/ex1.mp3
     METADATA=../tests/testStorage.xml
-    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"` || exit $?
+    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"` || \
+    	{ ERN=$?; echo $RGUNID; exit $ERN; }
     echo $RGUNID
 }
 

@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.1 $
+#    Version  : $Revision: 1.2 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -109,4 +109,5 @@ try:
         print "Unknown command: "+method
         sys.exit(1)
 except Error, v:
-    print "XML-RPC Error:",v
+#    print "XML-RPC Error:",v
+    sys.exit(v)

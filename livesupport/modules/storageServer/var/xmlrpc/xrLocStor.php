@@ -23,15 +23,46 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
+error_reporting(0);
+ini_set("error_prepend_string", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<methodResponse>
+<fault>
+<value>
+<struct>
+<member>
+<name>faultCode</name>
+<value><int>804</int></value>
+</member>
+<member>
+<name>faultString</name>
+<value><string>");
+ini_set("error_append_string", "</string></value>
+</member>
+</struct>
+</value>
+</fault>
+</methodResponse>");
+header("Content-type: text/xml");
+
 include_once "xmlrpc.inc";
 include_once "xmlrpcs.inc";
 require_once '../conf.php';
 require_once 'DB.php';
 require_once '../LocStor.php';
+
+function errHndl($errno, $errmsg, $filename, $linenum, $vars){
+    if($errno == 8 /*E_NOTICE*/) return;
+    $xr =& new xmlrpcresp(0, 805,
+        "ERROR:xrLoctor: $errno $errmsg ($filename:$linenum)\n");
+    header("Content-type: text/xml");
+    echo $xr->serialize();
+    exit($errno);
+}
+$old_error_handler = set_error_handler("errHndl");
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
