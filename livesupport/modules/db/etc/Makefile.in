@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -39,14 +39,15 @@ DOXYGEN = doxygen
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
 #-------------------------------------------------------------------------------
-BASE_DIR    = @builddir@
-DOC_DIR     = ${BASE_DIR}/doc
-DOXYGEN_DIR = ${DOC_DIR}/doxygen
-ETC_DIR     = ${BASE_DIR}/etc
-INCLUDE_DIR = ${BASE_DIR}/include
-LIB_DIR     = ${BASE_DIR}/lib
-SRC_DIR     = ${BASE_DIR}/src
-TMP_DIR     = ${BASE_DIR}/tmp
+BASE_DIR     = @builddir@
+DOC_DIR      = ${BASE_DIR}/doc
+DOXYGEN_DIR  = ${DOC_DIR}/doxygen
+COVERAGE_DIR = ${DOC_DIR}/coverage
+ETC_DIR      = ${BASE_DIR}/etc
+INCLUDE_DIR  = ${BASE_DIR}/include
+LIB_DIR      = ${BASE_DIR}/lib
+SRC_DIR      = ${BASE_DIR}/src
+TMP_DIR      = ${BASE_DIR}/tmp
 
 USR_DIR         = ${BASE_DIR}/../../usr
 USR_INCLUDE_DIR = ${USR_DIR}/include
@@ -79,12 +80,13 @@ DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 #  	Configuration parameters
 #-------------------------------------------------------------------------------
 CPPFLAGS = @CPPFLAGS@
-CXXFLAGS = @CXXFLAGS@ @DEFS@ -I${USR_INCLUDE_DIR} \
+CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
+                             -pedantic -Wall -Wno-long-long \
+                             -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
-                             -I${INCLUDE_DIR} -I${TMP_DIR} \
-                             -pedantic -Wall -Wno-long-long
+                             -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
 
 
@@ -115,9 +117,11 @@ doc:
 clean:
 	${RM} ${DB_LIB_OBJS} ${DB_LIB_FILE}
 	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
+	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da
 
 docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
+	${RMDIR} ${COVERAGE_DIR}/*
 	${RM} ${TEST_RESULTS}
 
 depclean: clean
