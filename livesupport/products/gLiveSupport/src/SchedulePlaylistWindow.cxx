@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,10 +82,7 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
         std::cerr << e.what() << std::endl;
     }
 
-// the title is lost, for some reason, see
-// http://bugs.campware.org/view.php?id=534
-//    playlistLabel.reset(new Gtk::Label(*playlist->getTitle()));
-    playlistLabel.reset(new Gtk::Label("TODO: playlist title here"));
+    playlistLabel.reset(new Gtk::Label(*playlist->getTitle()));
     calendar.reset(new Gtk::Calendar());
     hourEntry.reset(new Gtk::Entry());
     minuteEntry.reset(new Gtk::Entry());
