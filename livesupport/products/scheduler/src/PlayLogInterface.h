@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlayLogInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class PlayLogInterface : virtual public Installable
 {
@@ -82,7 +82,7 @@ class PlayLogInterface : virtual public Installable
          *  @param timeStamp the time the clip was played (started).
          *  @return the id of the newly created play log entry.
          */
-        virtual Ptr<UniqueId>::Ref
+        virtual Ptr<const UniqueId>::Ref
         addPlayLogEntry(Ptr<const UniqueId>::Ref     audioClipId,
                         Ptr<const ptime>::Ref        timeStamp)
                                                 throw (std::invalid_argument)
@@ -97,7 +97,7 @@ class PlayLogInterface : virtual public Installable
          *          non-inclusive
          *  @return a vector of the play log entries for the time region.
          */
-        virtual Ptr<std::vector<Ptr<PlayLogEntry>::Ref> >::Ref
+        virtual Ptr<std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
         getPlayLogEntries(Ptr<const ptime>::Ref  fromTime,
                           Ptr<const ptime>::Ref  toTime)
                                                 throw (std::invalid_argument)

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
+#include "PlayLogEntry.h"
 #include "ScheduleEntry.h"
 
 
@@ -71,7 +72,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class XmlRpcTools
 {
@@ -130,6 +131,17 @@ class XmlRpcTools
                            XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                                     throw ();
 
+        /**
+         *  Convert a PlayLogEntry to an XmlRpcValue
+         *
+         *  @param playLogEntry the PlayLogEntry to convert.
+         *  @param xmlRpcValue the output parameter holding the result of
+         *         the conversion.
+         */
+        static void
+        playLogEntryToXmlRpcValue(Ptr<const PlayLogEntry>::Ref playLogEntry,
+                                  XmlRpc::XmlRpcValue        & returnValue)
+                                                                     throw ();
 
     public:
         /**
@@ -222,7 +234,7 @@ class XmlRpcTools
          *
          *  @param audioClipVector a list of AudioClips.
          *  @param returnValue the output parameter holding an XML-RPC
-         *         representation of the list of Playlists.
+         *         representation of the list of AudioClips.
          */
         static void
         audioClipVectorToXmlRpcValue(
@@ -314,6 +326,20 @@ class XmlRpcTools
         scheduleEntryIdToXmlRpcValue(
                 Ptr<const UniqueId>::Ref scheduleEntryId,
                 XmlRpc::XmlRpcValue    & returnValue)               throw ();
+
+        /**
+         *  Convert a vector of PlayLogEntries to an XML-RPC return value.
+         *
+         *  @param playLogVector a list of PlayLogEntries.
+         *  @param returnValue the output parameter holding an XML-RPC
+         *         representation of the list of PlayLogEntries.
+         */
+        static void
+        playLogVectorToXmlRpcValue(
+            Ptr<const std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
+                                    playLogVector,
+            XmlRpc::XmlRpcValue   & returnValue)
+                                                                     throw ();
 
 };
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -414,3 +414,47 @@ XmlRpcTools :: scheduleEntryIdToXmlRpcValue(
     returnValue[scheduleEntryIdName] = int(scheduleEntryId->getId());
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Convert a PlayLogEntry to an XmlRpcValue
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: playLogEntryToXmlRpcValue(
+                    Ptr<const PlayLogEntry>::Ref    playLogEntry,
+                    XmlRpc::XmlRpcValue           & returnValue)
+                                                throw ()
+{
+    returnValue["audioClipId"]  = int(playLogEntry->getAudioClipId()->getId());
+
+    XmlRpc::XmlRpcValue         timestamp;
+    ptimeToXmlRpcValue(playLogEntry->getTimestamp(), timestamp);
+    returnValue["timestamp"] =  timestamp;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a vector of PlayLogEntries into an XML-RPC value.
+ *  This function returns an XML-RPC array of XML-RPC structures.
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: playLogVectorToXmlRpcValue(
+             Ptr<const std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
+                                    playLogVector,
+             XmlRpc::XmlRpcValue  & returnValue)
+                                                throw ()
+{
+    returnValue.setSize(playLogVector->size());
+                            // a call to setSize() makes sure it's an XML-RPC
+                            // array
+
+    std::vector<Ptr<const PlayLogEntry>::Ref>::const_iterator it =
+                                                        playLogVector->begin();
+    int  arraySize = 0;
+    while (it != playLogVector->end()) {
+        Ptr<const PlayLogEntry>::Ref    playLog = *it;
+        XmlRpc::XmlRpcValue             returnStruct;
+        playLogEntryToXmlRpcValue(playLog, returnStruct);
+        returnValue[arraySize++] =      returnStruct;
+        ++it;
+    }
+}
