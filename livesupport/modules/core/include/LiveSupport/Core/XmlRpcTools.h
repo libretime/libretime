@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class XmlRpcTools
 {
@@ -226,6 +226,46 @@ class XmlRpcTools
             const Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector,
             XmlRpc::XmlRpcValue                             & returnValue)
                                                                      throw ();
+
+        /**
+         *  Extract a Playlist from an XML-RPC parameter.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the extracted Playlist.
+         */
+        static Ptr<Playlist>::Ref
+        extractPlaylist(XmlRpc::XmlRpcValue    & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract a vector of Playlists from an XML-RPC parameter.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a list of Playlists.
+         */
+        static Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        extractPlaylistVector(XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract an AudioClip from an XML-RPC parameter.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the extracted AudioClip.
+         */
+        static Ptr<AudioClip>::Ref
+        extractAudioClip(XmlRpc::XmlRpcValue    & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract a vector of AudioClips from an XML-RPC parameter.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a list of AudioClips.
+         */
+        static Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        extractAudioClipVector(XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                throw (std::invalid_argument);
 
         /**
          *  Convert an error code, message pair to an XML-RPC fault response.
@@ -417,7 +457,7 @@ class XmlRpcTools
                 XmlRpc::XmlRpcValue     & returnValue)              throw ();
 
         /**
-         *  Add a playlist id to an XmlRpcValue
+         *  Add a playlist ID to an XmlRpcValue
          *
          *  @param playlistId the playlist ID to add to the XmlRpcValue
          *  @param returnValue an output parameter, which has the 
@@ -429,7 +469,19 @@ class XmlRpcTools
                 XmlRpc::XmlRpcValue     & returnValue)              throw ();
 
         /**
-         *  Add a playlist element id to an XmlRpcValue
+         *  Add an audio clip ID to an XmlRpcValue
+         *
+         *  @param audioClipId the audio clip ID to add to the XmlRpcValue
+         *  @param returnValue an output parameter, which has the 
+         *         audio clip ID added after the function returns.
+         */
+        static void
+        audioClipIdToXmlRpcValue(
+                Ptr<const UniqueId>::Ref  audioClipId,
+                XmlRpc::XmlRpcValue     & returnValue)              throw ();
+
+        /**
+         *  Add a playlist element ID to an XmlRpcValue
          *
          *  @param playlistElementId the playlist element ID 
          *                           to add to the XmlRpcValue

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,15 +78,15 @@ using namespace LiveSupport::Core;
  *  No input parameters are expected.
  *
  *  The XML-RPC function returns an XML-RPC structure containing a single
- *  date/time field:
+ *  ISO 8601 DateTime field:
  *  <ul>
- *      <li>schedulerTime - date/time - the local time on the scheduler</li>
+ *      <li>schedulerTime - datetime - the local time on the scheduler</li>
  *  </ul>
  *
  *  This method does not generate any fault responses.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class GetSchedulerTimeMethod : public XmlRpc::XmlRpcServerMethod
 {

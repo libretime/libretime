@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,7 +149,7 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)
 
     xmlRpcResult.clear();
     if (!xmlRpcClient.execute("getVersion", xmlRpcParams, xmlRpcResult)) {
-        throw XmlRpcCommunicationException(
+        throw Core::XmlRpcCommunicationException(
                                 "cannot execute XML-RPC method 'getVersion'");
     }
 
@@ -157,20 +157,20 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'getVersion' returned error message:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
+
+    xmlRpcClient.close();
 
     if (!xmlRpcResult.hasMember("version")
       || xmlRpcResult["version"].getType() != XmlRpcValue::TypeString) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'getVersion' returned unexpected value:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodResponseException(eMsg.str());
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
     }
 
     result.reset(new std::string(xmlRpcResult["version"]));
-
-    xmlRpcClient.close();
 
     return result;
 }
@@ -194,7 +194,7 @@ SchedulerDaemonXmlRpcClient :: getSchedulerTime(void)
 
     xmlRpcResult.clear();
     if (!xmlRpcClient.execute("getSchedulerTime", xmlRpcParams, xmlRpcResult)) {
-        throw XmlRpcCommunicationException(
+        throw Core::XmlRpcCommunicationException(
                             "cannot execute XML-RPC method 'getSchedulerTime'");
     }
 
@@ -202,15 +202,17 @@ SchedulerDaemonXmlRpcClient :: getSchedulerTime(void)
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'getSchedulerTime' returned error message:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
+
+    xmlRpcClient.close();
 
     if (!xmlRpcResult.hasMember("schedulerTime")
      || xmlRpcResult["schedulerTime"].getType() != XmlRpcValue::TypeDateTime) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'getSchedulerTime' returned unexpected value:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodResponseException(eMsg.str());
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
     }
 
     struct tm   time = xmlRpcResult["schedulerTime"];
@@ -218,10 +220,8 @@ SchedulerDaemonXmlRpcClient :: getSchedulerTime(void)
     try {
         result = TimeConversion::tmToPtime(&time);
     } catch (std::out_of_range &e) {
-        throw XmlRpcException("time conversion error", e);
+        throw Core::XmlRpcException("time conversion error", e);
     }
-
-    xmlRpcClient.close();
 
     return result;
 }
@@ -254,7 +254,7 @@ SchedulerDaemonXmlRpcClient :: uploadPlaylist(
 
     xmlRpcResult.clear();
     if (!xmlRpcClient.execute("uploadPlaylist", xmlRpcParams, xmlRpcResult)) {
-        throw XmlRpcCommunicationException(
+        throw Core::XmlRpcCommunicationException(
                             "cannot execute XML-RPC method 'uploadPlaylist'");
     }
 
@@ -262,16 +262,16 @@ SchedulerDaemonXmlRpcClient :: uploadPlaylist(
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'uploadPlaylist' returned error message:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
+
+    xmlRpcClient.close();
 
     try {
         scheduleEntryId = XmlRpcTools::extractScheduleEntryId(xmlRpcResult);
     } catch (std::invalid_argument &e) {
-        throw XmlRpcInvalidArgumentException(e);
+        throw Core::XmlRpcInvalidArgumentException(e);
     }
-
-    xmlRpcClient.close();
 
     return scheduleEntryId;
 }
@@ -304,7 +304,7 @@ SchedulerDaemonXmlRpcClient :: displaySchedule(
 
     xmlRpcResult.clear();
     if (!xmlRpcClient.execute("displaySchedule", xmlRpcParams, xmlRpcResult)) {
-        throw XmlRpcCommunicationException(
+        throw Core::XmlRpcCommunicationException(
                             "cannot execute XML-RPC method 'displaySchedule'");
     }
 
@@ -312,16 +312,16 @@ SchedulerDaemonXmlRpcClient :: displaySchedule(
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'displaySchedule' returned error message:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
+
+    xmlRpcClient.close();
 
     try {
         entries = XmlRpcTools::extractScheduleEntries(xmlRpcResult);
     } catch (std::invalid_argument &e) {
-        throw XmlRpcInvalidArgumentException(e);
+        throw Core::XmlRpcInvalidArgumentException(e);
     }
-
-    xmlRpcClient.close();
 
     return entries;
 }
@@ -352,7 +352,7 @@ SchedulerDaemonXmlRpcClient :: removeFromSchedule(
     if (!xmlRpcClient.execute("removeFromSchedule",
                               xmlRpcParams,
                               xmlRpcResult)) {
-        throw XmlRpcCommunicationException(
+        throw Core::XmlRpcCommunicationException(
                         "cannot execute XML-RPC method 'removeFromSchedule'");
     }
 
@@ -360,7 +360,340 @@ SchedulerDaemonXmlRpcClient :: removeFromSchedule(
         std::stringstream eMsg;
         eMsg << "XML-RPC method 'removeFromSchedule' returned error message:\n"
              << xmlRpcResult;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
+
+    xmlRpcClient.close();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add an audio clip to a playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+SchedulerDaemonXmlRpcClient :: addAudioClipToPlaylist(
+                                Ptr<SessionId>::Ref     sessionId,
+                                Ptr<UniqueId>::Ref      playlistId,
+                                Ptr<UniqueId>::Ref      audioClipId,
+                                Ptr<time_duration>::Ref relativeOffset)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::playlistIdToXmlRpcValue(playlistId, xmlRpcParams);
+    XmlRpcTools::audioClipIdToXmlRpcValue(audioClipId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("addAudioClipToPlaylist",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'addAudioClipToPlaylist'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'addAudioClipToPlaylist' returned "
+                "error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<UniqueId>::Ref      playlistElementId;
+    try {
+        playlistElementId = XmlRpcTools::extractPlaylistElementId(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcInvalidArgumentException(e);
+    }
+
+    return playlistElementId;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a new playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+SchedulerDaemonXmlRpcClient :: createPlaylist(
+                                Ptr<SessionId>::Ref  sessionId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("createPlaylist",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'createPlaylist'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'createPlaylist' returned "
+                "error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<Playlist>::Ref      playlist;
+    try {
+        playlist = XmlRpcTools::extractPlaylist(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcInvalidArgumentException(e);
+    }
+
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Delete a playlist.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClient :: deletePlaylist(
+                                Ptr<SessionId>::Ref     sessionId,
+                                Ptr<UniqueId>::Ref      playlistId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::playlistIdToXmlRpcValue(playlistId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("deletePlaylist",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'deletePlaylist'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'deletePlaylist' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return an audio clip.
+ *----------------------------------------------------------------------------*/
+Ptr<AudioClip>::Ref
+SchedulerDaemonXmlRpcClient :: displayAudioClip(
+                                Ptr<SessionId>::Ref     sessionId,
+                                Ptr<UniqueId>::Ref      audioClipId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::audioClipIdToXmlRpcValue(audioClipId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("displayAudioClip",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'displayAudioClip'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'displayAudioClip' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<AudioClip>::Ref     audioClip;
+    try {
+        audioClip = XmlRpcTools::extractAudioClip(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcInvalidArgumentException(e);
+    }
+
+    return audioClip;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a list of audio clips.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+SchedulerDaemonXmlRpcClient :: displayAudioClips(
+                                Ptr<SessionId>::Ref     sessionId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("displayAudioClips",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'displayAudioClips'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'displayAudioClips' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref     audioClipVector;
+    try {
+        audioClipVector = XmlRpcTools::extractAudioClipVector(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcInvalidArgumentException(e);
+    }
+
+    return audioClipVector;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+SchedulerDaemonXmlRpcClient :: displayPlaylist(
+                                Ptr<SessionId>::Ref     sessionId,
+                                Ptr<UniqueId>::Ref      playlistId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::playlistIdToXmlRpcValue(playlistId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("displayPlaylist",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'displayPlaylist'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'displayPlaylist' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<Playlist>::Ref     playlist;
+    try {
+        playlist = XmlRpcTools::extractPlaylist(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcInvalidArgumentException(e);
+    }
+
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a list of playlists.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+SchedulerDaemonXmlRpcClient :: displayPlaylists(
+                                Ptr<SessionId>::Ref     sessionId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("displayPlaylists",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw Core::XmlRpcCommunicationException(
+                    "cannot execute XML-RPC method 'displayPlaylists'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'displayPlaylists' returned error message:\n"
+             << xmlRpcResult;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    xmlRpcClient.close();
+
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref     playlistVector;
+    try {
+        playlistVector = XmlRpcTools::extractPlaylistVector(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw Core::XmlRpcInvalidArgumentException(e);
+    }
+
+    return playlistVector;
 }
 

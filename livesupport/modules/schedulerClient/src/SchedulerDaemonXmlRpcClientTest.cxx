@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,8 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <XmlRpcClient.h>
+#include <XmlRpcValue.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/XmlRpcMethodFaultException.h"
@@ -116,23 +118,23 @@ SchedulerDaemonXmlRpcClientTest :: setUp(void)                         throw ()
         CPPUNIT_FAIL("error parsing configuration file");
     }
 
-    try {
-        Ptr<AuthenticationClientFactory>::Ref acf;
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfigFileName);
-        authentication = acf->getAuthenticationClient();
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("semantic error in authentication configuration file");
-    } catch (xmlpp::exception &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("error parsing authentication configuration file");
-    }
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
 
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
-    }
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
+    CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    parameters["login"]     = "root";
+    parameters["password"]  = "q";
+    CPPUNIT_ASSERT(xmlRpcClient.execute("login", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("sessionId"));
+
+    xmlRpcClient.close();
+
+    sessionId.reset(new SessionId(std::string(result["sessionId"])));
 }
 
 
@@ -142,11 +144,16 @@ SchedulerDaemonXmlRpcClientTest :: setUp(void)                         throw ()
 void
 SchedulerDaemonXmlRpcClientTest :: tearDown(void)                      throw ()
 {
-    schedulerClient.reset();
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
 
-    authentication->logout(sessionId);
-    sessionId.reset();
-    authentication.reset();
+    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+
+    parameters["sessionId"] = sessionId->getId();
+    CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }
 
 
@@ -161,7 +168,7 @@ SchedulerDaemonXmlRpcClientTest :: getVersionTest(void)
         Ptr<const std::string>::Ref     version = schedulerClient->getVersion();
 
         CPPUNIT_ASSERT(version.get());
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
@@ -182,7 +189,7 @@ SchedulerDaemonXmlRpcClientTest :: getSchedulerTimeTest(void)
         // assume that the scheduler and the client is in the same year
         // this can break at new year's eve - so don't run the test then :)
         CPPUNIT_ASSERT(time->date().year() == now->date().year());
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
@@ -206,9 +213,63 @@ SchedulerDaemonXmlRpcClientTest :: displayScheduleEmptyTest(void)
 
         entries = schedulerClient->displaySchedule(sessionId, from, to);
         CPPUNIT_ASSERT(entries->empty());
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test some simple playlist operations.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: displayPlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Playlist>::Ref      playlist;
+    Ptr<UniqueId>::Ref      playlistId;
+
+    // the test assumes that 
+    //  * there is a playlist with the id of 1
+    //  * there is no playlist with the id of 9999
+    // in the storage accessed by the scheduler daemon
+
+    playlistId.reset(new UniqueId(1));
+    CPPUNIT_ASSERT_NO_THROW(
+        playlist = schedulerClient->displayPlaylist(sessionId, playlistId)
+    );
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    
+    playlistId.reset(new UniqueId(9999));
+    CPPUNIT_ASSERT_THROW(
+        playlist = schedulerClient->displayPlaylist(sessionId, playlistId),
+        Core::XmlRpcMethodFaultException
+    );
+    
+    CPPUNIT_ASSERT_NO_THROW(
+        playlist = schedulerClient->createPlaylist(sessionId)
+    );
+    CPPUNIT_ASSERT(playlistId->getId() >= 0);
+
+    playlistId = playlist->getId();
+    CPPUNIT_ASSERT_NO_THROW(
+        playlist = schedulerClient->displayPlaylist(sessionId, playlistId)
+    );
+    CPPUNIT_ASSERT(*playlist->getId() == *playlistId);
+    CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 0);
+
+// This doesn't work yet: createPlaylist() opens the playlist for editing,
+// and so far we have no way of saving it.
+/*
+    CPPUNIT_ASSERT_NO_THROW(
+        schedulerClient->deletePlaylist(sessionId, playlistId)
+    );
+
+    CPPUNIT_ASSERT_THROW(
+        playlist = schedulerClient->displayPlaylist(sessionId, playlistId),
+        Core::XmlRpcMethodFaultException
+    );
+*/
 }
 
 
@@ -261,7 +322,7 @@ SchedulerDaemonXmlRpcClientTest :: playlistMgmtTest(void)
         schedulerClient->removeFromSchedule(sessionId, entryId);
         entries = schedulerClient->displaySchedule(sessionId, from, to);
         CPPUNIT_ASSERT(entries->empty());
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
@@ -298,7 +359,7 @@ SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
         entryId = schedulerClient->uploadPlaylist(sessionId,
                                                   playlistId,
                                                   playtime);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -307,9 +368,9 @@ SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
         // try to upload the same entry again, for the same time
         // this should result in an error
         schedulerClient->uploadPlaylist(sessionId, playlistId, playtime);
-    } catch (LiveSupport::Core::XmlRpcMethodFaultException &e) {
+    } catch (Core::XmlRpcMethodFaultException &e) {
         gotException = true;
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(gotException);
@@ -322,7 +383,7 @@ SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
         schedulerClient->removeFromSchedule(sessionId, entryId);
         entries = schedulerClient->displaySchedule(sessionId, from, to);
         CPPUNIT_ASSERT(entries->empty());
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -331,9 +392,9 @@ SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
         // and now, try to remove it again, which should result in an
         // exception
         schedulerClient->removeFromSchedule(sessionId, entryId);
-    } catch (LiveSupport::Core::XmlRpcMethodFaultException &e) {
+    } catch (Core::XmlRpcMethodFaultException &e) {
         gotException = true;
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(gotException);

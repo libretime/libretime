@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,14 +65,14 @@ static const std::string idName = "id";
 static const std::string playlistIdName = "playlistId";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlist element ID member in the XML-RPC param structure
- *----------------------------------------------------------------------------*/
-static const std::string playlistElementIdName = "playlistElementId";
-
-/*------------------------------------------------------------------------------
  *  The name of the audio clip ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
 static const std::string audioClipIdName = "audioClipId";
+
+/*------------------------------------------------------------------------------
+ *  The name of the playlist element ID member in the XML-RPC param structure
+ *----------------------------------------------------------------------------*/
+static const std::string playlistElementIdName = "playlistElementId";
 
 /*------------------------------------------------------------------------------
  *  The name of the relative offset member in the XML-RPC parameter structure
@@ -336,6 +336,76 @@ XmlRpcTools :: audioClipVectorToXmlRpcValue(
         returnValue[arraySize++]        = returnStruct;
         ++it;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract a Playlist from an XML-RPC parameter.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+XmlRpcTools :: extractPlaylist(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    Ptr<Playlist>::Ref  playlist(new Playlist(xmlRpcValue));
+                                         // may throw std::invalid_argument
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract a vector of Playlists from an XML-RPC parameter.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+XmlRpcTools :: extractPlaylistVector(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (xmlRpcValue.getType() != XmlRpc::XmlRpcValue::TypeArray) {
+        throw std::invalid_argument("argument to extractPlaylistVector "
+                                    "is not an array");
+    }
+
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector;
+    for (int i=0; i < xmlRpcValue.size(); i++) {
+        Ptr<Playlist>::Ref  playlist(new Playlist(xmlRpcValue[i]));
+                                         // may throw std::invalid_argument
+        playlistVector->push_back(playlist);
+    }
+    return playlistVector;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract an AudioClip from an XML-RPC parameter.
+ *----------------------------------------------------------------------------*/
+Ptr<AudioClip>::Ref
+XmlRpcTools :: extractAudioClip(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    Ptr<AudioClip>::Ref  audioClip(new AudioClip(xmlRpcValue));
+                                         // may throw std::invalid_argument
+    return audioClip;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract a vector of AudioClips from an XML-RPC parameter.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+XmlRpcTools :: extractAudioClipVector(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (xmlRpcValue.getType() != XmlRpc::XmlRpcValue::TypeArray) {
+        throw std::invalid_argument("argument to extractAudioClipVector "
+                                    "is not an array");
+    }
+
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector;
+    for (int i=0; i < xmlRpcValue.size(); i++) {
+        Ptr<AudioClip>::Ref  audioClip(new AudioClip(xmlRpcValue[i]));
+                                         // may throw std::invalid_argument
+        audioClipVector->push_back(audioClip);
+    }
+    return audioClipVector;
 }
 
 
@@ -624,6 +694,19 @@ XmlRpcTools :: playlistIdToXmlRpcValue(
                                                 throw ()
 {
     returnValue[playlistIdName] = std::string(*playlistId);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add an audio clip ID to an XmlRpcValue
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: audioClipIdToXmlRpcValue(
+                            Ptr<const UniqueId>::Ref    audioClipId,
+                            XmlRpc::XmlRpcValue       & returnValue)
+                                                throw ()
+{
+    returnValue[audioClipIdName] = std::string(*audioClipId);
 }
 
 

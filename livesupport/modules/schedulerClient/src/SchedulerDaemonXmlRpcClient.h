@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,9 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/Playlist.h"
+#include "LiveSupport/Core/AudioClip.h"
+
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
 
 
@@ -76,8 +79,8 @@ using namespace LiveSupport::Core;
  *
  *  <pre><code>
  *  &lt;schedulerDaemonXmlRpcClient xmlRpcHost = "localhost"
- *                                  xmlRpcPort = "3344"
- *                                  xmlRpcUri  = "/RC2"
+ *                               xmlRpcPort = "3344"
+ *                               xmlRpcUri  = "/RC2"
  *  /&gt;
  *  </code></pre>
  *
@@ -90,8 +93,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.5 $
  */
 class SchedulerDaemonXmlRpcClient :
                     virtual public Configurable,
@@ -215,6 +218,97 @@ class SchedulerDaemonXmlRpcClient :
         virtual void
         removeFromSchedule(Ptr<SessionId>::Ref  sessionId,
                            Ptr<UniqueId>::Ref   scheduleEntryId)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Add an audio clip to a playlist.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param playlistId the id of the playlist.
+         *  @param audioClipId the id of the audio clip.
+         *  @param relativeOffset the number of seconds between the start
+         *                of the playlist and the start of the audio clip.
+         *  @return the unique ID of the newly created playlist element.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<UniqueId>::Ref
+        addAudioClipToPlaylist(Ptr<SessionId>::Ref      sessionId,
+                               Ptr<UniqueId>::Ref       playlistId,
+                               Ptr<UniqueId>::Ref       audioClipId,
+                               Ptr<time_duration>::Ref  relativeOffset)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Create a new playlist.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @return the newly created playlist.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<Playlist>::Ref
+        createPlaylist(Ptr<SessionId>::Ref      sessionId)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Delete a playlist.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param playlistId the id of the playlist.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual void
+        deletePlaylist(Ptr<SessionId>::Ref      sessionId,
+                       Ptr<UniqueId>::Ref       playlistId)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Return an audio clip.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param audioClipId the id of the audio clip.
+         *  @return the audio clip.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<AudioClip>::Ref
+        displayAudioClip(Ptr<SessionId>::Ref      sessionId,
+                         Ptr<UniqueId>::Ref       audioClipId)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Return a list of audio clips.  This method returns the audio
+         *  clips found by the latest search() on the storage client.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @return a std::vector of audio clips.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+        displayAudioClips(Ptr<SessionId>::Ref      sessionId)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Return a playlist.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param playlistId the id of the playlist.
+         *  @return the playlist.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<Playlist>::Ref
+        displayPlaylist(Ptr<SessionId>::Ref      sessionId,
+                        Ptr<UniqueId>::Ref       playlistId)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Return a list of playlists.  This method returns the playlists
+         *  found by the latest search() on the storage client.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @return a std::vector of playlists.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+        displayPlaylists(Ptr<SessionId>::Ref      sessionId)
                                                     throw (XmlRpcException);
 
 };

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -137,36 +137,9 @@ XmlRpcToolsTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcPlaylist["playlist"].getType() 
                                                 == XmlRpcValue::TypeString);
 
-    Ptr<Playlist>::Ref  copyOfPlaylist(new Playlist());
-    xmlpp::DomParser    parser;
-    CPPUNIT_ASSERT_NO_THROW(parser.parse_memory(std::string(
-                                        xmlRpcPlaylist["playlist"] )));
-    xmlpp::Element*     configElement = 0;
-    CPPUNIT_ASSERT_NO_THROW(configElement = parser.get_document()
-                                                 ->get_root_node());
-    CPPUNIT_ASSERT(configElement);
-    CPPUNIT_ASSERT_NO_THROW(copyOfPlaylist->configure(*configElement));
-
-    CPPUNIT_ASSERT(*copyOfPlaylist->getId()     == *playlist->getId());
-    CPPUNIT_ASSERT(*copyOfPlaylist->getTitle()  == *playlist->getTitle());
-    CPPUNIT_ASSERT(*copyOfPlaylist->getPlaylength() 
-                                           == *playlist->getPlaylength());
-
     CPPUNIT_ASSERT(xmlRpcAudioClip.hasMember("audioClip"));
     CPPUNIT_ASSERT(xmlRpcAudioClip["audioClip"].getType() 
                                                 == XmlRpcValue::TypeString);
-
-    Ptr<AudioClip>::Ref copyOfAudioClip(new AudioClip());
-    CPPUNIT_ASSERT_NO_THROW(parser.parse_memory(std::string(
-                                        xmlRpcAudioClip["audioClip"] )));
-    CPPUNIT_ASSERT_NO_THROW(configElement = parser.get_document()
-                                                 ->get_root_node());
-    CPPUNIT_ASSERT_NO_THROW(copyOfAudioClip->configure(*configElement));
-
-    CPPUNIT_ASSERT(*copyOfAudioClip->getId()     == *audioClip->getId());
-    CPPUNIT_ASSERT(*copyOfAudioClip->getTitle()  == *audioClip->getTitle());
-    CPPUNIT_ASSERT(*copyOfAudioClip->getPlaylength() 
-                                           == *audioClip->getPlaylength());
 
     XmlRpcValue              xmlRpcPlaylistId;
     Ptr<UniqueId>::Ref       playlistId(new UniqueId(rand()));
@@ -181,10 +154,16 @@ XmlRpcToolsTest :: firstTest(void)
     Ptr<UniqueId>::Ref       newPlaylistId;
     Ptr<UniqueId>::Ref       newAudioClipId;
     Ptr<time_duration>::Ref  newRelativeOffset;
+    Ptr<Playlist>::Ref       newPlaylist;
+    Ptr<AudioClip>::Ref      newAudioClip;
     try {
-       newPlaylistId     = XmlRpcTools::extractPlaylistId(xmlRpcPlaylistId);
-       newAudioClipId    = XmlRpcTools::extractAudioClipId(xmlRpcPlaylistId);
-       newRelativeOffset = XmlRpcTools::extractRelativeOffset(xmlRpcPlaylistId);
+        newPlaylistId   = XmlRpcTools::extractPlaylistId(xmlRpcPlaylistId);
+        newAudioClipId  = XmlRpcTools::extractAudioClipId(xmlRpcPlaylistId);
+        newRelativeOffset 
+                        = XmlRpcTools::extractRelativeOffset(xmlRpcPlaylistId);
+        newPlaylist     = XmlRpcTools::extractPlaylist(xmlRpcPlaylist);
+        newAudioClip    = XmlRpcTools::extractAudioClip(xmlRpcAudioClip);
+        
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -192,6 +171,16 @@ XmlRpcToolsTest :: firstTest(void)
     CPPUNIT_ASSERT(*playlistId     == *newPlaylistId);
     CPPUNIT_ASSERT(*audioClipId    == *newAudioClipId);
     CPPUNIT_ASSERT(*relativeOffset == *newRelativeOffset);
+
+    CPPUNIT_ASSERT(*playlist->getId()     == *newPlaylist->getId());
+    CPPUNIT_ASSERT(*playlist->getTitle()  == *newPlaylist->getTitle());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() 
+                                          == *newPlaylist->getPlaylength());
+
+    CPPUNIT_ASSERT(*audioClip->getId()     == *newAudioClip->getId());
+    CPPUNIT_ASSERT(*audioClip->getTitle()  == *newAudioClip->getTitle());
+    CPPUNIT_ASSERT(*audioClip->getPlaylength() 
+                                           == *newAudioClip->getPlaylength());
 }
 
 

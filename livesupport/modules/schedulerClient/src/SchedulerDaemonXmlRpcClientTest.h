@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,8 +62,8 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the SchedulerDaemonXmlRpcClient class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.5 $
  *  @see SchedulerDaemonXmlRpcClient
  */
 class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
@@ -72,6 +72,7 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(getVersionTest);
     CPPUNIT_TEST(getSchedulerTimeTest);
     CPPUNIT_TEST(displayScheduleEmptyTest);
+    CPPUNIT_TEST(displayPlaylistTest);
     CPPUNIT_TEST(playlistMgmtTest);
     CPPUNIT_TEST(xmlRpcErrorTest);
     CPPUNIT_TEST_SUITE_END();
@@ -81,11 +82,6 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
          *  The SchedulerDaemonXmlRpcClient instance to test.
          */
         Ptr<SchedulerDaemonXmlRpcClient>::Ref   schedulerClient;
-
-        /**
-         *  An authentication client.
-         */
-        Ptr<AuthenticationClientInterface>::Ref authentication;
 
         /**
          *  A session ID from the authentication client login() method.
@@ -133,6 +129,14 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         displayScheduleEmptyTest(void)          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test some simple playlist operations.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        displayPlaylistTest(void)               throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test playlist management.

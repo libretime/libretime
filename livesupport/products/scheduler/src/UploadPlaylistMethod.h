@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,9 +76,9 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>playlistId - int, the id of the playlist to upload</li>
- *      <li>playtime - the time when the playlist should be scheduled,
- *                     an ISO 8601 DateTime field</li>
+ *      <li>playlistId - string - the id of the playlist to upload</li>
+ *      <li>playtime - datetime - the time when the playlist should be 
+ *                                scheduled, an ISO 8601 DateTime field</li>
  *  </ul>
  *
  *  If the upload is successful, the method returns an XML-RPC structure with
@@ -102,7 +102,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
