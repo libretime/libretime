@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -237,7 +237,9 @@ HelixPlayer :: open(const std::string   fileUrl)
     if (HXR_OK != player->OpenURL(fileUrl.c_str())) {
         throw std::invalid_argument("can't open URL");
     }
-    if (sourceCount == player->GetSourceCount()) {
+    // if the source count was not 0 before OpenURL(), the source is simply
+    // replaced
+    if (!sourceCount && sourceCount == player->GetSourceCount()) {
         throw std::invalid_argument("can't open URL");
     }
 }
