@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -285,7 +285,8 @@ class MetaData{
             $pom = $this->getSubrows($rec['mid']);
             if(PEAR::isError($pom)) return $pom;
             $all[$i]['attrs'] = $pom['attrs'];
-            $atlang = $pom['attrs']['xml:lang'];
+            $atlang = (isset($pom['attrs']['xml:lang']) ?
+                $pom['attrs']['xml:lang'] : NULL);
             // select only matching lang (en is default)
             if(
                 is_null($lang) ||
@@ -328,7 +329,7 @@ class MetaData{
                     if($mid == intval($row['mid'])) $aktual = $row;
                 }
             }
-        }else $aktual = $rows[0];
+        }else $aktual = (isset($rows[0])? $rows[0] : NULL);
         if(!is_null($aktual)){
             $res = $this->setMetadataEl($aktual['mid'], $value);
             if(PEAR::isError($res)) return $res;
