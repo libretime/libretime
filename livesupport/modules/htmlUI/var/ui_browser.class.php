@@ -182,7 +182,9 @@ class uiBrowser extends uiBase {
                                   'id'  => $id,
                                   'act' => $id ? 'editFile' : 'uploadFile'));
         $this->_parseArr2Form($form, $mask);
-        return $form->toHTML();
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
     }
 
 
@@ -210,7 +212,9 @@ class uiBrowser extends uiBase {
                       );
         $form->setConstants($const);
         $this->_parseArr2Form($form, $mask);
-        return $form->toHTML();
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
     }
 
 

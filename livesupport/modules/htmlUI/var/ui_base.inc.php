@@ -380,7 +380,7 @@ class uiBase
     function _formElementEncode($str)
     {
         $str = str_replace(':', '__', $str);
-        $str = str_replace('.', '_', $str);
+        #$str = str_replace('.', '_', $str);
         return $str;
     }
 
@@ -388,7 +388,7 @@ class uiBase
     function _formElementDecode($str)
     {
         $str = str_replace('__', ':', $str);
-        $str = str_replace('_', '.', $str);
+        #$str = str_replace('_', '.', $str);
         return $str;
     }
 }

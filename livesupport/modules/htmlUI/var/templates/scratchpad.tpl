@@ -9,7 +9,10 @@
             <table style="width:255px;">
             <!-- start table header -->
                 <tr class="blue_head">
-                    <td style="width: 30px"></td>
+                    <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></td>
+                        <script type="text/javascript">
+                            document.forms['SP'].elements['all'].checked = false;
+                        </script>
                     <td style="width: 95px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
                     <td style="width: 69px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Duration##</td>
                     <td style="width: 41px; border: 0"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Type##</td>
@@ -22,9 +25,9 @@
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td>
                         {if $_PL_activeId == $i.id}
-                            <b>{$i.title|truncate:30}</b>
+                            <b>{$i.title|truncate:12}</b>
                         {else}
-                            {$i.title|truncate:30}
+                            {$i.title|truncate:12}
                         {/if}
                     </td>
                     <td>{$i.duration}</td>
@@ -36,8 +39,7 @@
         </div>
 
         <div class="footer" style="width:250px;">
-                <input type="checkbox" name="all" onClick="collector_switchAll('SP')">
-                <select name="SP_multiaction">
+            <select name="SP_multiaction">
                 <option>##Multiple Action:##</option>
                 <option onClick="collector_submit('SP', 'SP.removeItem')">##Remove##</option>
                 {if $_PL_activeId}
@@ -54,7 +56,12 @@
     </div>
 </form>
 {/if}
+
+{assign var="_PL_activeId" value=NULL}
 <!-- end scratch pad -->
+
+
+
 {*
 <!-- old template -->
 {assign var="_PL_activeId" value=$PL->getActiveId()}

@@ -59,9 +59,33 @@
      }
 
      function hpopup(url, name)
-     {                                   //, 'width=1, height=1'
+     {
+        var width  = 10;
+        var height = 10;
+        var screenX;
+        var screenY;
+        var Xpos;
+        var Ypos;
+        var Pwidth;
+        var Pheight;
+        
+        if (ie5) {
+            Xpos     = window.screenLeft;
+            Ypos     = window.screenTop;
+            Pwidth   = document.body.clientWidth;
+            Pheight  = document.body.clientHeight;
+        } else {
+            Xpos     = window.screenX;
+            Ypos     = window.screenY;
+            Pwidth   = window.innerWidth;
+            Pheight  = window.innerHeight;
+        }
         url = url + '&is_popup=1';
-        popupwin = window.open(url, name);
+        screenX = (Xpos + Pwidth/2  - width/2);
+        screenY = (Ypos + Pheight/2 - height/2);
+        arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
+
+        popupwin = window.open(url, name, arg);
         //window.parent.focus();
      }
      {/literal}

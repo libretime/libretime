@@ -29,7 +29,7 @@ onContextmenu="return contextmenu('{$i.id}'
                 , 'PL.addItem', 'delete'
             {/if}
         {else}
-            , 'PL.activate', 'PL.create', 'PL.editMetaData', 'delete'
+            , 'PL.activate', 'PL.create', 'delete'
         {/if}
     {/if}
 

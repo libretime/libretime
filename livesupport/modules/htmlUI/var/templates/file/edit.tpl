@@ -1,46 +1,35 @@
-<div class="standardFrame">
-{include file="sub/x.tpl"}
+<div class="content">
+    <!-- start editor -->
+    <div class="container_elements" style="width: 607px;">
+    <h1>
+    {if $editItem.id}
+        ##Edit##
+    {else}
+        ##New##
+    {/if}
+    {$editItem.type|capitalize}
+    </h1>
 
-<h4>
-{if $editItem.id}
-    Edit
-{else}
-    New
-{/if}
-{$editItem.type|capitalize}
-</h4>
+    {if $editItem.type == 'audioclip' || $editItem.type == 'file'}
+        <div id="div_Data">     {include file="file/fileform.tpl"}          </div>
+        <div id="div_MData">    {include file="file/metadataform.tpl"}      </div>
+    <input type="button" class="button" onClick="showData()" value="##Data##">
+    <input type="button" class="button" onClick="showMData()" value="##Metadata##">
+    {/if}
 
-{if $editItem.type == 'audioclip' || $editItem.type == 'file'}
-<input type="button" onClick="showData()" value="Data">
-<input type="button" onClick="showMData()" value="MData">
-<div id="div_Data">
-    {include file="file/fileform.tpl"}
+    {if $editItem.type == 'webstream'}
+        <div id="div_Data">     {include file="file/webstreamform.tpl"}     </div>
+        <div id="div_MData">    {include file="file/metadataform.tpl"}      </div>
+    <input type="button" class="button" onClick="showData()" value="##Data##">
+    <input type="button" class="button" onClick="showMData()" value="##Metadata##">
+    {/if}
+
+    {if $editItem.type == 'playlist'}
+        {include file="file/metadataform.tpl"}
+    {/if}
 </div>
-<div id="div_MData">
-    {include file="file/metadataform.tpl"}
+<!-- end editor -->
 </div>
-{/if}
-
-
-{if $editItem.type == 'webstream'}
-<input type="button" onClick="showData()" value="Data">
-<input type="button" onClick="showMData()" value="MData">
-<div id="div_Data">
-    {include file="file/webstreamform.tpl"}
-</div>
-<div id="div_MData">
-    {include file="file/metadataform.tpl"}
-</div>
-{/if}
-
-{if $editItem.type == 'playlist'}
-<div id="div_MData">
-    {include file="file/metadataform.tpl"}
-</div>
-{/if}
-
-</div>
-
 
 <script>
 

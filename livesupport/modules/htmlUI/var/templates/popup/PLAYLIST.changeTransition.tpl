@@ -1,3 +1,7 @@
+{include file="popup/header.tpl"}
+
+{include file="sub/dynForm_plain.tpl"}
+
 <script type="text/javascript">
 {literal}
 function pl_switchUp()
@@ -34,3 +38,7 @@ function pl_stop()
 
 {/literal}
 </script>
+
+</body>
+</html>
+

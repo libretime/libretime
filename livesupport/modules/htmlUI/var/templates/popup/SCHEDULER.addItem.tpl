@@ -1,4 +1,4 @@
-{include file="header.tpl"}
+{include file="popup/header.tpl"} 
 
 <center>
 {if $SCHEDULER->_copyPlFromSP()}

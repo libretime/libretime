@@ -36,6 +36,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/login.tpl');
             break;
 
+            case "deleteItem":
+                $Smarty->assign('id', $_REQUEST['id']);
+                $Smarty->display('popup/deleteItem.tpl');
+            break;
+
             case "_2PL.simpleManagement":
                 $Smarty->assign('target', 'PL.simpleManagement');
                 $Smarty->display('popup/_redirector.tpl');
@@ -43,20 +48,20 @@ if (is_array($_REQUEST['popup'])){
 
             case "PL.changeTransition";
                 $Smarty->assign('dynform', $uiBrowser->PLAYLIST->changeTransitionForm($_REQUEST['id'], $_REQUEST['type'], $ui_fmask['PL.changeTransition']));
-                $Smarty->display('playlist/changeTransition.tpl');
+                $Smarty->display('popup/PLAYLIST.changeTransition.tpl');
+            break;
+
+            case "PL.deleteActive":
+                $Smarty->display('popup/PLAYLIST.deleteActive.tpl');
             break;
 
             case "SCHEDULER.addItem":
-                $Smarty->display('scheduler/addItem.tpl');
+                $Smarty->display('popup/SCHEDULER.addItem.tpl');
             break;
 
             case "SCHEDULER.removeItem":
                 $Smarty->assign('gunid', $_REQUEST['gunid']);
-                $Smarty->display('scheduler/removeItem.tpl');
-            break;
-
-            case "PL.deleteActive":
-                $Smarty->display('playlist/deleteActive.tpl');
+                $Smarty->display('popup/SCHEDULER.removeItem.tpl');
             break;
         }
     }

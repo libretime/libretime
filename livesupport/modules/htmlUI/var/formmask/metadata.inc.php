@@ -20,13 +20,19 @@ $mask = array(
             'type'    =>'reset',
             'label'   =>'Reset',
             'groupit' => TRUE,
+            'attributes' => array(
+                'class'=> "button",
+                ),
         ),
         array(
             'element'   => 'cancel',
             'type'      => 'button',
             'label'     => 'Cancel',
-            'attributes'=> array('onClick'  => "location.href='".UI_BROWSER."'"),
-            'groupit'   => TRUE
+            'attributes'=> array(
+                'class'=> "button",
+                'onClick'  => "location.href='".UI_BROWSER."'"
+                ),
+            'groupit'   => TRUE,
         ),
         array(
             'element' =>'button',
@@ -34,14 +40,15 @@ $mask = array(
             'label'   =>'Submit',
             'groupit' => TRUE,
             'attributes'=> array(
-                            'onClick' => 'return switchMDataLang();'
-                          ),
+                'class'=> "button",
+                'onClick' => 'return switchMDataLang();'
+                ),
         ),
         array(
             'group'   => array('reset', 'cancel', 'button'),
         )
     ),
-    'tabs'  => array(
+    'tabs'  => array(/*
         array(
             'element' => 'Main',
             'type'    => 'button',
@@ -66,7 +73,7 @@ $mask = array(
         array(
             'group'   => array('Main', 'Music', 'Talk'),
         )
-
+*/
     ),
     'langswitch'    => array(
         array(
@@ -499,7 +506,7 @@ $mask = array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
                 'label'     => 'Length',
-                'attributes'=> array('readonly' => 'on'),
+                'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
             ),
             array(

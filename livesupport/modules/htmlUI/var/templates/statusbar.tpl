@@ -1,3 +1,6 @@
+{assign var='_nowplaying'  value=$SCHEDULER->getNowNextClip()}
+{assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
+
 {include file="script/clock.js.tpl"}
     <!-- start header -->
         <!-- start header left -->
@@ -18,8 +21,11 @@
             <!-- end station information -->
             <!-- start onair information -->
             <div class="onair">
-                <img src="img/el_onair.gif" alt="on air" />
-                <!--img src="img/el_offair.gif" alt="off air" /-->
+                {if $_nowplaying}
+                    <img src="img/el_onair.gif" alt="on air" />
+                {else}
+                    <img src="img/el_offair.gif" alt="off air">
+                {/if}
             </div>
             <!-- end onair information -->
             <!-- start station time -->
@@ -39,11 +45,9 @@
             <!-- end station time -->
             <!-- start what playing -->
             <div class="whatplaying">
-                {assign var='_nowplaying' value=$SCHEDULER->getNowNextClip()}
-                {assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
                 {if $_nowplaying}
                     <div class="nowplaying">Now Playing: {$_nowplaying.title}</div>
-                    <div class="scala">
+                    <div class="scala">      
                         <div class="scala_in" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
                     </div>
                     <div class="time">
@@ -60,6 +64,11 @@
         </div>
         <!-- end header right -->
     <!-- end header -->
+
+{assign var='_nowplaying'  value=NULL}
+{assign var='_nextplaying' value=NULL}
+
+
 {*
 <!-- old template -->
 <div id="statusbar">

@@ -221,7 +221,7 @@ class uiScheduler extends uiCalendar
                 'duration'  => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION),
                 'elapsed'   => $clip['elapsed'],
                 'remaining' => $clip['remaining'],
-                'percentage'=> 50
+                'percentage'=> 100 * $this->Base->gb->_plTimeToSecs($clip['elapsed']) / ( $this->Base->gb->_plTimeToSecs($clip['elapsed']) + $this->Base->gb->_plTimeToSecs($clip['remaining']))
                );
     }
 

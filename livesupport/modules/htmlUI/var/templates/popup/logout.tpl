@@ -1,6 +1,4 @@
-{*Smarty template*}
-
-{include file="header.tpl"}
+{include file="popup/header.tpl"}
 
 <center>
 <div id="logout">

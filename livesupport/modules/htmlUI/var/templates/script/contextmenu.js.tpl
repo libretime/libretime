@@ -63,7 +63,7 @@ function contextmenu(param) {
             break;
 
             case "PL.editMetaData":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;Edit MData&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;Edit Metadata&nbsp;</a></li>";
             break;
 
             case "SP.addItem":
@@ -84,7 +84,8 @@ function contextmenu(param) {
             break;
 
             case "delete":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=delete&id="+param+"')\" "+oF+">&nbsp;!Delete Item!&nbsp;</a></li>";
+                //contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=delete&id="+param+"')\" "+oF+">&nbsp;Delete Item&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 300, 150)\"')"+oF+">&nbsp;Delete Item&nbsp;</a></li>";
             break;
 
             case "fileList":

@@ -25,7 +25,7 @@
     <link href="styles_livesupport.css" rel="stylesheet" type="text/css" />
 
     {include file="script/basics.js.tpl"}
-    {include file="script/contextMenue.js.tpl"}
+    {include file="script/contextmenu.js.tpl"}
     {include file="script/collector.js.tpl"}
 </head>
 

@@ -281,14 +281,19 @@ $ui_fmask = array(
             'element'   => 'cancel',
             'type'      => 'button',
             'label'     => 'Cancel',
-            'attributes'=> array('onClick'  => "location.href='".UI_BROWSER."'"),
+            'attributes'=> array(
+                'class'=> "button",
+                'onClick'  => "location.href='".UI_BROWSER."'"),
             'groupit'   => TRUE
         ),
         array(
             'element'   => 'Submit',
             'type'      => 'submit',
             'label'     => 'Submit',
-            'groupit'   => TRUE
+            'groupit'   => TRUE,
+            'attributes' => array(
+                'class'=> "button",
+                ),
         ),
         array(
             'group'     => array('cancel', 'Submit')

@@ -10,9 +10,11 @@
     {include file="menu.tpl"}
 {/if}
 
+{*
 {if $structure}
     {include file="file/path.tpl"}
 {/if}
+*}
 
 {if $fileList}
     {include file="file/list.tpl"}

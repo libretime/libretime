@@ -8,10 +8,7 @@ require_once dirname(__FILE__).'/ui_handler.class.php';
 ## initialize objects ###############################################
 $uiHandler      =& new uiHandler($config);
 $uiBase         =& $uiHandler;
-?>
-<html>
-<body>
-<img src="img/progress.gif">
-<?php
+
+include("../templates/loader/index.tpl");
 ob_start();
 ?>

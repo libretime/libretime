@@ -1,4 +1,4 @@
-{include file="header.tpl"}
+{include file="popup/header.tpl"} 
 
 <center>
 <b>Are you sure to remove this entry?</b>

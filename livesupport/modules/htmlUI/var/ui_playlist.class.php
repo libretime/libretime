@@ -7,11 +7,17 @@ class uiPlaylist
         $this->activeId  =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
         $this->token     =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->redirectUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
     }
 
     function setReload()
     {
         $this->Base->redirUrl = $this->reloadUrl;
+    }
+
+    function setRedirect()
+    {
+        $this->Base->redirUrl = $this->redirectUrl;
     }
 
     function get()
@@ -48,7 +54,8 @@ class uiPlaylist
         $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid.':'.$this->token);
         $this->activeId = $plid;
-        if ($msg) $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+        if ($msg && UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+
         return TRUE;
     }
 
@@ -64,11 +71,11 @@ class uiPlaylist
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            if (UI_VERBOSE) print_r($plgunid);
-             if (UI_WARNING) $this->Base->_retMsg('Unable to release Playlist');
+            #print_r($plgunid);
+            if (UI_WARNING) $this->Base->_retMsg('Unable to release Playlist');
             return FALSE;
         }
-        if($msg) $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        if ($msg && UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
@@ -81,7 +88,7 @@ class uiPlaylist
         $tmpid = $this->activeId;
         $this->release(FALSE);
         $this->activate($tmpid, FALSE);
-        $this->Base->_retMsg('Playlist "$1" saved', $this->Base->_getMDataValue($tmpid, UI_MDATA_KEY_TITLE));
+        if (UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" saved', $this->Base->_getMDataValue($tmpid, UI_MDATA_KEY_TITLE));
 
         return $this->activeId;
     }
@@ -90,16 +97,16 @@ class uiPlaylist
     function revert()
     {
         if(!$this->token) {
-             if (UI_WARNING) $this->Base->_retMsg('No Playlist is looked by You');
+            if (UI_WARNING) $this->Base->_retMsg('No Playlist is looked by You');
             return FALSE;
         }
         $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
-            if (UI_VERBOSE) print_r($plgunid);
+            # print_r($plgunid);
             if (UI_WARNING) $this->Base->_retMsg('Unable to revert to looked state');
             return FALSE;
         }
-        $this->Base->_retMsg('Playlist "$1" reverted', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        if (UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" reverted', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
@@ -413,9 +420,9 @@ class uiPlaylist
                 $this->Base->_retMsg('Unable to set $1: $2', $key, $val);
             }
         }
-        $this->Base->_retMsg('Metadata saved');
-        #$this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=$id";
-        $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id";
+        if (UI_VERBOSE) $this->Base->_retMsg('Metadata saved');
+        $this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=$id";
+        #$this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id";
     }
 
 

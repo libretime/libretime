@@ -1,10 +1,4 @@
-{UIBROWSER->webstreamForm id=$editItem.id folderId=$editItem.folderId assign="_uploadform"}
-
-<div id="uploadform">
-    <center>
-        {$_uploadform}
-    </center>
-</div>
-
-{assign var="_uploadform" value=FALSE}
+{UIBROWSER->webstreamForm id=$editItem.id folderId=$editItem.folderId assign="dynform"}
+{include file="sub/dynForm_plain.tpl}
+{assign var="_uploadform" value=NULL}
 

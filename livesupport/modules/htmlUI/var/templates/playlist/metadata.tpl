@@ -1,7 +1,7 @@
 {assign var="_form" value=$PL->metaDataForm($PL_id)}
 {assign var="dynform" value=$_form.main}
 
-{$_form.langswitch}
+{* $_form.langswitch *}
 {include file="sub/dynForm_plain.tpl"}
 
 <script type="text/javascript">
