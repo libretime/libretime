@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,62 @@ using namespace LiveSupport::Storage;
  *----------------------------------------------------------------------------*/
 const std::string TestStorageClient::configElementNameStr = "testStorage";
 
+/*------------------------------------------------------------------------------
+ *  The path to the local temp storage
+ *----------------------------------------------------------------------------*/
+const std::string TestStorageClient::localTempStoragePath = "var/";
+
+/*------------------------------------------------------------------------------
+ *  The XML version used to create the SMIL file.
+ *----------------------------------------------------------------------------*/
+static const std::string    xmlVersion = "1.0";
+
+/*------------------------------------------------------------------------------
+ *  The name of the SMIL root node.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilRootNodeName = "smil";
+
+/*------------------------------------------------------------------------------
+ *  The name of the SMIL language description attribute.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilLanguageAttrName = "xmlns";
+
+/*------------------------------------------------------------------------------
+ *  The value of the SMIL language description attribute.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilLanguageAttrValue
+                            = "http://www.w3.org/2001/SMIL20/Language";
+
+/*------------------------------------------------------------------------------
+ *  The name of the SMIL real networks extension attribute.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilExtensionsAttrName = "xmlns:rn";
+
+/*------------------------------------------------------------------------------
+ *  The value of the SMIL real networks extension attribute.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilExtensionsAttrValue
+                            = "http://features.real.com/2001/SMIL20/Extensions";
+
+/*------------------------------------------------------------------------------
+ *  The name of the body node in the SMIL file.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilBodyNodeName = "body";
+
+/*------------------------------------------------------------------------------
+ *  The name of the sequential audio clip list node in the SMIL file.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilSeqNodeName = "seq";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip element node in the SMIL file.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilAudioClipNodeName = "audio";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute containing the URI of the audio clip element.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilAudioClipUriAttrName = "src";
 
 
 /* ===============================================  local function prototypes */
@@ -138,11 +194,49 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
  *----------------------------------------------------------------------------*/
 Ptr<std::string>::Ref
 TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
-                                                throw (std::invalid_argument,
-                                                       std::logic_error)
+                                                throw (std::logic_error)
 {
-    Ptr<std::string>::Ref   returnValue(new std::string("/tmp/somefile.xml"));
-    return returnValue;
+    PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
+
+    if (playlistMapIt == playlistMap.end()) {
+        throw std::invalid_argument("no such playlist");
+    }
+
+    Ptr<Playlist>::Ref  playlist = playlistMapIt->second;
+
+    Ptr<xmlpp::Document>::Ref
+                        smilDocument(new xmlpp::Document(xmlVersion));
+    xmlpp::Element    * smilRootNode 
+                        = smilDocument->create_root_node(smilRootNodeName);
+    smilRootNode->set_attribute(smilLanguageAttrName,
+                                smilLanguageAttrValue);
+    smilRootNode->set_attribute(smilExtensionsAttrName,
+                                smilExtensionsAttrValue);
+
+    xmlpp::Element    * smilBodyNode
+                        = smilRootNode->add_child(smilBodyNodeName);
+    xmlpp::Element    * smilSeqNode
+                        = smilBodyNode->add_child(smilSeqNodeName);
+    
+    Playlist::const_iterator it = playlist->begin();
+
+    while (it != playlist->end()) {
+        xmlpp::Element    * smilAudioClipNode
+                            = smilSeqNode->add_child(smilAudioClipNodeName);
+        smilAudioClipNode->set_attribute(
+                    smilAudioClipUriAttrName, 
+                  * acquireAudioClip(it->second->getAudioClip()->getId()));
+        ++it;                                       // may throw exception
+    }
+    
+    std::stringstream       fileNameBuffer;
+    fileNameBuffer << localTempStoragePath << "tempPlaylist" 
+                                           << id->getId() 
+                                           << ".smil";
+    Ptr<std::string>::Ref   fileName(new std::string(fileNameBuffer.str()));
+
+    smilDocument->write_to_file(*fileName, "UTF-8");
+    return fileName;
 }
 
 
@@ -151,33 +245,37 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
  *----------------------------------------------------------------------------*/
 void
 TestStorageClient :: releasePlaylist(Ptr<const UniqueId>::Ref id) const
-                                                throw (std::invalid_argument,
-                                                       std::logic_error)
+                                                throw (std::logic_error)
 {
-    PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
+    PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
 
-    if (it == playlistMap.end()) {
+    if (playlistMapIt == playlistMap.end()) {
         throw std::invalid_argument("no such playlist");
     }
     
-    Ptr<Playlist>::Ref          playlist = it->second;
-    if (playlist->isLocked()) {
-        throw std::logic_error("playlist is locked");
-    }
-    
+    Ptr<Playlist>::Ref          playlist = playlistMapIt->second;
+   
     bool                        success = true;
-    Playlist::const_iterator    playlistIt = playlist->begin();
-    while (playlistIt != playlist->end()) {
+    Playlist::const_iterator    it = playlist->begin();
+    while (it != playlist->end()) {
         try {
-            releaseAudioClip(playlistIt->second->getAudioClip()->getId());
+            releaseAudioClip(it->second->getAudioClip()->getId());
         }
         catch (std::invalid_argument &e) {
             success = false;
         }
-        ++playlistIt;
+        ++it;
     }
+
+    std::stringstream       fileNameBuffer;
+    fileNameBuffer << localTempStoragePath << "tempPlaylist" 
+                                           << id->getId() 
+                                           << ".smil";
+    std::remove(fileNameBuffer.str().c_str());
+
     if (!success) {
-        throw std::logic_error("some audio clips in playlist do not exist");
+        throw std::logic_error("could not release some audio clips"
+                               " in playlist");
     }
 }
 
@@ -268,11 +366,33 @@ TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
 
 
 /*------------------------------------------------------------------------------
+ *  Acquire resources for an audio clip.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+                                                throw (std::logic_error)
+{
+    AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
+
+    if (it == audioClipMap.end()) {
+        throw std::invalid_argument("no such audio clip");
+    }
+
+    std::stringstream       fileNameBuffer;
+    fileNameBuffer << localTempStoragePath << "test" 
+                                           << id->getId() 
+                                           << ".mp3";
+    Ptr<std::string>::Ref   fileName(new std::string(fileNameBuffer.str()));
+    return fileName;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
 TestStorageClient :: releaseAudioClip(Ptr<const UniqueId>::Ref id) const
-                                                throw (std::invalid_argument)
+                                                throw (std::logic_error)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
 

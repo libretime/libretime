@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class StorageClientInterface
 {
@@ -91,24 +91,22 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Acquire the resources for the playlist
-         *  At this point, this does not do anything.
+         *  Acquire the resources for the playlist.
          *
-         *  @param id the id of the playlist to release.
-         *  @return something
+         *  @param id the id of the playlist to acquire.
+         *  @return a path (in the local storage) to the Playlist SMIL 
+         *          temp file.
          *  @exception std::invalid_argument if no playlist with the specified
          *             specified id exists. 
          */
         virtual Ptr<std::string>::Ref
         acquirePlaylist(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument,
-                                                   std::logic_error)
+                                            throw (std::logic_error)
                                                                         = 0;
 
         /**
          *  Release the resources (audio clips, other playlists) used 
          *  in a playlist.
-         *  At this point, this does not do anything.
          *
          *  @param id the id of the playlist to release.
          *  @exception std::invalid_argument if no playlist with the specified
@@ -116,8 +114,7 @@ class StorageClientInterface
          */
         virtual void
         releasePlaylist(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument,
-                                                   std::logic_error)
+                                            throw (std::logic_error)
                                                                         = 0;
         /**
          *  Delete a playlist with the specified id.
@@ -172,6 +169,19 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
+         *  Acquire the resources for the audio clip with the specified id.
+         *
+         *  @param id the id of the audio clip to acquire.
+         *  @return a URI to the audio clip.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists. 
+         */
+        virtual Ptr<std::string>::Ref
+        acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::logic_error)
+                                                                        = 0;
+
+        /**
          *  Release the lock on an audio clip with the specified id.
          *
          *  @param id the id of the audio clip to release.
@@ -180,7 +190,7 @@ class StorageClientInterface
          */
         virtual void
         releaseAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument)
+                                            throw (std::logic_error)
                                                                         = 0;
 
         /**
@@ -202,7 +212,6 @@ class StorageClientInterface
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
         getAllAudioClips(void) const         throw ()                    = 0;
-
 
 };
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -78,6 +78,11 @@ class TestStorageClient :
          *  The name of the configuration XML elmenent used by TestStorageClient
          */
         static const std::string    configElementNameStr;
+
+        /**
+         *  The path to the local temp storage
+         */
+        static const std::string    localTempStoragePath;
 
         /**
          *  The map type containing the playlists by their ids.
@@ -161,18 +166,17 @@ class TestStorageClient :
                                             throw (std::invalid_argument);
 
         /**
-         *  Acquire the resources for the playlist
-         *  At this point, this does not do anything.
+         *  Acquire the resources for the playlist.
          *
-         *  @param id the id of the playlist to release.
-         *  @return something
+         *  @param id the id of the playlist to acquire.
+         *  @return a path (in the local storage) to the Playlist SMIL 
+         *          temp file.
          *  @exception std::invalid_argument if no playlist with the specified
          *             specified id exists. 
          */
         virtual Ptr<std::string>::Ref
         acquirePlaylist(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument,
-                                                   std::logic_error);
+                                            throw (std::logic_error);
 
         /**
          *  Release the resources (audio clips, other playlists) used 
@@ -185,8 +189,7 @@ class TestStorageClient :
          */
         virtual void
         releasePlaylist(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument,
-                                                   std::logic_error);
+                                            throw (std::logic_error);
 
         /**
          *  Delete the playlist with the specified id.
@@ -239,6 +242,18 @@ class TestStorageClient :
                                             throw (std::invalid_argument);
 
         /**
+         *  Acquire the resources for the audio clip with the specified id.
+         *
+         *  @param id the id of the audio clip to acquire.
+         *  @return a URI to the audio clip.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists. 
+         */
+        virtual Ptr<std::string>::Ref
+        acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::logic_error);
+                                            
+        /**
          *  Release the lock on an audio clip with the specified id.
          *  At this point, this does not do anything.
          *
@@ -248,7 +263,7 @@ class TestStorageClient :
          */
         virtual void
         releaseAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument);
+                                            throw (std::logic_error);
 
         /**
          *  Delete the audio clip with the specified id.

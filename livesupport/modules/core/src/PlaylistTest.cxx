@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -390,5 +390,5 @@ PlaylistTest :: toSmilTest(void)
     }
     CPPUNIT_ASSERT(newSmilPlaylist == smilPlaylist);
 
-    playlist->setLockedForPlaying(true);
+    playlist->setLockedForPlaying(false);
 }
