@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThreadTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@
 #include <iostream>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/Thread.h"
+
 #include "SchedulerThread.h"
 #include "TestScheduledEvent.h"
 #include "TestEventContainer.h"
@@ -95,6 +97,7 @@ SchedulerThreadTest :: firstTest(void)
 {
     Ptr<TestScheduledEvent>::Ref        event;
     Ptr<TestEventContainer>::Ref        container;
+    Ptr<Thread>::Ref                    thread;
     Ptr<SchedulerThread>::Ref           schedulerThread;
     Ptr<ptime>::Ref                     now;
     Ptr<ptime>::Ref                     when;
@@ -119,8 +122,9 @@ SchedulerThreadTest :: firstTest(void)
     container.reset(new TestEventContainer(event));
 
     schedulerThread.reset(new SchedulerThread(container, granularity));
+    thread.reset(new Thread(schedulerThread));
 
-    schedulerThread->start();
+    thread->start();
 
     CPPUNIT_ASSERT(event->getState() == TestScheduledEvent::created);
     state = event->getState();
@@ -177,7 +181,7 @@ SchedulerThreadTest :: firstTest(void)
         TimeConversion::sleep(granularity);
     }
 
-    schedulerThread->stop();
-    schedulerThread->join();
+    thread->stop();
+    thread->join();
 }
 

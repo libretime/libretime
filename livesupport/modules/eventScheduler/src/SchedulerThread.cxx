@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,13 +32,6 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#error need unistd.h
-#endif
-
 
 #include "LiveSupport/Core/TimeConversion.h"
 
@@ -139,47 +132,6 @@ SchedulerThread :: run(void)                                    throw ()
                                                               - *diff));
             TimeConversion::sleep(sleepTime);
         }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  The POSIX thread function for this thread.
- *----------------------------------------------------------------------------*/
-void *
-SchedulerThread :: posixThreadFunction(void * schedulerThread)      throw ()
-{
-    SchedulerThread   * sThread = (SchedulerThread *) schedulerThread;
-
-    sThread->run();
-
-    pthread_exit(0);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Start the thread.
- *----------------------------------------------------------------------------*/
-void
-SchedulerThread :: start(void)                      throw (std::exception)
-{
-    int     ret;
-    if ((ret = pthread_create(&thread, 0, posixThreadFunction, this))) {
-        // TODO: signal return code
-        throw std::exception();
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Join the thread.
- *----------------------------------------------------------------------------*/
-void
-SchedulerThread :: join(void)                       throw ()
-{
-    int     ret;
-    if ((ret = pthread_join(thread, 0))) {
-        // TODO: signal return code
     }
 }
 

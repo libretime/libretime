@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,14 +40,9 @@
 #include "configure.h"
 #endif
 
-#ifdef HAVE_PTHREAD_H
-#include <pthread.h>
-#else
-#error need pthread.h
-#endif
-
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "LiveSupport/Core/RunnableInterface.h"
 #include "LiveSupport/EventScheduler/ScheduledEventInterface.h"
 #include "LiveSupport/EventScheduler/EventContainerInterface.h"
 
@@ -72,9 +67,9 @@ using namespace LiveSupport::Core;
  *  The main, executing thread of the scheduler.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class SchedulerThread
+class SchedulerThread : public virtual RunnableInterface
 {
     private:
         /**
@@ -109,11 +104,6 @@ class SchedulerThread
         Ptr<time_duration>::Ref             granularity;
 
         /**
-         *  The POSIX thread for this object.
-         */
-        pthread_t                           thread;
-
-        /**
          *  Flag indicating whether the thread should still run, or
          *  actually terminate.
          */
@@ -125,15 +115,6 @@ class SchedulerThread
         SchedulerThread(void)                           throw ()
         {
         }
-
-        /**
-         *  The thread function for the POSIX thread interface.
-         *
-         *  @param schedulerThread pointer to this SchedulerThread instance.
-         *  @return always 0
-         */
-        static void *
-        posixThreadFunction(void * schedulerThread)     throw ();
 
         /**
          *  Get the next event.
@@ -169,14 +150,6 @@ class SchedulerThread
         nextStep(Ptr<ptime>::Ref    now)                throw ();
 
 
-    protected:
-        /**
-         *  The main execution loop for the thread.
-         */
-        virtual void
-        run(void)                                       throw ();
-
-
     public:
         /**
          *  Constructor.
@@ -199,15 +172,10 @@ class SchedulerThread
         }
 
         /**
-         *  Start the execution of the thread.
-         *  This funcion will create a new thread and starts executing
-         *  it by the run() function of this object. Start will
-         *  return immediately.
-         *
-         *  @exception std::exception if the thread could not be started.
+         *  The main execution loop for the thread.
          */
         virtual void
-        start(void)                                     throw (std::exception);
+        run(void)                                       throw ();
 
         /**
          *  Signal the thread to stop, gracefully.
@@ -217,13 +185,6 @@ class SchedulerThread
         {
             shouldRun = false;
         }
-
-        /**
-         *  Join the thread.
-         *  Wait for the thread to terminate and free up all its resources.
-         */
-        virtual void
-        join(void)                                      throw ();
 };
 
 
