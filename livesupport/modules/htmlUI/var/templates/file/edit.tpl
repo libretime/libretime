@@ -73,7 +73,7 @@ function showData()
     {literal}
     function showMData()
     {
-        alert ('First Data');
+        alert ('Data first!');
     }
     {/literal}
     document.getElementById('div_MData').style.visibility='hidden';
