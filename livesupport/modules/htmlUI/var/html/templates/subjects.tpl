@@ -1,16 +1,16 @@
 {* Smarty template *}
 <div id="subjects">
 
-{if $changePassForm}
-    {$changePassForm}
+{if $chgPasswd}
+    {$chgPasswd}
 {/if}
 
-{if $groups}
+{if $groupMembers}
     <table id="tree" border="0" cellpadding="5">
-      <tr><th colspan="5">Subjects in group {$groups.gname}</th></tr>
+      <tr><th colspan="5">Subjects in group {$groupMembers.gname}</th></tr>
 
-    {if (is_array($groups.rows) && count($groups.rows)>0)}
-        {foreach from=$groups.rows item=row}
+    {if (is_array($groupMembers.rows) && count($groupMembers.rows)>0)}
+        {foreach from=$groupMembers.rows item=row}
             <tr bgcolor="{cycle values='#eeeeee, #dadada"'}">
                 <td>{$row.id}</td>
                 <td class="b">
@@ -22,7 +22,7 @@
                  </td
                  <td>{if ($row.type=='G')}(G){else}(U){/if}</td>
                 <td>
-                 <a href="{$UI_HANDLER}?act=removeSubjFromGr&login={urlencode str=$row.login}&gname={urlencode str=$groups.gname}&reid={$groups.id}">
+                 <a href="{$UI_HANDLER}?act=removeGroupMember&login={urlencode str=$row.login}&gname={urlencode str=$groupMembers.gname}&reid={$groupMembers.id}">
                     [remove from Group]
                  </a>
                 </td>
@@ -34,7 +34,7 @@
 
     </table>
     <br>
-    {$addSubj2GroupForm}
+    {$addGroupMember}
 {/if}
 
 {if $subjects}
@@ -48,7 +48,7 @@
                     <td>{$c.id}</td>
                     <td class="b">
                         {if ($c.type eq 'G')}
-                            <a href="{$UI_BROWSER}?act=groups&id={$c.id}">{$c.login}</a>
+                            <a href="{$UI_BROWSER}?act=groupMembers&id={$c.id}">{$c.login}</a>
                         {else}
                             {$c.login}
                         {/if}
@@ -63,7 +63,7 @@
                     <td>
                      <a class="lnkbutt" href="{$UI_HANDLER}?act=removeSubj&login={urlencode str=$c.login}">[remove]</a>
                      {if ($c.type != 'G')}
-                        <a class="lnkbutt" href="{$UI_BROWSER}?act=passwd&uid={urlencode str=$c.id}">[change Password]</a>
+                        <a class="lnkbutt" href="{$UI_BROWSER}?act=chgPasswd&uid={urlencode str=$c.id}">[change Password]</a>
                      {/if}
                     </td>
                 </tr>

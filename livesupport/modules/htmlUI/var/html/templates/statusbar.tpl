@@ -14,13 +14,13 @@
     </div>
 
     <div class="statusbaritem">
-        <img src="{$statusbar.stationLogoPath}" width="30" height="50">
+        <img src="{$systemPrefs.stationLogoPath}" width="30" height="50">
     </div>
 
     <div class="statusbaritem">
-        {$statusbar.stationName}
+        {$systemPrefs.stationName}
         <br>
-        {$statusbar.frequency}
+        {$systemPrefs.frequency}
     </div>
 
     <div class="statusbaritem">

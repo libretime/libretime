@@ -14,6 +14,7 @@ $ui_fmask = array(
         ),
         array(
             'element'   => 'maxfilesize',
+            'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Maximum File Size for Upload',
             'required'  => TRUE,
@@ -25,23 +26,27 @@ $ui_fmask = array(
         ),
         array(
             'element'   => 'frequency',
+            'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Frequency',
             'required'  => TRUE
         ),
         array(
             'element'   => 'stationName',
+            'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Staion Name',
             'required'  => TRUE
         ),
         array(
             'element'   => 'stationLogoPath',
+            'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Station Logo path'
         ),
         array(
             'element'   => 'stationURL',
+            'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Station URL',
             'default'   => 'http://'
@@ -51,6 +56,21 @@ $ui_fmask = array(
             'element'   => 'stationURL',
             'format'    => UI_REGEX_URL,
             'rulemsg'   => 'URL seems not to be valid'
+        ),
+        array(
+            'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,
+            'isPref'    => TRUE,
+            'type'      => 'select',
+            'label'     => 'Maximun length of ScratchPad',
+            'options'   => array(
+                            '4' => '4',
+                            '5' => '5',
+                            '6' => '6',
+                            '7' => '7',
+                            '8' => '8',
+                            '9' => '9',
+                            '10'=>'10'
+                            )
         ),
         array(
             'element'   => 'upload',
@@ -71,12 +91,12 @@ $ui_fmask = array(
     ),
 
     /* =========================================================== Matadata-Mask */
-    'mData' =>  array(
+    'editMetaData' =>  array(
         'basics' => array(
             array(
                 'element' => 'act',
                 'type'    => 'hidden',
-                'constant'=> 'editMetaDataValues'
+                'constant'=> 'editMetaData'
             ),
             array(
                 'element' => 'id',
@@ -515,6 +535,7 @@ $ui_fmask = array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
+            'default'   => 'chgPasswd'
         ),
         array(
             'element'   => 'uid',
@@ -606,7 +627,7 @@ $ui_fmask = array(
         )
     ),
 
-    'loginform' => array(
+    'login' => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
@@ -637,11 +658,11 @@ $ui_fmask = array(
         )
     ),
 
-    'upload'    => array(
+    'uploadFileM'    => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'upload'
+            'constant'  => 'uploadFileM'
         ),
         array(
             'element'   => 'id',
@@ -684,6 +705,50 @@ $ui_fmask = array(
             'label'     => 'Mediafile',
             'required'  => TRUE,
             'requiredmsg'=> 'please select Media file'
+        ),
+        array(
+            'element'   => 'Submit',
+            'type'      => 'submit',
+            'label'     => 'Submit'
+        )
+    ),
+
+    'addWebstream'    => array(
+        array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+            'constant'  => 'addWebstream'
+        ),
+        array(
+            'element'   => 'id',
+            'type'      => 'hidden'
+        ),
+        array(
+            'element'   => 'name',
+            'type'      => 'text',
+            'label'     => 'Name',
+            'required'  => TRUE,
+            'rule'      => 'alphanumeric',
+            'rulemsg'   => 'Name must be alphanumeric'
+        ),
+        array(
+            'element'   => 'url',
+            'type'      => 'text',
+            'default'   => 'http://',
+            'label'     => 'Stream URL',
+            'required'  => TRUE,
+            'requiredmsg'=> 'URL is missing',
+            'rule'      => 'regex',
+            'format'    => UI_REGEX_URL,
+            'rulemsg'   => 'URL seems invalid',
+        ),
+        array(
+            'element'   => 'duration',
+            'type'      => 'date',
+            'label'     => 'Duration',
+            'options'   => array(
+                            'format'    => 'His',
+                            )
         ),
         array(
             'element'   => 'Submit',

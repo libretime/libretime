@@ -7,8 +7,8 @@
     {include file="menu_top.tpl"}
 {/if}
 
-{if $showSP}
-    {include file="scratchpad.tpl"}
+{if $ScratchPad}
+    {include file="ScratchPad.tpl"}
 {/if}
 
 {if $showPath}
@@ -23,13 +23,10 @@
     {include file="objects.tpl"}
 {/if}
 
-{if $showPermissions}
+{if $permissions}
     {include file="permissions.tpl"}
 {/if}
 
-{if $showNewFileForm}
-    {include file="newfileform.tpl"}
-{/if}
 
 {if ($showSearchForm || $showSearchRes)}
     {include file="search.tpl"}
@@ -43,15 +40,15 @@
     {include file="filedata.tpl"}
 {/if}
 
-{if $showMetaDataForm}
-    {include file="metadataform.tpl"}
+{if $editMetaData}
+    {include file="editMetaData.tpl"}
 {/if}
 
-{if $showSystemPrefs}
+{if $systemPrefs}
     {include file="systemPrefs.tpl"}
 {/if}
 
-{if $showUploadForm}
+{if $uploadform}
     {include file="uploadform.tpl"}
 {/if}
 

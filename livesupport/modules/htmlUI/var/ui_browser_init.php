@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-
 ## LS classes/functions #############################################
 require_once dirname(__FILE__).'/conf.php';
 require_once dirname(__FILE__).'/ui_base.inc.php';
 require_once dirname(__FILE__).'/ui_browser.class.php';
+require_once dirname(__FILE__).'/ui_scratchPad.class.php';
 require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
 
 
@@ -23,15 +23,18 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
 
 ## initialize objects ###############################################
-$Smarty    = new Smarty;
-$uiBrowser = new uiBrowser($config);
-$uiBase    = new uiBase($config);
+$Smarty         =& new Smarty;
+$uiBrowser      =& new uiBrowser($config);
+#$uiBase            = new uiBase($config);
+$uiBase         =& $uiBrowser;
+#$uiScratchPad   = new uiScratchPad(&$uiBrowser);
 
 
 ## load Smarty+filters ##############################################
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
-$Smarty->load_filter('output', 'trimwhitespace');
+#$Smarty->load_filter('output', 'trimwhitespace');
 $Smarty->load_filter('post', 'template_marker');
+$Smarty->load_filter('output', 'localizer');
 
 
 ## some basic things ################################################
@@ -46,7 +49,7 @@ $Smarty->assign('user', array('sessid' => &$uiBrowser->sessid,
 
 
 ## retransfer incomplete formdata from SESSION to POST-data #########
-if(is_array($_SESSION['retransferFormData'])){
+if (is_array($_SESSION['retransferFormData'])){
     foreach($_SESSION['retransferFormData'] as $k=>$v){
         $_POST[$k] = $v;
     }

@@ -4,23 +4,32 @@ require dirname(__FILE__).'/../ui_handler_init.php';
 switch($_REQUEST['act']){
 
     case "login":
-        $uiHandler->login($_REQUEST, $ui_fmask["loginform"]);
+        $uiHandler->login($_REQUEST, $ui_fmask["login"]);
     break;
 
     case "logout":
+        $uiHandler->SP->save();
         $uiHandler->logout();
     break;
 
     case "signover":
+        $uiHandler->SP->save();
         $uiHandler->logout(TRUE);
     break;
 
-    case "upload":     ## media- and metadata file together #####
-        $uiHandler->upload(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["upload"]);
+    case "uploadFileM":
+        if ($ui_tmpid = $uiHandler->uploadFileM(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFileM"]))
+            $uiHandler->SP->addItem($ui_tmpid);
     break;
 
-    case "uploadFile": ## just media file #######################
-        $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFile"]);
+    case "uploadFile":
+        if ($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFile"]))
+            $uiHandler->SP->addItem($ui_tmpid);
+    break;
+
+    case "addWebstream":
+        if ($ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->id, $ui_fmask['addWebstream']))
+            $uiHandler->SP->addItem($ui_tmpid);
     break;
 
     case "newFolder":
@@ -55,8 +64,8 @@ switch($_REQUEST['act']){
         $uiHandler->removeSubj($_REQUEST["login"]);
     break;
 
-    case "changePasswd":
-        $uiHandler->passwd($_REQUEST["uid"], $_REQUEST["oldpass"], $_REQUEST["pass"], $_REQUEST["pass2"]);
+    case "chgPasswd":
+        $uiHandler->chgPasswd($_REQUEST["uid"], $_REQUEST["oldpass"], $_REQUEST["pass"], $_REQUEST["pass2"]);
     break;
 
     case "addPerm":
@@ -67,32 +76,39 @@ switch($_REQUEST['act']){
         $uiHandler->removePerm($_REQUEST["permid"], $_REQUEST["oid"]);
     break;
 
-    case "addSubj2Group":
-        $uiHandler->addSubj2Group($_REQUEST["login"], $_REQUEST["gname"], $_REQUEST["reid"]);
+    case "addGroupMember":
+        $uiHandler->addSubj2Group($_REQUEST);
     break;
 
-    case "removeSubjFromGr":
-        $uiHandler->removeSubjFromGr($_REQUEST["login"], $_REQUEST["gname"], $_REQUEST["reid"]);
+    case "removeGroupMember":
+        $uiHandler->removeGroupMember($_REQUEST);
     break;
 
     case "systemPrefs":
         $uiHandler->storeSystemPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["systemPrefs"]);
     break;
 
-    case "editMetaDataValues":
-        $uiHandler->storeMetaData($_REQUEST, $ui_fmask["mData"]);
+    case "editMetaData":
+        $uiHandler->editMetaData($uiHandler->id, $_REQUEST, $ui_fmask["editMetaData"]);
     break;
 
-    case "add2SP":
-        $uiHandler->add2SP($uiHandler->id);
+    case "SP.addItem":
+        $uiHandler->SP->addItem($_REQUEST['SPid']);
+        $uiHandler->SP->setReload();
     break;
 
-    case "remFromSP":
-        $uiHandler->remFromSP($uiHandler->id);
+    case "SP.removeItem":
+        $uiHandler->SP->removeItems($_REQUEST['SPid']);
+        $uiHandler->SP->setReload();
+    break;
+
+    case "SP.reOrder":
+        $uiHandler->SP->reOrder($_REQUEST['by']);
+        $uiHandler->SP->setReload();
     break;
 
     default:
-        $_SESSION["alertMsg"] = $uiHandler->tra("Unknown method: ").$_REQUEST["act"];
+        $_SESSION["alertMsg"] = tra("Unknown method: $1", $_REQUEST["act"]);
         header("Location: ".UI_BROWSER);
         die();
 }

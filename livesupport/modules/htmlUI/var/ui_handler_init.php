@@ -6,6 +6,7 @@ session_start();
 require_once dirname(__FILE__).'/conf.php';
 require_once dirname(__FILE__).'/ui_base.inc.php';
 require_once dirname(__FILE__).'/ui_handler.class.php';
+require_once dirname(__FILE__).'/ui_scratchPad.class.php';
 require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
 
 
@@ -20,9 +21,10 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 
 
 ## initialize objects ###############################################
-$uiHandler = new uiHandler($config);
-$uiBase    = new uiBase($config);
-
+$uiHandler      =& new uiHandler($config);
+#$uiBase        = new uiBase($config);
+$uiBase         =& $uiHandler;
+#$uiScratchPad   =& new uiScratchPad(&$uiHandler);
 
 ## mask for forms, at the end because $uiBase is used ###############
 require_once dirname(__FILE__).'/ui_fmask.inc.php';

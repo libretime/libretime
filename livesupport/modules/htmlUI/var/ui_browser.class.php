@@ -61,30 +61,20 @@ class uiBrowser extends uiBase {
     }
 
 
-    function getStationInfo(&$mask)
-    {
-        foreach ($mask as $key=>$val) {
-            if ($val['type']=='text')
-                $a[$val['element']] = is_string($this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
-        }
-
-        return $a;
-    }
-
     // --- template feed ---
     /**
-     *  loginform
+     *  login
      *
      *  create a login-form
      *
      *  @param string $faillogin login name of failed login process
      *  @return string (html)
      */
-    function loginform(&$Smarty, &$mask)
+    function login(&$Smarty, &$mask)
     {
-        $form = new HTML_QuickForm('loginbox', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form = new HTML_QuickForm('login', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
-        $this->_parseArr2Form($form, $mask['loginform']);
+        $this->_parseArr2Form($form, $mask['login']);
         $this->_parseArr2Form($form, $mask['languages']);
 
         ## using Static Smarty Renderer
@@ -125,15 +115,14 @@ class uiBrowser extends uiBase {
      */
     function getStructure($id)
     {
-        $data=array_merge($data, array(
-                'pathdata'  => $this->gb->getPath($id, $this->sessid),
-                'listdata'  => ($this->gb->getObjType($id)=='Folder'?
-                    $this->gb->listFolder($id, $this->sessid):array()
-                ),
-                'tree'  => ($_REQUEST['tree']=='Y'),
-                'showPath'  => true,
-                'showTree'  => true,
-            ));
+        $data = array(
+                    'pathdata'  => $this->gb->getPath($id, $this->sessid),
+                    'listdata'  => ($this->gb->getObjType($id)=='Folder'?
+                                    $this->gb->listFolder($id, $this->sessid) : array()),
+                    #'tree'      => ($_REQUEST['tree']=='Y'),
+                    'showPath'  => true,
+                    'showTree'  => true,
+                );
             if($_REQUEST['tree']=='Y'){
                 $data['treedata'] = $this->gb->getSubTree($id, $this->sessid);
             }
@@ -155,7 +144,7 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  getNewFileForm
+     *  uploadFileM
      *
      *  create a form for file-upload
      *
@@ -163,9 +152,9 @@ class uiBrowser extends uiBase {
      *
      *  @eturn string  (html)
      */
-    function getNewFileForm($id, $mask)
+    function uploadFileM($id, $mask)
     {
-        $form = new HTML_QuickForm('newfile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form = new HTML_QuickForm('uploadFileM', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
                                                 $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
                                                 : ini_get('upload_max_filesize'));
@@ -178,17 +167,40 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  getUploadFileForm
+     *  uploadFile
      *
      *  create a form for file-upload
      *
-     *  @param int local $id of directory to store file in
+     *  @param int local $id of directory to store file
      *
      *  @eturn string  (html)
      */
-    function getUploadFileForm($id, $mask)
+    function uploadFile($id, $mask)
     {
-        $form = new HTML_QuickForm('upload', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form = new HTML_QuickForm('uploadFile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
+                                                $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
+                                                : ini_get('upload_max_filesize'));
+        $form->setConstants(array('id' => $id));
+
+        $this->_parseArr2Form($form, $mask);
+
+        return $form->toHTML();
+    }
+
+
+    /**
+     *  addWebstream
+     *
+     *  create a form to add Webstream
+     *
+     *  @param int local $id of directory to store stream
+     *
+     *  @eturn string  (html)
+     */
+    function addWebstream($id, $mask)
+    {
+        $form = new HTML_QuickForm('addWebstream', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
                                                 $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
                                                 : ini_get('upload_max_filesize'));
@@ -230,17 +242,16 @@ class uiBrowser extends uiBase {
     }
 
     /**
-     *  getChangePasswdForm
+     *  chgPasswd
      *
      *  create a form to change user-passwords in GreenBox
      *
      *  @return string (html)
      */
-    function getChangePasswdForm($uid, &$mask)
+    function chgPasswd($uid, &$mask)
     {
-        $form = new HTML_QuickForm('changePasswd', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setConstants(array('act'=>'changePasswd',
-                                  'uid'=>$uid));
+        $form = new HTML_QuickForm('chgPasswd', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form->setConstants(array('uid'=>$uid));
         $this->_parseArr2Form($form, $mask);
         return $form->toHTML();
     }
@@ -253,7 +264,7 @@ class uiBrowser extends uiBase {
      *  @parm $id int local user ID
      *  @return array
      */
-    function getGroups($id)
+    function groupMembers($id)
     {
         return array(
             'rows'      => $this->gb->listGroup($id),
@@ -274,15 +285,15 @@ class uiBrowser extends uiBase {
      *
      *  @return string (html)
      */
-    function getSubj2GroupForm($id)
+    function addGroupMember($id)
     {
-        $g = $this->getGroups($id);
+        $g = $this->groupMembers($id);
         foreach($g['subj'] as $s) {
             $this->logins[($s['login'])]=$s['login'];
         }
 
-        $form = new HTML_QuickForm('addSubj2Group', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setConstants(array('act'=>'addSubj2Group',
+        $form = new HTML_QuickForm('addGroupMember', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form->setConstants(array('act'=>'addGroupMember',
                                   'reid'=>$g['id'],
                                   'gname'=>$g['gname']));
         $form->addElement('hidden', 'act');
@@ -291,7 +302,7 @@ class uiBrowser extends uiBase {
         $s =& $form->createElement('select', 'login', 'Add Group: ');
         $s->loadArray($this->logins, NULL);
         $form->addElement($s);
-        $form->addElement('submit', NULL, $this->tra('Do'));
+        $form->addElement('submit', NULL, tra('Do'));
 
         return $form->toHTML();
     }
@@ -305,7 +316,7 @@ class uiBrowser extends uiBase {
      *
      *  @return array
      */
-    function getPermissions($id)
+    function permissions($id)
     {
         return array('pathdata'  => $this->gb->getPath($id),
                      'perms'     => $this->gb->getObjPerms($id),
@@ -436,14 +447,14 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  getMetaDataForm
+     *  metaDataForm
      *
      *  create a form to edit Metadata
      *
      *  @param id int
      *  @return string (html)
      */
-    function getMetadataForm($id, $mask, $get=FALSE, $data=NULL)
+    function editMetaData($id, $mask, $get=FALSE, $data=NULL)
     {
         $form = new HTML_QuickForm('tabs', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['tabs']);
@@ -452,7 +463,7 @@ class uiBrowser extends uiBase {
         $this->_parseArr2Form($form, $mask['langswitch']);
         $output['langswitch'] = $form->toHTML();
 
-        $form = new HTML_QuickForm('metadata', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->_parseArr2Form($form, $mask['basics']);
         $form->setConstants( array('id'     => $id,
                                    #!!!!!'langid' => array_pop($this->gb->getMDataValue($id, 'langid', $this->sessid))
@@ -493,7 +504,7 @@ class uiBrowser extends uiBase {
 
 
 
-    function systemPrefs(&$mask)
+    function systemPrefsForm(&$mask)
     {
         $form = new HTML_QuickForm('systemPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
 

@@ -44,8 +44,8 @@
 
      function hpopup(url, name)                 //hidden popup!
      {
-        popupwin = window.open(url, name, 'width=1, height=1, scrollbars=no, menubar=no, depend=yes');
-        window.parent.focus();
+        popupwin = window.open(url, name);
+        //window.parent.focus();
      }
      {/literal}
 

@@ -13,7 +13,7 @@ if (is_array($_REQUEST['popup'])){
             break;
 
             case "login":
-                $Smarty->assign('loginform', $uiBrowser->loginform($Smarty, $ui_fmask));
+                $Smarty->assign('login', $uiBrowser->login($Smarty, $ui_fmask));
                 $Smarty->display('popup/login.tpl');
             break;
 
@@ -36,12 +36,12 @@ if (is_array($_REQUEST['popup'])){
     die();
 };
 
-$Smarty->assign('statusbar', $uiBrowser->getStationInfo($ui_fmask['systemPrefs']));
+$uiBrowser->loadSystemPrefs($ui_fmask['systemPrefs']);
+$Smarty->assign('systemPrefs', $uiBrowser->systemPrefs); #print_r($uiBrowser->systemPrefs);
 
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
-  $Smarty->assign('sp', $uiBrowser->getSP());
-  $Smarty->assign('showSP', TRUE);
+  $Smarty->assign('ScratchPad', $uiBrowser->SP->get());
 
   switch ($_REQUEST['act']){
     default:
@@ -61,26 +61,32 @@ if ($uiBrowser->userid) {
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('perms', $uiBrowser->getPermissions($uiBrowser->id));
-        $Smarty->assign('showPermissions', TRUE);
+        $Smarty->assign('perms', $uiBrowser->permissions($uiBrowser->id));
+        $Smarty->assign('permissions', TRUE);
     break;
 
 
-    case "newfile":
+    case "uploadFileM":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('newfileform', $uiBrowser->getNewFileForm($uiBrowser->id, $ui_fmask['upload']));
-        $Smarty->assign('showNewFileForm', TRUE);
+        $Smarty->assign('uploadform', $uiBrowser->uploadFileM($uiBrowser->id, $ui_fmask['uploadFileM']));
     break;
 
 
     case "uploadFile":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', FALSE);
+        $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('uploadform',  $uiBrowser->getUploadFileForm($uiBrowser->id, $ui_fmask['uploadFile']));
-        $Smarty->assign('showUploadForm', TRUE);
+        $Smarty->assign('uploadform',  $uiBrowser->uploadFile($uiBrowser->id, $ui_fmask['uploadFile']));
+    break;
+
+
+    case "addWebstream":
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+        $Smarty->assign('showPath', TRUE);
+
+        $Smarty->assign('uploadform',  $uiBrowser->addWebstream($uiBrowser->id, $ui_fmask['addWebstream']));
     break;
 
 
@@ -88,8 +94,7 @@ if ($uiBrowser->userid) {
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('showPath', FALSE);
 
-        $Smarty->assign('uploadform',  $uiBrowser->getUploadFileForm($uiBrowser->id, $ui_fmask['upload_1']));
-        $Smarty->assign('showUploadForm', TRUE);
+        $Smarty->assign('uploadform',  $uiBrowser->uploadFile($uiBrowser->id, $ui_fmask['uploadFile']));
     break;
 
 
@@ -116,14 +121,14 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showSubjects', TRUE);
     break;
 
-    case "passwd":
-        $Smarty->assign('changePassForm', $uiBrowser->getChangePasswdForm($_REQUEST['uid'], $ui_fmask['chgPasswd']));
+    case "chgPasswd":
+        $Smarty->assign('chgPasswd', $uiBrowser->chgPasswd($_REQUEST['uid'], $ui_fmask['chgPasswd']));
         $Smarty->assign('showSubjects', TRUE);
     break;
 
-    case "groups":
-        $Smarty->assign('groups', $uiBrowser->getGroups($uiBrowser->id));
-        $Smarty->assign('addSubj2GroupForm', $uiBrowser->getSubj2GroupForm($uiBrowser->id));
+    case "groupMembers":
+        $Smarty->assign('groupMembers', $uiBrowser->groupMembers($uiBrowser->id));
+        $Smarty->assign('addGroupMember', $uiBrowser->addGroupMember($uiBrowser->id));
         $Smarty->assign('showSubjects', TRUE);
     break;
 
@@ -137,19 +142,18 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showFile', TRUE);
     break;
 
-    case "editMetaDataValues":
-        $Smarty->assign('mDataForm', $uiBrowser->getMetaDataForm($uiBrowser->id, $ui_fmask['mData'], TRUE));
-        $Smarty->assign('showMetaDataForm', TRUE);
+    case "editMetaData":
+        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, $ui_fmask['editMetaData'], TRUE));
     break;
 
-    case "getInfo":
-        $Smarty->assign('fInfo', $uiBrowser->_getInfo($uiBrowser->id, 'text'));
+    case "_analyzeFile":
+        $Smarty->assign('_analyzeFile', $uiBrowser->_analyzeFile($uiBrowser->id, 'text'));
         $Smarty->assign('showFile', TRUE);
     break;
 
-    case "systemPrefs":
-        $Smarty->assign('dynform', $uiBrowser->systemPrefs($ui_fmask['systemPrefs']));
-        $Smarty->assign('showSystemPrefs', TRUE);
+    case "editSystemPrefs":
+        $Smarty->assign('dynform', $uiBrowser->systemPrefsForm($ui_fmask['systemPrefs']));
+        $Smarty->assign('editSystemPrefs', TRUE);
     break;
   }
 }

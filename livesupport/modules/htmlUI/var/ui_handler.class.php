@@ -8,8 +8,8 @@ define('ACTION_BASE', '/actions' ) ;
  *  LiveSupport HTML User Interface module
  */
 class uiHandler extends uiBase {
-    var $redirUrl;
-    var $alertMsg;
+#    var $redirUrl;
+#    var $alertMsg;
 
     // --- class constructor ---
     /**
@@ -24,8 +24,6 @@ class uiHandler extends uiBase {
     {
         $this->uiBase($config);
     }
-
-
 
 
     // --- authentication ---
@@ -68,6 +66,7 @@ class uiHandler extends uiBase {
     {
         $this->gb->logout($this->sessid);
         setcookie($this->config['authCookieName'], '');
+        session_destroy();
 
         if ($trigger_login)
              $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=login';
@@ -76,7 +75,7 @@ class uiHandler extends uiBase {
 
     // --- files ---
     /**
-     *  upload
+     *  uploadFileM
      *
      *  Provides file upload and store it to the storage
      *
@@ -85,42 +84,47 @@ class uiHandler extends uiBase {
      *  @param mdatafile file uploded by HTTP, metadata XML file
      *  @param id int, destination folder id
      */
-    function upload(&$formdata, $id, &$mask)
+    function uploadFileM(&$formdata, $id, &$mask)
     {
-        if ($this->_validateForm($formdata, $mask)) {
-            $tmpgunid = md5(
-                microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport"
-            );
-            $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
-            #        $ntmp = tempnam(""{$gb->bufferDir}", 'gbTmp_');
-            $mdtmp = "";
-            move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
-            chmod($ntmp, 0664);
-            if($formdata['mdatafile']['tmp_name']){
-                $mdtmp = "$ntmp.xml";
-                if(move_uploaded_file($formdata['mdatafile']['tmp_name'], $mdtmp)){
-                    chmod($mdtmp, 0664);
+    if ($this->_isFolder($id)) {
+            if ($this->_validateForm($formdata, $mask)) {
+                $tmpgunid = md5(
+                    microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport"
+                );
+                $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
+                $mdtmp = "";
+                move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
+                chmod($ntmp, 0664);
+                if($formdata['mdatafile']['tmp_name']){
+                    $mdtmp = "$ntmp.xml";
+                    if(move_uploaded_file($formdata['mdatafile']['tmp_name'], $mdtmp)){
+                        chmod($mdtmp, 0664);
+                    }
                 }
-            }
-            $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
-            if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
-            else{
-            #            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
-                @unlink($ntmp);
-                @unlink($mdtmp);
-            }
-            $this->add2SP($r);
-            $this->redirUrl = UI_BROWSER."?id=".$id;
-            return $r;
-         } else {
-            $this->redirUrl = UI_BROWSER."?act=newfile&id=".$id;
+                $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
+                if(PEAR::isError($r)) {
+                    $this->_retMsg($r->getMessage());
+                    $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
+                    return FALSE;
+                } else{
+                    @unlink($ntmp);
+                    @unlink($mdtmp);
+                    $this->redirUrl = UI_BROWSER."?id=".$id;
+                    return $r;
+                }
+             } else {
+                $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
+                return FALSE;
+             }
+        } else {
+            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
             return FALSE;
-         }
+        }
     }
 
 
     /**
-     *  uploadS1
+     *  uploadFile
      *
      *  Provides file upload and store it to the storage
      *
@@ -129,34 +133,75 @@ class uiHandler extends uiBase {
      */
     function uploadFile(&$formdata, $id, &$mask)
     {
-        if ($this->_validateForm($formdata, $mask)) {
-            $tmpgunid = md5(
-                microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport"
-            );
-            $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
-            #        $ntmp = tempnam(""{$gb->bufferDir}", 'gbTmp_');
-            $mdtmp = "";
-            move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
-            chmod($ntmp, 0664);
+        if ($this->_isFolder($id)) {
+            if ($this->_validateForm($formdata, $mask)) {
+                $tmpgunid = md5(
+                    microtime().$_SERVER['SERVER_ADD3R'].rand()."org.mdlf.livesupport"
+                );
+                $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
+                $mdtmp = "";
+                move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
+                chmod($ntmp, 0664);
 
-            $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid);
-            if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
-            else{
-            #            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
-                @unlink($ntmp);
-                @unlink($mdtmp);
+                $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid);
+                if(PEAR::isError($r)) {
+                    $this->_retMsg($r->getMessage());
+                    $this->redirUrl = UI_BROWSER."?act=uploadFile&id=$id";
+                    return FALSE;
+                } else{
+                    @unlink($ntmp);
+                    @unlink($mdtmp);
+                    $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
+                    $this->gb->replaceMetadata($r, $this->_analyzeFile($r, 'xml'), 'string', $this->sessid);
+                    return $r;
+                }
+            } else {
+                $this->redirUrl = UI_BROWSER."?act=uploadFile&id=$id";
+                return FALSE;
             }
-            ## extract some metadata with getID3
-            $this->gb->replaceMetadata($r, $this->_getInfo($r, 'xml'), 'string', $this->sessid);
-
-            $this->add2SP($r);
-            $this->redirUrl = UI_BROWSER."?act=editMetaDataValues&id=$r";
-            return $r;
         } else {
-            $this->redirUrl = UI_BROWSER."?act=uploadFile&id=$id";
+            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
             return FALSE;
         }
     }
+
+
+    /**
+     *  addWebstream
+     *
+     *  Provides file upload and store it to the storage
+     *
+     *  @param formdata array, submitted text and file
+     *  @param id int, destination folder id
+     */
+    function addWebstream(&$formdata, $id, &$mask)
+    {
+        if ($this->_isFolder($id)) {
+            if ($this->_validateForm($formdata, $mask)) {
+
+                $r = $this->gb->storeWebstream($id, $formdata['name'], NULL, $this->sessid, NULL, $formdata['url']);
+                if(PEAR::isError($r)) {
+                    $this->_retMsg($r->getMessage());
+                    $this->redirUrl = UI_BROWSER."?act=addWebstream&id=$id";
+                    return FALSE;
+                    }
+                else{
+                    $data = $this->_dateArr2Str($formdata);
+                    $this->gb->setMDataValue($r, 'dc:title', $this->sessid, $data['name']);
+                    $this->gb->setMDataValue($r, 'dcterms:extent', $this->sessid, $data['duration']);
+                    $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
+                    return $r;
+                }
+            } else {
+                $this->redirUrl = UI_BROWSER."?act=addWebstream&id=$id";
+                return FALSE;
+            }
+        } else {
+            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+            return FALSE;
+        }
+    }
+
 
     /**
      *  newFolder
@@ -168,9 +213,14 @@ class uiHandler extends uiBase {
      */
     function newFolder($newname, $id)
     {
-        $r = $this->gb->createFolder($id, $newname, $this->sessid);
-        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
-        $this->redirUrl = UI_BROWSER.'?id='.$id;
+        if ($this->_isFolder($id)) {
+            $r = $this->gb->createFolder($id, $newname, $this->sessid);
+            if(PEAR::isError($r))
+                $this->_retMsg($r->getMessage());
+            $this->redirUrl = UI_BROWSER.'?id='.$id;
+        } else {
+            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+        }
     }
 
     /**
@@ -300,7 +350,7 @@ class uiHandler extends uiBase {
     */
     function addSubj(&$formdata, &$mask)
     {
-        $this->redirUrl = UI_BROWSER.'?act='.$_REQUEST['act'];
+        $this->redirUrl = UI_BROWSER.'?act='.$formdata['act'];
 
         ## first validate the form data
         if ($this->_validateForm($formdata, $mask)) {
@@ -336,7 +386,7 @@ class uiHandler extends uiBase {
     }
 
     /**
-     *  passwd
+     *  chgPasswd
      *
      *  Change password for specified user
      *
@@ -345,9 +395,9 @@ class uiHandler extends uiBase {
      *  @param pass string, new password
      *  @param pass2 string, retype of new password
      */
-    function passwd($uid, $oldpass, $pass, $pass2)
+    function chgPasswd($uid, $oldpass, $pass, $pass2)
     {
-        $this->redirUrl = UI_BROWSER.'?act=subjects';
+        $this->redirUrl = UI_BROWSER.'?act=chgPasswd&uid='.$uid;
         $ulogin = $this->gb->getSubjName($uid);
 
         if($this->userid != $uid &&
@@ -365,6 +415,8 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER.'?act=subjects';
             return;
         }
+        $this->_retMsg('Password changed');
+        $this->redirUrl = UI_BROWSER.'?act=subjects';
         $this->gb->passwd($ulogin, $oldpass, $pass);
     }
 
@@ -408,7 +460,7 @@ class uiHandler extends uiBase {
 
 
     /**
-     *  addSubj2Group
+     *   addSubj2Group
      *
      *   Add {login} and direct/indirect members to {gname} and to groups,
      *   where {gname} is [in]direct member
@@ -417,56 +469,56 @@ class uiHandler extends uiBase {
      *   @param gname string
      *   @param reid string, local id of managed group, just needed for redirect
      */
-    function addSubj2Group($login, $gname, $reid)
+    function addSubj2Group(&$formdata)
     {
         if($this->gb->checkPerm($this->userid, 'subjects')){
-            $res = $this->gb->addSubj2Gr($login, $gname);
+            $res = $this->gb->addSubj2Gr($formdata['login'], $formdata['gname']);
         }else{
             $this->_retMsg('Access denied.');
             return;
         }
         if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
 
-        $this->redirUrl = UI_BROWSER.'?act=groups&id='.$reid;
+        $this->redirUrl = UI_BROWSER.'?act=groupMembers&id='.$formdata['reid'];
     }
 
     /**
+     *   removeGroupMember
+     *
      *   Remove subject from group
      *
      *   @param login string
      *   @param gname string
      *   @param reid string, local id of managed group, just needed for redirect
      */
-    function removeSubjFromGr($login, $gname, $reid)
+    function removeGroupMember(&$formdata)
     {
-        if($this->gb->checkPerm($this->userid, 'subjects')){
-            $res = $this->gb->removeSubjFromGr($login, $gname);
-        }else{
+        if ($this->gb->checkPerm($this->userid, 'subjects')){
+            $res = $this->gb->removeSubjFromGr($formdata['login'], $formdata['gname']);
+        } else {
             $this->_retMsg('Access denied.');
             return;
         }
         if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
-
-        $this->redirUrl = UI_BROWSER.'?act=groups&id='.$reid;
+        $this->redirUrl = UI_BROWSER.'?act=groupMembers&id='.$formdata['reid'];
     }
 
 
-    function storeMetaData(&$formdata, &$mask)
+    function editMetaData($id, &$formdata, &$mask)
     {
-        $this->redirUrl = UI_BROWSER.'?act=editMetaDataValues&id='.$formdata['id'];
+        $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+        ## first remove old entrys
+        $this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
+
         foreach ($mask['tabs']['group']['group'] as $key) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 $formdata[$key.'__'.$v['element']] ? $mData[strtr($v['element'], '_', '.')] = $formdata[$key.'__'.$v['element']] : NULL;
             }
         }
-
-        $this->_dateArr2Str(&$mData);
-
-        foreach ($mData as $key=>$val) {
-            #echo "id: {$formdata['id']}, key: $key, val: $val<br>";
-            $this->gb->setMDataValue($formdata['id'], $key, $this->sessid, $val);
+        $data = $this->_dateArr2Str($mData);
+        foreach ($data as $key=>$val) {
+            $this->gb->setMDataValue($id, $key, $this->sessid, $val);
         }
-
         $this->_retMsg('Metadata saved');
     }
 
@@ -514,15 +566,14 @@ class uiHandler extends uiBase {
     {
         $this->redirUrl = UI_BROWSER.'?act=systemPrefs';
 
-        ## first validate the form data
         if ($this->_validateForm($formdata, $mask)) {
-
             foreach($mask as $key=>$val) {
-                if ($this->_isTextInput ($val['type'], $mask)) {
+                if ($val['isPref']) {
                     if (strlen($formdata[$val['element']]))
                         $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                     else
                         $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
+                        $this->systemPrefs[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
                 }
                 if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                     if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
@@ -539,7 +590,7 @@ class uiHandler extends uiBase {
         }
     }
 
-
+    /*
     function _isTextInput($input)
     {
         $test = array('text' =>0, 'textarea' =>0, 'select'=>0, 'radio'=>0, 'checkbox'=>0);
@@ -548,6 +599,7 @@ class uiHandler extends uiBase {
 
         return FALSE;
     }
+    */
 }
 
 ?>

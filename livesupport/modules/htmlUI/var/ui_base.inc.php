@@ -8,6 +8,29 @@ function errCallBack($err)
     exit;
 }
 
+// --- basic funtionality ---
+/**
+ *  tra
+ *
+ *  Translate the given string using localisation files.
+ *
+ *  @param input string, string to translate
+ *  @return string, translated string
+ */
+function tra($input)
+{
+    // just a dummy function yet
+    $nr=func_num_args();
+    if ($nr>1)
+    for ($i=1; $i<$nr; $i++){
+        $name  = '$'.$i;
+        $val   = func_get_arg($i);
+        $input = str_replace($name, $val, $input);
+    }
+    return $input;
+}
+
+
 /**
  *  uiBase class
  *
@@ -26,6 +49,9 @@ class uiBase
      *
      *  @param $config array, configurartion data
      */
+    var $redirUrl;
+    var $alertMsg;
+
     function uiBase(&$config)
     {
         $this->dbc = DB::connect($config['dsn'], TRUE);
@@ -42,32 +68,21 @@ class uiBase
         $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
                                                'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
 
-
-
+        $this->SP =& new uiScratchPad(&$this);
+        $this->systemPrefs =& $_SESSION[UI_STATIONINFO_SESSNAME]; ;
     }
 
-    // --- basic funtionality ---
-    /**
-     *  tra
-     *
-     *  Translate the given string using localisation files.
-     *
-     *  @param input string, string to translate
-     *  @return string, translated string
-     */
-    function tra($input)
+
+
+    function loadSystemPrefs(&$mask)
     {
-        // just a dummy function yet
-        $nr=func_num_args();
-        if ($nr>1)
-        for ($i=1; $i<$nr; $i++){
-            $name  = '$'.$i;
-            $val   = func_get_arg($i);
-            $input = str_replace($name, $val, $input);
+        if (!is_array($this->systemPrefs)) {
+            foreach ($mask as $key=>$val) {
+                if ($val['isPref'])
+                    $this->systemPrefs[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+            }
         }
-        return $input;
     }
-
 
     /**
      *  _parseArr2Form
@@ -86,25 +101,25 @@ class uiBase
                 foreach($v['options'] as $rk=>$rv) {
                     $radio[] =& $form->createElement($v['type'], NULL, NULL, $rv, $rk, $v['attributes']);
                 }
-                $form->addGroup($radio, $v['element'], $this->tra($v['label']));
+                $form->addGroup($radio, $v['element'], tra($v['label']));
                 unset($radio);
 
             } elseif ($v['type']=='select') {
-                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], $this->tra($v['label']), $v['options'], $v['attributes']);
+                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']), $v['options'], $v['attributes']);
                 $elem[$v['element']]->setMultiple($v['multiple']);
                 if (isset($v['selected'])) $elem[$v['element']]->setSelected($v['selected']);
                 if (!$v['groupit'])        $form->addElement($elem[$v['element']]);
 
             } elseif ($v['type']=='date') {
-                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], $this->tra($v['label']), $v['options'], $v['attributes']);
+                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']), $v['options'], $v['attributes']);
                 if (!$v['groupit'])     $form->addElement($elem[$v['element']]);
 
             } elseif ($v['type']=='checkbox' || $v['type']=='static') {
-                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], $this->tra($v['label']), $v['text'], $v['attributes']);
+                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']), $v['text'], $v['attributes']);
                 if (!$v['groupit'])     $form->addElement($elem[$v['element']]);
 
             } elseif (isset($v['type'])) {
-                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], $this->tra($v['label']),
+                $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], tra($v['label']),
                                             ($v[type]=='text' || $v['type']=='file' || $v['type']=='password') ? array_merge($v['attributes'], array('size'=>UI_INPUT_STANDARD_SIZE, 'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH)) :
                                             ($v['type']=='textarea' ? array_merge($v['attributes'], array('rows'=>UI_TEXTAREA_STANDART_ROWS, 'cols'=>UI_TEXTAREA_STANDART_COLS)) : $v['attributes'])
                                         );
@@ -112,7 +127,7 @@ class uiBase
             }
             ## add required rule ###################
             if ($v['required']) {
-                $form->addRule($v['element'], isset($v['requiredmsg'])?$this->tra($v['requiredmsg']):$this->tra('Missing value for $1', $this->tra($v['label'])), 'required', NULL, $side);
+                $form->addRule($v['element'], isset($v['requiredmsg'])?tra($v['requiredmsg']):tra('Missing value for $1', tra($v['label'])), 'required', NULL, $side);
             }
             ## add constant value ##################
             if (isset($v['constant'])) {
@@ -124,16 +139,16 @@ class uiBase
             }
             ## add other rules #####################
             if ($v['rule']) {
-                $form->addRule($v['element'], isset($v['rulemsg']) ? $this->tra($v['rulemsg']) : $this->tra('$1 must be $2', $this->tra($v['element']), $this->tra($v['rule'])), $v['rule'] ,$v['format'], $side);
+                $form->addRule($v['element'], isset($v['rulemsg']) ? tra($v['rulemsg']) : tra('$1 must be $2', tra($v['element']), tra($v['rule'])), $v['rule'] ,$v['format'], $side);
             }
             ## add group ###########################
             if (is_array($v['group'])) {
                 foreach($v['group'] as $val) {
                     $groupthose[] =& $elem[$val];
                 }
-                $form->addGroup($groupthose, $v['name'], $this->tra($v['label']), $v['seperator'], $v['appendName']);
+                $form->addGroup($groupthose, $v['name'], tra($v['label']), $v['seperator'], $v['appendName']);
                 if ($v['rule']) {
-                    $form->addRule($v['name'], isset($v['rulemsg']) ? $this->tra($v['rulemsg']) : $this->tra('$1 must be $2', $this->tra($v['name'])), $v['rule'], $v['format'], $side);
+                    $form->addRule($v['name'], isset($v['rulemsg']) ? tra($v['rulemsg']) : tra('$1 must be $2', tra($v['name'])), $v['rule'], $v['format'], $side);
                 }
                 if ($v['grouprule']) {
                     $form->addGroupRule($v['name'], $v['arg1'], $v['grouprule'], $v['format'], $v['howmany'], $side, $v['reset']);
@@ -143,7 +158,7 @@ class uiBase
             ## check error on type file ##########
             if ($v['type']=='file') {
                 if ($_POST[$v['element']]['error']) {
-                    $form->setElementError($v['element'], isset($v['requiredmsg']) ? $this->tra($v['requiredmsg']) : $this->tra('Missing value for $1', $this->tra($v['label'])));
+                    $form->setElementError($v['element'], isset($v['requiredmsg']) ? tra($v['requiredmsg']) : tra('Missing value for $1', tra($v['label'])));
                 }
             }
         }
@@ -158,27 +173,34 @@ class uiBase
      *
      *  Converts date-array from form into string
      *
-     *  @param input array, reference to array of form-elements
+     *  @param input array, array of form-elements
      */
     function _dateArr2Str(&$input)
     {
         foreach ($input as $k=>$v){
-            if (is_array($v) && isset($v['d']) && (isset($v['M']) || isset($v['m'])) && (isset($v['Y']) || isset($v['y']))){
-                $input[$k] = $v['Y'].$v['y'].'-'.(strlen($v['M'].$v['m'])==2 ? $v['M'].$v['m'] : '0'.$v['M'].$v['m']).'-'.(strlen($v['d'])==2 ? $v['d'] : '0'.$v['d']);
+            if (is_array($v)) {
+                if ( ( isset($v['d']) ) && ( isset($v['M']) || isset($v['m']) ) && ( isset($v['Y']) || isset($v['y']) ) ) {
+                    $input[$k] = $v['Y'].$v['y'].'-'.$this->_twoDigits($v['M'].$v['m']).'-'.$this->_twoDigits($v['d']);
+                }
+                if ( ( isset($v['H']) ) || isset($v['h'] ) && ( isset($v['i']) ) && ( isset($v['s']) ) ) {
+                    $input[$k] = $this->_twoDigits($v['H'].$v['h']).':'.$this->_twoDigits($v['i']).':'.$this->_twoDigits($v['s']);
+                }
             }
         }
+
+        return $input;
     }
 
 
     /**
-     *  _getInfo
+     *  _analyzeFile
      *
      *  Call getid3 library to analyze media file and show some results
      *
      *  @param $id int local ID of file
      *  @param $format string
      */
-    function _getInfo($id, $format)
+    function _analyzeFile($id, $format)
     {
         $ia = $this->gb->analyzeFile($id, $this->sessid);
 
@@ -221,7 +243,7 @@ class uiBase
 
     function _twoDigits($num)
     {
-        if ($num < 10)
+        if (strlen($num)<2)
             return ("0$num");
         else
             return $num;
@@ -268,102 +290,9 @@ class uiBase
     }
 
 
-    function getSP()
-    {
-        $spData = $this->gb->loadPref($this->sessid, UI_SCRATCHPAD_KEY);
-        if (!PEAR::isError($spData) && trim($spData) != '') {
-            $arr = explode(' ', $spData);
-            /*
-            ## Akos old format #####################################
-            foreach($arr as $val) {
-                if (preg_match(UI_SCRATCHPAD_REGEX, $val)) {
-                    list ($gunid, $date) = explode(':', $val);
-                    if ($this->gb->_idFromGunid($gunid) != FALSE) {
-                        $res[] = array_merge($this->_getMetaInfo($this->gb->_idFromGunid($gunid)), array('added' => $date));
-                    }
-                }
-            }
-            */
-
-            ## new format ##########################################
-            foreach($arr as $gunid) {
-                if (preg_match('/[0-9]{1,20}/', $gunid)) {
-                    if ($this->gb->_idFromGunid($this->_toHex($gunid)) != FALSE) {
-                        $res[] = $this->_getMetaInfo($this->gb->_idFromGunid($this->_toHex($gunid)));
-                    }
-                }
-            }
-
-
-            return ($res);
-        } else {
-            return FALSE;
-        }
-    }
-
-    function _saveSP($data)
-    {
-        if (is_array($data)) {
-            foreach($data as $val) {
-                #$str .= $val['gunid'].':'.$val['added'].' ';   ## new format ###
-                $str .= $this->_toInt8($val['gunid']).' ';      ## Akos´ old format ###
-            }
-        }
-
-        $this->gb->savePref($this->sessid, UI_SCRATCHPAD_KEY, $str);
-    }
-
-    function add2SP($id)
-    {
-        $info = $this->_getMetaInfo($id);
-        $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-
-        if ($sp = $this->getSP()) {
-            foreach ($sp as $key => $val) {
-                if ($val['gunid'] == $info['gunid']) {
-                    unset($sp[$key]);
-                    $this->_retMsg('Entry $1 was already on $2.\nMoved to Top.', $info['title'], $val['added']);
-                } else {
-                    #$this->incAccessCounter($id);
-                }
-            }
-        }
-
-
-        $sp = array_merge(array(array('gunid'   => $info['gunid'],
-                                      'added'   => date('Y-m-d')
-                               ),
-                          ),
-                          is_array($sp) ? $sp : NULL);
-
-        $this->_saveSP($sp);
-        #$this->_retmsg('Entry $1 added', $info['title']);
-        return TRUE;
-    }
-
-
-    function remFromSP($id)
-    {
-        $info = $this->_getMetaInfo($id);
-        $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-
-        if ($sp = $this->getSP()) {
-            foreach ($sp as $val) {
-                if ($val['gunid'] != $info['gunid']) {
-                    $new[] = $val;
-                }
-            }
-
-            $this->_saveSP($new);
-            $this->_retmsg('Entry $1 deleted', $info['title']);
-            return TRUE;
-        }
-    }
-
-
     function _retMsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
     {
-        $_SESSION['alertMsg'] .= $this->tra($msg, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9).'\n';
+        $_SESSION['alertMsg'] .= tra($msg, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9).'\n';
     }
 
 
@@ -373,11 +302,33 @@ class uiBase
                       'gunid'       => $this->gb->_gunidFromId($id),
                       'title'       => $this->_getMDataValue($id, 'title'),
                       'artist'      => $this->_getMDataValue($id, 'artist'),
-                      'duration'    => substr($this->_getMDataValue($id, 'format.extent'), 0 ,8),
-                      'type'        => $this->_getType($id),
+                      'duration'    => $this->_niceTime($this->_getMDataValue($id, 'dcterms:extent')),
+                      'type'        => $this->gb->getFileType($id),
                 );
 
         return ($data);
+    }
+
+
+    function _niceTime($in)
+    {
+        if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in))
+            list($h, $i, $s) = explode(':', $in);
+        elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))
+            list($i, $s) = explode(':', $in);
+        else
+            $s = $in;
+
+        if ($h > 0) {
+            $H = $this->_twoDigits($h).':';
+        } else {
+            $H = '&nbsp;&nbsp;&nbsp;';
+        }
+
+        $I = $this->_twoDigits($i).':';
+        $S = $this->_twoDigits($s);
+
+        return $H.$I.$S;
     }
 
 
@@ -394,14 +345,14 @@ class uiBase
         return $file['name'];
     }
 
-    function _getType($id)
-    {
-        if ($this->gb->existsPlaylist($this->sessid, $this->gb->_gunidFromId($id))) return 'playlist';
-        return 'file';
-        #if ($this->gb->existsAudioClip($this->sessid, $this->gb->_gunidFromId($id))) return 'audioclip';
-        #if ($this->gb->existsFile($this->sessid, $this->gb->_gunidFromId($id))) return 'File';
 
-        return FALSE;
+    function _isFolder($id)
+    {
+        if (strtolower($this->gb->getFileType($id)) != 'folder') {
+            $this->_retMsg('Parent is not Folder');
+            return FALSE;
+        }
+        return TRUE;
     }
 }
 ?>
