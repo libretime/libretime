@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<smil>
+ <body>
+  <seq>
+   <audio src="gunid:///123456789abcdef1"/>
+   <audio src="gunid:///123456789abcdef2"/>
+  </seq>
+ </body>
+</smil>
