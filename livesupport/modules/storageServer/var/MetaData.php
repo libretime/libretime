@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -228,7 +228,8 @@ class MetaData{
                     "MetaData::storeXMLDoc: can't read metadata file ($mdata)"
                 );
             }
-            $xml = domxml_open_file($mdata);
+            $mdstr = file_get_contents($mdata);
+            $xml = domxml_open_mem($mdstr);
             break;
         case"string":
             $xml = domxml_open_mem($mdata);
