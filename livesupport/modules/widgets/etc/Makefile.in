@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -113,7 +113,9 @@ WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
 				   ${TMP_DIR}/EntryBin.o \
 				   ${TMP_DIR}/WhiteWindow.o \
 				   ${TMP_DIR}/CornerImages.o \
+				   ${TMP_DIR}/ButtonImages.o \
 				   ${TMP_DIR}/ComboBoxText.o \
+				   ${TMP_DIR}/Notebook.o \
 				   ${TMP_DIR}/WidgetFactory.o
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o

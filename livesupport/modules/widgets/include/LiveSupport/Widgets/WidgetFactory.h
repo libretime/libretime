@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include "LiveSupport/Core/Configurable.h"
 
 #include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/ButtonImages.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
@@ -84,7 +85,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -93,7 +94,12 @@ class WidgetFactory :
         /**
          *  The types of available buttons.
          */
-        typedef enum { deleteButton } ButtonType;
+        typedef enum { pushButton, tabButton } ButtonType;
+
+        /**
+         *  The types of available image buttons.
+         */
+        typedef enum { deleteButton } ImageButtonType;
 
 
     private:
@@ -113,34 +119,14 @@ class WidgetFactory :
         std::string                             path;
 
         /**
-         *  The passive left image for the button.
+         *  The images for the standard button.
          */
-        Glib::RefPtr<Gdk::Pixbuf>   buttonPassiveImageLeft;
+        Ptr<ButtonImages>::Ref          buttonImages;
 
         /**
-         *  The passive center image for the button.
+         *  The images for the tab button.
          */
-        Glib::RefPtr<Gdk::Pixbuf>   buttonPassiveImageCenter;
-
-        /**
-         *  The passive right image for the button.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>   buttonPassiveImageRight;
-
-        /**
-         *  The rollover left image for the button.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>   buttonRollImageLeft;
-
-        /**
-         *  The rollover center image for the button.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>   buttonRollImageCenter;
-
-        /**
-         *  The rollover right image for the button.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>   buttonRollImageRight;
+        Ptr<ButtonImages>::Ref          tabButtonImages;
 
         /**
          *  The corner images for the blue bin.
@@ -245,10 +231,13 @@ class WidgetFactory :
          *  object properly.
          *
          *  @param label the label shown inside the button.
+         *  @param type the type of the button to create
          *  @return a button with the specified label.
          */
         Button *
-        createButton(const Glib::ustring      & label)      throw ();
+        createButton(const Glib::ustring      & label,
+                     ButtonType                 type = pushButton)
+                                                                    throw ();
 
         /**
          *  Create a stock button.
@@ -259,7 +248,7 @@ class WidgetFactory :
          *  @return a button of the requested type, or 0
          */
         ImageButton *
-        createButton(ButtonType         type)               throw ();
+        createButton(ImageButtonType    type)               throw ();
 
         /**
          *  Create a combo box, that holds text entries.

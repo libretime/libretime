@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Button.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Notebook.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_Button_h
-#define LiveSupport_Widgets_Button_h
+#ifndef LiveSupport_Widgets_Notebook_h
+#define LiveSupport_Widgets_Notebook_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,11 +40,15 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/button.h>
-#include <gtkmm/label.h>
+#include <vector>
+
+#include <gtkmm/table.h>
+#include <gtkmm/buttonbox.h>
+#include <gtkmm/alignment.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Widgets/ButtonImages.h"
+#include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/ImageButton.h"
 
 
 namespace LiveSupport {
@@ -61,66 +65,121 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A button holding a text.
+ *  A container holding a range of children, showing one a time, in tabs.
+ *
+ *  After adding pages to a Notebook object, call the function pagesAdded().
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.1 $
  */
-class Button : public Gtk::Button
+class Notebook : public Gtk::Alignment
 {
     private:
         /**
-         *  The possible states of the button.
+         *  A container class, holding all that is needed to represent
+         *  a page in the notepad.
+         *
+         *  @author  $Author: maroy $
+         *  @version $Revision: 1.1 $
          */
-        typedef enum { passiveState, rollState, selectedState } State;
-
-        /**
-         *  The font definition used in the button.
-         */
-        static const std::string        fontDefinition;
-
-        /**
-         *  The Gdk::Window object, used to draw inside this button.
-         */
-        Glib::RefPtr<Gdk::Window>       gdkWindow;
-
-        /**
-         *   The Graphics Context, used to draw.
-         */
-        Glib::RefPtr<Gdk::GC>           gc;
-
-        /**
-         *  The widget inside the button.
-         */
-        Gtk::Widget                   * child;
-
-        /**
-         *  The text label for the button.
-         */
-        Glib::ustring                   label;
-
-        /**
-         *  The state of the button.
-         */
-        State                           state;
-
-        /**
-         *  The non-interactive state of the button
-         *  (not rollover, either passive or selected)
-         */
-        State                           stationaryState;
-
-        /**
-         *  The button images.
-         */
-        Ptr<ButtonImages>::Ref          buttonImages;
-
-        /**
-         *  Default constructor.
-         */
-        Button(void)                                   throw ()
+        class Page
         {
-        }
+            public:
+                /**
+                 *  The Notebook this page is contained in.
+                 */
+                Notebook      * notebook;
+
+                /**
+                 *  The index of the page.
+                 */
+                unsigned int    index;
+
+                /**
+                 *  The container for the widget.
+                 */
+                Gtk::Alignment    * container;
+
+                /**
+                 *  The contents of the page.
+                 */
+                Gtk::Widget   * widget;
+
+                /**
+                 *  The button of the page.
+                 */
+                Button        * button;
+
+                /**
+                 *  Signal handler for the tab button clicked.
+                 */
+                virtual void
+                onTabClicked(void)                              throw ()
+                {
+                    notebook->activatePage(index);
+                }
+
+                /**
+                 *  Constructor.
+                 *
+                 *  @param notebook the notebook this page is contained in.
+                 *  @param index the index of the page.
+                 *  @param widget the widget of the page.
+                 *  @param button the button of the page.
+                 */
+                Page(Notebook         * notebook,
+                     unsigned int       index,
+                     Gtk::Widget      * widget,
+                     Button           * button)                 throw ()
+                {
+                    this->notebook = notebook;
+                    this->index    = index;
+                    this->widget   = widget;
+                    this->button   = button;
+
+                    container = new Gtk::Alignment;
+                    container->add(*widget);
+                }
+
+                /**
+                 *  Destructor.
+                 */
+                virtual
+                ~Page(void)                                     throw ()
+                {
+                    delete container;
+                }
+        };
+
+        /**
+         *  The list type, for the list of pages.
+         */
+        typedef std::vector<Page*>  PageList;
+
+        /**
+         *  The list of pages in the notebook.
+         */
+        PageList                        pageList;
+
+        /**
+         *  The layout of the window.
+         */
+        Gtk::Table                    * layout;
+
+        /**
+         *  The horizontal box holding the tabs.
+         */
+        Gtk::HBox                     * tabBox;
+
+        /**
+         *  The container for the displaying a page at a time.
+         */
+        Gtk::Alignment                * pageHolder;
+
+        /**
+         *  The index of the current active page.
+         */
+        unsigned int                    activePage;
 
 
     protected:
@@ -215,90 +274,42 @@ class Button : public Gtk::Button
         child_type_vfunc() const                            throw ();
 
         /**
-         *  Handle the event when the mouse enters the button area.
+         *  Call this function after finished adding pages to this object.
+         *  This call will make the object prepare the visuals to display.
          */
         virtual void
-        on_enter(void)                                      throw ();
+        pagesAdded(void)                                    throw ();
 
         /**
-         *  Handle the event when the mouse leaves the button area.
+         *  Make a specific page active.
+         *
+         *  @param pageNo the index of the page to make active.
          */
         virtual void
-        on_leave(void)                                      throw ();
+        activatePage(unsigned int   pageNo)                 throw ();
 
 
     public:
         /**
-         *  Constructor, with only one state.
-         *
-         *  @param label the text to display in the button
-         *  @param buttonImages the images of the button
+         *  Constructor.
          */
-        Button(const Glib::ustring       & label,
-               Ptr<ButtonImages>::Ref      buttonImages)        throw ();
-
-        /**
-         *  Constructor, with only one state.
-         *
-         *  @param child the widget that should be displayed inside the button.
-         *  @param buttonImages the images of the button
-         */
-        Button(Gtk::Widget               * child,
-               Ptr<ButtonImages>::Ref      buttonImages)        throw ();
+        Notebook()                                          throw ();
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~Button(void)                                  throw ();
+        ~Notebook(void)                                     throw ();
 
         /**
-         *  Set the label of the button.
+         *  Append a page to the notebook.
          *
-         *  @param label the text the button should display.
-         */
-        virtual void
-        set_label(const Glib::ustring & label)              throw ()
-        {
-            if (child && child->is_managed_()) {
-                delete child;
-            }
-            this->label = label;
-            child = Gtk::manage(new Gtk::Label(label));
-            child->modify_font(Pango::FontDescription(fontDefinition));
-            child->set_parent(*this);
-        }
-
-        /**
-         *  Get the label of the button.
-         *
-         *  @return the current label of the button.
-         */
-        Glib::ustring
-        get_label(void) const                               throw ()
-        {
-            return label;
-        }
-
-        /**
-         *  Change the state of the button to selected.
+         *  @param widget the widget that is the page itself.
+         *  @param label the label of the page.
          */
         void
-        select(void)                                        throw ()
-        {
-            state           = selectedState;
-            stationaryState = selectedState;
-        }
-
-        /**
-         *  Change the state of the button to passive.
-         */
-        void
-        unselect(void)                                      throw ()
-        {
-            state           = passiveState;
-            stationaryState = passiveState;
-        }
+        appendPage(Gtk::Widget            & widget,
+                   const Glib::ustring    & label)          throw ();
 };
 
 
@@ -311,5 +322,5 @@ class Button : public Gtk::Button
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_Button_h
+#endif // LiveSupport_Widgets_Notebook_h
 

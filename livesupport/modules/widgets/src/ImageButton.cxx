@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ImageButton.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -191,6 +191,8 @@ ImageButton :: on_unmap()                                           throw ()
 void
 ImageButton :: on_realize()                                         throw ()
 {
+    // trick to make GTK-- allocate a window for the later get_window() call
+    set_flags(Gtk::NO_WINDOW);
     Gtk::Button::on_realize();
 
     if (!gdkWindow) {

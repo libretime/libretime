@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,34 +62,14 @@ Ptr<WidgetFactory>::Ref WidgetFactory::singleton;
 static const std::string    pathAttrName = "path";
 
 /**
- *  The name of the left passive image for the button.
+ *  The relative path for the standard button images.
  */
-static const std::string    buttonPassiveLeftName = "button/left.png";
+static const std::string    buttonPath = "button/";
 
 /**
- *  The name of the center passive image for the button.
+ *  The relative path for the tab button images.
  */
-static const std::string    buttonPassiveCenterName = "button/center.png";
-
-/**
- *  The name of the right passive image for the button.
- */
-static const std::string    buttonPassiveRightName = "button/right.png";
-
-/**
- *  The name of the left rollover image for the button.
- */
-static const std::string    buttonRollLeftName = "button/leftRoll.png";
-
-/**
- *  The name of the center rollover image for the button.
- */
-static const std::string    buttonRollCenterName = "button/centerRoll.png";
-
-/**
- *  The name of the right rollover image for the button.
- */
-static const std::string    buttonRollRightName = "button/rightRoll.png";
+static const std::string    tabButtonPath = "tabButton/";
 
 /**
  *  The relative path for the blue bin images.
@@ -178,12 +158,8 @@ WidgetFactory :: configure(const xmlpp::Element & element)
     path = attribute->get_value();
 
     // load the button images, and check if all exist
-    buttonPassiveImageLeft   = loadImage(buttonPassiveLeftName);
-    buttonPassiveImageCenter = loadImage(buttonPassiveCenterName);
-    buttonPassiveImageRight  = loadImage(buttonPassiveRightName);
-    buttonRollImageLeft      = loadImage(buttonRollLeftName);
-    buttonRollImageCenter    = loadImage(buttonRollCenterName);
-    buttonRollImageRight     = loadImage(buttonRollRightName);
+    buttonImages.reset(new ButtonImages(path + buttonPath));
+    tabButtonImages.reset(new ButtonImages(path + tabButtonPath));
 
     // load the combo box images
     comboBoxLeftImage        = loadImage(comboBoxLeftName);
@@ -221,15 +197,19 @@ WidgetFactory :: loadImage(const std::string    imageName)
  *  Create a button
  *----------------------------------------------------------------------------*/
 Button *
-WidgetFactory :: createButton(const Glib::ustring & label)      throw ()
+WidgetFactory :: createButton(const Glib::ustring & label,
+                              ButtonType            type)       throw ()
 {
-    return new Button(label,
-                      buttonPassiveImageLeft,
-                      buttonPassiveImageCenter,
-                      buttonPassiveImageRight,
-                      buttonRollImageLeft,
-                      buttonRollImageCenter,
-                      buttonRollImageRight);
+    switch (type) {
+        case pushButton:
+            return new Button(label, buttonImages);
+
+        case tabButton:
+            return new Button(label, tabButtonImages);
+
+        default:
+            return 0;
+    }
 }
 
 
@@ -279,7 +259,7 @@ WidgetFactory :: createEntryBin(void)                           throw ()
  *  Create a stock button
  *----------------------------------------------------------------------------*/
 ImageButton *
-WidgetFactory :: createButton(ButtonType    type)               throw ()
+WidgetFactory :: createButton(ImageButtonType    type)          throw ()
 {
     Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
     Glib::RefPtr<Gdk::Pixbuf>   rollImage;

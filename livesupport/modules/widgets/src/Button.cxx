@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Button.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,11 @@ using namespace LiveSupport::Widgets;
 
 /* ================================================  local constants & macros */
 
+/*------------------------------------------------------------------------------
+ *  The font definition used by the button.
+ *----------------------------------------------------------------------------*/
+const std::string Button :: fontDefinition = "Bitstream Vera 10";
+
 
 /* ===============================================  local function prototypes */
 
@@ -54,51 +59,35 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 Button :: Button(const Glib::ustring          & label,
-                 Glib::RefPtr<Gdk::Pixbuf>      leftImage,
-                 Glib::RefPtr<Gdk::Pixbuf>      centerImage,
-                 Glib::RefPtr<Gdk::Pixbuf>      rightImage)
+                 Ptr<ButtonImages>::Ref         buttonImages)
                                                                     throw ()
 {
     set_flags(Gtk::NO_WINDOW);
 
     state                    = passiveState;
-    this->passiveImageLeft   = leftImage;
-    this->passiveImageCenter = centerImage;
-    this->passiveImageRight  = rightImage;
-    this->rollImageLeft.clear();
-    this->rollImageCenter.clear();
-    this->rollImageRight.clear();
+    stationaryState          = passiveState;
+    this->buttonImages       = buttonImages;
 
-    this->label = Gtk::manage(new Gtk::Label(label));
-    this->label->set_parent(*this);
+    this->child = Gtk::manage(new Gtk::Label(label));
+    this->child->modify_font(Pango::FontDescription(fontDefinition));
+    this->child->set_parent(*this);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-Button :: Button(const Glib::ustring          & label,
-                 Glib::RefPtr<Gdk::Pixbuf>      passiveImageLeft,
-                 Glib::RefPtr<Gdk::Pixbuf>      passiveImageCenter,
-                 Glib::RefPtr<Gdk::Pixbuf>      passiveImageRight,
-                 Glib::RefPtr<Gdk::Pixbuf>      rollImageLeft,
-                 Glib::RefPtr<Gdk::Pixbuf>      rollImageCenter,
-                 Glib::RefPtr<Gdk::Pixbuf>      rollImageRight)
+Button :: Button(Gtk::Widget                  * child,
+                 Ptr<ButtonImages>::Ref         buttonImages)
                                                                     throw ()
 {
     set_flags(Gtk::NO_WINDOW);
 
     state                    = passiveState;
-    this->passiveImageLeft   = passiveImageLeft;
-    this->passiveImageCenter = passiveImageCenter;
-    this->passiveImageRight  = passiveImageRight;
-    this->rollImageLeft      = rollImageLeft;
-    this->rollImageCenter    = rollImageCenter;
-    this->rollImageRight     = rollImageRight;
+    this->buttonImages       = buttonImages;
 
-    this->label = Gtk::manage(new Gtk::Label(label));
-    this->label->modify_font(Pango::FontDescription("Bitstream Vera 10"));
-    this->label->set_parent(*this);
+    this->child = Gtk::manage(child);
+    this->child->set_parent(*this);
 }
 
 
@@ -118,12 +107,12 @@ Button :: on_size_request(Gtk::Requisition* requisition)       throw ()
 {
     *requisition = Gtk::Requisition();
 
-    Gtk::Requisition    labelRequisition = label->size_request();;
+    Gtk::Requisition    childRequisition = child->size_request();;
 
-    requisition->width  = passiveImageLeft->get_width()
-                        + labelRequisition.width
-                        + passiveImageRight->get_width();
-    requisition->height = passiveImageCenter->get_height();
+    requisition->width  = buttonImages->passiveImageLeft->get_width()
+                        + childRequisition.width
+                        + buttonImages->passiveImageRight->get_width();
+    requisition->height = buttonImages->passiveImageCenter->get_height();
 }
 
 
@@ -135,7 +124,7 @@ Button :: on_size_request(Gtk::Requisition* requisition)       throw ()
 void
 Button :: on_size_allocate(Gtk::Allocation& allocation)        throw ()
 {
-    allocation.set_height(passiveImageCenter->get_height());
+    allocation.set_height(buttonImages->passiveImageCenter->get_height());
     set_allocation(allocation);
 
     if (gdkWindow) {
@@ -145,18 +134,18 @@ Button :: on_size_allocate(Gtk::Allocation& allocation)        throw ()
                                 allocation.get_height() );
     }
 
-    Gtk::Allocation     labelAlloc;
+    Gtk::Allocation     childAlloc;
 
-    labelAlloc.set_x(passiveImageLeft->get_width());
-    labelAlloc.set_y((allocation.get_height()
-                    - passiveImageCenter->get_height())
+    childAlloc.set_x(buttonImages->passiveImageLeft->get_width());
+    childAlloc.set_y((allocation.get_height()
+                    - buttonImages->passiveImageCenter->get_height())
                     / 2);
-    labelAlloc.set_width(allocation.get_width()
-                       - passiveImageLeft->get_width()
-                       - passiveImageRight->get_width());
-    labelAlloc.set_height(passiveImageCenter->get_height());
+    childAlloc.set_width(allocation.get_width()
+                       - buttonImages->passiveImageLeft->get_width()
+                       - buttonImages->passiveImageRight->get_width());
+    childAlloc.set_height(buttonImages->passiveImageCenter->get_height());
 
-    label->size_allocate(labelAlloc);
+    child->size_allocate(childAlloc);
 
     Gtk::Button::on_size_allocate(allocation);
 }
@@ -171,7 +160,7 @@ Button :: forall_vfunc(gboolean    includeInternals,
                        GtkCallback callback,
                        gpointer    callbackData)               throw ()
 {
-    callback((GtkWidget*) label->gobj(), callbackData);
+    callback((GtkWidget*) child->gobj(), callbackData);
 }
 
 
@@ -232,6 +221,8 @@ Button :: on_unmap()                                           throw ()
 void
 Button :: on_realize()                                         throw ()
 {
+    // trick to make GTK-- allocate a window for the later get_window() call
+    set_flags(Gtk::NO_WINDOW);
     Gtk::Button::on_realize();
 
     if (!gdkWindow) {
@@ -301,17 +292,33 @@ Button :: on_expose_event(GdkEventExpose* event)           throw ()
         switch (state) {
             case passiveState:
             default:
-                leftImage   = passiveImageLeft;
-                centerImage = passiveImageCenter;
-                rightImage  = passiveImageRight;
+                leftImage   = buttonImages->passiveImageLeft;
+                centerImage = buttonImages->passiveImageCenter;
+                rightImage  = buttonImages->passiveImageRight;
                 break;
 
             case rollState:
-                leftImage   = rollImageLeft ? rollImageLeft : passiveImageLeft;
-                centerImage = rollImageCenter ? rollImageCenter
-                                              : passiveImageCenter;
-                rightImage  = rollImageRight ? rollImageRight
-                                             : passiveImageRight;
+                leftImage   = buttonImages->rollImageLeft
+                                ? buttonImages->rollImageLeft
+                                : buttonImages->passiveImageLeft;
+                centerImage = buttonImages->rollImageCenter
+                                ? buttonImages->rollImageCenter
+                                : buttonImages->passiveImageCenter;
+                rightImage  = buttonImages->rollImageRight
+                                ? buttonImages->rollImageRight
+                                : buttonImages->passiveImageRight;
+                break;
+
+            case selectedState:
+                leftImage   = buttonImages->selectedImageLeft
+                                ? buttonImages->selectedImageLeft
+                                : buttonImages->passiveImageLeft;
+                centerImage = buttonImages->selectedImageCenter
+                                ? buttonImages->selectedImageCenter
+                                : buttonImages->passiveImageCenter;
+                rightImage  = buttonImages->selectedImageRight
+                                ? buttonImages->selectedImageRight
+                                : buttonImages->passiveImageRight;
                 break;
         }
 
@@ -384,7 +391,7 @@ Button :: on_enter(void)                                   throw ()
 void
 Button :: on_leave(void)                                   throw ()
 {
-    state = passiveState;
+    state = stationaryState;
 
     Gtk::Button::on_leave();
 }

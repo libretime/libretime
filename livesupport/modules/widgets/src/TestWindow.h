@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,6 +51,7 @@
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 #include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/Notebook.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 
 
@@ -71,7 +72,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class TestWindow : public WhiteWindow
 {
@@ -80,6 +81,11 @@ class TestWindow : public WhiteWindow
          *  The layout used in the window.
          */
         Gtk::Table                * layout;
+
+        /**
+         *  A notebook, to tab through pages.
+         */
+        Notebook                  * notebook;
 
         /**
          *  An image button.

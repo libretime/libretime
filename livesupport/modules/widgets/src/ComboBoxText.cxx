@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -233,6 +233,8 @@ ComboBoxText :: on_unmap()                                           throw ()
 void
 ComboBoxText :: on_realize()                                         throw ()
 {
+    // trick to make GTK-- allocate a window for the later get_window() call
+    set_flags(Gtk::NO_WINDOW);
     Gtk::ComboBoxText::on_realize();
 
     if (!gdkWindow) {

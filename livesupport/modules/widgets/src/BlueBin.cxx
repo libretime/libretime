@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -225,6 +225,8 @@ BlueBin :: on_unmap()                                           throw ()
 void
 BlueBin :: on_realize()                                         throw ()
 {
+    // trick to make GTK-- allocate a window for the later get_window() call
+    set_flags(Gtk::NO_WINDOW);
     Gtk::Bin::on_realize();
 
     if (!gdkWindow) {
