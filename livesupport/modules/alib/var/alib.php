@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -203,8 +203,8 @@ class Alib extends Subjects{
         $q_join = "LEFT JOIN {$this->smembTable} m ON p.subj=m.gid ";
         $q_cond = "p.action in('_all', '$action') AND
             (m.uid=$sid OR p.subj=$sid) AND s.id=p.subj";
-        // action ASC order is hack for lower priority of '_all':
-        $q_ordb = "ORDER BY S_lvl, action, p.type DESC";
+        // action DESC order is hack for lower priority of '_all':
+        $q_ordb = "ORDER BY S_lvl, action DESC, p.type DESC";
         $qc0 = $q_cond;
         // test if object is class:
         $iscls = $this->isClass($oid);
@@ -226,8 +226,8 @@ class Alib extends Subjects{
             $q_from = "{$this->treeTable} t, ".$q_from;
             $q_cond .= " AND t.id=p.obj AND t.lft<={$r1['lft']} AND
                 t.rgt>={$r1['rgt']}";
-            // action ASC order is hack for lower priority of '_all':
-            $q_ordb = "ORDER BY T_lvl, S_lvl, action, p.type DESC";
+            // action DESC order is hack for lower priority of '_all':
+            $q_ordb = "ORDER BY T_lvl, S_lvl, action DESC, p.type DESC";
         }
         $query="SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
         $r2 = $this->dbc->getAll($query);
