@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/schedulerPhpClient.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -478,9 +478,10 @@ class SchedulerPhpClient{
         $this->client->setDebug($this->debug);
         $res = $this->client->send($msg);
         if($res->faultCode() > 0) {
-            return $this->dbc->raiseError(
+            return PEAR::raiseError(
                 "SchedulerPhpClient::$method:".$res->faultString()." ".
-                $res->faultCode()."\n", $res->faultCode()
+                $res->faultCode()."\n", $res->faultCode(),
+                PEAR_ERROR_RETURN
             );
         }
         if($this->verbose){
@@ -488,7 +489,6 @@ class SchedulerPhpClient{
             echo $res->serialize();
         }
         $val = $res->value();
-#        echo"<pre>\n"; var_dump($val); exit;
         $resp = XML_RPC_decode($res->value());
         return $resp;
     }
@@ -511,13 +511,16 @@ $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 // scheduler client instantiation:
 $spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config);
 #$spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config, 0, TRUE);
+if(PEAR::isError($spc)){ echo $spc->getMessage."\n"; exit; }
 
 // call of chosen function by name according to key values in $mdefs array:
 // (for testing on storageServer XMLRPC I've changes confPrefix in
 //  SchedulerPhpClient constructor from 'scheduler' to 'storage' value)
 #$r = $spc->LoginGB('root', 'q'); var_dump($r);
 #$r = $spc->LogoutGB(''); var_dump($r);
+
 #$r = $spc->DisplayScheduleMethod($this->Base->sessid, '2005-01-01 00:00:00.000000', '2005-02-01 00:00:00.000000'); var_dump($r);
+#$r = $spc->DisplayScheduleMethod('dummySessionId2-1681692777', '2005-01-01 00:00:00.000000', '2005-02-01 00:00:00.000000'); var_dump($r);
 $r = $spc->DisplayScheduleMethod($this->Base->sessid, '20040101T00:00:00', '20050401T00:00:00'); var_dump($r);
 #$r = $spc->LoginMethod('root', 'q'); var_dump($r);
 #$r = $spc->LogoutMethod('dummySessionId3-1714636915'); var_dump($r);
