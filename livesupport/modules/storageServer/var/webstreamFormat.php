@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: sebastian $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/webstreamFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,7 +41,7 @@ $webstreamFormat = array(
                 'dc:title', 'dcterms:extent', 'ls:url'
             ),
             'optional'=>array(
-                'dc:identifier', 
+                'dc:identifier',
                 'dc:creator', 'dc:source', 'ls:genre',
                 'ls:year', 'dc:type', 'dc:description', 'dc:format',
                 'ls:bpm', 'ls:rating', 'ls:encoded_by', 'ls:track_num',
@@ -59,7 +59,9 @@ $webstreamFormat = array(
                 'dcterms:ispartof', 'dc:date',
                 'dc:publisher',
                 // extra
-                 'dcterms:alternative',
+                'dcterms:alternative',
+                // added lately by sebastian
+                'ls:mood',
             ),
         ),
         'namespaces'=>array(
