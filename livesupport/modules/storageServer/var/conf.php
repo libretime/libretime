@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,10 +66,10 @@ $config = array(
     'authCookieName'=> 'lssid',
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
-    'storageDir'    =>  dirname(__FILE__).'/stor',
-    'bufferDir'     =>  dirname(__FILE__).'/stor/buffer',
-    'transDir'      =>  dirname(__FILE__).'/trans',
-    'accessDir'     =>  dirname(__FILE__).'/access',
+    'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
+    'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
+    'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
+    'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
     'isArchive'     =>  FALSE,
 
     /* ==================================================== URL configuration */
