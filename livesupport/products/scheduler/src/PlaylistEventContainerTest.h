@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,9 +43,9 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
-#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
@@ -59,6 +59,8 @@ using namespace LiveSupport;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Authentication;
+using namespace LiveSupport::Storage;
 
 
 /* ================================================================ constants */
@@ -73,7 +75,7 @@ using namespace LiveSupport::Scheduler;
  *  Unit test for the PlaylistEventContainer class
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see PlaylistEventContainer
  */
 class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture

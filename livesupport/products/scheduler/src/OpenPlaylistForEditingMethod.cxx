@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <string>
 
-#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"

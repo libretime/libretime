@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
@@ -50,6 +50,7 @@ namespace Scheduler {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -63,7 +64,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the UploadPlaylistMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see UploadPlaylistMethod
  */
 class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture

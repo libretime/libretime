@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <string>
 
-#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/FadeInfo.h"

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/RpcDeletePlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
@@ -50,6 +50,7 @@ namespace Scheduler {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -64,7 +65,7 @@ using namespace LiveSupport::Core;
  *
  *  @author  $Author: maroy, fgerlits
  $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see DeletePlaylistMethod
  */
 class RpcDeletePlaylistTest : public CPPUNIT_NS::TestFixture

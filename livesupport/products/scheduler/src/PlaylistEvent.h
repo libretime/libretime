@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@
 #include "configure.h"
 #endif
 
-#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/ScheduledEventInterface.h"
 
@@ -56,6 +56,7 @@ using namespace LiveSupport::Core;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::EventScheduler;
 using namespace LiveSupport::Scheduler;
+using namespace LiveSupport::Storage;
 
 /* ================================================================ constants */
 
@@ -69,7 +70,7 @@ using namespace LiveSupport::Scheduler;
  *  A scheduled event for playing a playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {

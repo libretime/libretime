@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetVersionMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
@@ -50,6 +50,7 @@ namespace Scheduler {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -62,8 +63,8 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the GetVersionMethod class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  *  @see GetVersionMethod
  */
 class GetVersionMethodTest : public CPPUNIT_NS::TestFixture

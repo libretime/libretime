@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveFromScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
 
 namespace LiveSupport {
@@ -50,7 +50,7 @@ namespace Scheduler {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
-
+using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  Unit test to test the removeFromSchedule XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see SchedulerDaemon
  */
 class RpcRemoveFromScheduleTest : public CPPUNIT_NS::TestFixture
