@@ -29,7 +29,7 @@ switch($_REQUEST['act']){
 #        echo"<pre>\n$path\n$upath<hr>\n"; print_r($_FILES); print_r($_REQUEST); exit;
         $tpldata=array_merge($tpldata, array(
             'pathdata'  => $gb->getPath($id, $sessid),
-            'listdata'  => ($gb->getObjType($id)=='Folder'?
+            'listdata'  => ($gb->getFileType($id)=='Folder'?
                 $gb->listFolder($id, $sessid):array()
             ),
             'tree'  => ($_REQUEST['tree']=='Y'),

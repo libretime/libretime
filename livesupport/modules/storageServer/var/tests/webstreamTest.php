@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/tests/webstreamTest.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,8 @@ $gb = &new GreenBox($dbc, $config);
 
 #$gunid = "123456789abcdee0";
 $gunid = "";
-$mdataFileLP = '../tests/mdata1.xml';
+#$mdataFileLP = '../tests/mdata1.xml';
+$mdataFileLP = NULL;
 
 echo"#  Login: ".($sessid = $gb->login('root', 'q'))."\n";
 $parid = $gb->_getHomeDirId($sessid);
