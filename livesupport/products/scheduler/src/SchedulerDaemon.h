@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -158,7 +158,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -385,6 +385,17 @@ class SchedulerDaemon : public Installable,
          */
         virtual void
         shutdown (void)                             throw (std::logic_error);
+
+        /**
+         *  Re-read the scheduled events.
+         *  Call this when the events in the schedule under the event container
+         *  have changed.
+         *
+         *  @exception std::logic_error if the daemon has not
+         *             yet been configured.
+         */
+        virtual void
+        update(void)                                throw (std::logic_error);
 };
 
 

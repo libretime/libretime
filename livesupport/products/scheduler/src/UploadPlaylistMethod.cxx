@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,11 +42,12 @@
 
 #include <string>
 
+#include "LiveSupport/Core/XmlRpcTools.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
-#include "LiveSupport/Core/XmlRpcTools.h"
+#include "SchedulerDaemon.h"
 
 #include "UploadPlaylistMethod.h"
 
@@ -174,6 +175,10 @@ UploadPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                returnValue);
         return;
     }
+
+    // tell the scheduler daemon to reload the scheduled events
+    Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
+    scheduler->update();
 
     XmlRpcTools::scheduleEntryIdToXmlRpcValue(scheduleEntryId, returnValue);
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -382,4 +382,14 @@ SchedulerDaemon :: shutdown(void)               throw (std::logic_error)
     XmlRpcDaemon::shutdown();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Re-read the events from the event container.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemon :: update (void)                throw (std::logic_error)
+{
+    // TODO: check if we've been configured
+    eventScheduler->update();
+}
 
