@@ -3,707 +3,707 @@
 	<Id>en.English</Id>
 	<item>
 		<key>$1 must be $2</key>
-		<value />
+		<value>$1 must be $2.</value>
+	</item>
+	<item>
+		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
+		<value>Uploaded file $1 is bigger than LiveSupport´s system setting.</value>
+	</item>
+	<item>
+		<key>ScratchPad</key>
+		<value>ScratchPad</value>
 	</item>
 	<item>
 		<key>Access denied.</key>
-		<value />
+		<value>Access denied.</value>
 	</item>
 	<item>
 		<key>Already active Playlist</key>
-		<value />
+		<value>Already active playlist.</value>
 	</item>
 	<item>
 		<key>Audioclip Data saved</key>
-		<value />
+		<value>Audioclip data saved.</value>
 	</item>
 	<item>
 		<key>Cannot create Playlist</key>
-		<value />
+		<value>Cannot create an playlist.</value>
 	</item>
 	<item>
 		<key>Cannot delete this Playlist</key>
-		<value />
+		<value>Cannot delete this playlist.</value>
 	</item>
 	<item>
 		<key>Cannot move item</key>
-		<value />
+		<value>Cannot move file in playlist.</value>
 	</item>
 	<item>
 		<key>Cannot remove Item from Playlist</key>
-		<value />
+		<value>Cannot remove file from playlist.</value>
 	</item>
 	<item>
-		<key>ChangeFadeInfo failed</key>
-		<value />
+		<key>Change fade information failed.</key>
+		<value>Change fade information failed.</value>
 	</item>
 	<item>
 		<key>Do</key>
-		<value />
+		<value>Do</value>
 	</item>
 	<item>
-		<key>Entry $1 was already on SP since $2.nMoved to Top.</key>
-		<value />
+		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
+		<value>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</value>
 	</item>
 	<item>
 		<key>Entry added at $1 with ScheduleId: $2</key>
-		<value />
+		<value>Entry added at $1 with schedule ID $2.</value>
 	</item>
 	<item>
 		<key>Entry with ScheduleId $1 removed</key>
-		<value />
+		<value>Entry with schedule ID $1 removed.</value>
 	</item>
 	<item>
 		<key>Error on add item to Playlist</key>
-		<value />
+		<value>Error on add item to playlist.</value>
 	</item>
 	<item>
 		<key>Error saving Settings</key>
-		<value />
+		<value>Error saving System preferences.</value>
 	</item>
 	<item>
 		<key>Error uploading Logo</key>
-		<value />
+		<value>Error uploading Logo.</value>
 	</item>
 	<item>
 		<key>Error: $1</key>
-		<value />
+		<value>Error: $1</value>
 	</item>
 	<item>
-		<key>File $1 was not uploadet.</key>
-		<value />
+		<key>File $1 was not uploaded.</key>
+		<value>File $1 was not uploaded.</value>
 	</item>
 	<item>
 		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
-		<value />
+		<value>Folder is not empty. You can override this protection by clicking DEL again.</value>
 	</item>
 	<item>
-		<key>Found looked Playlist</key>
-		<value />
+		<key>Found locked Playlist.</key>
+		<value>Found locked playlist.</value>
 	</item>
 	<item>
 		<key>Invalid Form Data</key>
-		<value />
+		<value>There was some Invalid form data.</value>
 	</item>
 	<item>
 		<key>Login failed</key>
-		<value />
+		<value>Login failed.</value>
 	</item>
 	<item>
 		<key>Metadata saved</key>
-		<value />
+		<value>Metadata saved.</value>
 	</item>
 	<item>
 		<key>Missing value for $1</key>
-		<value />
+		<value>Missing value for $1.</value>
 	</item>
 	<item>
 		<key>No Item(s) selected</key>
-		<value />
+		<value>No file(s) selected.</value>
 	</item>
 	<item>
-		<key>No Playlist is looked by You</key>
-		<value />
+		<key>No Playlist is locked by You.</key>
+		<value>No active playlist.</value>
 	</item>
 	<item>
 		<key>Note: Station Preferences not setup proberly.</key>
-		<value />
+		<value>Note: Station Preferences not setup proberly.</value>
 	</item>
 	<item>
-		<key>Password changed</key>
-		<value />
+		<key>Old password was incorrect.</key>
+		<value>Old password was incorrect.</value>
 	</item>
 	<item>
-		<key>Passwords do not match.</key>
-		<value />
+		<key>Password changed.</key>
+		<value>Password changed.</value>
+	</item>
+	<item>
+		<key>Passwords did not match.</key>
+		<value>Passwords did not match.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; activated</key>
-		<value />
+		<value>Playlist &quot;$1&quot; activated.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; released</key>
-		<value />
+		<value>Playlist &quot;$1&quot; released.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; reverted</key>
-		<value />
+		<value>Playlist &quot;$1&quot; reverted.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; saved</key>
-		<value />
+		<value>Playlist &quot;$1&quot; saved.</value>
 	</item>
 	<item>
-		<key>Playlist is looked by $1</key>
-		<value />
+		<key>Playlist has been locked by $1</key>
+		<value>Playlist has been locked by $1.</value>
 	</item>
 	<item>
 		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
-		<value />
+		<value>ScratchPad length is not set in System Preferences, so it cannot be used.</value>
 	</item>
 	<item>
 		<key>Select a Value</key>
-		<value />
+		<value>Select a Value</value>
 	</item>
 	<item>
 		<key>Settings saved</key>
-		<value />
+		<value>Station preferences saved.</value>
 	</item>
 	<item>
 		<key>Stream Data changed</key>
-		<value />
+		<value>Stream data changed.</value>
 	</item>
 	<item>
 		<key>Stream Data saved</key>
-		<value />
+		<value>Stream data saved.</value>
 	</item>
 	<item>
 		<key>Subject $1 added.</key>
-		<value />
+		<value>Subject $1 added.</value>
 	</item>
 	<item>
 		<key>Target is not Folder</key>
-		<value />
+		<value>Target is not folder.</value>
 	</item>
 	<item>
-		<key>Unable to release Playlist</key>
-		<value />
+		<key>There is no playlist available to unlock.</key>
+		<value>There is no playlist available to unlock.</value>
 	</item>
 	<item>
-		<key>Unable to revert to looked state</key>
-		<value />
+		<key>Unable to release Playlist.</key>
+		<value>Unable to release Playlist.</value>
+	</item>
+	<item>
+		<key>Unable to revert to locked state.</key>
+		<value>Unable to revert to locked state.</value>
 	</item>
 	<item>
 		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
-		<value />
-	</item>
-	<item>
-		<key>Unable to set $1: $2</key>
-		<value />
+		<value>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;.</value>
 	</item>
 	<item>
 		<key>Upload of file $1 was incomplete.</key>
-		<value />
+		<value>Upload of file $1 was incomplete.</value>
 	</item>
 	<item>
-		<key>Uploaded file $1 is greater than LiveSupport system setting.</key>
-		<value />
+		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
+		<value>Uploaded file $1 is bigger than setting in php.ini.</value>
 	</item>
 	<item>
-		<key>Uploaded file $1 is greater than setting in php.ini.</key>
-		<value />
-	</item>
-	<item>
-		<key>Wrong old pasword.</key>
-		<value />
-	</item>
-	<item>
-		<key>You have an Playlist already activated,n first close it</key>
-		<value />
+		<key>You have an Playlist already activated, first close it</key>
+		<value>You have an Playlist already activated, first close it.</value>
 	</item>
 	<item>
 		<key>Access</key>
-		<value />
+		<value>Access</value>
 	</item>
 	<item>
 		<key>Activate this Playlist</key>
-		<value />
+		<value>Activate this Playlist</value>
 	</item>
 	<item>
 		<key>Add Audio</key>
-		<value />
+		<value>Add Audio</value>
 	</item>
 	<item>
 		<key>Add Criteria</key>
-		<value />
+		<value>Add Criteria</value>
 	</item>
 	<item>
-		<key>Add to Playlist</key>
-		<value />
+		<key>Add file(s) to ScratchPad</key>
+		<value>Add file(s) to ScratchPad</value>
+	</item>
+	<item>
+		<key>Add file(s) to active Playlist</key>
+		<value>Add file(s) to active Playlist</value>
 	</item>
 	<item>
 		<key>Add to ScratchPad</key>
-		<value />
+		<value>Add to ScratchPad</value>
 	</item>
 	<item>
 		<key>Add to active Playlist</key>
-		<value />
+		<value>Add to active Playlist</value>
 	</item>
 	<item>
 		<key>Album</key>
-		<value />
+		<value>Album</value>
 	</item>
 	<item>
 		<key>Artist</key>
-		<value />
+		<value>Artist</value>
 	</item>
 	<item>
 		<key>Artist web page</key>
-		<value />
+		<value>Artist web page</value>
 	</item>
 	<item>
 		<key>Audio file information web page</key>
-		<value />
+		<value>Audio file information web page</value>
 	</item>
 	<item>
 		<key>Audio source web page</key>
-		<value />
+		<value>Audio source web page</value>
 	</item>
 	<item>
 		<key>BPM</key>
-		<value />
+		<value>BPM</value>
 	</item>
 	<item>
 		<key>Bitrate</key>
-		<value />
+		<value>Bitrate</value>
 	</item>
 	<item>
 		<key>Browse</key>
-		<value />
+		<value>Browse</value>
 	</item>
 	<item>
 		<key>Buy CD web page</key>
-		<value />
+		<value>Buy CD web page</value>
 	</item>
 	<item>
 		<key>CW</key>
-		<value />
+		<value>WK</value>
 	</item>
 	<item>
 		<key>Cancel</key>
-		<value />
+		<value>Cancel</value>
 	</item>
 	<item>
 		<key>Catalog number</key>
-		<value />
+		<value>Catalog number</value>
 	</item>
 	<item>
 		<key>Category</key>
-		<value />
+		<value>Category</value>
 	</item>
 	<item>
 		<key>Change Fadein</key>
-		<value />
+		<value>Change Fadein</value>
 	</item>
 	<item>
 		<key>Change Fadeout</key>
-		<value />
+		<value>Change Fadeout</value>
 	</item>
 	<item>
 		<key>Change Transition</key>
-		<value />
+		<value>Change Transition</value>
 	</item>
 	<item>
 		<key>Channels</key>
-		<value />
+		<value>Channels</value>
 	</item>
 	<item>
 		<key>Checksum</key>
-		<value />
+		<value>Checksum</value>
 	</item>
 	<item>
 		<key>Clear</key>
-		<value />
+		<value>Clear</value>
 	</item>
 	<item>
 		<key>Clear Playlist</key>
-		<value />
+		<value>Clear Playlist</value>
 	</item>
 	<item>
 		<key>Composer</key>
-		<value />
+		<value>Composer</value>
 	</item>
 	<item>
 		<key>Conductor</key>
-		<value />
+		<value>Conductor</value>
 	</item>
 	<item>
 		<key>Contributor</key>
-		<value />
+		<value>Contributor</value>
 	</item>
 	<item>
 		<key>Copyright</key>
-		<value />
+		<value>Copyright</value>
 	</item>
 	<item>
 		<key>Count</key>
-		<value />
+		<value>Count</value>
 	</item>
 	<item>
 		<key>Creator</key>
-		<value />
+		<value>Creator</value>
 	</item>
 	<item>
 		<key>Daily View</key>
-		<value />
+		<value>Daily view</value>
 	</item>
 	<item>
 		<key>Data</key>
-		<value />
+		<value>Data</value>
 	</item>
 	<item>
 		<key>Date</key>
-		<value />
+		<value>Date</value>
 	</item>
 	<item>
 		<key>Day</key>
-		<value />
+		<value>Day</value>
 	</item>
 	<item>
 		<key>Delete File</key>
-		<value />
+		<value>Delete file</value>
 	</item>
 	<item>
 		<key>Delete Playlist</key>
-		<value />
+		<value>Delete playlist</value>
 	</item>
 	<item>
 		<key>Description</key>
-		<value />
+		<value>Description</value>
 	</item>
 	<item>
 		<key>Disc number</key>
-		<value />
+		<value>Disc number</value>
 	</item>
 	<item>
 		<key>Display this Playlist</key>
-		<value />
+		<value>Display this playlist</value>
 	</item>
 	<item>
 		<key>Duration</key>
-		<value />
+		<value>Duration</value>
 	</item>
 	<item>
 		<key>Edit</key>
-		<value />
+		<value>Edit</value>
 	</item>
 	<item>
 		<key>Edit File</key>
-		<value />
+		<value>Edit file</value>
 	</item>
 	<item>
 		<key>Edit Metadata</key>
-		<value />
+		<value>Edit metadata</value>
 	</item>
 	<item>
 		<key>Encoded by</key>
-		<value />
+		<value>Encoded by</value>
 	</item>
 	<item>
 		<key>Encoder software used</key>
-		<value />
+		<value>Encoder software used</value>
 	</item>
 	<item>
 		<key>Fade</key>
-		<value />
+		<value>Fade</value>
 	</item>
 	<item>
 		<key>File</key>
-		<value />
+		<value>File</value>
 	</item>
 	<item>
 		<key>File List</key>
-		<value />
+		<value>File List</value>
 	</item>
 	<item>
 		<key>File Management</key>
-		<value />
+		<value>File management</value>
 	</item>
 	<item>
 		<key>File Type</key>
-		<value />
+		<value>File type</value>
 	</item>
 	<item>
 		<key>File format</key>
-		<value />
+		<value>File format</value>
 	</item>
 	<item>
 		<key>File type</key>
-		<value />
+		<value>File type</value>
 	</item>
 	<item>
 		<key>Folder Structure</key>
-		<value />
+		<value>Folder structure</value>
 	</item>
 	<item>
 		<key>Format</key>
-		<value />
+		<value>Format</value>
 	</item>
 	<item>
 		<key>Frequency</key>
-		<value />
+		<value>Frequency</value>
 	</item>
 	<item>
 		<key>Genre</key>
-		<value />
+		<value>Genre</value>
 	</item>
 	<item>
 		<key>Go</key>
-		<value />
+		<value>Go</value>
 	</item>
 	<item>
 		<key>Group Name</key>
-		<value />
+		<value>Group name</value>
 	</item>
 	<item>
 		<key>Help</key>
-		<value />
+		<value>Help</value>
 	</item>
 	<item>
 		<key>ISRC number</key>
-		<value />
+		<value>SRC number</value>
 	</item>
 	<item>
 		<key>Insert Playlist here</key>
-		<value />
+		<value>Insert playlist here</value>
 	</item>
 	<item>
 		<key>Item</key>
-		<value />
+		<value>Item</value>
 	</item>
 	<item>
 		<key>Label</key>
-		<value />
+		<value>Label</value>
 	</item>
 	<item>
 		<key>Language</key>
-		<value />
+		<value>Language</value>
 	</item>
 	<item>
 		<key>Length</key>
-		<value />
+		<value>Length</value>
 	</item>
 	<item>
 		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-		<value />
+		<value>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</value>
 	</item>
 	<item>
 		<key>Library Search</key>
-		<value />
+		<value>Library search</value>
 	</item>
 	<item>
 		<key>List Folder</key>
-		<value />
+		<value>List folder</value>
 	</item>
 	<item>
 		<key>Listen to File</key>
-		<value />
+		<value>Listen to file</value>
 	</item>
 	<item>
 		<key>Local Time</key>
-		<value />
+		<value>Local time</value>
 	</item>
 	<item>
 		<key>Lyricist</key>
-		<value />
+		<value>Lyricist</value>
 	</item>
 	<item>
 		<key>Lyrics</key>
-		<value />
+		<value>Lyrics</value>
 	</item>
 	<item>
 		<key>MDataXML</key>
-		<value />
+		<value>MDataXML</value>
 	</item>
 	<item>
 		<key>Main</key>
-		<value />
+		<value>Main</value>
 	</item>
 	<item>
 		<key>Maximum length of ScratchPad</key>
-		<value />
+		<value>Maximum length of ScratchPad</value>
 	</item>
 	<item>
 		<key>Media File</key>
-		<value />
+		<value>Media file</value>
 	</item>
 	<item>
 		<key>Media Library</key>
-		<value />
+		<value>Media library</value>
 	</item>
 	<item>
 		<key>Metadata</key>
-		<value />
+		<value>Metadata</value>
 	</item>
 	<item>
 		<key>Month</key>
-		<value />
+		<value>Month</value>
 	</item>
 	<item>
 		<key>Monthly View</key>
-		<value />
+		<value>Monthly view</value>
 	</item>
 	<item>
 		<key>Mood</key>
-		<value />
+		<value>Mood</value>
 	</item>
 	<item>
 		<key>Move</key>
-		<value />
+		<value>Move</value>
 	</item>
 	<item>
 		<key>Multiple Action:</key>
-		<value />
+		<value>Multiple action:</value>
 	</item>
 	<item>
 		<key>Music</key>
-		<value />
+		<value>Music</value>
 	</item>
 	<item>
 		<key>Name</key>
-		<value />
+		<value>Name</value>
 	</item>
 	<item>
 		<key>New</key>
-		<value />
+		<value>New</value>
 	</item>
 	<item>
 		<key>New Password</key>
-		<value />
+		<value>New password</value>
 	</item>
 	<item>
-		<key>New Playlist</key>
-		<value />
+		<key>New Playlist using this File</key>
+		<value>New playlist using this File</value>
 	</item>
 	<item>
-		<key>New Playlist using File</key>
-		<value />
-	</item>
-	<item>
-		<key>New Playlist using Item</key>
-		<value />
+		<key>New Playlist using this file(s)</key>
+		<value>New playlist using this file(s)</value>
 	</item>
 	<item>
 		<key>New empty Playlist</key>
-		<value />
+		<value>Create new empty playlist</value>
 	</item>
 	<item>
 		<key>No Entry</key>
-		<value />
+		<value>No entry</value>
 	</item>
 	<item>
 		<key>No match found.</key>
-		<value />
+		<value>No match found.</value>
 	</item>
 	<item>
 		<key>No objects</key>
-		<value />
+		<value>No objects.</value>
 	</item>
 	<item>
 		<key>Old Password</key>
-		<value />
+		<value>Old Password</value>
 	</item>
 	<item>
 		<key>Open last Playlist</key>
-		<value />
+		<value>Open last playlist</value>
 	</item>
 	<item>
 		<key>Operator</key>
-		<value />
+		<value>Operator</value>
 	</item>
 	<item>
 		<key>Orchestra or band</key>
-		<value />
+		<value>Orchestra or band</value>
 	</item>
 	<item>
 		<key>Original artist</key>
-		<value />
+		<value>Original artist</value>
 	</item>
 	<item>
 		<key>Original lyricist</key>
-		<value />
-	</item>
-	<item>
-		<key>PL Editor</key>
-		<value />
+		<value>Original lyricist</value>
 	</item>
 	<item>
 		<key>Page</key>
-		<value />
+		<value>Page</value>
 	</item>
 	<item>
 		<key>Password</key>
-		<value />
+		<value>Password</value>
 	</item>
 	<item>
 		<key>Playlist</key>
-		<value />
+		<value>Playlist</value>
 	</item>
 	<item>
 		<key>Playlist Editor</key>
-		<value />
+		<value>Playlist editor</value>
 	</item>
 	<item>
 		<key>Playlist Metadata</key>
-		<value />
+		<value>Playlist metadata</value>
 	</item>
 	<item>
 		<key>Radio station name</key>
-		<value />
+		<value>Radio station name</value>
 	</item>
 	<item>
 		<key>Radio station web page</key>
-		<value />
+		<value>Radio station web page</value>
 	</item>
 	<item>
 		<key>Range</key>
-		<value />
+		<value>Range</value>
 	</item>
 	<item>
 		<key>Rating</key>
-		<value />
+		<value>Rating</value>
 	</item>
 	<item>
 		<key>RawAnalyze</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove</key>
-		<value />
+		<value>RawAnalyze</value>
 	</item>
 	<item>
 		<key>Remove File from Playlist</key>
-		<value />
+		<value>Remove file from playlist</value>
 	</item>
 	<item>
 		<key>Remove Playlist</key>
-		<value />
+		<value>Remove playlist</value>
 	</item>
 	<item>
 		<key>Remove Selected</key>
-		<value />
+		<value>Remove selected</value>
+	</item>
+	<item>
+		<key>Remove file(s)</key>
+		<value>Remove file(s)</value>
 	</item>
 	<item>
 		<key>Remove from Scratchpad</key>
-		<value />
+		<value>Remove from Scratchpad</value>
 	</item>
 	<item>
 		<key>Repeat Password</key>
-		<value />
+		<value>Repeat password</value>
 	</item>
 	<item>
 		<key>Report date/time</key>
-		<value />
+		<value>Report date/time</value>
 	</item>
 	<item>
 		<key>Report location</key>
-		<value />
+		<value>Report location</value>
 	</item>
 	<item>
 		<key>Report organizations</key>
-		<value />
+		<value>Report organizations</value>
 	</item>
 	<item>
 		<key>Reset</key>
-		<value />
+		<value>Reset</value>
 	</item>
 	<item>
 		<key>Retype Password</key>
-		<value />
+		<value>Retype password</value>
 	</item>
 	<item>
 		<key>Revert to Saved</key>
-		<value />
+		<value>Revert to saved</value>
 	</item>
 	<item>
 		<key>Rows Per Page</key>
@@ -711,198 +711,174 @@
 	</item>
 	<item>
 		<key>Rows per Page</key>
-		<value />
+		<value>Rows per page</value>
 	</item>
 	<item>
 		<key>Sample rate</key>
-		<value />
+		<value>Sample rate</value>
 	</item>
 	<item>
 		<key>Save Playlist</key>
-		<value />
+		<value>Save playlist</value>
 	</item>
 	<item>
 		<key>Save and Close</key>
-		<value />
+		<value>Save and close</value>
 	</item>
 	<item>
-		<key>Save and Close Playlist</key>
-		<value />
+		<key>Save and Close this Playlist</key>
+		<value>Save and close this Playlist</value>
 	</item>
 	<item>
 		<key>Scheduler</key>
-		<value />
+		<value>Scheduler</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>
-		<value />
-	</item>
-	<item>
-		<key>Scratch Pad</key>
-		<value />
+		<value>Scheduler navigation</value>
 	</item>
 	<item>
 		<key>Search</key>
-		<value />
+		<value>Search</value>
 	</item>
 	<item>
 		<key>Search Library</key>
-		<value />
+		<value>Search library</value>
 	</item>
 	<item>
 		<key>Signed in</key>
-		<value />
+		<value>Signed in</value>
 	</item>
 	<item>
 		<key>Station Logo</key>
-		<value />
-	</item>
-	<item>
-		<key>Station Logo Path</key>
-		<value />
+		<value>Station logo</value>
 	</item>
 	<item>
 		<key>Station Name</key>
-		<value />
+		<value>Station name</value>
 	</item>
 	<item>
 		<key>Station Settings</key>
-		<value />
+		<value>Station settings</value>
 	</item>
 	<item>
 		<key>Station Time</key>
-		<value />
+		<value>Station time</value>
 	</item>
 	<item>
 		<key>Station URL</key>
-		<value />
-	</item>
-	<item>
-		<key>StationPrefs</key>
-		<value />
+		<value>Station URL</value>
 	</item>
 	<item>
 		<key>Stream</key>
-		<value />
+		<value>Stream</value>
 	</item>
 	<item>
 		<key>Stream URL</key>
-		<value />
+		<value>Stream URL</value>
 	</item>
 	<item>
 		<key>Subject</key>
-		<value />
+		<value>Subject</value>
 	</item>
 	<item>
 		<key>Submit</key>
-		<value />
+		<value>Submit</value>
 	</item>
 	<item>
 		<key>System Settings</key>
-		<value />
+		<value>System settings</value>
 	</item>
 	<item>
 		<key>Talk</key>
-		<value />
+		<value>Talk</value>
 	</item>
 	<item>
 		<key>Time</key>
-		<value />
+		<value>Time</value>
 	</item>
 	<item>
 		<key>Title</key>
-		<value />
-	</item>
-	<item>
-		<key>To Playlist</key>
-		<value />
+		<value>Title</value>
 	</item>
 	<item>
 		<key>Today</key>
-		<value />
+		<value>Today</value>
 	</item>
 	<item>
 		<key>Track number</key>
-		<value />
+		<value>Track number</value>
 	</item>
 	<item>
 		<key>Tree view</key>
-		<value />
+		<value>Tree view</value>
 	</item>
 	<item>
 		<key>Type</key>
-		<value />
-	</item>
-	<item>
-		<key>Upload</key>
-		<value />
-	</item>
-	<item>
-		<key>UploadM</key>
-		<value />
+		<value>Type</value>
 	</item>
 	<item>
 		<key>User Password</key>
-		<value />
+		<value>User password</value>
 	</item>
 	<item>
 		<key>User/Groups</key>
-		<value />
+		<value>User/Groups</value>
 	</item>
 	<item>
 		<key>Username</key>
-		<value />
+		<value>Username</value>
 	</item>
 	<item>
 		<key>Week</key>
-		<value />
+		<value>Week</value>
 	</item>
 	<item>
 		<key>Weekly View</key>
-		<value />
+		<value>Weekly view</value>
 	</item>
 	<item>
 		<key>Year</key>
-		<value />
+		<value>Year</value>
 	</item>
 	<item>
 		<key>calendar week</key>
-		<value />
+		<value>calendar week</value>
 	</item>
 	<item>
 		<key>copy</key>
-		<value />
+		<value>copy</value>
 	</item>
 	<item>
 		<key>go up</key>
-		<value />
+		<value>go up</value>
 	</item>
 	<item>
 		<key>move</key>
-		<value />
+		<value>move</value>
 	</item>
 	<item>
 		<key>move down</key>
-		<value />
+		<value>move down</value>
 	</item>
 	<item>
 		<key>move up</key>
-		<value />
+		<value>move up</value>
 	</item>
 	<item>
 		<key>new&amp;nbsp;folder</key>
-		<value />
+		<value>new folder</value>
 	</item>
 	<item>
 		<key>next</key>
-		<value />
+		<value>next</value>
 	</item>
 	<item>
 		<key>permissions</key>
-		<value />
+		<value>permissions</value>
 	</item>
 	<item>
 		<key>previous</key>
-		<value />
+		<value>previous</value>
 	</item>
 </language>
