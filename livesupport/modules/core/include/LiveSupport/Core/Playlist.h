@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -107,27 +107,27 @@ class Playlist : public Configurable,
         /**
          *  The unique id of the playlist.
          */
-        Ptr<UniqueId>::Ref          id;
+        Ptr<UniqueId>::Ref              id;
 
         /**
          *  The title of the playlist.
          */
-        Ptr<Glib::ustring>::Ref     title;
+        Ptr<const Glib::ustring>::Ref   title;
 
         /**
          *  The playling length of the playlist.
          */
-        Ptr<time_duration>::Ref     playlength;
+        Ptr<time_duration>::Ref         playlength;
 
         /**
          *  The uri of the SMIL file generated from this playlist (if any).
          */
-        Ptr<const std::string>::Ref uri;
+        Ptr<const std::string>::Ref     uri;
 
         /**
          *  The token given to this playlist by the storage server.
          */
-        Ptr<const std::string>::Ref token;
+        Ptr<const std::string>::Ref     token;
 
         /**
          *  Flag set if playlist is currently playing.
@@ -171,7 +171,7 @@ class Playlist : public Configurable,
         /**
          *  The type for storing the metadata.
          */
-        typedef std::map<const std::string, Ptr<Glib::ustring>::Ref>
+        typedef std::map<const std::string, Ptr<const Glib::ustring>::Ref>
                                     metadataType;
 
         /**
@@ -200,9 +200,9 @@ class Playlist : public Configurable,
          *  @param uri the location of the SMIL file representing this
          *             playlist (optional)
          */
-        Playlist(Ptr<UniqueId>::Ref         id,
-                 Ptr<time_duration>::Ref    playlength,
-                 Ptr<std::string>::Ref      uri = Ptr<std::string>::Ref())
+        Playlist(Ptr<UniqueId>::Ref             id,
+                 Ptr<time_duration>::Ref        playlength,
+                 Ptr<const std::string>::Ref    uri = Ptr<std::string>::Ref())
                                                 throw ()
         {
             this->id         = id;
@@ -223,10 +223,10 @@ class Playlist : public Configurable,
          *  @param uri the location of the SMIL file representing this
          *             playlist (optional)
          */
-        Playlist(Ptr<UniqueId>::Ref        id,
-                 Ptr<Glib::ustring>::Ref   title,
-                 Ptr<time_duration>::Ref   playlength,
-                 Ptr<std::string>::Ref     uri = Ptr<std::string>::Ref())
+        Playlist(Ptr<UniqueId>::Ref             id,
+                 Ptr<const Glib::ustring>::Ref  title,
+                 Ptr<time_duration>::Ref        playlength,
+                 Ptr<const std::string>::Ref    uri = Ptr<std::string>::Ref())
                                                 throw ()
         {
             this->id         = id;
@@ -312,7 +312,7 @@ class Playlist : public Configurable,
          *  @param uri the new URI.
          */
         virtual void
-        setUri(Ptr<const string>::Ref uri)      throw ()
+        setUri(Ptr<const std::string>::Ref uri) throw ()
         {
             this->uri = uri;
         }
@@ -323,7 +323,7 @@ class Playlist : public Configurable,
          *
          *  @return the token.
          */
-        virtual Ptr<const string>::Ref
+        virtual Ptr<const std::string>::Ref
         getToken(void) const                    throw ()
         {
             return token;
@@ -336,7 +336,8 @@ class Playlist : public Configurable,
          *  @param token a new token.
          */
         virtual void
-        setToken(Ptr<const string>::Ref token)  throw ()
+        setToken(Ptr<const std::string>::Ref token) 
+                                                throw ()
         {
             this->token = token;
         }
@@ -541,7 +542,7 @@ class Playlist : public Configurable,
          *
          *  @return the title.
          */
-        virtual Ptr<Glib::ustring>::Ref
+        virtual Ptr<const Glib::ustring>::Ref
         getTitle(void) const                    throw ()
         {
             return title;
@@ -553,7 +554,7 @@ class Playlist : public Configurable,
          *  @param title a new title.
          */
         virtual void
-        setTitle(Ptr<Glib::ustring>::Ref title)
+        setTitle(Ptr<const Glib::ustring>::Ref title)
                                                 throw ()
         {
             this->title = title;
@@ -580,8 +581,8 @@ class Playlist : public Configurable,
          *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
-        setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key, 
-                                                   const std::string &ns = "")
+        setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                    const std::string &key, const std::string &ns = "")
                                                 throw ();
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,7 +54,6 @@
 namespace LiveSupport {
 namespace Core {
 
-using namespace std;
 using namespace boost::posix_time;
 
 /* ================================================================ constants */
@@ -70,7 +69,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class Playable
 {
@@ -100,7 +99,7 @@ class Playable
          *
          *  @return the URI.
          */
-        virtual Ptr<const string>::Ref
+        virtual Ptr<const std::string>::Ref
         getUri(void) const                      throw () = 0;
 
         /**
@@ -111,7 +110,7 @@ class Playable
          *  @param uri the new URI.
          */
         virtual void
-        setUri(Ptr<const string>::Ref uri)      throw () = 0;
+        setUri(Ptr<const std::string>::Ref uri) throw () = 0;
 
 
         /**
@@ -120,7 +119,7 @@ class Playable
          *
          *  @return the token.
          */
-        virtual Ptr<const string>::Ref
+        virtual Ptr<const std::string>::Ref
         getToken(void) const                    throw () = 0;
 
         /**
@@ -130,7 +129,8 @@ class Playable
          *  @param token a new token.
          */
         virtual void
-        setToken(Ptr<const string>::Ref token)  throw () = 0;
+        setToken(Ptr<const std::string>::Ref token) 
+                                                throw () = 0;
 
 
         /**
@@ -138,7 +138,7 @@ class Playable
          *
          *  @return the title.
          */
-        virtual Ptr<Glib::ustring>::Ref
+        virtual Ptr<const Glib::ustring>::Ref
         getTitle(void) const                    throw () = 0;
 
         /**
@@ -147,7 +147,7 @@ class Playable
          *  @param title a new title.
          */
         virtual void
-        setTitle(Ptr<Glib::ustring>::Ref title)
+        setTitle(Ptr<const Glib::ustring>::Ref title)
                                                 throw () = 0;
 
 
@@ -171,8 +171,9 @@ class Playable
          *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
-        setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key, 
-                                                   const std::string &ns = "")
+        setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                    const std::string &key, 
+                    const std::string &ns = "")
                                                 throw () = 0;
 
 

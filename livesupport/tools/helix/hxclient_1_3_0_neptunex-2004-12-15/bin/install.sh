@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/helix/hxclient_1_3_0_neptunex-2004-12-15/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -77,6 +77,10 @@ helix_lib_dir=$installdir/lib/helix
 mkdir -p $helix_lib_dir
 cp ./release/*.a $helix_lib_dir
 cp ./release/*.so $helix_lib_dir
+
+usr_bin_dir=$installdir/bin
+mkdir -p $usr_bin_dir
+cp ./release/splay $usr_bin_dir
 
 # clean up
 cd $basedir

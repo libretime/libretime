@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,16 +109,16 @@ AudioClipTest :: firstTest(void)
         CPPUNIT_ASSERT(duration->minutes() == 18);
         CPPUNIT_ASSERT(duration->seconds() == 30);
 
-        Ptr<Glib::ustring>::Ref     title = audioClip->getTitle();
+        Ptr<const Glib::ustring>::Ref     title = audioClip->getTitle();
         CPPUNIT_ASSERT(title);
         CPPUNIT_ASSERT(*title == "File Title txt");
 
-        Ptr<Glib::ustring>::Ref     subject = audioClip
+        Ptr<const Glib::ustring>::Ref     subject = audioClip
                                         ->getMetadata("subject", "dc");
         CPPUNIT_ASSERT(subject);
         CPPUNIT_ASSERT(*subject == "Keywords: qwe, asd, zcx");
 
-        Ptr<Glib::ustring>::Ref     alternativeTitle = audioClip
+        Ptr<const Glib::ustring>::Ref     alternativeTitle = audioClip
                                         ->getMetadata("alternative", "dcterms");
         CPPUNIT_ASSERT(alternativeTitle);
         CPPUNIT_ASSERT(*alternativeTitle ==

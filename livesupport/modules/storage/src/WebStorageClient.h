@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -404,6 +404,10 @@ class WebStorageClient :
 
         /**
          *  Return a list of all audio clips in the playlist store.
+         *
+         *  Since this makes no sense whatsoever, this method currently returns
+         *  an empty list.  It will be replaced by a method which uses
+         *  <code>locstor.searchMetadata</code>.
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.

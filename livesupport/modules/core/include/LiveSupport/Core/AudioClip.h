@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -138,32 +138,32 @@ class AudioClip : public Configurable,
         /**
          *  The unique id of the audio clip.
          */
-        Ptr<UniqueId>::Ref          id;
+        Ptr<UniqueId>::Ref              id;
 
         /**
          *  The title of the audio clip.
          */
-        Ptr<Glib::ustring>::Ref     title;
+        Ptr<const Glib::ustring>::Ref   title;
 
         /**
          *  The playling length of the audio clip.
          */
-        Ptr<time_duration>::Ref     playlength;
+        Ptr<time_duration>::Ref         playlength;
 
         /**
          *  The location of the binary audio clip sound file.
          */
-        Ptr<const std::string>::Ref uri;
+        Ptr<const std::string>::Ref     uri;
 
         /**
          *  The identifying token returned by the storage server.
          */
-        Ptr<const std::string>::Ref token;
+        Ptr<const std::string>::Ref     token;
 
         /**
          *  This audio clip in XML format.
          */
-        Ptr<xmlpp::Document>::Ref   xmlAudioClip;
+        Ptr<xmlpp::Document>::Ref       xmlAudioClip;
 
 
     public:
@@ -196,9 +196,9 @@ class AudioClip : public Configurable,
          *  @param uri the location of the sound file corresponding to
          *             this audio clip object (optional)
          */
-        AudioClip(Ptr<UniqueId>::Ref         id,
-                  Ptr<time_duration>::Ref    playlength,
-                  Ptr<string>::Ref           uri = Ptr<string>::Ref())
+        AudioClip(Ptr<UniqueId>::Ref            id,
+                  Ptr<time_duration>::Ref       playlength,
+                  Ptr<const std::string>::Ref   uri = Ptr<string>::Ref())
                                                            throw ();
 
         /**
@@ -210,10 +210,10 @@ class AudioClip : public Configurable,
          *  @param uri the location of the sound file corresponding to
          *             this audio clip object (optional)
          */
-        AudioClip(Ptr<UniqueId>::Ref       id,
-                  Ptr<Glib::ustring>::Ref  title,
-                  Ptr<time_duration>::Ref  playlength,
-                  Ptr<string>::Ref         uri = Ptr<string>::Ref())
+        AudioClip(Ptr<UniqueId>::Ref            id,
+                  Ptr<const Glib::ustring>::Ref title,
+                  Ptr<time_duration>::Ref       playlength,
+                  Ptr<const std::string>::Ref   uri = Ptr<string>::Ref())
                                                            throw ();
 
         /**
@@ -326,7 +326,7 @@ class AudioClip : public Configurable,
          *
          *  @return the title.
          */
-        virtual Ptr<Glib::ustring>::Ref
+        virtual Ptr<const Glib::ustring>::Ref
         getTitle(void) const                    throw ()
         {
             return title;
@@ -338,7 +338,7 @@ class AudioClip : public Configurable,
          *  @param title a new title.
          */
         virtual void
-        setTitle(Ptr<Glib::ustring>::Ref title)
+        setTitle(Ptr<const Glib::ustring>::Ref title)
                                                 throw ();
 
         /**
@@ -361,8 +361,8 @@ class AudioClip : public Configurable,
          *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
-        setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key, 
-                                                   const std::string &ns = "")
+        setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                    const std::string &key, const std::string &ns = "")
                                                 throw ();
 
 
@@ -370,6 +370,13 @@ class AudioClip : public Configurable,
          *  Return an XML representation of this audio clip.  This contains
          *  the metadata fields of the audio clip, and it's roughly the
          *  inverse of the configure() method.
+         *
+         *  (NOTE: This returns a non-constant pointer to a member of the
+         *  AudioClip object, so handle with care, and do not ever, ever
+         *  modify the Document object returned.  It cannot be made const
+         *  because <code>xmlpp::Document::write_to_file()</code> and 
+         *  <code>xmlpp::Document::write_to_string()</code> are only defined on
+         *  non-constant instances.)
          *
          *  @return an xmlpp::Document containing the metadata.
          */

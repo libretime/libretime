@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,9 +115,9 @@ static const std::string    defaultPrefixUri ="http://www.streamonthefly.org/";
 /*------------------------------------------------------------------------------
  *  Test constructor without title.
  *----------------------------------------------------------------------------*/
-AudioClip :: AudioClip(Ptr<UniqueId>::Ref   id,
-                  Ptr<time_duration>::Ref   playlength,
-                  Ptr<std::string>::Ref     uri)
+AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
+                  Ptr<time_duration>::Ref       playlength,
+                  Ptr<const std::string>::Ref   uri)
                                                            throw ()
 {
     this->id         = id;
@@ -125,7 +125,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref   id,
     this->playlength = playlength;
     this->uri        = uri;
     
-    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+    Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                         to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
@@ -133,10 +133,10 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref   id,
 /*------------------------------------------------------------------------------
  *  Test constructor with title.
  *----------------------------------------------------------------------------*/
-AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
-                       Ptr<Glib::ustring>::Ref  title,
-                       Ptr<time_duration>::Ref  playlength,
-                       Ptr<std::string>::Ref    uri)
+AudioClip :: AudioClip(Ptr<UniqueId>::Ref               id,
+                       Ptr<const Glib::ustring>::Ref    title,
+                       Ptr<time_duration>::Ref          playlength,
+                       Ptr<const std::string>::Ref      uri)
                                                            throw ()
 {
     this->id         = id;
@@ -144,7 +144,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
     this->playlength = playlength;
     this->uri        = uri;
 
-    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+    Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                         to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 
@@ -156,7 +156,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
  *  Set the value of the title field.
  *----------------------------------------------------------------------------*/
 void
-AudioClip :: setTitle(Ptr<Glib::ustring>::Ref title)
+AudioClip :: setTitle(Ptr<const Glib::ustring>::Ref title)
                                                 throw ()
 {
     this->title = title;
@@ -243,7 +243,8 @@ AudioClip :: configure(const xmlpp::Element  & element)
                        && dataElement->has_child_text()) {
                 Glib::ustring       value = dataElement->get_child_text()
                                                        ->get_content();
-                Ptr<Glib::ustring>::Ref ptrToValue(new Glib::ustring(value));
+                Ptr<const Glib::ustring>::Ref ptrToValue(
+                                                new const Glib::ustring(value));
                 title = ptrToValue;
             }
 
@@ -267,7 +268,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
         throw std::invalid_argument(eMsg);
     }
     
-    Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
+    Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                              to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
@@ -317,8 +318,9 @@ AudioClip :: getMetadata(const string &key, const std::string &ns) const
  *  Set the value of a metadata field.
  *----------------------------------------------------------------------------*/
 void
-AudioClip :: setMetadata(Ptr<Glib::ustring>::Ref value, const std::string &key,
-                                                        const std::string &ns)
+AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                         const std::string &key,
+                         const std::string &ns)
                                                 throw ()
 {
     if (ns == extentElementPrefix && key == extentElementName) {

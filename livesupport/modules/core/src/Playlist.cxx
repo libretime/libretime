@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -376,7 +376,8 @@ Playlist :: getMetadata(const string &key, const string &ns) const
     metadataType::const_iterator  it = metadata.find(completeKey);
 
     if (it != metadata.end()) {
-        return it->second;
+        Ptr<Glib::ustring>::Ref data(new Glib::ustring(*it->second));
+        return data;
     }
     else {
         Ptr<Glib::ustring>::Ref nullPointer;
@@ -389,8 +390,8 @@ Playlist :: getMetadata(const string &key, const string &ns) const
  *  Set the value of a metadata field.
  *----------------------------------------------------------------------------*/
 void
-Playlist :: setMetadata(Ptr<Glib::ustring>::Ref value, const string &key, 
-                                                       const string &ns)
+Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                        const string &key, const string &ns)
                                                 throw ()
 {
     std::string     completeKey = key + ns;
