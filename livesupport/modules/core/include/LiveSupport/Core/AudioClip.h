@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,9 +78,28 @@ using namespace boost::posix_time;
  *  <pre><code>
  *  &lt;audioClip id="1" 
  *             playlength="00:18:30.000000"
- *             uri="file:var/test1.mp3"
+ *             uri="file:var/test1.mp3" &gt;
+ *         &lt;metadata
+ *                xmlns="http://www.streamonthefly.org/"
+ *                xmlns:dc="http://purl.org/dc/elements/1.1/"
+ *                xmlns:dcterms="http://purl.org/dc/terms/"
+ *                xmlns:xbmf="http://www.streamonthefly.org/xbmf"
+ *                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
+ *             &lt;dc:title  &gt;File Title txt&lt;/dc:title&gt;
+ *             &lt;dcterms:extent  &gt;123&lt;/dcterms:extent&gt;
+ *             ...
+ *         &lt;/metadata&gt;
  *  &lt;/audioClip&gt;
  *  </code></pre>
+ *
+ *  The metadata element is optional.  The <code>configure()</code> method
+ *  sets only those fields which had not been set previously: e.g., if we set
+ *  some or all fields of the AudioClip in the constructor, then these fields
+ *  in the XML element will be ignored by <code>configure()</code>. If both the
+ *  <code>playlength</code> attribute and the 
+ *  <code>&lt;dcterms:extent&gt;</code>
+ *  element are present, then the playlength is set from the attribute and 
+ *  <code>&lt;dcterms:extent&gt;</code> is ignored.
  *
  *  The URI is not normally part of the XML element; it's only included
  *  as an optional attribute for testing purposes.
@@ -88,14 +107,14 @@ using namespace boost::posix_time;
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT audioClip EMPTY &gt;
+ *  &lt;!ELEMENT audioClip (metadata?) &gt;
  *  &lt;!ATTLIST audioClip  id           NMTOKEN     #REQUIRED  &gt;
  *  &lt;!ATTLIST audioClip  playlength   NMTOKEN     #REQUIRED  &gt;
  *  &lt;!ATTLIST audioClip  uri          CDATA       #IMPLIED   &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -133,6 +152,18 @@ class AudioClip : public Configurable,
          */
         AudioClip(void)                                    throw ()
         {
+        }
+
+        /**
+         *  Create an audio clip by specifying its unique ID.
+         *  The other fields will be filled in by configure().
+         *
+         *  @param id the id of the audio clip.
+         */
+        AudioClip(Ptr<UniqueId>::Ref         id)
+                                                           throw ()
+        {
+            this->id         = id;
         }
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,21 @@ using namespace LiveSupport::Core;
 const std::string AudioClip::configElementNameStr = "audioClip";
 
 /**
+ *  The name of the metadata child element.
+ */
+static const std::string    metadataElementName = "metadata";
+
+/**
+ *  The prefix of the extent (length) metadata element.
+ */
+static const std::string    extentElementPrefix = "dcterms";
+
+/**
+ *  The name of the extent (length) metadata element.
+ */
+static const std::string    extentElementName = "extent";
+
+/**
  *  The name of the attribute to get the id of the audio clip.
  */
 static const std::string    idAttrName = "id";
@@ -65,6 +80,7 @@ static const std::string    uriAttrName = "uri";
  *  The name of the attribute to get the playlength of the audio clip.
  */
 static const std::string    playlengthAttrName = "playlength";
+
 
 /* ===============================================  local function prototypes */
 
@@ -83,31 +99,76 @@ AudioClip :: configure(const xmlpp::Element  & element)
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
-
+    
     const xmlpp::Attribute    * attribute;
-    std::stringstream           strStr;
-    unsigned long int           idValue;
 
-    if (!(attribute = element.get_attribute(idAttrName))) {
-        std::string eMsg = "missing attribute ";
-        eMsg += idAttrName;
-        throw std::invalid_argument(eMsg);
+    if (!id) {
+        if (!(attribute = element.get_attribute(idAttrName))) {
+            std::string eMsg = "missing attribute ";
+            eMsg += idAttrName;
+            throw std::invalid_argument(eMsg);
+        }
+        std::stringstream   strStr(attribute->get_value());
+        UniqueId::IdType    idValue;
+        strStr >> idValue;
+        id.reset(new UniqueId(idValue));
     }
-    strStr.str(attribute->get_value());
-    strStr >> idValue;
-    id.reset(new UniqueId(idValue));
 
-    if (!(attribute = element.get_attribute(playlengthAttrName))) {
-        std::string eMsg = "missing attribute ";
-        eMsg += idAttrName;
-        throw std::invalid_argument(eMsg);
+    if (!playlength
+            && (attribute = element.get_attribute(playlengthAttrName))) {
+        playlength.reset(new time_duration(
+                                duration_from_string(attribute->get_value())));
     }
-    playlength.reset(new time_duration(
-                            duration_from_string(attribute->get_value())));
 
-    if ((attribute = element.get_attribute(uriAttrName))) {
-        std::string  uriValue = attribute->get_value();
-        uri.reset(new std::string(uriValue));
+    if (!uri 
+            && (attribute = element.get_attribute(uriAttrName))) {
+        uri.reset(new std::string(attribute->get_value()));
+    }
+
+    xmlpp::Node::NodeList       childNodes 
+                                = element.get_children(metadataElementName);
+    xmlpp::Node::NodeList::iterator it = childNodes.begin();
+
+    if (it != childNodes.end()) {
+        const xmlpp::Element    * metadataElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
+
+        xmlpp::Node::NodeList   dataFieldList
+                                = metadataElement->get_children();
+        xmlpp::Node::NodeList::iterator listIt = dataFieldList.begin();
+
+        while (listIt != dataFieldList.end()) {
+            const xmlpp::Node * dataNode = *listIt;
+            if (!playlength 
+                    && dataNode->get_namespace_prefix() == extentElementPrefix
+                    && dataNode->get_name() == extentElementName) {
+                const xmlpp::Element
+                        * dataElement 
+                        = dynamic_cast<const xmlpp::Element*> (dataNode);
+                if (dataElement->has_child_text()) {
+                    std::stringstream strStr(dataElement->get_child_text()
+                                                        ->get_content());
+                    unsigned long int seconds;
+                    strStr >> seconds;
+                    playlength.reset(new time_duration(0,0,seconds,0));
+                }
+            }
+            ++listIt;
+        }
+        
+        ++it;
+        if (it != childNodes.end()) {
+            std::string eMsg = "more than one ";
+            eMsg += metadataElementName;
+            eMsg += " XML element";
+            throw std::invalid_argument(eMsg);
+        }
+    }
+
+    if (!playlength) {
+        std::string eMsg = "missing attribute ";
+        eMsg += playlengthAttrName;
+        throw std::invalid_argument(eMsg);
     }
 }
 

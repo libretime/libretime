@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ AudioClipTest :: firstTest(void)
 {
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
+                                    new xmlpp::DomParser(configFileName, false));
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
         Ptr<AudioClip>::Ref     audioClip(new AudioClip());

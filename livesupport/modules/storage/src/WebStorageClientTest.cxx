@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,7 +165,7 @@ WebStorageClientTest :: audioClipTest(void)
     
 /*    std::cout << "\nReset storage result:\n";
     for (unsigned i=0; i<uniqueIdVector->size(); i++) {
-        std::cout << std::hex << uniqueIdVector->at(i)->getId() << std::endl;
+        std::cout << std::hex << std::string(*uniqueIdVector->at(i)) << std::endl;
     } */
 
     Ptr<SessionId>::Ref sessionId = authentication->login("root", "q");
@@ -179,7 +179,7 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(exists);
-/*
+
     Ptr<AudioClip>::Ref audioClip;
     try {
         audioClip = wsc->getAudioClip(sessionId, id01);
@@ -187,9 +187,7 @@ WebStorageClientTest :: audioClipTest(void)
     catch (std::logic_error &e) {
         CPPUNIT_FAIL(e.what());
     }
-std::cout << "\nid: " << audioClip->getId()->getId()
-          << "\nplaylength: " << audioClip->getPlaylength() << "\n";
-*/
+
     Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
     try {
         exists = wsc->existsAudioClip(sessionId, id77);
@@ -198,6 +196,7 @@ std::cout << "\nid: " << audioClip->getId()->getId()
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
+
 /*    
     Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
     Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));

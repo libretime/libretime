@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<audioClip>
 <metadata
   xmlns="http://www.streamonthefly.org/"
   xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -31,3 +32,4 @@
  <xbmf:phone>123456789</xbmf:phone>
 </xbmf:contributor>
 </metadata>
+</audioClip>

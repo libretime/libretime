@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -202,8 +202,14 @@ static const std::string    existsAudioClipMethodResultParamName = "exists";
 /*------------------------------------------------------------------------------
  *  The name of the get audio clip method on the storage server
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipMethodName 
-                            = "locstor.getAudioClip";
+static const std::string    getAudioClipOpenMethodName 
+                            = "locstor.downloadMetadataOpen";
+
+/*------------------------------------------------------------------------------
+ *  The name of the get audio clip method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipCloseMethodName 
+                            = "locstor.downloadMetadataClose";
 
 /*------------------------------------------------------------------------------
  *  The name of the session ID parameter in the input structure
@@ -216,9 +222,19 @@ static const std::string    getAudioClipMethodSessionIdParamName = "sessid";
 static const std::string    getAudioClipMethodAudioClipIdParamName = "gunid";
 
 /*------------------------------------------------------------------------------
- *  The name of the result parameter returned by the method
+ *  The name of the result URL parameter returned by the method
  *----------------------------------------------------------------------------*/
-static const std::string    getAudioClipMethodResultParamName = "metadata";
+static const std::string    getAudioClipMethodUrlParamName = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter returned (for open) or input (for close)
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipMethodTokenParamName = "token";
+
+/*------------------------------------------------------------------------------
+ *  The name of the status parameter returned by the close method
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipMethodStatusParamName = "status";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: storeAudioClip */
@@ -457,11 +473,13 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
+    parameters.clear();
     parameters[existsAudioClipMethodSessionIdParamName] 
             = sessionId->getId();
     parameters[existsAudioClipMethodAudioClipIdParamName] 
             = std::string(*id);
     
+    result.clear();
     if (!xmlRpcClient.execute(existsAudioClipMethodName.c_str(),
                               parameters, result)) {
         std::string eMsg = "cannot execute XML-RPC method '";
@@ -487,7 +505,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
  
 
 /*------------------------------------------------------------------------------
- *  Return an audio clip.
+ *  Retrieve an audio clip from the storage.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
 WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
@@ -500,32 +518,39 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
+    parameters.clear();
     parameters[getAudioClipMethodSessionIdParamName] 
             = sessionId->getId();
     parameters[getAudioClipMethodAudioClipIdParamName] 
             = std::string(*id);
     
-    if (!xmlRpcClient.execute(getAudioClipMethodName.c_str(),
+    result.clear();
+    if (!xmlRpcClient.execute(getAudioClipOpenMethodName.c_str(),
                               parameters, result)) {
         std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += getAudioClipMethodName;
+        eMsg += getAudioClipOpenMethodName;
         eMsg += "'";
         throw std::logic_error(eMsg);
     }
 
     if (xmlRpcClient.isFault() 
-                || ! result.hasMember(getAudioClipMethodResultParamName)
-                || result[getAudioClipMethodResultParamName].getType() 
+                || ! result.hasMember(getAudioClipMethodUrlParamName)
+                || result[getAudioClipMethodUrlParamName].getType() 
+                                                != XmlRpcValue::TypeString
+                || ! result.hasMember(getAudioClipMethodTokenParamName)
+                || result[getAudioClipMethodTokenParamName].getType() 
                                                 != XmlRpcValue::TypeString) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
-             << getAudioClipMethodName
+             << getAudioClipOpenMethodName
              << "' returned error message:\n"
              << result;
         throw std::logic_error(eMsg.str());
     }
     
-    std::string         xmlAudioClip(result[getAudioClipMethodResultParamName]);
+    std::string         url     = result[getAudioClipMethodUrlParamName];
+    std::string         token   = result[getAudioClipMethodTokenParamName];
+/*
 int offset = 353;
 std::cout << "\n" << xmlAudioClip.at(offset+0) << "\n";
 std::cout << xmlAudioClip.at(offset+1) << "\n";
@@ -548,21 +573,48 @@ std::cout << xmlAudioClip.at(offset+17) << "\n";
 std::cout << xmlAudioClip.at(offset+18) << "\n";
 std::cout << xmlAudioClip.at(offset+19) << "\n";
 std::cout << xmlAudioClip.at(offset+20) << "\n";
-
-    Ptr<AudioClip>::Ref audioClip;
+*/
+    Ptr<AudioClip>::Ref audioClip(new AudioClip(id));
 
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
-        parser->parse_memory(xmlAudioClip);
+        parser->parse_file(url);
         const xmlpp::Document     * document = parser->get_document();
         const xmlpp::Element      * root     = document->get_root_node();
 
-        audioClip.reset(new AudioClip);
         audioClip->configure(*root);
     } catch (std::invalid_argument &e) {
         throw std::logic_error("semantic error in audio clip metafile");
     } catch (xmlpp::exception &e) {
         throw std::logic_error("error parsing audio clip metafile");
+    }
+
+    parameters.clear();
+    parameters[getAudioClipMethodSessionIdParamName] 
+            = sessionId->getId();
+    parameters[getAudioClipMethodTokenParamName] 
+            = token;
+    
+    result.clear();
+    if (!xmlRpcClient.execute(getAudioClipCloseMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getAudioClipCloseMethodName;
+        eMsg += "'";
+        throw std::logic_error(eMsg);
+    }
+
+    if (xmlRpcClient.isFault() 
+                || ! result.hasMember(getAudioClipMethodStatusParamName)
+                || result[getAudioClipMethodStatusParamName].getType() 
+                                                != XmlRpcValue::TypeBoolean
+                || ! bool(result[getAudioClipMethodStatusParamName])) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getAudioClipCloseMethodName
+             << "' returned error message:\n"
+             << result;
+        throw std::logic_error(eMsg.str());
     }
 
     return audioClip;
@@ -634,7 +686,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                 || result.getType() != XmlRpcValue::TypeString) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
-             << getAudioClipMethodName
+             << storeAudioClipMethodName
              << "' returned error message:\n"
              << result;
         throw std::logic_error(eMsg.str());
@@ -709,8 +761,10 @@ WebStorageClient :: reset(void)
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
+    parameters.clear();
     parameters["dummy_param"] = "dummy_value"; 
     
+    result.clear();
     if (!xmlRpcClient.execute(resetStorageMethodName.c_str(),
                               parameters, result)) {
         std::string eMsg = "cannot execute XML-RPC method '";
@@ -743,7 +797,7 @@ WebStorageClient :: reset(void)
                  << "':\n"
                  << result;
             throw std::logic_error(eMsg.str());
-        }            
+        }
         Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(uniqueIdArray[i])));
         returnValue->push_back(uniqueId);
     }
