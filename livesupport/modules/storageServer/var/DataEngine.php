@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -252,6 +252,7 @@ class DataEngine{
     function _makeOrSql($fldsPart, $whereArr, $ftypeCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
+        $whereArr[] = " FALSE\n";
         foreach($whereArr as $i=>$v){
             $whereArr[$i] = sprintf($v, "md", "md", "md", "md");
         }
