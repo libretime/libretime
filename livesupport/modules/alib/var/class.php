@@ -23,11 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/class.php,v $
 
 ------------------------------------------------------------------------------*/
-require_once "mtree.php";
+require_once "m2tree.php";
 
 /**
  *  ObjClass class
@@ -35,11 +35,11 @@ require_once "mtree.php";
  *  class for 'object classes' handling - i.e. groups of object in tree
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see Mtree
  *  @see Subj
  */
-class ObjClasses extends Mtree{
+class ObjClasses extends M2tree{
     var $classTable;
     var $cmembTable;
     /**
@@ -51,7 +51,7 @@ class ObjClasses extends Mtree{
      */
     function ObjClasses(&$dbc, $config)
     {
-        parent::MTree($dbc, $config);
+        parent::M2Tree($dbc, $config);
         $this->classTable = $config['tblNamePrefix'].'classes';
         $this->cmembTable = $config['tblNamePrefix'].'cmemb';
     }
@@ -174,7 +174,7 @@ class ObjClasses extends Mtree{
     function getClassName($id)
     {
         return $this->dbc->getOne(
-            $query = "SELECT cname FROM {$this->classTable}WHERE id=$id");
+            $query = "SELECT cname FROM {$this->classTable} WHERE id=$id");
     }
 
     /**
@@ -244,7 +244,7 @@ class ObjClasses extends Mtree{
     {
         $this->dbc->query("DELETE FROM {$this->cmembTable}");
         $this->dbc->query("DELETE FROM {$this->classTable}");
-        parent::deleteData();
+        parent::reset();
     }
     /**
      *   Insert test data
@@ -253,10 +253,12 @@ class ObjClasses extends Mtree{
     function testData()
     {
         parent::testData();
-        $o[] = $this->addClass('Sections b');
-        $o[] = $this->addClass('Class 2');
-        $this->addObj2Class($o[1], $this->tdata['tree'][4]);
-        $this->addObj2Class($o[1], $this->tdata['tree'][9]);
+        $o['cl_sa'] = $this->addClass('Sections a');
+        $o['cl2'] = $this->addClass('Class 2');
+        $this->addObj2Class($o['cl_sa'], $this->tdata['tree']['s1a']);
+        $this->addObj2Class($o['cl_sa'], $this->tdata['tree']['s2a']);
+        $this->addObj2Class($o['cl2'], $this->tdata['tree']['t1']);
+        $this->addObj2Class($o['cl2'], $this->tdata['tree']['pb']);
         $this->tdata['classes'] = $o;
     }
     
@@ -269,11 +271,11 @@ class ObjClasses extends Mtree{
         if(PEAR::isError($p = parent::test())) return $p;
         $this->deleteData();
         $this->testData();
-        $this->test_correct = "Sections b (0), Class 2 (2)\n";
+        $this->test_correct = "Sections a (2), Class 2 (2)\n";
         $this->test_dump = $this->dumpClasses();
-        $this->removeClass('Sections b');
-        $this->removeObjFromClass($this->tdata['tree'][4],
-            $this->tdata['classes'][1]);
+        $this->removeClass('Sections a');
+        $this->removeObjFromClass($this->tdata['tree']['pb'],
+            $this->tdata['classes']['cl2']);
         $this->test_correct .= "Class 2 (1)\n";
         $this->test_dump .= $this->dumpClasses();
         $this->deleteData();

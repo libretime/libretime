@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -71,6 +71,9 @@ class Subjects extends ObjClasses{
      */
     function addSubj($login, $pass=NULL)
     {
+        if(!$login) return $this->dbc->raiseError(
+            get_class($this)."::addSubj: empty login"
+        );
         $id = $this->dbc->nextId("{$this->subjTable}_id_seq");
         if(PEAR::isError($id)) return $id;
         $r = $this->dbc->query("
@@ -465,21 +468,22 @@ class Subjects extends ObjClasses{
     function testData()
     {
         parent::testData();
-        $o[] = $this->addSubj('root', 'q');
-        $o[] = $this->addSubj('test1', 'a');
-        $o[] = $this->addSubj('test2', 'a');
-        $o[] = $this->addSubj('test3', 'a');
-        $o[] = $this->addSubj('test4', 'a');
-        $o[] = $this->addSubj('gr1');
-        $o[] = $this->addSubj('gr2');
-#        $this->addSubj2Gr('test1', 'gr1');
-        $this->addSubj2Gr('test2', 'gr1');
-        $this->addSubj2Gr('test3', 'gr1');
-        $this->addSubj2Gr('test4', 'gr2');
-        $this->addSubj2Gr('gr2', 'gr1');
-        $o[] = $this->addSubj('gr3');
+        $o['root'] = $this->addSubj('root', 'q');
+        $o['test1'] = $this->addSubj('test1', 'a');
+        $o['test2'] = $this->addSubj('test2', 'a');
+        $o['test3'] = $this->addSubj('test3', 'a');
+        $o['test4'] = $this->addSubj('test4', 'a');
+        $o['test5'] = $this->addSubj('test5', 'a');
+        $o['gr1'] = $this->addSubj('gr1');
+        $o['gr2'] = $this->addSubj('gr2');
+        $o['gr3'] = $this->addSubj('gr3');
+        $o['gr4'] = $this->addSubj('gr4');
+        $this->addSubj2Gr('test1', 'gr1');
+        $this->addSubj2Gr('test2', 'gr2');
         $this->addSubj2Gr('test3', 'gr3');
-        $this->addSubj2Gr('test1', 'gr3');
+        $this->addSubj2Gr('test4', 'gr4');
+        $this->addSubj2Gr('test5', 'gr1');
+        $this->addSubj2Gr('gr4', 'gr3');
         $this->addSubj2Gr('gr3', 'gr2');
         return $this->tdata['subjects'] = $o;
     }
@@ -494,14 +498,14 @@ class Subjects extends ObjClasses{
         $this->deleteData();
         $this->testData();
         $this->test_correct = "root(0), test1(0), test2(0), test3(0),".
-            " test4(0), gr1(3), gr2(2), gr3(2)\n";
+            " test4(0), test5(0), gr1(2), gr2(2), gr3(2), gr4(1)\n";
         $this->test_dump = $this->dumpSubjects();
         $this->removeSubj('test1');
         $this->removeSubj('test3');
-        $this->removeSubjFromGr('test2', 'gr1');
+        $this->removeSubjFromGr('test5', 'gr1');
         $this->removeSubjFromGr('gr3', 'gr2');
-        $this->test_correct .= "root(0), test2(0), test4(0), gr1(1),".
-            " gr2(1), gr3(0)\n";
+        $this->test_correct .= "root(0), test2(0), test4(0), test5(0),".
+            " gr1(0), gr2(1), gr3(1), gr4(1)\n";
         $this->test_dump .= $this->dumpSubjects();
         $this->deleteData();
         if($this->test_dump == $this->test_correct)

@@ -23,11 +23,14 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
+
 require_once 'subj.php';
+
+define('USE_ALIB_CLASSES', TRUE);
 define('ALIBERR_NOTLOGGED', 30);
 define('ALIBERR_NOTEXISTS', 31);
 
@@ -37,7 +40,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -182,68 +185,89 @@ class Alib extends Subjects{
     }
 
     /**
-     *   Check if specified subject have permission to specified action
-     *   on specified object - huh ;)<br>
-     *   One of the most important method in this class hierarchy ...
+     *  Check if specified subject have permission to specified action
+     *  on specified object
      *
-     *   @param sid int
-     *   @param action string
-     *   @param oid int OPT
-     *   @return boolean/err
+     *  Look for sequence of correnponding permissions and order it by
+     *  relevence, then test the most relevant for result.
+     *  High relevence have direct permission (directly for specified subject
+     *  and object. Relevance order is done by level distance in the object
+     *  tree, level distance in subjects (user/group system).
+     *  Similar way is used for permissions related to object classes.
+     *  But class-related permissions have lower priority then
+     *  object-tree-related.
+     *  Support for object classes can be disabled by USE_ALIB_CLASSES const.
+     *
+     *  @param sid int, subject id (user or group id)
+     *  @param action string, from set defined in config
+     *  @param oid int, object id, optional (default: root node)
+     *  @return boolean/err
      */
     function checkPerm($sid, $action, $oid=NULL)
     {
         if(!is_numeric($sid)) return FALSE;
-        if(is_null($oid)) $oid = $this->getObjId($this->RootNode);
+        if(is_null($oid) or $oid=='') $oid = $this->getObjId($this->RootNode);
         if(PEAR::isError($oid)) return $oid;
         if(!is_numeric($oid)) return FALSE;
-        // query elements
-        $q_flds = "m.level as S_lvl, p.subj, s.login, action, p.type, p.obj";
-        $q_from = "{$this->subjTable} s, {$this->permTable} p";
-        $q_join = "LEFT JOIN {$this->smembTable} m ON p.subj=m.gid ";
+        // query construction
+        //      shortcuts:
+        //          p: permTable, 
+        //          s: subjTable, m smembTable,
+        //          t: treeTable ts: structTable,
+        //          c: classTable, cm: cmembTable
+        // main query elements:
+        $q_flds = "m.level , p.subj, s.login, action, p.type, p.obj";
+        $q_from = "{$this->permTable} p ";
+        // joins for solving users/groups:
+        $q_join = "LEFT JOIN {$this->subjTable} s ON s.id=p.subj ";
+        $q_join .= "LEFT JOIN {$this->smembTable} m ON m.gid=p.subj ";
         $q_cond = "p.action in('_all', '$action') AND
-            (m.uid=$sid OR p.subj=$sid) AND s.id=p.subj";
+            (s.id=$sid OR m.uid=$sid) ";
+        // coalesce -1 for higher priority of nongroup rows:
+        // action DESC order for lower priority of '_all':
+        $q_ordb = "ORDER BY coalesce(m.level,-1), action DESC, p.type DESC";
+        $q_flds0 = $q_flds;
+        $q_from0 = $q_from;
+        $q_join0 = $q_join;
+        $q_cond0 = $q_cond;
+        $q_ordb0 = $q_ordb;
+        //  joins for solving object tree:
+        $q_flds .= ", t.name, ts.level as tlevel";
+        $q_join .= "LEFT JOIN {$this->treeTable} t ON t.id=p.obj ";
+        $q_join .= "LEFT JOIN {$this->structTable} ts ON ts.parid=p.obj ";
+        $q_cond .= " AND (t.id=$oid OR ts.objid=$oid)";
         // action DESC order is hack for lower priority of '_all':
-        $q_ordb = "ORDER BY S_lvl, action DESC, p.type DESC";
-        $qc0 = $q_cond;
-        // test if object is class:
-        $iscls = $this->isClass($oid);
-        if(PEAR::isError($iscls)) return $iscls;
-        if($iscls){
-            $q_from .= ", {$this->classTable} c";
-            $q_cond .= " AND c.id=p.obj AND c.id=$oid";
-        }else{
-            //  obj is normal node => path search => retrieve L/R values for it:
-            $r1 = $this->dbc->getRow("SELECT lft, rgt, level
-                FROM {$this->treeTable} WHERE id=$oid");
-            if(is_null($r1))
-                return PEAR::raiseError("Alib::checkPerm: object not exists ($oid)",
-                    ALIBERR_NOTEXISTS, PEAR_ERROR_RETURN
-                );
-            if(PEAR::isError($r1)) return($r1);
-            //  fetch all path to oid + join with perms
-            $q_flds .= ", t.name, ({$r1['level']}-t.level)as T_lvl";
-            $q_from = "{$this->treeTable} t, ".$q_from;
-            $q_cond .= " AND t.id=p.obj AND t.lft<={$r1['lft']} AND
-                t.rgt>={$r1['rgt']}";
-            // action DESC order is hack for lower priority of '_all':
-            $q_ordb = "ORDER BY T_lvl, S_lvl, action DESC, p.type DESC";
-        }
-        $query="SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
-        $r2 = $this->dbc->getAll($query);
-        if(PEAR::isError($r2)) return($r2);
-        if(!$iscls && !(is_array($r2) && count($r2)>0)){
-          //  no perm found, search in classes:
-            $q_from = "{$this->cmembTable} cm, ".$q_from;
-            $q_cond = $qc0.
-              " AND t.lft<={$r1['lft']} AND t.rgt>={$r1['rgt']}".
-              " AND cm.cid=p.obj AND cm.objid=t.id";
-            $query="SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
-            $r2 = $this->dbc->getAll($query);
-            if(PEAR::isError($r2)) return($r2);
-        }
+        $q_ordb = "ORDER BY coalesce(ts.level,0), m.level, action DESC, p.type DESC";
+        // query by tree:
+        $query1 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
+        $r1 = $this->dbc->getAll($query1);
+        if(PEAR::isError($r1)) return($r1);
         //  if there is row with type='A' on the top => permit
-        return (is_array($r2) && count($r2)>0 && $r2[0]['type']=='A');
+        $AllowedByTree =
+            (is_array($r1) && count($r1)>0 && $r1[0]['type']=='A');
+        $DeniedByTree =
+            (is_array($r1) && count($r1)>0 && $r1[0]['type']=='D');
+        
+        if(!USE_ALIB_CLASSES) return $AllowedbyTree;
+        
+        // joins for solving object classes:
+        $q_flds = $q_flds0.", c.cname ";
+        $q_join = $q_join0."LEFT JOIN {$this->classTable} c ON c.id=p.obj ";
+        $q_join .= "LEFT JOIN {$this->cmembTable} cm ON cm.cid=p.obj ";
+        $q_cond = $q_cond0." AND (c.id=$oid OR cm.objid=$oid)";
+        $q_ordb = $q_ordb0;
+        // query by class:
+        $query2 = "SELECT $q_flds FROM $q_from $q_join WHERE $q_cond $q_ordb";
+        $r2 = $this->dbc->getAll($query2);
+        if(PEAR::isError($r2)) return($r2);
+        $AllowedByClass =
+            (is_array($r2) && count($r2)>0 && $r2[0]['type']=='A');
+        // not used now:
+        // $DeniedByClass =
+        //    (is_array($r2) && count($r2)>0 && $r2[0]['type']=='D');
+        $res = ($AllowedByTree || (!$DeniedByTree && $AllowedByClass));
+#        echo"<pre>\nsid=$sid, action=$action, oid=$oid\n"; var_dump($r1); echo"\n---\n$query1\n---\n\n"; var_dump($r2); echo"\n---\n$query2\n---\n\n"; exit;
+        return $res;
     }
 
     /* ---------------------------------------------------------- object tree */
@@ -392,9 +416,17 @@ class Alib extends Subjects{
      */
     function dumpPerms($indstr='    ', $ind='')
     {
-        $r = $ind.join(', ', array_map(
-            create_function('$v', 'return "{$v[\'action\']}/{$v[\'type\']}";'),
-            $this->dbc->getAll("SELECT action, type FROM {$this->permTable}")
+        $arr = $this->dbc->getAll("
+            SELECT s.login, p.action, p.type
+            FROM {$this->permTable} p, {$this->subjTable} s
+            WHERE s.id=p.subj
+            ORDER BY p.permid
+        ");
+        if(PEAR::isError($arr)) return $arr;
+        $r = $ind.join(', ', array_map(create_function('$v',
+                'return "{$v[\'login\']}/{$v[\'action\']}/{$v[\'type\']}";'
+            ),
+            $arr
         ))."\n";
         return $r;
     }
@@ -421,24 +453,27 @@ class Alib extends Subjects{
         $t =& $this->tdata['tree'];
         $c =& $this->tdata['classes'];
         $s =& $this->tdata['subjects'];
-        $o[] = $this->addPerm($s[0], '_all', $t[0], 'A');
-        $o[] = $this->addPerm($s[1], '_all', $t[4], 'A');
-        $o[] = $this->addPerm($s[1], '_all', $t[7], 'D');
-#        $o[] = $this->addPerm($s[2], 'addChilds', $t[6], 'A');
-        $o[] = $this->addPerm($s[2], 'read', $t[5], 'A');
-        $o[] = $this->addPerm($s[2], 'edit', $t[6], 'A');
-        $o[] = $this->addPerm($s[3], 'read', $c[0], 'A');
-        $o[] = $this->addPerm($s[4], 'editPerms', $c[1], 'A');
-        $o[] = $this->addPerm($s[4], 'editPerms', $t[7], 'D');
-
-        $o[] = $this->addPerm($s[1], 'addChilds', $t[3], 'A');
-        $o[] = $this->addPerm($s[1], 'addChilds', $t[1], 'A');
-        $o[] = $this->addPerm($s[5], 'addChilds', $t[3], 'A');
-        $o[] = $this->addPerm($s[5], 'addChilds', $t[1], 'A');
-        $o[] = $this->addPerm($s[6], 'addChilds', $t[3], 'A');
-        $o[] = $this->addPerm($s[6], 'addChilds', $t[1], 'A');
-        $o[] = $this->addPerm($s[7], 'addChilds', $t[3], 'A');
-        $o[] = $this->addPerm($s[7], 'addChilds', $t[1], 'A');
+        $this->dbc->setErrorHandling(PEAR_ERROR_PRINT);
+        $perms = array(
+            array($s['root'], '_all', $t['root'], 'A'),
+            array($s['test1'], '_all', $t['pa'], 'A'),
+            array($s['test1'], 'read', $t['s2b'], 'D'),
+            array($s['test2'], 'addChilds', $t['pa'], 'D'),
+            array($s['test2'], 'read', $t['i2'], 'A'),
+            array($s['test2'], 'edit', $t['s1a'], 'A'),
+            array($s['test1'], 'addChilds', $t['s2a'], 'D'),
+            array($s['test1'], 'addChilds', $t['s2c'], 'D'),
+            array($s['gr2'], 'addChilds', $t['i2'], 'A'),
+            array($s['test3'], '_all', $t['t1'], 'D'),
+        );
+        if(USE_ALIB_CLASSES){
+            $perms[] = array($s['test3'], 'read', $c['cl_sa'], 'D');
+            $perms[] = array($s['test4'], 'editPerms', $c['cl2'], 'A');
+        }
+        foreach($perms as $p){
+            $o[] = $r = $this->addPerm($p[0], $p[1], $p[2], $p[3]);
+            if(PEAR::isError($r)) return $r;
+        }
         $this->tdata['perms'] = $o;
     }
     
@@ -451,24 +486,38 @@ class Alib extends Subjects{
     {
         if(PEAR::isError($p = parent::test())) return $p;
         $this->deleteData();
-        $this->testData();
-        $this->test_correct = "_all/A, _all/A, _all/D, read/A, edit/A, read/A,".
-            " editPerms/A, editPerms/D, addChilds/A, addChilds/A, addChilds/A,".
-            " addChilds/A, addChilds/A, addChilds/A, addChilds/A, addChilds/A".
-            "\nno, yes\n";
-        $this->test_dump = $this->dumpPerms().
+        $r = $this->testData();
+        if(PEAR::isError($r)) return $r;
+        $this->test_correct = "root/_all/A, test1/_all/A, test1/read/D,".
+            " test2/addChilds/D, test2/read/A, test2/edit/A,".
+            " test1/addChilds/D, test1/addChilds/D, gr2/addChilds/A,".
+            " test3/_all/D";
+        if(USE_ALIB_CLASSES){
+            $this->test_correct .= ", test3/read/D, test4/editPerms/A";
+        }
+        $this->test_correct .= "\nno, yes\n";
+        $r = $this->dumpPerms();
+        if(PEAR::isError($r)) return $r;
+        $this->test_dump = $r.
             ($this->checkPerm(
-                $this->tdata['subjects'][1], 'edit', $this->tdata['tree'][7]
+                $this->tdata['subjects']['test1'], 'read',
+                $this->tdata['tree']['t1']
             )? 'yes':'no').", ".
             ($this->checkPerm(
-                $this->tdata['subjects'][2], 'read', $this->tdata['tree'][5]
+                $this->tdata['subjects']['test1'], 'addChilds',
+                $this->tdata['tree']['i2']
             )? 'yes':'no')."\n"
         ;
         $this->removePerm($this->tdata['perms'][1]);
         $this->removePerm($this->tdata['perms'][3]);
-        $this->test_correct .= "_all/A, _all/D, edit/A, read/A, editPerms/A,".
-            " editPerms/D, addChilds/A, addChilds/A, addChilds/A, addChilds/A,".
-            " addChilds/A, addChilds/A, addChilds/A, addChilds/A\n";
+        $this->test_correct .= "root/_all/A, test1/read/D,".
+            " test2/read/A, test2/edit/A,".
+            " test1/addChilds/D, test1/addChilds/D, gr2/addChilds/A,".
+            " test3/_all/D";
+        if(USE_ALIB_CLASSES){
+            $this->test_correct .= ", test3/read/D, test4/editPerms/A";
+        }
+        $this->test_correct .= "\n";
         $this->test_dump .= $this->dumpPerms();
         $this->deleteData();
         if($this->test_dump==$this->test_correct)
