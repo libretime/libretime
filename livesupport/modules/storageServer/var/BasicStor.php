@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -606,34 +606,11 @@ class BasicStor extends Alib{
      */
     function bsGetMetadataValue($id, $category)
     {   
-        $gunid = $this->_gunidFromId($id);
-        if(PEAR::isError($gunid)) return $gunid;
-        if(is_null($gunid)){
-            return PEAR::raiseError(
-                "BasicStor::bsGetMdataValue: file not found ($id)",
-                GBERR_NOTF
-            );
-        }
-        $catOrig = strtolower($category);
-        // handle predicate namespace shortcut
-        if(preg_match("|^([^:]+):([^:]+)$|", $catOrig, $catOrigArr)){
-            $catNs = $catOrigArr[1]; $cat = $catOrigArr[2];
-        }else{ $catNs=NULL; $cat=$catOrig; }
-        $cond = "
-                gunid=x'$gunid'::bigint AND objns='_L' AND
-                predicate='$cat'
-        ";
-        if(!is_null($catNs)) $cond .= " AND predns='$catNs'";
-        $sql = "
-            SELECT object
-            FROM {$this->mdataTable}
-            WHERE $cond
-        ";
-        $res = $this->dbc->getCol($sql);
-        if(PEAR::isError($res)) return $res;
-        return $res;
+        require_once "DataEngine.php";
+        $de =& new DataEngine(&$this);
+        return $de->getMetadataValue($id, $category);
     }
-
+    
     /**
      *  Search in local metadata database.
      *
@@ -659,77 +636,37 @@ class BasicStor extends Alib{
      *   </ul>
      *  @param limit int, limit for result arrays (0 means unlimited)
      *  @param offset int, starting point (0 means without offset)
-     *  @return hash, field 'results' is an array with gunid strings
+     *  @return hash, fields:
+     *       results : array with gunid strings
+     *       cnt : integer - number of matching gunids 
      *  of files have been found
+     *  @see DataEngine
      */
-    function bsLocalSearch($criteria, $limit, $offset)
+    function bsLocalSearch($criteria, $limit=0, $offset=0)
     {
-        $operators = array('and'=>'AND', 'or'=>'OR');
-        $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
-            '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
-        );
-        $filetype   = strtolower($criteria['filetype']);
-        $operator   = strtolower($criteria['operator']);
-        $conds      = $criteria['conditions'];
-        $whereArr   = array();
-        foreach($conds as $cond){
-            $catOrig = strtolower($cond['cat']);
-            // handle predicate namespace shortcut
-            if(preg_match("|^([^:]+):([^:]+)$|", $catOrig, $catOrigArr)){
-                $catNs = $catOrigArr[1]; $cat = $catOrigArr[2];
-            }else{ $catNs=NULL; $cat=$catOrig; }
-            $opVal  = sprintf($ops[$cond['op']], 
-                addslashes(strtolower($cond['val'])));
-            // escape % for sprintf in whereArr construction:
-            $cat    = str_replace("%", "%%", $cat);
-            $opVal  = str_replace("%", "%%", $opVal);
-            $sqlCond = "
-                %s.predicate = '{$cat}' AND
-                %s.objns='_L' AND lower(%s.object) {$opVal}\n
-            ";
-            if(!is_null($catNs)){
-                $catNs  = str_replace("%", "%%", $catNs);
-                $sqlCond = "%s.predns = '{$catNs}' AND  $sqlCond";
-            }
-            $whereArr[] = "$sqlCond";
-        }
-        $selPart = "SELECT DISTINCT to_hex(f.gunid)as gunid, f.ftype as filetype";
-        $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
-            ($offset != 0 ? " OFFSET $offset" : '' );
-        $ftypeCond = " AND f.ftype='$filetype'";
-        if($operator == 'and'){
-            // operator: and
-            $from = array("{$this->filesTable} f");
-            $joinArr = array("f.gunid = md0.gunid".$ftypeCond);
-            foreach($whereArr as $i=>$v){
-                $from[] = "{$this->mdataTable} md$i";
-                $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i");
-                $joinArr[] = "md$i.gunid = md".($i+1).".gunid";
-            }
-            // there are n-1 join condtions for join n tables - remove last:
-            array_pop($joinArr);
-            // query construcion:
-            $sql = "$selPart\nFROM ".join(", ", $from).
-                "\nWHERE ".join(' AND ', $whereArr);
-            // add join conditions if there are any:
-            if(count($joinArr)>0){ $sql .= " AND ".join(" AND ", $joinArr); }
-        }else{
-            // operator: or
-            foreach($whereArr as $i=>$v){
-                $whereArr[$i] = sprintf($v, "md", "md", "md", "md");
-            }
-            // query construcion:
-            $sql = "\n$selPart\nFROM {$this->mdataTable} md\n".
-                "INNER JOIN {$this->filesTable} f ON md.gunid=f.gunid $ftypeCond\n".
-                "WHERE ".join(' OR ', $whereArr);
-        }
-        $rh = $this->dbc->query($sql); $cnt = $rh->numRows(); $rh->free();
-        $res = $this->dbc->getCol($sql.$limitPart);
-        if(PEAR::isError($res)) return $res;
-        if(!is_array($res)) $res = array();
-        $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
-#        return array('sql'=>$sql, 'results'=>$res);
-        return array('results'=>$res, 'cnt'=>$cnt);
+        require_once "DataEngine.php";
+        $de =& new DataEngine(&$this);
+        return $de->localSearch($criteria, $limit, $offset);
+    }
+
+    /**
+     *  Return values of specified metadata category
+     *
+     *  @param category string, metadata category name
+     *          with or without namespace prefix (dc:title, author)
+     *  @param limit int, limit for result arrays (0 means unlimited)
+     *  @param offset int, starting point (0 means without offset)
+     *  @param criteria hash, see bsLocalSearch method
+     *  @return hash, fields:
+     *       results : array with gunid strings
+     *       cnt : integer - number of matching values
+     *  @see DataEngine
+     */
+    function bsBrowseCategory($category, $limit=0, $offset=0, $criteria=NULL)
+    {
+        require_once "DataEngine.php";
+        $de =& new DataEngine(&$this);
+        return $de->browseCategory($category, $limit, $offset, $criteria);
     }
 
     /* --------------------------------------------------------- info methods */
