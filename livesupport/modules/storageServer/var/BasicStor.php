@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.41 $
+ *  @version $Revision: 1.42 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1344,8 +1344,12 @@ class BasicStor extends Alib{
         if(!$this->config['isArchive']){
             $stPrefGr = parent::addSubj($this->config['StationPrefsGr']);
             $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
-            $stPrefGr = parent::addSubj($this->config['AllGr']);
-            $this->addSubj2Gr('root', $this->config['AllGr']);
+            $allid = $stPrefGr = parent::addSubj($this->config['AllGr']);
+            if($this->dbc->isError($allid)) return $allid;
+            $r = $this->addSubj2Gr('root', $this->config['AllGr']);
+            if($this->dbc->isError($r)) return $r;
+            $r = $res = $this->addPerm($allid, 'read', $this->rootId, 'A');
+            if($this->dbc->isError($r)) return $r;
         }
     }
     /**
