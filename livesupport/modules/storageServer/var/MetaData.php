@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -167,7 +167,10 @@ class MetaData{
     function getMetaData()
     {
         // return $this->genXMLDoc();       // obsolete
-        return file_get_contents($this->fname);
+        if(file_exists($this->fname))
+            return file_get_contents($this->fname);
+        else
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<metadata/>\n";
     }
 
     /**
