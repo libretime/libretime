@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/webstreamFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,13 +32,13 @@ $webstreamFormat = array(
     '_root'=>'audioclip',
     'audioclip'=>array(
         'childs'=>array(
-            'required'=>array('metadata', 'ls:url'),
+            'required'=>array('metadata'),
         ),
     ),
     'metadata'=>array(
         'childs'=>array(
             'required'=>array(
-                'dc:title', 'dcterms:extent'
+                'dc:title', 'dcterms:extent', 'ls:url'
             ),
             'optional'=>array(
                 'dc:identifier', 

@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.50 $
+    Version  : $Revision: 1.51 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.50 $
+ *  @version $Revision: 1.51 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -107,7 +107,7 @@ class GreenBox extends BasicStor{
         );
         if(PEAR::isError($oid)) return $oid;
         $r = $this-> bsSetMetadataValue(
-            $oid, 'ls:url', $url, NULL, NULL, 'audioClip');
+            $oid, 'ls:url', $url, NULL, NULL, 'metadata');
         if(PEAR::isError($r)) return $r;
         return $oid;
     }

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -158,7 +158,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ac)) return $ac;
         $oid = $ac->getId();
         $r = $this-> bsSetMetadataValue(
-            $oid, 'ls:url', $url, NULL, NULL, 'audioClip');
+            $oid, 'ls:url', $url, NULL, NULL, 'metadata');
         if(PEAR::isError($r)) return $r;
         return $gunid;
     }
