@@ -1,0 +1,167 @@
+ body {
+    background-color : ThreedLightShadow;
+    font-family : monospace;
+}
+
+#masterpanel {
+    text-align: center;
+    background-color : ThreedLightShadow;
+    height: 800px;
+    font-family : monospace;
+}
+
+#statusbar {
+    text-align: center;
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    height : 70px;
+}
+
+.statusbaritem {
+    width : 100px;
+    height : 50px;
+    border-style : dotted;
+    padding : 3px;
+    float : left;
+}
+
+#login {
+    width : 300px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 20px;
+}
+
+#tree {
+    text-align : left;
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 20px;
+}
+
+#menu_top {
+    text-align: center;
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#scratchpad {
+    text-align: center;
+    width: 300px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#path {
+    text-align: center;
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#objects {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+
+#permissions {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#subjects {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#uploadform {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#searchform {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#searchres {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#footer {
+
+    text-align: center;
+    width: 98%;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 20px;
+    font-size : x-small;
+}
+
+#filedata {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#metadataform {;
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+.dynformelement {
+    padding-bottom : 6px;
+}
+
+#systemPrefs {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+.closer {
+    width : 10px;
+    float : right;
+    font-weight : bold;
+    background-color : Gray;
+}
+
+a {
+    text-decoration: none;
+}
+
+.header {
+   color: #FFF;
+   background-color: #999;
+}
+
+.standardFrame {
+    width: 800px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}

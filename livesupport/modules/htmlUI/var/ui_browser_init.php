@@ -5,12 +5,14 @@ session_start();
 require_once dirname(__FILE__).'/conf.php';
 require_once dirname(__FILE__).'/ui_base.inc.php';
 require_once dirname(__FILE__).'/ui_browser.class.php';
-require_once dirname(__FILE__).'/ui_scratchPad.class.php';
+require_once dirname(__FILE__).'/ui_scratchpad.class.php';
+require_once dirname(__FILE__).'/ui_playlist.class.php'; #
+require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/general.inc.php';
 
 ## well known classes ###############################################
-require_once dirname(__FILE__).'/html/Smarty/libs/Smarty.class.php';
+require_once dirname(__FILE__).'/Smarty/libs/Smarty.class.php';
 
 require_once 'DB.php';
 require_once 'HTML/QuickForm.php';
@@ -40,17 +42,18 @@ $Smarty->load_filter('output', 'localizer');
 ## some basic things ################################################
 $Smarty->assign('UI_BROWSER', UI_BROWSER);
 $Smarty->assign('UI_HANDLER', UI_HANDLER);
-$Smarty->assign('GLOBALS', array(
+$Smarty->assign('ACT', $_REQUEST['act']);
+$Smarty->assign('START', array(
                             'id'  => &$uiBrowser->id,
                             'pid' => &$uiBrowser->pid,
                             'fid' => &$uiBrowser->fid
-                           )
-               );
-$Smarty->assign('user', array('sessid' => &$uiBrowser->sessid,
+                           ));
+$Smarty->assign('USER', array('sessid' => &$uiBrowser->sessid,
                               'userid' => &$uiBrowser->userid,
                               'login'  => &$uiBrowser->login
-                        )
-                );
+                        ));
+$uiBrowser->loadSystemPrefs($ui_fmask['systemPrefs']);
+$Smarty->assign('SYSTEMPREFS', $uiBrowser->SYSTEMPREFS);
 
 
 ## retransfer incomplete formdata from SESSION to POST-data #########

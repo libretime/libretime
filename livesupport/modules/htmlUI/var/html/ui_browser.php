@@ -36,12 +36,10 @@ if (is_array($_REQUEST['popup'])){
     die();
 };
 
-$uiBrowser->loadSystemPrefs($ui_fmask['systemPrefs']);
-$Smarty->assign('systemPrefs', $uiBrowser->systemPrefs);
-
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
-  $Smarty->assign('ScratchPad', $uiBrowser->SP->get());
+  $Smarty->assign('SCRATCHPAD', $uiBrowser->SCRATCHPAD->get());
+  $Smarty->assign('PLAYLIST',   $uiBrowser->PLAYLIST->get());
 
   switch ($_REQUEST['act']){
     case "fileBrowse":
@@ -91,13 +89,13 @@ if ($uiBrowser->userid) {
     break;
 
 
-    case "search":
-        if (is_array($uiBrowser->search['criteria']) ){
-            $Smarty->assign('searchres', $uiBrowser->search['result']);
+    case "SEARCH":
+        if (is_array($uiBrowser->SEARCH->criteria) ){
+            $Smarty->assign('searchres', $uiBrowser->SEARCH->results);
             $Smarty->assign('showSearchRes', TRUE);
         };
 
-        $Smarty->assign('searchform', $uiBrowser->getSearchForm($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('searchform', $uiBrowser->SEARCH->form($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showSearchForm', TRUE);
 
         break;
@@ -114,7 +112,7 @@ if ($uiBrowser->userid) {
     break;
 
     case "chgPasswd":
-        $Smarty->assign('chgPasswd', $uiBrowser->chgPasswd($uiBrowser->id, $ui_fmask['chgPasswd']));
+        $Smarty->assign('chgPasswd', $uiBrowser->chgPasswd($_REQUEST['uid'], $ui_fmask['chgPasswd']));
         $Smarty->assign('showSubjects', TRUE);
     break;
 
@@ -141,8 +139,12 @@ if ($uiBrowser->userid) {
     break;
 
     case "editSystemPrefs":
-        $Smarty->assign('dynform', $uiBrowser->systemPrefsForm($ui_fmask['systemPrefs']));
+        $Smarty->assign('dynform', $uiBrowser->editSystemPrefs($ui_fmask['systemPrefs']));
         $Smarty->assign('editSystemPrefs', TRUE);
+    break;
+
+    case "PL.display":
+        $Smarty->assign('playlist', $uiBrowser->PLAYLIST->get());
     break;
   }
 }

@@ -8,45 +8,45 @@ switch($_REQUEST['act']){
     break;
 
     case "logout":
-        $uiHandler->SP->save();
+        $uiHandler->SCRATCHPAD->save();
         $uiHandler->logout();
     break;
 
     case "signover":
-        $uiHandler->SP->save();
+        $uiHandler->SCRATCHPAD->save();
         $uiHandler->logout(TRUE);
     break;
 
     case "uploadFileM":
         if ($ui_tmpid = $uiHandler->uploadFileM(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFileM"]))
-            $uiHandler->SP->addItem($ui_tmpid);
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 
     case "uploadFile":
         if ($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFile"]))
-            $uiHandler->SP->addItem($ui_tmpid);
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 
     case "replaceFile":
         $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
         if ($uiHandler->delete($uiHandler->id)) {
             $ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->pid, $ui_fmask["uploadFile"], $ui_tmpgunid);
-            $uiHandler->SP->removeItems($uiHandler->id);
-            $uiHandler->SP->addItem($ui_tmpid);
+            $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
     break;
 
     case "addWebstream":
         if ($ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->id, $ui_fmask['addWebstream']))
-            $uiHandler->SP->addItem($ui_tmpid);
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 
     case "replaceWebstream":
         $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
         if ($uiHandler->delete($uiHandler->id)) {
             $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->pid, $ui_fmask['addWebstream'], $ui_tmpgunid);
-            $uiHandler->SP->removeItems($uiHandler->id);
-            $uiHandler->SP->addItem($ui_tmpid);
+            $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
     break;
 
@@ -68,7 +68,8 @@ switch($_REQUEST['act']){
 
     case "delete":
         if ($uiHandler->delete($uiHandler->id, $_REQUEST['delOverride']))
-            $uiHandler->SP->removeItems($uiHandler->id);
+            if ($uiHandler->type != 'Folder')
+                $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
     break;
 
     case "addUser":
@@ -103,32 +104,45 @@ switch($_REQUEST['act']){
         $uiHandler->removeGroupMember($_REQUEST);
     break;
 
-    case "systemPrefs":
-        $uiHandler->storeSystemPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["systemPrefs"]);
+    case "editSystemPrefs":
+        $uiHandler->editSystemPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["systemPrefs"]);
     break;
 
     case "editMetaData":
         $uiHandler->editMetaData($uiHandler->id, $_REQUEST);
-        $uiHandler->SP->reLoadM();
+        $uiHandler->SCRATCHPAD->reLoadM();
     break;
 
     case "SP.addItem":
-        $uiHandler->SP->addItem($_REQUEST['id']);
-        $uiHandler->SP->setReload();
+        $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+        $uiHandler->SCRATCHPAD->setReload();
     break;
 
     case "SP.removeItem":
-        $uiHandler->SP->removeItems($_REQUEST['id']);
-        $uiHandler->SP->setReload();
+        $uiHandler->SCRATCHPAD->removeItems($_REQUEST['id']);
+        $uiHandler->SCRATCHPAD->setReload();
     break;
 
     case "SP.reOrder":
-        $uiHandler->SP->reOrder($_REQUEST['by']);
-        $uiHandler->SP->setReload();
+        $uiHandler->SCRATCHPAD->reOrder($_REQUEST['by']);
+        $uiHandler->SCRATCHPAD->setReload();
     break;
 
-    case "search":
-        $uiHandler->search($_REQUEST);
+    case "SEARCH.newsearch":
+        $uiHandler->SEARCH->newsearch($_REQUEST);
+    break;
+
+    case "SEARCH.reOrder":
+        $uiHandler->SEARCH->reOrder($_REQUEST['by']);
+    break;
+
+    case "SEARCH.clear":
+        $uiHandler->SEARCH->clear($_REQUEST);
+    break;
+
+    case "activatePL":
+        $uiHandler->PLAYLIST->activate($_REQUEST['id']);
+        $uiHandler->PLAYLIST->setReload();
     break;
 
     default:

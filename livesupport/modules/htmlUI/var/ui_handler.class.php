@@ -332,7 +332,7 @@ class uiHandler extends uiBase {
         ## first validate the form data
         if ($this->_validateForm($formdata, $mask)) {
             if($this->gb->checkPerm($this->userid, 'subjects')){
-                $res = $this->gb->addSubj($formdata['login'], ($formdata['pass']=='' ? NULL:$formdata['pass'] ));
+                $res = $this->gb->addSubj($formdata['login'], ($formdata['pass']=='' ? NULL : $formdata['pass']));
                 $this->_retMsg('Subject $1 added.', $formdata['login']);
             } else {
                 $this->_retMsg('Access denied.');
@@ -525,7 +525,7 @@ class uiHandler extends uiBase {
             }
             if ($was_error) {
                 $_SESSION['retransferFormData'] = array_merge($_REQUEST, $_FILES);
-                $this->retMsg('Invalid Form Data');
+                $this->_retMsg('Invalid Form Data');
                 return FALSE;
             }
         }
@@ -542,9 +542,9 @@ class uiHandler extends uiBase {
     }
 
 
-    function storeSystemPrefs(&$formdata, &$mask)
+    function editSystemPrefs(&$formdata, &$mask)
     {
-        $this->redirUrl = UI_BROWSER.'?act=systemPrefs';
+        $this->redirUrl = UI_BROWSER;
 
         if ($this->_validateForm($formdata, $mask)) {
             foreach($mask as $key=>$val) {
@@ -553,7 +553,7 @@ class uiHandler extends uiBase {
                         $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                     else
                         $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
-                        $this->systemPrefs[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+                        $this->SYSTEMPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
                 }
                 if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                     if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
@@ -569,46 +569,5 @@ class uiHandler extends uiBase {
             return FALSE;
         }
     }
-
-
-    /**
-     *  search
-     *
-     *  get Search Result and tore them in session
-     *
-     *  @param $id int local ID (file/folder) to search in
-     *  @param $serach string
-     */
-    function search(&$formdata)
-    {
-        $this->search = FALSE;
-        if ($formdata['clear']) {
-            $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        } else {
-            $this->redirUrl = UI_BROWSER.'?act=search&id='.$formdata['id'];
-            $this->search['criteria']['operator'] = $formdata['operator'];
-            $this->search['criteria']['filetype'] = $formdata['filetype'];
-
-            foreach ($formdata as $key=>$val) {
-                if (is_array($val) && strlen($val[2])) {
-                    $critArr[] = array('cat' => $this->_formElementDecode($val[0]),
-                                       'op'  => $val[1],
-                                       'val' => $val[2]
-                                 );
-                    $this->search['criteria'][$key] = $val;
-                }
-            }
-            $searchCriteria = array('filetype'  => $formdata['filetype'],
-                                    'operator'  => $formdata['operator'],
-                                    'conditions'=> $critArr
-                              );
-
-            $results = $this->gb->localSearch($searchCriteria, $this->sessid);
-            foreach ($results['results'] as $rec) {
-                $this->search['result'][] = $this->_getMetaInfo($this->gb->_idFromGunid($rec));
-            }
-        }
-    }
 }
-
 ?>

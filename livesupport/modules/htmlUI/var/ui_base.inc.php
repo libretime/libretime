@@ -89,24 +89,23 @@ class uiBase
         $this->id       = $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
         $this->pid      = $this->gb->getparent($this->id) != 1 ? $this->gb->getparent($this->id) : FALSE;
         $this->type     = $this->gb->getFileType($this->id);
-        $this->fid      = $this->type=='Folder' ? $this->id : $this->pid; 
-
+        $this->fid      = $this->type=='Folder' ? $this->id : $this->pid;
         $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
                                                'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
-
-        $this->SP          =& new uiScratchPad($this);
-        $this->systemPrefs =& $_SESSION[UI_STATIONINFO_SESSNAME];
-        $this->search      =& $_SESSION[UI_SEARCH_SESSNAME];
+        $this->SYSTEMPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
+        $this->SCRATCHPAD  =& new uiScratchPad($this);
+        $this->SEARCH      =& new uiSearch($this);
+        $this->PLAYLIST    =& new uiPlaylist($this);
     }
 
 
 
     function loadSystemPrefs(&$mask)
     {
-        if (!is_array($this->systemPrefs)) {
+        if (!is_array($this->SYSTEMPREFS)) {
             foreach ($mask as $key=>$val) {
                 if ($val['isPref'])
-                    $this->systemPrefs[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+                    $this->SYSTEMPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
             }
         }
     }
@@ -230,10 +229,11 @@ class uiBase
     function _analyzeFile($id, $format)
     {
         $ia = $this->gb->analyzeFile($id, $this->sessid);
+        $s  = $ia['playtime_seconds'];
 
         if ($format=='array') {
             return array(
-                    'Format.Extent'             => $ia['playtime_string'],
+                    'Format.Extent'             => date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')),
                     'Format.Medium.Bitrate'     => $ia['audio']['bitrate'],
                     'Format.Medium.Channels'    => $ia['audio']['channelmode'],
                     'Format.Medium.Samplerate'  => $ia['audio']['sample_rate'],
@@ -241,6 +241,8 @@ class uiBase
                    );
         } elseif ($format=='text') {
             return "fileformat: {$ia['fileformat']}<br>
+                    seconds: {$ia['playtime_seconds']}<br>
+                    length: ".date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'))."<br>
                     channels: {$ia['audio']['channels']}<br>
                     sample_rate: {$ia['audio']['sample_rate']}<br>
                     bits_per_sample: {$ia['audio']['bits_per_sample']}<br>
@@ -260,7 +262,7 @@ class uiBase
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    >
                   <dc:title>'.$this->_getFileTitle($id).'</dc:title>
-                  <dcterms:extent>'.$ia['playtime_string'].'</dcterms:extent>
+                  <dcterms:extent>'.date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')).'</dcterms:extent>
                   </metadata>
                   </audioClip>';
 
@@ -306,7 +308,7 @@ class uiBase
         $data = array('id'          => $id,
                       'gunid'       => $this->gb->_gunidFromId($id),
                       'title'       => $this->_getMDataValue($id, 'title'),
-                      'artist'      => $this->_getMDataValue($id, 'artist'),
+                      'creator'     => $this->_getMDataValue($id, 'creator'),
                       'duration'    => $this->_niceTime($this->_getMDataValue($id, 'dcterms:extent')),
                       'type'        => $this->gb->getFileType($id),
                 );

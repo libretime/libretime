@@ -5,7 +5,7 @@ $ui_fmask = array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'systemPrefs'
+            'constant'  => 'editSystemPrefs'
         ),
         array(
             'element'   => 'basics',
@@ -18,7 +18,7 @@ $ui_fmask = array(
             'type'      => 'text',
             'label'     => 'Maximum File Size for Upload',
             'required'  => TRUE,
-            'default'   => ini_get('upload_max_filesize')
+            'default'   => strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'))
         ),
         array(
             'rule'      => 'nopunctuation',
@@ -321,11 +321,11 @@ $ui_fmask = array(
         )
     ),
 
-    'searchform'    => array(
+    'search'    => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'search'
+            'constant'  => 'SEARCH.newsearch'
         ),
         array(
             'element'   => 'id',
@@ -364,7 +364,7 @@ $ui_fmask = array(
             'element'   => 'clear',
             'type'      => 'button',
             'label'     => 'Clear',
-            'attributes'  => array('onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=search&clear=1', 'SF')"),
+            'attributes'  => array('onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
             'groupit'   => TRUE,
         ),
         array(
