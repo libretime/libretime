@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,8 +67,21 @@ using namespace LiveSupport::Core;
 /**
  *  An object containing the schedule of events in a PostreSQL database.
  *
+ *  This object has to be configured with a simple empty element, as
+ *  the following:
+ *
+ *  <pre><code>
+ *      &lt;postgresqlSchedule/&gt;
+ *  </code></pre>
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT postgresqlSchedule EMPTY &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class PostgresqlSchedule : public Configurable,
                            public ScheduleInterface

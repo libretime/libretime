@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,17 @@ using namespace LiveSupport::Core;
  *  An XML-RPC method object to accept a playlist for upload,
  *  and schedule it in the scheduler.
  *
+ *  The name of the method when called through XML-RPC is "uploadPlaylist".
+ *  The expected parameter is an XML-RPC structure, with the following
+ *  member:
+ *  <ul>
+ *      <li>playlistId - int, the id of the playlist to upload</li>
+ *      <li>playtime - the time when the playlist should be scheduled,
+ *                     an ISO 8601 DateTime field</li>
+ *  </ul>
+ *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -87,10 +96,10 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         static const std::string        playlistIdName;
 
         /**
-         *  The name of the playlength member in the XML-RPC parameter
+         *  The name of the playtime member in the XML-RPC parameter
          *  structure.
          */
-        static const std::string        playlengthName;
+        static const std::string        playtimeName;
 
         /**
          *  Extract the playlist id from the XML-RPC parameters.

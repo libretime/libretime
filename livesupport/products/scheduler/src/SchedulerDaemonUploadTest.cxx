@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemonTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonUploadTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -41,11 +41,14 @@
 
 
 #include <string>
+#include <XmlRpcClient.h>
+#include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
-#include "SchedulerDaemonTest.h"
+#include "SchedulerDaemonUploadTest.h"
 
 
+using namespace XmlRpc;
 using namespace LiveSupport::Scheduler;
 
 /* ===================================================  local data structures */
@@ -53,7 +56,7 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-//CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonUploadTest);
 
 /**
  *  The name of the configuration file for the scheduler daemon.
@@ -70,7 +73,7 @@ static const std::string configFileName = "etc/scheduler.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonTest :: setUp(void)                              throw ()
+SchedulerDaemonUploadTest :: setUp(void)                        throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
@@ -81,11 +84,17 @@ SchedulerDaemonTest :: setUp(void)                              throw ()
             const xmlpp::Document * document = parser->get_document();
             daemon->configure(*(document->get_root_node()));
         } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
             CPPUNIT_FAIL("semantic error in configuration file");
         } catch (xmlpp::exception &e) {
+            std::cerr << e.what() << std::endl;
             CPPUNIT_FAIL("error parsing configuration file");
         }
     }
+
+    daemon->install();
+//    daemon->start();
+//    sleep(5);
 }
 
 
@@ -93,39 +102,34 @@ SchedulerDaemonTest :: setUp(void)                              throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonTest :: tearDown(void)                           throw ()
+SchedulerDaemonUploadTest :: tearDown(void)                     throw ()
 {
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+
+//    daemon->stop();
+    daemon->uninstall();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the singleton Hello object is accessible
+ *  Test a simple upload.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemonTest :: getSingleton(void)       throw (CPPUNIT_NS::Exception)
+SchedulerDaemonUploadTest :: simpleTest(void)
+                                                throw (CPPUNIT_NS::Exception)
 {
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
+    XmlRpcValue                 parameters;
+    XmlRpcValue                 result;
+    struct tm                   time;
 
-    CPPUNIT_ASSERT( daemon.get() );
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+
+    // try to schedule playlist #1 for the time below
+    parameters["playlistId"] = 1;
+    strptime("2001-11-12 10:00:00", "%Y-%m-%d %H:%M:%S", &time);
+    parameters["playtime"] = &time;
+
+    xmlRpcClient.execute("uploadPlaylist", parameters, result);
+    CPPUNIT_ASSERT(result);
 }
-
-
-/*------------------------------------------------------------------------------
- *  Test to see if the scheduler starts and stops OK
- *----------------------------------------------------------------------------*/
-void
-SchedulerDaemonTest :: testStartStop(void)      throw (CPPUNIT_NS::Exception)
-{
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-    CPPUNIT_ASSERT( daemon.get() );
-    CPPUNIT_ASSERT( !(daemon->isRunning()) );
-    daemon->start();
-    sleep(3);
-    CPPUNIT_ASSERT( daemon->isRunning() );
-    daemon->stop();
-    sleep(3);
-    CPPUNIT_ASSERT( !(daemon->isRunning()) );
-}
-
 

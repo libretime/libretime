@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,6 +152,7 @@ UploadPlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
+    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
@@ -159,9 +160,10 @@ UploadPlaylistMethodTest :: firstTest(void)
     // set up a structure for the parameters
     parameters["playlistId"] = 1;
     strptime("2001-11-12 18:31:01", "%Y-%m-%d %H:%M:%S", &time);
-    parameters["playlength"] = &time;
+    parameters["playtime"] = &time;
+    rootParameter[0] = parameters;
 
-    method->execute(parameters, result);
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result);
 }
 
@@ -174,6 +176,7 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<UploadPlaylistMethod>::Ref  method(new UploadPlaylistMethod());
+    XmlRpc::XmlRpcValue             rootParameter;
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
@@ -181,34 +184,38 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     // load the first playlist, this will succeed
     parameters["playlistId"] = 1;
     strptime("2001-11-12 10:00:00", "%Y-%m-%d %H:%M:%S", &time);
-    parameters["playlength"] = &time;
+    parameters["playtime"] = &time;
+    rootParameter[0] = parameters;
 
-    method->execute(parameters, result);
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result);
 
     // try to load the same one, but in an overlapping time region
     // (we know that playlist with id 1 in 1 hour long)
     parameters["playlistId"] = 1;
     strptime("2001-11-12 10:30:00", "%Y-%m-%d %H:%M:%S", &time);
-    parameters["playlength"] = &time;
+    parameters["playtime"] = &time;
+    rootParameter[0] = parameters;
 
-    method->execute(parameters, result);
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result);
 
     // try to load the same one, but now in good timing
     parameters["playlistId"] = 1;
     strptime("2001-11-12 11:30:00", "%Y-%m-%d %H:%M:%S", &time);
-    parameters["playlength"] = &time;
+    parameters["playtime"] = &time;
+    rootParameter[0] = parameters;
 
-    method->execute(parameters, result);
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(result);
 
     // try to load the same one, this time overlapping both previos instnaces
     parameters["playlistId"] = 1;
     strptime("2001-11-12 10:45:00", "%Y-%m-%d %H:%M:%S", &time);
-    parameters["playlength"] = &time;
+    parameters["playtime"] = &time;
+    rootParameter[0] = parameters;
 
-    method->execute(parameters, result);
+    method->execute(rootParameter, result);
     CPPUNIT_ASSERT(!result);
 }
 

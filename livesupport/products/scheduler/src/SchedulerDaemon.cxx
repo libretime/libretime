@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,9 +51,14 @@
 #include <fstream>
 #include <cstdio>
 
+#include "LiveSupport/Db/ConnectionManagerFactory.h"
+#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "ScheduleFactory.h"
 #include "SchedulerDaemon.h"
 
 
+using namespace LiveSupport::Db;
+using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
 
 /* ===================================================  local data structures */
@@ -64,7 +69,7 @@ using namespace LiveSupport::Scheduler;
 /**
  *  The singleton instance of the Scheduler daemon object.
  */
-SchedulerDaemon   * SchedulerDaemon::schedulerDaemon = 0;
+Ptr<SchedulerDaemon>::Ref   SchedulerDaemon::schedulerDaemon;
 
 /**
  *  The name of the XML configuration element for the Scheduler daemon.
@@ -86,15 +91,16 @@ static const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
 /*------------------------------------------------------------------------------
  *  Return the singleton instnace.
  *----------------------------------------------------------------------------*/
-class SchedulerDaemon *
+class Ptr<SchedulerDaemon>::Ref
 SchedulerDaemon :: getInstance (void)                       throw ()
 {
     if (!schedulerDaemon) {
-        schedulerDaemon = new SchedulerDaemon();
+        schedulerDaemon.reset(new SchedulerDaemon());
     }
 
     return schedulerDaemon;
 }
+
 
 /*------------------------------------------------------------------------------
  *  Configure the scheduler daemon
@@ -110,10 +116,77 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
         throw std::invalid_argument(eMsg);
     }
 
-    xmlpp::Node::NodeList   nodes =
-                                element.get_children(xmlRpcDaemonConfElement);
+    xmlpp::Node::NodeList   nodes;
+
+    // configure the ConnectionManagerFactory
+    nodes =
+         element.get_children(ConnectionManagerFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no connectionManagerFactory  element");
+    }
+    Ptr<ConnectionManagerFactory>::Ref cmf
+                                = ConnectionManagerFactory::getInstance();
+    cmf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
+    // configure the StorageClientFactory
+    nodes = element.get_children(StorageClientFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no storageClientFactory element");
+    }
+    Ptr<StorageClientFactory>::Ref scf = StorageClientFactory::getInstance();
+    scf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
+    // configure the ScheduleFactory
+    nodes = element.get_children(ScheduleFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no scheduleFactory element");
+    }
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    sf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
+    // configure the XmlRpcDaemon
+    nodes = element.get_children(XmlRpcDaemon::getConfigElementName());
     if (nodes.size() < 1) {
         throw std::invalid_argument("no xmlRpcDaemon element");
     }
     configureXmlRpcDaemon( *((const xmlpp::Element*) *(nodes.begin())) );
+
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Register our XML-RPC methods
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemon :: registerXmlRpcFunctions(
+                            Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
+                                                    throw (std::logic_error)
+{
+    xmlRpcServer->addMethod(uploadPlaylistMethod.get());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Install the scheduler daemon.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemon :: install(void)                throw (std::exception)
+{
+    // TODO: check if we have already been configured
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    sf->install();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Install the scheduler daemon.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemon :: uninstall(void)              throw (std::exception)
+{
+    // TODO: check if we have already been configured
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    sf->uninstall();
+}
+
+

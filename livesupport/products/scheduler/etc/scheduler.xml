@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE scheduler [
 
-<!ELEMENT scheduler (xmlRpcDaemon) >
+<!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
+                     scheduleFactory,xmlRpcDaemon) >
+
+<!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
+
+<!ELEMENT simpleConnectionManager   EMPTY >
+<!ATTLIST simpleConnectionManager   dsn         CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
+
+<!ELEMENT storageClientFactory (testStorage) >
+
+<!ELEMENT testStorage (playlist*) >
+
+<!ELEMENT playlist EMPTY >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+
+<!ELEMENT scheduleFactory (postgresqlSchedule) >
+
+<!ELEMENT postgresqlSchedule EMPTY >
 
 <!ELEMENT xmlRpcDaemon EMPTY >
 <!ATTLIST xmlRpcDaemon xmlRpcHost   CDATA          #REQUIRED >
@@ -11,8 +31,26 @@
 
 ]>
 <scheduler>
+    <connectionManagerFactory>
+        <simpleConnectionManager    dsn      = "LiveSupport-test"
+                                    userName = "test"
+                                    password = "test"
+        />
+    </connectionManagerFactory>
+
+    <storageClientFactory>
+        <testStorage>
+            <playlist id="1" playlength="01:30:00.00"/>
+        </testStorage>
+    </storageClientFactory>
+
+    <scheduleFactory>
+        <postgresqlSchedule/>
+    </scheduleFactory>
+
     <xmlRpcDaemon xmlRpcHost  = "localhost"
                   xmlRpcPort  = "3344"
                   pidFileName = "tmp/scheduler.pid"
     />
 </scheduler>
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,8 +63,32 @@ using namespace LiveSupport::Core;
 /**
  *  The factory to create appropriate StorageClient objects.
  *
+ *  This object has to be configured with an XML configuration element
+ *  called storageClientFactory. This element contains a child element
+ *  specifying and configuring the kind of StorageClient that the
+ *  factory builds. Currently on the TestStorageClient is supported.
+ *
+ *  A storageClientFactory configuration element may look like the following:
+ *
+ *  <pre><code>
+ *  &lt;storageClientFactory&gt;
+ *      &lt;testStorage&gt;
+ *          ...
+ *      &lt;/testStorage&gt;
+ *  &lt;/storageClientFactory&gt;
+ *
+ *  For detais of the testStorage element, see the documentation for the
+ *  TestStorageClient class.
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT storageClientFactory (testStorage) &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
+ *  @see TestStorageClient
  */
 class StorageClientFactory :
                         virtual public Configurable
@@ -109,7 +133,7 @@ class StorageClientFactory :
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        configElementName(void)                         throw ()
+        getConfigElementName(void)                      throw ()
         {
             return configElementNameStr;
         }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,4 +114,31 @@ ScheduleFactory :: configure(const xmlpp::Element & element)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Install the schedule factory.
+ *----------------------------------------------------------------------------*/
+void
+ScheduleFactory :: install(void)                throw (std::exception)
+{
+    if (!schedule) {
+        throw std::logic_error("ScheduleFactory not yet configured");
+    }
+
+    schedule->install();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Install the schedule factory.
+ *----------------------------------------------------------------------------*/
+void
+ScheduleFactory :: uninstall(void)              throw (std::exception)
+{
+    if (!schedule) {
+        throw std::logic_error("ScheduleFactory not yet configured");
+    }
+
+    schedule->uninstall();
+}
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,11 +57,17 @@
 #include <libxml++/libxml++.h>
 #include <XmlRpc.h>
 
+#include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/Installable.h"
+#include "LiveSupport/Core/Configurable.h"
+#include "UploadPlaylistMethod.h"
 #include "XmlRpcDaemon.h"
 
 
 namespace LiveSupport {
 namespace Scheduler {
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -76,17 +82,59 @@ namespace Scheduler {
  *  This class is responsible for starting, running and stopping the
  *  Scheduler daemon.
  *
+ *  The SchedulerDaemon has to configured by an XML element called
+ *  scheduler. This element contains configuration elements for the
+ *  compontents used by the scheduler. The configuration file looks
+ *  like the following:
+ *
+ *  <pre><code>
+ *  &lt;scheduler&gt;
+ *      &lt;connectionManagerFactory&gt;
+ *          ...
+ *      &lt;/connectionManagerFactory&gt;
+ *      &lt;storageClientFactory&gt;
+ *          ...
+ *      &lt;/storageClientFactory&gt;
+ *      &lt;scheduleFactory&gt;
+ *          ...
+ *      &lt;/scheduleFactory&gt;
+ *      &lt;xmlRpcDaemon&gt;
+ *          ...
+ *      &lt;/xmlRpcDaemon&gt;
+ *  &lt;/scheduler&gt;
+ *  </code></pre>
+ *
+ *  For details on the included elements, see the corresponding documentation
+ *  for XmlRpcDaemon, ConnectionManagerFactory and ScheduleFactory.
+ *
+ *  The DTD for the above element is the following:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
+ *                          scheduleFactory,xmlRpcDaemon) &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
+ *  @see XmlRpcDaemon
+ *  @see ConnectionManagerFactory
+ *  @see ScheduleFactory
  */
-class SchedulerDaemon : public XmlRpcDaemon
+class SchedulerDaemon : public Installable,
+                        public Configurable,
+                        public XmlRpcDaemon
 {
     private:
 
         /**
          *  The singleton instance of the scheduler daemon.
          */
-        static SchedulerDaemon    * schedulerDaemon;
+        static Ptr<SchedulerDaemon>::Ref    schedulerDaemon;
+
+        /**
+         *  The UploadPlaylistMethod the daemon is providing.
+         */
+        Ptr<UploadPlaylistMethod>::Ref      uploadPlaylistMethod;
 
         /**
          *  Default constructor.
@@ -94,6 +142,7 @@ class SchedulerDaemon : public XmlRpcDaemon
         SchedulerDaemon (void)                          throw ()
                     : XmlRpcDaemon()
         {
+            uploadPlaylistMethod.reset(new UploadPlaylistMethod());
         }
 
     protected:
@@ -102,19 +151,25 @@ class SchedulerDaemon : public XmlRpcDaemon
          *  Register your XML-RPC functions by implementing this function.
          */
         virtual void
-        registerXmlRpcFunctions(XmlRpc::XmlRpcServer  & xmlRpcServer)
-                                                    throw (std::logic_error)
-        {
-        }
+        registerXmlRpcFunctions(Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
+                                                    throw (std::logic_error);
 
     public:
+
+        /**
+         *  Virtual destructor.
+         */
+        virtual
+        ~SchedulerDaemon(void)                          throw ()
+        {
+        }
 
         /**
          *  Return a pointer to the singleton instance of SchedulerDaemon.
          *
          *  @return a pointer to the singleton instance of SchedulerDaemon
          */
-        static SchedulerDaemon *
+        static Ptr<SchedulerDaemon>::Ref
         getInstance (void)                              throw ();
 
         /**
@@ -133,6 +188,25 @@ class SchedulerDaemon : public XmlRpcDaemon
                                                 throw (std::invalid_argument,
                                                        std::logic_error);
 
+        /**
+         *  Install the component.
+         *  This step involves creating the environment in which the component
+         *  will run. This may be creation of coniguration files,
+         *  database tables, etc.
+         *
+         *  @exception std::exception on installation problems.
+         */
+        virtual void
+        install(void)                           throw (std::exception);
+
+        /**
+         *  Uninstall the component.
+         *  Removes all the resources created in the install step.
+         *
+         *  @exception std::exception on unistallation problems.
+         */
+        virtual void
+        uninstall(void)                         throw (std::exception);
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,6 +87,11 @@ static const struct option longOptions[] = {
 };
 
 /**
+ *  The start command: "install"
+ */
+static const std::string installCommand = "install";
+
+/**
  *  The start command: "start"
  */
 static const std::string startCommand = "start";
@@ -100,6 +105,11 @@ static const std::string statusCommand = "status";
  *  The stop command: "stop"
  */
 static const std::string stopCommand = "stop";
+
+/**
+ *  The stop command: "uninstall"
+ */
+static const std::string uninstallCommand = "uninstall";
 
 
 /* ===============================================  local function prototypes */
@@ -170,7 +180,7 @@ int main (  int     argc,
 
     std::cerr << "using config file '" << configFileName << '\'' << std::endl;
 
-    SchedulerDaemon       * daemon = SchedulerDaemon::getInstance();
+    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
 
     try {
         std::auto_ptr<xmlpp::DomParser> 
@@ -189,7 +199,9 @@ int main (  int     argc,
 
     daemon->setBackground(!debugMode);
 
-    if (startCommand == argv[optind]) {
+    if (installCommand == argv[optind]) {
+        daemon->install();
+    } else if (startCommand == argv[optind]) {
         daemon->start();
     } else if (statusCommand == argv[optind]) {
         std::cout << "The Scheduler Daemon is "
@@ -197,6 +209,8 @@ int main (  int     argc,
                   << "running" << std::endl;
     } else if (stopCommand == argv[optind]) {
         daemon->stop();
+    } else if (uninstallCommand == argv[optind]) {
+        daemon->uninstall();
     } else {
         printUsage(argv[0], std::cout);
         return 1;
@@ -228,7 +242,8 @@ printUsage (    const char      invocation[],
        << std::endl
        << "Usage: " << invocation << " [OPTION] COMMAND"
        << std::endl
-       << "  COMMAND is one of: start, stop or status" << std::endl
+       << "  COMMAND is one of: install, start, stop, status or uninstall"
+                                                                    << std::endl
        << std::endl
        << "  mandatory options:" << std::endl
        << "  -c, --config=file.name   scheduler configuration file" << std::endl

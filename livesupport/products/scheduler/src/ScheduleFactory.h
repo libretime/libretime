@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/Installable.h"
 #include "ScheduleInterface.h"
 
 
@@ -63,11 +64,33 @@ using namespace LiveSupport::Core;
 /**
  *  The factory to create appropriate Schedule objects.
  *
+ *  This object has to be configured with an element that contains
+ *  the configuration element that the factory should build.
+ *  Currently only PostgresqlSchedule is supported by this factory.
+ *
+ *  An example configuration element is the following:
+ *
+ *  <pre><code>
+ *      &lt;scheduleFactory&gt;
+ *          &lt;postgresqlSchedule/&gt;
+ *      &lt;/scheduleFactory&gt;
+ *  </code></pre>
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT scheduleFactory (postgresqlSchedule) &gt;
+ *  </code></pre>
+ *
+ *  For details on the &lt;postgreslSchedule&gt; element, see the
+ *  PostgresqlSchedule documentation.
+ *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
+ *  @see PostgresqlSchedule
  */
-class ScheduleFactory :
-                        virtual public Configurable
+class ScheduleFactory : virtual public Configurable,
+                        virtual public Installable
 {
     private:
         /**
@@ -109,7 +132,7 @@ class ScheduleFactory :
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        configElementName(void)                         throw ()
+        getConfigElementName(void)                      throw ()
         {
             return configElementNameStr;
         }
@@ -135,6 +158,28 @@ class ScheduleFactory :
         configure(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error);
+
+        /**
+         *  Install the component.
+         *  This step involves creating the environment in which the component
+         *  will run. This may be creation of coniguration files,
+         *  database tables, etc.
+         *
+         *  @exception std::exception on installation problems,
+         *             especially if the ScheduleFactory was not yet configured.
+         */
+        virtual void
+        install(void)                           throw (std::exception);
+
+        /**
+         *  Uninstall the component.
+         *  Removes all the resources created in the install step.
+         *
+         *  @exception std::exception on unistallation problems,
+         e             especially if the ScheduleFactory was not yet configured.
+         */
+        virtual void
+        uninstall(void)                         throw (std::exception);
 
         /**
          *  Return a schedule.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/include/LiveSupport/Db/ConnectionManagerFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ using namespace LiveSupport::Core;
  *  element, see the SimpleConnectionManager documentation.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see SimpleConnectionManager
  */
 class ConnectionManagerFactory :
@@ -136,7 +136,7 @@ class ConnectionManagerFactory :
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        configElementName(void)                         throw ()
+        getConfigElementName(void)                  throw ()
         {
             return configElementNameStr;
         }

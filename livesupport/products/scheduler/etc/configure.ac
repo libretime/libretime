@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.1 $
+dnl Version  : $Revision: 1.2 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(Scheduler, 0.1, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.1 $)
+AC_REVISION($Revision: 1.2 $)
 
 AC_CONFIG_SRCDIR(../src/main.cxx)
 
@@ -43,6 +43,7 @@ AC_CONFIG_HEADERS(configure.h)
 AC_PROG_CXX()
 
 AC_CHECK_HEADERS(sys/types.h unistd.h getopt.h signal.h sys/stat.h time.h)
+AC_CHECK_HEADERS(stdio.h fcntl.h)
 
 AC_CONFIG_FILES(../Makefile:../etc/Makefile.in)
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of this XML-RPC method.
  *----------------------------------------------------------------------------*/
-const std::string UploadPlaylistMethod::methodName = "stop";
+const std::string UploadPlaylistMethod::methodName = "uploadPlaylist";
 
 /*------------------------------------------------------------------------------
  *  The name of the playlist id member in the XML-RPC parameter
@@ -74,10 +74,10 @@ const std::string UploadPlaylistMethod::methodName = "stop";
 const std::string UploadPlaylistMethod::playlistIdName = "playlistId";
 
 /*------------------------------------------------------------------------------
- *  The name of the playlength member in the XML-RPC parameter
+ *  The name of the playtime member in the XML-RPC parameter
  *  structure.
  *----------------------------------------------------------------------------*/
-const std::string UploadPlaylistMethod::playlengthName = "playlength";
+const std::string UploadPlaylistMethod::playtimeName = "playtime";
 
 
 /* ===============================================  local function prototypes */
@@ -120,11 +120,11 @@ UploadPlaylistMethod :: extractPlayschedule(
                             XmlRpc::XmlRpcValue   & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
-    if (!xmlRpcValue.hasMember(playlengthName)) {
-        throw std::invalid_argument("no playlength in parameter structure");
+    if (!xmlRpcValue.hasMember(playtimeName)) {
+        throw std::invalid_argument("no playtime in parameter structure");
     }
 
-    struct tm     & tm   = (struct tm &) xmlRpcValue[playlengthName];
+    struct tm     & tm   = (struct tm &) xmlRpcValue[playtimeName];
     time_t          time = mktime(&tm);
     Ptr<ptime>::Ref ptime(new ptime(from_time_t(time)));
 
@@ -141,8 +141,14 @@ UploadPlaylistMethod :: execute( XmlRpc::XmlRpcValue  & parameters,
                                                                     throw ()
 {
     try {
-        Ptr<UniqueId>::Ref  id           = extractPlaylistId(parameters);
-        Ptr<ptime>::Ref     playschedule = extractPlayschedule(parameters);
+        if (!parameters.valid()) {
+            // TODO: mark error
+            returnValue = XmlRpc::XmlRpcValue(false);
+            return;
+        }
+
+        Ptr<UniqueId>::Ref  id           = extractPlaylistId(parameters[0]);
+        Ptr<ptime>::Ref     playschedule = extractPlayschedule(parameters[0]);
 
         Ptr<StorageClientFactory>::Ref      scf;
         Ptr<StorageClientInterface>::Ref    storage;

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -79,6 +79,7 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
 SCHEDULER_EXE = ${TMP_DIR}/scheduler
+SCHEDULER_CFG = ${ETC_DIR}/scheduler.xml
 TEST_RUNNER   = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
@@ -120,6 +121,7 @@ SCHEDULER_EXE_LIBS = -l${STORAGE_LIB} -l${DB_LIB} -l${CORE_LIB} \
 
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/SchedulerDaemonTest.o \
+                   ${TMP_DIR}/SchedulerDaemonUploadTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
                    ${TMP_DIR}/PostgresqlScheduleTest.o \
                    ${TMP_DIR}/TestRunner.o
@@ -130,6 +132,7 @@ TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean
+.PHONY: install start run_tests stop uninstall
 
 all: dir_setup ${SCHEDULER_EXE}
 
@@ -147,13 +150,32 @@ docclean:
 	${RM} ${TEST_RESULTS}
 
 depclean: clean
+	${MAKE} -C ${STORAGE_DIR} clean
+	${MAKE} -C ${DB_DIR} clean
+	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER}
+check: all ${TEST_RUNNER} start run_tests stop
+
+run_tests: ${TEST_RUNNER}
 	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
                                    -o ${TEST_RESULTS} -s ${TEST_XSLT}
+
+install: ${SCHEDULER_EXE}
+	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} install
+
+start: ${SCHEDULER_EXE}
+	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} start
+	sleep 2
+
+stop: ${SCHEDULER_EXE}
+	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
+
+uninstall: ${SCHEDULER_EXE}
+	LD_LIBRARY_PATH=${USR_LIB_DIR} ${SCHEDULER_EXE} -c ${SCHEDULER_CFG} \
+                                                                      uninstall
 
 
 #-------------------------------------------------------------------------------

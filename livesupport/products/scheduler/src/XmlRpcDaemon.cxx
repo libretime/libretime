@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -31,6 +31,24 @@
 
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
+#endif
+
+#if HAVE_STDIO_H
+#include <stdio.h>
+#else
+#error "Need stdio.h"
+#endif
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#else
+#error "Need unistd.h"
+#endif
+
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#else
+#error "Need fcntl.h"
 #endif
 
 #if HAVE_SIGNAL_H
@@ -63,10 +81,11 @@ using namespace LiveSupport::Scheduler;
 
 /* ================================================  local constants & macros */
 
-/**
- *  The name of the XML configuration element for the Scheduler daemon.
- */
-static const std::string confElement = "xmlRpcDaemon";
+/*------------------------------------------------------------------------------
+ *  The name of the config element for this class
+ *----------------------------------------------------------------------------*/
+const std::string XmlRpcDaemon::configElementNameStr =
+                                                        "xmlRpcDaemon";
 
 /**
  *  The name of the XML configuration attribute for the XML-RPC host name.
@@ -110,7 +129,7 @@ XmlRpcDaemon :: configureXmlRpcDaemon(
     const xmlpp::Attribute    * attribute;
     std::stringstream           strStr;
 
-    if (element.get_name() != confElement) {
+    if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
@@ -148,14 +167,14 @@ XmlRpcDaemon :: configureXmlRpcDaemon(
  *  http://www.linuxprofilm.com/articles/linux-daemon-howto.html
  *  for hints.
  *----------------------------------------------------------------------------*/
-void
+bool
 XmlRpcDaemon :: daemonize(void)                  throw (std::runtime_error)
 {
     int     i;
 
     if (getppid() == 1) {
         // we're already a daemon
-        return;
+        return true;
     }
 
     i = fork();
@@ -163,7 +182,15 @@ XmlRpcDaemon :: daemonize(void)                  throw (std::runtime_error)
         throw std::runtime_error("fork error");
     } else if (i > 0) {
         // this is the parent, simply return
-        return;
+        return false;
+    }
+    // for twice, so that we're totally detached from our ancestor
+    i = fork();
+    if (i < 0) {
+        throw std::runtime_error("fork error");
+    } else if (i > 0) {
+        // this is the parent, simply return
+        return false;
     }
 
     // now we're in the child process
@@ -174,23 +201,24 @@ XmlRpcDaemon :: daemonize(void)                  throw (std::runtime_error)
     // change the umask
     umask(uMask);
 
+    /* TODO: wait with this until we have logging
     // close standard file descriptors
-    /* TODO: don't close these until we don't have logging
-    std::cin.close();
-    std::cout.close();
-    std::cerr.close();
+    for (i=getdtablesize();i>=0;--i) close(i); //
+
+    // set all std in/out to /dev/null
+    i=open("/dev/null",O_RDWR); // open stdin
+    dup(i);                     // stdout
+    dup(i);                     // stderr
     */
 
     // save the process id
     savePid();
 
     // ignore some signals
-    /* TODO
     signal(SIGCHLD,SIG_IGN);
     signal(SIGTSTP,SIG_IGN);
     signal(SIGTTOU,SIG_IGN);
     signal(SIGTTIN,SIG_IGN);
-    */
 
     // register our signal hanlder
     SignalDispatcher * signalDispatcher = SignalDispatcher::getInstance();
@@ -200,6 +228,8 @@ XmlRpcDaemon :: daemonize(void)                  throw (std::runtime_error)
     signalDispatcher->registerHandler(SIGTERM, handler);
     // FIXME: this signal handler will not be deleted by anyone,
     //        poddible memory leak
+
+    return true;
 }
 
 
@@ -245,16 +275,19 @@ XmlRpcDaemon :: start (void)                         throw (std::logic_error)
     checkForConfiguration();
 
     if (background) {
-        daemonize();
+        if (!daemonize()) {
+            // return if we're the parent process that should not continue
+            return;
+        }
     }
 
     // and now our own XML-RPC methods
     registerXmlRpcFunctions(xmlRpcServer);
 
     // bind & run
-    XmlRpc::setVerbosity(5);
-    xmlRpcServer.bindAndListen(xmlRpcPort);
-    xmlRpcServer.work(-1.0);
+    xmlRpcServer->enableIntrospection(true);
+    xmlRpcServer->bindAndListen(xmlRpcPort);
+    xmlRpcServer->work(-1.0);
 }
 
 
@@ -266,7 +299,17 @@ XmlRpcDaemon :: isRunning (void)                     throw (std::logic_error)
 {
     checkForConfiguration();
 
-    return loadPid();
+    pid_t   pid = loadPid();
+    // check if there is a stale pid stored
+    if (pid && kill(pid, 0)) {
+        if (errno == ESRCH) {
+            // the pid does not exist, remove the stale pid file
+            remove(pidFileName.c_str());
+            pid = 0;
+        }
+    }
+
+    return pid;
 }
 
 
@@ -291,7 +334,7 @@ XmlRpcDaemon :: shutdown (void)                      throw (std::logic_error)
 {
     checkForConfiguration();
 
-    xmlRpcServer.shutdown();
+    xmlRpcServer->shutdown();
     remove(pidFileName.c_str());
 }
 

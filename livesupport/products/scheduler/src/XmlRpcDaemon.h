@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,9 +57,14 @@
 #include <libxml++/libxml++.h>
 #include <XmlRpc.h>
 
+#include "LiveSupport/Core/Ptr.h"
+
 
 namespace LiveSupport {
 namespace Scheduler {
+
+using namespace XmlRpc;
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -114,11 +119,15 @@ namespace Scheduler {
  *
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class XmlRpcDaemon
 {
     private:
+        /**
+         *  The name of the configuration XML elmenent used by this object.
+         */
+        static const std::string    configElementNameStr;
 
         /**
          *  The host the XML-RPC server the daemon is
@@ -154,14 +163,16 @@ class XmlRpcDaemon
         /**
          *  The XML-RPC server running within the Scheduler Daemon.
          */
-        XmlRpc::XmlRpcServer    xmlRpcServer;
+        Ptr<XmlRpcServer>::Ref xmlRpcServer;
 
         /**
          *  Do all the necessary tasks of becoming a daemon.
          *
+         *  @return true if we're in the daemon process, false
+         *          if we're in the parent process that should not continue
          *  @exception std::runtime_error on forking errors
          */
-        void
+        bool
         daemonize(void)                         throw (std::runtime_error);
 
         /**
@@ -179,7 +190,6 @@ class XmlRpcDaemon
         loadPid(void)                                   throw();
 
     protected:
-
         /**
          *  Default constructor.
          */
@@ -187,6 +197,7 @@ class XmlRpcDaemon
         {
             background = true;
             configured = false;
+            xmlRpcServer.reset(new XmlRpcServer());
         }
 
         /**
@@ -233,11 +244,22 @@ class XmlRpcDaemon
          *  Register your XML-RPC functions by implementing this function.
          */
         virtual void
-        registerXmlRpcFunctions(XmlRpc::XmlRpcServer  & xmlRpcServer)
+        registerXmlRpcFunctions(Ptr<XmlRpcServer>::Ref  xmlRpcServer)
                                                     throw (std::logic_error)
                                                                           = 0;
 
     public:
+        /**
+         *  Return the name of the XML element this object expects
+         *  to be sent to a call to configure().
+         *  
+         *  @return the name of the expected XML configuration element.
+         */
+        static const std::string
+        getConfigElementName(void)                      throw ()
+        {
+            return configElementNameStr;
+        }
 
         /**
          *  Tell if the daemon has already been configured.
@@ -353,9 +375,11 @@ class XmlRpcDaemon
         start (void)                                throw (std::logic_error);
 
         /**
-         *  Tell if the deamon is running.
+         *  Tell if the daemon is running.
+         *  If there is a stale pid file stored for the daemon, it is
+         *  removed during checking (and correctly false is returned).
          *
-         *  @return true of the deamon is running, false otherwise.
+         *  @return true of the daemon is running, false otherwise.
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
          */
