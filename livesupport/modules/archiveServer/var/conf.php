@@ -23,23 +23,59 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
+
+/**
+ *  configuration structure:
+ *  <dl>
+ *   <dt>dsn<dd> datasource setting
+ *   <dt>tblNamePrefix <dd>prefix for table names in the database
+ *   <dt>authCookieName <dd>secret token cookie name
+ *   <dt>storageDir <dd>main directory for storing binary media files
+ *   <dt>bufferDir <dd>directory for temporary files
+ *   <dt>transDir <dd>directory for incomplete transferred files
+ *   <dt>accessDir <dd>directory for symlinks to accessed files
+ *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
+ *      (on central archive side: storage=archive)
+ *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
+ *   <dt>storageUrlHost, storageUrlPort<dd>host and port of storageServer
+ *   <dt>archiveUrlPath<dd>path-URL-part of archiveServer base dir
+ *   <dt>archiveXMLRPC<dd>XMLRPC server script address relative to archiveUrlPath
+ *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
+ *  </dl>
+ */
 $config = array(
+    /* ================================================== basic configuration */
     'dsn'           => array(
         'username'      => 'test',
         'password'      => 'test',
         'hostspec'      => 'localhost',
-#        'hostspec'     => '127.0.0.1',         // for bad resolver
         'phptype'       => 'pgsql',
         'database'      => 'LiveSupport-test',
     ),
     'tblNamePrefix' => 'as_',
     'authCookieName'=> 'assid',
-    'RootNode'      => 'RootNode',
-    'tmpRootPass'   => 'q',
+    'storageDir'    =>  dirname(getcwd()).'/stor',
+    'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
+    'transDir'      =>  dirname(getcwd()).'/trans',
+    'accessDir'     =>  dirname(getcwd()).'/access',
+
+    /* ==================================================== URL configuration */
+    // on central archive side: storage=archive !
+    'storageUrlPath'        => '/livesupport/modules/archiveServer/var',
+    'storageXMLRPC'         => 'xmlrpc/xrArchive.php',
+    'storageUrlHost'        => 'localhost',
+    'storageUrlPort'        => 80,
+    // only for returning right URLs:
+    'archiveUrlPath'        => '/livesupport/modules/archiveServer/var',
+    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
+    'archiveUrlHost'        => 'localhost',
+    'archiveUrlPort'        => 80,
+
+    /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
         'RootNode'      => array('Folder'),
         'Storage'       => array('Folder', 'File', 'Replica'),
@@ -57,21 +93,9 @@ $config = array(
     'allActions'    =>  array(
         'editPrivs', 'write', 'read', 'classes', 'subjects'
     ),
-    'storageDir'    =>  dirname(getcwd()).'/stor',
-    'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
-    'transDir'      =>  dirname(getcwd()).'/trans',
-    'accessDir'     =>  dirname(getcwd()).'/access',
 
-// on central archive side storage=archive
-    'storageUrlPath'        => '/livesupport/modules/archiveServer/var',
-    'storageXMLRPC'         => 'xmlrpc/xrArchive.php',
-    'storageUrlHost'        => 'localhost',
-    'storageUrlPort'        => 80,
-// only for returning right URLs:
-    'archiveUrlPath'        => '/livesupport/modules/archiveServer/var',
-    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
-    'archiveUrlHost'        => 'localhost',
-    'archiveUrlPort'        => 80,
-
+    /* ============================================== auxiliary configuration */
+    'RootNode'      => 'RootNode',
+    'tmpRootPass'   => 'q',
 );
 ?>

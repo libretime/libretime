@@ -1,9 +1,6 @@
 
-The HTTP_GROUP variable in Makefile haveto be set to group running apache.
-
 Install steps for file uploading (do it with appropriate changes):
 (PUT method for uploading from behind firewall with resume feature)
-
 1) mkdir cgi-bin-put in apache2 dir
 2) move put.cgi there from var subdir
 3) add to apache2 config (i.g. commonapache2.conf):
@@ -25,4 +22,14 @@ ScriptAlias /cgi-bin-put/ "/usr/local/apache2/cgi-bin-put/"
 
 Tested with apache 2.0.49 and (without Directory tag) with apache 1.3.28.
 
-TODO: check more put.cgi for security problems!
+----
+
+For devel environment follow steps in storageServer/doc/INSTALL.
+For running archiveServer on different HW then storageServer:
+ - required packages: apache, php, mod_php, postgreSQL, PEAR_DB
+ - check if PEAR DB installed: 'pear list' or install it: 'pear install DB'
+ - check if include_path in php.ini points to PEAR too
+   (/usr/lib/php or /usr/local/lib/php)
+ - setup var/conf.php - at least "basic configuration" part
+ - run 'make check' to: setup directories, create db tables and run test scripts
+   OR 'make all' without tests
