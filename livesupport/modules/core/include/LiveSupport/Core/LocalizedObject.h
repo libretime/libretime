@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 
 #include <unicode/resbund.h>
 #include <unicode/fmtable.h>
+#include <libxml++/libxml++.h>
 
 #include "LiveSupport/Core/Ptr.h"
 
@@ -63,11 +64,16 @@ namespace Core {
  *  to make localized life easier.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class LocalizedObject
 {
     private:
+        /**
+         *  The name of the configuration XML elmenent used by this object.
+         */
+        static const std::string    configElementNameStr;
+
         /**
          *  The resource bundle holding the localized resources for this
          *  object.
@@ -101,6 +107,54 @@ class LocalizedObject
         ~LocalizedObject(void)                                  throw ()
         {
         }
+
+        /**
+         *  Return the name of the XML element that is expected
+         *  to be sent to a call to getBundle().
+         *  
+         *  @return the name of the expected XML configuration element.
+         *  @see #getBundle(const xmlpp::Element &)
+         */
+        static const std::string
+        getConfigElementName(void)                      throw ()
+        {
+            return configElementNameStr;
+        }
+
+        /**
+         *  Load a resource bundle based on an XML configuration element.
+         *
+         *  The DTD for the lement to be supplied to this function is:
+         *  <pre><code>
+         *  <!DOCTYPE resourceBundle [
+         *  <!ELEMENT resourceBundle    EMPTY >
+         *  <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
+         *  <!ATTLIST resourceBundle    locale  CDATA   #REQUIRED >
+         *  ]>
+         *  </code></pre>
+         *
+         *  a sample configuration element is as follows:
+         *
+         *  <pre><code>
+         *  <resourceBundle path   = "./tmp/Core"
+         *                  locale = "en"
+         *  />
+         *  </code></pre>
+         *
+         *  for an overview of resource bundle parameters, see the ICU
+         *  documentation on <a
+         *  href=http://oss.software.ibm.com/icu/userguide/ResourceManagement.html>
+         *  resource management</a>
+         *
+         *  @param element the XML configuration element
+         *  @return the resource bundle, based on this element.
+         *  @exception std::invalid_argument if the supplied element is not
+         *             a proper resource bundle configuration element.
+         *  @see http://oss.software.ibm.com/icu/userguide/ResourceManagement.html
+         */
+        static Ptr<ResourceBundle>::Ref
+        getBundle(const xmlpp::Element    & element)
+                                                throw (std::invalid_argument);
 
         /**
          *  Get the resource bundle for this object.

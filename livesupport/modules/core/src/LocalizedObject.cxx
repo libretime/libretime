@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,11 +45,68 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
+/*------------------------------------------------------------------------------
+ *  The name of the config element for this class
+ *----------------------------------------------------------------------------*/
+const std::string LocalizedObject::configElementNameStr = "resourceBundle";
+
+/**
+ *  The name of the attribute to get the path of the resource bundle.
+ */
+static const std::string    pathAttrName = "path";
+
+/**
+ *  The name of the attribute to get the locale of the resource bundle.
+ */
+static const std::string    localeAttrName = "locale";
+
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  Load a resource bunlde based on an XML configuration element.
+ *----------------------------------------------------------------------------*/
+Ptr<ResourceBundle>::Ref
+LocalizedObject :: getBundle(const xmlpp::Element     & element)
+                                            throw (std::invalid_argument)
+{
+    if (element.get_name() != configElementNameStr) {
+        std::string eMsg = "Bad configuration element ";
+        eMsg += element.get_name();
+        throw std::invalid_argument(eMsg);
+    }
+
+    const xmlpp::Attribute    * attribute;
+
+    if (!(attribute = element.get_attribute(pathAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += pathAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    std::string path = attribute->get_value();
+
+    if (!(attribute = element.get_attribute(localeAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += localeAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    std::string locale = attribute->get_value();
+
+    UErrorCode                  status = U_ZERO_ERROR;
+    Ptr<ResourceBundle>::Ref    resourceBundle(
+                                    new ResourceBundle(path.c_str(),
+                                                       locale.c_str(),
+                                                       status));
+    if (!U_SUCCESS(status)) {
+        throw std::invalid_argument("opening resource bundle a failure");
+    }
+
+    return resourceBundle;
+}
+
 
 /*------------------------------------------------------------------------------
  *  Get a resource bundle by the specified key

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,11 @@ using namespace LiveSupport::Core;
 /* ================================================  local constants & macros */
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LocalizedObjectTest);
+
+/**
+ *  The name of the configuration file for the resource bundle.
+ */
+static const std::string configFileName = "etc/resourceBundle.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -224,4 +229,39 @@ LocalizedObjectTest :: formatMessageTest(void)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Test to see if resource bundle can be loaded based on a config file
+ *----------------------------------------------------------------------------*/
+void
+LocalizedObjectTest :: loadFromConfig(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<ResourceBundle>::Ref    bundle;
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                                    new xmlpp::DomParser(configFileName, true));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        bundle = LocalizedObject::getBundle(*root);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in configuration file");
+    } catch (std::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(bundle.get());
+
+    // now, see if this really is the en bundle
+    try {
+        Ptr<LocalizedObject>::Ref   locObj(new LocalizedObject(bundle));
+        Ptr<LocalizedObject>::Ref   section1(new LocalizedObject(
+                                                locObj->getBundle("section1")));
+        Ptr<UnicodeString>::Ref     foo = section1->getResourceString("foo");
+        CPPUNIT_ASSERT(foo->compare("fou") == 0);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
 

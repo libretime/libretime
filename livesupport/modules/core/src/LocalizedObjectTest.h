@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the LocalizedObject class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see LocalizedObject
  */
 class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
@@ -68,6 +68,7 @@ class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(fallbackTest);
     CPPUNIT_TEST(unicodeTest);
     CPPUNIT_TEST(formatMessageTest);
+    CPPUNIT_TEST(loadFromConfig);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -104,6 +105,15 @@ class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
          */
         void
         formatMessageTest(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to see if a resource bundle can be loaded based on a
+         *  configuration file
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        loadFromConfig(void)                    throw (CPPUNIT_NS::Exception);
 
 
     public:
