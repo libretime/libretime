@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ class StoredFile{
         $this->gb         =& $gb;
         $this->dbc        =& $gb->dbc;
         $this->filesTable =  $gb->filesTable;
-        $this->accessTable= $gb->accessTable;
+        $this->accessTable=  $gb->accessTable;
         $this->gunid      =  $gunid;
         if(is_null($this->gunid)) $this->gunid = $this->_createGunid();
         $this->resDir     =  $this->_getResDir($this->gunid);
@@ -68,6 +68,7 @@ class StoredFile{
         $this->md         =& new MetaData(&$gb, $this->gunid);
         return $this->gunid;
     }
+
     /* ========= 'factory' methods - should be called to construct StoredFile */
     /**
      *   Create instace of StoreFile object and insert new file
@@ -76,36 +77,41 @@ class StoredFile{
      *  @param oid int, local object id in the tree
      *  @param name string, name of new file
      *  @param mediaFileLP string, local path to media file
-     *  @param mdataFileLP string, local path to metadata XML file
+     *  @param metadata string, local path to metadata XML file or XML string
+     *  @param mdataLoc string 'file'|'string' (optional)
      *  @param gunid global unique id (optional) - for insert file with gunid
      *  @return instace of StoredFile object
      */
     function insert(&$gb, $oid, $name,
-        $mediaFileLP='', $mdataFileLP='', $gunid=NULL)
+        $mediaFileLP='', $metadata='', $mdataLoc='file', $gunid=NULL)
     {
         $ac =& new StoredFile(&$gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
         $ac->id   = $oid;
         $ac->type = "unKnown";
+        $emptyState = TRUE;
         if($ac->name=='') $ac->name=$ac->gunid;
         $this->dbc->query("BEGIN");
-        $res = $ac->dbc->query("INSERT INTO {$ac->filesTable}
-                (id, name, gunid, type)
+        $res = $ac->dbc->query("
+            INSERT INTO {$ac->filesTable}
+                (id, name, gunid, type, state)
             VALUES
-                ('$oid', '{$ac->name}', '{$ac->gunid}', '{$ac->type}')"
-        );
+                ('$oid', '{$ac->name}', '{$ac->gunid}', '{$ac->type}',
+                    'incomplete')
+        ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
-        if($mdataFileLP != ''){
-            if(!file_exists($mdataFileLP))
+        if($metadata != ''){
+            if($mdataLoc=='file' && !file_exists($metadata))
             {
                 return PEAR::raiseError("StoredFile::insert: ".
-                    "metadata file doesn't exists ($mdataFileLP)");
+                    "metadata file doesn't exists ($metadata)");
             }
-            $res = $ac->md->insert($mdataFileLP);
+            $res = $ac->md->insert($metadata, $mdataLoc);
             if(PEAR::isError($res)){
                 $this->dbc->query("ROLLBACK"); return $res;
             }
+            $emptyState = FALSE;
         }
         // --- media file insert:
         if($mediaFileLP != ''){
@@ -121,17 +127,22 @@ class StoredFile{
             $mime = $ac->rmd->getMime();
             //$gb->debugLog("gunid={$ac->gunid}, mime=$mime");
             if($mime !== FALSE){
-                $res = $ac->dbc->query("UPDATE {$ac->filesTable}
-                    SET type='$mime' WHERE id='$oid'");
+                $res = $ac->setType($mime);
                 if(PEAR::isError($res)){
                     $ac->dbc->query("ROLLBACK"); return $res;
                 }
             }
+            $emptyState = FALSE;
+        }
+        if(!$emptyState){
+            $res = $ac->setState('ready');
+            if(PEAR::isError($res)){ $ac->dbc->query("ROLLBACK"); return $res; }
         }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         return $ac;
     }
+
     /**
      *  Create instace of StoreFile object and recall existing file.<br>
      *  Should be supplied oid XOR gunid - not both ;)
@@ -144,8 +155,10 @@ class StoredFile{
     function recall(&$gb, $oid='', $gunid='')
     {
         $cond = ($oid != '' ? "id='".intval($oid)."'" : "gunid='$gunid'" );
-        $row = $gb->dbc->getRow("SELECT id, gunid, type, name
-            FROM {$gb->filesTable} WHERE $cond");
+        $row = $gb->dbc->getRow("
+            SELECT id, gunid, type, name
+            FROM {$gb->filesTable} WHERE $cond
+        ");
         if(PEAR::isError($row)) return $row;
         if(is_null($row)){
             return PEAR::raiseError(
@@ -159,9 +172,10 @@ class StoredFile{
         $ac->id   = $row['id'];
         return $ac;
     }
+
     /**
      *  Create instace of StoreFile object and recall existing file
-     *	by gunid.<br>
+     *	by gunid.<br/>
      *
      *  @param gb reference to GreenBox object
      *  @param gunid string, optional, global unique id of file
@@ -171,24 +185,27 @@ class StoredFile{
     {
       return StoredFile::recall(&$gb, '', $gunid);
     }
+
     /**
-     *  Create instace of StoreFile object and recall existing file from tmpLink
+     *  Create instace of StoreFile object and recall existing file
+     *  by access token.<br/>
      *
      *  @param gb reference to GreenBox object
-     *  @param tmpLink string
-     *  @param sessid string
+     *  @param token string, access token
+     *  @return instace of StoredFile object
      */
-    function recallFromLink(&$gb, $tmpLink, $sessid)
+    function recallByToken(&$gb, $token)
     {
         $gunid = $gb->dbc->getOne("SELECT gunid FROM {$gb->accessTable}
-            WHERE tmpLink='$tmpLink' AND sessid='$sessid'");
+            WHERE token='$token'");
         if(PEAR::isError($gunid)) return $gunid;
         if(is_null($gunid)) return PEAR::raiseError(
-            "StoredFile::recallFromLink: accessobj not exist ($tmpLink)", GBERR_AOBJNEX);
+            "StoredFile::recallByToken: invalid token ($token)", GBERR_AOBJNEX);
         return StoredFile::recall(&$gb, '', $gunid);
     }
+
     /**
-     *  Create instace of StoreFile object and make copy of existing file
+     *  Create instace of StoredFile object and make copy of existing file
      *
      *  @param src reference to source object
      *  @param nid int, new local id
@@ -208,35 +225,30 @@ class StoredFile{
      *  @param oid int, local id
      *  @param name string, name of file
      *  @param mediaFileLP string, local path to media file
-     *  @param mdataFileLP string, local path to metadata XML file or XML string
+     *  @param metadata string, local path to metadata XML file or XML string
      *  @param mdataLoc string 'file'|'string'
      */
-    function replace($oid, $name, $mediaFileLP='', $mdataFileLP='',
+    function replace($oid, $name, $mediaFileLP='', $metadata='',
         $mdataLoc='file')
     {
         $this->dbc->query("BEGIN");
-        $res = $this->dbc->query("UPDATE {$this->filesTable}
-            SET name='$name', type='{$this->type}' WHERE id='$oid'");
+        $res = $this->rename($name);
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        if($mediaFileLP != ''){
-            $res = $this->rmd->replace($mediaFileLP, $this->type);
-            if(PEAR::isError($res)){
-                $this->dbc->query("ROLLBACK"); return $res;
-            }
-            $mime = $this->rmd->getMime();
-            if($mime !== FALSE){
-                $res = $this->dbc->query("UPDATE {$this->filesTable}
-                    SET type='$mime' WHERE id='$oid'");
-                if(PEAR::isError($res)){
-                    $this->dbc->query("ROLLBACK"); return $res;
-                }
-            }
+        if($mediaFileLP != ''){     // media
+            $res = $this->replaceRawMediaData($mediaFileLP);
+        }else{
+            $res = $this->rmd->delete();
         }
-        if($mdataFileLP != ''){
-            $res = $this->md->replace($mdataFileLP, $mdataLoc);
-            if(PEAR::isError($res)){
-                $this->dbc->query("ROLLBACK"); return $res;
-            }
+        if(PEAR::isError($res)){
+            $this->dbc->query("ROLLBACK"); return $res;
+        }
+        if($metadata != ''){        // metadata
+            $res = $this->md->replace($metadata, $mdataLoc);
+        }else{
+            $res = $this->md->delete();
+        }
+        if(PEAR::isError($res)){
+            $this->dbc->query("ROLLBACK"); return $res;
         }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)){
@@ -244,97 +256,107 @@ class StoredFile{
         }
         return TRUE;
     }
+
     /**
-     *  Increase access counter, create access record,
+     *  Increase access counter, create access token, insert access record,
      *  call access method of RawMediaData
      *
      *  @param sessid string
+     *  @return array with: access URL, access token
      */
     function accessRawMediaData($sessid)
     {
         $this->dbc->query("BEGIN");
-        $res = $this->dbc->query("UPDATE {$this->filesTable}
+        $res = $this->dbc->query("
+            UPDATE {$this->filesTable}
             SET currentlyAccessing=currentlyAccessing+1
-            WHERE gunid='{$this->gunid}'");
+            WHERE gunid='{$this->gunid}'
+        ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $accLinkName = $this->_getAccessFname($sessid, $this->_getExt());
-        $res = $this->dbc->query("INSERT INTO {$this->accessTable}
-                (gunid, sessid, tmplink, ts)
-            VALUES
-                ('{$this->gunid}', '$sessid', '$accLinkName', now())");
+#        $token = $this->_createGunid();
+        $realFname  = $this->_getRealRADFname();
+        $ext        = $this->_getExt();
+
+        $res = $this->gb->bsAccess($realFname, $ext, $this->gunid, $sessid);
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $acc = $this->rmd->access($accLinkName);
-        if(PEAR::isError($acc)){ $this->dbc->query("ROLLBACK"); return $acc; }
-        if($acc === FALSE){
-             $this->dbc->query("ROLLBACK");
-            return PEAR::raiseError(
-             'StoredFile::accessRawMediaData: not exists'
-            );
-        }
+        $resultArray =
+            array('url'=>"file://{$res['fname']}", 'token'=>$res['token']);
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        return $acc;
+        return $resultArray;
     }
+
     /**
      *  Decrease access couter, delete access record,
      *  call release method of RawMediaData
      *
-     *  @param sessid string
+     *  @param token string, access token
+     *  @return boolean
      */
-    function releaseRawMediaData($sessid)
+    function releaseRawMediaData($token)
     {
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("UPDATE {$this->filesTable}
             SET currentlyAccessing=currentlyAccessing-1
-            WHERE gunid='{$this->gunid}' AND currentlyAccessing>0"
-        );
+            WHERE gunid='{$this->gunid}' AND currentlyAccessing>0
+        ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $ca = $this->dbc->getOne("SELECT currentlyAccessing
-            FROM {$this->filesTable}
-            WHERE gunid='{$this->gunid}'"
-        );
-        if(PEAR::isError($ca)){ $this->dbc->query("ROLLBACK"); return $ca; }
-        $accLinkName = $this->_getAccessFname($sessid, $this->_getExt());
-        $res = $this->dbc->query("DELETE FROM {$this->accessTable}
-            WHERE gunid='{$this->gunid}' AND sessid='$sessid'
-                AND tmplink='$accLinkName'");
+        $res = $this->gb->bsRelease($token);
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        if(intval($ca)==0) return $this->rmd->release($accLinkName);
         return TRUE;
     }
+
+    /**
+     *  Replace media file only with new binary file
+     *
+     *  @param mediaFileLP string, local path to media file
+     */
+    function replaceRawMediaData($mediaFileLP)
+    {
+        $res = $this->rmd->replace($mediaFileLP);
+        if(PEAR::isError($res)){ return $res; }
+        $mime = $this->rmd->getMime();
+        if($mime !== FALSE){
+            $res = $this->setType($mime);
+            if(PEAR::isError($res)){ return $res; }
+        }
+    }
+
     /**
      *  Replace metadata with new XML file
      *
-     *  @param mdataFileLP string, local path to metadata XML file or XML string
+     *  @param metadata string, local path to metadata XML file or XML string
      *  @param mdataLoc string 'file'|'string'
      */
-    function replaceMetaData($mdataFileLP, $mdataLoc='file')
+    function replaceMetaData($metadata, $mdataLoc='file')
     {
         $this->dbc->query("BEGIN");
-        $res = $this->md->replace($mdataFileLP, $mdataLoc);
+        $res = $this->md->replace($metadata, $mdataLoc);
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
+
     /**
      *  Update metadata with new XML file
      *
-     *  @param mdataFileLP string, local path to metadata XML file or XML string
+     *  @param metadata string, local path to metadata XML file or XML string
      *  @param mdataLoc string 'file'|'string'
      *  @return boolean or PEAR::error
      */
-    function updateMetaData($mdataFileLP, $mdataLoc='file')
+    function updateMetaData($metadata, $mdataLoc='file')
     {
         $this->dbc->query("BEGIN");
-        $res = $this->md->update($mdataFileLP, $mdataLoc);
+        $res = $this->md->update($metadata, $mdataLoc);
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
+
     /**
      *  Update object namespace and value of one metadata record
      *
@@ -349,6 +371,7 @@ class StoredFile{
     {
         return $this->md->updateRecord($mdid, $object, $objns='_L');
     }
+
     /**
      *  Get metadata as XML string
      *
@@ -359,6 +382,7 @@ class StoredFile{
     {
         return $this->md->getMetaData();
     }
+
     /**
      *  Analyze file with getid3 module.<br>
      *  Obtain some metadata stored in media file.<br>
@@ -372,6 +396,7 @@ class StoredFile{
         $ia = $this->rmd->analyze();
         return $ia;
     }
+
     /**
      *  Rename stored virtual file
      *
@@ -380,11 +405,46 @@ class StoredFile{
      */
     function rename($newname)
     {
-        $res = $this->dbc->query("UPDATE {$this->filesTable} SET name='$newname'
-            WHERE gunid='{$this->gunid}'");
+        $res = $this->dbc->query("
+            UPDATE {$this->filesTable} SET name='$newname'
+            WHERE gunid='{$this->gunid}'
+        ");
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
+
+    /**
+     *  Set state of virtual file
+     *
+     *  @param state string, 'empty'|'incomplete'|'ready'|'edited'
+     *  @return boolean or error
+     */
+    function setState($state)
+    {
+        $res = $this->dbc->query("
+            UPDATE {$this->filesTable} SET state='$state'
+            WHERE gunid='{$this->gunid}'
+        ");
+        if(PEAR::isError($res)){ return $res; }
+        return TRUE;
+    }
+
+    /**
+     *  Set mime-type of virtual file
+     *
+     *  @param type string, mime-type
+     *  @return boolean or error
+     */
+    function setType($type)
+    {
+        $res = $this->dbc->query("
+            UPDATE {$this->filesTable} SET type='$type'
+            WHERE gunid='{$this->gunid}'
+        ");
+        if(PEAR::isError($res)){ return $res; }
+        return TRUE;
+    }
+
     /**
      *  Delete stored virtual file
      *
@@ -397,10 +457,11 @@ class StoredFile{
         if(PEAR::isError($res)) return $res;
         $res = $this->md->delete();
         if(PEAR::isError($res)) return $res;
-        $links = $this->dbc->getAll("SELECT tmplink FROM {$this->accessTable}
+        $tokens = $this->dbc->getAll("SELECT token FROM {$this->accessTable}
             WHERE gunid='{$this->gunid}'");
-        if(is_array($links)) foreach($links as $i=>$item){
-            @unlink($item['tmplink']);
+        if(is_array($tokens)) foreach($tokens as $i=>$item){
+            $file = _getAccessFname($item['token'], $item['ext']);
+            @unlink($file);
         }
         $res = $this->dbc->query("DELETE FROM {$this->accessTable}
             WHERE gunid='{$this->gunid}'");
@@ -425,6 +486,7 @@ class StoredFile{
             WHERE gunid='$gunid'
         "));
     }    
+
     /**
      *  Returns local id of virtual file
      *
@@ -433,14 +495,17 @@ class StoredFile{
     {
         return $this->id;
     }    
+
     /**
      *  Returns true if raw media file exists
      *
      */
     function exists()
     {
-        $indb = $this->dbc->getRow("SELECT gunid FROM {$this->filesTable}
-            WHERE gunid='{$this->gunid}'");
+        $indb = $this->dbc->getRow("
+            SELECT gunid FROM {$this->filesTable}
+            WHERE gunid='{$this->gunid}'
+        ");
         return (!is_null($indb) && $this->rmd->exists());
     }    
     
@@ -451,9 +516,11 @@ class StoredFile{
      */
     function _createGunid()
     {
-        return md5(microtime().$_SERVER['SERVER_ADDR'].rand().
-            "org.mdlf.livesupport");
+        return md5(
+            microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport"
+        );
     }
+
     /**
      *  Get local id from global id.
      *  Static or dynamic call is possible.
@@ -471,6 +538,7 @@ class StoredFile{
         );
         return $id;
     }
+
     /**
      *  Return suitable extension.<br>
      *  <b>TODO: make it general - is any tool for it?</b>
@@ -487,6 +555,7 @@ class StoredFile{
         }
         return $ext;
     }
+
     /**
      *  Get filetype from global id
      *
@@ -494,9 +563,12 @@ class StoredFile{
      */
     function _getType($gunid)
     {
-        return $this->dbc->getOne("SELECT type FROM {$this->filesTable}
-            WHERE gunid='$gunid'");
+        return $this->dbc->getOne("
+            SELECT type FROM {$this->filesTable}
+            WHERE gunid='$gunid'
+        ");
     }
+
     /**
      *  Get and optionaly create subdirectory in real filesystem for storing
      *  raw media data
@@ -509,6 +581,7 @@ class StoredFile{
         if(!file_exists($resDir)){ mkdir($resDir, 02775); chmod($resDir, 02775); }
         return $resDir;
     }
+
     /**
      *  Get real filename of raw media data
      *
@@ -518,14 +591,15 @@ class StoredFile{
     {
         return $this->rmd->getFname();
     }
+
     /**
      *  Create and return name for temporary symlink.<br>
      *  <b>TODO: Should be more unique</b>
      *
      */
-    function _getAccessFname($sessid, $ext='EXT')
+    function _getAccessFname($token, $ext='EXT')
     {
-        $spart = md5("{$sessid}_{$this->gunid}");
+        $spart = md5($token);
         return "{$this->accessDir}/$spart.$ext";
     }
 }

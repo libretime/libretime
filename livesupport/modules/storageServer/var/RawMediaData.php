@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/RawMediaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,7 @@
 
 /* ================== RawMediaData ================== */
 class RawMediaData{
+
     /**
      *  Constructor
      *
@@ -53,6 +54,7 @@ class RawMediaData{
         $this->fname  = $this->makeFname();
         $this->exists = file_exists($this->fname);
     }
+
     /**
      *  Insert media file to filesystem
      *
@@ -69,11 +71,10 @@ class RawMediaData{
         }
         umask(0002);
         if(@copy($mediaFileLP, $this->fname)){
-//            @chmod($this->fname, 0775);
             $this->exists = TRUE;
             return TRUE;
         }else{
-//            @unlink($this->fname);
+            //@unlink($this->fname);    // maybe useless
             $this->exists  = FALSE;
             return PEAR::raiseError(
                 "RawMediaData::insert: file save failed".
@@ -81,6 +82,7 @@ class RawMediaData{
             );
         }
     }
+    
     /**
      *  Delete and insert media file
      *
@@ -93,6 +95,7 @@ class RawMediaData{
         if(PEAR::isError($r)) return $r;
         return $this->insert($mediaFileLP);
     }
+    
     /**
      *  Return true if file corresponding to the object exists
      *
@@ -102,6 +105,7 @@ class RawMediaData{
     {
         return $this->exists;
     }
+    
     /**
      *  Return filename
      *
@@ -111,38 +115,42 @@ class RawMediaData{
     {
         return $this->fname;
     }
+    
+/*
     /**
      *  Make access symlink to the media file
      *
      *  @param accLinkName string, access symlink name
      *  @return string, access symlink name
-     */
+     * /
     function access($accLinkName)
     {
         if(!$this->exists) return FALSE;
         if(file_exists($accLinkName))   return $accLinkName;
         if(@symlink($this->fname, $accLinkName)){
-//            @chmod($accLinkName, 0775);
             return $accLinkName;
         }else return PEAR::raiseError(
             "RawMediaData::access: symlink create failed ($accLinkName)",
             GBERR_FILEIO
         );
     }
+    
     /**
      *  Delete access symlink
      *
      *  @param accLinkName string, access symlink name
      *  @return boolean or PEAR::error
-     */
+     * /
     function release($accLinkName)
     {
         if(!$this->exists) return FALSE;
         if(@unlink($accLinkName)) return TRUE;
         else return PEAR::raiseError(
-            "RawMediaData::release: symlink unlink failed", GBERR_FILEIO
+            "RawMediaData::release: unlink failed ($accLinkName)", GBERR_FILEIO
         );
     }
+*/
+
     /**
      *  Delete media file from filesystem
      *
@@ -196,6 +204,7 @@ class RawMediaData{
     {
         return "{$this->resDir}/{$this->gunid}";
     }
+    
     /**
      *  Test method
      *

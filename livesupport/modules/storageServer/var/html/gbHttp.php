@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -147,7 +147,7 @@ switch($_REQUEST['act']){
  *  @param id int, destination folder id
  */
     case"rename":
-        $parid = $gb->getparent($id);
+        $parid = $gb->getParent($id);
         $r = $gb->renameFile($id, $_REQUEST['newname'], $sessid);
         if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$parid";
@@ -164,7 +164,7 @@ switch($_REQUEST['act']){
     case"move":
         $newPath = urlencode($_REQUEST['newPath']);
         $did = $gb->getObjIdFromRelPath($id, $newPath);
-        $parid = $gb->getparent($id);
+        $parid = $gb->getParent($id);
         $r = $gb->moveFile($id, $did, $sessid);
         if(PEAR::isError($r)){
             $_SESSION['alertMsg'] = $r->getMessage();
@@ -184,7 +184,7 @@ switch($_REQUEST['act']){
     case"copy":
         $newPath = urldecode($_REQUEST['newPath']);
         $did = $gb->getObjIdFromRelPath($id, $newPath);
-        $parid = $gb->getparent($id);
+        $parid = $gb->getParent($id);
         $r = $gb->copyFile($id, $did, $sessid);
         if(PEAR::isError($r)){
             $_SESSION['alertMsg'] = $r->getMessage();
@@ -200,7 +200,7 @@ switch($_REQUEST['act']){
  *  @param id int, local id of deleted file or folder
  */
     case"delete":
-        $parid = $gb->getparent($id);
+        $parid = $gb->getParent($id);
         $r = $gb->deleteFile($id, $sessid);
         if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$parid";

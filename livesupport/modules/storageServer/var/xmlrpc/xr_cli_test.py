@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.3 $
+#    Version  : $Revision: 1.4 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -84,29 +84,47 @@ try:
     elif method=="test":
         print server.locstor.test({'sessid':pars[0], 'teststring':pars[1]})
     elif method=="authenticate":
-        print server.locstor.authenticate({'login':pars[0], 'pass':pars[1]})
+        print server.locstor.authenticate({'login':pars[0], 'pass':pars[1]})['authenticate']
     elif method=="login":
-        print server.locstor.login({'login':pars[0], 'pass':pars[1]})
+        print server.locstor.login({'login':pars[0], 'pass':pars[1]})['sessid']
     elif method=="logout":
         print server.locstor.logout({'sessid':pars[0]})
-    elif method=="existsAudioClip":
-        print server.locstor.existsAudioClip({'sessid':pars[0], 'gunid':pars[1]} )
-    elif method=="storeAudioClip":
-        print server.locstor.storeAudioClip({'sessid':pars[0], 'gunid':pars[1], 'mediaFileLP':pars[2], 'mdataFileLP':pars[3]})
+    elif method=="storeAudioClipOpen":
+        r = server.locstor.storeAudioClipOpen({'sessid':pars[0], 'gunid':pars[1], 'metadata':pars[2], 'chsum':pars[3]})
+        print r['url']+'\n'+r['token']
+    elif method=="storeAudioClipClose":
+        print server.locstor.storeAudioClipClose({'sessid':pars[0], 'token':pars[1]})['gunid']
+    elif method=="accessRawAudioData":
+        r = server.locstor.accessRawAudioData({'sessid':pars[0], 'gunid':pars[1]})
+        print r['url']+'\n'+r['token']
+    elif method=="releaseRawAudioData":
+        print server.locstor.releaseRawAudioData({'sessid':pars[0], 'token':pars[1]})
+    elif method=="downloadRawAudioDataOpen":
+        r = server.locstor.downloadRawAudioDataOpen({'sessid':pars[0], 'gunid':pars[1]})
+        print r['url']+'\n'+r['token']
+    elif method=="downloadRawAudioDataClose":
+        print server.locstor.downloadRawAudioDataClose({'sessid':pars[0], 'token':pars[1]})
+    elif method=="downloadMetadataOpen":
+        r = server.locstor.downloadMetadataOpen({'sessid':pars[0], 'gunid':pars[1]})
+        print r['url']+'\n'+r['token']
+    elif method=="downloadMetadataClose":
+        print server.locstor.downloadMetadataClose({'sessid':pars[0], 'token':pars[1]})
     elif method=="deleteAudioClip":
         print server.locstor.deleteAudioClip({'sessid':pars[0], 'gunid':pars[1]})
+    elif method=="existsAudioClip":
+        print server.locstor.existsAudioClip({'sessid':pars[0], 'gunid':pars[1]} )['exists']
     elif method=="updateAudioClipMetadata":
         print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'mdataFileLP':pars[2]})
     elif method=="searchMetadata":
         print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
-    elif method=="accessRawAudioData":
-        print server.locstor.accessRawAudioData({'sessid':pars[0], 'gunid':pars[1]})
-    elif method=="releaseRawAudioData":
-        print server.locstor.releaseRawAudioData({'sessid':pars[0], 'tmpLink':pars[1]})
     elif method=="getAudioClip":
         print server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
     elif method=="resetStorage":
         print server.locstor.resetStorage({})
+    elif method=="openPut":
+        r = server.locstor.openPut({}); print r['url']+'\n'+r['token']
+    elif method=="closePut":
+        print server.locstor.closePut({'token':pars[0], 'chsum':pars[1]})
     else:
         print "Unknown command: "+method
         sys.exit(1)

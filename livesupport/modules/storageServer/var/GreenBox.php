@@ -23,24 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
-define('GBERR_DENY', 40);
-define('GBERR_FILEIO', 41);
-define('GBERR_FILENEX', 42);
-define('GBERR_FOBJNEX', 43);
-define('GBERR_WRTYPE', 44);
-define('GBERR_NONE', 45);
-define('GBERR_AOBJNEX', 46);
-define('GBERR_NOTF', 47);
-
-define('GBERR_NOTIMPL', 50);
-
-require_once "../../../alib/var/alib.php";
-require_once "StoredFile.php";
-require_once "Transport.php";
+require_once "BasicStor.php";
 
 /**
  *  GreenBox class
@@ -48,47 +35,13 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.10 $
- *  @see Alib
+ *  @version $Revision: 1.11 $
+ *  @see BasicStor
  */
-class GreenBox extends Alib{
-    var $filesTable;
-    var $mdataTable;
-    var $accessTable;
-    var $storageDir;
-    var $bufferDir;
-    var $accessDir;
-    var $rootId;
-    var $storId;
-    var $doDebug = true;
-    /**
-     *  Constructor
-     *
-     *  @param dbc PEAR::db abstract class reference
-     *  @param config config array from conf.php
-     *  @return class instance
-     */
-    function GreenBox(&$dbc, $config)
-    {
-        parent::Alib(&$dbc, $config);
-        $this->config = $config;
-        $this->filesTable = $config['tblNamePrefix'].'files';
-        $this->mdataTable = $config['tblNamePrefix'].'mdata';
-        $this->accessTable= $config['tblNamePrefix'].'access';
-        $this->storageDir = $config['storageDir'];
-        $this->bufferDir  = $config['bufferDir'];
-        $this->transDir  = $config['transDir'];
-        $this->accessDir  = $config['accessDir'];
-        $this->dbc->setErrorHandling(PEAR_ERROR_RETURN);
-        $this->rootId = $this->getRootNode();
-        $this->storId = $this->wd =
-            $this->getObjId('StorageRoot', $this->rootId);
-        $this->dbc->setErrorHandling();
-    }
+class GreenBox extends BasicStor{
 
-    
     /* ======================================================= public methods */
-    
+
     /**
      *  Create new folder
      *
@@ -102,7 +55,7 @@ class GreenBox extends Alib{
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        return $this->addObj($folderName , 'Folder', $parid);
+        return $this->bsCreateFolder($parid, $folderName , 'Folder', $parid);
     }
 
     /**
@@ -122,38 +75,9 @@ class GreenBox extends Alib{
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        $name   = "$fileName";
-        $id = $this->addObj($name , 'File', $parid);
-        $ac =&  StoredFile::insert(
-            &$this, $id, $name, $mediaFileLP, $mdataFileLP, $gunid
+        return $this->bsPutFile(
+            $parid, $fileName, $mediaFileLP, $mdataFileLP, $gunid
         );
-        if(PEAR::isError($ac)) return $ac;
-        return $id;
-    }
-
-    /**
-     *  Return raw media file.<br>
-     *  <b>will be probably removed from API</b><br>
-     *  see access() method
-     *  
-     *  @param id int, virt.file's local id
-     *  @param sessid string, session id
-     *  @return file
-     */
-    function getFile($id, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::getFile: probably obsolete API function');
-        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
-            return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-            $fname = $ac->accessRawMediaData();
-#            readfile($fname);
-            return join('', file($fname));
-            $fname = $ac->releaseRawMediaData();
-        }
     }
 
     /**
@@ -165,53 +89,11 @@ class GreenBox extends Alib{
      */
     function analyzeFile($id, $sessid='')
     {
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-#            echo"<pre>\n"; print_r($ac); exit;
-            $ia = $ac->analyzeMediaFile();
-            return $ia;
-        }
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsAnalyzeFile($id);
     }
     
-    /**
-     *  Create and return access link to media file
-     *
-     *  @param id int, virt.file's local id
-     *  @param sessid string, session id
-     *  @return filename as string or PEAR::error
-     */
-    function access($id, $sessid='')
-    {
-        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
-            return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-            $fname = $ac->accessRawMediaData($sessid);
-            return $fname;
-        }
-    }
-
-    /**
-     *  Release access link to media file
-     *
-     *  @param id int, virt.file's local id
-     *  @param sessid string, session id
-     *  @return boolean or PEAR::error
-     */
-    function release($id, $sessid='')
-    {
-        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
-            return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-            $res = $ac->releaseRawMediaData($sessid);
-            return $res;
-        }
-    }
-
     /**
      *  Rename file
      *
@@ -225,15 +107,7 @@ class GreenBox extends Alib{
         $parid = $this->getParent($id);
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)){
-            // catch nonerror exception:
-            if($ac->getCode() != GBERR_FOBJNEX) return $ac;
-        }else{
-            $res = $ac->rename($newName);
-            if(PEAR::isError($res)) return $res;
-        }
-        return $this->renameObj($id, $newName);
+        return $this->bsRenameFile($id, $newName);
     }
 
     /**
@@ -246,14 +120,10 @@ class GreenBox extends Alib{
      */
     function moveFile($id, $did, $sessid='')
     {
-        if($this->getObjType($did) !== 'Folder')
-            return PEAR::raiseError(
-                'GreenBox::moveFile: destination is not folder', GBERR_WRTYPE
-            );
         if(($res = $this->_authorize(
             array('read', 'write'), array($id, $did), $sessid
         )) !== TRUE) return $res;
-        $this->_relocateSubtree($id, $did);
+        return $this->bsMoveFile($id, $did);
     }
 
     /**
@@ -266,14 +136,10 @@ class GreenBox extends Alib{
      */
     function copyFile($id, $did, $sessid='')
     {
-        if($this->getObjType($did)!=='Folder')
-            return PEAR::raiseError(
-                'GreenBox::copyFile: destination is not folder', GBERR_WRTYPE
-            );
         if(($res = $this->_authorize(
             array('read', 'write'), array($id, $did), $sessid
         )) !== TRUE) return $res;
-        return $this->_copySubtree($id, $did);
+        return $this->bsCopyFile($id, $did);
     }
 
     /**
@@ -288,13 +154,41 @@ class GreenBox extends Alib{
         $parid = $this->getParent($id);
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        $res = $this->removeObj($id);
-        if(PEAR::isError($res)) return $res;
-        return TRUE;
+        return $this->bsDeleteFile($id);
+    }
+
+    /* ----------------------------------------------------- put, access etc. */
+    /**
+     *  Create and return access link to media file
+     *
+     *  @param id int, virt.file's local id
+     *  @param sessid string, session id
+     *  @return array with: seekable filehandle, access token
+     */
+    function access($id, $sessid='')
+    {
+        $ac =& StoredFile::recall(&$this, $id);
+        if(PEAR::isError($ac)) return $ac;
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $ac->accessRawMediaData($sessid);
+    }
+
+    /**
+     *  Release access link to media file
+     *
+     *  @param sessid string, session id
+     *  @param token string, access token
+     *  @return boolean or PEAR::error
+     */
+    function release($token, $sessid='')
+    {
+        $ac =& StoredFile::recallByToken(&$this, $token);
+        if(PEAR::isError($ac)) return $ac;
+        return $ac->releaseRawMediaData($sessid, $token);
     }
 
     /* ---------------------------------------------- replicas, versions etc. */
-
     /**
      *  Create replica.<br>
      *  <b>TODO: NOT FINISHED</b>
@@ -307,24 +201,10 @@ class GreenBox extends Alib{
      */
     function createReplica($id, $did, $replicaName='', $sessid='')
     {
-        return PEAR::raiseError(
-            'GreenBox::createVersion: not implemented', GBERR_NOTIMPL
-        );
-        // ---
-        if($this->getObjType($did)!=='Folder')
-            return PEAR::raiseError(
-                'GreenBox::createReplica: dest is not folder', GBERR_WRTYPE
-            );
         if(($res = $this->_authorize(
             array('read', 'write'), array($id, $did), $sessid
         )) !== TRUE) return $res;
-        if($replicaName=='') $replicaName = $this->getObjName($id);
-        while(($exid = $this->getObjId($replicaName, $did))<>'')
-            { $replicaName.='_R'; }
-        $rid = $this->addObj($replicaName , 'Replica', $did, 0, $id);
-        if(PEAR::isError($rid)) return $rid;
-#        $this->addMdata($this->_pathFromId($rid), 'isReplOf', $id, $sessid);
-        return $rid;
+        return $this->bsCreateReplica($id, $did, $replicaName);
     }
 
     /**
@@ -339,9 +219,7 @@ class GreenBox extends Alib{
      */
     function createVersion($id, $did, $versionLabel, $sessid='')
     {
-        return PEAR::raiseError(
-            'GreenBox::createVersion: not implemented', GBERR_NOTIMPL
-        );
+        return $this->bsCreateVersion($id, $did, $versionLabel);
     }
 
 
@@ -359,11 +237,7 @@ class GreenBox extends Alib{
     {
         if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
             return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-            return $ac->updateMetaData($mdataFile);
-        }
+        return $this->bsUpdateMetadata($id, $mdataFile);
     }
     
     /**
@@ -382,11 +256,7 @@ class GreenBox extends Alib{
     {
         if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
             return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-            return $ac->updateMetaDataRecord($mdid, $object, $objns);
-        }
+        return $this->bsUpdateMetadataRecord($id, $mdid, $object, $objns);
     }
 
     /**
@@ -401,14 +271,11 @@ class GreenBox extends Alib{
      *  @return boolean or PEAR::error
      *  @see MetaData
      */
-    function addMetaDataRecord($id, $propertyName,
-        $propertyValue, $sessid='')
+    function addMetaDataRecord($id, $propertyName, $propertyValue, $sessid='')
     {
-        //if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
-        //    return $res;
-        return PEAR::raiseError(
-            'GreenBox::addMetaDataRecord: not implemented', GBERR_NOTIMPL
-        );
+        if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsAddMetaDataRecord($id, $propertyName, $propertyValue);
     }
 
     /**
@@ -422,21 +289,16 @@ class GreenBox extends Alib{
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
-            return $ac->getMetaData();
-        }
+        return $this->bsGetMdata($id);
     }
 
     /**
      *  Search in local metadata database.<br>
      *  <b>TODO: NOT FINISHED</b><br>
-     *  Should support structured queries, e.g.:<br>
-     *  XML file with the structure as metadata, but
-     *  with SQL LIKE terms instead of metadata values.<br>
-     *  Some standard query format would be better,
-     *  but I've not found it yet.
+     *  It will support structured queries -  array of mode and query parts.
+     *  Mode is &quot;match all&quot; or &quot;match any&quot;.
+     *  Query parts is array of [fieldname, operator, value] entities.
+     *
      *
      *  @param searchData string, search query -
      *      only one SQL LIKE term supported now.
@@ -447,210 +309,8 @@ class GreenBox extends Alib{
      */
     function localSearch($searchData, $sessid='')
     {
-        $ftsrch = $searchData;
-        $res = $this->dbc->getCol("SELECT md.gunid as gunid
-            FROM {$this->filesTable} f, {$this->mdataTable} md
-            WHERE f.gunid=md.gunid AND md.objns='_L' AND
-                md.object like '%$ftsrch%'
-            GROUP BY md.gunid
-        ");
-        if(!is_array($res)) $res = array();
-        return $res;
+        return $this->bsLocalSearch($searchData);
     }
-
-    /* -------------------------------------------- remote repository methods */
-
-    /**
-     *  Upload file to remote repository
-     *
-     *  @param id int, virt.file's local id
-     *  @param gunid string, global id
-     *  @param sessid string, session id
-     *  @return string - transfer id or PEAR::error
-     */
-    function uploadFile($id, $gunid, $sessid='')
-    {
-        $res = $this->prepareForTransport($id, $gunid, $sessid);
-        if(PEAR::isError($res)) return $res;
-        list($mediaFile, $mdataFile, $gunid) = $res;
-        $tr =& new Transport(&$this->dbc, $this->config);
-        $res = $tr->uploadOpen($mediaFile, 'media', $sessid, $gunid);
-        if(PEAR::isError($res)) return $res;
-        $res2 = $tr->uploadOpen($mdataFile, 'metadata', $sessid, $gunid);
-        if(PEAR::isError($res2)) return $res2;
-        $res3 = $tr->getTransportStatus($res);
-        $res4 = $tr->getTransportStatus($res2);
-#        return $res;
-        return array($res, $res2, $res3, $res4);
-    }
-
-    /**
-     *  Download file from remote repository
-     *
-     *  @param gunid int, global unique id
-     *  @param sessid string, session id
-     *  @return string - transfer id or PEAR::error
-     */
-    function downloadFile($gunid, $sessid='')
-    {
-        $tr =& new Transport(&$this->dbc, $this->config);
-        // get home dir if needed
-        $res = $tr->downloadOpen($sessid, 'media', $gunid,
-            $this->getSessUserId($sessid)
-        );
-        if(PEAR::isError($res)) return $res;
-        $res2 = $tr->downloadOpen($sessid, 'metadata', $gunid,
-            $this->getSessUserId($sessid)
-        );
-        if(PEAR::isError($res)) return $res;
-        $res3 = $tr->getTransportStatus($res);
-        $res4 = $tr->getTransportStatus($res2);
-#        return $res;
-        return array($res, $res2, $res3, $res4);
-    }
-    
-
-
-    /**
-     *  Method for handling interupted transports via cron 
-     *
-     */
-     function cronJob()
-     {
-        $tr =& new Transport(&$this->dbc, $this->config);
-        $ru = $tr->uploadCron();
-        $rd = $tr->downloadCron(&$this);
-        return array($ru, $rd);
-     }
-
-    /**
-     *  Get status of asynchronous transfer
-     *
-     *  @param transferId int, id of asynchronous transfer
-     *      returned by uploadFile or downloadFile methods
-     *  @param sessid string, session id
-     *  @return string or PEAR::error
-     */
-    function getTransferStatus($transferId, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::getTransferStatus: not implemented', GBERR_NOTIMPL
-        );
-    }
-
-    /**
-     *  Prepare symlink to media file and create metadata file for transport
-     *
-     *  @param id
-     *  @param gunid
-     *  @param sessid
-     *  @return array
-     */
-    function prepareForTransport($id, $gunid, $sessid='')
-    {
-        if(!$gunid) $gunid = $this->_gunidFromId($id);
-        else $id = $this->_idFromGunid($gunid);
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
-        if(PEAR::isError($ac)) return $ac;
-        $mediaTarget = $ac->_getRealRADFname();
-        $mediaFile = "$gunid";
-        $mdataFile = "$gunid.xml";
-        @symlink($mediaTarget, $this->transDir."/$mediaFile");
-        $mdata = $this->getMdata($id, $sessid);
-        if(PEAR::isError($mdata)) return $mdata;
-        if(!($fh = fopen($this->transDir."/$mdataFile", 'w'))) $res=FALSE;
-        else{
-            $res = fwrite($fh, $mdata);
-            fclose($fh);
-        }
-        if($res === FALSE) return PEAR::raiseError(
-            "GreenBox::prepareForTransport:".
-            " can't write metadata tmp file ($mdataFile)"
-        );
-        return array($mediaFile, $mdataFile, $gunid);
-    }
-    
-    /**
-     *  Insert transported file and metadata into storage.<br>
-     *  TODO: cals methods from LocStor - it's not good
-     *
-     *  @param sessid string - session id
-     *  @param file string - local path to filr
-     *  @param type string - media|metadata|search
-     *  @param gunid string - global unique id
-     */
-    function processTransported($sessid, $file, $type, $gunid='X')
-    {
-        switch($type){
-            case 'media':
-                if(!file_exists($file)) break;
-                $res = $this->storeAudioClip($sessid, $gunid,
-                    $file, '');
-                if(PEAR::isError($res)) return $res;
-                @unlink($file);
-                break;
-            case 'metadata':
-            case 'mdata':
-                if(!file_exists($file)) break;
-                $res = $this->updateAudioClipMetadata($sessid, $gunid,
-                    $file);
-                if(PEAR::isError($res)){
-                    // catch valid exception
-                    if($res->getCode() == GBERR_FOBJNEX){
-                        $res2 = $this->storeAudioClip($sessid, $gunid,
-                            '', $file);
-                        if(PEAR::isError($res2)) return $res2;
-                    }else return $res;
-                }
-                @unlink($file);
-                break;
-            case 'search':
-                //$this->localSearch($criteria);
-                return PEAR::raiseError("processTranferred: search not implemented");
-                break;
-            default:
-                return PEAR::raiseError("processTranferred: unknown type ($type)");
-                break;
-        }
-    }
-
-    /**
-     *  Search in central metadata database
-     *
-     *  @param searchData string, search query - see localSearch method
-     *  @param sessid string, session id
-     *  @return string - job id or PEAR::error
-     */
-    function globalSearch($searchData, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::globalSearch: not implemented', GBERR_NOTIMPL
-        );
-        /*
-        $srchid = md5($sessid.mtime());
-        $fh = fopen($this->transDir."/$srchid", "w");
-        fwrite($fh, serialize($searchData));
-        fclose($fh); 
-        $res = $tr->uploadOpen($srchid, 'search', $sessid, $gunid);
-        if(PEAR::isError($res)) return $res;
-        return $res;
-        */
-    }
-
-    /**
-     *  Get results from asynchronous search
-     *
-     *  @param transferId int, transfer id returned by
-     *  @param sessid string, session id
-     *  @return array with results or PEAR::error
-     */
-    function getSearchResults($transferId, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::getSearchResults: not implemented', GBERR_NOTIMPL
-        );
-    }
-
 
     /* --------------------------------------------------------- info methods */
 
@@ -665,43 +325,9 @@ class GreenBox extends Alib{
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        if($this->getObjType($id)!=='Folder')
-            return PEAR::raiseError(
-                'GreenBox::listFolder: not a folder', GBERR_NOTF
-            );
-        $a = $this->getDir($id, 'id, name, type, param as target', 'name');
-        return $a;
+        return $this->bsListFolder($id);
     }
     
-    /**
-     *  List files in folder
-     *
-     *  @param id int, local id of object
-     *  @param relPath string, relative path
-     *  @return array
-     */
-    function getObjIdFromRelPath($id, $relPath='.')
-    {
-        $a = split('/', $relPath);
-        if($this->getObjType($id)!=='Folder') $nid = $this->getparent($id);
-        else $nid = $id;
-        foreach($a as $i=>$item){
-            switch($item){
-                case".":
-                    break;
-                case"..":
-                    $nid = $this->getparent($nid);
-                    break;
-                case"":
-                    break;
-                default:
-                    $nid = $this->getObjId($item, $nid);
-            }
-        }
-        return $nid;
-    }
-    
-
     /* ---------------------------------------------------- redefined methods */
 
     /**
@@ -712,13 +338,15 @@ class GreenBox extends Alib{
      */
     function logout($sessid)
     {
+        /* release all accessed files on logout - probably not useful
         $acfa = $this->dbc->getAll("SELECT * FROM {$this->accessTable}
             WHERE sessid='$sessid'");
         if(PEAR::isError($acfa)) return $acfa;
         foreach($acfa as $i=>$acf){
-            $ac =& StoredFile::recallFromLink(&$this, $acf['tmplink'], $sessid);
-            $ac->releaseRawMediaData($sessid);
+            $ac =& StoredFile::recallByToken(&$this, $acf['token']);
+            $ac->releaseRawMediaData($sessid, $acf['token']);
         }
+        */
         return parent::logout($sessid);
     }
 
@@ -898,248 +526,5 @@ class GreenBox extends Alib{
         );
     }
 
-    /* =============================================== test and debug methods */
-    /**
-     *  dump
-     *
-     */
-    function dump($id='', $indch='    ', $ind='', $format='{name}')
-    {
-        if($id=='') $id = $this->storId;
-        return parent::dump($id, $indch, $ind, $format);
-    }
-
-    /**
-     *
-     *
-     */
-    function dumpDir($id='', $format='$o["name"]')
-    {
-        if($id=='') $id = $this->storId;
-        $arr = $this->getDir($id, 'id,name');
-//        if($this->doDebug){ $this->debug($arr); exit; }
-        $arr = array_map(create_function('$o', 'return "'.$format.'";'), $arr);
-        return join('', $arr);
-    }
-
-    /**
-     *
-     *
-     */
-    function debug($va)
-    {
-        echo"<pre>\n"; print_r($va); #exit;
-    }
-
-    /**
-     *  deleteData
-     *
-     *  @return void
-     */
-    function deleteData()
-    {
-//        $this->dbc->query("DELETE FROM {$this->filesTable}");
-        $ids = $this->dbc->getAll("SELECT id FROM {$this->filesTable}");
-        if(is_array($ids)) foreach($ids as $i=>$item){
-            $this->removeObj($item['id']);
-        }
-        parent::deleteData();
-        $this->initData();
-    }
-    /**
-     *  testData
-     *
-     */
-    function testData($d='')
-    {
-        $exdir = '../../../storageServer/var/tests';
-        $s = $this->sessid;
-        $o[] = $this->addSubj('test1', 'a');
-        $o[] = $this->addSubj('test2', 'a');
-        $o[] = $this->addSubj('test3', 'a');
-        $o[] = $this->addSubj('test4', 'a');
-
-        $o[] = $t1hd = $this->getObjId('test1', $this->storId);
-        $o[] = $t1d1 = $this->createFolder($t1hd, 'test1_folder1', $s);
-        $o[] = $this->createFolder($t1hd, 'test1_folder2', $s);
-        $o[] = $this->createFolder($t1d1, 'test1_folder1_1', $s);
-        $o[] = $t1d12 = $this->createFolder($t1d1, 'test1_folder1_2', $s);
-
-        $o[] = $t2hd = $this->getObjId('test2', $this->storId);
-        $o[] = $this->createFolder($t2hd, 'test2_folder1', $s);
-
-        $o[] = $this->putFile($t1hd, 'file1.mp3', "$exdir/ex1.mp3", '', $s);
-        $o[] = $this->putFile($t1d12 , 'file2.wav', "$exdir/ex2.wav", '', $s);
-/*
-*/
-        $this->tdata['storage'] = $o;
-    }
-
-    /**
-     *  test
-     *
-     */
-    function test()
-    {
-//        if(PEAR::isError($p = parent::test())) return $p;
-        $this->deleteData();
-        $this->login('root', $this->config['tmpRootPass']);
-        $this->testData();
-        $this->logout($this->sessid);
-        $this->test_correct = "    StorageRoot
-        root
-        test1
-            test1_folder1
-                test1_folder1_1
-                test1_folder1_2
-                    file2.wav
-            test1_folder2
-            file1.mp3
-        test2
-            test2_folder1
-        test3
-        test4
-";
-        $this->test_dump = $this->dumpTree($this->storId);
-        if($this->test_dump==$this->test_correct)
-            { $this->test_log.="storageServer: OK\n"; return true; }
-        else PEAR::raiseError('GreenBox::test:', 1, PEAR_ERROR_DIE, '%s'.
-            "<pre>\ncorrect:\n.{$this->test_correct}.\n".
-            "dump:\n.{$this->test_dump}.\n</pre>\n");
-    }
-
-    /**
-     *  initData - initialize
-     *
-     */
-    function initData()
-    {
-        $this->rootId = $this->getRootNode();
-        $this->storId = $this->wd =
-            $this->addObj('StorageRoot', 'Folder', $this->rootId);
-        $rootUid = parent::addSubj('root', $this->config['tmpRootPass']);
-        $this->login('root', $this->config['tmpRootPass']);
-        $res = $this->addPerm($rootUid, '_all', $this->rootId, 'A');
-        $fid = $this->createFolder($this->storId, 'root', $this->sessid);
-#        $id = $this->dbc->nextId("{$this->mdataTable}_id_seq");
-        $this->logout($this->sessid);
-    }
-    /**
-     *  install - create tables
-     *
-     */
-    function install()
-    {
-        parent::install();
-        $this->dbc->query("CREATE TABLE {$this->filesTable} (
-            id int not null,
-            gunid char(32) not null,
-            name varchar(255) not null default'',
-            type varchar(255) not null default'',
-            currentlyAccessing int not null default 0
-        )");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->filesTable}_id_idx
-            ON {$this->filesTable} (id)");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->filesTable}_gunid_idx
-            ON {$this->filesTable} (gunid)");
-        $this->dbc->query("CREATE INDEX {$this->filesTable}_name_idx
-            ON {$this->filesTable} (name)");
-
-        $this->dbc->createSequence("{$this->mdataTable}_id_seq");
-        $this->dbc->query("CREATE TABLE {$this->mdataTable} (
-            id int not null,
-            gunid char(32),
-            subjns varchar(255),             -- subject namespace shortcut/uri
-            subject varchar(255) not null default '',
-            predns varchar(255),             -- predicate namespace shortcut/uri
-            predicate varchar(255) not null,
-            predxml char(1) not null default 'T', -- Tag or Attribute
-            objns varchar(255),              -- object namespace shortcut/uri
-            object text
-        )");
-        $this->dbc->query("CREATE UNIQUE INDEX {$this->mdataTable}_id_idx
-            ON {$this->mdataTable} (id)");
-        $this->dbc->query("CREATE INDEX {$this->mdataTable}_gunid_idx
-            ON {$this->mdataTable} (gunid)");
-        $this->dbc->query("CREATE INDEX {$this->mdataTable}_subj_idx
-            ON {$this->mdataTable} (subjns, subject)");
-        $this->dbc->query("CREATE INDEX {$this->mdataTable}_pred_idx
-            ON {$this->mdataTable} (predns, predicate)");
-
-        $this->dbc->query("CREATE TABLE {$this->accessTable} (
-            gunid char(32) not null,
-            sessid char(32) not null,
-            tmpLink varchar(255) not null default'',
-            ts timestamp
-        )");
-        $this->dbc->query("CREATE INDEX {$this->accessTable}_acc_idx
-            ON {$this->accessTable} (tmpLink, sessid)");
-        if(!file_exists($this->bufferDir)){
-            mkdir($this->bufferDir, 02775);
-            chmod($this->bufferDir, 02775); // may be obsolete
-        }
-        $this->initData();
-    }
-    /**
-     *  id  subjns  subject predns  predicate   objns   object
-     *  y1  literal xmbf    NULL    namespace   literal http://www.sotf.org/xbmf
-     *  x1  gunid   <gunid> xbmf    contributor NULL    NULL
-     *  x2  mdid    x1      xbmf    role        literal Editor
-     *
-     *  predefined shortcuts:
-     *      _L              = literal
-     *      _G              = gunid (global id of media file)
-     *      _I              = mdid (local id of metadata record)
-     *      _nssshortcut    = namespace shortcut definition
-     *      _blank          = blank node
-     */
-
-    /**
-     *  uninstall
-     *
-     *  @return void
-     */
-    function uninstall()
-    {
-        $this->dbc->query("DROP TABLE {$this->mdataTable}");
-        $this->dbc->dropSequence("{$this->mdataTable}_id_seq");
-        $this->dbc->query("DROP TABLE {$this->filesTable}");
-        $this->dbc->query("DROP TABLE {$this->accessTable}");
-        $d = dir($this->storageDir);
-        while (is_object($d) && (false !== ($entry = $d->read()))){
-            if(filetype("{$this->storageDir}/$entry")=='dir' &&
-                    $entry!='CVS' && strlen($entry)==3)
-            {
-                $dd = dir("{$this->storageDir}/$entry");
-                while (false !== ($ee = $dd->read())){
-                    if(substr($ee, 0, 1)!=='.')
-                        unlink("{$this->storageDir}/$entry/$ee");
-                }
-                $dd->close();
-                rmdir("{$this->storageDir}/$entry");
-            }
-        }
-        if(is_object($d)) $d->close();
-        if(file_exists($this->bufferDir)){
-            $d = dir($this->bufferDir);
-            while (false !== ($entry = $d->read())) if(substr($entry,0,1)!='.')
-                { unlink("{$this->bufferDir}/$entry"); }
-            $d->close();
-            rmdir($this->bufferDir);
-        }
-        parent::uninstall();
-    }
-
-    /**
-     *  Aux logging for debug
-     *
-     *  @param msg string - log message
-     */
-    function debugLog($msg)
-    {
-        $fp=fopen("{$this->storageDir}/log", "a") or die("Can't write to log\n");
-        fputs($fp, date("H:i:s").">$msg<\n");
-        fclose($fp);
-    }
 }
 ?>

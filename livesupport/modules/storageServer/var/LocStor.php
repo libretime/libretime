@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,212 @@ require_once "GreenBox.php";
  *  Livesupport local storage interface
  */
 class LocStor extends GreenBox{
+    /* ---------------------------------------------------------------- store */
+    /**
+     *  Store or replace existing audio clip
+     *
+     *  @param sessid string
+     *  @param gunid string
+     *  @param metadata string with metadata XML
+     *  @param chsum string, md5 checksum of media file
+     *  @return struct {url:writable URL for HTTP PUT, token:access token
+     */
+    function storeAudioClipOpen($sessid, $gunid, $metadata, $chsum)
+    {
+        // test if specified gunid exists:
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        if(!PEAR::isError($ac)){
+            // gunid exists - do replace
+            if(($res = $this->_authorize(
+                'write', $ac->getId(), $sessid
+            )) !== TRUE) return $res;
+            if($ac->isAccessed()){
+                return PEAR::raiseError(
+                    'LocStor.php: storeAudioClip: is accessed'
+                );
+            }
+            $res = $ac->replace(
+                $ac->getId(), $ac->name, '', $metadata, 'string'
+            );
+            if(PEAR::isError($res)) return $res;
+        }else{
+            // gunid doesn't exists - do insert
+            $tmpid = uniqid('');
+            $parid = $this->getObjId(
+                $this->getSessLogin($sessid), $this->storId
+            );
+            if(PEAR::isError($parid)) return $parid;
+            if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
+                return $res;
+            $oid = $this->addObj($tmpid , 'File', $parid);
+            if(PEAR::isError($oid)) return $oid;
+            $ac =&  StoredFile::insert(
+                &$this, $oid, '', '', $metadata, 'string', $gunid
+            );
+            if(PEAR::isError($ac)){
+                $res = $this->removeObj($oid);
+                return $ac;
+            }
+            $res = $this->renameFile($oid, $ac->gunid, $sessid);
+            if(PEAR::isError($res)) return $res;
+        }
+        $res = $ac->setState('incomplete');
+        if(PEAR::isError($res)) return $res;
+        return $this->bsOpenPut($chsum, $ac->gunid);
+    }
+
+    /**
+     *  Store or replace existing audio clip
+     *
+     *  @param sessid string
+     *  @param token string
+     *  @return string gunid or PEAR::error
+     */
+    function storeAudioClipClose($sessid, $token)
+    {
+        $ac =& StoredFile::recallByToken(&$this, $token);
+        $fname = $this->bsClosePut($token);
+        if(PEAR::isError($ac)){ return $ac; }
+        $res = $ac->replaceRawMediaData($fname);
+        if(PEAR::isError($res)){ return $res; }
+        @unlink($fname);
+        $res = $ac->setState('ready');
+        if(PEAR::isError($res)) return $res;
+        return $ac->gunid;
+    }
+
+    /* --------------------------------------------------------------- access */
+    /**
+     *  Make access to audio clip
+     *
+     *  @param sessid string
+     *  @param gunid string
+     *  @return array with: seekable filehandle, access token
+     */
+    function accessRawAudioData($sessid, $gunid)
+    {
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        if(PEAR::isError($ac)) return $ac;
+        if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
+            return $res;
+        return $ac->accessRawMediaData($sessid);
+    }
+
+    /**
+     *  Release access to audio clip
+     *
+     *  @param sessid string
+     *  @param token string, access token
+     *  @return boolean or PEAR::error
+     */
+    function releaseRawAudioData($sessid, $token)
+    {
+        $ac =& StoredFile::recallByToken(&$this, $token);
+        if(PEAR::isError($ac)) return $ac;
+        return $ac->releaseRawMediaData($token);
+    }
+
+    /* ------------------------------------------------------------- download */
+    /**
+     *  Create and return downloadable URL for audio file
+     *
+     *  @param sessid string, session id
+     *  @param gunid string, global unique id
+     *  @return array with: downloadable URL, download token
+     */
+    function downloadRawAudioDataOpen($sessid, $gunid)
+    {
+        $res = $this->existsAudioClip($sessid, $gunid);
+        if(PEAR::isError($res)) return $res;
+        $id = $this->_idFromGunid($gunid);
+        if(is_null($id)){
+            return PEAR::raiseError(
+             "LocStor::downloadRawAudioDataOpen: gunid not found ($gunid)"
+            );
+        }
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsOpenDownload($id);
+    }
+
+    /**
+     *  Discard downloadable URL for audio file
+     *
+     *  @param token string, download token
+     *  @return boolean
+     */
+    function downloadRawAudioDataClose($token)
+    {
+        return $this->bsCloseDownload($token);
+    }
+
+    /**
+     *  Create and return downloadable URL for metadata
+     *
+     *  @param sessid string, session id
+     *  @param gunid string, global unique id
+     *  @return array with: downloadable URL, download token
+     */
+    function downloadMetadataOpen($sessid, $gunid)
+    {
+        $res = $this->existsAudioClip($sessid, $gunid);
+        if(PEAR::isError($res)) return $res;
+        $id = $this->_idFromGunid($gunid);
+        if(is_null($id)){
+            return PEAR::raiseError(
+             "LocStor::downloadMetadataOpen: gunid not found ($gunid)"
+            );
+        }
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsOpenDownload($id, 'metadata');
+    }
+
+    /**
+     *  Discard downloadable URL for metadata
+     *
+     *  @param token string, download token
+     *  @return boolean
+     */
+    function downloadMetadataClose($token)
+    {
+        return $this->bsCloseDownload($token, 'metadata');
+    }
+
+    /**
+     *  Return metadata as XML
+     *
+     *  @param sessid string
+     *  @param gunid string
+     *  @return string or PEAR::error
+     */
+    function getAudioClip($sessid, $gunid)
+    {
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        if(PEAR::isError($ac)) return $ac;
+        if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
+            return $res;
+        $md = $this->getMdata($ac->getId(), $sessid);
+        if(PEAR::isError($md)) return $md;
+        return $md;
+    }
+
+    /* --------------------------------------------------------------- search */
+    /**
+     *  Search in metadata database
+     *
+     *  @param sessid string
+     *  @param criteria string
+     *  @return array or PEAR::error
+     *  @see GreenBox::localSearch
+     */
+    function searchMetadata($sessid, $criteria)
+    {
+        $res = $this->localSearch($criteria, $sessid);
+        return $res;
+    }
+
+    /* ----------------------------------------------------------------- etc. */
     /**
      *  Check if audio clip exists
      *
@@ -61,56 +267,7 @@ class LocStor extends GreenBox{
             return $res;
         return $ac->exists();
     }
-    /**
-     *  Store or replace existing audio clip
-     *
-     *  @param sessid string
-     *  @param gunid string
-     *  @param mediaFileLP string, local path to media file
-     *  @param mdataFileLP string, local path to metadata XML file
-     *  @return string gunid or PEAR::error
-     */
-    function storeAudioClip($sessid, $gunid, $mediaFileLP, $mdataFileLP)
-    {
-        // test if specified gunid exists:
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
-        if(!PEAR::isError($ac)){
-            // gunid exists - do replace
-            if(($res = $this->_authorize(
-                'write', $ac->getId(), $sessid
-            )) !== TRUE) return $res;
-            if($ac->isAccessed()){
-                return PEAR::raiseError(
-                    'LocStor.php: storeAudioClip: is accessed'
-                );
-            }
-            $res = $ac->replace(
-                $ac->getId(), $ac->name,$mediaFileLP, $mdataFileLP
-            );
-            if(PEAR::isError($res)) return $res;
-        }else{
-            // gunid doesn't exists - do insert
-            $tmpid = uniqid('');
-            $parid = $this->getObjId(
-                $this->getSessLogin($sessid), $this->storId
-            );
-            if(PEAR::isError($parid)) return $parid;
-            if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
-                return $res;
-            $oid = $this->addObj($tmpid , 'File', $parid);
-            if(PEAR::isError($oid)) return $oid;
-            $ac =&  StoredFile::insert(
-                &$this, $oid, '', $mediaFileLP, $mdataFileLP, $gunid
-            );
-            if(PEAR::isError($ac)){
-                $res = $this->removeObj($oid);
-                return $ac;
-            }
-            $res = $this->renameFile($oid, $ac->gunid, $sessid);
-            if(PEAR::isError($res)) return $res;
-        }
-        return $ac->gunid;
-    }
+
     /**
      *  Delete existing audio clip
      *
@@ -133,82 +290,24 @@ class LocStor extends GreenBox{
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
+
     /**
      *  Update existing audio clip metadata
      *
      *  @param sessid string
      *  @param gunid string
-     *  @param mdataFileLP string, local path to metadata XML file
+     *  @param metadata string, metadata XML string
      *  @return boolean or PEAR::error
      */
-    function updateAudioClipMetadata($sessid, $gunid, $mdataFileLP)
+    function updateAudioClipMetadata($sessid, $gunid, $metadata)
     {
         $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        return $ac->replaceMetaData($mdataFileLP);
+        return $ac->replaceMetaData($metadata, 'string');
     }
-    /**
-     *  Make access to audio clip
-     *
-     *  @param sessid string
-     *  @param gunid string
-     *  @return string - access symlink path or PEAR::error
-     */
-    function accessRawAudioData($sessid, $gunid)
-    {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
-        if(PEAR::isError($ac)) return $ac;
-        if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
-            return $res;
-        return $ac->accessRawMediaData($sessid);
-    }
-    /**
-     *  Release access to audio clip
-     *
-     *  @param sessid string
-     *  @param tmpLink string
-     *  @return boolean or PEAR::error
-     */
-    function releaseRawAudioData($sessid, $tmpLink)
-    {
-        $ac =& StoredFile::recallFromLink(&$this, $tmpLink, $sessid);
-        if(PEAR::isError($ac)) return $ac;
-        if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
-            return $res;
-        return $ac->releaseRawMediaData($sessid);
-    }
-    /**
-     *  Search in metadata database
-     *
-     *  @param sessid string
-     *  @param criteria string
-     *  @return array or PEAR::error
-     *  @see GreenBox::localSearch
-     */
-    function searchMetadata($sessid, $criteria)
-    {
-        $res = $this->localSearch($criteria, $sessid);
-        return $res;
-    }
-    /**
-     *  Return metadata as XML
-     *
-     *  @param sessid string
-     *  @param gunid string
-     *  @return string or PEAR::error
-     */
-    function getAudioClip($sessid, $gunid)
-    {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
-        if(PEAR::isError($ac)) return $ac;
-        if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
-            return $res;
-        $md = $this->getMdata($ac->getId(), $sessid);
-        if(PEAR::isError($md)) return $md;
-        return $md;
-    }
+
     /**
      *  Reset storageServer for debugging.
      *
