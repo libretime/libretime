@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/xmlrpc++/xmlrpc++-20040713/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -32,8 +32,8 @@
 product=xmlrpc++-20040713 
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
-installdir=`cd $basedir/../../../usr; pwd; cd -`
+basedir=`cd $reldir; pwd;`
+installdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 tar=$basedir/src/$product.tar.gz

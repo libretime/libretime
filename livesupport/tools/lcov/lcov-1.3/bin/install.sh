@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/lcov/lcov-1.3/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -33,8 +33,8 @@
 product=lcov-1.3
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
-installdir=`cd $basedir/../../../usr; pwd; cd -`
+basedir=`cd $reldir; pwd;`
+installdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 tar=$basedir/src/$product.tar.gz
@@ -49,7 +49,7 @@ tar xfz $tar
 cd $product
 patch -p1 < $etcdir/lcov-1.3-geninfo-regexp.patch
 # lcov installs itself into PREFIX/usr/bin, so our normal installdir won't work
-lcov_installdir=`cd $installdir/..; pwd; cd -`
+lcov_installdir=`cd $installdir/..; pwd;`
 PREFIX=$lcov_installdir make install
 
 cd $basedir

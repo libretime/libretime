@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/libodbc++/libodbc++-0.2.3/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -33,8 +33,8 @@
 product=libodbc++-0.2.3
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
-installdir=`cd $basedir/../../../usr; pwd; cd -`
+basedir=`cd $reldir; pwd;`
+installdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
 tar=$basedir/src/$product.tar.gz
 

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -34,9 +34,9 @@
 package="Authentication"
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
+basedir=`cd $reldir; pwd;`
 test -z "$basedir" && basedir=.
-usrdir=`cd $basedir/../../usr; pwd; cd -`
+usrdir=`cd $basedir/../../usr; pwd;`
 
 bindir=$basedir/bin
 etcdir=$basedir/etc

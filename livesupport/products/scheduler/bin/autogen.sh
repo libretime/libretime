@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ package="Scheduler"
 
 # assume we're in $basedir/bin
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
+basedir=`cd $reldir; pwd;`
 test -z "$basedir" && basedir=.
-usrdir=`cd $basedir/../../usr; pwd; cd -`
+usrdir=`cd $basedir/../../usr; pwd;`
 
 bindir=$basedir/bin
 etcdir=$basedir/etc

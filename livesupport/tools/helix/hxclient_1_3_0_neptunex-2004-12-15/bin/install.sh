@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/helix/hxclient_1_3_0_neptunex-2004-12-15/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -35,8 +35,8 @@ branch=hxclient_1_3_0_neptunex
 export SYSTEM_ID=linux-2.4-glibc23-i686
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
-installdir=`cd $basedir/../../../usr; pwd; cd -`
+basedir=`cd $reldir; pwd;`
+installdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 srcdir=$basedir/src

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/helix/all_clients_nodist-helix-20041010/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -32,8 +32,8 @@
 product=all_clients_nodist-helix-20041010
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
-installdir=`cd $basedir/../../../usr; pwd; cd -`
+basedir=`cd $reldir; pwd;`
+installdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 tar=$basedir/src/$product-source.zip

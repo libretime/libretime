@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/curl/curl-7.12.3/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -37,8 +37,8 @@
 product=curl-7.12.3
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
-usrdir=`cd $basedir/../../../usr; pwd; cd -`
+basedir=`cd $reldir; pwd;`
+usrdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
 tar=$basedir/src/$product.tar.bz2
 installdir=$usrdir

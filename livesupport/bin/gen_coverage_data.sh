@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/gen_coverage_data.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -31,14 +31,14 @@
 module="LiveSupport"
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
+basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 docdir=$basedir/doc
 tmpdir=$basedir/tmp
 modules_dir=$basedir/modules
 products_dir=$basedir/products
 
-usrdir=`cd $basedir/usr; pwd; cd -`
+usrdir=`cd $basedir/usr; pwd;`
 
 coverage_report_dir=$docdir/coverage
 

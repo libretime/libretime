@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/bin/gen_coverage_data.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -31,12 +31,12 @@
 module="LiveSupport Scheduler Client"
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd; cd -`
+basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 docdir=$basedir/doc
 tmpdir=$basedir/tmp
 
-usrdir=`cd $basedir/../../usr; pwd; cd -`
+usrdir=`cd $basedir/../../usr; pwd;`
 
 coverage_report_dir=$docdir/coverage
 
