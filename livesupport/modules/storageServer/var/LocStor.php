@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,7 +36,7 @@ require_once '../GreenBox.php';
  *  Livesupport local storage interface
  */
 class LocStor extends GreenBox{
-    /*
+    /**
      *  Check if audio clip exists
      *
      *  @param sessid string
@@ -61,7 +61,7 @@ class LocStor extends GreenBox{
             return $res;
         return $ac->exists();
     }
-    /*
+    /**
      *  Store or replace existing audio clip
      *
      *  @param sessid string
@@ -108,7 +108,7 @@ class LocStor extends GreenBox{
         }
         return $ac->gunid;
     }
-    /*
+    /**
      *  Delete existing audio clip
      *
      *  @param sessid string
@@ -125,7 +125,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
-    /*
+    /**
      *  Update existing audio clip metadata
      *
      *  @param sessid string
@@ -141,7 +141,7 @@ class LocStor extends GreenBox{
             return $res;
         return $ac->replaceMetaData($mdataFileLP);
     }
-    /*
+    /**
      *  Make access to audio clip
      *
      *  @param sessid string
@@ -156,7 +156,7 @@ class LocStor extends GreenBox{
             return $res;
         return $ac->accessRawMediaData($sessid);
     }
-    /*
+    /**
      *  Release access to audio clip
      *
      *  @param sessid string
@@ -171,7 +171,7 @@ class LocStor extends GreenBox{
             return $res;
         return $ac->releaseRawMediaData($sessid);
     }
-    /*
+    /**
      *  Search in metadata database
      *
      *  @param sessid string
@@ -183,7 +183,7 @@ class LocStor extends GreenBox{
         $res = $this->localSearch($criteria, $sessid);
         return $res;
     }
-    /*
+    /**
      *  Return metadata as XML
      *
      *  @param sessid string
