@@ -4,7 +4,7 @@
         <par>
             <audio src="file:var/test10001.mp3" begin="0s"/> 
             <audio src="file:var/test10002.mp3" begin="6s"/> 
-            <audio src="file:var/test10003.mp3" begin="13s"/> 
+            <audio src="file:var/test10003.mp3" begin="18s"/> 
         </par>
     </body>
 </smil>

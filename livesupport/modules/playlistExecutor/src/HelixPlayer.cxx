@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,9 +60,9 @@ typedef HX_RESULT (HXEXPORT_PTR FPRMSETDLLACCESSPATH) (const char*);
 static DLLAccessPath        accessPath;
 
 
-/*------------------------------------------------------------------------------
+/**
  *  The name of the config element for this class
- *----------------------------------------------------------------------------*/
+ */
 const std::string HelixPlayer::configElementNameStr = "helixPlayer";
 
 
@@ -75,6 +75,18 @@ static const std::string    dllPathName = "dllPath";
  *  The name of the client core shared object, as found under dllPath
  */
 static const std::string    clntcoreName = "/clntcore.so";
+
+
+/**
+ *  Magic number #1: max time to wait for an audio stream, in milliseconds
+ */
+static const int            getAudioStreamTimeOut = 10;
+
+/**
+ *  Magic number #2: time to wait after getting crossfade interface, 
+ *  and before setting crossfade values, in milliseconds
+ */
+static const int            crossFadeWaitingTime = 50;
 
 
 /* ===============================================  local function prototypes */
@@ -422,20 +434,28 @@ HelixPlayer :: openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)
 
     Ptr<time_duration>::Ref sleepT(new time_duration(microseconds(10)));
 
-    IHXAudioStream*     audioStream[numberOfPlaylistElements];
+    IHXAudioStream*     audioStream[numberOfPlaylistElements + 1];
     for (int i = 0; i < numberOfPlaylistElements; i++) {
+        int j = 0;
         do {
             TimeConversion::sleep(sleepT);
             audioStream[i] = audioPlayer->GetAudioStream(i);
+            ++j;
+            if (j > getAudioStreamTimeOut * 100) {
+                std::stringstream   eMsg;
+                eMsg << "can't get audio stream number " << i;
+                throw std::runtime_error(eMsg.str());
+            }
         } while (!audioStream[i]);
     }
+    audioStream[numberOfPlaylistElements] = 0;  // fade out last clip into 0
 
     it = playlist->begin();
     
-    sleepT.reset(new time_duration(seconds(2)));
+    sleepT.reset(new time_duration(milliseconds(crossFadeWaitingTime)));
     TimeConversion::sleep(sleepT);
 
-    for (int i = 1; i < numberOfPlaylistElements; i++) {
+    for (int i = 0; i < numberOfPlaylistElements; i++) {
 
         Ptr<PlaylistElement>::Ref   playlistElement = it->second;
         if (!playlistElement->getFadeInfo()) {
@@ -455,10 +475,12 @@ HelixPlayer :: openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)
                                                      ->total_milliseconds()
                                     - crossFadeLength;
 
+        if (crossFadeLength) {
 //std::cerr << "fadeOutAt: " << fadeOutAt << "\n"
 //          << "crossFadeLength: " << crossFadeLength << "\n";
-        crossFade->CrossFade(audioStream[i-1], audioStream[i], 
+            crossFade->CrossFade(audioStream[i], audioStream[i+1], 
                                 fadeOutAt, fadeOutAt, crossFadeLength);
+        }
     
         ++it;
     }

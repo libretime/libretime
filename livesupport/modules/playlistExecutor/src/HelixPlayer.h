@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -329,6 +329,17 @@ class HelixPlayer : virtual public Configurable,
 
         /**
          *  Play a playlist, with simulated fading.
+         *
+         *  This is a stopgap method, and should be replaced as soon as
+         *  the SMIL animation issues are fixed in the Helix client.
+         *
+         *  Note: the method only reads the fade out value, and assumes
+         *  that the following fade in value is equal to it.
+         *
+         *  The playlist is assumed to contain a URI field, which points
+         *  to a SMIL file containing the same audio clips, with the same
+         *  offsets, as the playlist.  This can be ensured, for example, by 
+         *  calling Storage::WebStorageClient::acquirePlaylist().
          *
          *  @param playlist the Playlist object to be played.
          *  @exception std::invalid_argument playlist is invalid (e.g.,
