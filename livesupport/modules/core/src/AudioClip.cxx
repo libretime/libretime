@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,7 +105,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
 
-    if (attribute = element.get_attribute(uriAttrName)) {
+    if ((attribute = element.get_attribute(uriAttrName))) {
         std::string  uriValue = attribute->get_value();
         uri.reset(new std::string(uriValue));
     }
