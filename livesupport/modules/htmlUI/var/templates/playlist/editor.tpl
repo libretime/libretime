@@ -5,14 +5,12 @@
 
 {foreach from=$PL->getFlat() key='pos' item='i'}
     <!-- {$n++} -->
-    <tr onMouseOver="highlight()"
-        onMouseOut="darklight()"
-        onContextmenu="return menu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: lightblue">
+    <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: lightblue">
         <td colspan="4" align="center">{$i.fadein_ms|string_format:"%d"} ms</td>
     </tr>
-    <tr onMouseOver="highlight()"
-        onMouseOut="darklight()"
-        onContextmenu="return menu('{$i.attrs.id}', 'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
+    <tr onContextmenu="return contextmenu('{$i.attrs.id}',
+        {if $i.type|lower == "audioclip"}'listen', '{$i.gunid}', {/if}
+        'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
         <td>
             <input type="checkbox" name="{$i.attrs.id}">
             <font size="+1">
@@ -26,9 +24,7 @@
     </tr>
 {/foreach}
     {if $n}
-    <tr onMouseOver="highlight()"
-        onMouseOut="darklight()"
-        onContextmenu="return menu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: lightblue">
+    <tr onContextmenu="return contextmenu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: lightblue">
         <td colspan="4" align="center">{$i.fadeout_ms|string_format:"%d"} ms</td>
     </tr>
     {/if}

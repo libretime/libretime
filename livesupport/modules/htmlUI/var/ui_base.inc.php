@@ -20,9 +20,9 @@ function errCallBack($err)
 function tra($input)
 {
     // just a dummy function yet
-    $nr=func_num_args();
-    if ($nr>1)
-    for ($i=1; $i<$nr; $i++){
+    $nr = func_num_args();
+    if ($nr > 1)
+    for ($i = 1; $i < $nr; $i++){
         $name  = '$'.$i;
         $val   = func_get_arg($i);
         $input = str_replace($name, $val, $input);
@@ -91,10 +91,14 @@ class uiBase
         $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
         $this->gb       =& new GreenBox($this->dbc, $config);
         $this->config   =& $config;
+
         $this->config['accessRawAudioUrl'] = $config['storageUrlPath'].'/xmlrpc/simpleGet.php';
+
         $this->sessid   = $_REQUEST[$config['authCookieName']];
         $this->userid   = $this->gb->getSessUserId($this->sessid);
         $this->login    = $this->gb->getSessLogin($this->sessid);
+        $this->langid   =& $_SESSION['lanid'];
+
         $this->id       = $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
         $this->pid      = $this->gb->getparent($this->id) != 1 ? $this->gb->getparent($this->id) : FALSE;
         $this->type     = $this->gb->getFileType($this->id);
@@ -336,7 +340,7 @@ class uiBase
 
 
     function _getMDataValue($id, $key)
-    {   
+    {
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid))) {
             $value = current($arr);
             return $value['value'];

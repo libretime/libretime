@@ -357,7 +357,7 @@ class uiPlaylist
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
-        #$id = $this->activeId;
+        $id = $this->activeId;
 
         foreach ($mask['playlist'] as $k=>$v) {
             $mask['playlist'][$k]['element']    = $this->Base->_formElementEncode($v['element']);
@@ -409,6 +409,7 @@ class uiPlaylist
         foreach ($data as $key=>$val) {
             $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val);
             if (PEAR::isError($r)) {
+                #print_r($r);
                 $this->Base->_retMsg('Unable to set $1: $2', $key, $val);
             }
         }

@@ -1,11 +1,7 @@
 {include file="library/searchForm.js.tpl"}
-        
-<div id="searchform">
-{include file="sub/x.tpl"}
-  <center>
     {foreach from=$searchForm item=dynform}
+    <div class="container_elements" style="width: 607px;">
+    <h1>##Search##</h1>
         {include file="sub/dynForm_plain.tpl"}
+    </div>
     {/foreach}
-  </center>
-</div>
-

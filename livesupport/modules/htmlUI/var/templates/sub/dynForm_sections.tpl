@@ -1,13 +1,9 @@
 {$dynform.javascript}
-
-<table border="0" class="maintable">
+<!-- start dynForm_sections -->
     <form{$dynform.attributes}>{$dynform.hidden}
 
     {foreach item=sec key=i from=$dynform.sections}
-        <tr>
-            <td class="header" colspan="2">
-            <b>{$sec.header}</b></td>
-        </tr>
+        <h1>##{$sec.header}##</h1>
 
         {foreach item=element from=$sec.elements}
 
@@ -26,54 +22,63 @@
             <!-- submit or reset button (don't display on frozen forms) -->
             {elseif $element.type eq "submit" or $element.type eq "reset"}
                 {if not $dynform.frozen}
-                <tr>
-                    <td>&nbsp;</td>
-                    <td align="left">{$element.html}</td>
-                </tr>
+                    <div class="container_button_upload">
+                    {$element.html}
+                    </div>
                 {/if}
 
             <!-- normal elements -->
             {else}
-                <tr>
                 {if $element.type eq "textarea"}
-                    <td colspan="2">
-                        {if $element.required}<font color="red">*</font>{/if}<b>{$element.label}</b><br />
+					<div class="container_search">
+                        <label>
+                        {$element.label}
+                        {if $element.required}<font color="red">*</font>{/if}
+                        </label>
+                    </div>
                 {else}
-                    <td align="right" valign="top">
-                        {if $element.required}<font color="red">*</font>{/if}<b>{$element.label}:</b></td>
-                    <td>
+					<div class="container_search">
+                        <label>
+                        {$element.label}
+                        {if $element.required}<font color="red">*</font>{/if}
+                        </label>
+                    </div>
                 {/if}
-                    {if $element.error}<font color="red">{$element.error}</font><br />{/if}
+                    {if $element.error}
+                        <label><font color="red">{$element.error}</font></label>
+                    {/if}
                     {if $element.type eq "group"}
                         {foreach key=gkey item=gitem from=$element.elements}
+                            <label>
                             {$gitem.label}
                             {$gitem.html}{if $gitem.required}<font color="red">*</font>{/if}
+                            </label>
                             {if $element.separator}{cycle values=$element.separator}{/if}
                         {/foreach}
                     {else}
                         {$element.html}
                     {/if}
                     <div style="font-size: 80%;">{$element.label_note}</div>
-                    </td>
-                </tr>
-
             {/if}
         {/foreach}
     {/foreach}
 
     {if $dynform.requirednote and not $dynform.frozen}
-    <tr>
-        <td>&nbsp;</td>
-        <td valign="top">{$dynform.requirednote}</td>
-    </tr>
+        <div class="container_search">
+            <label>
+            {if $element.required}<font color="red">*</font>{/if}
+            {$dynform.requirednote}
+            </label>
+        </div>
     {/if}
 
     </form>
-</table>
 
-&nbsp;
+{*
 <p><b>Collected Errors:</b><br />
 {foreach key=name item=error from=$dynform.errors}
     <font color="red">{$error}</font> in element [{$name}]<br />
 {/foreach}
 </p>
+*}
+<!-- end dynForm_sections -->

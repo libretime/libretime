@@ -32,7 +32,7 @@ class uiSearch
         #print_r($this->criteria['form']);
         include dirname(__FILE__).'/formmask/metadata.inc.php';
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setConstants(array('id'=>$id, 'counter'=>$this->criteria['counter'] ? $this->criteria['counter'] : UI_SEARCH_MIN_ROWS));
+        $form->setConstants(array('id'=>$id, 'counter'=>$this->criteria['counter'] ? $this->criteria['counter'] : 1));
 
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $v){
@@ -45,10 +45,10 @@ class uiSearch
                 }
             };
         };
-        for($n=1; $n<=UI_SEARCH_MAX_ROWS; $n++) {
+        for($n = 1; $n <= UI_SEARCH_MAX_ROWS; $n++) {
             unset ($group);
             $form->addElement('static', 's1', NULL, "<div id='searchRow_$n'>");
-            if ($n>UI_SEARCH_MIN_ROWS && $n>$this->criteria['counter']) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
+            if ($n > 1 && $n > $this->criteria['counter']) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {display:none; height : 0px;}</style>");
             $sel = &$form->createElement('hierselect', "row_$n", NULL);
             $sel->setOptions(array($col1, $col2));
             $group[] = &$sel;
@@ -73,7 +73,7 @@ class uiSearch
         $this->results                  = NULL;
         $this->criteria['conditions']   = NULL;
         $this->criteria['offset']       = NULL;
-        $this->criteria['form']         = NULL; 
+        $this->criteria['form']         = NULL;
         $this->criteria['operator']     = $formdata['operator'];
         $this->criteria['filetype']     = $formdata['filetype'];
         $this->criteria['limit']        = $formdata['limit'];
@@ -147,6 +147,7 @@ class uiSearch
     function searchDB()
     {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
+
         #print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         if (PEAR::isError($results)) {
@@ -157,6 +158,25 @@ class uiSearch
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
         $this->results['cnt'] = $results['cnt'];
+
+        /*
+        ## test
+        for ($n=0; $n<=$this->criteria['limit']; $n++) {
+            $this->results['items'][] = Array
+                (
+                    'id' => 24,
+                    'gunid' => '1cc472228d0cb2ac',
+                    'title' => 'Strom 10min',
+                    'creator' => 'Sebastian',
+                    'duration' => '&nbsp;&nbsp;&nbsp;10:00',
+                    'type' => 'webstream'
+                );
+        }
+        $results['cnt'] = 500;
+        $this->results['cnt'] = $results['cnt'];
+        ## end test
+        */
+
         #print_r($this->results);
         $this->pagination($results);
     }

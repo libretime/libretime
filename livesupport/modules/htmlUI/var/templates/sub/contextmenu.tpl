@@ -1,10 +1,9 @@
 {assign var="_PL_activeId" value=$PL->getActiveId()}
 
-onMouseOver="highlight()"
-onMouseOut="darklight()"
-onContextmenu="return menu('{$i.id}'
+onContextmenu="return contextmenu('{$i.id}'
     {$moreContextBefore}
-    {if ($i.type == 'audioclip' || $i.type == 'webstream')}
+    {if $i.type == 'audioclip'}
+        , 'listen', '{$i.gunid}'
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
@@ -13,7 +12,16 @@ onContextmenu="return menu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if ($i.type == 'playlist')}
+    {if $i.type == 'webstream'}
+        {if $_PL_activeId}
+            , 'PL.addItem'
+        {else}
+            , 'PL.create'
+        {/if}
+        , 'edit', 'delete'
+    {/if}
+
+    {if $i.type == 'playlist'}
         {if $_PL_activeId}
             {if $_PL_activeId == $i.id}
                 , 'PL.release'

@@ -41,36 +41,21 @@ function spread(element, name)
 
 function showMain()
 {
-    document.getElementById('metadataform').style.height=400;
-    document.getElementById('masterpanel').style.height=600;
-    document.getElementById('div_Main').style.visibility='';
-    document.getElementById('div_Main').style.height='';
-    document.getElementById('div_Music').style.visibility='hidden';
-    document.getElementById('div_Music').style.height='0';
-    document.getElementById('div_Talk').style.visibility='hidden';
-    document.getElementById('div_Talk').style.height='0';
+    document.getElementById('div_Main').style.display='inline';
+    document.getElementById('div_Music').style.display='none';
+    document.getElementById('div_Talk').style.display='none';
 }
 function showMusic()
 {
-    document.getElementById('metadataform').style.height=1600;
-    document.getElementById('masterpanel').style.height=1800;
-    document.getElementById('div_Main').style.visibility='hidden';
-    document.getElementById('div_Main').style.height='0';
-    document.getElementById('div_Music').style.visibility='';
-    document.getElementById('div_Music').style.height='';
-    document.getElementById('div_Talk').style.visibility='hidden';
-    document.getElementById('div_Talk').style.height='0';
+    document.getElementById('div_Main').style.display='none';
+    document.getElementById('div_Music').style.display='inline';
+    document.getElementById('div_Talk').style.display='none';
 }
 function showTalk()
 {
-    document.getElementById('metadataform').style.height=800;
-    document.getElementById('masterpanel').style.height=1000;
-    document.getElementById('div_Main').style.visibility='hidden';
-    document.getElementById('div_Main').style.height='0';
-    document.getElementById('div_Music').style.visibility='hidden';
-    document.getElementById('div_Music').style.height='0';
-    document.getElementById('div_Talk').style.visibility='';
-    document.getElementById('div_Talk').style.height='';
+    document.getElementById('div_Main').style.display='none';
+    document.getElementById('div_Music').style.display='none';
+    document.getElementById('div_Talk').style.display='inline';
 }
 showMain();
 {/literal}

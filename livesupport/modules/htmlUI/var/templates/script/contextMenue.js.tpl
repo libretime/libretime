@@ -5,126 +5,136 @@
 // Nur für IE 5+ und NN 6+
 ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
 nn6 = (document.getElementById && !document.all) ? 1 : 0;
-menuStatus = 0;
-document.onmouseup = hideMenu;
-document.write('<div id="menucontainer"></div>');
-menuWidth  = 0,
-menuHeight = 0;
+contextmenuStatus = 0;
+document.onmouseup = hidecontextmenu;
+document.write('<div id="contextmenucontainer"></div>');
+contextmenuWidth  = 0,
+contextmenuHeight = 0;
 
-function menu(param) {
-    var menuHeader  = "<div id='menu' style='position: absolute; top: -250; left: 0; z-index: 100'>" +
-                      "<table cellpadding='5' cellspacing='0' width='" + menuWidth + "' height='" + menuHeight + "' style='border-style: outset; border-width: 1; border-color: #3a6c96 ;background-color: #4682B4'>";
-    var menuFooter  = "</table></div>";
-    var menuHtml    = '';
+function contextmenu(param) {
+    var contextmenuHeader  = "<div class='contextmenu' id='contextmenu' style='position: absolute; top: -250; left: 0; z-index: 100'>" +
+                                "<ul>";
+    var contextmenuFooter  = "</ul></div>";
+    var contextmenuHtml    = '';
+
     var sp2         = "&nbsp;&nbsp;";
     var sp5         = sp2 + sp2 + "&nbsp;";                     // Leerzeichen als Abstandshalter (flexibler und code-sparender als eine aufwendige Tabellenkonstruktion) ;
     var oF          = "onfocus = 'if (this.blur) this.blur()'"; // Um hässlichen Linkrahmen in einigen Browsern zu vermeiden;
     var entry       = new Array();
-    //menuStatus = 0;
+    //contextmenuStatus = 0;
 
-    for (var i = 1; i < menu.arguments.length; ++i) {
-        switch (menu.arguments[i]) {
+    for (var i = 1; i < contextmenu.arguments.length; ++i) {
+        switch (contextmenu.arguments[i]) {
+            {/literal}
             case "PL.display":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"{/literal}{$UI_BROWSER}{literal}?act=PL.display&id="+param+"\" "+oF+">&nbsp;Display this Playlist&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"{$UI_BROWSER}?act=PL.display&id="+param+"\" "+oF+">&nbsp;Display this Playlist&nbsp;</a></li>";
             break;
 
             case "PL.release":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.release')\" "+oF+">&nbsp;Release Playlist&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.release')\" "+oF+">&nbsp;Release Playlist&nbsp;</a></li>";
             break;
 
             case "PL.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;Add to active Playlist&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;Add to active Playlist&nbsp;</a></li>";
             break;
 
             case "PL.removeItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove Item from Playlist&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove Item from Playlist&nbsp;</a></li>";
             break;
 
             case "PL.activate":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href=\"javascript: hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></li>";
             break;
 
             case "PL.create":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></li>";
             break;
 
             case "PL.changeFadeIn":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></li>";
             break;
 
             case "PL.changeTransition":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></li>";
             break;
 
             case "PL.changeFadeOut":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></li>";
             break;
 
             case "PL.editMetaData":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;Edit MData&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;Edit MData&nbsp;</a></li>";
             break;
 
             case "SP.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></li>";
             break;
 
             case "SP.removeItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></li>";
+            break;
+
+            case "listen":
+                i++;
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[i]+"'"+oF+">&nbsp;Listen&nbsp;</a></li>";
             break;
 
             case "edit":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=editItem&id="+param+"'"+oF+">&nbsp;Edit&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"'"+oF+">&nbsp;Edit&nbsp;</a></li>";
             break;
 
             case "delete":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+param+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_HANDLER}?act=delete&id="+param+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></li>";
             break;
 
             case "fileList":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=fileList&id="+param+"'"+oF+">&nbsp;List Folder&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=fileList&id="+param+"'"+oF+">&nbsp;List Folder&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.addItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Insert Playlist here&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 600, 400)\"')"+oF+">&nbsp;Insert Playlist here&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.removeItem":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Remove Playlist&nbsp;</a></td></tr>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 600, 400)\"')"+oF+">&nbsp;Remove Playlist&nbsp;</a></li>";
             break;
+            {literal}
         }
     }
-    document.getElementById('menucontainer').innerHTML = menuHeader + menuHtml + menuFooter;
+    document.getElementById('contextmenucontainer').innerHTML = contextmenuHeader + contextmenuHtml + contextmenuFooter;
 
-    document.oncontextmenu = showMenu;
+    document.oncontextmenu = showcontextmenu;
     return false;
 }
 
 
-function showMenu(e) {
+function showcontextmenu(e) {
     if (ie5) {
-        if (event.clientX > menuWidth)  xPos = event.clientX - menuWidth + document.body.scrollLeft;
+        if (event.clientX > contextmenuWidth)  xPos = event.clientX - contextmenuWidth + document.body.scrollLeft;
         else                            xPos = event.clientX + document.body.scrollLeft;
-        if (event.clientY > menuHeight) yPos = event.clientY - menuHeight + document.body.scrollTop;
+        if (event.clientY > contextmenuHeight) yPos = event.clientY - contextmenuHeight + document.body.scrollTop;
         else                            yPos = event.clientY + document.body.scrollTop;
     }
     else {
-        if (e.pageX > menuWidth + window.pageXOffset)  xPos = e.pageX - menuWidth;
-        else                                           xPos = e.pageX;
-        if (e.pageY > menuHeight + window.pageYOffset) yPos = e.pageY - menuHeight;
-        else                                           yPos = e.pageY;
+        if (e.pageX > contextmenuWidth + window.pageXOffset)  xPos = e.pageX - contextmenuWidth;
+        else                                                  xPos = e.pageX;
+        if (e.pageY > contextmenuHeight + window.pageYOffset) yPos = e.pageY - contextmenuHeight;
+        else                                                  yPos = e.pageY;
     }
 
-    document.getElementById("menu").style.left = xPos;
-    document.getElementById("menu").style.top  = yPos;
-    menuStatus = 1;
+    document.getElementById("contextmenu").style.left = xPos;
+    document.getElementById("contextmenu").style.top  = yPos;
+    //document.getElementById('contextmenustyle').innerHTML = '<style type="text/css">#contextmenu {top: 50px; left: 300px; }</style>';
+
+    contextmenuStatus = 1;
     document.oncontextmenu = null;
 }
 
 
-function hideMenu(e) {
-    if (menuStatus == 1) {
-        setTimeout("document.getElementById('menu').style.top =- 250", 100);
-        menuStatus = 0;
+function hidecontextmenu(e) {
+    if (contextmenuStatus == 1) {
+        setTimeout("document.getElementById('contextmenu').style.top =- 250", 100);
+        contextmenuStatus = 0;
     }
 }
 
@@ -143,9 +153,48 @@ function darklight()
 </script>
 
 <style type="text/css">
-    a.menu {text-decoration:none;font-family: Verdana, Arial; font-size: 80%}
-    a.menu:link,a.menu:visited {text-decoration: none; color : #F0F8FF}
-    a.menu:hover,a.menu:active {text-decoration: none; background-color: #F0F8FF; color: #000040}
-    hr.menu {border: 0px; height: 1px; background-color: #B0C4DE; color: #B0C4DE}
+
+#contextmenu {
+    font-size : 80%;
+    }
+
+#contextmenu ul {
+    float: left;
+    width: 200px;
+    list-style: none;
+    line-height: 20px;
+    padding: 0;
+    margin: 0px 0 0 0px;
+    display: block;
+    clear: left;
+    background: #eee;
+    border-top: 1px solid #ACB3BA;
+}
+
+#contextmenu a {
+    display: block;
+    background: #eee;
+    width: 200px;
+    color: #666;
+    text-decoration: none;
+    padding: 0px;
+    border-top: 0px solid #ACB3BA;
+    border-left: 1px solid #ACB3BA;
+    border-bottom: 1px solid #ACB3BA;
+    border-right: 1px solid #ACB3BA;
+}
+
+#contextmenu li {
+    float: left;
+    clear: left;
+    padding: 0;
+}
+
+#contextmenu a:hover {
+    color: #000;
+    background: #D6E3EF;
+}
+
+
 </style>
 {/literal}

@@ -10,9 +10,8 @@ $uiHandler      =& new uiHandler($config);
 $uiBase         =& $uiHandler;
 ?>
 <html>
-<link rel="stylesheet" href="styles.css">
 <body>
-Your request is processed...
+<img src="img/progress.gif">
 <?php
 ob_start();
 ?>

@@ -1,9 +1,9 @@
-{literal}
-
 <SCRIPT LANGUAGE="JavaScript">
 <!-- Original:  Tomleung (lok_2000_tom@hotmail.com) This tag should not be removed-->
 <!--Server time ticking clock v2.0 Updated by js-x.com-->
 <!-- server time ticking clock modified for livesupport.campware.org using above script-->
+
+{literal}
 function twoDigit(_v)
 {
   _v = Math.round(_v);
@@ -31,7 +31,7 @@ var seconds;
 var timer=null;
 function sClock()
 {
-  sinterval = 100;      // milliseconds
+  sinterval = 1000;      // milliseconds
   {/literal}
   hours   = {$smarty.now|date_format:"%H"|string_format:"%d"};
   minutes = {$smarty.now|date_format:"%M"|string_format:"%d"};
@@ -112,7 +112,7 @@ var lseconds;
 var ltimer=null;
 function lClock()
 {
-  linterval = 100;      // milliseconds
+  linterval = 1000;      // milliseconds
   var tDate = new Date();
   lhours   = tDate.getHours();
   lminutes = tDate.getMinutes();
@@ -166,8 +166,9 @@ function lwork()
     }
   }
 }
+{/literal}
 
 sClock();
-lClock();
+{* lClock(); *}
 </script>
-{/literal}
+

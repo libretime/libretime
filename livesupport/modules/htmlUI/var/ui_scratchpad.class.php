@@ -85,6 +85,7 @@ class uiScratchPad
         for ($n=0; $n<$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]; $n++) {
             if (is_array($sp[$n])) $this->items[$n] = $sp[$n];
         }
+        ksort($this->items);
     }
 
 

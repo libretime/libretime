@@ -1,0 +1,726 @@
+body { font-size: 12px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #2C2C2C;
+    margin: 0px;
+    background: #FFF url("css_img/bg_head.gif") no-repeat;     
+}
+
+img { font-size: 12px;
+    border: none;
+}
+
+form { font-size: 12px;
+    margin: 15px 0 15px 0;
+}
+
+.clearer { font-size: 12px;
+    clear: both;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+}
+
+.container { font-size: 12px;
+    width: 100%;
+}
+
+.button { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.button_large { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    padding: 0 25px 0 25px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.button_small { font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    background-color: #F7F9FB;
+    cursor: pointer;
+    width: 34px;
+}
+
+input, select { font-size: 12px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 12px;
+    border-top: 1px solid #C7CCCC;
+    border-left: 1px solid #C7CCCC;
+    border-bottom: 1px solid #A4A9A9;
+    border-right: 1px solid #A4A9A9;
+}
+
+.checkbox { font-size: 12px;
+    border: none;
+}
+
+.input { font-size: 12px;
+    height: 16px;
+}
+
+.input[class] { font-size: 12px;
+    height: 15px;
+}
+
+/*######################### HEADER ########################### */
+
+.headLeft { font-size: 12px;
+    margin: 26px 16px 0 10px;
+    float: left;
+    width: 169px;
+}
+
+.headLeft[class] { font-size: 12px;
+    margin-left: 22px;
+}
+
+.headLeft .container { font-size: 12px;
+    margin-left: 10px;
+}
+
+.loginname { font-size: 12px;
+    margin: 15px 0 8px 0;
+    font-weight: bold;
+}
+
+.headRight { font-size: 12px;
+    float: left;
+    margin-top: 10px;
+    height: 115px;
+}
+
+.station { font-size: 12px;
+    margin: 30px 30px 0 30px;
+    float: left;
+}
+
+.frequence { font-size: 12px;
+    margin: 15px 0 8px 0;
+}
+
+.onair { font-size: 12px;
+    float: left;
+    margin: 24px 30px 0 0;
+}
+
+.onair img { font-size: 12px;
+    display: block;
+    margin-top: 10px;
+}
+
+/* ************* station time **************** */
+
+.stationtime { font-size: 12px;
+    margin: 34px 30px 0 0;
+    float: left;
+    font-weight: bold;
+    color: #666;
+}
+
+.stationtime { font-size: 12px;
+    text-transform: uppercase;
+}
+
+.stationtime h1 { font-size: 12px;
+    font-size: 12px;
+    margin: 0;
+    text-transform: none;
+}
+
+.stationtime .clock { font-size: 12px;
+    font-size: 22px;
+    float: left;
+    margin: 0;
+}
+
+.stationtime .timezone { font-size: 12px;
+    float: left;
+    margin: 9px 0 0 15px;
+}
+
+/*  *************** what playing  ******************  */
+
+.whatplaying { font-size: 12px;
+    float: left;
+    border: 1px solid #CCC;
+    background-color: #F9FAFB;
+    margin-top: 13px;
+    padding: 10px 8px;
+    width: 250px;
+}
+
+.whatplaying .nowplaying { font-size: 12px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.whatplaying .scala { font-size: 12px;
+    width: 250px;
+    height: 8px;
+    margin-top: 5px;
+    background-color: #DADADA;
+    border-top: 1px solid #B5B5B5;
+    border-left: 1px solid #B5B5B5;
+    border-bottom: 1px solid #6F6F6F;
+    border-right: 1px solid #6F6F6F;
+}
+
+.whatplaying .scala .scala_in { font-size: 12px;
+    background: #DADADA url("css_img/bg_scala_in.gif") repeat-x top left;
+    font-size:1px;
+    height: 8px;
+}
+
+.whatplaying .time { font-size: 12px;
+    width: 250px;
+    font-size: 11px;
+}
+
+.whatplaying .time .left { font-size: 12px;
+    float: left;
+    width: 125px;
+}
+
+.whatplaying .time .right { font-size: 12px;
+    width: 125px;
+    float: left;
+    text-align: right;
+}
+
+.whatplaying p { font-size: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 10px 0 0 0;
+}
+
+/* #################################### NAVIGATION ############################### */
+
+.container_nav { font-size: 12px;
+    height: 26px;
+    clear: both;
+    background: url("css_img/bg_navigation.gif") repeat-x top left;
+    margin-bottom: 38px;
+}
+
+.container_nav[class] { font-size: 12px;
+    padding-left: 10px;
+    margin-bottom: 50px;
+}
+
+#nav, #nav ul { font-size: 12px;
+    float: left;
+    width: auto;
+    list-style: none;
+    line-height: 24px;
+    padding: 0;
+    margin: 2px 0 0 15px;
+    display: block;
+}
+
+#nav a { font-size: 12px;
+    display: block;
+    color: #666;
+    text-decoration: none;
+    padding-right: 40px;
+}
+
+#nav li { font-size: 12px;
+    float: left;
+    padding: 0;
+}
+
+#nav li ul { font-size: 12px;
+    display: block;
+    position: absolute;
+    left: -999px;
+    width: 120px;
+    font-weight: normal;
+    margin: 0;
+    z-index: 1;
+}
+
+#nav li ul li { font-size: 12px;
+    clear: both;
+    margin: 0;
+}
+
+#nav li ul a { font-size: 12px;
+    width: 100px;
+    line-height: 25px;
+    background: #eee;
+    padding-left : 5px;
+    border-top: 0px solid #ACB3BA;
+    border-left: 1px solid #ACB3BA;
+    border-bottom: 1px solid #ACB3BA;
+    border-right: 1px solid #ACB3BA;
+}
+
+#nav a:hover { font-size: 12px;
+    color: #000;
+}
+
+#nav li li a:hover { font-size: 12px;
+    background: #D6E3EF;
+}
+
+#nav li:hover ul , #nav li:hover ul, #nav li.sfhover ul , #nav li.sfhover ul { font-size: 12px;
+    left: -999em;
+}
+
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul { font-size: 12px;
+    left: auto;
+}
+
+#tabnav { 
+    position: absolute;
+    top: 175px;
+    left: 20px;
+    z-index: 1;
+}
+
+#tabnav ul { 
+    width: auto;
+    list-style: none;
+    padding: 0;
+    display: block;
+}
+
+#tabnav a { 
+    background: url("css_img/bt_tab_off.gif");
+    display: block;
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 99px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+#tabnav a:hover { 
+    background: url("css_img/bt_tab_on.gif");
+    color: #FFF;
+}
+
+#tabnav a.active { 
+    background: url("css_img/bt_tab_on.gif");
+    color: #FFF;
+}
+
+#tabnav li { 
+    padding: 0;
+    float: left;
+}
+
+/* #################################### CONTENTAREA ############################### */
+
+
+.content { font-size: 12px;
+    margin: 19px;
+    margin-top: 0;
+    float: left;
+}
+
+.container_elements { font-size: 12px;
+    border: 1px solid #cfcfcf;
+    padding: 6px;
+    margin-bottom: 21px;
+}
+
+.container_elements h1 { font-size: 12px;
+    font-size: 18px;
+    margin: 0 0 4px 0;
+    color: #666;
+}
+
+.head { font-size: 12px;
+    background-color: #5286ba;
+    font-weight: bold;
+    color: #FFF;
+}
+
+.head .left { font-size: 12px;
+    padding: 5px 0 3px 10px;
+    float: left;
+    width: 330px;
+}
+
+.head .right { font-size: 12px;
+    padding: 5px 10px 3px 0;
+    float: left;
+    text-align: right;
+    width: 224px;
+}
+
+.container_table { font-size: 12px;
+    height: 275px;
+    overflow: auto;
+}
+
+
+table { font-size: 12px;
+    border-collapse: collapse;
+}
+
+table td { font-size: 12px;
+    padding: 0 6px 0 12px;
+    border-right: 1px solid #333;
+    height: 19px;
+    vertical-align: top;
+}
+
+table tr.blue_head td { font-size: 12px;
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+
+}
+
+A#blue_head { font-size: 12px;
+    color:#fff;
+}
+
+table tr.blue1 td { font-size: 12px;
+    color: #000;
+    background-color: #d5e2ee;
+}
+
+table tr.blue2 td { font-size: 12px;
+    color: #000;
+    background-color: #f5f5f5;
+}
+
+table tr.red td { font-size: 12px;
+    background-color: #FBAAAA;
+}
+
+.footer { font-size: 12px;
+    padding: 4px 5px 5px 0;
+    background-color: #8baed1;
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.container_button { font-size: 12px;
+    margin-top: 4px;
+}
+
+.container_search {
+    margin-bottom: 4px;
+}
+
+.comment { font-size: 12px;
+    float: left;
+    font-size: 10px;
+    margin: 5px 0 0 10px;
+}
+
+.select_width_comment { font-size: 12px;
+    float:left;
+    margin-left: 3px;
+}
+
+.select_width_comment[class] { font-size: 12px;
+    margin-left: 0;
+}
+
+
+.tablebottom { font-size: 12px;
+    float: left;
+    margin-left: 0px;
+    background-color: #8baed1;
+}
+
+.counter { font-size: 12px;
+    float: left;
+    margin-left: 7px;
+    font-weight: bold;
+    background-color: #8baed1;
+}
+
+.counter[class] { font-size: 12px;
+    margin-left: 15px;
+}
+
+.container_browse { 
+    width: 170px;
+    float: left;
+    margin: 0px 0px 10px 0px;
+}
+
+.area_browse { 
+    width: 174px;
+    height: 100px;
+}
+
+.area_browse[class] { 
+    width: 180px;
+}
+
+.comment_browse { 
+    font-size: 10px;
+}
+
+.container_button_upload { font-size: 12px;
+    margin: 20px 0 0 204px;
+}
+
+.container_button_upload[class] { font-size: 12px;
+    margin-left: 200px;
+}
+
+label { font-size: 12px;
+    display: block;
+    float: left;
+    width: 200px;
+}
+
+
+/* ############################################# scheduler ################################# */
+
+.container_calender_overview { font-size: 12px;
+    width: 235px;
+}
+
+.container_calender_overview p { font-size: 12px;
+    font-size: 10px;
+    margin-top: 0;
+    float: right;
+}
+
+.month_year { font-size: 12px;
+    border: 1px solid #cdcdcd;
+    border-bottom: none;
+    padding: 5px 20px;
+    float: right;
+}
+
+.calender_overview { font-size: 12px;
+    border: 1px solid #cdcdcd;
+}
+
+table.calender_overview_table { font-size: 12px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+table.calender_overview_table th { font-size: 12px;
+    background-color: #5286ba;
+    color: #FFF;
+}
+
+table.calender_overview_table td { font-size: 12px;
+    border: 0;
+    text-align: center;
+    padding: 5px 5px 0 5px;
+}
+
+table.calender_overview_table td.full { font-size: 12px;
+    font-weight: bold
+}
+
+table.calender_overview_table th.week { font-size: 12px;
+    border-right: 1px solid #FFF;
+}
+
+table.calender_overview_table td.week { font-size: 12px;
+    border-right: 1px solid #cdcdcd;
+}
+
+table.calender_overview_table a.active { font-size: 12px;
+    color: #FFF;
+    font-weight: bold;
+    background-color: #5286ba;
+    padding: 1px 0;
+    width: 100%;
+    display: block;
+}
+
+table.calender_overview_table a { font-size: 12px;
+    text-decoration: none;
+    color: #000;
+}
+
+table.calender_overview_table a.not_this_month { font-size: 12px;
+    color: #999;
+}
+
+.head_scheduler { font-size: 12px;
+    float: left;
+    width: 50%;
+}
+
+.container_button_scheduler { font-size: 12px;
+    float: left;
+    width: 50%;
+    text-align: right;
+    margin-top: 5px;
+}
+
+table.scheduler_day td { font-size: 12px;
+    border-bottom: 1px solid #ccc;
+    padding-top: 2px;
+}
+
+table.scheduler_week { font-size: 12px;
+    width: 790px;
+    border: 1px solid #7392A6;
+}
+
+table.scheduler_week th { font-size: 12px;
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+    text-align: left;
+}
+
+table.scheduler_week th.firstrow { font-size: 12px;
+    width: 34px;
+}
+
+table.scheduler_week th.date { font-size: 12px;
+    width: 22px;
+    border-left: 1px solid #7392A6;
+}
+
+table.scheduler_week th.day { font-size: 12px;
+    width: 86px;
+}
+
+table.scheduler_week td.firstrow_secondcol { font-size: 12px;
+    background-color: #CFDEE7;
+    border: none;
+    border-bottom: 1px solid #757575;
+    padding: 0;
+}
+
+table.scheduler_week td.date_secondcol { font-size: 12px;
+    background-color: #CFDEE7;
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #757575;
+    padding: 2px;
+    font-weight: bold;
+}
+
+table.scheduler_week td.day_secondcol { font-size: 12px;
+    background-color: #CFDEE7;
+    border: none;
+    border-bottom: 1px solid #757575;
+    padding: 0;
+    padding-left: 2px;
+}
+
+table.scheduler_week td.firstrow { font-size: 12px;
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 2px;
+    font-weight: bold;
+}
+
+table.scheduler_week td.date { font-size: 12px;
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+    padding: 0;
+    background-color: #D0D0D0;
+}
+
+table.scheduler_week td.date_full { font-size: 12px;
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+    padding: 0;
+    background-color: #97BACF;
+}
+
+table.scheduler_week td.date_locked { font-size: 12px;
+    border: none;
+    border-left: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+    background-color: #FFCACB;
+    text-align: center;
+    padding: 0;
+    padding-top: 3px;
+}
+
+table.scheduler_week td.day { font-size: 12px;
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 0;
+    background-color: #EAEAEA;
+}
+
+table.scheduler_week td.day_full { font-size: 12px;
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 2px;
+    background-color: #E7ECEF;
+}
+
+table.scheduler_week td.day_locked { font-size: 12px;
+    border: none;
+    border-bottom: 1px solid #7392A6;
+    padding: 2px;
+    background-color: #EAEAEA;
+}
+
+table.scheduler_week td h2 { font-size: 12px;
+    font-size: 11px;
+    margin: 0;
+}
+
+table.scheduler_week td p { font-size: 12px;
+    font-size: 11px;
+    margin: 0;
+}
+
+table.scheduler_month{ font-size: 12px;
+    width: 790px;
+    border: 1px solid #7392A6;
+}
+
+table.scheduler_month th { font-size: 12px;
+    background-color: #8baed1;
+    color: #FFF;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #7392A6;
+}
+
+table.scheduler_month td { font-size: 12px;
+    width: 113px;
+    border: 1px solid #7392A6;
+    padding: 2px;
+    text-align: left;
+}
+
+table.scheduler_month p { font-size: 12px;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+table.scheduler_month .scala { font-size: 12px;
+    margin: 0 0 2px 4px;
+    width: 96px;
+    height: 12px;
+    background-color: #DADADA;
+    border: 1px solid #7F95A7;
+}
+
+table.scheduler_month .scala .scala_in { font-size: 12px;
+    background: #DADADA url("css_img/bg_scala_in_scheduler.gif") repeat-x top left;
+    font-size:1px;
+    height: 12px;
+}

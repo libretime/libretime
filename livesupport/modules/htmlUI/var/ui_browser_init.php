@@ -18,7 +18,7 @@ $uiBase         =& $uiBrowser;
 ## load Smarty+filters ##############################################
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
 #$Smarty->load_filter('output', 'trimwhitespace');
-$Smarty->load_filter('post', 'template_marker');
+#$Smarty->load_filter('post', 'template_marker');
 $Smarty->load_filter('output', 'localizer');
 
 
@@ -28,15 +28,15 @@ $Smarty->assign('UI_HANDLER', UI_HANDLER);
 $Smarty->assign('ACT', $_REQUEST['act']);
 $Smarty->assign('CONFIG', $config);
 $Smarty->assign('START', array(
-                            'id'  => &$uiBrowser->id,
-                            'pid' => &$uiBrowser->pid,
-                            'fid' => &$uiBrowser->fid,
-                            'sessid' => &$uiBrowser->sessid
-                           ));
-$Smarty->assign('USER', array('sessid' => &$uiBrowser->sessid,
-                              'userid' => &$uiBrowser->userid,
-                              'login'  => &$uiBrowser->login
-                        ));
+                            'id'        => &$uiBrowser->id,
+                            'pid'       => &$uiBrowser->pid,
+                            'fid'       => &$uiBrowser->fid,
+                            'sessid'    => &$uiBrowser->sessid)
+                         );
+$Smarty->assign('USER', array('sessid'  => &$uiBrowser->sessid,
+                              'userid'  => &$uiBrowser->userid,
+                              'login'   => &$uiBrowser->login)
+                        );
 $uiBrowser->loadStationPrefs($ui_fmask['stationPrefs']);
 $Smarty->assign('STATIONPREFS', $uiBrowser->STATIONPREFS);
 

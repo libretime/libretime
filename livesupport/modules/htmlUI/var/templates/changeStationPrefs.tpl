@@ -1,6 +1,6 @@
-<div id="systemPrefs">
-{include file="sub/x.tpl"}
-<center>
+{*include file="sub/x.tpl"*}
+<div class="content">
+<div class="container_elements" style="width: 607px;">
 {include file="sub/dynForm_sections.tpl"}
-</center>
+</div>
 </div>

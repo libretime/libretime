@@ -41,14 +41,14 @@ class uiHandler extends uiBase {
         #$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
-            $_SESSION['retransferFormData']['login']=$formdata['login'];
+            $_SESSION['retransferFormData']['login'] = $formdata['login'];
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
         $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
         if(!$sessid || PEAR::isError($sessid)){
             $this->_retMsg('Login failed');
-            $_SESSION['retransferFormData']['login']=$formdata['login'];
+            $_SESSION['retransferFormData']['login'] = $formdata['login'];
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
@@ -63,6 +63,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
         $this->sessid = $sessid;
+        $this->langid = $formdata['langid'];
         $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
         return TRUE;
      }
@@ -266,7 +267,7 @@ class uiHandler extends uiBase {
             }
         }
         $data = $this->_dateArr2Str($mData);
-        foreach ($data as $key=>$val) { 
+        foreach ($data as $key=>$val) {
             $r = $this->gb->setMDataValue($id, $key, $this->sessid, $val);
             if (PEAR::isError($r)) {
                 $this->_retMsg('Unable to set $1: $2', $key, $val);

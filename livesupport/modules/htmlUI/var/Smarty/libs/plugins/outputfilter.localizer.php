@@ -26,7 +26,7 @@
  }
 
  function smarty_outputfilter_localizer($compiled, &$smarty)
- {
+ {     
     $pattern = '/##.*##/U';
     return preg_replace_callback($pattern, 'smarty_tra', $compiled);
  }

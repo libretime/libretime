@@ -14,6 +14,7 @@
         </tr>
     {if count($structure.listdata)}
         {foreach from=$structure.listdata item=i}
+            {assign var="_listen_gunid" value=$i.gunid}
             <tr bgcolor="{cycle values='#eeeeee, #dadada"'}" {assign var="moreContextBefore" value=", 'SP.addItem'"}{include file="sub/contextmenu.tpl"}>
               <td align="center">
                 <span id="ID{$i.id}">

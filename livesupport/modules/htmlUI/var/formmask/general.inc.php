@@ -10,19 +10,7 @@ $ui_fmask = array(
         array(
             'element'   => 'basics',
             'type'      => 'header',
-            'label'     => 'Basic Settings',
-        ),
-        array(
-            'element'   => 'stationMaxfilesize',
-            'isPref'    => TRUE,
-            'type'      => 'text',
-            'label'     => 'Reduce Upload Filesize<br><small>(must be smaller than ' .ini_get('upload_max_filesize').')</small>',
-            'rule'      => 'numeric',
-            'attributes'   => array(
-                                'onClick'  => 'alert ("Note: System Maximum is set to '.
-                                                ini_get('upload_max_filesize')
-                                                .' in php.ini\n You can just reduce this amount here.")'
-                           )
+            'label'     => 'Station Settings',
         ),
         array(
             'rule'      => 'nopunctuation',
@@ -71,6 +59,18 @@ $ui_fmask = array(
             'rulemsg'   => 'URL seems not to be valid'
         ),
         array(
+            'element'   => 'stationlogo',
+            'type'      => 'file',
+            'label'     => 'Station Logo',
+            'requiredmsg'=> 'please select Logo file',
+            'attributes'=> array('multiple' => 'application/pdf')
+        ),
+        array(
+            'element'   => 'systemsettings',
+            'type'      => 'header',
+            'label'     => 'System Settings'
+        ),
+        array(
             'element'   => UI_SCRATCHPAD_MAXLENGTH_KEY,
             'isPref'    => TRUE,
             'type'      => 'select',
@@ -82,16 +82,16 @@ $ui_fmask = array(
                            )
         ),
         array(
-            'element'   => 'upload',
-            'type'      => 'header',
-            'label'     => 'Upload'
-        ),
-        array(
-            'element'   => 'stationlogo',
-            'type'      => 'file',
-            'label'     => 'Station Logo',
-            'requiredmsg'=> 'please select Logo file',
-            'attributes'=> array('multiple' => 'application/pdf')
+            'element'   => 'stationMaxfilesize',
+            'isPref'    => TRUE,
+            'type'      => 'text',
+            'label'     => 'Reduce Upload Filesize<br><small>(must be smaller than ' .ini_get('upload_max_filesize').')</small>',
+            'rule'      => 'numeric',
+            'attributes'   => array(
+                                'onClick'  => 'alert ("Note: System Maximum is set to '.
+                                                ini_get('upload_max_filesize')
+                                                .' in php.ini\n You can just reduce this amount here.")'
+                           )
         ),
         array(
             'element'   =>'Submit',
@@ -473,16 +473,20 @@ $ui_fmask = array(
             'element'   => 'category',
             'type'      => 'select',
             'label'     => 'Category',
-            'attributes'=> array('onChange' => 'this.form.act.value="BROWSE.setCategory"; this.form.submit()')
+            'attributes'=> array(
+                'onChange'  => 'this.form.act.value="BROWSE.setCategory"; this.form.submit()',
+                'style'     => 'width: 180px;',
+                'id'        => 'category_1'
+                )
         ),
         'value'      => array(
             'element'   => 'value',
             'type'      => 'select',
             'multiple'  => TRUE,
             'attributes'=> array(
-                'size' => 10,
-                'STYLE' => 'width: 220px',
-                'onChange' => 'this.form.act.value="BROWSE.setValue"; this.form.submit()'
+                'size'      => 10,
+                'class'     => 'area_browse',
+                'onChange'  => 'this.form.act.value="BROWSE.setValue"; this.form.submit()'
             )
         )
     ),
@@ -523,6 +527,11 @@ $ui_fmask = array(
             'element'   => 'act',
             'type'      => 'hidden',
             'constant'  => 'SEARCH.simpleSearch'
+        ),
+        array(
+            'element'   => 'simplesearch',
+            'type'      => 'header',
+            'label'     => 'Library Search',
         ),
         array(
             'element'   => 'criterium',

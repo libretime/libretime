@@ -48,7 +48,7 @@
             Ypos     = window.screenY;
             Pwidth   = window.innerWidth;
             Pheight  = window.innerHeight;
-        } 
+        }
         url = url + '&is_popup=1';
         screenX = (Xpos + Pwidth/2  - width/2);
         screenY = (Ypos + Pheight/2 - height/2);
@@ -58,11 +58,11 @@
         window.popupwin.focus();
      }
 
-     function hpopup(url, name)                 //hidden popup!       'width=1, height=1'
-     {
+     function hpopup(url, name)
+     {  
         url = url + '&is_popup=1';
-        popupwin = window.open(url, name);
-        //window.parent.focus();
+        popupwin = window.open(url, name, 'width=1, height=1');
+        window.parent.focus();
      }
      {/literal}
 

@@ -146,6 +146,7 @@ class uiBrowse
     function searchDB()
     {
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
+
         $this->criteria['conditions'] = array();
         for($col=4; $col>=1; $col--) {
             if (is_array($this->col[$col]['criteria'])) {
@@ -158,6 +159,24 @@ class uiBrowse
         foreach ($results['results'] as $rec) {
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
+
+        /*
+        ## test
+        for ($n=0; $n<=$this->criteria['limit']; $n++) {
+            $this->results['items'][] = Array
+                (
+                    'id' => 24,
+                    'gunid' => '1cc472228d0cb2ac',
+                    'title' => 'Strom 10min',
+                    'creator' => 'Sebastian',
+                    'duration' => '&nbsp;&nbsp;&nbsp;10:00',
+                    'type' => 'webstream'
+                );
+        }
+        $results['cnt'] = 500;
+        $this->results['cnt'] = $results['cnt'];
+        ## end test
+        */
         $this->pagination($results);
         #print_r($this->criteria);
         #print_r($this->results);

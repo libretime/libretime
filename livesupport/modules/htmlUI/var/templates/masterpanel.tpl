@@ -1,17 +1,13 @@
+{*Smarty template*}
+
+{*
 <div id="masterpanel">
+*}
 
 {include file="statusbar.tpl"}
 
 {if $showMenuTop}
     {include file="menu_top.tpl"}
-{/if}
-
-{if $SCRATCHPAD}
-    {include file="scratchPad.tpl"}
-{/if}
-
-{if $simpleSearchForm}
-    {include file="library/simpleSearchForm.tpl"}
 {/if}
 
 {if $structure}
@@ -50,9 +46,20 @@
     {include file="playlist/simpleManagement.tpl"}
 {/if}
 
+<div class="content">
+{if $simpleSearchForm}
+    {include file="library/simpleSearchForm.tpl"}
+{/if}
+
+{if $SCRATCHPAD}
+    {include file="scratchPad.tpl"}
+{/if}
+</div>
+
 {if $showScheduler}
     {include file="scheduler/main.tpl"}
 {/if}
 
+{*
 </div>
-
+*}

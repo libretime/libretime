@@ -16,7 +16,6 @@ define('UI_QFORM_REQUIRED',     '../templates/sub/form_required.tpl');
 define('UI_QFORM_REQUIREDNOTE', '../templates/sub/form_requirednote.tpl');
 define('UI_QFORM_ERROR',        '../templates/sub/form_error.tpl');
 define('UI_SEARCH_MAX_ROWS', 8);
-define('UI_SEARCH_MIN_ROWS', 2);
 define('UI_REGEX_URL', '/^(ht|f)tps?:\/\/[^ ]+$/');
 define('UI_PL_ACCESSTOKEN_KEY', 'playlistToken');
 define('UI_SCRATCHPAD_KEY',     'djBagContents');

@@ -1,11 +1,11 @@
 {*Smarty template*}
 
 {if $USER.userid}
-    Login: {$USER.login}
-    <br>
-    <a href='javascript: popup("{$UI_BROWSER}?popup[]=logout", "name", "350", "100");'>[logout]</a>
-    <a href='javascript: popup("{$UI_BROWSER}?popup[]=signover_1", "name", "350", "160");'>[sign over]</a>
+    <div class="loginname">##Signed in## : {$USER.login}</div>
+    <input type="button" class="button" value="{tra 0=logout}" onClick='javascript: popup("{$UI_BROWSER}?popup[]=logout", "name", "350", "100");'/>
+    {*
+    <input type="button" class="button" value="{tra 0='sign over'}" onClick='javascript: popup("{$UI_BROWSER}?popup[]=signover_1", "name", "350", "160");'/>
+    *}
 {else}
-    <a href='javascript: popup("{$UI_BROWSER}?popup[]=login", "name", "350", "160");'>[login]</a>
+    <input type="button" class="button" value="{tra 0=login}" onClick='javascript: popup("{$UI_BROWSER}?popup[]=login", "name", "350", "160");'/>
 {/if}
-

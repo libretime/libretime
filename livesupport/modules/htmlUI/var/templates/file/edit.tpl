@@ -41,21 +41,21 @@
 
 </div>
 
-{literal}
+
 <script>
 
 function showData()
+{literal}
 {
 {/literal}
     {if $editItem.id && $editItem.type == 'file'}
         alert('Sorry, function temporary disabled');
         return false;
     {/if}
+
+    document.getElementById('div_Data').style.display   = 'inherit';
+    document.getElementById('div_MData').style.display  = 'none';
 {literal}
-    document.getElementById('div_Data').style.visibility='visible';
-    document.getElementById('div_Data').style.height='';
-    document.getElementById('div_MData').style.visibility='hidden';
-    document.getElementById('div_MData').style.height='0';
 }
 {/literal}
 
@@ -63,13 +63,10 @@ function showData()
     {literal}
     function showMData()
     {
-        document.getElementById('div_MData').style.visibility='visible';
-        document.getElementById('div_MData').style.height='';
-        document.getElementById('div_Data').style.visibility='hidden';
-        document.getElementById('div_Data').style.height='0';
+        document.getElementById('div_MData').style.display  = 'inherit';
+        document.getElementById('div_Data').style.display   = 'none';
     }
-    document.getElementById('div_Data').style.visibility='hidden';
-    document.getElementById('div_Data').style.height='0';
+    document.getElementById('div_Data').style.display   = 'none';
     {/literal}
 {else}
     {literal}
@@ -78,8 +75,7 @@ function showData()
         alert ('Data first!');
     }
     {/literal}
-    document.getElementById('div_MData').style.visibility='hidden';
-    document.getElementById('div_MData').style.height='0';
+    document.getElementById('div_MData').style.display  = 'none';
 {/if}
 </script>
 
