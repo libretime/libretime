@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -479,9 +479,6 @@ class GreenBox extends Alib{
         $res4 = $tr->getTransportStatus($res2);
 #        return $res;
         return array($res, $res2, $res3, $res4);
-#        return PEAR::raiseError(
-#            'GreenBox::uploadFile: not implemented', GBERR_NOTIMPL
-#        );
     }
 
     /**
@@ -507,9 +504,6 @@ class GreenBox extends Alib{
         $res4 = $tr->getTransportStatus($res2);
 #        return $res;
         return array($res, $res2, $res3, $res4);
-#        return PEAR::raiseError(
-#            'GreenBox::downloadFile: not implemented', GBERR_NOTIMPL
-#        );
     }
     
 
