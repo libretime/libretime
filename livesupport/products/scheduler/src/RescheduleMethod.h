@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,8 +78,8 @@ using namespace LiveSupport::Core;
  *  The return value is true if all went well,
  *  or a boolean false, if there were errors.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -89,42 +89,6 @@ class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
-
-        /**
-         *  The name of the scheduled entry id member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        scheduleEntryIdName;
-
-        /**
-         *  The name of the playtime member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        playtimeName;
-
-        /**
-         *  Extract the schedule entry id from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return a UniqueId that was found in the XML-RPC parameter.
-         *  @exception std::invalid_argument if there was no UniqueId
-         *             in xmlRpcValue
-         */
-        Ptr<UniqueId>::Ref
-        extractScheduleEntryId(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Extract the playtime from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the playing time, as stored in the XML-RPC parameter
-         *  @exception std::invalid_argument if there was no playtime
-         *             in xmlRpcValue
-         */
-        Ptr<boost::posix_time::ptime>::Ref
-        extractPlayschedule(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
 
 
     public:

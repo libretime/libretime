@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,8 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "XmlRpcTools.h"
+
 #include "DisplayPlaylistMethod.h"
 
 
@@ -91,37 +93,6 @@ DisplayPlaylistMethod :: DisplayPlaylistMethod (
 
 
 /*------------------------------------------------------------------------------
- *  Extract the UniqueId from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<UniqueId>::Ref
-DisplayPlaylistMethod :: extractPlaylistId(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(playlistIdName)) {
-        throw std::invalid_argument("no playlist id in parameter structure");
-    }
-
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
-    return id;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Convert a Playlist to an XmlRpcValue
- *----------------------------------------------------------------------------*/
-void
-DisplayPlaylistMethod :: playlistToXmlRpcValue(
-                            Ptr<const Playlist>::Ref    playlist,
-                            XmlRpc::XmlRpcValue       & xmlRpcValue)
-                                                                throw ()
-{
-    xmlRpcValue["id"]         = (int) (playlist->getId()->getId());
-    xmlRpcValue["playlength"] = playlist->getPlaylength()->total_seconds();
-}
-
- 
-/*------------------------------------------------------------------------------
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
@@ -136,7 +107,7 @@ DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
             return;
         }
 
-        Ptr<UniqueId>::Ref  id = extractPlaylistId(parameters[0]);
+        Ptr<UniqueId>::Ref  id = XmlRpcTools::extractPlaylistId(parameters[0]);
 
         Ptr<StorageClientFactory>::Ref      scf;
         Ptr<StorageClientInterface>::Ref    storage;
@@ -152,7 +123,7 @@ DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
 
         Ptr<Playlist>::Ref  playlist = storage->getPlaylist(id);
 
-        playlistToXmlRpcValue(playlist, returnValue);
+        XmlRpcTools::playlistToXmlRpcValue(playlist, returnValue);
 
     } catch (std::invalid_argument &e) {
         // TODO: mark error

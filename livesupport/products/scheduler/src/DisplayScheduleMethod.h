@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,8 +92,8 @@ using namespace LiveSupport::Core;
  *      <li>end - datetime - the end of the scheduled item</li>
  *  </ul>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -104,66 +104,6 @@ class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
          */
         static const std::string        methodName;
 
-        /**
-         *  The name of the from member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        fromName;
-
-        /**
-         *  The name of the to member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        toName;
-
-        /**
-         *  Extract the from time parameter from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the time value for the from parameter
-         *  @exception std::invalid_argument if there was no from parameter
-         *             in xmlRpcValue
-         */
-        Ptr<boost::posix_time::ptime>::Ref
-        extractFrom(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Extract the to parameter from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return the time value for the to parameter
-         *  @exception std::invalid_argument if there was no to parameter
-         *             in xmlRpcValue
-         */
-        Ptr<boost::posix_time::ptime>::Ref
-        extractTo(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Convert a boost::posix_time::ptime to an XmlRpcValue
-         *
-         *  @param ptime the ptime to convert
-         *  @param xmlRpcValue the output parameter holding the value of
-         *         the conversion.
-         */
-        static void
-        ptimeToXmlRpcValue(Ptr<const ptime>::Ref   ptime,
-                           XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                                    throw ();
-
-        /**
-         *  Convert a vector of ScheduleEntries to an XML-RPC return value.
-         *
-         *  @param scheduleEntries a list of ScheduleEntries.
-         *  @param returnValue the output parameter holding an XML-RPC
-         *         representation of the suppied schedule entires.
-         */
-        void
-        scheduleEntriesToXmlRpcValue(
-                Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref scheduleEntries,
-                XmlRpc::XmlRpcValue                           & returnValue)
-                                                                    throw ();
 
     public:
         /**

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@
 
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "XmlRpcTools.h"
+
 #include "RemoveFromScheduleMethod.h"
 
 
@@ -62,13 +64,6 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string RemoveFromScheduleMethod::methodName = "removeFromSchedule";
 
-/*------------------------------------------------------------------------------
- *  The name of the playlist id member in the XML-RPC parameter
- *  structure.
- *----------------------------------------------------------------------------*/
-const std::string RemoveFromScheduleMethod::scheduleEntryIdName =
-                                                        "scheduleEntryId";
-
 
 /* ===============================================  local function prototypes */
 
@@ -82,23 +77,6 @@ RemoveFromScheduleMethod :: RemoveFromScheduleMethod (
                         Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)   throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
 {
-}
-
-
-/*------------------------------------------------------------------------------
- *  Extract the UniqueId from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<UniqueId>::Ref
-RemoveFromScheduleMethod :: extractScheduleEntryId(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(scheduleEntryIdName)) {
-        throw std::invalid_argument("no playlist id in parameter structure");
-    }
-
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[scheduleEntryIdName]));
-    return id;
 }
 
 
@@ -117,7 +95,8 @@ RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
             return;
         }
 
-        Ptr<UniqueId>::Ref  entryId = extractScheduleEntryId(parameters[0]);
+        Ptr<UniqueId>::Ref  entryId 
+                          = XmlRpcTools::extractScheduleEntryId(parameters[0]);
 
         Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
         Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();

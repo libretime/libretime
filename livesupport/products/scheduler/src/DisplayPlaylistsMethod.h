@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,7 +83,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -94,18 +94,6 @@ class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
          */
         static const std::string        methodName;
 
-        /**
-         *  Convert a vector of Playlists to an XML-RPC return value.
-         *
-         *  @param playlistVector a list of Playlists.
-         *  @param returnValue the output parameter holding an XML-RPC
-         *         representation of the list of Playlists.
-         */
-        void
-        playlistVectorToXmlRpcValue(
-            const Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector,
-            XmlRpc::XmlRpcValue                            & returnValue)
-                                                                    throw ();
 
     public:
         /**

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@
 
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "XmlRpcTools.h"
+
 #include "RescheduleMethod.h"
 
 
@@ -65,19 +67,6 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string RescheduleMethod::methodName = "reschedule";
 
-/*------------------------------------------------------------------------------
- *  The name of the playlist id member in the XML-RPC parameter
- *  structure.
- *----------------------------------------------------------------------------*/
-const std::string RescheduleMethod::scheduleEntryIdName =
-                                                        "scheduleEntryId";
-
-/*------------------------------------------------------------------------------
- *  The name of the playtime member in the XML-RPC parameter
- *  structure.
- *----------------------------------------------------------------------------*/
-const std::string RescheduleMethod::playtimeName = "playtime";
-
 
 /* ===============================================  local function prototypes */
 
@@ -91,44 +80,6 @@ RescheduleMethod :: RescheduleMethod (
                         Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)   throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
 {
-}
-
-
-/*------------------------------------------------------------------------------
- *  Extract the UniqueId from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<UniqueId>::Ref
-RescheduleMethod :: extractScheduleEntryId(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(scheduleEntryIdName)) {
-        throw std::invalid_argument("no playlist id in parameter structure");
-    }
-
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[scheduleEntryIdName]));
-    return id;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Extract the playtime from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<ptime>::Ref
-RescheduleMethod :: extractPlayschedule(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(playtimeName)) {
-        throw std::invalid_argument("no playtime in parameter structure");
-    }
-
-    struct tm       tm = (struct tm) xmlRpcValue[playtimeName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
 }
 
 
@@ -147,8 +98,10 @@ RescheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
             return;
         }
 
-        Ptr<UniqueId>::Ref  entryId     = extractScheduleEntryId(parameters[0]);
-        Ptr<ptime>::Ref     playschedule = extractPlayschedule(parameters[0]);
+        Ptr<UniqueId>::Ref  entryId     
+                          = XmlRpcTools::extractScheduleEntryId(parameters[0]);
+        Ptr<ptime>::Ref     playschedule 
+                          = XmlRpcTools::extractPlayschedule(parameters[0]);
         Ptr<UniqueId>::Ref  scheduleEntryId;
 
         Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
@@ -167,7 +120,6 @@ RescheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         returnValue = XmlRpc::XmlRpcValue(false);
         return;
     }
-
 
     returnValue = XmlRpc::XmlRpcValue(true);
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -98,17 +98,6 @@ class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         static const std::string        playlistIdName;
 
-        /**
-         *  Extract the playlist id from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return a UniqueId that was found in the XML-RPC parameter.
-         *  @exception std::invalid_argument if there was no UniqueId
-         *             in xmlRpcValue
-         */
-        Ptr<UniqueId>::Ref
-        extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
 
     public:
         /**

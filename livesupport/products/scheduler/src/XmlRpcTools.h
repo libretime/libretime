@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,10 +42,13 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include <XmlRpcValue.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
+#include "ScheduleEntry.h"
 
 
 namespace LiveSupport {
@@ -68,11 +71,11 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class XmlRpcTools
 {
-    public:
+    private:
         /**
          *  The name of the playlistId member in the XML-RPC parameter
          *  structure given as the input to an XmlRpcServerMethod.
@@ -90,6 +93,56 @@ class XmlRpcTools
          *  structure given as the input to an XmlRpcServerMethod.
          */
         static const std::string        relativeOffsetName;
+
+        /**
+         *  The name of the from member in the XML-RPC parameter
+         *  structure.
+         */
+        static const std::string        fromTimeName;
+
+        /**
+         *  The name of the to member in the XML-RPC parameter
+         *  structure.
+         */
+        static const std::string        toTimeName;
+
+        /**
+         *  The name of the entry id member in the XML-RPC parameter
+         *  structure.
+         */
+        static const std::string        scheduleEntryIdName;
+
+        /**
+         *  The name of the playtime member in the XML-RPC parameter
+         *  structure.
+         */
+        static const std::string        playtimeName;
+
+        /**
+         *  Convert a boost::posix_time::ptime to an XmlRpcValue
+         *
+         *  @param ptime the ptime to convert
+         *  @param xmlRpcValue the output parameter holding the value of
+         *         the conversion.
+         */
+        static void
+        ptimeToXmlRpcValue(Ptr<const ptime>::Ref   ptime,
+                           XmlRpc::XmlRpcValue   & xmlRpcValue)
+                                                                    throw ();
+
+
+    public:
+        /**
+         *  Extract the schedule entry id from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a UniqueId that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no UniqueId
+         *             in xmlRpcValue
+         */
+        static Ptr<UniqueId>::Ref
+        extractScheduleEntryId(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
 
         /**
          *  Extract the playlist id from the XML-RPC parameters.
@@ -162,6 +215,69 @@ class XmlRpcTools
         validStatusToXmlRpcValue(bool validStatus,
                                  XmlRpc::XmlRpcValue    & xmlRpcValue)
                                                                      throw ();
+
+        /**
+         *  Convert a vector of Playlists to an XML-RPC return value.
+         *
+         *  @param playlistVector a list of Playlists.
+         *  @param returnValue the output parameter holding an XML-RPC
+         *         representation of the list of Playlists.
+         */
+        static void
+        playlistVectorToXmlRpcValue(
+            const Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector,
+            XmlRpc::XmlRpcValue                            & returnValue)
+                                                                     throw ();
+
+        /**
+         *  Extract the from time parameter from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the time value for the from parameter
+         *  @exception std::invalid_argument if there was no from parameter
+         *             in xmlRpcValue
+         */
+        static Ptr<boost::posix_time::ptime>::Ref
+        extractFromTime(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the to parameter from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the time value for the to parameter
+         *  @exception std::invalid_argument if there was no to parameter
+         *             in xmlRpcValue
+         */
+        static Ptr<boost::posix_time::ptime>::Ref
+        extractToTime(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the playtime from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return the playing time, as stored in the XML-RPC parameter
+         *  @exception std::invalid_argument if there was no playtime
+         *             in xmlRpcValue
+         */
+        static Ptr<boost::posix_time::ptime>::Ref
+        extractPlayschedule(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Convert a vector of ScheduleEntries to an XML-RPC return value.
+         *
+         *  @param scheduleEntries a list of ScheduleEntries.
+         *  @param returnValue the output parameter holding an XML-RPC
+         *         representation of the suppied schedule entires.
+         */
+        static void
+        scheduleEntriesToXmlRpcValue(
+                Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref scheduleEntries,
+                XmlRpc::XmlRpcValue                           & returnValue)
+                                                                    throw ();
+
 };
 
 /* ================================================= external data structures */

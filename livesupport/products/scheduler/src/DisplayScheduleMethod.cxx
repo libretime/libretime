@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@
 
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "XmlRpcTools.h"
+
 #include "DisplayScheduleMethod.h"
 
 
@@ -65,18 +67,6 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string DisplayScheduleMethod::methodName = "displaySchedule";
 
-/*------------------------------------------------------------------------------
- *  The name of the from member in the XML-RPC parameter
- *  structure.
- *----------------------------------------------------------------------------*/
-const std::string DisplayScheduleMethod::fromName = "from";
-
-/*------------------------------------------------------------------------------
- *  The name of the to member in the XML-RPC parameter
- *  structure.
- *----------------------------------------------------------------------------*/
-const std::string DisplayScheduleMethod::toName = "to";
-
 
 /* ===============================================  local function prototypes */
 
@@ -90,109 +80,6 @@ DisplayScheduleMethod :: DisplayScheduleMethod (
                         Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)   throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
 {
-}
-
-
-/*------------------------------------------------------------------------------
- *  Extract the from time from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<ptime>::Ref
-DisplayScheduleMethod :: extractFrom(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(fromName)) {
-        throw std::invalid_argument("no from part in parameter structure");
-    }
-
-    struct tm       tm = (struct tm) xmlRpcValue[fromName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Extract the to time from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<ptime>::Ref
-DisplayScheduleMethod :: extractTo(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(toName)) {
-        throw std::invalid_argument("no to part in parameter structure");
-    }
-
-    struct tm       tm = (struct tm) xmlRpcValue[toName];
-    gregorian::date date(tm.tm_year, tm.tm_mon, tm.tm_mday);
-    time_duration   hours(tm.tm_hour, tm.tm_min, tm.tm_sec);
-    Ptr<ptime>::Ref ptime(new ptime(date, hours));
-
-    return ptime;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Convert a boost::posix_time::ptime to an XmlRpcValue
- *----------------------------------------------------------------------------*/
-void
-DisplayScheduleMethod :: ptimeToXmlRpcValue(
-                            Ptr<const ptime>::Ref   ptime,
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                                throw ()
-{
-    gregorian::date           date  = ptime->date();
-    posix_time::time_duration hours = ptime->time_of_day();
-    struct tm                 time;
-
-    time.tm_year  = date.year();
-    time.tm_mon   = date.month();
-    time.tm_mday  = date.day();
-    time.tm_hour  = hours.hours();
-    time.tm_min   = hours.minutes();
-    time.tm_sec   = hours.seconds();
-    // TODO: set tm_wday, tm_yday and tm_isdst fields as well
-
-    xmlRpcValue = XmlRpc::XmlRpcValue(&time);
-}
-
- 
-/*------------------------------------------------------------------------------
- *  Convert a vector of ScheduleEntries into an XML-RPC value.
- *  This function returns an XML-RPC array of XML-RPC structures.
- *----------------------------------------------------------------------------*/
-void
-DisplayScheduleMethod :: scheduleEntriesToXmlRpcValue(
-                Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref scheduleEntries,
-                XmlRpc::XmlRpcValue                           & returnValue)
-                                                                        throw ()
-{
-    returnValue.setSize(scheduleEntries->size());
-                            // a call to setSize() makes sure it's an XML-RPC
-                            // array
-
-    std::vector<Ptr<ScheduleEntry>::Ref>::iterator   it
-                                                = scheduleEntries->begin();
-    int                     arraySize = 0;
-    while (it != scheduleEntries->end()) {
-        Ptr<ScheduleEntry>::Ref     entry = *it;
-        XmlRpc::XmlRpcValue         returnStruct;
-        returnStruct["id"]         = (int) (entry->getId()->getId());
-        returnStruct["playlistId"] = (int) (entry->getPlaylistId()->getId());
-
-        XmlRpc::XmlRpcValue         time;
-        ptimeToXmlRpcValue(entry->getStartTime(), time);
-        returnStruct["start"]      = time;
-
-        ptimeToXmlRpcValue(entry->getEndTime(), time);
-        returnStruct["end"]        = time;
-
-        returnValue[arraySize++] = returnStruct;
-        ++it;
-    }
 }
 
 
@@ -211,8 +98,10 @@ DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
             return;
         }
 
-        Ptr<ptime>::Ref     fromTime    = extractFrom(parameters[0]);
-        Ptr<ptime>::Ref     toTime      = extractTo(parameters[0]);
+        Ptr<ptime>::Ref     fromTime    
+                            = XmlRpcTools::extractFromTime(parameters[0]);
+        Ptr<ptime>::Ref     toTime      
+                            = XmlRpcTools::extractToTime(parameters[0]);
 
         Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
         Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
@@ -220,7 +109,8 @@ DisplayScheduleMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref  scheduleEntries
                             = schedule->getScheduleEntries(fromTime, toTime);
 
-        scheduleEntriesToXmlRpcValue(scheduleEntries, returnValue);
+        XmlRpcTools::scheduleEntriesToXmlRpcValue(scheduleEntries, 
+                                                  returnValue);
 
     } catch (std::invalid_argument &e) {
         // TODO: mark error

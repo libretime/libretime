@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,8 +83,8 @@ using namespace LiveSupport::Core;
  *  </ul>
  *  In case of an error, a simple false value is returned.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class DisplayPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -101,29 +101,6 @@ class DisplayPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         static const std::string        playlistIdName;
 
-        /**
-         *  Extract the playlist id from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return a UniqueId that was found in the XML-RPC parameter.
-         *  @exception std::invalid_argument if there was no UniqueId
-         *             in xmlRpcValue
-         */
-        Ptr<UniqueId>::Ref
-        extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
-
-        /**
-         *  Convert a Playlist to an XmlRpcValue
-         *
-         *  @param playlist the Playlist to convert.
-         *  @param xmlRpcValue the output parameter holding the value of
-         *         the conversion.
-         */
-        static void
-        playlistToXmlRpcValue(Ptr<const Playlist>::Ref   playlist,
-                              XmlRpc::XmlRpcValue      & xmlRpcValue)
-                                                                    throw ();
 
     public:
         /**

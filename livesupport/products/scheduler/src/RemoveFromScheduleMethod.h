@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,8 +74,8 @@ using namespace LiveSupport::Core;
  *      <li>scheduleEntryId - int - the id of the scheduled entry to remove</li>
  *  </ul>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -85,24 +85,6 @@ class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
-
-        /**
-         *  The name of the entry id member in the XML-RPC parameter
-         *  structure.
-         */
-        static const std::string        scheduleEntryIdName;
-
-        /**
-         *  Extract the schedule entry id from the XML-RPC parameters.
-         *
-         *  @param xmlRpcValue the XML-RPC parameter to extract from.
-         *  @return a UniqueId that was found in the XML-RPC parameter.
-         *  @exception std::invalid_argument if there was no UniqueId
-         *             in xmlRpcValue
-         */
-        Ptr<UniqueId>::Ref
-        extractScheduleEntryId(XmlRpc::XmlRpcValue & xmlRpcValue)
-                                                throw (std::invalid_argument);
 
 
     public:

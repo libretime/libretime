@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,7 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "ScheduleInterface.h"
 #include "ScheduleFactory.h"
+#include "XmlRpcTools.h"
 
 #include "DeletePlaylistMethod.h"
 
@@ -82,23 +83,6 @@ DeletePlaylistMethod :: DeletePlaylistMethod (
 
 
 /*------------------------------------------------------------------------------
- *  Extract the UniqueId from an XML-RPC function call parameter
- *----------------------------------------------------------------------------*/
-Ptr<UniqueId>::Ref
-DeletePlaylistMethod :: extractPlaylistId(
-                            XmlRpc::XmlRpcValue   & xmlRpcValue)
-                                                throw (std::invalid_argument)
-{
-    if (!xmlRpcValue.hasMember(playlistIdName)) {
-        throw std::invalid_argument("no playlist id in parameter structure");
-    }
-
-    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
-    return id;
-}
-
-
-/*------------------------------------------------------------------------------
  *  Execute the XML-RPC function call.
  *  (Overrides 'execute' in XmlRpcServerMethod.)
  *----------------------------------------------------------------------------*/
@@ -114,7 +98,7 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
             return;
         }
 
-        Ptr<UniqueId>::Ref  id = extractPlaylistId(parameters[0]);
+        Ptr<UniqueId>::Ref  id = XmlRpcTools::extractPlaylistId(parameters[0]);
 
         Ptr<StorageClientFactory>::Ref      scf;
         Ptr<StorageClientInterface>::Ref    storage;

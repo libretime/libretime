@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/SchedulerDaemonDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,7 +140,6 @@ SchedulerDaemonDisplayScheduleTest :: simpleTest(void)
     time.tm_min  =  0;
     time.tm_sec  =  0;
     parameters["to"] = &time;
-
     xmlRpcClient.execute("displaySchedule", parameters, result);
     CPPUNIT_ASSERT(result.valid());
     CPPUNIT_ASSERT(result.size() == 0);
