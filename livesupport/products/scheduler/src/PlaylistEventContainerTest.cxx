@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -156,7 +156,12 @@ PlaylistEventContainerTest :: setUp(void)                        throw ()
         CPPUNIT_FAIL("error parsing configuration file");
     }
 
-    scheduleFactory->install();
+    try {
+        scheduleFactory->install();
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        CPPUNIT_FAIL("can't install schedule factory");
+    }
     audioPlayer->initialize();
 
     if (!(sessionId = authentication->login("root", "q"))) {

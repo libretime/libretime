@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,6 +38,8 @@
 #else
 #error need unistd.h
 #endif
+
+#include <iostream>
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/SessionId.h"
@@ -109,6 +111,7 @@ PlaylistEvent :: start(void)                       throw ()
         audioPlayer->playThis(*playlist->getUri());
         audioPlayer->start();
     } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
         // TODO: handle error?
     }
 }
