@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,7 +85,8 @@ $r = $gb->install();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 
 echo "# Testing ...\n";
-$gb->test();
+$r = $gb->test();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 $log = $gb->test_log;
 if($log) echo "# testlog:\n{$log}";
 
