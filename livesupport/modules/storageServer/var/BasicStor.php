@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -362,7 +362,7 @@ class BasicStor extends Alib{
         $fname = "{$this->accessDir}/$token";
         touch($fname);      // is it needed?
         $url = $this->getUrlPart()."xmlrpc/put.php?token=$token";
-        return array('url'=>$url, 'token'=>$token);
+        return array('url'=>$url, 'token'=>$token, 'gunid'=>$gunid);
     }
 
     /**
@@ -667,8 +667,8 @@ class BasicStor extends Alib{
         $o[] = $t2hd = $this->getObjId('test2', $this->storId);
         $o[] = $this->bsCreateFolder($t2hd, 'test2_folder1');
 
-        $o[] = $this->bsPutFile($t1hd, 'file1.mp3', "$exdir/ex1.mp3", '');
-        $o[] = $this->bsPutFile($t1d12, 'file2.wav', "$exdir/ex2.wav", '');
+        $o[] = $this->bsPutFile($t1hd, 'file1.mp3', "$exdir/ex1.mp3", '', NULL, 'audioclip');
+        $o[] = $this->bsPutFile($t1d12, 'file2.wav', "$exdir/ex2.wav", '', NULL, 'audioclip');
 /*
 */
         $this->tdata['storage'] = $o;

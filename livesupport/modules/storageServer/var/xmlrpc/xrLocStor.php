@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -233,6 +233,7 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> url : string - writable URL for HTTP PUT</li>
      *      <li> token : string - access token</li>
+     *      <li> gunid  : string  -  global unique id of AudioCLip</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.

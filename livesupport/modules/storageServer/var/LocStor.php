@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,7 +106,7 @@ class LocStor extends GreenBox{
         $ac =& StoredFile::recallByToken(&$this, $token);
         if(PEAR::isError($ac)){ return $ac; }
         $fname = $this->bsClosePut($token);
-        if(PEAR::isError($fname)){ return $fname; }
+        if(PEAR::isError($fname)){ $ac->delete(); return $fname; }
         $res = $ac->replaceRawMediaData($fname);
         if(PEAR::isError($res)){ return $res; }
         if(file_exists($fname)) @unlink($fname);
@@ -394,7 +394,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($res)) return $res;
         $res = $ac->setMime('application/smil');
         if(PEAR::isError($res)) return $res;
-        return $playlistId;
+        return $ac->gunid;
     }
 
     /**
