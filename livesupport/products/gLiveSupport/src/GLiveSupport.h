@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
+#include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -58,6 +59,7 @@ using namespace LiveSupport::Core;
 using namespace LiveSupport::SchedulerClient;
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::Storage;
+using namespace LiveSupport::PlaylistExecutor;
 
 /* ================================================================ constants */
 
@@ -92,7 +94,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -132,6 +134,11 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The scheduler client, used to access the scheduler daemon.
          */
         Ptr<SchedulerClientInterface>::Ref          scheduler;
+
+        /**
+         *  The audio player.
+         */
+        Ptr<AudioPlayerInterface>::Ref              audioPlayer;
 
         /**
          *  The session id for the user.
@@ -175,6 +182,9 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual
         ~GLiveSupport(void)                                  throw ()
         {
+            if (audioPlayer.get()) {
+                audioPlayer->deInitialize();
+            }
         }
 
         /**
@@ -292,6 +302,30 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return supportedLanguages;
         }
+
+        /**
+         *  Show the UI components that are visible when no one is logged in.
+         */
+        void
+        showAnonymousUI(void)                                   throw ();
+
+        /**
+         *  Show the UI components that are visible when someone is logged in.
+         */
+        void
+        showLoggedInUI(void)                                    throw ();
+
+        /**
+         *  Upload a file to the storage.
+         *
+         *  @param title the title of the audio clip.
+         *  @param fileName the full filename of the audio clip.
+         *  @exception StorageException on upload failures.
+         */
+        void
+        uploadFile(Ptr<const Glib::ustring>::Ref    title,
+                   Ptr<const std::string>::Ref      fileName)
+                                                    throw (StorageException);
 
 };
 

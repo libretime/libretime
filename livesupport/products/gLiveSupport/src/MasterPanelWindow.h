@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,7 +79,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -136,6 +136,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Widget>::Ref       radioLogoWidget;
 
         /**
+         *  The button to invoke the upload file window.
+         */
+        Ptr<Gtk::Button>::Ref       uploadFileButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -166,6 +171,13 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         resetTimer(void)                                    throw ();
+
+        /**
+         *  Function to catch the event of the file upload button being
+         *  pressed.
+         */
+        virtual void
+        onUploadFileButtonClicked(void)                     throw ();
 
 
     public:
@@ -198,6 +210,18 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         changeLanguage(Ptr<ResourceBundle>::Ref     bundle)     throw ();
+
+        /**
+         *  Show the UI components that are visible when no one is logged in.
+         */
+        void
+        showAnonymousUI(void)                                   throw ();
+
+        /**
+         *  Show the UI components that are visible when someone is logged in.
+         */
+        void
+        showLoggedInUI(void)                                    throw ();
 
 };
 

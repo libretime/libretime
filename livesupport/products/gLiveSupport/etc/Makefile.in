@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.16 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.17 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -54,6 +54,13 @@ USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_BIN_DIR     = ${USR_DIR}/bin
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+
+HELIX_LIB_DIR     = ${USR_LIB_DIR}/helix
+HELIX_LIBS        = ${HELIX_LIB_DIR}/runtlib.a \
+                    ${HELIX_LIB_DIR}/syslib.a \
+                    ${HELIX_LIB_DIR}/contlib.a \
+                    ${HELIX_LIB_DIR}/debuglib.a \
+                    ${HELIX_LIB_DIR}/utillib.a 
 
 GENRB     = ${USR_BIN_DIR}/genrb
 GENRBOPTS = --destdir ${TMP_DIR} \
@@ -89,6 +96,11 @@ SCHEDULER_CLIENT_LIB_DIR     = ${SCHEDULER_CLIENT_DIR}/lib
 SCHEDULER_CLIENT_LIB         = livesupport_scheduler_client
 SCHEDULER_CLIENT_LIB_FILE = ${SCHEDULER_CLIENT_LIB_DIR}/lib${SCHEDULER_CLIENT_LIB}.a
 
+PLAYLIST_EXECUTOR_DIR         = ${MODULES_DIR}/playlistExecutor
+PLAYLIST_EXECUTOR_INCLUDE_DIR = ${PLAYLIST_EXECUTOR_DIR}/include
+PLAYLIST_EXECUTOR_LIB_DIR     = ${PLAYLIST_EXECUTOR_DIR}/lib
+PLAYLIST_EXECUTOR_LIB         = livesupport_playlist_executor
+PLAYLIST_EXECUTOR_LIB_FILE    = ${PLAYLIST_EXECUTOR_LIB_DIR}/lib${PLAYLIST_EXECUTOR_LIB}.a
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
@@ -129,6 +141,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${STORAGE_INCLUDE_DIR} \
                              -I${SCHEDULER_CLIENT_INCLUDE_DIR} \
+                             -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${ICU_LIBS} \
@@ -136,10 +149,12 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${CURL_LIBS} \
                      ${GTKMM_LIBS} \
                      -L${USR_LIB_DIR} \
+                     -L${HELIX_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
                      -L${STORAGE_LIB_DIR} \
-                     -L${SCHEDULER_CLIENT_LIB_DIR}
+                     -L${SCHEDULER_CLIENT_LIB_DIR} \
+                     -L${PLAYLIST_EXECUTOR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -151,7 +166,8 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/MasterPanelUserInfoWidget.o \
                      ${TMP_DIR}/LoginWindow.o \
                      ${TMP_DIR}/AudioClipListWindow.o \
-                     ${TMP_DIR}/PlaylistListWindow.o
+                     ${TMP_DIR}/PlaylistListWindow.o \
+                     ${TMP_DIR}/UploadFileWindow.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \
@@ -161,10 +177,12 @@ G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 
 FSDF = ${G_LIVESUPPORT_OBJS} \
                          ${TMP_DIR}/main.o
-G_LIVESUPPORT_EXE_LIBS = -l${AUTHENTICATION_LIB} \
+G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
+                         -l${AUTHENTICATION_LIB} \
                          -l${STORAGE_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
+                         ${HELIX_LIBS} \
                          -lboost_date_time-gcc \
                          -lxmlrpc++ -lssl
 
@@ -197,6 +215,7 @@ docclean:
 	${RM} ${TEST_RESULTS}
 
 depclean: clean
+	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} clean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} clean
 	${MAKE} -C ${STORAGE_DIR} clean
 	${MAKE} -C ${AUTHENTICATION_DIR} clean
@@ -221,6 +240,7 @@ ${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} \
                       ${AUTHENTICATION_LIB_FILE} \
                       ${STORAGE_LIB_FILE} \
                       ${SCHEDULER_CLIENT_LIB_FILE} \
+                      ${PLAYLIST_EXECUTOR_LIB_FILE} \
                       ${G_LIVESUPPORT_OBJS} ${G_LIVESUPPORT_EXE_OBJS}
 	${CXX} ${LDFLAGS} -o $@ $^ ${G_LIVESUPPORT_EXE_LIBS}
 
@@ -248,6 +268,9 @@ ${STORAGE_LIB_FILE}:
 
 ${SCHEDULER_CLIENT_LIB_FILE}:
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR}
+
+${PLAYLIST_EXECUTOR_LIB_FILE}:
+	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR}
 
 
 #-------------------------------------------------------------------------------

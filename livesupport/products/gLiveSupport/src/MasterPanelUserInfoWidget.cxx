@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,6 +124,9 @@ MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));
+
+    // show only the anonymous UI
+    gLiveSupport->showAnonymousUI();
 }
 
 
@@ -166,6 +169,7 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
         } else {
             // TODO: get and set default locale for user
         }
+        gLiveSupport->showLoggedInUI();
     }
 }
 

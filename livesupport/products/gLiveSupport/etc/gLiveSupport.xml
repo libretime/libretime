@@ -5,7 +5,8 @@
                                        supportedLanguages,
                                        authenticationClientFactory,
                                        storageClientFactory,
-                                       schedulerClientFactory) >
+                                       schedulerClientFactory,
+                                       audioPlayer) >
 
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
@@ -64,6 +65,11 @@
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcHost    CDATA       #REQUIRED >
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcPort    NMTOKEN     #REQUIRED >
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
+
+<!ELEMENT audioPlayer   (helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
 
 ]>
 <gLiveSupport>
@@ -129,6 +135,10 @@
                                         xmlRpcUri  = "/RC2"
         />
     </schedulerClientFactory>
+
+    <audioPlayer>
+        <helixPlayer dllPath = "../../usr/lib/helix"/>
+    </audioPlayer>
 
 </gLiveSupport>
 

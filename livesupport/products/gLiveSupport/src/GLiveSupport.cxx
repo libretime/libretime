@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
+#include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 
 #include "MasterPanelWindow.h"
 #include "GLiveSupport.h"
@@ -154,6 +155,17 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     schcf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     scheduler = schcf->getSchedulerClient();
+
+    // configure the AudioPlayerFactory
+    nodes = element.get_children(AudioPlayerFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no audioPlayer element");
+    }
+    Ptr<AudioPlayerFactory>::Ref    apf = AudioPlayerFactory::getInstance();
+    apf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
+    audioPlayer = apf->getAudioPlayer();
+    audioPlayer->initialize();
 }
 
 
@@ -250,4 +262,64 @@ GLiveSupport :: logout(void)                                throw ()
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Show the anonymous UI
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: showAnonymousUI(void)                       throw ()
+{
+    if (masterPanel.get()) {
+        masterPanel->showAnonymousUI();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Show the UI when someone is logged in
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: showLoggedInUI(void)                        throw ()
+{
+    if (masterPanel.get()) {
+        masterPanel->showLoggedInUI();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Upload a file to the server.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
+                           Ptr<const std::string>::Ref      fileName)
+                                                    throw (StorageException)
+{
+    // create a URI from the file name
+    Ptr<std::string>::Ref   uri(new std::string("file://"));
+    *uri += *fileName;
+
+    // determine the playlength of the audio clip
+    Ptr<time_duration>::Ref     playlength;
+    try {
+        audioPlayer->open(*uri);
+        playlength = audioPlayer->getPlaylength();
+        audioPlayer->close();
+    } catch (std::invalid_argument &e) {
+        throw StorageException(e.what());
+    }
+
+    // get a unique id
+    Ptr<UniqueId>::Ref      uid = UniqueId::generateId();
+
+    // create and upload an AudioClip object
+    Ptr<AudioClip>::Ref     audioClip(new AudioClip(uid,
+                                                    title,
+                                                    playlength,
+                                                    uri));
+    storage->storeAudioClip(sessionId, audioClip);   
+}
 

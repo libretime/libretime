@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,8 +36,10 @@
 #include <iostream>
 #include <unicode/msgfmt.h>
 #include <gtkmm/label.h>
+#include <gtkmm/main.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "UploadFileWindow.h"
 #include "MasterPanelWindow.h"
 
 
@@ -71,6 +73,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     onAirWidget.reset(new Gtk::Label("on air"));
     radioLogoWidget.reset(new Gtk::Label("radio logo"));
     userInfoWidget.reset(new MasterPanelUserInfoWidget(gLiveSupport, bundle));
+    uploadFileButton.reset(new Gtk::Button("upload file"));
 
     // set up the time label
     timeWidget.reset(new Gtk::Label("time"));
@@ -88,14 +91,19 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*onAirWidget      , 4, 5, 0, 1);
     layout->attach(*radioLogoWidget  , 5, 6, 0, 1);
     layout->attach(*userInfoWidget   , 4, 6, 1, 2);
-    
+    layout->attach(*uploadFileButton,  0, 1, 2, 3);
+
     add(*layout);
 
     // set the localized resources
     changeLanguage(bundle);
 
-    // show everything
-    show_all();
+    // bind events
+    uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onUploadFileButtonClicked));
+
+    // show what's there to see
+    showAnonymousUI();
 
     // set the timer, that will update timeWidget
     setTimer();
@@ -180,4 +188,46 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
     return true;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  The event when the upload file button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
+{
+    Ptr<ResourceBundle>::Ref    bundle;
+    try {
+        // TODO: add and get the proper resource bundle for the upload window
+        bundle       = getBundle("loginWindow");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
+
+    Ptr<UploadFileWindow>::Ref  uploadWindow(new UploadFileWindow(gLiveSupport,
+                                                                  bundle));
+
+    Gtk::Main::run(*uploadWindow);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Show only the UI components that are visible when no one is logged in
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: showAnonymousUI(void)                          throw ()
+{
+    show_all();
+    uploadFileButton->hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Show the UI components that are visible to a specific user.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: showLoggedInUI(void)                           throw ()
+{
+    show_all();
+}
 
