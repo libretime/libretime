@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -608,10 +608,9 @@ WebStorageClientTest :: searchTest(void)
                                             "audioClip",
                                             "dc:title", "prefix", "File "));
         int numberFound = wsc->search(sessionId, criteria);
-        CPPUNIT_ASSERT(numberFound == 2);
-        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
+        CPPUNIT_ASSERT(numberFound == 1);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 1);
         CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip2);
-        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip4);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
