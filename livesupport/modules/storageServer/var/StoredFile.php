@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,8 @@ class StoredFile{
      *  @param gunid global unique id (optional) - for insert file with gunid
      *  @return instace of StoredFile object
      */
-    function insert(&$gb, $oid, $name, $mediaFileLP='', $mdataFileLP='', $gunid=NULL)
+    function insert(&$gb, $oid, $name,
+        $mediaFileLP='', $mdataFileLP='', $gunid=NULL)
     {
         $ac =& new StoredFile(&$gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
@@ -94,20 +95,31 @@ class StoredFile{
                 ('$oid', '{$ac->name}', '{$ac->gunid}', '{$ac->type}')"
         );
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        // --- metadata insert:
         if($mdataFileLP != ''){
+            if(!file_exists($mdataFileLP))
+            {
+                return PEAR::raiseError("StoredFile::insert: ".
+                    "metadata file doesn't exists ($mdataFileLP)");
+            }
             $res = $ac->md->insert($mdataFileLP);
             if(PEAR::isError($res)){
                 $this->dbc->query("ROLLBACK"); return $res;
             }
         }
+        // --- media file insert:
         if($mediaFileLP != ''){
+            if(!file_exists($mediaFileLP))
+            {
+                return PEAR::raiseError("StoredFile::insert: ".
+                    "media file doesn't exists ($mediaFileLP)");
+            }
             $res = $ac->rmd->insert($mediaFileLP);
             if(PEAR::isError($res)){
                 $this->dbc->query("ROLLBACK"); return $res;
             }
             $mime = $ac->rmd->getMime();
-//        return PEAR::raiseError("X1");
-//        $gb->debugLog("gunid={$ac->gunid}, mime=$mime");
+            //$gb->debugLog("gunid={$ac->gunid}, mime=$mime");
             if($mime !== FALSE){
                 $res = $ac->dbc->query("UPDATE {$ac->filesTable}
                     SET type='$mime' WHERE id='$oid'");

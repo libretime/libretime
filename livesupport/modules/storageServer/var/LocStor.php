@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,10 @@ class LocStor extends GreenBox{
             $ac =&  StoredFile::insert(
                 &$this, $oid, '', $mediaFileLP, $mdataFileLP, $gunid
             );
-            if(PEAR::isError($ac)) return $ac;
+            if(PEAR::isError($ac)){
+                $res = $this->removeObj($oid);
+                return $ac;
+            }
             $res = $this->renameFile($oid, $ac->gunid, $sessid);
             if(PEAR::isError($res)) return $res;
         }
@@ -121,6 +124,11 @@ class LocStor extends GreenBox{
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
+        if($ac->isAccessed()){
+            return PEAR::raiseError(
+                'LocStor.php: deleteAudioClip: is accessed'
+            );
+        }
         $res = $this->deleteFile($ac->getId(), $sessid);
         if(PEAR::isError($res)) return $res;
         return TRUE;
