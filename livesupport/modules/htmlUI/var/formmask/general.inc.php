@@ -1,11 +1,11 @@
 <?php
 $ui_fmask = array(
     /* ===================== list of system preferences which can be adjusted */
-    'systemPrefs'   => array(
+    'stationPrefs'   => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'editSystemPrefs'
+            'constant'  => 'changeStationPrefs'
         ),
         array(
             'element'   => 'basics',
@@ -18,7 +18,12 @@ $ui_fmask = array(
             'type'      => 'text',
             'label'     => 'Maximum File Size for Upload',
             'required'  => TRUE,
-            'default'   => strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'))
+            'rule'      => 'numeric',
+            'attributes'   => array(
+                                'onClick'  => 'alert ("Note: System Maximum is set to '.
+                                                strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'))
+                                                .' in php.ini\n You cannot override this here.")'
+                           )
         ),
         array(
             'rule'      => 'nopunctuation',
@@ -359,6 +364,19 @@ $ui_fmask = array(
                             'webstream' => 'Webstream',
                             'playlist'  => 'Playlist'
                             )
+        ),
+        array(
+            'element'   => 'limit',
+            'type'      => 'select',
+            'label'     => 'Rows per Page',
+            'options'   => array(
+                                1   => 1,
+                                5   => 5,
+                                10  => 10,
+                                25  => 25,
+                                50  => 50,
+                                100 => 100
+                           )
         ),
         array(
             'element'   => 'clear',

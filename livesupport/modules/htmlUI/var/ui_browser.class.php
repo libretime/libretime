@@ -154,7 +154,7 @@ class uiBrowser extends uiBase {
     function uploadFileM(&$mask, $id)
     {
         $form = new HTML_QuickForm('uploadFileM', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize($this->SYSTEMPREFS['stationMaxfilesize']);
+        $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
         $form->setConstants(array('id'  => $id,
                                   'act' => 'uploadFileM'));
         $this->_parseArr2Form($form, $mask);
@@ -174,7 +174,7 @@ class uiBrowser extends uiBase {
     function uploadFile(&$mask, $id, $replace=FALSE)
     {
         $form = new HTML_QuickForm('uploadFile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize($this->SYSTEMPREFS['stationMaxfilesize']);
+        $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
         $form->setConstants(array('id'  => $id,
                                   'act' => $replace ? 'replaceFile' : 'uploadFile'));
         $this->_parseArr2Form($form, $mask);
@@ -403,9 +403,9 @@ class uiBrowser extends uiBase {
 
 
 
-    function editSystemPrefs(&$mask)
+    function changeStationPrefs(&$mask)
     {
-        $form = new HTML_QuickForm('systemPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form = new HTML_QuickForm('changeStationPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
 
         foreach($mask as $key=>$val) {
             $p = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']);

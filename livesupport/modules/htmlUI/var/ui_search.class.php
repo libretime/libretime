@@ -7,7 +7,6 @@ class uiSearch
         $this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
-        $this->criteria['limit']  = 3;
     }
 
     function setReload()
@@ -57,12 +56,14 @@ class uiSearch
     {
         $this->results                  = NULL;
         $this->criteria['conditions']   = NULL;
-        $this->criteria['offset']      = NULL;
+        $this->criteria['offset']       = NULL;
 
-        $this->criteria['operator'] = $formdata['operator'];
-        $this->criteria['filetype'] = $formdata['filetype'];
-        $this->criteria['form']['operator'] = $formdata['operator'];
+        $this->criteria['operator']         = $formdata['operator'];
+        $this->criteria['filetype']         = $formdata['filetype'];
+        $this->criteria['limit']            = $formdata['limit'];
+        $this->criteria['form']['operator'] = $formdata['operator'];    ## $criteria['form'] is used for retransfer to form ##
         $this->criteria['form']['filetype'] = $formdata['filetype'];
+        $this->criteria['form']['limit']    = $formdata['limit'];
 
         foreach ($formdata as $key=>$val) {
             if (is_array($val) && strlen($val[2])) {
@@ -86,13 +87,26 @@ class uiSearch
         foreach ($results['results'] as $rec) {
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
+        $this->pagination($results);
+    }
+
+
+    function pagination(&$results)
+    {
         $this->results['count'] = $results['cnt'];
         $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
         $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
-        for ($n = 0; $n < (ceil($results['cnt'] / $this->criteria['limit'])); $n++) {
-            $this->results['pages'][$n] = $n+1;
+
+        $p = 1;
+        for ($n = 1; $n <= ceil($results['cnt'] / $this->criteria['limit']); $n = $n+$p) {
+            $p = bcpow(10, floor($n/10)); echo "$p<br>";
+            $this->results['pages'][$n-1] = $n;
         }
+
+        array_pop($this->results['pages']);
+        $this->results['pages'][ceil($results['cnt'] / $this->criteria['limit'])-1] = '>>';
     }
+
 
     function reOrder($by)
     {

@@ -8,5 +8,5 @@
     <a href="{$UI_BROWSER}?id={$START.id}&act=subjects">{tra 0='[Subjects]'}</a>
     <!-- <br>
     <a href="{$UI_BROWSER}?act=MetaDataValues&Main=1">[Metadata]</a> -->
-    <a href="{$UI_BROWSER}?act=editSystemPrefs">[SystemPrefs]</a>
+    <a href="{$UI_BROWSER}?act=changeStationPrefs">[StationPrefs]</a>
 </div>

@@ -45,16 +45,19 @@ function work()
 {
   if (!document.layers && !document.all && !document.getElementById) return;
   var runTime = new Date();
-  var dn = "AM";
   var shours = hours;
   var sminutes = minutes;
   var sseconds = seconds;
-  if (shours >= 12)
-  {
-    dn = "PM";
-    shours-=12;
-  }
-  if (!shours) shours = 12;
+
+  //if (shours >= 12)
+  //{
+  //  dn = "PM";              //change here for 12h format//
+  //  shours-=12;
+  //}
+  //if (!shours) shours = 12;
+  //var dn = "AM";
+  var dn= ''
+
   sminutes=twoDigit(sminutes);
   sseconds=twoDigit(sseconds);
   shours  =twoDigit(shours  );
@@ -122,16 +125,19 @@ function lwork()
 {
   if (!document.layers && !document.all && !document.getElementById) return;
   var runTime = new Date();
-  var dn = "AM";
   var shours = lhours;
   var sminutes = lminutes;
   var sseconds = lseconds;
-  if (shours >= 12)
-  {
-    dn = "PM";
-    shours-=12;
-  }
-  if (!shours) shours = 12;
+
+  //if (shours >= 12)
+  //{
+  //  dn = "PM";              //change here for 12h format//
+  //  shours-=12;
+  //}
+  //if (!shours) shours = 12;
+  //var dn = "AM";
+  var dn= ''
+
   sminutes=twoDigit(sminutes);
   sseconds=twoDigit(sseconds);
   shours  =twoDigit(shours  );

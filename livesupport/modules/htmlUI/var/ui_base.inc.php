@@ -82,7 +82,8 @@ class uiBase
         }
         $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
         $this->gb       =& new GreenBox($this->dbc, $config);
-        $this->config   = $config;
+        $this->config   =& $config;
+        $this->config['accessRawAudioUrl'] = $config['storageUrlPath'].'/xmlrpc/simpleGet.php';
         $this->sessid   = $_REQUEST[$config['authCookieName']];
         $this->userid   = $this->gb->getSessUserId($this->sessid);
         $this->login    = $this->gb->getSessLogin($this->sessid);
@@ -92,20 +93,28 @@ class uiBase
         $this->fid      = $this->type=='Folder' ? $this->id : $this->pid;
         $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
                                                'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
-        $this->SYSTEMPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
-        $this->SCRATCHPAD  =& new uiScratchPad($this);
-        $this->SEARCH      =& new uiSearch($this);
-        $this->PLAYLIST    =& new uiPlaylist($this);
+        $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
+        $this->SCRATCHPAD   =& new uiScratchPad($this);
+        $this->SEARCH       =& new uiSearch($this);
+        $this->PLAYLIST     =& new uiPlaylist($this);
     }
 
 
 
-    function loadSystemPrefs(&$mask)
+    function loadStationPrefs(&$mask)
     {
-        if (!is_array($this->SYSTEMPREFS)) {
+        if (!is_array($this->STATIONPREFS)) {
             foreach ($mask as $key=>$val) {
-                if ($val['isPref'])
-                    $this->SYSTEMPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+                if ($val['isPref']) {
+                    if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
+                        $this->STATIONPREFS[$val['element']] = $setting;
+                    } else {
+                        $miss = TRUE;
+                    }
+                }
+            }
+            if ($miss && $this->login) {
+                $this->_retMsg('Note: Station Preferences not setup.');
             }
         }
     }

@@ -14,16 +14,17 @@
  * Author:   Media Development Loan Fund
  * -------------------------------------------------------------
  */
- function smarty_outputfiler_localizer_tra($matches)
+ function smarty_postfiler_localizer_tra($matches)
  {
     foreach ($matches as $match) {
         $key = substr($match, 2, strpos(substr($match, 2), '#'));
+        return tra(preg_replace('/%%/', '', $match));
     }
  }
 
- function smarty_outputfilter_localizer($compiled, &$smarty)
+ function smarty_postfilter_localizer($compiled, &$smarty)
  {
-    $pattern = '/##.*##/U';
-    return preg_replace_callback($pattern, 'smarty_outputfiler_localizer_tra', $compiled);
+    $pattern = '/%%.*%%/U';
+    return preg_replace_callback($pattern, 'smarty_postfiler_localizer_tra', $compiled);
  }
 ?>

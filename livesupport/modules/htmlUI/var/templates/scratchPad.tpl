@@ -1,7 +1,8 @@
 {*Smarty template*}
 
+{include file="script/scratchPad.js.tpl"}
 <div id="scratchpad">
-<center><b>ScratchPad</b>
+<center><b>%%ScratchPad%%</b>
 
 {if is_array($SCRATCHPAD)}
     <form name="SP">

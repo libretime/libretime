@@ -95,7 +95,7 @@ if ($uiBrowser->userid) {
 
     case "SEARCH":
         if (is_array($uiBrowser->SEARCH->criteria) ){
-            $Smarty->assign('searchres', $uiBrowser->SEARCH->results); 
+            $Smarty->assign('searchres', $uiBrowser->SEARCH->results);
             $Smarty->assign('showSearchRes', TRUE);
         };
 
@@ -142,9 +142,9 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showFile', TRUE);
     break;
 
-    case "editSystemPrefs":
-        $Smarty->assign('dynform', $uiBrowser->editSystemPrefs($ui_fmask['systemPrefs']));
-        $Smarty->assign('editSystemPrefs', TRUE);
+    case "changeStationPrefs":
+        $Smarty->assign('dynform', $uiBrowser->changeStationPrefs($ui_fmask['stationPrefs']));
+        $Smarty->assign('changeStationPrefs', TRUE);
     break;
 
     case "PL.display":

@@ -134,7 +134,7 @@ class uiHandler extends uiBase {
             return FALSE;
         }
         if (!$this->_validateForm($formdata, $mask)) {
-            $this->redirUrl = UI_BROWSER."?act=addWebstream&id=".$id;
+            $this->redirUrl = UI_BROWSER."?act=uploadFile&id=".$id;
             return FALSE;
         }
         $tmpgunid = md5(microtime().$_SERVER['SERVER_ADD3R'].rand()."org.mdlf.livesupport");
@@ -544,32 +544,31 @@ class uiHandler extends uiBase {
     }
 
 
-    function editSystemPrefs(&$formdata, &$mask)
+    function changeStationPrefs(&$formdata, &$mask)
     {
         $this->redirUrl = UI_BROWSER;
 
-        if ($this->_validateForm($formdata, $mask)) {
-            foreach($mask as $key=>$val) {
-                if ($val['isPref']) {
-                    if (strlen($formdata[$val['element']]))
-                        $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
-                    else
-                        $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
-                        $this->SYSTEMPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
-                }
-                if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
-                    if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
-                        $this->_retMsg('Error uploading Logo');
-                        return;
-                }
-            }
-
-            $this->_retMsg('Settings saved');
-            return TRUE;
-        } else {
+        if ($this->_validateForm($formdata, $mask) == FALSE) {
             $this->_retMsg('Error saving Settings');
             return FALSE;
         }
+        foreach($mask as $key=>$val) {
+            if ($val['isPref']) {
+                if (strlen($formdata[$val['element']]))
+                    $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
+                else
+                    $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
+                    $this->STATIONPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
+            }
+            if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
+                if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))
+                    $this->_retMsg('Error uploading Logo');
+                    return;
+            }
+        }
+
+        $this->_retMsg('Settings saved');
+        return TRUE;
     }
 }
 ?>

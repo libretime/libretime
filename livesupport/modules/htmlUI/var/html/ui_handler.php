@@ -1,4 +1,4 @@
-<?php    
+<?php
 require dirname(__FILE__).'/../ui_handler_init.php';
 
 switch($_REQUEST['act']){
@@ -104,8 +104,8 @@ switch($_REQUEST['act']){
         $uiHandler->removeGroupMember($_REQUEST);
     break;
 
-    case "editSystemPrefs":
-        $uiHandler->editSystemPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["systemPrefs"]);
+    case "changeStationPrefs":
+        $uiHandler->changeStationPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["stationPrefs"]);
     break;
 
     case "editMetaData":

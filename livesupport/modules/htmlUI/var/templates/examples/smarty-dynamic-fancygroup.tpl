@@ -1,4 +1,4 @@
-<!--  $Id: smarty-dynamic-fancygroup.tpl,v 1.2 2005/02/23 22:57:14 sebastian Exp $ -->
+<!--  $Id: smarty-dynamic-fancygroup.tpl,v 1.3 2005/02/24 14:00:15 sebastian Exp $ -->
 
 <tr>
     <td valign="top" align="right">

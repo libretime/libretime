@@ -65,7 +65,7 @@ class uiScratchPad
 
     function addItem($id)
     {
-        if(!$this->Base->SYSTEMPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
+        if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
             $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
             return false;
         }
@@ -81,7 +81,7 @@ class uiScratchPad
             }
         }
         $sp = array_merge(array($item), is_array($sp) ? $sp : NULL);
-        for ($n=0; $n<$this->Base->SYSTEMPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]; $n++) {
+        for ($n=0; $n<$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]; $n++) {
             if (is_array($sp[$n])) $this->items[$n] = $sp[$n];
         }
     }

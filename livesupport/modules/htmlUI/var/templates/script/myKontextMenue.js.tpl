@@ -8,7 +8,7 @@ nn6=(document.getElementById && !document.all)?1:0;
 menuStatus = 0;
 document.onmouseup = hideMenu;
 document.write('<div id="menucontainer"></div>');
-menuWidth  = 0,
+menuWidth  = 160,
 menuHeight = 0;
 
 function menu(id) {

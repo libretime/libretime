@@ -40,8 +40,8 @@
     {include file="editMetaData.tpl"}
 {/if}
 
-{if $editSystemPrefs}
-    {include file="systemPrefs.tpl"}
+{if $changeStationPrefs}  
+    {include file="changeStationPrefs.tpl"}
 {/if}
 
 {if $playlist}
