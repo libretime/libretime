@@ -651,14 +651,32 @@ table.scheduler_day td { font-size: 12px;
     padding-top: 2px;
 }
 
+
+/*############# SCHEDULER WEEK #######*/
+
 table.scheduler_week_time { 
+    background: #ddd;
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+ 
+table.scheduler_week_time tr { 
     width: 20px;
-    border: 1px solid #7392A6;
+    border-bottom: 1px solid #7392A6;
+} 
+ 
+table.scheduler_week_time td { 
+    height: 20px;
+    text-align: center;
 } 
 
 table.scheduler_week { 
     width: 790px;
     border: 1px solid #7392A6;
+    padding: 0;
+    border: 0;
+    margin: 0;
 }
 
 table.scheduler_week a {
@@ -679,7 +697,8 @@ table.scheduler_week th.date {
 }
 
 table.scheduler_week th.day {
-    width: 186px;
+    width: 286px;
+    text-align: left;
 }
 
 table.scheduler_week td.firstrow_secondcol {
@@ -695,8 +714,9 @@ table.scheduler_week td.date_secondcol {
     border: none;
     border-left: 1px solid #7392A6;
     border-bottom: 1px solid #757575;
-    padding: 0px;
     font-weight: bold;
+}
+table.scheduler_week td.date_secondcol a {color: #000;
 }
 
 table.scheduler_week td.day_secondcol {

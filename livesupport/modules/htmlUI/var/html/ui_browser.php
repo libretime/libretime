@@ -16,8 +16,13 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/_clear_parent.tpl');
             break;
 
+            case "_2PL.simpleManagement":
+                $Smarty->assign('target', 'PL.simpleManagement');
+                $Smarty->display('popup/_redirector.tpl');
+            break;
+
             case "login":
-                $Smarty->assign('login', $uiBrowser->login($Smarty, $ui_fmask));
+                $Smarty->assign('dynform', $uiBrowser->login($ui_fmask));
                 $Smarty->display('popup/login.tpl');
             break;
 
@@ -39,11 +44,6 @@ if (is_array($_REQUEST['popup'])){
             case "deleteItem":
                 $Smarty->assign('id', $_REQUEST['id']);
                 $Smarty->display('popup/deleteItem.tpl');
-            break;
-
-            case "_2PL.simpleManagement":
-                $Smarty->assign('target', 'PL.simpleManagement');
-                $Smarty->display('popup/_redirector.tpl');
             break;
 
             case "PL.changeTransition";

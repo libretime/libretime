@@ -70,18 +70,14 @@ class uiBrowser extends uiBase {
      *  @param string $faillogin login name of failed login process
      *  @return string (html)
      */
-    function login(&$Smarty, &$mask)
+    function login(&$mask)
     {
         $form = new HTML_QuickForm('login', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
+        $this->_parseArr2Form($form, $mask['languages']); 
         $this->_parseArr2Form($form, $mask['login']);
-        $this->_parseArr2Form($form, $mask['languages']);
 
-        ## using Static Smarty Renderer
-        $renderer =& new HTML_QuickForm_Renderer_ArraySmarty($Smarty, true);
-        $renderer->setRequiredTemplate(file_get_contents(UI_QFORM_REQUIRED));
-        #$renderer->setErrorTemplate(file_get_contents(UI_QFORM_ERROR));
-
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
 
         return $renderer->toArray();

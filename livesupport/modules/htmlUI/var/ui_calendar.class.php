@@ -9,6 +9,8 @@ class uiCalendar
 
     function buildDecade()
     {
+        if (is_array($this->Decade)) return TRUE;
+
         for ($Year = $this->curr['year']-5; $Year<=$this->curr['year']+5; $Year++) {
             $this->Decade[] = array(
                                 'year'          => $Year,
@@ -42,7 +44,7 @@ class uiCalendar
 
     function buildMonth()
     {
-        if (is_array($this->Month)) return FALSE;
+        if (is_array($this->Month)) return TRUE;
 
         require_once 'Calendar/Month/Weekdays.php';
         require_once 'Calendar/Day.php';
@@ -50,7 +52,7 @@ class uiCalendar
         $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], UI_SCHEDULER_FIRSTWEEKDAY);
         $Month->build($this->_scheduledDays('month'));                                                       ## scheduled days are selected
         while ($Day = $Month->fetch()) {
-            $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';   ## due to bug in
+            $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';           ## due to bug in
             $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;               ## Calendar_Month_Weekdays
             $this->Month[] = array(
                                 'day'           => sprintf('%02d', $Day->thisDay()),
@@ -79,11 +81,13 @@ class uiCalendar
         $Week = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], UI_SCHEDULER_FIRSTWEEKDAY);
         $Week->build($this->_scheduledDays('week'));
         while ($Day = $Week->fetch()) {
+            $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';           ## due to bug in
+            $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;               ## Calendar_Month_Weekdays
             $this->Week[] = array(
                                 'day'           => sprintf('%02d', $Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
-                                'month'         => sprintf('%02d', $Day->thisMonth()),
-                                'year'          => $Day->thisYear(),
+                                'month'         => $corrMonth,
+                                'year'          => $corrYear,
                                 'label'         => $this->_getDayName($Day),
                                 'isSelected'    => $Day->isSelected(),
                                 'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE,
@@ -103,11 +107,13 @@ class uiCalendar
         $Day = new Calendar_Day ($this->curr['year'], $this->curr['month'], $this->curr['day']);
         $Day->build();
         while ($Hour = $Day->fetch()) {
+            $corrMonth = $Hour->thisMonth()<=12 ? sprintf('%02d', $Hour->thisMonth()) : '01';           ## due to bug in
+            $corrYear  = $Hour->thisMonth()<=12 ? $Day->thisYear() : $Hour->thisYear()+1;               ## Calendar_Month_Weekdays
             $this->Day[] = array(
                                 'day'          => sprintf('%02d', $Hour->thisDay()),
                                 'week'         => $this->_getWeekNr($Hour),
-                                'month'        => sprintf('%02d', $Hour->thisMonth()),
-                                'year'         => $Hour->thisYear(),
+                                'month'        => $corrMonth,
+                                'year'         => $corrYear,
                                 'hour'         => $Hour->thisHour(),
                                 'isSelected'   => $Hour->isSelected(),
                                 'isCurrent'    => $Hour->thisDay()==$this->curr['day'] ? TRUE : FALSE,
@@ -120,6 +126,8 @@ class uiCalendar
 
     function buildHour()
     {
+        if (is_array($this->Hour)) return FALSE;
+
         require_once 'Calendar/Hour.php';
 
         $Hour = new Calendar_Hour ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->curr['hour']);

@@ -71,28 +71,74 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function _datetime2timestamp($i)
+    function getWeekEntrys()
     {
-        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, 'T');
-        #echo "input: $i formatted:".$formatted;
-        return $this->_strtotime($formatted);
+        ## build array within all entrys of current week ##
+
+        $this->buildWeek();
+
+        $weekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
+        $weekEnd   = strftime("%Y%m%d", $this->Week[6]['timestamp']);
+
+        $arr = $this->displayScheduleMethod($weekStart.'T00:00:00', $weekEnd.'T23:59:59.999999');
+        if (!count($arr))
+            return FALSE;
+        foreach ($arr as $key => $val) {
+            $items[strftime('%d', $this->_datetime2timestamp($val['start']))][number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
+                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+            );
+        }
+        #print_r($items);
+        return $items;
     }
 
 
-    function _strtotime($input)
+    function getDayEntrys()
     {
-        ## !! bug in strtotime. zeigt 8h später an als reines datum, wenn Txx:xx:xx verwendet wird !!
-        if (strpos($input, 'T'))
-            return strtotime($input)-8*3600;
-        return strtotime($input);
+        ## build array within all entrys of current day ##
+
+        $this->buildDay();
+
+        $day = strftime("%Y%m%d", $this->Day[0]['timestamp']);
+
+        $arr = $this->displayScheduleMethod($day.'T00:00:00', $day.'T23:59:59.999999');
+        if (!count($arr))
+            return FALSE;
+        foreach ($arr as $key => $val) {
+            $items[strftime('%d', $this->_datetime2timestamp($val['start']))][]= array (
+                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+            );
+        }
+        #print_r($items);
+        return $items;
     }
 
+    function getDayHourlyEntrys($year, $month, $day)
+    {
+        $date = $year.$month.$day;
+        $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
+        if (!count($arr))
+            return FALSE;
+        foreach ($arr as $key => $val) {
+            $items[date('H', $this->_datetime2timestamp($val['start']))][]= array (
+                'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
+                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
+                'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+            );
+        }
+        print_r($items);
+        return $items;
+    }
 
     function getDayUsage($year, $month, $day)
     {
-        $day_start = $this->_datetime2timestamp($year.$month.$day.'T00:00:00');
-        $day_end   = $this->_datetime2timestamp($year.$month.$day.'T23:59:59');
-
         $date = $year.$month.$day;
         $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
         if (!count($arr))
@@ -103,7 +149,7 @@ class uiScheduler extends uiCalendar
             $arr[$key]['pos']       = $this->_datetime2timestamp($val['start']);
             $arr[$key]['span']      = date('H', $this->_datetime2timestamp($val['end'])) - date('H', $this->_datetime2timestamp($val['start'])) +1;
         }
-        #print_r($arr);
+        print_r($arr);
         return $arr;
     }
 
@@ -132,7 +178,7 @@ class uiScheduler extends uiCalendar
                    ));
 
         $curr = current($arr);
-        if ($this->_strtotime($curr['start']) > $day_start)                     ## insert gap if first entry start after 00:00:00
+        if ($this->_strtotime($curr['start']) > $day_start)             ## insert gap if first entry start after 00:00:00
             $list[] = array(
                         'type'      => 'gap',
                         #'pos'       => 0,
@@ -237,6 +283,22 @@ class uiScheduler extends uiCalendar
         return TRUE;
     }
 
+
+    function _datetime2timestamp($i)
+    {
+        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, 'T');
+        #echo "input: $i formatted:".$formatted;
+        return $this->_strtotime($formatted);
+    }
+
+
+    function _strtotime($input)
+    {
+        ## !! bug in strtotime. zeigt 8h später an als reines datum, wenn Txx:xx:xx verwendet wird !!
+        if (strpos($input, 'T'))
+            return strtotime($input)-8*3600;
+        return strtotime($input);
+    }
 
     function _oneOrMore($in)
     {

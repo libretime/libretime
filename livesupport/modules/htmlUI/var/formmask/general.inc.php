@@ -215,16 +215,21 @@ $ui_fmask = array(
             'required'  => TRUE
         ),
         array(
-            'element'   => 'Submit',
-            'type'      => 'submit',
-            'label'     => 'Submit'
-        ),
-        array(
             'element'   => 'cancel',
             'type'      => 'button',
             'label'     => 'Cancel',
-            'attributes'=> array('onClick' => 'window.close()')
-        )
+            'attributes'=> array('onClick' => 'window.close()'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'Submit',
+            'type'      => 'submit',
+            'label'     => 'Submit',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'Submit')
+        ),
     ),
 
     'uploadFileM'    => array(
