@@ -391,13 +391,10 @@ class uiBrowser extends uiBase {
             $this->_parseArr2Form($form, $mask['buttons']);
             $form->addElement('static', NULL, NULL, "</div id='div_$key'>");
         }
-
-        ## using Dynamic Smarty Renderer
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['pages'][] = $renderer->toArray();
         #print_r($output);
-
         return $output;
     }
 
@@ -406,18 +403,13 @@ class uiBrowser extends uiBase {
     function changeStationPrefs(&$mask)
     {
         $form = new HTML_QuickForm('changeStationPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-
         foreach($mask as $key=>$val) {
             $p = $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']);
             if (is_string($p)) $mask[$key]['default'] = $p;
         };
-
         $this->_parseArr2Form($form, $mask);
-
-        ## using Dynamic Smarty Renderer
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
-
         return $renderer->toArray();
     }
 }

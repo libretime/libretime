@@ -47,12 +47,27 @@ function menu(id) {
             case "PL.create":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=PL.create&id="+id+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></td></tr>";
             break;
+
+            case "PL.changeFadeIn":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeIn&id="+id+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></td></tr>";
+            break;
+
+            case "PL.changeTransition":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=transition&id="+id+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></td></tr>";
+            break;
+
+            case "PL.changeFadeOut":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeOut&id="+id+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></td></tr>";
+            break;
+
             case "SP.addItem":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+id+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></td></tr>";
             break;
+
             case "SP.removeItem":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+id+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></td></tr>";
             break;
+
             case "delete":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+id+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></td></tr>";
             break;

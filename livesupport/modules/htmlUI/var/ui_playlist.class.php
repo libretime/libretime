@@ -19,7 +19,7 @@ class uiPlaylist
         if (!$this->activeId) {
             return FALSE;
         }
-        print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid));
+        #echo '<pre><div align="left">'; print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid)); echo '</div></pre>';
         return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
     }
 
@@ -156,7 +156,7 @@ class uiPlaylist
     function getFlat()
     {
         $this->plwalk($this->get());
-        #print_r($this->flat);
+        #echo '<pre><div align="left">'; print_r($this->flat); echo '</div></pre>';
         return $this->flat;
     }
 
@@ -170,9 +170,132 @@ class uiPlaylist
             if ($sub['elementname']=='audioclip') {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
-                $this->flat["$parent.$node"] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
-                $this->flat["$parent.$node"]['attrs'] = $attrs;
+                $this->flat[$parent] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
+                $this->flat[$parent]['attrs'] = $attrs;
+            }
+            if ($sub['elementname']=='fadeinfo') {
+                $this->flat[$parent]['fadein']  = $this->_plTimeToSecs($sub['attrs']['fadein']);
+                $this->flat[$parent]['fadeout'] = $this->_plTimeToSecs($sub['attrs']['fadeout']);
+                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadein']  ? $this->_plTimeToSecs($sub['attrs']['fadein'])  * 1000 : 0;
+                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeout'] ? $this->_plTimeToSecs($sub['attrs']['fadeout']) * 1000 : 0;
             }
         }
+    }
+
+
+    function changeTransition($id, $type, $duration)
+    {
+        $curr = $this->getCurrElement($id);
+        $prev = $this->getPrevElement($id);
+        $next = $this->getNextElement($id);
+
+        switch ($type) {
+            case "fadeX":
+                $item[$prev['attrs']['id']] =
+                              array('fadeIn'  => $this->_secsToPlTime($prev['fadein']),
+                                    'fadeOut' => $this->_secsToPlTime($duration/1000));
+                $item[$id]  = array('fadeIn'  => $this->_secsToPlTime($duration/1000),
+                                    'fadeOut' => $this->_secsToPlTime($curr['fadeout']));
+            break;
+            case "pause":
+                $item[$prev['attrs']['id']] =
+                              array('fadeIn'  => $this->_secsToPlTime($prev['fadein']),
+                                    'fadeOut' => $this->_secsToPlTime(-$duration/1000));
+                $item[$id]  = array('fadeIn'  => $this->_secsToPlTime(-$duration/1000),
+                                    'fadeOut' => $this->_secsToPlTime($curr['fadeout']));
+            break;
+            case "fadeIn":
+                $item[$id]  = array('fadeIn'  => $this->_secsToPlTime($duration/1000),
+                                    'fadeOut' => $this->_secsToPlTime($curr['fadeout']));
+            break;
+            case "fadeOut":
+                $item[$id] = array('fadeIn'  => $this->_secsToPlTime($curr['fadein']),
+                                   'fadeOut' => $this->_secsToPlTime($duration/1000));
+            break;
+        }
+        #print_r($item);
+        foreach ($item as $i=>$val)
+            $this->Base->gb->changeFadeInfo($this->token, $i, $val['fadeIn'], $val['fadeOut'], $this->Base->sessid);
+    }
+
+
+    function getCurrElement($id)
+    {
+        $arr = $this->getFlat();
+        while ($val = current($arr)) {
+            if ($val['attrs']['id'] == $id) {
+                return current($arr);
+            }
+            next($arr);
+        }
+    }
+
+
+    function getPrevElement($id)
+    {
+        $arr = $this->getFlat();
+        while ($val = current($arr)) {
+            if ($val['attrs']['id'] == $id) {
+                return prev($arr);
+            }
+            next($arr);
+        }
+    }
+
+
+    function getNextElement($id)
+    {
+        $arr = $this->getFlat();
+        while ($val = current($arr)) {
+            if ($val['attrs']['id'] == $id) {
+                return next($arr);
+            }
+            next($arr);
+        }
+    }
+
+
+    function changeTransitionForm($id, $type, &$mask)
+    {
+        switch ($type) {
+            case "fadeIn":
+                $d = $this->getCurrElement($id);
+                $duration = $d['fadein_ms'];
+            break;
+            case "transition":
+                $d = $this->getPrevElement($id);
+                $duration = $d['fadein_ms'];
+            break;
+            case "fadeOut":
+                $d = $this->getCurrElement($id);
+                $duration = $d['fadeout_ms'];
+            break;
+        }
+
+        $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $form->setConstants(array('id'       => $id,
+                                  'duration' => $duration));
+        $this->Base->_parseArr2Form($form, $mask[$type]);
+        $this->Base->_parseArr2Form($form, $mask['all']);
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
+    }
+
+    function _plTimeToSecs($plt, $length=4)
+    {
+         $arr = split(':', $plt);
+         if(isset($arr[2])){ return ($arr[0]*60 + $arr[1])*60 + $arr[2]; }
+         if(isset($arr[1])){ return $arr[0]*60 + $arr[1]; }
+         return $arr[0];
+    }
+
+    function _secsToPlTime($s0)
+    {
+        $m = intval($s0 / 60);
+        $r = $s0 - $m*60;
+        $h = $m  / 60;
+        $m = $m  % 60;
+        return sprintf("%02d:%02d:%09.6f", $h, $m, $r);
     }
 }

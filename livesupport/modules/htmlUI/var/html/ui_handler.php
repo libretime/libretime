@@ -182,6 +182,11 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReload();
     break;
 
+    case "PL.changeTransition":
+        $uiHandler->PLAYLIST->changeTransition($_REQUEST['id'], $_REQUEST['type'], $_REQUEST['duration']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
     default:
         $_SESSION["alertMsg"] = tra("Unknown method: $1", $_REQUEST["act"]);
         header("Location: ".UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close');

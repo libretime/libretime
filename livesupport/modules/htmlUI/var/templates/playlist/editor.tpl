@@ -3,14 +3,27 @@
 
 {PL->getFlat assign='FLAT'}
 {foreach from=$FLAT item='i'}
-    {* {uiBrowser->_niceTime p1=$i.playlength assign='nicelength'} *}
-    <tr onMouseOver="highlight()" onMouseOut="darklight()" onContextmenu="return menu('{$i.attrs.id}', 'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
+    <!-- {$n++} -->
+    <tr onMouseOver="highlight()"
+        onMouseOut="darklight()"
+        onContextmenu="return menu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: lightblue">
+        <td colspan="4" align="center">{$i.fadein_ms} ms</td>
+    </tr>
+    <tr onMouseOver="highlight()"
+        onMouseOut="darklight()"
+        onContextmenu="return menu('{$i.attrs.id}', 'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
         <td><input type="checkbox" name="{$i.attrs.id}"></td>
         <td>{$i.title}</td>
         <td>{$i.duration}</td>
         <td>{$i.type}</td>
     </tr>
 {/foreach}
+    <tr onMouseOver="highlight()"
+        onMouseOut="darklight()"
+        onContextmenu="return menu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: lightblue">
+        <td colspan="4" align="center">{$i.fadeout_ms} ms</td>
+    </tr>
+
 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
     <td><input type="checkbox" name="all" onClick="form_switchAll('PL')"></th>
     <td align="center" colspan="2"><a href="#" onClick="form_submit('PL')">[Remove Selected]</a></th>

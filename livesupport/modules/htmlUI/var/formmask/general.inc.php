@@ -428,5 +428,95 @@ $ui_fmask = array(
                                 'hu'    => 'Hungarian',
                               )
             )
+    ),
+    'PL.changeTransition'  => array(
+        'transition' => array(
+                array(
+                    'element'   => 'type',
+                    'type'      => 'radio',
+                    'label'     => 'Type',
+                    'options'   => array(
+                                    'fadeX'      => 'Crossfade',
+                                    'pause'      => 'Pause'
+                                   ),
+                    'default'   => 'fadeX'
+                )
+        ),
+        'fadeIn' => array(
+                array(
+                    'element'   => 'type',
+                    'type'      => 'radio',
+                    'label'     => 'Type',
+                    'options'   => array('fadeIn' => 'Fade in'),
+                    'default'   => 'fadeIn'
+                )
+        ),
+        'fadeOut' => array(
+               array(
+                    'element'   => 'type',
+                    'type'      => 'radio',
+                    'label'     => 'Type',
+                    'options'   => array('fadeOut' => 'Fade out'),
+                    'default'   => 'fadeOut'
+               )
+        ),
+        'all'           => array(
+               array(
+                   'element'   => 'act',
+                   'type'      => 'hidden',
+                   'constant'  => 'PL.changeTransition'
+               ),
+               array(
+                   'element'   => 'id',
+                   'type'      => 'hidden'
+               ),
+               array(
+                   'element'   => 'duration',
+                   'type'      => 'text',
+                   'rule'      => 'numeric',
+                   'attributes'=> array('size' => 4, 'maxlength' => 4),
+                   'groupit'   => TRUE
+               ),
+               array(
+                   'element'   => 'switchdown',
+                   'type'      => 'button',
+                   'label'     => '-',
+                   'attributes'=> array('onClick' => 'switchDown()'),
+                   'groupit'   => TRUE
+               ),
+               array(
+                   'element'   => 'switchup',
+                   'type'      => 'button',
+                   'label'     => '+',
+                   'attributes'=> array('onClick' => 'switchUp()'),
+                   'groupit'   => TRUE
+               ),
+               array(
+                   'group'     => array('duration', 'switchdown', 'switchup'),
+                   'label'     => 'Duration'
+               ),
+               array(
+                   'element'   => 'cancel',
+                   'type'      => 'button',
+                   'label'     => 'Cancel',
+                   'attributes'=> array('onClick' => 'window.close()'),
+                   'groupit'   => TRUE,
+               ),
+               array(
+                   'element'   => 'reset',
+                   'type'      => 'reset',
+                   'label'     => 'Reset',
+                   'groupit'   => TRUE,
+               ),
+               array(
+                   'element'   => 'submit',
+                   'type'      => 'submit',
+                   'label'     => 'Submit',
+                   'groupit'   => TRUE,
+               ),
+               array(
+                   'group'     => array('cancel', 'reset', 'submit')
+               )
+            )
     )
-); 
+);

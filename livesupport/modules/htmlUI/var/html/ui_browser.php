@@ -40,6 +40,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('target', 'PL.simpleManagement');
                 $Smarty->display('popup/_redirector.tpl');
             break;
+
+            case "PL.changeTransition";
+                $Smarty->assign('dynform', $uiBrowser->PLAYLIST->changeTransitionForm($_REQUEST['id'], $_REQUEST['type'], $ui_fmask['PL.changeTransition']));
+                $Smarty->display('popup/PL.changeTransition.tpl');
+            break;
         }
     }
     die();
