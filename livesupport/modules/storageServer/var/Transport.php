@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Transport.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -388,7 +388,7 @@ class Transport{
             'archive.storeAudioClipClose',
             array('sessid'=>$asessid, 'token'=>$row['pdtoken'])
         );
-#        if(PEAR::isError($res)) return $res;
+//        if(PEAR::isError($res)) return $res;
         if(PEAR::isError($res)){
             switch($res->getCode()){
                 case GBERR_PUT:
@@ -400,7 +400,6 @@ class Transport{
                     break;
                     return FALSE;
                 default:
-#                    echo $res->getCode()."\n"; exit;
                     return $res;
             }
         }
@@ -460,7 +459,7 @@ class Transport{
         if(PEAR::isError($uid)) return $uid;
         if(is_null($uid)){
             return PEAR::raiseError("Transport::downloadFromArchive: ".
-                "invalid session id",GBERR_SESS);
+                "invalid session id", GBERR_SESS);
         }
         $parid = $this->gb->_getHomeDirId($sessid);
         if(PEAR::isError($parid)) return $parid;
@@ -873,6 +872,7 @@ class Transport{
      *  logging wrapper for PEAR error object
      *
      *  @param eo PEAR error object
+     *  @param row array returned from getRow
      */
     function trLogPear($eo, $row=NULL)
     {

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@ class LocStor extends BasicStor{
      *  @param fname string, human readable menmonic file name
      *                      with extension corresponding to filetype
      *  @param chsum string, md5 checksum of media file
+     *  @param ftype string audioclip | playlist
      *  @return struct {url:writable URL for HTTP PUT, token:access token
      */
     function storeAudioClipOpen(
@@ -212,8 +213,8 @@ class LocStor extends BasicStor{
      */
     function downloadMetadataOpen($sessid, $gunid)
     {
-#        $res = $this->existsAudioClip($sessid, $gunid);
-#        if(PEAR::isError($res)) return $res;
+//        $res = $this->existsAudioClip($sessid, $gunid);
+//        if(PEAR::isError($res)) return $res;
         $id = $this->_idFromGunid($gunid);
         if(is_null($id)){
             return PEAR::raiseError(
@@ -271,6 +272,8 @@ class LocStor extends BasicStor{
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
      *     </li>
+     *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
+     *     <li>offset : int - starting point (0 means without offset)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
      *           <li>cat - string, metadata category name</li>
