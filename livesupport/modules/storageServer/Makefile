@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.10 $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -90,10 +90,12 @@ TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean dist \
-  db_init db_clean testonly transtest
+  db_init db_clean testonly transtest local reset
 
-all: dir_setup db_init
+all: local
 	$(MAKE) -C ../archiveServer all
+
+local: dir_setup db_init
 
 dir_setup: ${DOXYGEN_DIR}
 	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
@@ -124,6 +126,9 @@ testonly: ${TEST_RUNNER}
 check: all testonly
 
 recheck: clean check
+
+reset:
+	./bin/resetStorage.sh
 
 #-------------------------------------------------------------------------------
 #   Specific targets
