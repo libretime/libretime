@@ -46,8 +46,17 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('playlist/changeTransition.tpl');
             break;
 
-            case "SCHEDULER.schedule":
-                $Smarty->display('scheduler/schedule.tpl');
+            case "SCHEDULER.addItem":
+                $Smarty->display('scheduler/addItem.tpl');
+            break;
+
+            case "SCHEDULER.removeItem":
+                $Smarty->assign('gunid', $_REQUEST['gunid']);
+                $Smarty->display('scheduler/removeItem.tpl');
+            break;
+
+            case "PL.deleteActive":
+                $Smarty->display('playlist/deleteActive.tpl');
             break;
         }
     }

@@ -1,16 +1,16 @@
 {assign var="_PL_activeId" value=$PL->getActiveId()}
 
 <div id="scratchpad">
-<center><b>%%ScratchPad%%</b>
+<center><b>ScratchPad</b>
 {if is_array($SCRATCHPAD)}
     <form name="SP">
         <input type="hidden" name="act">
         <table>
             <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
                 <th></th>
-                <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');">[{tra 0=Title}]</a></td>
-                <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=duration', 'order');">[{tra 0=Duration}]</a></td>
-                <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=type', 'order');">[{tra 0=Type}]</a></td>
+                <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');">[Title]</a></td>
+                <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=duration', 'order');">[Duration]</a></td>
+                <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=type', 'order');">[Type]</a></td>
                 <td align="center">Remove</td>
             </tr>
 

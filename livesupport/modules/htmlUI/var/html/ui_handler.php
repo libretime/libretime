@@ -235,17 +235,23 @@ switch($_REQUEST['act']){
         $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
     break;
 
+    case "PL.deleteActive":
+        if (($ui_tmpid = $uiHandler->PLAYLIST->deleteActive()) !== FALSE)
+            $uiHandler->SCRATCHPAD->removeItems($ui_tmpid);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
     case "SCHEDULER.set":
         $uiHandler->SCHEDULER->set($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.uploadPlaylistMethod":
+    case "SCHEDULER.addItem":
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.removeFromScheduleMethod":
+    case "SCHEDULER.removeItem":
         $uiHandler->SCHEDULER->removeFromScheduleMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;

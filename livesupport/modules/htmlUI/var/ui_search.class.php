@@ -73,11 +73,13 @@ class uiSearch
         $this->results                  = NULL;
         $this->criteria['conditions']   = NULL;
         $this->criteria['offset']       = NULL;
+        $this->criteria['form']         = NULL; 
+        $this->criteria['operator']     = $formdata['operator'];
+        $this->criteria['filetype']     = $formdata['filetype'];
+        $this->criteria['limit']        = $formdata['limit'];
+        $this->criteria['counter']      = 0;
 
-        $this->criteria['operator']         = $formdata['operator'];
-        $this->criteria['filetype']         = $formdata['filetype'];
-        $this->criteria['limit']            = $formdata['limit'];
-        $this->criteria['counter']          = 0;
+
         $this->criteria['form']['operator'] = $formdata['operator'];    ## $criteria['form'] is used for retransfer to form ##
         $this->criteria['form']['filetype'] = $formdata['filetype'];
         $this->criteria['form']['limit']    = $formdata['limit'];

@@ -16,7 +16,7 @@
     {assign var="_hour"  value=$_Hour.hour}
 
     <tr>
-        <td {include file="scheduler/contextmenu.tpl"} bgcolor="#d4d0c8" height="50" valign="top">
+        <td onContextmenu="return menu('year={$_year}&month={$_month}&day={$_day}&hour={$_hour}', 'SCHEDULER.addItem')" bgcolor="grey" height="50" valign="top">
             <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&hour={$_Hour.hour}')">{$_Hour.hour}</a>
         </td>
 
@@ -41,13 +41,11 @@
 
         {foreach from=$_usage item="_entry"}
             {if $_entry.pos >= $_Hour.timestamp && $_entry.pos < $_Hour.timestamp+3600}
-                <td rowspan="{$_entry.span}" valign="top" bgcolor="#ffcacb">
+                <td rowspan="{$_entry.span}" onContextmenu="return menu('gunid={$_entry.id}', 'SCHEDULER.removeItem')" valign="top" bgcolor="#ffcacb">
                     <b>{$_entry.title}</b>
                     {$_entry.start|regex_replace:"/[0-9]+T/":""|truncate:5:""}-{$_entry.end|regex_replace:"/[0-9]+T/":""|truncate:5:""}
                     <br>
                     {$_entry.creator}
-                    <br>
-                    <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.removeFromScheduleMethod&gunid={$_entry.id}');"><b>X</b></a>
                 </td>
             {/if}
         {/foreach}

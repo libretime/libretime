@@ -18,7 +18,7 @@ function SearchForm_addRow()
         return false;
     }
 }
-
+       
 
 function SearchForm_hideRow(row)
 {

@@ -35,7 +35,7 @@
         <table border="1" cellspacing="0" cellpadding="0">
         {foreach from=$_scale item="_hour"}
             <tr height="20" style="font-family: monospace;" valign="top">
-                    <td bgcolor="grey" {include file="scheduler/contextmenu.tpl"}>
+                    <td bgcolor="grey" onContextmenu="return menu('year={$_year}&month={$_month}&day={$_day}&hour={$_hour}', 'SCHEDULER.addItem')">
                         <div style="padding: 1px">{$_hour|string_format:'%02d'}</div>
                     </td>
             </tr>
@@ -55,9 +55,9 @@
             <tr height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}" style="font-family: monospace;" valign="top">
             {if is_array($i.entry)}
                 {if $i.length/$_divisor > $_minwidth}
-                    <td bgcolor="#ffcacb" width="70"><div style="padding: 1px"><small><b>{$_title}</b><br>{$_period}<br>{$_creator}</small></div></td>
+                    <td bgcolor="#ffcacb" width="70" onContextmenu="return menu('gunid={$i.entry.id}', 'SCHEDULER.removeItem')"><div style="padding: 1px"><small><b>{$_title}</b><br>{$_period}<br>{$_creator}</small></div></td>
                 {else}
-                    <td bgcolor="#ffcacb" width="70" onMouseover="mouseoverShow('<small><b>{$_title}</b><br>{$_period}<br>{$_creator}</small>')" onMouseout="mouseoverHide()"></td>
+                    <td bgcolor="#ffcacb" width="70" onContextmenu="return menu('gunid={$i.entry.id}', 'SCHEDULER.removeItem')" onMouseover="mouseoverShow('<small><b>{$_title}</b><br>{$_period}<br>{$_creator}</small>')" onMouseout="mouseoverHide()"></td>
                 {/if}
             {else}
                 <td bgcolor="#97bacf" width="70"></td>

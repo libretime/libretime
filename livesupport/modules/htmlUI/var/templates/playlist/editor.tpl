@@ -34,7 +34,7 @@
     {/if}
 
 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
-    <td><input type="checkbox" name="all" onClick="collector_switchAll('PL')"></th>
+    <td><input type="checkbox" name="all" onClick="collector_switchAll('PL')"></td>
     <td align="center" colspan="2"><a href="#" onClick="collector_submit('PL', 'PL.removeItem')">[Remove Selected]</a></th>
     <td align="center" colspan="2"><a href="#" onClick="collector_clearAll('PL', 'PL.removeItem')">[Clear]</a></th>
 </tr>
@@ -44,6 +44,7 @@
     <td><input type="button" value="Revert" onClick="hpopup('{$UI_HANDLER}?act=PL.revert')"></td>
     <td><input type="button" value="Release" onClick="hpopup('{$UI_HANDLER}?act=PL.release')"></td>
     <td><input type="button" value="MData" onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'"></td>
+    <td><input type="button" value="Delete" onClick="popup('{$UI_BROWSER}?popup[]=PL.deleteActive', 'PL.deleteActive', 400, 200)"></td>
 </tr>
 </table>
 </form>

@@ -1,13 +1,5 @@
-{include file="library/search.js.tpl"}
-
-
-{literal}
-<style type="text/css">
-    .dynformelement {
-        width : 800px;
-    }
-</style>
-{/literal}
+{include file="library/searchForm.js.tpl"}
+        
 <div id="searchform">
 {include file="sub/x.tpl"}
   <center>

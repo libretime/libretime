@@ -18,8 +18,8 @@ $uiBase         =& $uiBrowser;
 ## load Smarty+filters ##############################################
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
 #$Smarty->load_filter('output', 'trimwhitespace');
-#$Smarty->load_filter('post', 'template_marker');
-$Smarty->load_filter('post', 'localizer');
+$Smarty->load_filter('post', 'template_marker');
+$Smarty->load_filter('output', 'localizer');
 
 
 ## some basic things ################################################

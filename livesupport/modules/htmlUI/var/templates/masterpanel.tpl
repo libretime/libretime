@@ -1,5 +1,3 @@
-{*Smarty template*}
-
 <div id="masterpanel">
 
 {include file="statusbar.tpl"}

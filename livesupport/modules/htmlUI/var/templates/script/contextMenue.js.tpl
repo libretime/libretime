@@ -84,9 +84,12 @@ function menu(param) {
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=fileList&id="+param+"'"+oF+">&nbsp;List Folder&nbsp;</a></td></tr>";
             break;
 
-            case "SCHEDULER.schedule":
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.schedule', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>";
+            case "SCHEDULER.addItem":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Insert Playlist here&nbsp;</a></td></tr>";
+            break;
 
+            case "SCHEDULER.removeItem":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Remove Playlist&nbsp;</a></td></tr>";
             break;
         }
     }

@@ -392,7 +392,6 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                            5   => 5,
                             10  => 10,
                             25  => 25,
                             50  => 50,
@@ -510,7 +509,6 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                            5   => 5,
                             10  => 10,
                             25  => 25,
                             50  => 50,
@@ -649,7 +647,7 @@ $ui_fmask = array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'SCHEDULER.uploadPlaylistMethod'
+            'constant'  => 'SCHEDULER.addItem'
         ),
         'date'      => array(
             'element'   => 'date',

@@ -401,7 +401,6 @@ class uiPlaylist
         ## first remove old entrys
         #$this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
-
         foreach ($mask['playlist'] as $k=>$v) {
             $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;
         }
@@ -416,6 +415,17 @@ class uiPlaylist
         $this->Base->_retMsg('Metadata saved');
         #$this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=$id";
         $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id";
+    }
+
+
+    function deleteActive()
+    {
+        $id = $this->activeId;
+        $this->release(FALSE);
+        if ($this->Base->delete($id))
+            return TRUE;
+        $this->Base->_retMsg('Cannot delete this Playlist');
+        return FALSE;
     }
 
 
