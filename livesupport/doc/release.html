@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>LiveSupport release process documentation</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/release.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes the process of releasing a new version of
+LiveSupport. Obviously this document is only relevant to people who
+have the rights and permissions to make such a release.<br>
+<h1>Introduction</h1>
+For all the releases of LiveSupport to remain consistent, it is
+preferable to have a repeatable release process, which will be followed
+when creating releases. This ensures that no matter who creates the
+releases, they will remain similar.<br>
+<br>
+The release process boils down to the following steps:<br>
+<ul>
+  <li>getting LiveSupport sources</li>
+  <li>checking the distribution script<br>
+  </li>
+  <li>creating release tarballs</li>
+  <li>testing the tarballs</li>
+  <li>tagging the sources</li>
+  <li>publishing the tarballs</li>
+  <li>announcing the release<br>
+  </li>
+</ul>
+<h1>Getting LiveSupport sources</h1>
+It is assumed that the person doing the release has a read/write access
+to the LiveSupport version control system. As a first step of the
+release process, a fresh copy of the version control repository is
+check out, so as to insure that:<br>
+<ul>
+  <li>the release contains exactly the files that are in the version
+control system</li>
+  <li>there are no generated files in the release</li>
+</ul>
+To get a fresh copy of the LiveSupport repository, execute the
+following in an empty directory:<br>
+<br>
+<pre><code>cvs -z3 -d :ext:&lt;username&gt;:netfinity-5.mdlf.org:/home/cvs checkout livesupport</code><br></pre>
+<br>
+Where <code>&lt;username&gt;</code> is the user name for accessing the
+repository of the person making the release.<br>
+<h1>Checking the distribution script</h1>
+It is advisable to check the installation script <code>bin/dist.sh</code>,
+to make sure it refers to up-to-date information from the development
+environment.<br>
+<br>
+The most important aspect to check is that the specific versions of
+tools mentioned in the distribution script are in sync with the tools
+compiled by the master <code>Makefile</code> under the target <code>tools_setup</code>.
+To check this, compare tool version variables in the two files, e.g. <code>BOOST_VERSION</code>
+from <code>Makefile</code> with <code>boost_version</code> from <code>bin/dist.sh</code>.
+Make sure to check the versions for all the tools mentioned in these
+files.<br>
+<h1>Creating release tarballs<br>
+</h1>
+To create the release tarballs, invoke the distribution script <code>bin/dist.sh</code>,
+with the release version as its single parameter:<br>
+<br>
+<pre><code>./bin/dist.sh &lt;ls-version&gt;<br></code></pre>
+<br>
+This will create two tarballs in the current directory:<br>
+<ul>
+  <li><code>livesupport-&lt;ls-version&gt;.tar.bz2</code></li>
+  <li><code>livesupport-libraries-&lt;ls-version&gt;.tar.bz2</code></li>
+</ul>
+<h1>Testing the tarballs</h1>
+Having broken releases is very annoying, thus it is highly recommended
+that the release tarballs are tested on a plain vanilla system. To test
+the tarballs, follow the procedure described in the LiveSupport <a
+ href="install.html">installation document</a>.<br>
+<br>
+Do not publish tarballs that have not been tested, or are known to be
+broken.<br>
+<h1>Tagging the sources</h1>
+After the tarballs have been tested, the release can be finalized. As a
+first step, the current state of the LiveSupport version control
+repository has to be tagged, so that the the very versions in the
+release can be retrieved at any later date. To tag the repository,
+issue the following command from the LiveSupport checked out source
+directory:<br>
+<br>
+<pre><code>cvs tag livesupport_&lt;ls-version&gt;<br></code></pre>
+<br>
+This will tag the current state of the repository with the tag <code>livesupport_&lt;ls-version&gt;</code>,
+enabling later retrieval of this specific state.<br>
+<h1>Publishing the tarballs</h1>
+To make the release available to the public, the created tarballs have
+to be published. This is done by making the files accessible under the
+URL <code>http://ls-demo.campware.org/download/</code> , which can be
+achieved by moving the files to the <code>/var/www/download/</code>
+directory on the <code>ls-demo.campware.org</code> system. It is
+assumed that the person making the release has ssh access to this
+system and write access to this directory. The files can be published
+by executing the following command:<br>
+<br>
+<pre><code>scp livesupport-&lt;ls-version&gt;.tar.bz2 livesupport-libraries-&lt;ls-version&gt;.tar.bz &lt;username&gt;@ls-demo.campware.org:/var/www/download</code><br></pre>
+<br>
+<h1>Announcing the release</h1>
+For the public to be aware of the new release, it has to be announced.
+This is primarily done on the Campware site, but also on other
+meta-sites, like freshmeat.<br>
+<br>
+<pre><code></code></pre>
+</body>
+</html>
