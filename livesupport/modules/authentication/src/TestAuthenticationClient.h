@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -106,12 +106,12 @@ class TestAuthenticationClient :
         static const std::string    configElementNameStr;
 
         /**
-         *  The name of the storage server, e.g. "myserver.mycompany.com".
+         *  The login name of the (one) authorized test user.
          */
         std::string                 userLogin;
 
        /**
-        *  The path to the storage server php page.
+        *  The password for the test user.
         */
         std::string                 userPassword;
 
