@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -92,7 +92,7 @@ SCHEDULER_CLIENT_LIB_FILE = ${SCHEDULER_CLIENT_LIB_DIR}/lib${SCHEDULER_CLIENT_LI
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-CURL_LIBS=`${USR_DIR}/bin/curlpp-config --libs`
+CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
