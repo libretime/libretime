@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8"
+ http-equiv="content-type">
+  <title>File Conventions</title>
+  <meta content="$Auhor$" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/fileConventions.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes the conventions used for files in the
+LiveSupport project.<br>
+<h1>Introduction</h1>
+To facilitate cooperation between multiple contributors, it is
+advisable to have common file conventions, so as the result of
+different peoples work have a uniform look and form. This document
+lists the file conventions for the different file formats used by the
+project.<br>
+<br>
+Where the description of the conventions is ambiguous, the examples
+given are binding, and are to be followed.<br>
+<h1>Generic conventions</h1>
+In general, all documents have the following structure:<br>
+<ul>
+  <li>header</li>
+  <li>partition1</li>
+  <li>partition2</li>
+  <li>...</li>
+  <li>partitionN</li>
+</ul>
+<h2><a name="header"></a>header<br>
+</h2>
+The header of the file holds:<br>
+<ul>
+  <li>a reference to the LiveSupport project itself</li>
+  <li>copyright information</li>
+  <li>reference to the license of the file</li>
+  <li>the latest author of the file</li>
+  <li>the current version of the file</li>
+  <li>the full location of the file in the configuration management
+system<br>
+  </li>
+</ul>
+Following the GNU GPL <a
+ href="http://www.gnu.org/licenses/gpl.html#SEC4">guidelines</a> on
+applying a license term to source files, the typical header for a text
+file looks like the following:<br>
+<br>
+<pre><code>    Copyright (c) 2004 Media Development Loan Fund<br> <br>    This file is part of the LiveSupport project.<br>    http://livesupport.campware.org/<br>    To report bugs, send an e-mail to bugs@campware.org<br> <br>    LiveSupport is free software; you can redistribute it and/or modify<br>    it under the terms of the GNU General Public License as published by<br>    the Free Software Foundation; either version 2 of the License, or<br>    (at your option) any later version.<br> <br>    LiveSupport is distributed in the hope that it will be useful,<br>    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>    GNU General Public License for more details.<br> <br>    You should have received a copy of the GNU General Public License<br>    along with LiveSupport; if not, write to the Free Software<br>    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br> <br> <br>    Author   : $Author: maroy $<br>    Version  : $Revision: 1.1 $<br>    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/fileConventions.html,v $<br></code><br></pre>
+Note the CVS keywords (as an example) for having up-to-date information
+on the author, version and location of the file.<br>
+<h2>partitions</h2>
+Each file is split into separate partitions, and maintains its
+structure with the fixed sequence of these partitions. File formats
+differ heavily on the capabilities of defining partitions - some have
+explicit support (like HTML with headers and paragraphs), while in some
+the commenting feature can be used to visually split up the file (like
+comments in source code).<br>
+<br>
+The exact nature and sequence of the partitions is dependent on the
+nature of the file itself.<br>
+<h2><a name="textConventions"></a>Generic text-based conventions</h2>
+The majority (if not) all sources files are text-based. As a general
+rule, text-based files adhere to the following conventions in the
+LiveSupport project:<br>
+<h3>UTF-8</h3>
+Whenever possible, the text files should be saved in the <a
+ href="http://www.unicode.org/glossary/#UTF_8">UTF-8</a> character
+encoding, to enable all characters within covered by the Unicode
+character set.<br>
+<h3>80 columns</h3>
+Don't exceed 80 columns for any line in the file, unless it's
+absolutely necessary (like having a single expression over 80 columns
+that can not be broken up by a new-line character).<br>
+<h3>no tabs - 4 spaces</h3>
+Don't use the tab character in text files - use 4 spaces instead for
+indentation.<br>
+<h1>Specific conventions</h1>
+For specific file conventions, see the separate descriptions below.<br>
+<h2>html</h2>
+<a href="htmlFileConventions.html">convention</a> and <a
+ href="templates/htmlDocumentTemplate.html">template</a>.<br>
+<h2>shell scripts</h2>
+<a href="shellScriptConventions.html">convention</a> and <a
+ href="templates/shellScriptTemplate.sh">template</a>.<br>
+<h2>Makefiles</h2>
+<a href="makefileConventions.html">convention</a> and <a
+ href="templates/Makefile">template</a>.<br>
+<h2>Autoconf configure files<br>
+</h2>
+<a href="autoconfConfigureConventions.html">convention</a> and <a
+ href="templates/configure.ac">template</a>.<br>
+<h2>C++ files</h2>
+There are specific conventions for the header files and the source
+files.<br>
+<h3>C++ header files</h3>
+<a href="cxxHeaderFileConventions.html">convention</a> and <a
+ href="templates/Bar.h">template</a>.<br>
+<h3>C++ source files</h3>
+<a href="cxxSourceFileConventions.html">convention</a> and <a
+ href="templates/Bar.cxx">template</a>.<br>
+<br>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8"
+ http-equiv="content-type">
+  <title>Directory structure</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/directoryStructure.html,v $<br>
+  </li>
+</ul>
+<h1>Scope</h1>
+This document describes the directory structure used for all component
+of the LiveSupport project.<br>
+<h1>Introduction</h1>
+It is important to define a common and uniform directory structure in
+order to allow more seamless cooperation between participants of the
+project. It also helps referencing the various components (modules,
+etc.), as all the components will have a predictable and stable file
+hierarchy.<br>
+<br>
+As seen below, the main inspiration for each components directory
+structure is the <a href="http://www.pathname.com/fhs/">Filesystem
+Hierarchy Standard</a>.<br>
+<h1>Overall structure</h1>
+The base livesupport directory contains all the special tools needed to
+build, test and run LiveSupport, along with all the source code that
+constitutes LiveSupport itself.<br>
+<br>
+The self written part of LiveSupport project consists of re-usable
+modules, and products.
+Modules are components that do not execute by themselves, but have a
+useful, preferably generic functionality. Products are the executable
+components that are actually run by users.<br>
+<br>
+Both modules and products may reference (depend on) other modules, but
+circular reference is not allowed.<br>
+<br>
+Other needed parts of the directory structure are involved with
+external libraries LiveSupport depends on, and a running environment
+where LiveSupport can run.<br>
+<br>
+The directory structure is organized in the following way:<br>
+<br>
+<code></code>
+<pre>livesupport<br>|-- Makefile<br>|-- doc<br>|-- etc<br>|-- modules<br>|   |-- module1<br>|   |-- module2<br> ...<br>|   `-- moduleN<br>|-- products<br>|   |-- product1<br>|   |-- product2<br>|    ...<br>|   `-- productN<br>|-- tools<br>|   |-- tool1<br>|   |-- tool2<br>|    ...<br>|   `-- tool3<br>`-- usr<br></pre>
+<br>
+<h2>Referencing modules and the running environment<br>
+</h2>
+As a consequence of the directory structure above, if a module is
+referencing an other (e.g. moduleX), than it can be sure that it is
+located at <code>../moduleX</code>. If a product is referencing the
+same module, it can be sure that it is located at <code>../../modules/moduleX</code>.<br>
+<br>
+Furthermore, if a module or product is referencing the running
+environment under <code>livesupport/usr</code>, it can also be sure
+that it is located at <code>../../usr</code> from either the module or
+the product directory.<br>
+<br>
+Referencing always means exactly that: no contents are copied from one
+module directory to an other. For example for a module or product to
+reference the shared libraries of moduleX means to do exactly that:
+link to the library <code>../../modules/moduleX/lib/libmoduleX.so</code>.<br>
+<h1>Top-level Makefile</h1>
+The top-level Makefile provides targets that effect the whole of the
+LiveSupport project. Currently the only target is <code>doc</code>,
+which generates the documentations for the whole project under the doc
+directory.<br>
+<br>
+<h1>Documentation directory</h1>
+The doc directory contains generic documentation with respect to the
+whole LiveSupport project. Documentation pertaining to a module or
+products should go under the modules' or products' directory,
+respectively.<br>
+<h1>Configuration files</h1>
+Under the <code>etc</code> directory project-wide configuration files
+are found, like the ones used by the top-level Makefile.<br>
+<h1>Module structure</h1>
+Each module has the same directory structure, which is as follows:<br>
+<br>
+<pre>moduleX<br>|-- Makefile<br>|-- bin<br>|-- etc<br>|-- include<br>|   `-- LiveSupport<br>|       `-- ModuleX<br>|-- lib<br>|-- src<br>|-- tmp<br>`-- var<br></pre>
+<h4>Makefile</h4>
+A makefile executable by <a
+ href="http://www.gnu.org/directory/make.html">GNU make</a>. See the <a
+ href="buildEnvironment.html">build environment</a> document for a
+detailed description.<br>
+<h4>bin</h4>
+Directory containing all executables, either if these are executable
+used for building the module, or executables resulting from the build.<br>
+<h4>etc</h4>
+All configuration files go here.<br>
+<h4>include</h4>
+The public C/C++ header files for this module. The include files are
+stored in a subdirectory that completely replicates the namespacing of
+the module itself, in a case-sensitive manner. Thus a header file name <code>Foo.h</code>
+for <code>ModuleX</code> would be contained in the directory <code>include/LiveSupport/ModuleX/Foo.h</code>,
+and would be included with the line:<br>
+<br>
+<pre>#include "LiveSupport/ModuleX/Foo.h"<br></pre>
+<h4>lib</h4>
+Directory containing all shared and static libraries that are generated
+by building the module. All external, third-party libraries used by
+this module should be installed into the <code>../../usr/lib</code>
+directory. The libraries are named resembling the full namespacing of
+the module, but all lower cased. For example, the library for moduleX
+would be named <code>liblivesupport_modulex.so</code>, and thus would
+be linked to with the linker option <code>-L../../modules/moduleX/lib
+-llivesupport_modulex</code>.<br>
+<h4>src</h4>
+Contains all source files. A source file is a file which is processed
+(compiled, etc.) by the build process, and as a result some target
+files are generated from it.<br>
+<h4>tmp</h4>
+A temporary directory, holding temporary files used by the build
+process. This directory either does not exist in the configuration
+management system, or is empty there.<br>
+<h4>var</h4>
+Directory containing data. This can range from XML data to HTML pages
+to all other files that are not source files (are not processed by the
+build process). Note that web-page scripting files like PHP files also
+fall into this category.<br>
+<h1>Product structure</h1>
+The directory structure for a product is in essence the same as for
+modules, described above, with the difference that products don't have
+externally visible include files, thus their directories don't contain
+an <code>include</code> directory.<br>
+<h1>Tools structure</h1>
+The tools directory is an archive of tools and external libraries used
+for either building or running the LiveSupport system. These tools are
+installable to the usr directory of the LiveSupport directory tree.<br>
+Each tool has its own directory, where several versions of the same
+tool may reside. Thus the generic directory structure is as follows:<br>
+<pre>tools<br>|-- tool1<br>|   |-- tool1-X<br>|   |-- tool1-Y<br>|   ...<br>|   `-- tool1-Z<br> ...<br>`-- toolN<br>    |-- toolN-A<br>    |-- toolN-B<br>    ...<br>    `-- toolN-C<br></pre>
+Thus a user can select version X of toolK to be installed by selecting
+the directory <code>tools/toolK/toolK-X</code>. Each tool directory
+has the following structure:<br>
+<pre>toolK-X<br>|-- bin<br>|   `-- install.sh<br>|-- etc<br>|-- src<br>|   `-- toolK-X.tar.gz<br>`-- tmp<br></pre>
+The script <code>bin/install.sh</code> is responsible for installing
+the specific tool under the <code>livesupport/usr</code> directory.
+This typically involves the following steps:<br>
+<pre>cd tmp<br>tar xfz ../src/toolK-X.tar.gz<br>./configure --prefix=../../../../usr<br>make install<br></pre>
+In case the source needs to patched before compilation, the patches may
+be contained in the <code>etc</code> directory.<br>
+<h1>usr structure</h1>
+The usr directory is similar to the /usr system directory on UNIX
+systems (see the <a href="http://www.pathname.com/fhs/">Filesystem
+Hierarchy Standard</a>). This directory contains all the external tools
+needed by either developing or running the LiveSupport system. This
+directory is separate from the system /usr directory in order to
+facilitate changing the configuration for LiveSupport related libraries
+and tools in user space.<br>
+<br>
+</body>
+</html>

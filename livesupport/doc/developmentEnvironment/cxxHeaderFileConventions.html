@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8"
+ http-equiv="content-type">
+  <title>C++ header file conventions</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/cxxHeaderFileConventions.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes C++ header file conventions for the
+LiveSupport
+project. See also the generic description of the <a
+ href="file:///home/darkeye/src/livesupport/livesupport/doc/developmentEnvironment/fileConventions.html">file
+conventions</a> in the LiveSupport
+project.<br>
+<h1>Introduction</h1>
+C++ header files are files containing declarations of structures,
+functions and classes, that may be shared among object files, by
+including them with the pre-processor directive <code>#include</code>
+in multiple source files. They are text
+based files, thus they should adhere to the <a
+ href="fileConventions.html#textConventions">generic text-based
+conventions</a>.<br>
+<br>
+The LiveSupport project uses a strong object oriented approach. Part of
+this approach is to group declarations of classes into their own files:
+one header file and one source file for each class. Therefore each C++
+header file contains the declaration of exactly one C++ class, although
+inner types are defined in the same file.<br>
+<h1>Naming</h1>
+A C++ header files name reflects the class it is defining. Class names
+begin with a capital letter, followed by lower case letters. In case of
+a multiple word class name, the first letter of each word is
+capitalized. Example class names are <code>Foo</code> and <code>FooBar</code>.<br>
+<br>
+As the name of the header file reflects the name of the class defined
+in it, the header file will be named exactly as the class inside, with
+the <code>.h</code> extension. Thus a class named <code>Foo</code> is
+defined in
+the header file <code>Foo.h</code>, and the class named <code>SomeOtherLongNamedClass</code>
+is defined in the header file named <code>SomeOtherLongNamedClass.h</code>.<br>
+<h1>Structure</h1>
+C++ files are partitioned by using the following 80 column wide
+partitioning comment:<br>
+<pre>/* ==================================================== name of the partition */<br></pre>
+Note that the comment is always 80 columns wide, independent of the
+length of the text within.<br>
+<br>
+The file has the
+following mandatory structure:<br>
+<ul>
+  <li>Header</li>
+  <li>Include files &amp; namespaces</li>
+  <li>Constants</li>
+  <li>Macros</li>
+  <li>Data types</li>
+  <li>External data signatures</li>
+  <li>Function Prototypes</li>
+  <li>Footer<br>
+  </li>
+</ul>
+<h2>Header</h2>
+The header holds all information mandated by the <a
+ href="fileConventions.html#header">generic guidelines</a>. It begins
+with the generic header information, enclosed in 80
+column wide partitioning delimiters.<br>
+<br>
+After this a macro definition follows, prohibiting the multiple time
+inclusion of the header file. The name of the header-identity macro is
+derived from the full name the file is expected to be included as. The
+macro name is formed by replacing all non-alphanumeric characters from
+the expected include definition with the '_' (underscore) character.
+For a header file that will be included with the line:<br>
+<pre><code>#include "Foo.h"</code><br></pre>
+the identity macro is defined as <code>Foo_h</code>. For a header file
+that is expected to be included as:<br>
+<pre><code>#include "LiveSupport/Foo/Bar.h"<br></code></pre>
+the identity macro is defined as <code>LiveSupport_Foo_Bar_h</code>.<br>
+<br>
+After the identity macro, a preprocessor check is performed to see if
+the file is being processessed by a C++ compiler (and say not a C
+compiler).<br>
+<h3>Sample</h3>
+A sample for a C++ header file header follows, where the file itself
+would be expected to be included as <code>"LiveSupport/Foo/Bar.h"</code>.<br>
+<br>
+<pre>/*------------------------------------------------------------------------------<br><br>    Copyright (c) 2004 Media Development Loan Fund<br>                                                                                <br>    This file is part of the LiveSupport project.<br>    http://livesupport.campware.org/<br>    To report bugs, send an e-mail to bugs@campware.org<br>                                                                                <br>    LiveSupport is free software; you can redistribute it and/or modify<br>    it under the terms of the GNU General Public License as published by<br>    the Free Software Foundation; either version 2 of the License, or<br>    (at your option) any later version.<br>                                                                                <br>    LiveSupport is distributed in the hope that it will be useful,<br>    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>    GNU General Public License for more details.<br>                                                                                <br>    You should have received a copy of the GNU General Public License<br>    along with LiveSupport; if not, write to the Free Software<br>    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>                                                                                <br>                                                                                <br>    Author   : $Author: maroy $<br>    Version  : $Revision: 1.1 $<br>    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/cxxHeaderFileConventions.html,v $<br>                                                                                <br>------------------------------------------------------------------------------*/<br>#ifndef LiveSupport_Foo_Bar_h<br>#define LiveSupport_Foo_Bar_h<br>                                                                                <br>#ifndef __cplusplus<br>#error This is a C++ include file<br>#endif<br><br></pre>
+<h2>Include files &amp; namespace <br>
+</h2>
+This section contains all the include files that the header file needs
+to include, plus namespace declarations. The include files are listed
+in a most generic to most specific order: firts system include files,
+then other LiveSupport module include files, and finnally include files
+from the same module / product are listed.<br>
+<br>
+After the includes, namespace definitions follow. Each LiveSupport
+object is contained in its own namespace inside the <code>LiveSupport</code>
+namespace, thus this is a nested namespace declaration.<br>
+<br>
+After the namespace declarations, the namespaces used within the
+include file itself are listed with <code>using namespace</code>
+clauses. Note that the <code>using namespace</code> clauses are
+strictly within the namespace declaration clauses, so that they only
+take effect within the header file, but not afterwards.<br>
+<h3>Sample</h3>
+A sample include files &amp; namespaces section follows.<br>
+<pre>/* =============================================== include files &amp; namespaces */<br><br>#ifdef HAVE_CONFIG_H<br>#include "configure.h"<br>#endif<br><br>#if HAVE_STDLIB_H<br>#include &lt;stdlib.h&gt;<br>#else<br>#error need stdlib.h<br>#endif<br><br>#include &lt;string&gt;<br><br><br>namespace LiveSupport {<br>namespace Foo {<br><br>using namespace LiveSupport::Core;<br><br></pre>
+<h2>Constants</h2>
+The constants section contains static constant values defined in the
+header file.
+Nowhere in the header file may be other static constants defined. This
+section is
+rarely used, as static constants&nbsp; outside classes are discurraged,<br>
+<h3>Sample</h3>
+A sample constants section follows.<br>
+<pre>/* ================================================================ constants */<br><br>/**<br> *  The contant value of foo bar.<br> */<br>static const int fooBarConst;<br></pre>
+<h2>Macros</h2>
+The macros section contains any macros defined in the header file.
+Nowhere in the header file may be other macros defined. This section is
+rarely used, as macros are discurraged,<br>
+<h3>Sample</h3>
+A sample macros section follows.<br>
+<pre>/* =================================================================== macros */<br><br>/**<br> *  Some very important macro.<br> */<br>#define SOME_MACRO     "some macro"<br></pre>
+<h2>Data types</h2>
+This section contains the data type definitions of the header file,
+most notable the definition of the class this header file is named
+after.<br>
+<br>
+The class itself and all its members (including private members) are
+described by <a href="http://www.doxygen.org/">doxygen</a> comments.
+The Java style of commenting is to be used.&nbsp; For the comment
+describing the entire class, the <code>@author</code> and <code>@version</code>
+tags are mandatory. For each member function, all parameters, the
+return value and all possibly thrown exceptions are to be documented.<br>
+<br>
+The class lists its members in the following order:<br>
+<ul>
+  <li>private</li>
+  <li>protected</li>
+  <li>public</li>
+</ul>
+Within each of the above blocks, the order is the following:<br>
+<ul>
+  <li>static data members</li>
+  <li>dynamic data members</li>
+  <li>constructors</li>
+  <li>destructor</li>
+  <li>static functions</li>
+  <li>dynamic functions</li>
+</ul>
+For proper indentation of the above blocks, see the example below.<br>
+<h3>Sample</h3>
+A sample data types section follows.<br>
+<pre>/* =============================================================== data types */<br><br>/**<br> *  Hello class.<br> *  The only purpose of this class is to say hello.<br> *<br> *  @author  $Author: maroy $<br> *  @version $Revision: 1.1 $<br> */<br>class Hello<br>{<br>    private:<br>        /**<br>         *  Our famous hello string.<br>         */<br>        static const std::string        helloWorld;<br><br>    public:<br>        /**<br>         *  Default constructor.<br>         */<br>        Hello (void)                                    throw ()<br>        {<br>        }<br><br>        /**<br>         *  Say hello.<br>         *<br>         *  @return the string "Hello, World!"<br>         *  @exception std::exception on problems<br>         */<br>        const std::string<br>        hello (void)                        throw (std::exception)<br>        {<br>            return helloWorld;<br>        }<br>};<br><br></pre>
+<h2>External data structures<br>
+</h2>
+The external data structures section contains any external data
+definitions needed by the header file, that may be defined externally.
+Nowhere in the header file may other external data definitions exist.
+This section is
+rarely used, as external data definitions are discouraged.<br>
+<h3>Sample</h3>
+A sample external data structures section follows.<br>
+<pre>/* ================================================= external data structures */<br><br>/**<br> *  An externally defined data, which the linker will find.<br> */<br>extern int    fooBarInt;<br><br></pre>
+<h2>Function prototypes<br>
+</h2>
+The function prototypes section contains any function prototypes
+defined by the header file, that are not members of classes.
+Nowhere in the header file may other such definitions exist.
+This section is seldom used, as functions outside classes are
+discouraged.<br>
+<h3>Sample</h3>
+A sample function prototypes section follows.<br>
+<pre>/* ====================================================== function prototypes */<br><br>/**<br> *  An important foo function.<br> *<br> *  @return the result of foo.<br> */<br>int	foo(void)			throw ();<br></pre>
+<h2>Footer</h2>
+The footer of the header file closes the namespace brackets opened in
+the include files &amp; namespaces section, and also ends the header
+identity macro #ifdef section opened in the header.<br>
+<h3>Sample</h3>
+A sample footer section follows.<br>
+<br>
+<pre>} // namespace Foo<br>} // namespace LiveSupport<br><br>#endif // LiveSupport_Foo_Bar_h<br></pre>
+<h1>Template</h1>
+See a <a href="templates/Bar.h">template
+C++ header file</a>. You may freely copy this
+template when starting to create a new header file.<br>
+<br>
+</body>
+</html>

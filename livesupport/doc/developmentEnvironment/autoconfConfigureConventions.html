@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8"
+ http-equiv="content-type">
+  <title>autoconf configure file conventions</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/autoconfConfigureConventions.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes the autoconf configure file conventions for the
+LiveSupport
+project. See also the generic description of the <a
+ href="file:///home/darkeye/src/livesupport/livesupport/doc/developmentEnvironment/fileConventions.html">file
+conventions</a> in the LiveSupport
+project.<br>
+<h1>Introduction</h1>
+Autoconf configure input files are processed by GNU <a
+ href="http://www.gnu.org/software/autoconf/">autoconf</a> and <a
+ href="http://www.gnu.org/software/automake/">automake</a> to generate
+a configure script, which in turn generates Makefiles and other files
+based on the system specifics it is run on. These are text
+based files, thus they should adhere to the <a
+ href="fileConventions.html#textConventions">generic text-based
+conventions</a>.<br>
+<h1>Naming</h1>
+Autoconf configure files are named either <code>configure.ac</code>
+(for autoconf) or sometimes <code>configure.am</code> (for automake).<br>
+<h1>Structure</h1>
+Autoconf configure files are partitioned by using the following 80
+column
+wide partitioning comment:<br>
+<pre>dnl-----------------------------------------------------------------------------<br>dnl This is the title of the partition<br>dnl-----------------------------------------------------------------------------<br></pre>
+The file has the
+following mandatory structure:<br>
+<ul>
+  <li>Header</li>
+  <li>Additional sections+</li>
+</ul>
+<h2>Header</h2>
+The header holds all information mandated by the <a
+ href="fileConventions.html#header">generic guidelines</a>, but
+starting with the autoconf comment sequence <code>dnl</code>. Note the
+80
+column wide partitioning delimiter enclosing the header.<br>
+<pre>dnl-----------------------------------------------------------------------------<br>dnl Copyright (c) 2004 Media Development Loan Fund<br>dnl<br>dnl This file is part of the LiveSupport project.<br>dnl http://livesupport.campware.org/<br>dnl To report bugs, send an e-mail to bugs@campware.org<br>dnl<br>dnl LiveSupport is free software; you can redistribute it and/or modify<br>dnl it under the terms of the GNU General Public License as published by<br>dnl the Free Software Foundation; either version 2 of the License, or<br>dnl (at your option) any later version.<br>dnl<br>dnl LiveSupport is distributed in the hope that it will be useful,<br>dnl but WITHOUT ANY WARRANTY; without even the implied warranty of<br>dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>dnl GNU General Public License for more details.<br>dnl<br>dnl You should have received a copy of the GNU General Public License<br>dnl along with LiveSupport; if not, write to the Free Software<br>dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>dnl<br>dnl<br>dnl Author   : $Author: maroy $<br>dnl Version  : $Revision: 1.1 $<br>dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/autoconfConfigureConventions.html,v $<br>dnl-----------------------------------------------------------------------------<br></pre>
+<h2>Additional sections</h2>
+Additional sections contain the autoconf configuration macro calls.
+Bigger
+parts of the file may be partitioned by the partitioning commend seen
+above.<br>
+<h1>Template</h1>
+See a generic <a href="templates/configure.ac">template
+for autoconf configurations</a>. You may freely copy this
+template when starting to create a new document.<br>
+<br>
+</body>
+</html>

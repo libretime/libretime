@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8"
+ http-equiv="content-type">
+  <title>Makefile conventions</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/makefileConventions.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes the Makefile file conventions for the
+LiveSupport
+project. See also the generic description of the <a
+ href="file:///home/darkeye/src/livesupport/livesupport/doc/developmentEnvironment/fileConventions.html">file
+conventions</a> in the LiveSupport
+project. This document does not describe the mandatory targets for
+Makefiles, see the <a href="buildEnvironment.html">build environment</a>
+description for such details.<br>
+<h1>Introduction</h1>
+Makefiles are text-based files processed by <a
+ href="http://www.gnu.org/software/make/">GNU make</a>. As text based
+files, they should adhere to the <a
+ href="fileConventions.html#textConventions">generic text-based
+conventions</a>.<br>
+<h1>Naming</h1>
+Makefiles are always named <code>Makefile</code>. In case they are
+input files for automake or autoconf, they can be named <code>Makefile.in</code>
+or <code>Makefile.am</code>.<br>
+<h1>Structure</h1>
+Makefiles are partitioned by using the following 80 column wide
+partitioning comment:<br>
+<pre>#-------------------------------------------------------------------------------<br># This is the title of the partition<br>#-------------------------------------------------------------------------------<br></pre>
+The file has the
+following mandatory structure:<br>
+<ul>
+  <li>Header</li>
+  <li>General command definitions</li>
+  <li>Basic directory and file definitions</li>
+  <li>Configuration parameters</li>
+  <li>Dependencies</li>
+  <li>Targets</li>
+  <li>Specific targets</li>
+  <li>Pattern rules<br>
+  </li>
+</ul>
+<h2>Header</h2>
+The header holds all information mandated by the <a
+ href="fileConventions.html#header">generic guidelines</a>, but
+starting with the Makefile comment character <code>#</code>. Note the
+80
+column wide partitioning delimiter enclosing the header.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Copyright (c) 2004 Media Development Loan Fund<br>#<br>#   This file is part of the LiveSupport project.<br>#   http://livesupport.campware.org/<br>#   To report bugs, send an e-mail to bugs@campware.org<br>#<br>#   LiveSupport is free software; you can redistribute it and/or modify<br>#   it under the terms of the GNU General Public License as published by<br>#   the Free Software Foundation; either version 2 of the License, or<br>#   (at your option) any later version.<br>#<br>#   LiveSupport is distributed in the hope that it will be useful,<br>#   but WITHOUT ANY WARRANTY; without even the implied warranty of<br>#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>#   GNU General Public License for more details.<br>#<br>#   You should have received a copy of the GNU General Public License<br>#   along with LiveSupport; if not, write to the Free Software<br>#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>#<br>#<br>#   Author   : $Author: maroy $<br>#   Version  : $Revision: 1.1 $<br>#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/makefileConventions.html,v $<br>#-------------------------------------------------------------------------------<br></pre>
+<h2>General command definitions<br>
+</h2>
+This section contains definitions to commands used when executing the
+make targets within this Makefile. All the commands should be collected
+here, and a variable defined for them. This insures easy overview of
+the commands the Makefile uses, and also makes it easy to migrate to
+new commands, or the same commands in different locations.<br>
+<br>
+No external commands may be directly referenced outside this section.<br>
+<h3>Sample</h3>
+A sample general command definitions section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   General command definitions<br>#-------------------------------------------------------------------------------<br>MKDIR   = mkdir -p<br>RM      = rm -f<br>RMDIR   = rm -rf<br>DOXYGEN = doxygen<br><br></pre>
+<h2>Basic directory and file definitions</h2>
+This section contains definitions for the directories and files
+referenced in this Makefile. All directories referenced from the
+Makefile, and all external files referenced by the Makefile should be
+collected here. This insures easy adoption in case some external
+directories or files change.<br>
+<br>
+No directories or external files may be directory referenced outside
+this section.<br>
+<br>
+When referencing other LiveSupport modules, typically the following
+variables are defined for them:<br>
+<pre><code>MODULEX_DIR         = ${MODULES_DIR}/moduleX<br>MODULEX_INCLUDE_DIR = ${MODULEX_DIR}/include<br>MODULEX_LIB_DIR     = ${MODULEX_DIR}/lib<br>MODULEX_LIB         = livesupport_modulex<br></code></pre>
+<h3>Sample</h3>
+A sample directory and file definition section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Basic directory and file definitions<br>#-------------------------------------------------------------------------------<br>BASE_DIR    = .<br>DOC_DIR     = ${BASE_DIR}/doc<br>DOXYGEN_DIR = ${DOC_DIR}/doxygen<br>ETC_DIR     = ${BASE_DIR}/etc<br>SRC_DIR     = ${BASE_DIR}/src<br>TMP_DIR     = ${BASE_DIR}/tmp<br><br><br>USR_DIR         = ${BASE_DIR}/../../usr<br>USR_INCLUDE_DIR = ${USR_DIR}/include<br>USR_LIB_DIR     = ${USR_DIR}/lib<br>BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31<br>LIBXMLPP_INCLUDE_DIR = ${USR_INCLUDE_DIR}/libxml++-1.0<br><br>MODULES_DIR = ${BASE_DIR}/../../modules<br><br>HELLOLIB_DIR         = ${MODULES_DIR}/hello<br>HELLOLIB_INCLUDE_DIR = ${HELLOLIB_DIR}/include<br>HELLOLIB_LIB_DIR     = ${HELLOLIB_DIR}/lib<br>HELLOLIB_LIB         = livesupport_hello<br><br>VPATH    = ${SRC_DIR}<br><br>HELLO_EXE = ${TMP_DIR}/hello<br><br>DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config<br><br></pre>
+<h2>Configuration parameters</h2>
+This section contains the parameters passed to the building tools
+(compiler, linker, etc.) When invoking building tools, they should be
+parametrized by the definitions made here.<br>
+<h3>Sample<br>
+</h3>
+A sample configuration parameters section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Configuration parameters<br>#-------------------------------------------------------------------------------<br>CPPFLAGS = <br>CXXFLAGS = -pedantic -Wall \<br>          &nbsp;-I${USR_INCLUDE_DIR} -I${HELLOLIB_INCLUDE_DIR} \<br>           -I${INCLUDE_DIR} -I${TMP_DIR}<br>LDFLAGS  = -L${USR_LIB_DIR} -L${HELLOLIB_LIB_DIR} -L${LIB_DIR}<br><br></pre>
+<h2>Dependencies</h2>
+The dependencies section lists the objects that are build by implicit
+rules, and that main targets depend on. This is the place where all
+object files are listed, basically, for each library or executable.<br>
+<br>
+No object files that are built by this Makefile should be directly
+referred to outside this section.<br>
+<h3>Sample</h3>
+A sample dependencies section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Dependencies<br>#-------------------------------------------------------------------------------<br>HELLO_EXE_OBJS = ${TMP_DIR}/main.o<br><br></pre>
+<h2>Targets</h2>
+This section lists all the explicit, external targets for the makefile.
+For a list of targets required, see the <a href="buildEnvironment.html">description</a>
+of the build environment. All targets in this section are marked as
+.PHONY, as these targets are not building the files they are named
+after.<br>
+<br>
+No explicit targets should be defined in the Makefile outside this
+directory.<br>
+<h3>Sample</h3>
+A sample targets section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Targets<br>#-------------------------------------------------------------------------------<br>.PHONY: all dir_setup doc clean docclean depclean distclean<br>                                                                                <br>all: dir_setup ${HELLO_EXE}<br>                                                                                <br>dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}<br>                                                                                <br>doc:<br>    ${DOXYGEN} ${DOXYGEN_CONFIG}<br>                                                                                <br>clean:<br>    ${RM} ${HELLO_EXE_OBJS} ${HELLO_EXE}<br>                                                                                <br>docclean:<br>    ${RMDIR} ${DOXYGEN_DIR}/html<br>                                                                                <br>depclean: clean<br>                                                                                <br>distclean: clean docclean<br>    ${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*<br>                                                                                <br></pre>
+<h2>Specific targets</h2>
+This section defines the targets for files to be built by the Makefile.
+These are the targets that specify how files are built, but are not
+covered by pattern rules.<br>
+<h3>Sample</h3>
+A sample specific targets section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Specific targets<br>#-------------------------------------------------------------------------------<br>${HELLO_EXE}: ${HELLO_EXE_OBJS}<br>    ${CXX} ${LDFLAGS} -o $@ $^ -l${HELLOLIB_LIB}<br>                                                                                <br>${TMP_DIR}:<br>    ${MKDIR} ${TMP_DIR}<br>                                                                                <br>${DOXYGEN_DIR}:<br>    ${MKDIR} ${DOXYGEN_DIR}<br>                                                                                <br></pre>
+<h2>Pattern rules</h2>
+Pattern rules are the generic rules to build target files from object
+files. Define these pattern rules in this section.<br>
+<br>
+No pattern rules should exist outside this section.<br>
+<h3>Sample</h3>
+A sample pattern rules section follows.<br>
+<pre>#-------------------------------------------------------------------------------<br>#   Pattern rules<br>#-------------------------------------------------------------------------------<br>${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx<br>    ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $&lt;<br><br></pre>
+<br>
+<h1>Template</h1>
+See a generic <a href="templates/Makefile">template
+for Makefiles</a>. You may freely copy this
+template when starting to create a new Makefile.<br>
+<br>
+</body>
+</html>

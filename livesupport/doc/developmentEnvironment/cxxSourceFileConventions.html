@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8"
+ http-equiv="content-type">
+  <title>C++ source file conventions</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/cxxSourceFileConventions.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes C++ source file conventions for the
+LiveSupport
+project. See also the generic description of the <a
+ href="file:///home/darkeye/src/livesupport/livesupport/doc/developmentEnvironment/fileConventions.html">file
+conventions</a> in the LiveSupport
+project.<br>
+<h1>Introduction</h1>
+C++ source files are files containing implementations of functions and
+definitions of static data. They are text
+based files, thus they should adhere to the <a
+ href="fileConventions.html#textConventions">generic text-based
+conventions</a>.<br>
+<br>
+The LiveSupport project uses a strong object oriented approach. Part of
+this approach is to group implementations of classes into their own
+files: one header file and one source file for each class. Therefore
+each C++ source file contains implementation of exactly one C++ class,
+although static (local) functions may be defined as well.<br>
+<h1>Naming</h1>
+A C++ source files name reflects the class it is implementing. Class
+names begin with a capital letter, followed by lower case letters. In
+case of a multiple word class name, the first letter of each word is
+capitalized. Example class names are <code>Foo</code> and <code>FooBar</code>.<br>
+<br>
+As the name of the source file reflects the name of the class it
+implements, the source file will be named exactly as the class inside,
+with the <code>.cxx</code> extension. Thus a class named <code>Foo</code>
+is implemented in the source file <code>Foo.cxx</code>, and the class
+named <code>SomeOtherLongNamedClass</code> is implemented in the
+source file named <code>SomeOtherLongNamedClass.cxx</code>.<br>
+<h1>Structure</h1>
+C++ files are partitioned by using the following 80 column wide
+partitioning comment:<br>
+<pre>/* ==================================================== name of the partition */<br></pre>
+Note that the comment is always 80 columns wide, independent of the
+length of the text within.<br>
+<br>
+Local data type definitions and function prototypes required
+doxygen-style commenting.<br>
+<br>
+Function implementations and static data definitions were already
+commented for doxygen at their place of declaration. Therefore these
+are preceded by the following simple comment header.<br>
+<pre>/*------------------------------------------------------------------------------<br>&nbsp;*  Function implementation below.<br> *----------------------------------------------------------------------------*/<br></pre>
+<br>
+The file has the
+following mandatory structure:<br>
+<ul>
+  <li>Header</li>
+  <li>Include files &amp; namespaces</li>
+  <li>Local data structures<br>
+  </li>
+  <li>Local constants &amp; macros<br>
+  </li>
+  <li>Local function prototypes<br>
+  </li>
+  <li>Module code<br>
+  </li>
+</ul>
+<h2>Header</h2>
+The header holds all information mandated by the <a
+ href="fileConventions.html#header">generic guidelines</a>. It contains
+with the generic header information, enclosed in 80
+column wide partitioning delimiters.<br>
+<h3>Sample</h3>
+A sample for a C++ source file header follows.<br>
+<pre>/*------------------------------------------------------------------------------<br><br>    Copyright (c) 2004 Media Development Loan Fund<br>                                                                                <br>    This file is part of the LiveSupport project.<br>    http://livesupport.campware.org/<br>    To report bugs, send an e-mail to bugs@campware.org<br>                                                                                <br>    LiveSupport is free software; you can redistribute it and/or modify<br>    it under the terms of the GNU General Public License as published by<br>    the Free Software Foundation; either version 2 of the License, or<br>    (at your option) any later version.<br>                                                                                <br>    LiveSupport is distributed in the hope that it will be useful,<br>    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>    GNU General Public License for more details.<br>                                                                                <br>    You should have received a copy of the GNU General Public License<br>    along with LiveSupport; if not, write to the Free Software<br>    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA<br>                                                                                <br>                                                                                <br>    Author   : $Author: maroy $<br>    Version  : $Revision: 1.1 $<br>    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/developmentEnvironment/cxxSourceFileConventions.html,v $<br>                                                                                <br>------------------------------------------------------------------------------*/<br><br></pre>
+<h2>Include files &amp; namespaces <br>
+</h2>
+This section contains all the include files that the source file needs
+to include, plus namespace references. The include files are listed in
+a most generic to most specific order: first system include files, then
+other LiveSupport module include files, and finally include files from
+the same module / product are listed. The last one is the header file
+for the class this source file implements.<br>
+<br>
+After the includes, the namespaces used within the source file itself
+are listed with <code>using namespace</code> clauses. The order of the
+<code>using namespace</code> declarations is also from most generic to
+most specific, the last one being the namespace of the class this
+source file implements.<br>
+<h3>Sample</h3>
+A sample include files &amp; namespaces section follows.<br>
+<pre>/* =============================================== include files &amp; namespaces */<br><br>#ifdef HAVE_CONFIG_H<br>#include "configure.h"<br>#endif<br><br>#if HAVE_STDLIB_H<br>#include &lt;stdlib.h&gt;<br>#else<br>#error need stdlib.h<br>#endif<br><br>#include &lt;string&gt;<br><br>#include &lt;LiveSupport/Foo/Bar.h&gt;<br><br><br>using namespace LiveSupport::Core;<br>using namespace LiveSupport::Foo;<br><br></pre>
+<h2>Local data structures<br>
+</h2>
+The constants section contains locally defined data structures, that
+are not used anywhere outside this source file.
+Nowhere in the source file may be other data structure definitions.
+This section is
+rarely used, as reusable data structures are encouraged.<br>
+<h3>Sample</h3>
+A sample local data structures section follows.<br>
+<pre>/* ===================================================  local data structures */<br><br>/**<br> *  The union of foo.<br> */<br>union foo {<br>    int     foo;<br>    long    bar;<br>};<br></pre>
+<h2>Local constants &amp; macros</h2>
+The local constants &amp; macros section contains any macros and
+constant values used in this source file. It also contains the
+definitions for constant values of the class this source file
+implements. Nowhere in the source file may be other macros or constants
+defined.<br>
+<br>
+Having local constants is discouraged. Have private static class
+members instead.<br>
+<h3>Sample</h3>
+A sample local constants &amp; macros section follows.<br>
+<pre>/* ================================================  local constants &amp; macros */<br><br>/*------------------------------------------------------------------------------<br>&nbsp;*  The famous foo string for the class Bar.<br> *----------------------------------------------------------------------------*/<br>const std::string Bar::fooStr = "foo";<br><br></pre>
+<h2>Local function prototypes<br>
+</h2>
+This section contains the prototypes for local functions, which are
+only used in this source file. Nowhere else in the source file may
+function prototypes be other than in this section. This section is
+rarely used, local functions are discouraged. Use private class member
+functions instead.<br>
+<h3>Sample</h3>
+A sample local function prototypes section follows.<br>
+<pre>/* ===============================================  local function prototypes */<br><br>/**<br> *  Some local function.<br> *<br> *  @param parameter some parameter<br> *  @return a very big return value.<br> */<br>int<br>localFunction(int parameter)                    throw ();<br><br></pre>
+<h2>Module code<br>
+</h2>
+This section contains the implementation for the class it is made for.
+Also contains the implementation for all local functions. The
+implementation order is not defined.<br>
+<h3>Sample</h3>
+A sample module code section follows.<br>
+<pre>/* =============================================================  module code */<br><br>/*------------------------------------------------------------------------------<br>&nbsp;*  Return the famous bar string.<br> *----------------------------------------------------------------------------*/<br>const std::string<br>Bar :: sayBar(void)                         throw (std::exception)<br>{<br>    if (barInt) {<br>        throw std::exception();<br>    }<br><br>    return barStr;<br>}<br><br></pre>
+<h1>Template</h1>
+See a <a href="templates/Bar.cxx">template
+C++ source file</a>. You may freely copy this
+template when starting to create a new source file.<br>
+<br>
+</body>
+</html>
