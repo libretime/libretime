@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -113,6 +113,7 @@ class GreenBox extends Alib{
      *  @param mediaFileLP string, local path of media file
      *  @param mdataFileLP string, local path of metadata file
      *  @param sessid string, session id
+     *  @param gunid string, global unique id OPTIONAL
      *  @return int
      *  @exception PEAR::error
      */

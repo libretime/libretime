@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -177,6 +177,7 @@ class LocStor extends GreenBox{
      *  @param sessid string
      *  @param criteria string
      *  @return array or PEAR::error
+     *  @see GreenBox::localSearch
      */
     function searchMetadata($sessid, $criteria)
     {

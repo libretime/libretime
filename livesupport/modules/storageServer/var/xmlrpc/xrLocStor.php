@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,6 +67,7 @@ class XR_LocStor extends LocStor{
      *  Convert XMLRPC struct to PHP array
      *
      *  @param input XMLRPC struct
+     *  @return array
      */
     function _xr_getPars($input)
     {
@@ -77,7 +78,7 @@ class XR_LocStor extends LocStor{
             return array(TRUE, $r);
         }
         else return array(FALSE, new xmlrpcresp(0, 801,
-            "xr_login: wrong 1st parameter, struct expected."
+            "wrong 1st parameter, struct expected."
         ));
     }
 
@@ -86,6 +87,7 @@ class XR_LocStor extends LocStor{
      *  also return loginname of logged user
      *
      *  @param input XMLRPC struct
+     *  @return XMLRPC struct
      */
     function xr_test($input)
     {
@@ -98,29 +100,92 @@ class XR_LocStor extends LocStor{
         ), true));
     }
 
+
     /**
-     *  Call LocStor::authenticate
+     *  Checks the login name and password of the user and return
+     *  true if login data are correct, othervise return false.
+     *
+     *  The XML-RPC name of this method is "locstor.authenticate".
+     *
+     *  Input parameters: XML-RPC struct with the following fields:
+     *  <ul>
+     *      <li> login  :  string  -  login name </li>
+     *      <li> pass   :  string  -  password </li>
+     *  </ul>
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 804  -  xr_authenticate: database error </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return boolean
+     *  @see Subjects::authenticate
      */
     function xr_authenticate($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         $res = $this->authenticate($r['login'], $r['pass']);
-        return new xmlrpcresp(new xmlrpcval($res, "boolean"));
+        if(PEAR::isError($res)){
+            return new xmlrpcresp(0, 804,"xr_authenticate: database error");
+        }
+        $retval = ($res !== FALSE);
+        return new xmlrpcresp(new xmlrpcval($retval, "boolean"));
     }
 
     /**
-     *  Call LocStor::login
+     *  Checks the login name and password of the user.  If the login is
+     *  correct, a new session ID string is generated, to be used in all
+     *  subsequent XML-RPC calls as the "sessid" field of the
+     *  parameters.
+     *
+     *  The XML-RPC name of this method is "locstor.login".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> login  :  string  -  login name </li>
+     *      <li> pass   :  string  -  password </li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> string  -  the newly generated session ID </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 802  -  xr_login: login failed -
+     *                      incorrect username or password. </li>
+     *      <li> 804  -  xr_login:: database error </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return string
+     *  @see Alib::login
      */
     function xr_login($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        if(!($res = $this->login($r['login'], $r['pass'])))
+        $res = $this->login($r['login'], $r['pass']);
+        if(PEAR::isError($res)){
+            return new xmlrpcresp(0, 804,"xr_login: database error");
+        }
+        if($res === FALSE)
             return new xmlrpcresp(0, 802,
                 "xr_login: login failed - incorrect username or password."
             );
@@ -129,9 +194,34 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Call LocStor::logout
+     *  Logout, destroy session and return 'Bye'.
+     *  If session is not valid error message is returned.
+     *
+     *  The XML-RPC name of this method is "locstor.logout".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean  -  TRUE </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 803  -  xr_logout: logout failed - not logged. </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return string
+     *  @see GreenBox::logout
      */
     function xr_logout($input)
     {
@@ -147,9 +237,35 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Call LocStor::existsAudioClip
+     *  Check if audio clip exists and return TRUE/FALSE
+     *
+     *  The XML-RPC name of this method is "locstor.existsAudioClip".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean  </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_existsAudioClip:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return boolean
+     *  @see LocStor::existsAudioClip
      */
     function xr_existsAudioClip($input)
     {
@@ -159,7 +275,7 @@ class XR_LocStor extends LocStor{
         $res = $this->existsAudioClip($r['sessid'], $r['gunid']);
         #$this->debugLog($res);
         if(PEAR::isError($res))
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_existsAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
@@ -167,9 +283,37 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Call LocStor::storeAudioClip
+     *  Store new AudioClip or replace existing one.
+     *
+     *  The XML-RPC name of this method is "locstor.storeAudioClip".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *      <li> mediaFileLP  :  local path of raw audio file</li>
+     *      <li> mdataFileLP  :  local path of metadata XML file</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> string - gunid of stored file</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_storeAudioClip:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return string
+     *  @see LocStor::storeAudioClip
      */
     function xr_storeAudioClip($input)
     {
@@ -181,16 +325,42 @@ class XR_LocStor extends LocStor{
         if(!PEAR::isError($res))
             return new xmlrpcresp(new xmlrpcval($res, "string"));
         else
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_storeAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
     }
 
     /**
-     *  Call LocStor::deleteAudioClip
+     *  Delete existing audio clip
+     *
+     *  The XML-RPC name of this method is "locstor.deleteAudioClip".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean - TRUE</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_deleteAudioClip:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return boolean
+     *  @see LocStor::deleteAudioClip
      */
     function xr_deleteAudioClip($input)
     {
@@ -200,16 +370,43 @@ class XR_LocStor extends LocStor{
         if(!PEAR::isError($res))
             return new xmlrpcresp(new xmlrpcval($res, "boolean"));
         else
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_deleteAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
     }
 
     /**
-     *  Call LocStor::updateAudioClipMetadata
+     *  Update existing audio clip metadata
+     *
+     *  The XML-RPC name of this method is "locstor.updateAudioClipMetadata".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *      <li> mdataFileLP  :  local path of metadata XML file</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean - TRUE</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_updateAudioClipMetadata:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return boolean
+     *  @see LocStor::updateAudioClipMetadata
      */
     function xr_updateAudioClipMetadata($input)
     {
@@ -221,16 +418,46 @@ class XR_LocStor extends LocStor{
         if(!PEAR::isError($res))
             return new xmlrpcresp(new xmlrpcval($res, "boolean"));
         else
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_updateAudioClip: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
     }
 
     /**
-     *  Call LocStor::searchMetadata
+     *  Search in local metadata database
+     *
+     *  The XML-RPC name of this method is "locstor.searchMetadata".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> criteria  : search string
+     *           - will be searched in object part of RDF tripples
+     *           - <b>this parameter may be changed</b> structured
+     *              queries will be supported in the future</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean - TRUE</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_searchMetadata:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return boolean
+     *  @see LocStor::searchMetadata
+     *  @see GreenBox::localSearch
      */
     function xr_searchMetadata($input)
     {
@@ -247,9 +474,35 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Call LocStor::accessRawAudioData
+     *  Make access to audio clip.
+     *
+     *  The XML-RPC name of this method is "locstor.accessRawAudioData".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioClip</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> string - access symlink filename</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_accessRawAudioData:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return string
+     *  @see LocStor::accessRawAudioData
      */
     function xr_accessRawAudioData($input)
     {
@@ -259,16 +512,43 @@ class XR_LocStor extends LocStor{
         if(!PEAR::isError($res))
             return new xmlrpcresp(new xmlrpcval($res, "string"));
         else
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_accessRawAudioData: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
     }
 
     /**
-     *  Call LocStor::releaseRawAudioData
+     *  Release access to audio clip
+     *
+     *  The XML-RPC name of this method is "locstor.releaseRawAudioData".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> tmpLink  :  string  -  temporary access symlink
+     *              returned by locstor.accessRawAudioData</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> boolean</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_releaseRawAudioData:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return boolean
+     *  @see LocStor::releaseRawAudioData
      */
     function xr_releaseRawAudioData($input)
     {
@@ -278,26 +558,52 @@ class XR_LocStor extends LocStor{
         if(!PEAR::isError($res))
             return new xmlrpcresp(new xmlrpcval($res, "boolean"));
         else
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_releaseRawAudioData: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
     }
 
     /**
-     *  Call LocStor::getAudioClip
+     *  Return all file's metadata as XML string
+     *
+     *  The XML-RPC name of this method is "locstor.getAudioClip".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> gunid  :  string  -  global unique id of AudioCLip</li>
+     *  </ul>
+     *
+     *  On success, returns a single XML-RPC value:
+     *  <ul>
+     *      <li> string - metadata as XML</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_getAudioClip:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
      *
      *  @param input XMLRPC struct
+     *  @return string
+     *  @see LocStor::getAudioClip
      */
     function xr_getAudioClip($input)
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->getAudioClip($r['sessid'], $r['gunid'], $r['metaData']);
+        $res = $this->getAudioClip($r['sessid'], $r['gunid']);
         if(!PEAR::isError($res))
             return new xmlrpcresp(new xmlrpcval($res, "string"));
         else
-            return new xmlrpcresp(0, 803,
+            return new xmlrpcresp(0, 805,
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
     }

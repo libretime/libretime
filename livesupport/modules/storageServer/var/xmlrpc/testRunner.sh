@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -87,7 +87,7 @@ updateAudioClipMetadata() {
 
 getAudioClip() {
     echo "getAudioClip:"
-    $XR_CLI getAudioClip $SESSID $GUNID | ./urldecode
+    $XR_CLI getAudioClip $SESSID $GUNID | $TESTDIR/urldecode
 }
 
 searchMetadata() {
