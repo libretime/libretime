@@ -5,6 +5,8 @@
 <!ENTITY coreResults SYSTEM "../modules/core/doc/testResults.xml" >
 <!ENTITY dbResults SYSTEM "../modules/db/doc/testResults.xml" >
 <!ENTITY storageResults SYSTEM "../modules/storage/doc/testResults.xml" >
+<!ENTITY playlistExecutorResults SYSTEM "../modules/playlistExecutor/doc/testResults.xml" >
+<!ENTITY eventSchedulerResults SYSTEM "../modules/eventScheduler/doc/testResults.xml" >
 <!ENTITY schedulerResults SYSTEM "../products/scheduler/doc/testResults.xml" >
 
 ]>
@@ -12,5 +14,7 @@
 &coreResults;
 &dbResults;
 &storageResults;
+&playlistExecutorResults;
+&eventSchedulerResults;
 &schedulerResults;
 </TestResults>

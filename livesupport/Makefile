@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -71,10 +71,12 @@ LCOV_VERSION      = lcov-1.3
 HELIX_DIR         = ${TOOLS_DIR}/helix
 HELIX_VERSION     = all_clients_nodist-helix-20041010
 
-MODULES_DIR = ${BASE_DIR}/modules
-CORE_DIR    = ${MODULES_DIR}/core
-DB_DIR      = ${MODULES_DIR}/db
-STORAGE_DIR = ${MODULES_DIR}/storage
+MODULES_DIR           = ${BASE_DIR}/modules
+CORE_DIR              = ${MODULES_DIR}/core
+DB_DIR                = ${MODULES_DIR}/db
+STORAGE_DIR           = ${MODULES_DIR}/storage
+PLAYLIST_EXECUTOR_DIR = ${MODULES_DIR}/playlistExecutor
+EVENT_SCHEDULER_DIR   = ${MODULES_DIR}/eventScheduler
 
 PRODUCTS_DIR  = ${BASE_DIR}/products
 SCHEDULER_DIR = ${PRODUCTS_DIR}/scheduler
@@ -111,6 +113,9 @@ flawfinder:
                   ${CORE_DIR}/include ${CORE_DIR}/src \
                   ${DB_DIR}/include ${DB_DIR}/src \
                   ${STORAGE_DIR}/include ${STORAGE_DIR}/src \
+                  ${PLAYLIST_EXECUTOR_DIR}/include \
+                  ${PLAYLIST_EXECUTOR_DIR}/src \
+                  ${EVENT_SCHEDULER_DIR}/include ${EVENT_SCHEDULER_DIR}/src \
                   ${SCHEDULER_DIR}/src \
                   > ${FLAWFINDER_FILE}
 
@@ -133,6 +138,8 @@ modules_setup:
 	${CORE_DIR}/bin/autogen.sh
 	${DB_DIR}/bin/autogen.sh
 	${STORAGE_DIR}/bin/autogen.sh
+	${PLAYLIST_EXECUTOR_DIR}/bin/autogen.sh
+	${EVENT_SCHEDULER_DIR}/bin/autogen.sh
 
 products_setup:
 	${SCHEDULER_DIR}/bin/autogen.sh
