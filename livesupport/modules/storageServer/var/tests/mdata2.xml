@@ -26,7 +26,7 @@
 <xbmf:episodetitle  >Episode Title txt</xbmf:episodetitle>
 <xbmf:episodesequence  >Episode sequence</xbmf:episodesequence>
 <xbmf:contributor>
- <xbmf:role>Editor</xbmf:role>
+ <xbmf:role>Author</xbmf:role>
  <xbmf:name>John X</xbmf:name>
  <xbmf:phone>123456789</xbmf:phone>
 </xbmf:contributor>

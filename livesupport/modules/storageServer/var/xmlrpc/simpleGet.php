@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,7 +76,7 @@ if(preg_match("|^[0-9a-f]{32}$|", $_REQUEST['sessid'])){
 }else{
     http_error(400, "Error on sessid parameter. ({$_REQUEST['sessid']})");
 }
-if(preg_match("|^[0-9a-f]{32}$|", $_REQUEST['id'])){
+if(preg_match("|^[0-9a-f]{16}$|", $_REQUEST['id'])){
     $gunid = $_REQUEST['id'];
 }else{
     http_error(400, "Error on id parameter. ({$_REQUEST['id']})");

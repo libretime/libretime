@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/put.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ function http_error($code, $err){
     exit;
 }
 
-if(preg_match("|^[0-9a-f]{32}$|", $_REQUEST['token'])){
+if(preg_match("|^[0-9a-f]{16}$|", $_REQUEST['token'])){
     $token = $_REQUEST['token'];
 }else{
     http_error(400, "Error on token parameter. ({$_REQUEST['token']})");

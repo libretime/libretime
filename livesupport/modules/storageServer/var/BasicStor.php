@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -215,7 +215,7 @@ class BasicStor extends Alib{
     {
         $cnt = $this->dbc->getOne("
             SELECT count(token) FROM {$this->accessTable}
-            WHERE token='{$token}' AND type='$type'
+            WHERE token=x'{$token}'::bigint AND type='$type'
         ");
         if(PEAR::isError($cnt)){ return FALSE; }
         return ($cnt == 1);
@@ -236,9 +236,11 @@ class BasicStor extends Alib{
         $token  = StoredFile::_createGunid();
         $res = $this->dbc->query("
             INSERT INTO {$this->accessTable}
-                (gunid, sessid, token, ext, type, ts)
+                (gunid, sessid, token,
+                ext, type, ts)
             VALUES
-                ('{$gunid}', '$sessid', '$token', '$ext', '$type', now())
+                (x'{$gunid}'::bigint, '$sessid', x'$token'::bigint,
+                '$ext', '$type', now())
         ");
         if(PEAR::isError($res)){ return $res; }
         $linkFname = "{$this->accessDir}/$token.$ext";
@@ -271,15 +273,15 @@ class BasicStor extends Alib{
             );
         }
         $acc = $this->dbc->getRow("
-            SELECT gunid, ext FROM {$this->accessTable}
-            WHERE token='{$token}' AND type='$type'
+            SELECT to_hex(gunid)as gunid, ext FROM {$this->accessTable}
+            WHERE token=x'{$token}'::bigint AND type='$type'
         ");
         $ext = $acc['ext'];
-        $gunid = $acc['gunid'];
+        $gunid = StoredFile::_normalizeGunid($acc['gunid']);
         if(PEAR::isError($acc)){ return $acc; }
         $linkFname = "{$this->accessDir}/$token.$ext";
         $res = $this->dbc->query("
-            DELETE FROM {$this->accessTable} WHERE token='$token'
+            DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
         if(! @unlink($linkFname)){
@@ -339,10 +341,11 @@ class BasicStor extends Alib{
     {
         if($part == 'metadata'){
             $gunid = $this->dbc->getOne("
-                SELECT gunid FROM {$this->accessTable}
-                WHERE token='{$token}' AND type='download'
+                SELECT to_hex(gunid)as gunid FROM {$this->accessTable}
+                WHERE token=x'{$token}'::bigint AND type='download'
             ");
             if(PEAR::isError($gunid)){ return $gunid; }
+            $gunid = StoredFile::_normalizeGunid($gunid);
             $fname  =  "{$this->bufferDir}/$gunid";
             @unlink($fname);
         }
@@ -365,7 +368,7 @@ class BasicStor extends Alib{
             INSERT INTO {$this->accessTable}
                 (gunid, sessid, token, ext, chsum, type, ts)
             VALUES
-                ('{$gunid}', '$sessid', '$token',
+                (x'{$gunid}'::bigint, '$sessid', x'$token'::bigint,
                     '$ext', '$chsum', 'put', now())
         ");
         if(PEAR::isError($res)){ return $res; }
@@ -390,7 +393,7 @@ class BasicStor extends Alib{
         }
         $chsum = $this->dbc->getOne("
             SELECT chsum FROM {$this->accessTable}
-            WHERE token='{$token}'
+            WHERE token=x'{$token}'::bigint
         ");
         $fname = "{$this->accessDir}/$token";
         $md5sum = md5_file($fname);
@@ -400,7 +403,7 @@ class BasicStor extends Alib{
             );
         }
         $res = $this->dbc->query("
-            DELETE FROM {$this->accessTable} WHERE token='$token'
+            DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
         return $fname;
@@ -544,14 +547,54 @@ class BasicStor extends Alib{
      */
     function bsLocalSearch($criteria)
     {
-        $ftsrch = $criteria;
-        $res = $this->dbc->getCol("SELECT md.gunid as gunid
+        $types = array('and'=>'AND', 'or'=>'OR');
+        $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
+            '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
+        );
+#        var_dump($criteria);
+        echo "\n";
+        $type  = strtolower($criteria['type']);
+        $conds = $criteria['conds'];
+        $whereArr = array();
+        foreach($conds as $cond){
+            $cat = strtolower($cond['cat']);
+            $opVal = sprintf($ops[$cond['op']], strtolower($cond['val']));
+            $sqlCond = "
+                %s.predicate = '".str_replace("%", "%%", $cat)."' AND
+                %s.objns='_L' AND lower(%s.object) ".str_replace("%", "%%", $opVal)."\n
+            ";
+#            echo "$sqlCond\n";
+            $whereArr[] = "$sqlCond";
+        }
+        if($type == 'and'){
+            $from = array(); $joinArr = array();
+            foreach($whereArr as $i=>$v){
+                $from[] = "{$this->mdataTable} md$i";
+                $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i");
+                $joinArr[] = "md$i.gunid = md".($i+1).".gunid";
+            }
+            array_pop($joinArr);
+            $sql = "SELECT to_hex(md0.gunid)as gunid \nFROM ".join(", ", $from).
+                "\nWHERE ".join(' AND ', $whereArr);
+            if(count($joinArr)>0){ $sql .= " AND ".join(" AND ", $joinArr); }
+        }else{
+            foreach($whereArr as $i=>$v){
+                $whereArr[$i] = sprintf($v, "md", "md", "md");
+            }
+            $sql = "\nSELECT to_hex(gunid)as gunid \n".
+                "FROM {$this->mdataTable} md \nWHERE ".join(' OR ', $whereArr);
+        }
+        echo "$sql\n";
+#        var_dump($whereArr);
+        $sql0 = "SELECT to_hex(md.gunid)as gunid
             FROM {$this->filesTable} f, {$this->mdataTable} md
             WHERE f.gunid=md.gunid AND md.objns='_L' AND
-                md.object like '%$ftsrch%'
+                md.object like '%$criteria%'
             GROUP BY md.gunid
-        ");
+        ";
+        $res = $this->dbc->getCol($sql);
         if(!is_array($res)) $res = array();
+        // $res = array_map("StoredFile::_normalizeGunid", $res); // TODO: correct!
         return $res;
     }
 
@@ -931,14 +974,16 @@ class BasicStor extends Alib{
     function install()
     {
         parent::install();
-        $this->dbc->query("CREATE TABLE {$this->filesTable} (
+        echo "{$this->filesTable}\n";
+        $r = $this->dbc->query("CREATE TABLE {$this->filesTable} (
             id int not null,
-            gunid char(32) not null,                    -- global unique ID
+            gunid bigint not null,             -- global unique ID
             name varchar(255) not null default'',       -- human file id ;)
             type varchar(255) not null default'',       -- mime type
             state varchar(128) not null default'empty', -- file state
             currentlyAccessing int not null default 0   -- access counter
         )");
+        if(PEAR::isError($r)) return $r;
         $this->dbc->query("CREATE UNIQUE INDEX {$this->filesTable}_id_idx
             ON {$this->filesTable} (id)");
         $this->dbc->query("CREATE UNIQUE INDEX {$this->filesTable}_gunid_idx
@@ -946,10 +991,11 @@ class BasicStor extends Alib{
         $this->dbc->query("CREATE INDEX {$this->filesTable}_name_idx
             ON {$this->filesTable} (name)");
 
+        echo "{$this->mdataTable}\n";
         $this->dbc->createSequence("{$this->mdataTable}_id_seq");
-        $this->dbc->query("CREATE TABLE {$this->mdataTable} (
+        $r = $this->dbc->query("CREATE TABLE {$this->mdataTable} (
             id int not null,
-            gunid char(32),
+            gunid bigint,
             subjns varchar(255),             -- subject namespace shortcut/uri
             subject varchar(255) not null default '',
             predns varchar(255),             -- predicate namespace shortcut/uri
@@ -958,6 +1004,7 @@ class BasicStor extends Alib{
             objns varchar(255),              -- object namespace shortcut/uri
             object text
         )");
+        if(PEAR::isError($r)) return $r;
         $this->dbc->query("CREATE UNIQUE INDEX {$this->mdataTable}_id_idx
             ON {$this->mdataTable} (id)");
         $this->dbc->query("CREATE INDEX {$this->mdataTable}_gunid_idx
@@ -967,15 +1014,17 @@ class BasicStor extends Alib{
         $this->dbc->query("CREATE INDEX {$this->mdataTable}_pred_idx
             ON {$this->mdataTable} (predns, predicate)");
 
-        $this->dbc->query("CREATE TABLE {$this->accessTable} (
-            gunid char(32) not null default'',
+        echo "{$this->accessTable}\n";
+        $r = $this->dbc->query("CREATE TABLE {$this->accessTable} (
+            gunid bigint,
             sessid char(32) not null default'',
-            token char(32) not null default'',
+            token bigint,
             chsum char(32) not null default'',
             ext varchar(128) not null default'',
             type varchar(20) not null default'',
             ts timestamp
         )");
+        if(PEAR::isError($r)) return $r;
         $this->dbc->query("CREATE INDEX {$this->accessTable}_token_idx
             ON {$this->accessTable} (token)");
         $this->dbc->query("CREATE INDEX {$this->accessTable}_gunid_idx

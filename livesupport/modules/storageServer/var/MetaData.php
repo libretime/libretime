@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,8 +111,10 @@ class MetaData{
      */
     function delete()
     {
-        $res = $this->dbc->query("DELETE FROM {$this->mdataTable}
-            WHERE gunid='{$this->gunid}'");
+        $res = $this->dbc->query("
+            DELETE FROM {$this->mdataTable}
+            WHERE gunid=x'{$this->gunid}'::bigint
+        ");
         if(PEAR::isError($res)) return $res;
         $this->exists = FALSE;
         return TRUE;
@@ -135,8 +137,11 @@ class MetaData{
      */
     function dbCheck($gunid)
     {
-        $cnt = $this->dbc->getOne("SELECT count(*)as cnt
-            FROM {$this->mdataTable} WHERE gunid='$gunid'");
+        $cnt = $this->dbc->getOne("
+            SELECT count(*)as cnt
+            FROM {$this->mdataTable}
+            WHERE gunid=x'$gunid'::bigint
+        ");
         if(PEAR::isError($cnt)) return $cnt;
         return (intval($cnt) > 0);
     }
@@ -192,7 +197,7 @@ class MetaData{
         $nameSpaces = array();
         $arr = $this->dbc->getAll("SELECT subject, object
             FROM {$this->mdataTable}
-            WHERE gunid='{$this->gunid}'
+            WHERE gunid=x'{$this->gunid}'::bigint
                 AND subjns='_L'
                 AND predns is null AND predicate='_namespace'
                 AND objns='_L'
@@ -218,16 +223,19 @@ class MetaData{
     function storeXMLNode($node, $parid=NULL, $mode='insert')
     {
         //echo $node->node_name().", ".$node->node_type().", ".$node->prefix().", $parid.\n";
+        // preprocessing:
         switch($node->node_type()){
             case 1:             // element
             case 2:             // attribute
                 $subjns  = (is_null($parid)? '_G'         : '_I');
                 $subject = (is_null($parid)? $this->gunid : $parid);
+                // DOM XML extension doesn't like empty prefix - use '_d'
                 $prefix = $node->prefix(); $prefix = ($prefix === '' ? '_d' : $prefix);
                 if(!isset($this->nameSpaces[$prefix]))   
                     $this->nameSpaces[$prefix] = $node->namespace_uri();
             break;
         }
+        // main processing:
         switch($node->node_type()){
             case 9:             // document
                 $this->storeXMLNode($node->document_element(), $parid, $mode);
@@ -264,6 +272,7 @@ class MetaData{
 #                echo"T\n";
                 if($node->is_blank_node()) break;
                 $objns_sql  = "'_L'";
+                // coalesce ... returns the first of its arguments that is not NULL
                 $object_sql = "coalesce(object,'')||'".$node->node_value()."'";
                 $res = $this->dbc->query("
                     UPDATE {$this->mdataTable}
@@ -297,7 +306,7 @@ class MetaData{
     {
         $res = $this->dbc->query("UPDATE {$this->mdataTable}
             SET objns  = '$objns',  object    = '$object'
-            WHERE gunid = '{$this->gunid}' AND id='$mdid'
+            WHERE gunid = x'{$this->gunid}'::bigint AND id='$mdid'
         ");
         if(PEAR::isError($res)) return $res;
         return TRUE;
@@ -327,7 +336,7 @@ class MetaData{
         $objns_sql  = (is_null($objns) ? "NULL":"'$objns'" );
         $object_sql = (is_null($object)? "NULL":"'$object'");
         if($mode == 'update'){
-            $cond = "gunid = '{$this->gunid}' AND predns=$predns_sql
+            $cond = "gunid = x'{$this->gunid}'::bigint AND predns=$predns_sql
                 AND predicate='$predicate'";
             if($subjns == '_I'){
                 $cond .= " AND subjns='_I' AND subject='$subject'";
@@ -349,7 +358,7 @@ class MetaData{
                         objns     , object
                     )
                 VALUES
-                    ($id, '{$this->gunid}', '$subjns', '$subject',
+                    ($id, x'{$this->gunid}'::bigint, '$subjns', '$subject',
                         $predns_sql, '$predicate', '$predxml',
                         $objns_sql, $object_sql
                     )
@@ -376,8 +385,8 @@ class MetaData{
         $domd =& domxml_new_xmldoc('1.0');
         $row = $this->dbc->getRow("
             SELECT * FROM {$this->mdataTable}
-            WHERE gunid='{$this->gunid}'
-                AND subjns='_G' AND subject='{$this->gunid}'
+            WHERE gunid=x'{$this->gunid}'::bigint
+                AND subjns='_G' AND subject=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($row)) return $row;
         if(is_null($row)){
@@ -412,7 +421,7 @@ class MetaData{
         $xn->append_child(&$nxn);
         $uri = $this->dbc->getOne("
             SELECT object FROM {$this->mdataTable}
-            WHERE gunid='{$this->gunid}' AND predicate='_namespace'
+            WHERE gunid=x'{$this->gunid}'::bigint AND predicate='_namespace'
                 AND subjns='_L' AND subject='{$row['predns']}'
         ");
         if(!is_null($uri) && $uri !== ''){
@@ -440,7 +449,8 @@ class MetaData{
     {
         $qh = $this->dbc->query("
             SELECT * FROM {$this->mdataTable}
-            WHERE gunid='{$this->gunid}' AND subjns='_I' AND subject='$parid'
+            WHERE gunid=x'{$this->gunid}'::bigint AND subjns='_I'
+                AND subject='$parid'
             ORDER BY id
         ");
         if(PEAR::isError($qh)) return $qh;

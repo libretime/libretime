@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,8 +96,8 @@ class StoredFile{
             INSERT INTO {$ac->filesTable}
                 (id, name, gunid, type, state)
             VALUES
-                ('$oid', '{$ac->name}', '{$ac->gunid}', '{$ac->type}',
-                    'incomplete')
+                ('$oid', '{$ac->name}', x'{$ac->gunid}'::bigint,
+                    '{$ac->type}', 'incomplete')
         ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
@@ -154,9 +154,12 @@ class StoredFile{
      */
     function recall(&$gb, $oid='', $gunid='')
     {
-        $cond = ($oid != '' ? "id='".intval($oid)."'" : "gunid='$gunid'" );
+        $cond = ($oid != ''
+            ? "id='".intval($oid)."'"
+            : "gunid=x'$gunid'::bigint"
+        );
         $row = $gb->dbc->getRow("
-            SELECT id, gunid, type, name
+            SELECT id, to_hex(gunid)as gunid, type, name
             FROM {$gb->filesTable} WHERE $cond
         ");
         if(PEAR::isError($row)) return $row;
@@ -166,7 +169,8 @@ class StoredFile{
                 GBERR_FOBJNEX
             );
         }
-        $ac =& new StoredFile(&$gb, $row['gunid']);
+        $gunid = StoredFile::_normalizeGunid($row['gunid']);
+        $ac =& new StoredFile(&$gb, $gunid);
         $ac->type = $row['type'];
         $ac->name = $row['name'];
         $ac->id   = $row['id'];
@@ -196,11 +200,15 @@ class StoredFile{
      */
     function recallByToken(&$gb, $token)
     {
-        $gunid = $gb->dbc->getOne("SELECT gunid FROM {$gb->accessTable}
-            WHERE token='$token'");
+        $gunid = $gb->dbc->getOne("
+            SELECT to_hex(gunid)as gunid
+            FROM {$gb->accessTable}
+            WHERE token=x'$token'::bigint
+        ");
         if(PEAR::isError($gunid)) return $gunid;
         if(is_null($gunid)) return PEAR::raiseError(
             "StoredFile::recallByToken: invalid token ($token)", GBERR_AOBJNEX);
+        $gunid = StoredFile::_normalizeGunid($gunid);
         return StoredFile::recall(&$gb, '', $gunid);
     }
 
@@ -270,7 +278,7 @@ class StoredFile{
         $res = $this->dbc->query("
             UPDATE {$this->filesTable}
             SET currentlyAccessing=currentlyAccessing+1
-            WHERE gunid='{$this->gunid}'
+            WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
 #        $token = $this->_createGunid();
@@ -298,7 +306,7 @@ class StoredFile{
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("UPDATE {$this->filesTable}
             SET currentlyAccessing=currentlyAccessing-1
-            WHERE gunid='{$this->gunid}' AND currentlyAccessing>0
+            WHERE gunid=x'{$this->gunid}'::bigint AND currentlyAccessing>0
         ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->gb->bsRelease($token);
@@ -408,7 +416,7 @@ class StoredFile{
     {
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET name='$newname'
-            WHERE gunid='{$this->gunid}'
+            WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)) return $res;
         return TRUE;
@@ -424,7 +432,7 @@ class StoredFile{
     {
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET state='$state'
-            WHERE gunid='{$this->gunid}'
+            WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
         return TRUE;
@@ -440,7 +448,7 @@ class StoredFile{
     {
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET type='$type'
-            WHERE gunid='{$this->gunid}'
+            WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
         return TRUE;
@@ -458,17 +466,23 @@ class StoredFile{
         if(PEAR::isError($res)) return $res;
         $res = $this->md->delete();
         if(PEAR::isError($res)) return $res;
-        $tokens = $this->dbc->getAll("SELECT token, ext FROM {$this->accessTable}
-            WHERE gunid='{$this->gunid}'");
+        $tokens = $this->dbc->getAll("
+            SELECT to_hex(token)as token, ext FROM {$this->accessTable}
+            WHERE gunid=x'{$this->gunid}'::bigint
+        ");
         if(is_array($tokens)) foreach($tokens as $i=>$item){
             $file = $this->_getAccessFname($item['token'], $item['ext']);
             if(file_exists($file)){ @unlink($file); }
         }
-        $res = $this->dbc->query("DELETE FROM {$this->accessTable}
-            WHERE gunid='{$this->gunid}'");
+        $res = $this->dbc->query("
+            DELETE FROM {$this->accessTable}
+            WHERE gunid=x'{$this->gunid}'::bigint
+        ");
         if(PEAR::isError($res)) return $res;
-        $res = $this->dbc->query("DELETE FROM {$this->filesTable}
-            WHERE gunid='{$this->gunid}'");
+        $res = $this->dbc->query("
+            DELETE FROM {$this->filesTable}
+            WHERE gunid=x'{$this->gunid}'::bigint
+        ");
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
@@ -484,7 +498,7 @@ class StoredFile{
         if(is_null($gunid)) $gunid = $this->gunid;
         return (0 < $this->dbc->getOne("
             SELECT currentlyAccessing FROM {$this->filesTable}
-            WHERE gunid='$gunid'
+            WHERE gunid=x'$gunid'::bigint
         "));
     }    
 
@@ -504,8 +518,8 @@ class StoredFile{
     function exists()
     {
         $indb = $this->dbc->getRow("
-            SELECT gunid FROM {$this->filesTable}
-            WHERE gunid='{$this->gunid}'
+            SELECT to_hex(gunid) FROM {$this->filesTable}
+            WHERE gunid=x'{$this->gunid}'::bigint
         ");
         return (!is_null($indb) && $this->rmd->exists());
     }    
@@ -517,9 +531,21 @@ class StoredFile{
      */
     function _createGunid()
     {
-        return md5(
-            microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport"
-        );
+        $initString =
+            microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport";
+        $hash = md5($initString);
+        // int8
+        $res = substr($hash, 0, 16);
+        return StoredFile::_normalizeGunid($res);
+    }
+
+    /**
+     *  Create new global unique id
+     *
+     */
+    function _normalizeGunid($gunid0)
+    {
+        return str_pad($gunid0, 16, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -532,8 +558,10 @@ class StoredFile{
     function _idFromGunid($gunid=NULL)
     {
         if(is_null($gunid)) $gunid = $this->$gunid;
-        $id = $this->dbc->getOne("SELECT id FROM {$this->filesTable}
-            WHERE gunid='$gunid'");
+        $id = $this->dbc->getOne("
+            SELECT id FROM {$this->filesTable}
+            WHERE gunid=x'$gunid'::bigint
+        ");
         if(is_null($id)) return PEAR::raiseError(
             "StoredFile::_idFromGunid: no such global unique id ($gunid)"
         );
@@ -566,7 +594,7 @@ class StoredFile{
     {
         return $this->dbc->getOne("
             SELECT type FROM {$this->filesTable}
-            WHERE gunid='$gunid'
+            WHERE gunid=x'$gunid'::bigint
         ");
     }
 
@@ -600,8 +628,7 @@ class StoredFile{
      */
     function _getAccessFname($token, $ext='EXT')
     {
-        $spart = md5($token);
-        return "{$this->accessDir}/$spart.$ext";
+        return "{$this->accessDir}/$token.$ext";
     }
 }
 ?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,8 @@ echo "\n# storageServer: Install ...\n";
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $gb->uninstall();
 PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
-$gb->install();
+$r = $gb->install();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 
 echo "#  Testing ...\n";
 $gb->test();
