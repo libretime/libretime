@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -390,7 +390,8 @@ class MetaData{
             $rr = $this->genXMLNode(&$domd, &$domd, $row);
             if(PEAR::isError($rr)) return $rr;
         }
-        return preg_replace("|</([^>]*)>|", "</\\1>\n", $domd->dump_mem())."\n";
+        //return preg_replace("|</([^>]*)>|", "</\\1>\n", $domd->dump_mem())."\n";
+        return $domd->dump_mem(TRUE, 'UTF-8');
     }
 
     /**
