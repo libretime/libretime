@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include "configure.h"
 #endif
 
+#include <map>
 #include <stdexcept>
 #include <libxml++/libxml++.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -47,6 +48,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/PlaylistElement.h"
 
 
 namespace LiveSupport {
@@ -69,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class Playlist : public Configurable
 {
@@ -98,6 +100,18 @@ class Playlist : public Configurable
          *  Flag set if playlist is currently being edited.
          */
         bool                        isLockedForEditing;
+
+        /**
+         *  A map type for storing the playlist elements associated with 
+         *  this playlist, indexed by their relative offsets.
+         */
+        typedef std::map<const time_duration, Ptr<PlaylistElement>::Ref>
+                                                     PlaylistElementListType;
+
+        /**
+         *  The list of playlist elements for this playlist.
+         */
+        Ptr<PlaylistElementListType>::Ref  elementList;
 
 
     public:
@@ -154,13 +168,10 @@ class Playlist : public Configurable
          *  @param element the XML element to configure the object from.
          *  @exception std::invalid_argument if the supplied XML element
          *             contains bad configuraiton information
-         *  @exception std::logic_error if the object has already
-         *             been configured, and can not be reconfigured.
          */
         virtual void
         configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error);
+                                                throw (std::invalid_argument);
 
         /**
          *  Return the id of the playlist.
@@ -204,6 +215,43 @@ class Playlist : public Configurable
         setLockedForPlaying(bool lockStatus)
                                                 throw ();
 
+        /**
+         *  Add a new playlist element to the playlist.
+         *
+         *  @param playlistElement the new playlist element to be added
+         *  @exception std::invalid_argument if the playlist already contains
+         *             a playlist element with the same relative offset as the
+         *             new playlist element
+         */
+        void
+        addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  The iterator type for this class.
+         *
+         */
+        typedef PlaylistElementListType::const_iterator  const_iterator;
+
+        /**
+         *  Get an iterator pointing to the first playlist element.
+         *
+         */
+        const_iterator
+        begin() const                           throw ()
+        {
+            return elementList->begin();
+        }
+
+        /**
+         *  Get an iterator pointing to one after the last playlist element.
+         *
+         */
+        const_iterator
+        end() const                             throw ()
+        {
+            return elementList->end();
+        }
 };
 
 

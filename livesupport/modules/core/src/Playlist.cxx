@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,6 +61,11 @@ static const std::string    idAttrName = "id";
  */
 static const std::string    playlengthAttrName = "playlength";
 
+/**
+ *  The name of playlist element child nodes.
+ */
+static const std::string    elementListAttrName = "playlistElement";
+
 
 /* ===============================================  local function prototypes */
 
@@ -72,8 +77,7 @@ static const std::string    playlengthAttrName = "playlength";
  *----------------------------------------------------------------------------*/
 void
 Playlist :: configure(const xmlpp::Element    & element)
-                                            throw (std::logic_error,
-                                                   std::invalid_argument)
+                                            throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
@@ -101,6 +105,43 @@ Playlist :: configure(const xmlpp::Element    & element)
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
+
+    // no exception thrown here: it's OK to have an empty playlist element list
+    elementList.reset(new PlaylistElementListType);
+    xmlpp::Node::NodeList  childNodes 
+                           = element.get_children(elementListAttrName);
+    xmlpp::Node::NodeList::iterator it = childNodes.begin();
+
+    while (it != childNodes.end()) {
+        Ptr<PlaylistElement>::Ref  newPlaylistElement(new PlaylistElement);
+        const xmlpp::Element       * childElement 
+                                   = dynamic_cast<const xmlpp::Element*> (*it);
+        newPlaylistElement->configure(*childElement);
+        addPlaylistElement(newPlaylistElement);
+        ++it;
+    }
+    
+    isLockedForPlaying = false;
+    isLockedForEditing = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a new playlist element to the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
+                                            throw (std::invalid_argument)
+{
+    Ptr<const time_duration>::Ref  relativeOffset
+                                   = playlistElement->getRelativeOffset();
+
+    if (elementList->find(*relativeOffset) != elementList->end()) {
+        std::string eMsg = "Two playlist elements at the same relative offset";
+        throw std::invalid_argument(eMsg);
+    }
+
+    (*elementList)[*relativeOffset] = playlistElement;
 }
 
 

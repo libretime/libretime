@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,7 +79,7 @@ static const std::string    audioClipIdAttrName = "id";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Create a playlist object based on an XML element.
+ *  Create a playlist element object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
 PlaylistElement :: configure(const xmlpp::Element & element)
@@ -123,10 +123,8 @@ PlaylistElement :: configure(const xmlpp::Element & element)
         throw std::invalid_argument(eMsg);
     }
 
-    // this is not really a new allocation, but a new pointer into the inside
-    // of the parameter '& element' -- so no delete is needed (nor allowed)
-    xmlpp::Element            * audioClipElement 
-                                = new xmlpp::Element( (*it)->cobj() );
+    const xmlpp::Element        * audioClipElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
 
     if (!(attribute= audioClipElement->get_attribute(audioClipIdAttrName))) {
         std::string eMsg = "Missing ";

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "PlaylistTest.h"
 
 
+using namespace std;
 using namespace LiveSupport::Core;
 
 /* ===================================================  local data structures */
@@ -99,7 +100,9 @@ PlaylistTest :: firstTest(void)
         const xmlpp::Element  * root     = document->get_root_node();
         Ptr<Playlist>::Ref      playlist(new Playlist());
 
+// cout << "\nconfig elott\n";
         playlist->configure(*root);
+// cout << "config utan\n";
 
         CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
         Ptr<const boost::posix_time::time_duration>::Ref  duration
