@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -180,13 +180,31 @@ class BasicStor extends Alib{
      */
     function bsMoveFile($id, $did)
     {
-        if($this->getObjType($did) !== 'Folder')
-            return PEAR::raiseError(
-                "BasicStor::moveFile: destination is not folder ($did)", GBERR_WRTYPE
-            );
         $parid = $this->getParent($id);
         if($parid == $did) return TRUE;
-        $this->_relocateSubtree($id, $did);
+        if($id == $did){
+            return PEAR::raiseError(
+                "BasicStor::moveFile: can't move to itself",
+                GBERR_WRTYPE
+            );
+        }
+        if($this->getObjType($did) !== 'Folder')
+            return PEAR::raiseError(
+                "BasicStor::moveFile: destination is not folder ($did)",
+                GBERR_WRTYPE
+            );
+        switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+            case"File":
+                return $this->_relocateSubtree($id, $did);
+            break;
+            default:
+                return PEAR::raiseError(
+                    "BasicStor::moveFile: only file move supported now, sorry.",
+                    GBERR_WRTYPE
+                );
+        }
     }
 
     /**
@@ -198,11 +216,32 @@ class BasicStor extends Alib{
      */
     function bsCopyFile($id, $did)
     {
-        if($this->getObjType($did) !== 'Folder')
+        $parid = $this->getParent($id);
+        if($parid == $did) return TRUE;
+        if($id == $did){
             return PEAR::raiseError(
-                'BasicStor::bsCopyFile: destination is not folder', GBERR_WRTYPE
+                "BasicStor::bsCopyFile: can't move to itself",
+                GBERR_WRTYPE
             );
-        return $this->_copySubtree($id, $did);
+        }
+        if($this->getObjType($did) !== 'Folder'){
+            return PEAR::raiseError(
+                'BasicStor::bsCopyFile: destination is not folder',
+                GBERR_WRTYPE
+            );
+        }
+        switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+            case"File":
+                return $this->_copySubtree($id, $did);
+            break;
+            default:
+                return PEAR::raiseError(
+                    "BasicStor::moveFile: only file sopy supported now, sorry.",
+                    GBERR_WRTYPE
+                );
+        }
     }
 
     /**
