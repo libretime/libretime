@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,9 +140,9 @@ static const std::string    smilExtensionsAttrValue
 static const std::string    smilBodyNodeName = "body";
 
 /*------------------------------------------------------------------------------
- *  The name of the sequential audio clip list node in the SMIL file.
+ *  The name of the parallel audio clip list node in the SMIL file.
  *----------------------------------------------------------------------------*/
-static const std::string    smilSeqNodeName = "seq";
+static const std::string    smilParNodeName = "par";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip element node in the SMIL file.
@@ -150,19 +150,19 @@ static const std::string    smilSeqNodeName = "seq";
 static const std::string    smilAudioClipNodeName = "audio";
 
 /*------------------------------------------------------------------------------
- *  The name of the attribute containing the URI of the audio clip element.
- *----------------------------------------------------------------------------*/
-static const std::string    smilAudioClipUriAttrName = "src";
-
-/*------------------------------------------------------------------------------
  *  The name of the sub-playlist element node in the SMIL file.
  *----------------------------------------------------------------------------*/
 static const std::string    smilPlaylistNodeName = "audio";
 
 /*------------------------------------------------------------------------------
- *  The name of the attribute containing the URI of the sub-playlist element.
+ *  The name of the attribute containing the URI of the element.
  *----------------------------------------------------------------------------*/
-static const std::string    smilPlaylistUriAttrName = "src";
+static const std::string    smilUriAttrName = "src";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute containing the relative offset of the element.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilRelativeOffsetAttrName = "begin";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: error reports */
@@ -1112,8 +1112,8 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
 
     xmlpp::Element    * smilBodyNode
                         = smilRootNode->add_child(smilBodyNodeName);
-    xmlpp::Element    * smilSeqNode
-                        = smilBodyNode->add_child(smilSeqNodeName);
+    xmlpp::Element    * smilParNode
+                        = smilBodyNode->add_child(smilParNodeName);
     
     Playlist::const_iterator it = oldPlaylist->begin();
 
@@ -1121,35 +1121,47 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         Ptr<FadeInfo>::Ref          fadeInfo = plElement->getFadeInfo();
 
+        Ptr<time_duration>::Ref 
+                relativeOffset      = plElement->getRelativeOffset();
+
+        long    offsetMilliseconds  = relativeOffset->total_milliseconds();
+        std::stringstream   offsetStringStream;
+        offsetStringStream << offsetMilliseconds / 1000l
+                           << '.'
+                           << offsetMilliseconds % 1000
+                           << 's';
+
         if (plElement->getType() == PlaylistElement::AudioClipType) {
             Ptr<AudioClip>::Ref audioClip 
                             = acquireAudioClip(sessionId, plElement
                                                           ->getAudioClip()
                                                           ->getId());
-            Ptr<time_duration>::Ref relativeOffset
-                            = plElement->getRelativeOffset();
             newPlaylist->addAudioClip(audioClip, relativeOffset, fadeInfo);
 
             xmlpp::Element* smilAudioClipNode
-                            = smilSeqNode->add_child(smilAudioClipNodeName);
+                            = smilParNode->add_child(smilAudioClipNodeName);
             smilAudioClipNode->set_attribute(
-                            smilAudioClipUriAttrName, 
+                            smilUriAttrName, 
                             *(audioClip->getUri()) );
+            smilAudioClipNode->set_attribute(
+                            smilRelativeOffsetAttrName, 
+                            offsetStringStream.str() );
             ++it;
         } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             Ptr<Playlist>::Ref playlist 
                             = acquirePlaylist(sessionId, plElement
                                                          ->getPlaylist()
                                                          ->getId());
-            Ptr<time_duration>::Ref relativeOffset
-                            = plElement->getRelativeOffset();
             newPlaylist->addPlaylist(playlist, relativeOffset, fadeInfo);
 
             xmlpp::Element* smilPlaylistNode
-                            = smilSeqNode->add_child(smilPlaylistNodeName);
+                            = smilParNode->add_child(smilPlaylistNodeName);
             smilPlaylistNode->set_attribute(
-                            smilPlaylistUriAttrName, 
+                            smilUriAttrName, 
                             *(playlist->getUri()) );
+            smilPlaylistNode->set_attribute(
+                            smilRelativeOffsetAttrName, 
+                            offsetStringStream.str() );
             ++it;
         } else {          // this should never happen
             throw XmlRpcInvalidArgumentException(
