@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class TimeConversion
 {
@@ -102,6 +102,14 @@ class TimeConversion
          */
         static Ptr<ptime>::Ref
         now(void)                                               throw ();
+
+        /**
+         *  Sleep for the specified time duration, with microsecond precision.
+         *
+         *  @param duration sleep for this duration.
+         */
+        static void
+        sleep(Ptr<time_duration>::Ref   duration)               throw ();
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,5 +87,16 @@ TimeConversion :: now(void)
     // TODO: check for -1 return value, to see if there are errors
     gettimeofday(&timeval, 0);
     return timevalToPtime(&timeval);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Sleep for the specified duration.
+ *----------------------------------------------------------------------------*/
+void
+TimeConversion :: sleep(Ptr<time_duration>::Ref duration)
+                                                                    throw ()
+{
+    usleep(duration->total_microseconds());
 }
 

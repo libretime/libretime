@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the TimeConversion class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see TimeConversion
  */
 class TimeConversionTest : public CPPUNIT_NS::TestFixture
@@ -66,6 +66,7 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(TimeConversionTest);
     CPPUNIT_TEST(timevalToPtimeTest);
     CPPUNIT_TEST(nowTest);
+    CPPUNIT_TEST(sleepTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -85,6 +86,14 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
          */
         void
         nowTest(void)                           throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the sleep function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        sleepTest(void)                         throw (CPPUNIT_NS::Exception);
 
 
     public:

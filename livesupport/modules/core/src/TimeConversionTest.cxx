@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -138,5 +138,26 @@ TimeConversionTest :: nowTest(void)
     CPPUNIT_ASSERT(ptime->time_of_day().hours() == tm.tm_hour);
     CPPUNIT_ASSERT(ptime->time_of_day().minutes() == tm.tm_min);
     CPPUNIT_ASSERT(ptime->time_of_day().seconds() == tm.tm_sec);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the sleep function
+ *----------------------------------------------------------------------------*/
+void
+TimeConversionTest :: sleepTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<ptime>::Ref             start;
+    Ptr<ptime>::Ref             end;
+    Ptr<time_duration>::Ref     duration;
+
+    duration.reset(new time_duration(seconds(2)));
+
+    start = TimeConversion::now();
+    TimeConversion::sleep(duration);
+    end = TimeConversion::now();
+
+    CPPUNIT_ASSERT((*end - *start) >= *duration);
 }
 
