@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.53 $
+    Version  : $Revision: 1.54 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.53 $
+ *  @version $Revision: 1.54 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -558,6 +558,9 @@ class GreenBox extends BasicStor{
 
     /**
      *  <span style="color:green">Move audioClip to the new position in the playlist</span>
+     *
+     *  <span style="color:green">This method may change id attributes
+     *      of playlistElements and/or fadeInfo</span>
      *
      *  @param token string, playlist access token
      *  @param plElGunid string, global id of deleted playlistElement
