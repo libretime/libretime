@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/RawMediaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -146,7 +146,10 @@ class RawMediaData{
     function analyze()
     {
         if(!$this->exists) return FALSE;
-        $ia = GetAllFileinfo($this->fname);
+        //$ia = GetAllFileinfo($this->fname);
+        //if(!isset($ia['mime_type']) || $ia['mime_type']==''){
+            $ia = GetAllFileinfo($this->fname, 'mp3');
+        //}
         return $ia;
     }
 
@@ -159,7 +162,8 @@ class RawMediaData{
     {
         $a = $this->analyze();
         if($a === FALSE) return $a;
-        return $a['mime_type'];
+        if(isset($a['mime_type'])) return $a['mime_type'];
+        return '';
     }
 
     /**
