@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,6 +62,7 @@
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventScheduler.h"
+#include "GetVersionMethod.h"
 #include "UploadPlaylistMethod.h"
 #include "DisplayScheduleMethod.h"
 #include "DisplayPlaylistMethod.h"
@@ -125,8 +126,8 @@ using namespace LiveSupport::PlaylistExecutor;
  *                          scheduleFactory,xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.10 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
@@ -152,6 +153,11 @@ class SchedulerDaemon : public Installable,
          *  The audio player.
          */
         Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+
+        /**
+         *  The getVersion the daemon is providing.
+         */
+        Ptr<GetVersionMethod>::Ref          getVersionMethod;
 
         /**
          *  The uploadPlaylistMethod the daemon is providing.

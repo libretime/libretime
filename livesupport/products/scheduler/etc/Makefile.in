@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.29 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.30 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -34,6 +34,7 @@ MKDIR   = mkdir -p
 RM      = rm -f
 RMDIR   = rm -rf
 DOXYGEN = doxygen
+KILLALL = killall
 
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
@@ -148,6 +149,7 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/XmlRpcDaemon.o \
                  ${TMP_DIR}/SchedulerDaemon.o \
                  ${TMP_DIR}/XmlRpcTools.o \
+                 ${TMP_DIR}/GetVersionMethod.o \
                  ${TMP_DIR}/UploadPlaylistMethod.o \
                  ${TMP_DIR}/DisplayScheduleMethod.o \
                  ${TMP_DIR}/DisplayPlaylistMethod.o \
@@ -192,6 +194,8 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RpcRemoveFromScheduleTest.o \
                    ${TMP_DIR}/RpcRescheduleTest.o \
                    ${TMP_DIR}/XmlRpcToolsTest.o \
+                   ${TMP_DIR}/GetVersionMethodTest.o \
+                   ${TMP_DIR}/SchedulerDaemonGetVersionTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayScheduleMethodTest.o \
                    ${TMP_DIR}/DisplayPlaylistMethodTest.o \
@@ -279,6 +283,11 @@ run: ${SCHEDULER_EXE}
 
 storage_server_init:
 #	${MAKE} -C ${STORAGE_SERVER_DIR}
+
+kill:
+	${KILLALL} scheduler
+	sleep 2
+	${KILLALL} -9 scheduler
 
 
 #-------------------------------------------------------------------------------

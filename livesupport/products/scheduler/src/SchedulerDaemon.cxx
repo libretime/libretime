@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,6 +101,7 @@ static const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
 SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
                         : XmlRpcDaemon()
 {
+    getVersionMethod.reset(new GetVersionMethod());
     uploadPlaylistMethod.reset(new UploadPlaylistMethod());
     displayScheduleMethod.reset(new DisplayScheduleMethod());
     displayPlaylistMethod.reset(new DisplayPlaylistMethod());
@@ -208,6 +209,7 @@ SchedulerDaemon :: registerXmlRpcFunctions(
                             Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
                                                     throw (std::logic_error)
 {
+    xmlRpcServer->addMethod(getVersionMethod.get());
     xmlRpcServer->addMethod(uploadPlaylistMethod.get());
     xmlRpcServer->addMethod(displayScheduleMethod.get());
     xmlRpcServer->addMethod(displayPlaylistMethod.get());
