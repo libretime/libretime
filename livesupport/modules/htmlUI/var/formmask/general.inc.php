@@ -298,6 +298,12 @@ $ui_fmask = array(
             'type'      => 'hidden'
         ),
         array(
+            'element'   => 'title',
+            'type'      => 'text',
+            'label'     => 'Title',
+            'required'  => TRUE
+        ),
+        array(
             'element'   => 'url',
             'type'      => 'text',
             'label'     => 'Stream URL',

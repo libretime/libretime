@@ -167,7 +167,7 @@ class uiHandler extends uiBase {
         $this->transMData($r);
 
         $this->redirUrl = UI_BROWSER."?act=editFile&id=$r";
-        $this->_retMsg('File saved');
+        $this->_retMsg('Audioclip Data saved');
         return $r;
     }
 
@@ -214,17 +214,17 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
         }
-        $r = $this->gb->storeWebstream($folderId, date('Y-m-d H:i:s'), NULL, $this->sessid, NULL, $formdata['url']);
+        $r = $this->gb->storeWebstream($folderId, $formdata['title'], NULL, $this->sessid, NULL, $formdata['url']);
         if(PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
         }
         $length = $this->_twoDigits($formdata['length']['H']).':'.$this->_twoDigits($formdata['length']['i']).':'.$this->_twoDigits($formdata['length']['s']).'.000000';
-        $this->gb->setMDataValue($r, UI_MDATA_KEY_TITLE, $this->sessid, $data['title']);
+        $this->gb->setMDataValue($r, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
         $this->gb->setMDataValue($r, UI_MDATA_KEY_DURATION, $this->sessid, $length);
         $this->redirUrl = UI_BROWSER."?act=editWebstream&id=$r";
-        $this->_retMsg('Stream saved');
+        $this->_retMsg('Stream Data saved');
         return $r;
     }
 
@@ -237,9 +237,10 @@ class uiHandler extends uiBase {
             return FALSE;
         }
         $length = $this->_twoDigits($formdata['length']['H']).':'.$this->_twoDigits($formdata['length']['i']).':'.$this->_twoDigits($formdata['length']['s']).'.000000';
+        $this->gb->setMDataValue($id, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
         $this->gb->setMDataValue($id, UI_MDATA_KEY_URL, $this->sessid, $formdata['url']);
         $this->gb->setMDataValue($id, UI_MDATA_KEY_DURATION, $this->sessid,  $length);
-        $this->_retMsg('Stream changed');
+        $this->_retMsg('Stream Data changed');
         $this->redirUrl = UI_BROWSER.'?act=editWebstream&id='.$formdata['id'];
     }
 
