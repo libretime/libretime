@@ -13,8 +13,8 @@ project, Copyright &#169; 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.1 $</li>
+  <li>Author: $Author: fgerlits $</li>
+  <li>Version: $Revision: 1.2 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/model/LocalStorage/index.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -35,6 +35,9 @@ The goal of the local storage system is to store Audio Clips locally.
 Audio Clips contain audio data bundled with metadata describing it.
 Storing locally means that the binary audio data is available not just
 as a stream, but also as random seekable file.<br>
+The local storage contains Playlists also.  These are metadata
+files containing a list of Audio Clip IDs with extra (fade in / fade out) 
+information.</br>
 <h2>System functions</h2>
 The main system functions are described below. There are three
 categories for these functions:<br>
@@ -115,6 +118,38 @@ that it is performed<br>
       <td valign="top">F1.5<br>
       </td>
       <td valign="top">Search Audio clips by querying metadata<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F2.1<br>
+      </td>
+      <td valign="top">Create new playlists<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F2.2<br>
+      </td>
+      <td valign="top">Access playlists for editing<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F2.3<br>
+      </td>
+      <td valign="top">Delete playlists<br>
+      </td>
+      <td valign="top">evident<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">F2.4<br>
+      </td>
+      <td valign="top">Access playlists for execution<br>
       </td>
       <td valign="top">evident<br>
       </td>
@@ -267,7 +302,7 @@ This section lists generic (essential) uses cases, that do not contain
 architecture-specific considerations.<br>
 <br>
 <object type="image/svg+xml" name="essential use cases"
- data="EssentialUseCases.svg" width="600" height="550"></object>
+ data="EssentialUseCases.svg" width="600" height="780"></object>
 <h3>UC-1 Store or update Audio clip<br>
 </h3>
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -933,9 +968,567 @@ refined criteria, and presents the results to the Storage maintainer<br>
   <li><b>action 3:</b> if the Storage maintainer can not be
 authenticated, he is notified, and the use case ends.</li>
 </ul>
-<h2>
-</h2>
 <br>
+
+<h3>UC-6 Create playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-6 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Create playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To store a new Playlist in the local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer contacts the Local
+storage with the aim of uploading a new Playlist. The Local
+storage stores the new metafile under the new ID.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F2.1<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the intention of uploading a new Playlist<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants access.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents the new Playlist
+ID and the new Playlist metafile<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies that there is no Playlist yet
+in the Local storage with the given ID<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system stores the received Playlist metafile
+and notifies the Storage maintainer of the action taken.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer disconnects<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, she is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if there is already a Playlist in the Local storage
+with the given ID, the user is notified and the use case ends.</li>
+</ul>
+<br>
+
+<h3>UC-7 Edit playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-7 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Edit playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To modify an existing Playlist in the local 
+storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer contacts the Local
+storage with the aim of editing an existing Playlist.  The Local
+storage retrieves the Playlist and marks it as being edited.  The Storage 
+maintainer modifies the Playlist.  The Storage maintainer saves the
+modified Playlist, the Local storage stores it in place of the old
+Playlist and marks it as no longer being edited.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F2.2<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the intention of editing a Playlist<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants access<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents a Playlist ID<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies that there is a Playlist 
+in the Local storage with the given ID, and it is not currently 
+being edited<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system marks the Playlist with the given ID 
+as being edited<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The system returns the Playlist metafile with
+the given ID and notifies the Storage maintainer of the actions taken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer modifies the Playlist<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>9.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents the new Playlist
+metafile for saving<br>
+      </td>
+      <td valign="top"><b>10.</b><br>
+      </td>
+      <td valign="top">The system verifies that the user had opened this
+Playlist earlier<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>11.</b><br>
+      </td>
+      <td valign="top">The system stores the new Playlist metafile in 
+place of the old one, marks it as no longer being edited, 
+and notifies the Storage maintainer of the actions taken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>12.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer disconnects.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, she is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if there is no Playlist in the Local storage
+with the given ID, or if the Playlist is already being edited, 
+the user is notified and the use case ends.</li>
+  <li><b>action 10:</b> if the user cannot be identified as the same
+that opened the Playlist for editing, the user is notified, and the
+use case continues at point 8.</li></ul>
+<br>
+
+<h3>UC-8 Delete playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-8 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Delete playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Storage maintainer </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To delete a Playlist from the local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Storage maintainer contacts the Local
+storage with the aim of deleting a Playlist.  The system deletes the 
+Playlist with the given ID from the Local storage.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F2.3<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Storage maintainer connects to the Local storage
+with the intention of deleting a Playlist<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Storage maintainer provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Storage maintainer
+and grants access<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer presents the ID of the
+Playlist to be deleted<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies that there is a Playlist 
+in the Local storage with the given ID, and it is not currently being
+edited<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system deletes the given Playlist from
+the Local storage
+and notifies the Storage maintainer of the action taken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Storage maintainer disconnects.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Storage maintainer can not be
+authenticated, she is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if there is no Playlist in the Local storage
+with the given ID, or if the Playlist is currently being edited, 
+the user is notified and the use case ends.</li>
+</ul>
+<br>
+
+<h3>UC-9 Access playlist<br>
+</h3>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>ref#</b> </td>
+      <td valign="top">UC-9 </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>use case</b> </td>
+      <td valign="top">Access playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>type</b> </td>
+      <td valign="top">primary, essential </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>actors</b> </td>
+      <td valign="top">Audio player </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>purpose</b> </td>
+      <td valign="top">To access a Playlist metafile in order to 
+execute (play) it<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>overview</b> </td>
+      <td valign="top">The Audio player contacts the Local
+storage with the aim of accessing a Playlist.  The Local storage 
+returns the requested Playlist metafile.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>references</b> </td>
+      <td valign="top">F2.4<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h4>Typical course of events</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <th colspan="2" valign="top">actor action <br>
+      </th>
+      <th colspan="2" valign="top">system response <br>
+      </th>
+    </tr>
+    <tr>
+      <td valign="top"><b>1.</b> </td>
+      <td valign="top">Audio player connects to the Local storage
+with the intention of accessing a Playlist<br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>2.</b> </td>
+      <td valign="top">The Audio player provides authentication
+information </td>
+      <td valign="top"><b>3.</b> </td>
+      <td valign="top">The system authenticates the Audio player
+and grants access<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>4.</b><br>
+      </td>
+      <td valign="top">The Audio player presents a Playlist ID<br>
+      </td>
+      <td valign="top"><b>5.</b><br>
+      </td>
+      <td valign="top">The system verifies that there is a Playlist
+in the Local storage with the given ID<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><b>6.</b><br>
+      </td>
+      <td valign="top">The system returns the requested Playlist metafile
+and notifies the Audio player of the action taken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>7.</b><br>
+      </td>
+      <td valign="top">The Audio player reads the Playlist, and saves
+a private copy<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>8.</b><br>
+      </td>
+      <td valign="top">The Audio player notifies the Local storage that
+it no longer needs the Playlist, and disconnects.<br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+      <td valign="top"> <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Alternate courses</h4>
+<ul>
+  <li><b>action 3:</b> if the Audio player can not be
+authenticated, she is notified, and the use case ends.</li>
+  <li><b>action 5:</b> if there is no Playlist in the Local storage
+with the given ID, the user is notified and the use case ends.</li>
+</ul>
+<br>
+
 <h2>Conceptual model</h2>
 The following figure displays the semantic concepts identified for the
 Scheduler daemon, and the main associations between the concepts.<br>
@@ -1006,6 +1599,13 @@ Local storage<br>
       </td>
       <td valign="top">The actor that accesses the raw audio contained
 in the Local storage<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Playlist</b><br>
+      </td>
+      <td valign="top">A metafile containing AudioClip IDs and some
+extra (fade in / fade out) information<br>
       </td>
     </tr>
     <tr>
@@ -1124,6 +1724,27 @@ AudioClips<br>
       </td>
     </tr>
     <tr>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top">Is identified by<br>
+      </td>
+      <td valign="top">UniqueId<br>
+      </td>
+      <td valign="top">This is a globally unique id for each Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Storage maintainer<br>
+      </td>
+      <td valign="top">Manages<br>
+      </td>
+      <td valign="top">Playlist<br>
+      </td>
+      <td valign="top">This includes creating, editing, deleting and
+accessing Playlists<br>
+      </td>
+    </tr>
+    <tr>
       <td valign="top"><br>
       </td>
       <td valign="top"><br>
@@ -1162,11 +1783,28 @@ System diagrams are presented for each use case below.<br>
 <h4>UC-5 Search in metadata</h4>
 <object type="image/svg+xml" name="authenticate user sequence diagram"
  data="Searchinmetadata_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
+<h4>UC-6 Create playlist</h4>
+<object type="image/svg+xml" name="create playlist sequence diagram"
+ data="Createplaylist_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
+<h4>UC-7 Edit playlist</h4>
+<object type="image/svg+xml" name="create playlist sequence diagram"
+ data="Editplaylist_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
+<h4>UC-8 Delete playlist</h4>
+<object type="image/svg+xml" name="create playlist sequence diagram"
+ data="Deleteplaylist_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
+<h4>UC-9 Access playlist</h4>
+<object type="image/svg+xml" name="create playlist sequence diagram"
+ data="Accessplaylist_SequenceDiagram.svg" width="650" height="200"></object>
+<br>
 <h3>System objects</h3>
 The following figure shows the system objects and their functions, as
 derived from the system sequence diagrams.<br>
 <object type="image/svg+xml" name="system behaviour"
- data="Systembehaviour.svg" width="450" height="250"></object>
+ data="Systembehaviour.svg" width="450" height="320"></object>
 <h3>Contracts</h3>
 For all operations exposed in the system sequence diagrams, the
 following contracts are defined.<br>
@@ -1890,6 +2528,763 @@ specified by the supplied id.<br>
       <td align="left" valign="top">none<br>
       </td>
       <td align="center" valign="top"><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : createPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">createPlaylist<br>
+(playlistId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Create a new Playlist
+metafile.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-6<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if a Playlist with the
+given playlistId already exists, report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"></td>
+      <td valign="top">a Playlist object is created</td>
+      <td valign="top">instance creation<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the new Playlist is marked as currently
+not being edited<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : editPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">editPlaylist<br>
+(playlistId : UniqueId)<br>
+: Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Open a Playlist metafile
+for editing.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-7<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Playlist with the
+given playlistId exists, or if the Playlist has already been marked as
+being edited, report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">a URL of a Playlist 
+metafile, and a token identifying it<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the Playlist is marked as currently
+being edited<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+     <td valign="top"><br></td>
+      <td valign="top">the Playlist metafile and the URL returned are
+associated with the token returned<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : savePlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">savePlaylist<br>
+(playlist : Playlist)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Store a new Playlist
+metafile in place of the old one.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-7<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">'playlist' is two arguments, 
+really: the URL of a (new) Playlist metafile, 
+and the token returned previously by editPlaylist()<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if the playlist token argument 
+does not match a token generated earlier in this session by editPlaylist(),
+report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">the Playlist has been marked
+as being edited in the same session</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the Playlist is marked as currently
+not being edited<br>
+      </td>
+      <td valign="top">attribute modification<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"></td>
+      <td valign="top">the token and the URL returned earlier by 
+editPlaylist() together with it are no longer valid</td>
+      <td valign="top">association broken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : deletePlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">deletePlaylist<br>
+(playlistId : UniqueId)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Delete a Playlist
+metafile.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-8<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Playlist with the
+given playlistId exists, or if the Playlist is marked as currently
+being edited, report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"></td>
+      <td valign="top">a Playlist object is deleted</td>
+      <td valign="top">instance deletion<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : accessPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">accessPlaylist<br>
+(playlistId : UniqueId)<br>
+: Playlist<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Access (read) a Playlist
+metafile.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-9<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">for this method, it does
+not matter whether the Playlist is being edited or not -- the latest
+saved state of the Playlist should be returned<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no Playlist with the
+given playlistId exists, report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">a URL of a Playlist 
+metafile, and a token identifying it<br>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    </tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the Playlist and the URL returned are
+associated with the token returned<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : releasePlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">releasePlaylist<br>
+(playlist : Playlist)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Release the resources
+obtained earlier by accessPlaylist().<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-9<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">here 'playlist' is just one
+argument (sorry!), a token returned previously by accessPlaylist()<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if the playlist token argument 
+does not match a token generated earlier in this session by accessPlaylist(),
+report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"></td>
+      <td valign="top">the token and the URL returned earlier by 
+accessPlaylist() together with it are no longer valid</td>
+      <td valign="top">association broken<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : existsPlaylist<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">existsPlaylist<br>
+(playlistId : UniqueId)<br>
+: bool<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Check whether a Playlist
+metafile with the given playlist ID exists.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-6, UC-7, UC-8, UC-9<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">true or false<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : accessAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">accessAudioClip<br>
+(audioClipId : UniqueId)<br>
+: AudioClip<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Access (read) an Audio
+Clip metafile.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-4<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if no AudioClip with the
+given audioClipId exists, report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">a URL of an AudioClip 
+metafile, and a token identifying it<br>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    </tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top">the AudioClip and the URL returned are
+associated with the token returned<br>
+      </td>
+      <td valign="top">association formed<br>
+      </td>
+    <tr>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<h4>Contract for Local storage : releaseAudioClip<br>
+</h4>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+  <tbody>
+    <tr>
+      <td valign="top"><b>Name</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">releaseAudioClip<br>
+(audioClip : AudioClip)<br>
+: void<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Responsibilities</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">Release the resources
+obtained earlier by accessAudioClip().<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Type</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">system<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Cross-reference</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">UC-4<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Notes</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">here 'audioClip' is just one
+argument (sorry!), a token returned previously by accessAudioClip()<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Exceptions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">if the playlist token argument 
+does not match a token generated earlier in this session by accessAudioClip(),
+report as an error<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Output</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Pre-conditions</b><br>
+      </td>
+      <td colspan="2" rowspan="1" valign="top">none</td>
+    </tr>
+    <tr>
+      <td valign="top"><b>Post-conditions</b><br>
+      </td>
+      <td align="center" valign="top"><b>condition</b><br>
+      </td>
+      <td align="center" valign="top"><b>type</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"></td>
+      <td valign="top">the token and the URL returned earlier by 
+accessAudioClip() together with it are no longer valid</td>
+      <td valign="top">association broken<br>
       </td>
     </tr>
     <tr>
