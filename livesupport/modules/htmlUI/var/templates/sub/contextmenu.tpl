@@ -4,22 +4,22 @@ onContextmenu="return menu('{$i.id}'
     {$moreContextBefore}
     {if ($i.type == 'audioclip' || $i.type == 'webstream')}
         {if $PLid}
-            ,'PL.addItem',
+            , 'PL.addItem'
         {else}
-            'PL.newUsingItem',
+            , 'PL.newUsingItem'
         {/if}
-        'delete'
+        , 'delete'
     {/if}
 
     {if ($i.type == 'playlist')}
         {if $PLid}
             {if $PLid == $i.id}
-                ,'PL.release'
+                , 'PL.release'
             {else}
-                ,'PL.addItem', 'delete'
+                , 'PL.addItem', 'delete'
             {/if}
         {else}
-            ,'PL.activate', 'PL.newUsingItem', 'delete'
+            , 'PL.activate', 'PL.newUsingItem', 'delete'
         {/if}
     {/if}
     {$moreContextAfter}
