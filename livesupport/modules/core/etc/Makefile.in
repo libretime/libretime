@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -85,11 +85,9 @@ LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${LIB_DIR}
 #	Dependencies
 #-------------------------------------------------------------------------------
 CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
-                ${TMP_DIR}/Playlist.o \
-                ${TMP_DIR}/AudioClip.o
+                ${TMP_DIR}/Playlist.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/PlaylistTest.o \
-                   ${TMP_DIR}/AudioClipTest.o \
                    ${TMP_DIR}/TestRunner.o
 
 TEST_RUNNER_LIBS = -l${CORE_LIB} -lxml++-1.0 -lcppunit -ldl
