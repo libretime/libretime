@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,7 +55,7 @@ const std::string TestStorageClient::configElementNameStr = "testStorage";
 /*------------------------------------------------------------------------------
  *  The path to the local temp storage
  *----------------------------------------------------------------------------*/
-const std::string TestStorageClient::localTempStoragePath = "var/";
+const std::string TestStorageClient::localTempStoragePath = "tmp/";
 
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
