@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -179,7 +179,7 @@ class MetaData{
             //$res = $fmt->formatString($res);
             return $res;
         }else
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<metadata/>\n";
+            return file_get_contents(dirname(__FILE__).'/emptyMdata.xml');
     }
 
     /**
