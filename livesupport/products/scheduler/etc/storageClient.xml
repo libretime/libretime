@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE storageClientFactory [
+
+<!ELEMENT storageClientFactory (testStorage?) >
+
+<!ELEMENT testStorage (playlist*) >
+
+<!ELEMENT playlist EMPTY >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+]>
+<storageClientFactory>
+    <testStorage>
+        <playlist id="1" playlength="01:00:00.000"/>
+    </testStorage>
+</storageClientFactory>

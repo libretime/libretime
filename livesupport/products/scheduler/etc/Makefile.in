@@ -1,0 +1,185 @@
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#   http://livesupport.campware.org/
+#   To report bugs, send an e-mail to bugs@campware.org
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.1 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
+#
+#   @configure_input@
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR   = mkdir -p
+RM      = rm -f
+RMDIR   = rm -rf
+DOXYGEN = doxygen
+
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+BASE_DIR    = @builddir@
+DOC_DIR     = ${BASE_DIR}/doc
+DOXYGEN_DIR = ${DOC_DIR}/doxygen
+ETC_DIR     = ${BASE_DIR}/etc
+SRC_DIR     = ${BASE_DIR}/src
+TMP_DIR     = ${BASE_DIR}/tmp
+
+USR_DIR         = ${BASE_DIR}/../../usr
+USR_INCLUDE_DIR = ${USR_DIR}/include
+USR_LIB_DIR     = ${USR_DIR}/lib
+BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
+LIBXMLPP_INCLUDE_DIR = ${USR_INCLUDE_DIR}/libxml++-1.0
+
+VPATH    = ${SRC_DIR}
+
+MODULES_DIR = ${BASE_DIR}/../../modules
+
+CORE_DIR         = ${MODULES_DIR}/core
+CORE_INCLUDE_DIR = ${CORE_DIR}/include
+CORE_LIB_DIR     = ${CORE_DIR}/lib
+CORE_LIB         = livesupport_core
+CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
+
+DB_DIR         = ${MODULES_DIR}/db
+DB_INCLUDE_DIR = ${DB_DIR}/include
+DB_LIB_DIR     = ${DB_DIR}/lib
+DB_LIB         = livesupport_db
+DB_LIB_FILE    = ${DB_LIB_DIR}/lib${DB_LIB}.a
+
+STORAGE_DIR         = ${MODULES_DIR}/storage
+STORAGE_INCLUDE_DIR = ${STORAGE_DIR}/include
+STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
+STORAGE_LIB         = livesupport_storage
+STORAGE_LIB_FILE    = ${STORAGE_LIB_DIR}/lib${STORAGE_LIB}.a
+
+SCHEDULER_EXE = ${TMP_DIR}/scheduler
+TEST_RUNNER   = ${TMP_DIR}/testRunner
+
+DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
+
+
+#-------------------------------------------------------------------------------
+#  	Configuration parameters
+#-------------------------------------------------------------------------------
+CPPFLAGS = @CPPFLAGS@
+CXXFLAGS = @CXXFLAGS@ @DEFS@ -pedantic -Wall -Wno-long-long \
+                             -I${USR_INCLUDE_DIR} \
+                             -I${BOOST_INCLUDE_DIR} \
+                             -I${LIBXMLPP_INCLUDE_DIR} \
+                             -I${CORE_INCLUDE_DIR} \
+                             -I${DB_INCLUDE_DIR} \
+                             -I${STORAGE_INCLUDE_DIR} \
+                             -I${TMP_DIR}
+LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} \
+                     -L${CORE_LIB_DIR} \
+                     -L${DB_LIB_DIR} \
+                     -L${STORAGE_LIB_DIR}
+
+
+#-------------------------------------------------------------------------------
+#	Dependencies
+#-------------------------------------------------------------------------------
+SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
+                 ${TMP_DIR}/XmlRpcDaemon.o \
+                 ${TMP_DIR}/SchedulerDaemon.o \
+                 ${TMP_DIR}/UploadPlaylistMethod.o \
+                 ${TMP_DIR}/ScheduleFactory.o \
+                 ${TMP_DIR}/PostgresqlSchedule.o
+
+SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
+                     ${TMP_DIR}/main.o
+SCHEDULER_EXE_LIBS = -l${STORAGE_LIB} -l${DB_LIB} -l${CORE_LIB} \
+                     -lodbc++ -lboost_date_time-gcc \
+                     -lxmlrpc++ -lssl -lxml++-1.0
+
+TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
+                   ${TMP_DIR}/SchedulerDaemonTest.o \
+                   ${TMP_DIR}/UploadPlaylistMethodTest.o \
+                   ${TMP_DIR}/PostgresqlScheduleTest.o \
+                   ${TMP_DIR}/TestRunner.o
+TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+.PHONY: all dir_setup doc clean docclean depclean distclean
+
+all: dir_setup ${SCHEDULER_EXE}
+
+dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
+
+doc:
+	${DOXYGEN} ${DOXYGEN_CONFIG}
+
+clean:
+	${RM} ${SCHEDULER_EXE_OBJS} ${SCHEDULER_EXE}
+	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
+
+docclean:
+	${RMDIR} ${DOXYGEN_DIR}/html
+
+depclean: clean
+
+distclean: clean docclean
+	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
+
+check: all ${TEST_RUNNER}
+	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER}
+
+
+#-------------------------------------------------------------------------------
+#   Specific targets
+#-------------------------------------------------------------------------------
+${SCHEDULER_EXE}: ${CORE_LIB_FILE} ${DB_LIB_FILE} ${STORAGE_LIB_FILE} \
+                  ${SCHEDULER_EXE_OBJS}
+	${CXX} ${LDFLAGS} -o $@ $^ ${SCHEDULER_EXE_LIBS}
+
+${TMP_DIR}:
+	${MKDIR} ${TMP_DIR}
+
+${DOXYGEN_DIR}:
+	${MKDIR} ${DOXYGEN_DIR}
+
+${TEST_RUNNER}: ${CORE_LIB_FILE} ${DB_LIB_FILE} ${STORAGE_LIB_FILE} \
+                ${TEST_RUNNER_OBJS}
+	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
+
+${CORE_LIB_FILE}:
+	${MAKE} -C ${CORE_DIR}
+
+${DB_LIB_FILE}:
+	${MAKE} -C ${DB_DIR}
+
+${STORAGE_LIB_FILE}:
+	${MAKE} -C ${STORAGE_DIR}
+
+
+#-------------------------------------------------------------------------------
+#   Pattern rules
+#-------------------------------------------------------------------------------
+${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx
+	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $<
+
