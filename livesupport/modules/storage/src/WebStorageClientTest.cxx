@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -178,7 +178,13 @@ void
 WebStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector = wsc->reset();
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
+    try {
+        uniqueIdVector = wsc->reset();
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
     Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(0);
     
@@ -187,10 +193,16 @@ WebStorageClientTest :: audioClipTest(void)
         std::cout << std::hex << std::string(*uniqueIdVector->at(i)) << std::endl;
     } */
 
-    Ptr<SessionId>::Ref sessionId = authentication->login("root", "q");
+    Ptr<SessionId>::Ref sessionId;
+    try {
+        sessionId = authentication->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(sessionId);
 
-    bool exists;
+    bool exists = false;;
     try {
         exists = wsc->existsAudioClip(sessionId, id01);
     }
@@ -215,10 +227,10 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
-/*    
+    
     Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
     Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));
-    Ptr<AudioClip>::Ref     audioClip(new AudioClip(id01, playlength, uri));
+    audioClip.reset(new AudioClip(id01, playlength, uri));
 
     try {    
         wsc->storeAudioClip(sessionId, audioClip);
@@ -227,18 +239,30 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
-    CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, id01));   
-
-    Ptr<AudioClip>::Ref     newAudioClip 
-                            = wsc->getAudioClip(sessionId, id01);
-    CPPUNIT_ASSERT(std::string(*newAudioClip->getId()) == std::string(*id01);
+    try {
+        CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, id01));
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    
+/* this doesn't work yet
+    Ptr<AudioClip>::Ref     newAudioClip;
+    try {
+        newAudioClip = wsc->getAudioClip(sessionId, id01);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    
+    CPPUNIT_ASSERT(std::string(*newAudioClip->getId()) == std::string(*id01));
     CPPUNIT_ASSERT(newAudioClip->getPlaylength()->total_seconds()
                    == audioClip->getPlaylength()->total_seconds());
 */
     try{
         authentication->logout(sessionId);
     }
-    catch (StorageException &e) {
+    catch (AuthenticationException &e) {
         CPPUNIT_FAIL(e.what());
     }
 /*

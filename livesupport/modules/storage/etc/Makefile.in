@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -73,6 +73,8 @@ VPATH    = ${SRC_DIR}
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
+CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
+
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
@@ -98,6 +100,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+                     ${CURL_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
