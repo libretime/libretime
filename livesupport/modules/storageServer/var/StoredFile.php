@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -131,7 +131,7 @@ class StoredFile{
      */
     function recall(&$gb, $oid='', $gunid='')
     {
-        $cond = ($gunid=='' ? "id='$oid'" : "gunid='$gunid'" );
+        $cond = ($oid != '' ? "id='".intval($oid)."'" : "gunid='$gunid'" );
         $row = $gb->dbc->getRow("SELECT id, gunid, type, name
             FROM {$gb->filesTable} WHERE $cond");
         if(PEAR::isError($row)) return $row;
@@ -146,6 +146,18 @@ class StoredFile{
         $ac->name = $row['name'];
         $ac->id   = $row['id'];
         return $ac;
+    }
+    /**
+     *  Create instace of StoreFile object and recall existing file
+     *	by gunid.<br>
+     *
+     *  @param gb reference to GreenBox object
+     *  @param gunid string, optional, global unique id of file
+     *  @return instace of StoredFile object
+     */
+    function recallByGunid(&$gb, $gunid='')
+    {
+      return StoredFile::recall(&$gb, '', $gunid);
     }
     /**
      *  Create instace of StoreFile object and recall existing file from tmpLink

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -548,7 +548,7 @@ class GreenBox extends Alib{
     {
         if(!$gunid) $gunid = $this->_gunidFromId($id);
         else $id = $this->_idFromGunid($gunid);
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         $mediaTarget = $ac->_getRealRADFname();
         $mediaFile = "$gunid";

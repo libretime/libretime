@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,7 +46,7 @@ class LocStor extends GreenBox{
      */
     function existsAudioClip($sessid, $gunid)
     {
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)){
             // catch some exceptions
             switch($ac->getCode()){
@@ -73,7 +73,7 @@ class LocStor extends GreenBox{
     function storeAudioClip($sessid, $gunid, $mediaFileLP, $mdataFileLP)
     {
         // test if specified gunid exists:
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(!PEAR::isError($ac)){
             // gunid exists - do replace
             if(($res = $this->_authorize(
@@ -117,7 +117,7 @@ class LocStor extends GreenBox{
      */
     function deleteAudioClip($sessid, $gunid)
     {
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -135,7 +135,7 @@ class LocStor extends GreenBox{
      */
     function updateAudioClipMetadata($sessid, $gunid, $mdataFileLP)
     {
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -150,7 +150,7 @@ class LocStor extends GreenBox{
      */
     function accessRawAudioData($sessid, $gunid)
     {
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -193,7 +193,7 @@ class LocStor extends GreenBox{
      */
     function getAudioClip($sessid, $gunid)
     {
-        $ac =& StoredFile::recall(&$this, '', $gunid);
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
