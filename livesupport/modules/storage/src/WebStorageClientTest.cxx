@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -227,7 +227,7 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
-/*
+
     Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
     Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));
     audioClip.reset(new AudioClip(id01, playlength, uri));
@@ -245,7 +245,7 @@ WebStorageClientTest :: audioClipTest(void)
     catch (StorageException &e) {
         CPPUNIT_FAIL(e.what());
     }
-*/    
+    
 /* this doesn't work yet
     Ptr<AudioClip>::Ref     newAudioClip;
     try {
