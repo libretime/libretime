@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -292,7 +292,7 @@ GLiveSupport :: showLoggedInUI(void)                        throw ()
 /*------------------------------------------------------------------------------
  *  Upload a file to the server.
  *----------------------------------------------------------------------------*/
-void
+Ptr<AudioClip>::Ref
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
                            Ptr<const std::string>::Ref      fileName)
@@ -320,6 +320,8 @@ GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
                                                     title,
                                                     playlength,
                                                     uri));
-    storage->storeAudioClip(sessionId, audioClip);   
+    storage->storeAudioClip(sessionId, audioClip);
+
+    return audioClip;
 }
 

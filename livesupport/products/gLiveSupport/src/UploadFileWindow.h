@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,7 +79,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class UploadFileWindow : public Gtk::Window, public LocalizedObject
 {
@@ -124,7 +124,10 @@ class UploadFileWindow : public Gtk::Window, public LocalizedObject
          */
         Ptr<Gtk::Button>::Ref       closeButton;
 
-        // TODO: add status bar
+        /**
+         *  The status bar.
+         */
+        Ptr<Gtk::Label>::Ref        statusBar;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,6 +74,7 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     nameEntry.reset(new Gtk::Entry());
     uploadButton.reset(new Gtk::Button("upload"));
     closeButton.reset(new Gtk::Button("close"));
+    statusBar.reset(new Gtk::Label("status bar"));
 
     // set up the layout, which is a button box
     layout.reset(new Gtk::Table());
@@ -87,6 +88,7 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*nameEntry,         1, 2, 1, 2);
     layout->attach(*uploadButton,      1, 2, 2, 3);
     layout->attach(*closeButton,       1, 2, 3, 4);
+    layout->attach(*statusBar,         0, 3, 4, 5);
 
     add(*layout);
 
@@ -135,18 +137,26 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
 void
 UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 {
-    std::cerr << "upload clicked" << std::endl;
     try {
         Ptr<const Glib::ustring>::Ref   title;
         Ptr<const std::string>::Ref     fileName;
+        Ptr<AudioClip>::Ref             audioClip;
         
         title.reset(new Glib::ustring(nameEntry->get_text()));
         fileName.reset(new std::string(fileNameEntry->get_text().raw()));
         
-        gLiveSupport->uploadFile(title, fileName);
+        audioClip = gLiveSupport->uploadFile(title, fileName);
+
+        // display success in the status bar
+        Glib::ustring   statusText("uploaded clip ");
+        statusText += *audioClip->getTitle();
+        statusBar->set_text(statusText);
+
+        // clean the entry fields
+        nameEntry->set_text("");
+        fileNameEntry->set_text("");
     } catch (StorageException &e) {
-        // TODO: signal error here
-        std::cerr << "StorageException: " << e.what() << std::endl;
+        statusBar->set_text(e.what());
     }
 }
 

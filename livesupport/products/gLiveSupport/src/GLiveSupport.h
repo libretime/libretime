@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -320,9 +320,10 @@ class GLiveSupport : public LocalizedConfigurable,
          *
          *  @param title the title of the audio clip.
          *  @param fileName the full filename of the audio clip.
+         *  @return the audio clip that was uploaded.
          *  @exception StorageException on upload failures.
          */
-        void
+        Ptr<AudioClip>::Ref
         uploadFile(Ptr<const Glib::ustring>::Ref    title,
                    Ptr<const std::string>::Ref      fileName)
                                                     throw (StorageException);
