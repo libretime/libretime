@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -192,6 +192,18 @@ class Playlist : public Configurable,
         }
 
         /**
+         *  Create a playlist by specifying its ID only.
+         */
+        Playlist(Ptr<UniqueId>::Ref id)         throw ()
+        {
+            this->id         = id;
+            
+            elementList.reset(new PlaylistElementListType);
+            this->isLockedForPlaying = false;
+            this->isLockedForEditing = false;
+        }
+
+        /**
          *  Create a playlist by specifying all details, except the title.
          *  This is used for testing purposes.
          *
@@ -209,6 +221,7 @@ class Playlist : public Configurable,
             this->title.reset(new Glib::ustring(""));
             this->playlength = playlength;
             this->uri        = uri;
+            
             elementList.reset(new PlaylistElementListType);
             this->isLockedForPlaying = false;
             this->isLockedForEditing = false;
@@ -233,6 +246,7 @@ class Playlist : public Configurable,
             this->title      = title;
             this->playlength = playlength;
             this->uri        = uri;
+            
             elementList.reset(new PlaylistElementListType);
             this->isLockedForPlaying = false;
             this->isLockedForEditing = false;
@@ -586,7 +600,17 @@ class Playlist : public Configurable,
                                                 throw ();
 
 
-
+        /**
+         *  Return an XML representation of this audio clip.
+         *  This consists of minimal information (ID and playlength for
+         *  playlists; ID, playlength and title
+         *  for the audio clips, plus fade in / fade out info)
+         *  only, without any metadata.
+         *
+         *  @return a string representation of the audio clip in XML
+         */
+       virtual Ptr<Glib::ustring>::Ref
+       getXmlString(void)                       throw ();
 };
 
 

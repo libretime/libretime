@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/FadeInfo.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class FadeInfo : public Configurable
 {
@@ -219,6 +219,14 @@ class FadeInfo : public Configurable
         {
             return fadeOut;
         }
+
+        /**
+         *  Return an XML representation of this FadeInfo object.
+         *
+         *  @return a string representation of the audio clip in XML
+         */
+       virtual Ptr<Glib::ustring>::Ref
+       getXmlString(void)                       throw ();
 };
 
 

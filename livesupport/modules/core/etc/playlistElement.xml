@@ -12,6 +12,7 @@
 <!ELEMENT audioClip EMPTY >
 <!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip title            CDATA       #REQUIRED >
 <!ATTLIST audioClip uri             CDATA       #IMPLIED  >
 
 <!ELEMENT fadeInfo EMPTY >
@@ -28,6 +29,7 @@
                          relativeOffset="0" >
             <audioClip   id="0000000000010003" 
                          playlength="00:00:11.000" 
+                         title = "three"
                          uri="file:var/test3.mp3" />
         </playlistElement>
     </playlist>

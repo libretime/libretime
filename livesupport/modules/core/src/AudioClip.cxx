@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,6 +67,11 @@ static const std::string    uriAttrName = "uri";
 static const std::string    playlengthAttrName = "playlength";
 
 /**
+ *  The name of the attribute to get the title of the audio clip.
+ */
+static const std::string    titleAttrName = "title";
+
+/**
  *  The name of the metadata child element.
  */
 static const std::string    metadataElementName = "metadata";
@@ -77,14 +82,14 @@ static const std::string    metadataElementName = "metadata";
 static const std::string    extentElementPrefix = "dcterms";
 
 /**
- *  The URI identifier for the "dcterms" prefix
- */
-static const std::string    extentElementUri = "http://purl.org/dc/terms/";
-
-/**
  *  The name of the extent (length) metadata element.
  */
 static const std::string    extentElementName = "extent";
+
+/**
+ *  The URI identifier for the "dcterms" prefix
+ */
+static const std::string    extentElementUri = "http://purl.org/dc/terms/";
 
 /**
  *  The prefix of the title metadata element.
@@ -92,14 +97,14 @@ static const std::string    extentElementName = "extent";
 static const std::string    titleElementPrefix = "dc";
 
 /**
- *  The URI identifier for the "dc" prefix
- */
-static const std::string    titleElementUri ="http://purl.org/dc/elements/1.1/";
-
-/**
  *  The name of the title metadata element.
  */
 static const std::string    titleElementName = "title";
+
+/**
+ *  The URI identifier for the "dc" prefix
+ */
+static const std::string    titleElementUri ="http://purl.org/dc/elements/1.1/";
 
 /**
  *  The URI identifier for the default XML namespace
@@ -128,6 +133,8 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                         to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
+
+    setMetadata(title, titleElementName, titleElementPrefix);
 }
 
 /*------------------------------------------------------------------------------
@@ -197,9 +204,14 @@ AudioClip :: configure(const xmlpp::Element  & element)
                                 duration_from_string(attribute->get_value())));
     }
 
+    if (!title
+            && (attribute = element.get_attribute(titleAttrName))) {
+        title.reset(new const Glib::ustring(attribute->get_value()));
+    }
+
     if (!uri 
             && (attribute = element.get_attribute(uriAttrName))) {
-        uri.reset(new std::string(attribute->get_value()));
+        uri.reset(new const std::string(attribute->get_value()));
     }
 
     xmlpp::Node::NodeList       childNodes 
@@ -232,17 +244,25 @@ AudioClip :: configure(const xmlpp::Element  & element)
             }
 
             if (!playlength && prefix  == extentElementPrefix
-                            && name    == extentElementName
-                            && dataElement->has_child_text()) {
-                playlength.reset(new time_duration(duration_from_string(
+                            && name    == extentElementName) {
+                if (dataElement->has_child_text()) {
+                    playlength.reset(new time_duration(duration_from_string(
                             dataElement->get_child_text()->get_content() )));
+                }
+                else {              // or just leave blank?  bad either way
+                    playlength.reset(new time_duration(0,0,0,0));
+                }
             }
 
             if (!title && prefix  == titleElementPrefix
-                       && name    == titleElementName
-                       && dataElement->has_child_text()) {
-                Glib::ustring       value = dataElement->get_child_text()
-                                                       ->get_content();
+                       && name    == titleElementName) {
+                Glib::ustring       value;
+                if (dataElement->has_child_text()) {
+                    value = dataElement->get_child_text()->get_content();
+                }
+                else {
+                    value = "";
+                }
                 Ptr<const Glib::ustring>::Ref ptrToValue(
                                                 new const Glib::ustring(value));
                 title = ptrToValue;
@@ -271,6 +291,16 @@ AudioClip :: configure(const xmlpp::Element  & element)
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                              to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
+
+    if (!title) {
+        std::string eMsg = "missing attribute ";
+        eMsg += titleAttrName;
+        eMsg += " or metadata element ";
+        eMsg += titleElementPrefix + ":" + titleElementName;
+        throw std::invalid_argument(eMsg);
+    }
+    
+    setMetadata(title, titleElementName, titleElementPrefix);
 }
 
 
@@ -353,9 +383,9 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                                             extentElementPrefix);
     }
 
-    xmlpp::Node::NodeList   nodeList = metadata->get_children(key);
-    xmlpp::Node::NodeList::iterator it = nodeList.begin();
-    xmlpp::Element*         element;
+    xmlpp::Node::NodeList   nodeList    = metadata->get_children(key);
+    xmlpp::Node::NodeList::iterator it  = nodeList.begin();
+    xmlpp::Element*         element     = 0;
 
     while (it != nodeList.end()) {
         xmlpp::Node*        node = *it;
@@ -377,5 +407,46 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
     }
     
     element->set_child_text(*value);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a string containing the essential fields of this object, in XML.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+AudioClip :: getXmlString(void)                 throw ()
+{
+    Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
+    
+    xmlString->append("<");
+    xmlString->append(configElementNameStr + " ");
+    xmlString->append(idAttrName + "=\"" 
+                                 + std::string(*id) 
+                                 + "\" ");
+    xmlString->append(playlengthAttrName + "=\"" 
+                                         + to_simple_string(*playlength)
+                                         + "\" ");
+    xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
+                                                   + *title
+                                                   + "\"/>");
+    return xmlString;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return a string containing the metadata of the audio clip, in XML.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+AudioClip :: getMetadataString()                throw ()
+{
+    Ptr<Glib::ustring>::Ref metadataString;
+
+    if (!xmlAudioClip) {
+        return metadataString;
+    }
+    
+    metadataString.reset(new Glib::ustring(xmlAudioClip->write_to_string() ));
+
+    return metadataString;
 }
 

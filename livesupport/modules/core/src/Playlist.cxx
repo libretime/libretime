@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -396,5 +396,34 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
 {
     std::string     completeKey = key + ns;
     metadata[completeKey] = value;
+}
+
+/*------------------------------------------------------------------------------
+ *  Return a string containing the essential fields of this object, in XML.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+Playlist :: getXmlString(void)                                  throw ()
+{
+    Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
+    
+    xmlString->append("<");
+    xmlString->append(configElementNameStr + " ");
+    xmlString->append(idAttrName + "=\"" 
+                                 + std::string(*id) 
+                                 + "\" ");
+    xmlString->append(playlengthAttrName + "=\"" 
+                                             + to_simple_string(*playlength)
+                                             + "\">\n");
+
+    PlaylistElementListType::const_iterator  it = elementList->begin();
+    while (it != elementList->end()) {
+        xmlString->append(*it->second->getXmlString() + "\n");
+        ++it;
+    }
+
+    xmlString->append("</");
+    xmlString->append(configElementNameStr + ">");
+
+    return xmlString;
 }
 

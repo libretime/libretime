@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -172,6 +172,52 @@ WebStorageClientTest :: firstTest(void)
 
 
 /*------------------------------------------------------------------------------
+ *  Testing the playlist operations
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: playlistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref  uniqueIdVector;
+    try {
+        uniqueIdVector = wsc->reset();
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
+//    Ptr<UniqueId>::Ref  audioClipId01 = uniqueIdVector->at(0);
+
+    Ptr<SessionId>::Ref sessionId;
+    try {
+        sessionId = authentication->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(sessionId);
+
+
+    // test ...
+    Ptr<UniqueId>::Ref  playlistId77(new UniqueId(77));
+    bool exists = true;
+    try {
+        exists = wsc->existsPlaylist(sessionId, playlistId77);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!exists);
+
+
+
+
+
+
+}
+
+
+/*------------------------------------------------------------------------------
  *  Testing the audio clip operations
  *----------------------------------------------------------------------------*/
 void
@@ -186,7 +232,7 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
-    Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(1);
+    Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(0);
     
 /*    std::cout << "\nReset storage result:\n";
     for (unsigned i=0; i<uniqueIdVector->size(); i++) {

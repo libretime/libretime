@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfo.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -113,3 +113,27 @@ FadeInfo :: configure(const xmlpp::Element  & element)
     fadeOut.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Return a string containing the essential fields of this object, in XML.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+FadeInfo :: getXmlString(void)                                  throw ()
+{
+    Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
+    
+    xmlString->append("<");
+    xmlString->append(configElementNameStr + " ");
+    xmlString->append(idAttrName + "=\"" 
+                                 + std::string(*id) 
+                                 + "\" ");
+    xmlString->append(fadeInAttrName + "=\"" 
+                                         + to_simple_string(*fadeIn)
+                                         + "\" ");
+    xmlString->append(fadeOutAttrName + "=\"" 
+                                         + to_simple_string(*fadeOut)
+                                         + "\"/>");
+    return xmlString;
+}
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -177,6 +177,101 @@ static const std::string    resetStorageMethodName
 static const std::string    resetStorageResultParamName = "gunids";
 
 
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsPlaylist */
+
+/*------------------------------------------------------------------------------
+ *  The name of the exists playlist method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    existsPlaylistMethodName 
+                            = "locstor.existsPlaylist";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    existsPlaylistSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip unique ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    existsPlaylistPlaylistIdParamName = "plid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    existsPlaylistResultParamName = "exists";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getPlaylist */
+
+/*------------------------------------------------------------------------------
+ *  The name of the opening 'get playlist' method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistOpenMethodName 
+                            = "locstor.accessPlaylist";
+
+/*------------------------------------------------------------------------------
+ *  The name of the closing 'get playlist' method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistCloseMethodName 
+                            = "locstor.releasePlaylist";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the playlist unique ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistPlaylistIdParamName = "plid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result URL parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistUrlParamName = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter returned (for open) or input (for close)
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistTokenParamName = "token";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: editPlaylist */
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'edit playlist' method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    editPlaylistMethodName 
+                            = "locstor.editPlaylist";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    editPlaylistSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the playlist unique ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    editPlaylistPlaylistIdParamName = "plid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result URL parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    editPlaylistUrlParamName = "url";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    editPlaylistTokenParamName = "token";
+
+
+
+
+
+
+
+
+
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsAudioClip */
 
 /*------------------------------------------------------------------------------
@@ -204,13 +299,13 @@ static const std::string    existsAudioClipResultParamName = "exists";
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getAudioClip */
 
 /*------------------------------------------------------------------------------
- *  The name of the get audio clip method on the storage server
+ *  The name of the opening 'get audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
 static const std::string    getAudioClipOpenMethodName 
                             = "locstor.downloadMetadataOpen";
 
 /*------------------------------------------------------------------------------
- *  The name of the get audio clip method on the storage server
+ *  The name of the closing 'get audio clip' method on the storage server
  *----------------------------------------------------------------------------*/
 static const std::string    getAudioClipCloseMethodName 
                             = "locstor.downloadMetadataClose";
@@ -445,7 +540,48 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
                                    Ptr<UniqueId>::Ref  id) const
                                                 throw (StorageException)
 {
-    return false;
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[existsPlaylistSessionIdParamName] 
+            = sessionId->getId();
+    parameters[existsPlaylistPlaylistIdParamName] 
+            = std::string(*id);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(existsPlaylistMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += existsPlaylistMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+    
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << existsPlaylistMethodName
+             << "' returned error message:\n"
+             << result;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (! result.hasMember(existsPlaylistResultParamName) 
+       || result[existsPlaylistResultParamName].getType() 
+                                                != XmlRpcValue::TypeBoolean) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << existsPlaylistMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    return bool(result[existsPlaylistResultParamName]);
 }
  
 
@@ -457,7 +593,106 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                 Ptr<UniqueId>::Ref  id) const
                                                 throw (StorageException)
 {
-    Ptr<Playlist>::Ref  playlist(new Playlist);
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[getPlaylistSessionIdParamName] 
+            = sessionId->getId();
+    parameters[getPlaylistPlaylistIdParamName] 
+            = std::string(*id);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getPlaylistOpenMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getPlaylistOpenMethodName
+             << "' returned error message:\n"
+             << result;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (! result.hasMember(getPlaylistUrlParamName)
+            || result[getPlaylistUrlParamName].getType() 
+                                                != XmlRpcValue::TypeString
+            || ! result.hasMember(getPlaylistTokenParamName)
+            || result[getPlaylistTokenParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getPlaylistOpenMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    const std::string   url     = result[getPlaylistUrlParamName];
+    const std::string   token   = result[getPlaylistTokenParamName];
+
+    Ptr<Playlist>::Ref playlist(new Playlist(id));
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
+        parser->parse_file(url);
+        const xmlpp::Document     * document = parser->get_document();
+        const xmlpp::Element      * root     = document->get_root_node();
+
+        playlist->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        throw XmlRpcMethodResponseException(
+                                    "semantic error in playlist metafile");
+    } catch (xmlpp::exception &e) {
+        throw XmlRpcMethodResponseException(
+                                    "error parsing playlist metafile");
+    }
+
+    parameters.clear();
+    parameters[getPlaylistSessionIdParamName] = sessionId->getId();
+    parameters[getPlaylistTokenParamName]     = token;
+    
+    result.clear();
+    if (!xmlRpcClient.execute(getPlaylistCloseMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getPlaylistCloseMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getPlaylistCloseMethodName
+             << "' returned error message:\n"
+             << result;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (! result.hasMember(getPlaylistPlaylistIdParamName)
+            || result[getPlaylistPlaylistIdParamName].getType() 
+                                                    != XmlRpcValue::TypeString
+            || std::string(result[getPlaylistPlaylistIdParamName])
+                                                    != std::string(*id)) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getPlaylistCloseMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
     return playlist;
 }
 
@@ -470,7 +705,74 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
                                                 throw (StorageException)
 {
-    Ptr<Playlist>::Ref  playlist(new Playlist);
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[editPlaylistSessionIdParamName] 
+            = sessionId->getId();
+    parameters[editPlaylistPlaylistIdParamName] 
+            = std::string(*id);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(editPlaylistMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += editPlaylistMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << editPlaylistMethodName
+             << "' returned error message:\n"
+             << result;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (! result.hasMember(editPlaylistUrlParamName)
+            || result[editPlaylistUrlParamName].getType() 
+                                                != XmlRpcValue::TypeString
+            || ! result.hasMember(editPlaylistTokenParamName)
+            || result[editPlaylistTokenParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << editPlaylistMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    const std::string       url =   result[getPlaylistUrlParamName];
+
+    Ptr<Playlist>::Ref playlist(new Playlist(id));
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
+        parser->parse_file(url);
+        const xmlpp::Document     * document = parser->get_document();
+        const xmlpp::Element      * root     = document->get_root_node();
+
+        playlist->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        throw XmlRpcMethodResponseException(
+                                    "semantic error in playlist metafile");
+    } catch (xmlpp::exception &e) {
+        throw XmlRpcMethodResponseException(
+                                    "error parsing playlist metafile");
+    }
+
+    Ptr<const std::string>::Ref token(new const std::string(
+                                    result[getPlaylistTokenParamName] ));
+    playlist->setToken(token);
+
     return playlist;
 }
 
@@ -653,8 +955,8 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcMethodResponseException(eMsg.str());
     }
 
-    std::string         url     = result[getAudioClipUrlParamName];
-    std::string         token   = result[getAudioClipTokenParamName];
+    const std::string   url     = result[getAudioClipUrlParamName];
+    const std::string   token   = result[getAudioClipTokenParamName];
 
     Ptr<AudioClip>::Ref audioClip(new AudioClip(id));
 
@@ -667,18 +969,18 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
         audioClip->configure(*root);
 
     } catch (std::invalid_argument &e) {
-        throw XmlRpcMethodResponseException(
-                                    "semantic error in audio clip metafile");
+        std::string eMsg = "semantic error in audio clip metafile:\n";
+        eMsg += e.what();
+        throw XmlRpcMethodResponseException(eMsg);
     } catch (xmlpp::exception &e) {
-        throw XmlRpcMethodResponseException(
-                                    "error parsing audio clip metafile");
+        std::string eMsg = "error parsing audio clip metafile";
+        eMsg += e.what();
+        throw XmlRpcMethodResponseException(eMsg);
     }
 
     parameters.clear();
-    parameters[getAudioClipSessionIdParamName] 
-            = sessionId->getId();
-    parameters[getAudioClipTokenParamName] 
-            = token;
+    parameters[getAudioClipSessionIdParamName] = sessionId->getId();
+    parameters[getAudioClipTokenParamName]     = token;
     
     result.clear();
     if (!xmlRpcClient.execute(getAudioClipCloseMethodName.c_str(),
@@ -727,9 +1029,6 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
         throw InvalidArgumentException("binary audio clip file not found");
     }
     
-    std::string     metadata = audioClip->toXml()
-                                        ->write_to_string("utf-8");
-
     // temporary hack; we will expect an absolute file name from getUri()
     //   in the final version
     std::string     binaryFileName = audioClip->getUri()->substr(5);
@@ -753,7 +1052,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     parameters[storeAudioClipAudioClipIdParamName] 
             = std::string(*audioClip->getId());
     parameters[storeAudioClipMetadataParamName] 
-            = metadata;
+            = std::string(*audioClip->getMetadataString());
     parameters[storeAudioClipChecksumParamName] 
             = md5string;
 

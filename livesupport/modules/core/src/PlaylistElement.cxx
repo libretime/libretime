@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,3 +188,31 @@ PlaylistElement :: configure(const xmlpp::Element & element)
         throw std::invalid_argument(eMsg);
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Return a string containing the essential fields of this object, in XML.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+PlaylistElement :: getXmlString(void)                                  throw ()
+{
+    Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
+    
+    xmlString->append("<");
+    xmlString->append(configElementNameStr + " ");
+    xmlString->append(idAttrName + "=\"" 
+                                 + std::string(*id) 
+                                 + "\" ");
+    xmlString->append(relativeOffsetAttrName + "=\"" 
+                                             + to_simple_string(*relativeOffset)
+                                             + "\">\n");
+    xmlString->append(*getPlayable()->getXmlString() + "\n");
+    if (fadeInfo) {
+        xmlString->append(*fadeInfo->getXmlString() + "\n");
+    }
+    xmlString->append("</");
+    xmlString->append(configElementNameStr + ">");
+
+    return xmlString;
+}
+

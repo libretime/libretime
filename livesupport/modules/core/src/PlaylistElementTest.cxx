@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ PlaylistElementTest :: firstTest(void)
 
         CPPUNIT_ASSERT(playlistElement->getType() 
                                         == PlaylistElement::PlaylistType);
-                                        
+
         // check that we can access the playlist inside the playlist element
         //   as a Playable instance
         CPPUNIT_ASSERT(playlistElement->getPlaylist()
@@ -148,6 +148,14 @@ PlaylistElementTest :: firstTest(void)
         CPPUNIT_ASSERT(playlistElement->getType() 
                                         == PlaylistElement::AudioClipType);
                                         
+        CPPUNIT_ASSERT(*playlistElement->getXmlString() ==
+                                "<playlistElement id=\"000000000000006f\" "
+                                "relativeOffset=\"00:00:00\">\n"
+                                        "<audioClip id=\"0000000000002713\" "
+                                        "playlength=\"00:00:11\" "
+                                        "title=\"three\"/>\n"
+                                "</playlistElement>");
+
         // and the audio clip inside the playlist element
         CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
                                                          == 10003);

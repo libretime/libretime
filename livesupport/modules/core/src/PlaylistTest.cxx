@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,6 +114,25 @@ PlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(duration->total_seconds() == 34);
 
     CPPUNIT_ASSERT(playlist->valid());
+
+    CPPUNIT_ASSERT(*playlist->getXmlString() ==
+"<playlist id=\"0000000000000001\" playlength=\"00:00:34\">\n"
+"<playlistElement id=\"0000000000000065\" relativeOffset=\"00:00:00\">\n"
+"<audioClip id=\"0000000000002711\" playlength=\"00:00:11\" title=\"one\"/>\n"
+"</playlistElement>\n"
+"<playlistElement id=\"0000000000000066\" relativeOffset=\"00:00:11\">\n"
+"<audioClip id=\"0000000000002712\" playlength=\"00:00:12\" title=\"two\"/>\n"
+"<fadeInfo id=\"00000000000026ad\" fadeIn=\"00:00:02\" "
+                                  "fadeOut=\"00:00:01.500000\"/>\n"
+"</playlistElement>\n"
+"<playlistElement id=\"0000000000000067\" relativeOffset=\"00:00:23\">\n"
+"<playlist id=\"0000000000000002\" playlength=\"00:00:11\">\n"
+"<playlistElement id=\"000000000000006f\" relativeOffset=\"00:00:00\">\n"
+"<audioClip id=\"0000000000002713\" playlength=\"00:00:11\" title=\"three\"/>\n"
+"</playlistElement>\n"
+"</playlist>\n"
+"</playlistElement>\n"
+"</playlist>");
 
     Playlist::const_iterator        it = playlist->begin();
     CPPUNIT_ASSERT(it != playlist->end());

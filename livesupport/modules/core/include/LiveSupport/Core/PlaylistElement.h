@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,7 +104,7 @@ class Playlist;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -369,6 +369,14 @@ class PlaylistElement : public Configurable
             return fadeInfo;
         }
 
+        /**
+         *  Return an XML representation of this playlist element.
+         *  This consists of minimal information only, without any metadata.
+         *
+         *  @return a string representation of the audio clip in XML
+         */
+       virtual Ptr<Glib::ustring>::Ref
+       getXmlString(void)                                  throw ();
 };
 
 

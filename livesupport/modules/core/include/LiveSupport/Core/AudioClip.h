@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -188,7 +188,7 @@ class AudioClip : public Configurable,
 
         /**
          *  Create an audio clip by specifying all details, except
-         *  for the title.
+         *  for the title.  The title is set to the empty string.
          *  This is used for testing purposes.
          *
          *  @param id the id of the audio clip.
@@ -367,24 +367,37 @@ class AudioClip : public Configurable,
 
 
         /**
-         *  Return an XML representation of this audio clip.  This contains
-         *  the metadata fields of the audio clip, and it's roughly the
-         *  inverse of the configure() method.
+         *  Return an XML representation of this audio clip
+         *  (in UTF-8 encoding).
+         *  This consists of minimal information (ID, playlength, title)
+         *  only, without any metadata.
          *
-         *  (NOTE: This returns a non-constant pointer to a member of the
-         *  AudioClip object, so handle with care, and do not ever, ever
-         *  modify the Document object returned.  It cannot be made const
-         *  because <code>xmlpp::Document::write_to_file()</code> and 
-         *  <code>xmlpp::Document::write_to_string()</code> are only defined on
-         *  non-constant instances.)
-         *
-         *  @return an xmlpp::Document containing the metadata.
+         *  @return a string representation of the audio clip in XML
          */
-        Ptr<xmlpp::Document>::Ref
-        toXml()                           throw ()
-        {
-            return xmlAudioClip;
-        }
+        virtual Ptr<Glib::ustring>::Ref
+        getXmlString(void)                      throw ();
+
+
+        /**
+         *  Return an XML representation of the metadata of the audio clip
+         *  (in UTF-8 encoding).  This has the (pseudo-) DTD
+         *  <pre><code>
+         *  &lt;!ELEMENT audioClip (metadata) &gt;
+         *  &lt;!ATTLIST audioClip  id           NMTOKEN     #REQUIRED  &gt;
+         *
+         *  &lt;!ELEMENT metadata (dcterms:extent, dc:title, (ANY)*) &gt;
+         *  &lt;!ELEMENT dcterms:extent (NMTOKEN) &gt;
+         *  &lt;!ELEMENT dc:title       (CDATA) &gt;
+         *  </code></pre>
+         *
+         *  If the audio clip has no metadata at all (this is possible if
+         *  it was created by the default constructor or the constructor
+         *  which takes a unique ID only), a null pointer is returned.
+         *
+         *  @return a string representation of the metadata in XML
+         */
+        Ptr<Glib::ustring>::Ref
+        getMetadataString()                     throw ();
 };
 
 

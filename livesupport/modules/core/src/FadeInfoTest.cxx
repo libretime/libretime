@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfoTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,6 +116,11 @@ FadeInfoTest :: firstTest(void)
         CPPUNIT_ASSERT(fadeOut->minutes() == 0);
         CPPUNIT_ASSERT(fadeOut->seconds() == 1);
         CPPUNIT_ASSERT(fadeOut->fractional_seconds() == 500);
+
+        CPPUNIT_ASSERT(*fadeInfo->getXmlString() == 
+                                    "<fadeInfo id=\"00000000000026ad\" "
+                                    "fadeIn=\"00:00:02\" "
+                                    "fadeOut=\"00:00:01.000500\"/>");
 
     } catch (std::invalid_argument &e) {
         std::string eMsg = "semantic error in configuration file:\n";
