@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,6 +110,17 @@ static const std::string    titleElementUri ="http://purl.org/dc/elements/1.1/";
  *  The URI identifier for the default XML namespace
  */
 static const std::string    defaultPrefixUri ="http://www.streamonthefly.org/";
+
+/**
+ *  The prefix for the Live Support extension elements.
+ */
+static const std::string    liveSupportNamespacePrefix = "ls";
+
+/**
+ *  The URI identifier for the "ls" prefix.
+ */
+static const std::string    liveSupportNamespaceUri 
+                            = "http://mdlf.org/livesupport/elements/1.0/";
 
 
 /* ===============================================  local function prototypes */
@@ -660,6 +671,8 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                                             titleElementPrefix);
         metadata->set_namespace_declaration(extentElementUri, 
                                             extentElementPrefix);
+        metadata->set_namespace_declaration(liveSupportNamespaceUri, 
+                                            liveSupportNamespacePrefix);
     }
 
     // find the element to be modified
@@ -742,6 +755,15 @@ Playlist :: getXmlDocumentString() const        throw ()
         if (id) {
             rootNode->set_attribute(idAttrName, std::string(*id));
         }
+        
+        xmlpp::Element*     metadata = rootNode->add_child(metadataElementName);
+        metadata->set_namespace_declaration(defaultPrefixUri);
+        metadata->set_namespace_declaration(titleElementUri, 
+                                            titleElementPrefix);
+        metadata->set_namespace_declaration(extentElementUri, 
+                                            extentElementPrefix);
+        metadata->set_namespace_declaration(liveSupportNamespaceUri, 
+                                            liveSupportNamespacePrefix);
     }
 
     Glib::ustring               playlistElementsXmlString("\n");
