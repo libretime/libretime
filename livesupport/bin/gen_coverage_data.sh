@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/gen_coverage_data.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -45,6 +45,8 @@ coverage_report_dir=$docdir/coverage
 core_coverage_file=$modules_dir/core/tmp/coverage.info
 db_coverage_file=$modules_dir/db/tmp/coverage.info
 storage_coverage_file=$modules_dir/storage/tmp/coverage.info
+eventScheduler_coverage_file=$modules_dir/eventScheduler/tmp/coverage.info
+playlistExecutor_coverage_file=$modules_dir/playlistExecutor/tmp/coverage.info
 scheduler_coverage_file=$products_dir/scheduler/tmp/coverage.info
 
 coverage_file=$tmpdir/coverage.info
@@ -59,6 +61,8 @@ genhtml=$usrdir/bin/genhtml
 $modules_dir/core/bin/gen_coverage_data.sh
 $modules_dir/db/bin/gen_coverage_data.sh
 $modules_dir/storage/bin/gen_coverage_data.sh
+$modules_dir/eventScheduler/bin/gen_coverage_data.sh
+$modules_dir/playlistExecutor/bin/gen_coverage_data.sh
 $products_dir/scheduler/bin/gen_coverage_data.sh
 
 
@@ -71,6 +75,8 @@ echo "" > $coverage_file
 cat $core_coverage_file | sed -e "s/core\/tmp\//core\//g" >> $coverage_file
 cat $db_coverage_file | sed -e "s/db\/tmp\//db\//g" >> $coverage_file
 cat $storage_coverage_file | sed -e "s/storage\/tmp\//storage\//g" >> $coverage_file
+cat $eventScheduler_coverage_file | sed -e "s/eventScheduler\/tmp\//eventScheduler\//g" >> $coverage_file
+cat $playlistExecutor_coverage_file | sed -e "s/playlistExecuto\/tmp\//playlistExecuto\//g" >> $coverage_file
 cat $scheduler_coverage_file | sed -e "s/scheduler\/tmp\//scheduler\//g" >> $coverage_file
 
 rm -rf $coverage_report_dir

@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.10 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -155,4 +155,12 @@ modules_setup:
 
 products_setup:
 	${SCHEDULER_DIR}/bin/autogen.sh
+
+distclean:
+	${MAKE} -c ${CORE_DIR} distclean
+	${MAKE} -c ${DB_DIR} distclean
+	${MAKE} -c ${STORAGE_DIR} distclean
+	${MAKE} -c ${PLAYLIST_EXECUTOR_DIR} distclean
+	${MAKE} -c ${EVENT_SCHEDULER_DIR} distclean
+	${MAKE} -c ${SCHEDULER_DIR} distclean
 
