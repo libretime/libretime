@@ -23,11 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
-define(USE_INTERSECT, TRUE);
+define('USE_INTERSECT', TRUE);
 
 require_once "XML/Util.php";
 
@@ -83,43 +83,6 @@ class DataEngine{
     }
 
     /**
-     *  Get metadata element value
-     *
-     *  @param id int, virt.file's local id
-     *  @param category string, metadata element name
-     *  @return array of matching records
-     */
-    function getMetadataValue($id, $category)
-    {
-        $gunid = $this->gb->_gunidFromId($id);
-        if(PEAR::isError($gunid)) return $gunid;
-        if(is_null($gunid)){
-            return PEAR::raiseError(
-                "BasicStor::bsGetMdataValue: file not found ($id)",
-                GBERR_NOTF
-            );
-        }
-        $catOrig = strtolower($category);
-        // handle predicate namespace shortcut
-        if(preg_match("|^([^:]+):([^:]+)$|", $catOrig, $catOrigArr)){
-            $catNs = $catOrigArr[1]; $cat = $catOrigArr[2];
-        }else{ $catNs=NULL; $cat=$catOrig; }
-        $cond = "
-                gunid=x'$gunid'::bigint AND objns='_L' AND
-                predicate='$cat'
-        ";
-        if(!is_null($catNs)) $cond .= " AND predns='$catNs'";
-        $sql = "
-            SELECT object
-            FROM {$this->mdataTable}
-            WHERE $cond
-        ";
-        $res = $this->dbc->getCol($sql);
-        if(PEAR::isError($res)) return $res;
-        return $res;
-    }
-
-    /**
      *  Method returning array with where-parts of sql queries
      *
      *  @param conditions array - see conditions field in search criteria format
@@ -163,13 +126,13 @@ class DataEngine{
      *
      *  @param fldsPart string - fields part of sql query
      *  @param whereArr array - array of where-parts
-     *  @param ftypeCond string - condition for ftype
+     *  @param fileCond string - condition for files table
      *  @param browse boolean - true if browse vals required instead of gunids
      *  @param brFldNs string - namespace prefix of category for browse
      *  @param brFld string - category for browse
      *  @return query string
      */
-    function _makeAndSqlWoIntersect($fldsPart, $whereArr, $ftypeCond, $browse,
+    function _makeAndSqlWoIntersect($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
         $innerBlocks = array();
@@ -187,7 +150,7 @@ class DataEngine{
             if(!is_null($brFldNs)) $sql .= " AND br.predns='{$brFldNs}'";
             $sql .= "\n";
         }
-        if(!is_null($ftypeCond)) $whereArr[] = " $ftypeCond";
+        if(!is_null($fileCond)) $whereArr[] = " $fileCond";
         if(count($whereArr)>0) $sql .= "WHERE\n".join("  AND\n", $whereArr);
         if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
@@ -199,17 +162,17 @@ class DataEngine{
      *
      *  @param fldsPart string - fields part of sql query
      *  @param whereArr array - array of where-parts
-     *  @param ftypeCond string - condition for ftype
+     *  @param fileCond string - condition for files table
      *  @param browse boolean - true if browse vals required instead of gunids
      *  @param brFldNs string - namespace prefix of category for browse
      *  @param brFld string - category for browse
      *  @return query string
      */
-    function _makeAndSql($fldsPart, $whereArr, $ftypeCond, $browse,
+    function _makeAndSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
         if(!USE_INTERSECT)  return $this->_makeAndSqlWoIntersect(
-            $fldsPart, $whereArr, $ftypeCond, $browse, $brFldNs, $brFld);
+            $fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         $isectBlocks = array();
         foreach($whereArr as $i=>$v){
             $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i");
@@ -233,7 +196,7 @@ class DataEngine{
             if(!is_null($brFldNs)) $sql .= " AND br.predns='{$brFldNs}'";
             $glue = " AND";
         }else{ $glue = "WHERE";}
-        if(!is_null($ftypeCond)) $sql .= "\n$glue $ftypeCond";
+        if(!is_null($fileCond)) $sql .= "\n$glue $fileCond";
         if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
@@ -243,13 +206,13 @@ class DataEngine{
      *
      *  @param fldsPart string - fields part of sql query
      *  @param whereArr array - array of where-parts
-     *  @param ftypeCond string - condition for ftype
+     *  @param fileCond string - condition for files table
      *  @param browse boolean - true if browse vals required instead of gunids
      *  @param brFldNs string - namespace prefix of category for browse
      *  @param brFld string - category for browse
      *  @return query string
      */
-    function _makeOrSql($fldsPart, $whereArr, $ftypeCond, $browse,
+    function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
         $whereArr[] = " FALSE\n";
@@ -269,7 +232,7 @@ class DataEngine{
             $sql .= "WHERE\n(\n".join("  OR\n", $whereArr).")";
             $glue = " AND";
         }else{ $glue = "WHERE"; }
-        if(!is_null($ftypeCond)) $sql .= "$glue $ftypeCond";
+        if(!is_null($fileCond)) $sql .= "$glue $fileCond";
         if($browse) $sql .= "\nORDER BY br.object";
         return $sql;
     }
@@ -320,14 +283,14 @@ class DataEngine{
         }
         $limitPart = ($limit != 0 ? " LIMIT $limit" : '' ).
             ($offset != 0 ? " OFFSET $offset" : '' );
-        $ftypeCond = "f.ftype='$filetype'";
-        if(is_null($filetype)) $ftypeCond = NULL;
+        $fileCond = "f.state='ready'";
+        if(!is_null($filetype)) $fileCond .= " AND f.ftype='$filetype'";
         if($operator == 'and'){     // operator: and
             $sql = $this->_makeAndSql(
-                $fldsPart, $whereArr, $ftypeCond, $browse, $brFldNs, $brFld);
+                $fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }else{          // operator: or
             $sql = $this->_makeOrSql(
-                $fldsPart, $whereArr, $ftypeCond, $browse, $brFldNs, $brFld);
+                $fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }
         // echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
