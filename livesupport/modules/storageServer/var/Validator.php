@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Validator.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,7 +105,10 @@ class Validator{
     /**
      *  Validate one metadata value (on insert/update)
      *
-     *  @param
+     *  @param fname string - parent element name
+     *  @param category string - qualif.category name
+     *  @param predxml string - 'A' | 'T' (attr or tag)
+     *  @param value string - validated element value
      *  @return TRUE or PEAR::error
      */
     function validateOneValue($fname, $category, $predxml, $value)

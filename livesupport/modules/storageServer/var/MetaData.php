@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -507,7 +507,10 @@ class MetaData{
     /**
      *  Validate one metadata value (on insert/update)
      *
-     *  @param
+     *  @param parName string - parent element name
+     *  @param category string - qualif.category name
+     *  @param predxml string - 'A' | 'T' (attr or tag)
+     *  @param value string - validated element value
      *  @return true or PEAR::error
      */
     function validateOneValue($parName, $category, $predxml, $value)
