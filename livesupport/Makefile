@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.25 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.26 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -79,9 +79,9 @@ LCOV_VERSION      = lcov-1.3
 HELIX_DIR         = ${TOOLS_DIR}/helix
 HELIX_VERSION     = hxclient_1_3_0_neptunex-2004-12-15
 GTK_DIR           = ${TOOLS_DIR}/gtk+
-GTK_VERSION       = gtk+-2.4.13
+GTK_VERSION       = gtk+-2.6.1
 GTKMM_DIR         = ${TOOLS_DIR}/gtkmm
-GTKMM_VERSION     = gtkmm-2.4.7
+GTKMM_VERSION     = gtkmm-2.5.5
 ICU_DIR           = ${TOOLS_DIR}/icu
 ICU_VERSION       = icu-3.0
 CURL_DIR          = ${TOOLS_DIR}/curl
