@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -379,12 +379,16 @@ class StoredFile{
      *  Set state of virtual file
      *
      *  @param state string, 'empty'|'incomplete'|'ready'|'edited'
+     *  @param editedby int, user id | 'NULL' for clear editedBy field
+     *      (optional)
      *  @return boolean or error
      */
-    function setState($state)
+    function setState($state, $editedby=NULL)
     {
+        $eb = (!is_null($editedby) ? ", editedBy=$editedby" : '');
         $res = $this->dbc->query("
-            UPDATE {$this->filesTable} SET state='$state'
+            UPDATE {$this->filesTable}
+            SET state='$state'$eb
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
@@ -472,8 +476,26 @@ class StoredFile{
     {
         if(is_null($playlistId)) $playlistId = $this->gunid;
         $state = $this->_getState($playlistId);
-        if($state == 'edited'){ return TRUE; }
-        return FALSE;
+        if($state != 'edited'){ return FALSE; }
+        return TRUE;
+    }
+
+    /**
+     *  Returns id of user editing playlist
+     *
+     *  @param playlistId string, playlist global unique ID
+     *  @return null or int, id of user editing it
+     */
+    function isEditedBy($playlistId=NULL)
+    {
+        if(is_null($playlistId)) $playlistId = $this->gunid;
+        $ca = $this->dbc->getOne("
+            SELECT editedBy FROM {$this->filesTable}
+            WHERE gunid=x'$playlistId'::bigint
+        ");
+        if($this->dbc->isError($ca)) return $ca;
+        if(is_null($ca)) return $ca;
+        return intval($ca);
     }
 
     /**
