@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -275,9 +275,9 @@ PostgresqlSchedule :: schedulePlaylist(
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         schedulePlaylistStmt));
         id = UniqueId::generateId();
-        pstmt->setLong(1, id->getId());
+        pstmt->setString(1, *id->toDecimalString());
 
-        pstmt->setLong(2, playlist->getId()->getId());
+        pstmt->setString(2, *playlist->getId()->toDecimalString());
  
         timestamp = Conversion::ptimeToTimestamp(playtime);
         pstmt->setTimestamp(3, *timestamp);
@@ -422,7 +422,7 @@ PostgresqlSchedule :: scheduleEntryExists(
         conn = cm->getConnection();
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                     scheduleEntryExistsStmt));
-        pstmt->setLong(1, entryId->getId());
+        pstmt->setString(1, *entryId->toDecimalString());
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         result = (rs->next()) ? (rs->getLong(1) == 1) : false;
@@ -454,7 +454,7 @@ PostgresqlSchedule :: removeFromSchedule(
         conn = cm->getConnection();
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                     removeFromScheduleStmt));
-        pstmt->setLong(1, entryId->getId());
+        pstmt->setString(1, *entryId->toDecimalString());
 
         result = pstmt->executeUpdate() == 1;
 
@@ -486,7 +486,7 @@ PostgresqlSchedule :: getScheduleEntry(Ptr<UniqueId>::Ref   entryId)
         conn = cm->getConnection();
         Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
                                                         getScheduleEntryStmt));
-        pstmt->setLong(1, entryId->getId());
+        pstmt->setString(1, *entryId->toDecimalString());
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         if (rs->next()) {
@@ -555,7 +555,7 @@ PostgresqlSchedule :: reschedule(Ptr<UniqueId>::Ref   entryId,
         timestamp = Conversion::ptimeToTimestamp(ends);
         pstmt->setTimestamp(2, *timestamp);
 
-        pstmt->setLong(3, entryId->getId());
+        pstmt->setString(3, *entryId->toDecimalString());
 
         result = pstmt->executeUpdate() == 1;
 

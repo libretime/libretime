@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/UniqueId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ namespace Core {
  *  A class representing globally unique identifiers.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class UniqueId
 {
@@ -131,7 +131,7 @@ class UniqueId
          *  @return a new UniqueId with the specified ID value.
          */
         static Ptr<UniqueId>::Ref
-        fromDecimalString(const std::string     idStr)          throw ()
+        fromDecimalString(const std::string     idStr)      throw ()
         {
             IdType      id;
             // TODO: error checking
@@ -148,7 +148,7 @@ class UniqueId
          *  @return a new string containing the value of the UniqueId.
          */
         Ptr<std::string>::Ref
-        toDecimalString(void)                                   throw ()
+        toDecimalString(void) const                         throw ()
         {
             std::stringstream idWriter;
             idWriter << std::dec << id;
