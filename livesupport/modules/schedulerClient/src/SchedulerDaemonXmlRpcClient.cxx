@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,6 +148,8 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)                 throw ()
         result.reset(new std::string(xmlRpcResult["version"]));
     }
 
+    xmlRpcClient.close();
+
     return result;
 }
 
@@ -183,6 +185,8 @@ SchedulerDaemonXmlRpcClient :: getSchedulerTime(
         }
 
     }
+
+    xmlRpcClient.close();
 
     return result;
 }
