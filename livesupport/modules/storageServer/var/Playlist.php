@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -545,9 +545,11 @@ class Playlist extends StoredFile{
     function _plTimeToSecs($plt)
     {
         $arr = split(':', $plt);
-        if(isset($arr[2])){ return ($arr[0]*60 + $arr[1])*60 + $arr[2]; }
-        if(isset($arr[1])){ return $arr[0]*60 + $arr[1]; }
-        return $arr[0];
+        if(isset($arr[2])){
+          return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
+        }
+        if(isset($arr[1])){ return intval($arr[0])*60 + floatval($arr[1]); }
+        return floatval($arr[0]);
     }
 
     /**
@@ -558,11 +560,16 @@ class Playlist extends StoredFile{
      */
     function _secsToPlTime($s0)
     {
-        $m = intval($s0 / 60);
-        $r = $s0 - $m*60;
-        $h = $m  / 60;
-        $m = $m  % 60;
-        return sprintf("%02d:%02d:%09.6f", $h, $m, $r);
+        $m  = intval($s0 / 60);
+        $r0 = $s0 - $m*60;
+        $h  = $m  / 60;
+        $m  = $m  % 60;
+        $s  = intval($r0);
+        $r  = $r0 - $s;
+        // $res = sprintf("%02d:%02d:%09.6f", $h, $m, $r);
+        $res = sprintf("%02d:%02d:%02d", $h, $m, $s);
+        $res .= str_replace('0.', '.', number_format($r, 6, '.', ''));
+        return $res;
     }
 
     /**
