@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,
@@ -163,6 +163,8 @@ class WebAuthenticationClient :
          *  configuration file.
          *  Returns a new session ID; in case of an error, throws one of three
          *  types of AuthenticationException.
+         *  Note that an incorrect login or password is considered an error
+         *  and will throw an XmlRpcMethodFaultException.
          *
          *  @param  login       the login to the server
          *  @param  password    the password to the server

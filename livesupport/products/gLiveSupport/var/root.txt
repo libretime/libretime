@@ -6,7 +6,7 @@ root:table
     loginButtonLabel:string  { "log in" }
     logoutButtonLabel:string { "log out" }
     uploadFileButtonLabel:string            { "upload file" }
-    djBagButtonLabel:string                 { "dj bag" }
+    djBagButtonLabel:string                 { "scratchpad" }
     simplePlaylistMgmtButtonLabel:string    { "simple playlist management" }
     schedulerButtonLabel:string             { "scheduler" }
 
@@ -34,11 +34,12 @@ root:table
 
     djBagWindow:table
     {
-        windowTitle:string            { "LiveSupport Dj Bag" }
+        windowTitle:string            { "LiveSupport Scratchpad" }
 
         typeColumnLabel:string        { "type" }
         titleColumnLabel:string       { "title" }
         closeButtonLabel:string       { "close" }
+        playButtonLabel:string        { "play" }
 
         upMenuItem:string               { "Move _Up" }
         downMenuItem:string             { "Move D_own" }

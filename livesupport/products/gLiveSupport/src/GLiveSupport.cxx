@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -259,11 +259,11 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: login(const std::string & login,
                       const std::string & password)          throw ()
 {
-    sessionId = authentication->login(login, password);
-    if (sessionId.get()) {
+    try {
+        sessionId = authentication->login(login, password);
         loadDjBagContents();
         return true;
-    } else {
+    } catch (XmlRpcException &e) {
         return false;
     }
 }

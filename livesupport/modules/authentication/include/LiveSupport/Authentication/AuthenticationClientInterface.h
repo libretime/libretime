@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  An interface for authentication clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class AuthenticationClientInterface
 {
@@ -79,6 +79,9 @@ class AuthenticationClientInterface
          *  Login to the authentication server.
          *  Returns a new session ID; in case of an error, throws
          *  AuthenticationException or one of its subclasses.
+         *  Note that an incorrect login or password is considered an error
+         *  and will throw an XmlRpcException (in the case of WebStorageClient,
+         *  an XmlRpcMethodFaultException, which is also an XmlRpcException).
          *
          *  @param  login       the login to the server
          *  @param  password    the password to the server

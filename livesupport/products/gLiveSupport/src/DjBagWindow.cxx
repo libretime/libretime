@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,11 +68,21 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     try {
         set_title(*getResourceUstring("windowTitle"));
+        playButton.reset(new Gtk::Button(
+                                    *getResourceUstring("playButtonLabel")));
         closeButton.reset(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
+
+    // set up the play button
+    playButton->set_name("playButton");
+    playButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
+    playButton->set_relief(Gtk::RELIEF_NORMAL);
+    // Register the signal handler for the button getting clicked.
+    playButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                          &DjBagWindow::onPlayItem));
 
     // set up the close button
     closeButton->set_name("closeButton");
@@ -81,7 +91,6 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Register the signal handler for the button getting clicked.
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                           &DjBagWindow::onCloseButtonClicked));
-
 
     set_border_width(5);
     set_default_size(400, 200);
@@ -94,8 +103,13 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
+    vBox.pack_start(playButtonBox, Gtk::PACK_SHRINK);
     vBox.pack_start(scrolledWindow);
     vBox.pack_start(buttonBox, Gtk::PACK_SHRINK);
+
+    playButtonBox.pack_start(*playButton, Gtk::PACK_SHRINK);
+    playButtonBox.set_border_width(5);
+    playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
 
     buttonBox.pack_start(*closeButton, Gtk::PACK_SHRINK);
     buttonBox.set_border_width(5);

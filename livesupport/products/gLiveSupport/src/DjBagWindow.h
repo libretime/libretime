@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class DjBagWindow : public Gtk::Window, public LocalizedObject
 {
@@ -80,7 +80,7 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.5 $
+         *  @version $Revision: 1.6 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -141,6 +141,16 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  The tree model, as a GTK reference.
          */
         Glib::RefPtr<Gtk::ListStore>    treeModel;
+
+        /**
+         *  The box containing the play button.
+         */
+        Gtk::HButtonBox             playButtonBox;
+
+        /**
+         *  The play button.
+         */
+        Ptr<Gtk::Button>::Ref       playButton;
 
         /**
          *  The box containing the close button.

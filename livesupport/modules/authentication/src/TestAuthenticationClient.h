@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -185,6 +185,8 @@ class TestAuthenticationClient :
          *  configuration file.
          *  Returns a new session ID; in case of an error, returns a
          *  null pointer.
+         *  Note that an incorrect login or password is considered an error
+         *  and will throw an XmlRpcException.
          *
          *  @return the new session ID
          *  @exception XmlRpcException login or password is incorrect

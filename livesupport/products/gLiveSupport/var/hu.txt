@@ -6,7 +6,7 @@ hu:table
     loginButtonLabel:string  { "bejelentkezés" }
     logoutButtonLabel:string { "kijelentkezés" }
     uploadFileButtonLabel:string            { "file feltöltés" }
-    djBagButtonLabel:string                 { "dj táska" }
+    djBagButtonLabel:string                 { "praktikus csupor" }
     simplePlaylistMgmtButtonLabel:string    { "egyszerű playlist kezelés" }
     schedulerButtonLabel:string             { "időzítő" }
 
@@ -34,11 +34,12 @@ hu:table
 
     djBagWindow:table
     {
-        windowTitle:string            { "LiveSupport Dj Táska" }
+        windowTitle:string            { "LiveSupport Praktikus Csupor" }
 
         typeColumnLabel:string        { "típus" }
         titleColumnLabel:string       { "cím" }
         closeButtonLabel:string       { "bezár" }
+        playButtonLabel:string        { "lejátszás" }
 
         upMenuItem:string               { "_Fel" }
         downMenuItem:string             { "_Le" }
