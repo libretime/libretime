@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -55,7 +55,7 @@ class GreenBox extends BasicStor{
     {
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        return $this->bsCreateFolder($parid, $folderName , 'Folder', $parid);
+        return $this->bsCreateFolder($parid, $folderName);
     }
 
     /**
@@ -157,37 +157,6 @@ class GreenBox extends BasicStor{
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
         return $this->bsDeleteFile($id);
-    }
-
-    /* ----------------------------------------------------- put, access etc. */
-    /**
-     *  Create and return access link to media file
-     *
-     *  @param id int, virt.file's local id
-     *  @param sessid string, session id
-     *  @return array with: seekable filehandle, access token
-     */
-    function access($id, $sessid='')
-    {
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
-            return $res;
-        return $ac->accessRawMediaData($sessid);
-    }
-
-    /**
-     *  Release access link to media file
-     *
-     *  @param sessid string, session id
-     *  @param token string, access token
-     *  @return boolean or PEAR::error
-     */
-    function release($token, $sessid='')
-    {
-        $ac =& StoredFile::recallByToken(&$this, $token);
-        if(PEAR::isError($ac)) return $ac;
-        return $ac->releaseRawMediaData($sessid, $token);
     }
 
     /* ---------------------------------------------- replicas, versions etc. */
@@ -304,38 +273,10 @@ class GreenBox extends BasicStor{
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
         $listArr = $this->bsListFolder($id);
-        foreach($listArr as $i=>$v){
-            if($v['type'] == 'File'){
-                $gunid = $this->_gunidFromId($v['id']);
-                $listArr[$i]['type'] =
-                    StoredFile::_getType($gunid);
-                $listArr[$i]['gunid'] = $gunid;
-            }
-        }
         return $listArr;
     }
     
     /* ---------------------------------------------------- redefined methods */
-
-    /**
-     *  Logout and destroy session
-     *
-     *  @param sessid string
-     *  @return true/err
-     */
-    function logout($sessid)
-    {
-        /* release all accessed files on logout - probably not useful
-        $acfa = $this->dbc->getAll("SELECT * FROM {$this->accessTable}
-            WHERE sessid='$sessid'");
-        if(PEAR::isError($acfa)) return $acfa;
-        foreach($acfa as $i=>$acf){
-            $ac =& StoredFile::recallByToken(&$this, $acf['token']);
-            $ac->releaseRawMediaData($sessid, $acf['token']);
-        }
-        */
-        return parent::logout($sessid);
-    }
 
     /**
      *  Add new user with home folder
@@ -348,7 +289,7 @@ class GreenBox extends BasicStor{
     {
         $uid = parent::addSubj($login, $pass);
         if(PEAR::isError($uid)) return $uid;
-        $fid = $this->addObj($login , 'Folder', $this->storId);
+        $fid = $this->bsCreateFolder($this->storId, $login);
         if(PEAR::isError($fid)) return $fid;
         $res = $this->addPerm($uid, '_all', $fid, 'A');
         if(PEAR::isError($res)) return $res;
@@ -367,7 +308,7 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($res)) return $res;
         $id = $this->getObjId($login, $this->storId);
         if(PEAR::isError($id)) return $id;
-        $res = $this->removeObj($id);
+        $res = $this->bsDeleteFile($id);
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }  
@@ -380,191 +321,11 @@ class GreenBox extends BasicStor{
      */
     function getPath($id)
     {
-        $pa =  parent::getPath($id, 'id, name, type'); array_shift($pa);
+        $pa =  parent::getPath($id, 'id, name, type');
+        array_shift($pa);
         return $pa;
     }
 
-    /**
-     *  Get object type by id.
-     *  (RootNode, Folder, File, )
-     *
-     *  @param oid int, local object id
-     *  @return string/err
-     */
-    function getObjType($oid)
-    {
-        $type = $this->getObjName($oid, 'type');
-        if($type == 'File'){
-            $ftype =
-                StoredFile::_getType($this->_gunidFromId($oid));
-            if(!is_null($ftype)) $type=$ftype;
-        }
-        return $type;
-    }
-    
-
-    /* ========================================== redefined "private" methods */
-    /**
-     *  Copy virtual file.<br>
-     *  Redefined from parent class.
-     *
-     *  @return id
-     */
-    function copyObj($id, $newParid, $after=NULL)
-    {
-        $parid = $this->getParent($id);
-        $nid = parent::copyObj($id, $newParid, $after);
-        if(PEAR::isError($nid)) return $nid;
-        switch($this->getObjType($id)){
-            case"audioclip":
-            case"playlist":
-            case"File":
-                $ac =& StoredFile::recall(&$this, $id);
-                if(PEAR::isError($ac)){ return $ac; }
-                $ac2 =& StoredFile::copyOf(&$ac, $nid);
-                $ac2->rename($this->getObjName($nid));
-                break;
-            default:
-        }
-        return $nid;
-    }
-    /**
-     *  Optionaly remove virtual file with the same name and add new one.<br>
-     *  Redefined from parent class.
-     *
-     *  @return id
-     */
-    function addObj($name, $type, $parid=1, $aftid=NULL, $param='')
-    {
-        if(!is_null($exid = $this->getObjId($name, $parid)))
-            { $this->removeObj($exid); }
-        return parent::addObj($name, $type, $parid, $aftid, $param);
-    }
-
-    /**
-     *  Remove virtual file.<br>
-     *  Redefined from parent class.
-     *
-     *  @param id int, local id of removed object
-     *  @return true or PEAR::error
-     */
-    function removeObj($id)
-    {
-        switch($ot = $this->getObjType($id)){
-            case"audioclip":
-            case"playlist":
-            case"File":
-                $ac =& StoredFile::recall(&$this, $id);
-                if(!PEAR::isError($ac)){
-                    $ac->delete();
-                }
-                $r = parent::removeObj($id);
-                if(PEAR::isError($r)) return $r;
-                break;
-            case"Folder":
-                $r = parent::removeObj($id);
-                if(PEAR::isError($r)) return $r;
-                break;
-            case"Replica":
-                $r = parent::removeObj($id);
-                if(PEAR::isError($r)) return $r;
-                break;
-            default:
-                return PEAR::raiseError(
-                    "GreenBox::removeObj: unknown obj type ($ot)"
-                );
-        }
-        return TRUE;
-    }
-    
     /* ==================================================== "private" methods */
-    /**
-     *  Return users's home folder local ID
-     *
-     *  @param sessid string, session ID
-     *  @return local folder id
-     */
-    function _getHomeDirId($sessid)
-    {
-        $parid = $this->getObjId(
-            $this->getSessLogin($sessid), $this->storId
-        );
-        return $parid;
-    }
-    
-    /**
-     *  Check authorization - auxiliary method
-     *
-     *  @param acts array of actions
-     *  @param pars array of parameters - e.g. ids
-     *  @param sessid string, session id
-     *  @return true or PEAR::error
-     */
-    function _authorize($acts, $pars, $sessid='')
-    {
-        $userid = $this->getSessUserId($sessid);
-        if(!is_array($pars)) $pars = array($pars);
-        if(!is_array($acts)) $acts = array($acts);
-        $perm = true;
-        foreach($acts as $i=>$action){
-            $res = $this->checkPerm($userid, $action, $pars[$i]);
-            if(PEAR::isError($res)) return $res;
-            $perm = $perm && $res;
-        }
-        if($perm) return TRUE;
-        $adesc = "[".join(',',$acts)."]";
-        return PEAR::raiseError("GreenBox::$adesc: access denied", GBERR_DENY);
-    }
-
-    /**
-     *  Create fake session for downloaded files
-     *
-     *  @param userid user id
-     *  @return string sessid
-     */
-    function _fakeSession($userid)
-    {
-        $sessid = $this->_createSessid();
-        if(PEAR::isError($sessid)) return $sessid;
-        $login = $this->getSubjName($userid);
-        $r = $this->dbc->query("INSERT INTO {$this->sessTable}
-                (sessid, userid, login, ts)
-            VALUES
-                ('$sessid', '$userid', '$login', now())");
-        if(PEAR::isError($r)) return $r;
-        return $sessid;
-    }
-
-    /**
-     *  Get local id from global id
-     *
-     *  @param gunid string global id
-     *  @return int local id
-     */
-    function _idFromGunid($gunid)
-    {
-        return $this->dbc->getOne(
-            "SELECT id FROM {$this->filesTable} WHERE gunid=x'$gunid'::bigint"
-        );
-    }
-
-    /**
-     *  Get global id from local id
-     *
-     *  @param id int local id
-     *  @return string global id
-     */
-    function _gunidFromId($id)
-    {
-        if(!is_numeric($id)) return NULL;
-        $gunid = $this->dbc->getOne("
-            SELECT to_hex(gunid)as gunid FROM {$this->filesTable}
-            WHERE id='$id'
-        ");
-        if(PEAR::isError($gunid)) return $gunid;
-        if(is_null($gunid)) return NULL;
-        return StoredFile::_normalizeGunid($gunid);
-    }
-
 }
 ?>

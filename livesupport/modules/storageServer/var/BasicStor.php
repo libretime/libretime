@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -127,21 +127,8 @@ class BasicStor extends Alib{
             $res = $this->removeObj($id);
             return $ac;
         }
+        if($ftype == 'playlist') $ac->setMime('application/smil');
         return $id;
-    }
-
-    /**
-     *  Analyze media file for internal metadata information
-     *
-     *  @param id int, virt.file's local id
-     *  @return array
-     */
-    function bsAnalyzeFile($id)
-    {
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        $ia = $ac->analyzeMediaFile();
-        return $ia;
     }
 
     /**
@@ -157,15 +144,16 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
-            case"File":
                 $ac =& StoredFile::recall(&$this, $id);
                 if(PEAR::isError($ac)){
-                    #// catch nonerror exception:
-                    #if($ac->getCode() != GBERR_FOBJNEX)
+                    // catch nonerror exception:
+                    //if($ac->getCode() != GBERR_FOBJNEX)
                     return $ac;
                 }
                 $res = $ac->rename($newName);
                 if(PEAR::isError($res)) return $res;
+                break;
+            case"File":
             default:
         }
         return $this->renameObj($id, $newName);
@@ -198,7 +186,7 @@ class BasicStor extends Alib{
             case"playlist":
             case"File":
                 return $this->_relocateSubtree($id, $did);
-            break;
+                break;
             default:
                 return PEAR::raiseError(
                     "BasicStor::moveFile: only file move supported now, sorry.",
@@ -235,7 +223,7 @@ class BasicStor extends Alib{
             case"playlist":
             case"File":
                 return $this->_copySubtree($id, $did);
-            break;
+                break;
             default:
                 return PEAR::raiseError(
                     "BasicStor::moveFile: only file sopy supported now, sorry.",
@@ -253,8 +241,7 @@ class BasicStor extends Alib{
     function bsDeleteFile($id)
     {
         $res = $this->removeObj($id);
-        if(PEAR::isError($res)) return $res;
-        return TRUE;
+        return $res;
     }
 
     /* ----------------------------------------------------- put, access etc. */
@@ -281,27 +268,16 @@ class BasicStor extends Alib{
      *  @param realFname string, local filepath to accessed file
      *  @param ext string, useful filename extension for accessed file
      *  @param gunid int, global unique id
-     *  @param sessid string, session id
      *  @param type string 'access'|'download'
      *  @return array with: seekable filehandle, access token
      */
-    function bsAccess($realFname, $ext, $gunid, $sessid='', $type='access')
+    function bsAccess($realFname, $ext, $gunid, $type='access')
     {
         $token  = StoredFile::_createGunid();
-        $res = $this->dbc->query("
-            INSERT INTO {$this->accessTable}
-                (gunid, sessid, token,
-                ext, type, ts)
-            VALUES
-                (x'{$gunid}'::bigint, '$sessid', x'$token'::bigint,
-                '$ext', '$type', now())
-        ");
-        if(PEAR::isError($res)){ return $res; }
         $linkFname = "{$this->accessDir}/$token.$ext";
-
         if(!file_exists($realFname)){
             return PEAR::raiseError(
-                "BasicStor::bsAccess: symlink create failed ($accLinkName)",
+                "BasicStor::bsAccess: real file not found ($realFname)",
                 GBERR_FILEIO);
         }
         if(! @symlink($realFname, $linkFname)){
@@ -309,6 +285,23 @@ class BasicStor extends Alib{
                 "BasicStor::bsAccess: symlink create failed ($linkFname)",
                 GBERR_FILEIO);
         }
+        $this->dbc->query("BEGIN");
+        $res = $this->dbc->query("
+            INSERT INTO {$this->accessTable}
+                (gunid, token, ext, type, ts)
+            VALUES
+                (x'{$gunid}'::bigint, x'$token'::bigint,
+                '$ext', '$type', now())
+        ");
+        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        $res = $this->dbc->query("
+            UPDATE {$this->filesTable}
+            SET currentlyAccessing=currentlyAccessing+1
+            WHERE gunid=x'{$gunid}'::bigint
+        ");
+        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        $res = $this->dbc->query("COMMIT");
+        if(PEAR::isError($res)){ return $res; }
         return array('fname'=>$linkFname, 'token'=>$token);
     }
 
@@ -330,19 +323,28 @@ class BasicStor extends Alib{
             SELECT to_hex(gunid)as gunid, ext FROM {$this->accessTable}
             WHERE token=x'{$token}'::bigint AND type='$type'
         ");
+        if(PEAR::isError($acc)){ return $acc; }
         $ext = $acc['ext'];
         $gunid = StoredFile::_normalizeGunid($acc['gunid']);
-        if(PEAR::isError($acc)){ return $acc; }
         $linkFname = "{$this->accessDir}/$token.$ext";
-        $res = $this->dbc->query("
-            DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
-        ");
-        if(PEAR::isError($res)){ return $res; }
         if(! @unlink($linkFname)){
             return PEAR::raiseError(
                 "BasicStor::bsRelease: unlink failed ($linkFname)",
                 GBERR_FILEIO);
         }
+        $this->dbc->query("BEGIN");
+        $res = $this->dbc->query("
+            UPDATE {$this->filesTable}
+            SET currentlyAccessing=currentlyAccessing-1
+            WHERE gunid=x'{$gunid}'::bigint AND currentlyAccessing>0
+        ");
+        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        $res = $this->dbc->query("
+            DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
+        ");
+        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        $res = $this->dbc->query("COMMIT");
+        if(PEAR::isError($res)){ return $res; }
         return $gunid;
     }
 
@@ -368,8 +370,7 @@ class BasicStor extends Alib{
             $ext    = "xml";
             break;
         }
-        $sessid = '';
-        $acc = $this->bsAccess($fname, $ext, $gunid, $sessid, 'download');
+        $acc = $this->bsAccess($fname, $ext, $gunid, 'download');
         $url = $this->getUrlPart()."access/".basename($acc['fname']);
         return array('url'=>$url, 'token'=>$acc['token']);
     }
@@ -400,14 +401,13 @@ class BasicStor extends Alib{
      */
     function bsOpenPut($chsum, $gunid)
     {
-        $sessid = '';
         $ext    = '';
         $token  = StoredFile::_createGunid();
         $res    = $this->dbc->query("
             INSERT INTO {$this->accessTable}
-                (gunid, sessid, token, ext, chsum, type, ts)
+                (gunid, token, ext, chsum, type, ts)
             VALUES
-                (x'{$gunid}'::bigint, '$sessid', x'$token'::bigint,
+                (x'{$gunid}'::bigint, x'$token'::bigint,
                     '$ext', '$chsum', 'put', now())
         ");
         if(PEAR::isError($res)){ return $res; }
@@ -488,7 +488,7 @@ class BasicStor extends Alib{
             { $replicaName.='_R'; }
         $rid = $this->addObj($replicaName , 'Replica', $did, 0, $id);
         if(PEAR::isError($rid)) return $rid;
-#        $this->addMdata($this->_pathFromId($rid), 'isReplOf', $id, $sessid);
+#        $this->addMdata($this->_pathFromId($rid), 'isReplOf', $id);
         return $rid;
     }
 
@@ -637,10 +637,34 @@ class BasicStor extends Alib{
             return PEAR::raiseError(
                 'BasicStor::bsListFolder: not a folder', GBERR_NOTF
             );
-        $a = $this->getDir($id, 'id, name, type, param as target', 'name');
-        return $a;
+        $listArr = $this->getDir($id, 'id, name, type, param as target', 'name');
+        foreach($listArr as $i=>$v){
+            if($v['type'] == 'File'){
+                $gunid = $this->_gunidFromId($v['id']);
+                $listArr[$i]['type'] =
+                    StoredFile::_getType($gunid);
+                $listArr[$i]['gunid'] = $gunid;
+                if(StoredFIle::_getState($gunid) == 'incomplete')
+                    unset($listArr[$i]);
+            }
+        }
+        return $listArr;
     }
     
+    /**
+     *  Analyze media file for internal metadata information
+     *
+     *  @param id int, virt.file's local id
+     *  @return array
+     */
+    function bsAnalyzeFile($id)
+    {
+        $ac =& StoredFile::recall(&$this, $id);
+        if(PEAR::isError($ac)) return $ac;
+        $ia = $ac->analyzeMediaFile();
+        return $ia;
+    }
+
     /**
      *  List files in folder
      *
@@ -651,11 +675,11 @@ class BasicStor extends Alib{
     function getObjIdFromRelPath($id, $relPath='.')
     {
         $relPath = trim($relPath);
-        #if($this->getObjType($id) !== 'Folder')
+        //if($this->getObjType($id) !== 'Folder')
         $nid = $this->getParent($id);
         if(PEAR::isError($nid)) return $nid;
         if(is_null($nid)){ return PEAR::raiseError("null parent for $nid"); }
-        #else $nid = $id;
+        //else $nid = $id;
         if(substr($relPath, 0, 1)=='/'){ $nid=$this->storId; }
         $a = split('/', $relPath);
         foreach($a as $i=>$pathItem){
@@ -686,6 +710,174 @@ class BasicStor extends Alib{
         return $nid;
     }
     
+    /* ---------------------------------------------------- redefined methods */
+    /**
+     *  Get object type by id.
+     *  (RootNode, Folder, File, )
+     *
+     *  @param oid int, local object id
+     *  @return string/err
+     */
+    function getObjType($oid)
+    {
+        $type = $this->getObjName($oid, 'type');
+        if($type == 'File'){
+            $ftype =
+                StoredFile::_getType($this->_gunidFromId($oid));
+            if(!is_null($ftype)) $type=$ftype;
+        }
+        return $type;
+    }
+    
+    /* ==================================================== "private" methods */
+    /**
+     *  Check authorization - auxiliary method
+     *
+     *  @param acts array of actions
+     *  @param pars array of parameters - e.g. ids
+     *  @param sessid string, session id
+     *  @return true or PEAR::error
+     */
+    function _authorize($acts, $pars, $sessid='')
+    {
+        $userid = $this->getSessUserId($sessid);
+        if(!is_array($pars)) $pars = array($pars);
+        if(!is_array($acts)) $acts = array($acts);
+        $perm = true;
+        foreach($acts as $i=>$action){
+            $res = $this->checkPerm($userid, $action, $pars[$i]);
+            if(PEAR::isError($res)) return $res;
+            $perm = $perm && $res;
+        }
+        if($perm) return TRUE;
+        $adesc = "[".join(',',$acts)."]";
+        return PEAR::raiseError("GreenBox::$adesc: access denied", GBERR_DENY);
+    }
+
+    /**
+     *  Return users's home folder local ID
+     *
+     *  @param sessid string, session ID
+     *  @return local folder id
+     */
+    function _getHomeDirId($sessid)
+    {
+        $parid = $this->getObjId(
+            $this->getSessLogin($sessid), $this->storId
+        );
+        return $parid;
+    }
+    
+    /**
+     *  Get local id from global id
+     *
+     *  @param gunid string global id
+     *  @return int local id
+     */
+    function _idFromGunid($gunid)
+    {
+        return $this->dbc->getOne(
+            "SELECT id FROM {$this->filesTable} WHERE gunid=x'$gunid'::bigint"
+        );
+    }
+
+    /**
+     *  Get global id from local id
+     *
+     *  @param id int local id
+     *  @return string global id
+     */
+    function _gunidFromId($id)
+    {
+        if(!is_numeric($id)) return NULL;
+        $gunid = $this->dbc->getOne("
+            SELECT to_hex(gunid)as gunid FROM {$this->filesTable}
+            WHERE id='$id'
+        ");
+        if(PEAR::isError($gunid)) return $gunid;
+        if(is_null($gunid)) return NULL;
+        return StoredFile::_normalizeGunid($gunid);
+    }
+
+    /* ------------------------------------------ redefined "private" methods */
+    /**
+     *  Copy virtual file.<br>
+     *  Redefined from parent class.
+     *
+     *  @return id
+     */
+    function copyObj($id, $newParid, $after=NULL)
+    {
+        $parid = $this->getParent($id);
+        $nid = parent::copyObj($id, $newParid, $after);
+        if(PEAR::isError($nid)) return $nid;
+        switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+                $ac =& StoredFile::recall(&$this, $id);
+                if(PEAR::isError($ac)){ return $ac; }
+                $ac2 =& StoredFile::copyOf(&$ac, $nid);
+                $ac2->rename($this->getObjName($nid));
+                break;
+            case"File":
+            default:
+        }
+        return $nid;
+    }
+
+    /**
+     *  Optionaly remove virtual file with the same name and add new one.<br>
+     *  Redefined from parent class.
+     *
+     *  @return id
+     */
+    function addObj($name, $type, $parid=1, $aftid=NULL, $param='')
+    {
+        if(!is_null($exid = $this->getObjId($name, $parid)))
+            { $this->removeObj($exid); }
+        return parent::addObj($name, $type, $parid, $aftid, $param);
+    }
+
+    /**
+     *  Remove virtual file.<br>
+     *  Redefined from parent class.
+     *
+     *  @param id int, local id of removed object
+     *  @return true or PEAR::error
+     */
+    function removeObj($id)
+    {
+        switch($ot = $this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+                $ac =& StoredFile::recall(&$this, $id);
+                if(PEAR::isError($ac)) return $ac;
+                if($ac->isEdited()){
+                    return PEAR::raiseError(
+                        'BasicStor.php: removeObj: is edited'
+                    );
+                }
+                if($ac->isAccessed()){
+                    return PEAR::raiseError(
+                        'BasicStor.php: removeObj: is accessed'
+                    );
+                }
+                $ac->delete();
+                break;
+            case"File":
+            case"Folder":
+            case"Replica":
+                break;
+            default:
+                return PEAR::raiseError(
+                    "GreenBox::bsDeleteFile: unknown obj type ($ot)"
+                );
+        }
+        $res = parent::removeObj($id);
+        if(PEAR::isError($res)) return $res;
+        return TRUE;
+    }
+
     /* =============================================== test and debug methods */
     /**
      *  dump
@@ -729,7 +921,7 @@ class BasicStor extends Alib{
 //        $this->dbc->query("DELETE FROM {$this->filesTable}");
         $ids = $this->dbc->getAll("SELECT id FROM {$this->filesTable}");
         if(is_array($ids)) foreach($ids as $i=>$item){
-            $this->removeObj($item['id']);
+            $this->bsDeleteFile($item['id']);
         }
         parent::deleteData();
         $this->initData();
@@ -871,7 +1063,6 @@ class BasicStor extends Alib{
         #echo "{$this->accessTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->accessTable} (
             gunid bigint,
-            sessid char(32) not null default'',
             token bigint,
             chsum char(32) not null default'',
             ext varchar(128) not null default'',

@@ -23,19 +23,19 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
 
-require_once "GreenBox.php";
+require_once "BasicStor.php";
 
 /**
  *  LocStor class
  *
  *  Livesupport local storage interface
  */
-class LocStor extends GreenBox{
+class LocStor extends BasicStor{
     /* ---------------------------------------------------------------- store */
     /**
      *  Store or replace existing audio clip
@@ -95,7 +95,7 @@ class LocStor extends GreenBox{
         if($fname == ''){
             $fname = "newFile";
         }
-        $res = $this->renameFile($oid, $fname, $sessid);
+        $res = $this->bsRenameFile($oid, $fname);
         if(PEAR::isError($res)) return $res;
         return $this->bsOpenPut($chsum, $ac->gunid);
     }
@@ -135,7 +135,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        return $ac->accessRawMediaData($sessid);
+        return $ac->accessRawMediaData();
     }
 
     /**
@@ -232,7 +232,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        $md = $this->getMdata($ac->getId(), $sessid);
+        $md = $this->bsGetMetadata($ac->getId());
         if(PEAR::isError($md)) return $md;
         return $md;
     }
@@ -284,7 +284,7 @@ class LocStor extends GreenBox{
                 'playlistResults'   => $resPL['results']
             );
         }
-        $srchRes = $this->localSearch($criteria, $sessid);
+        $srchRes = $this->bsLocalSearch($criteria);
         $res = array('audioClipResults'=>NULL, 'playlistResults'=>NULL);
         switch($filetype){
         case"audioclip":
@@ -356,12 +356,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        if($ac->isAccessed()){
-            return PEAR::raiseError(
-                'LocStor.php: deleteAudioClip: is accessed'
-            );
-        }
-        $res = $this->deleteFile($ac->getId(), $sessid);
+        $res = $this->bsDeleteFile($ac->getId());
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
@@ -392,8 +387,6 @@ class LocStor extends GreenBox{
     {
         $this->deleteData();
         $rootHD = $this->getObjId('root', $this->storId);
-#        $this->login('root', $this->config['tmpRootPass']);
-#        $s = $this->sessid;
         include"../tests/sampleData.php";
         $res = array();
         foreach($sampleData as $k=>$it){
@@ -420,7 +413,6 @@ class LocStor extends GreenBox{
             if(PEAR::isError($r)){ return $r; }
             $res[] = $this->_gunidFromId($r);
         }
-#        $this->logout($this->sessid);
         return $res;
     }
 
@@ -461,7 +453,7 @@ class LocStor extends GreenBox{
         if($fname == ''){
             $fname = "newFile.xml";
         }
-        $res = $this->renameFile($oid, $fname, $sessid);
+        $res = $this->bsRenameFile($oid, $fname);
         if(PEAR::isError($res)) return $res;
         $res = $ac->setState('ready');
         if(PEAR::isError($res)) return $res;
@@ -540,12 +532,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        if($this->_isEdited($playlistId)){
-            return PEAR::raiseError(
-                'LocStor.php: deletePlaylist: playlist is edited'
-            );
-        }
-        $res = $this->deleteFile($ac->getId(), $sessid);
+        $res = $this->bsDeleteFile($ac->getId());
         if(PEAR::isError($res)) return $res;
         return TRUE;
     }
@@ -626,9 +613,8 @@ class LocStor extends GreenBox{
      */
     function _isEdited($playlistId)
     {
-        $state = StoredFile::_getState($playlistId);
-        if($state == 'edited'){ return TRUE; }
-        return FALSE;
+        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        return $ac->isEdited($playlistId);
     }
 
     /**

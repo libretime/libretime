@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -274,28 +274,16 @@ class StoredFile{
      *  Increase access counter, create access token, insert access record,
      *  call access method of RawMediaData
      *
-     *  @param sessid string
      *  @return array with: access URL, access token
      */
-    function accessRawMediaData($sessid)
+    function accessRawMediaData()
     {
-        $this->dbc->query("BEGIN");
-        $res = $this->dbc->query("
-            UPDATE {$this->filesTable}
-            SET currentlyAccessing=currentlyAccessing+1
-            WHERE gunid=x'{$this->gunid}'::bigint
-        ");
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-#        $token = $this->_createGunid();
         $realFname  = $this->_getRealRADFname();
         $ext        = $this->_getExt();
-
-        $res = $this->gb->bsAccess($realFname, $ext, $this->gunid, $sessid);
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        $res = $this->gb->bsAccess($realFname, $ext, $this->gunid);
+        if(PEAR::isError($res)){ return $res; }
         $resultArray =
             array('url'=>"file://{$res['fname']}", 'token'=>$res['token']);
-        $res = $this->dbc->query("COMMIT");
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         return $resultArray;
     }
 
@@ -308,16 +296,8 @@ class StoredFile{
      */
     function releaseRawMediaData($token)
     {
-        $this->dbc->query("BEGIN");
-        $res = $this->dbc->query("UPDATE {$this->filesTable}
-            SET currentlyAccessing=currentlyAccessing-1
-            WHERE gunid=x'{$this->gunid}'::bigint AND currentlyAccessing>0
-        ");
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->gb->bsRelease($token);
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $res = $this->dbc->query("COMMIT");
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
+        if(PEAR::isError($res)){ return $res; }
         return TRUE;
     }
 
@@ -469,11 +449,32 @@ class StoredFile{
     function isAccessed($gunid=NULL)
     {
         if(is_null($gunid)) $gunid = $this->gunid;
-        return (0 < $this->dbc->getOne("
+        $ca = $this->dbc->getOne("
             SELECT currentlyAccessing FROM {$this->filesTable}
             WHERE gunid=x'$gunid'::bigint
-        "));
+        ");
+        if(is_null($ca)){
+            return PEAR::raiseError(
+                "StoredFile::isAccessed: invalid gunid ($gunid)",
+                GBERR_FOBJNEX
+            );
+        }
+        return ($ca > 0);
     }    
+
+    /**
+     *  Returns true if virtual file is edited
+     *
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function isEdited($gunid=NULL)
+    {
+        if(is_null($gunid)) $gunid = $this->gunid;
+        $state = $this->_getState($gunid);
+        if($state == 'edited'){ return TRUE; }
+        return FALSE;
+    }
 
     /**
      *  Returns local id of virtual file
