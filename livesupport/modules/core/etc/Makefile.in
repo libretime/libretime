@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.22 $
+#   Version  : $Revision: 1.23 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -83,7 +83,7 @@ TEST_RUNNER   = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
-export LD_LIBRARY_PATH=${USR_LIB_DIR}
+export LD_LIBRARY_PATH:=${LD_LIBRARY_PATH}:${USR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -78,6 +78,8 @@ AUTHENTICATION_LIB_FILE = ${LIB_DIR}/lib${AUTHENTICATION_LIB}.a
 TEST_RUNNER      = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
+
+export LD_LIBRARY_PATH:=${LD_LIBRARY_PATH}:${USR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -143,8 +145,7 @@ distclean: clean docclean
 
 check: all ${TEST_RUNNER}
 #	${MAKE} -C ${STORAGE_SERVER_DIR}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
-                                   -o ${TEST_RESULTS} -s ${TEST_XSLT}
+	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 
 #-------------------------------------------------------------------------------

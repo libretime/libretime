@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 export CPPFLAGS="-I$usrdir/include"
 export LDFLAGS="-L$usrdir/lib"
 export PKG_CONFIG_PATH="$usrdir/lib/pkgconfig"
-export LD_LIBRARY_PATH="$usrdir/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$usrdir/lib"
 
 ${configure} "$@" && echo
 

@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.16 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.17 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -84,6 +84,8 @@ STORAGE_LIB_FILE = ${LIB_DIR}/lib${STORAGE_LIB}.a
 TEST_RUNNER      = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
+
+export LD_LIBRARY_PATH:=${LD_LIBRARY_PATH}:${USR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -151,8 +153,7 @@ distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
 check: all storage_server_init ${TEST_RUNNER}
-	LD_LIBRARY_PATH=${USR_LIB_DIR} ${TEST_RUNNER} \
-                                   -o ${TEST_RESULTS} -s ${TEST_XSLT}
+	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 
 #-------------------------------------------------------------------------------
@@ -167,11 +168,15 @@ ${TMP_DIR}:
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
-${TEST_RUNNER}: ${CORE_LIB_FILE} ${TEST_RUNNER_OBJS} ${STORAGE_LIB_FILE}
+${TEST_RUNNER}: ${CORE_LIB_FILE} ${AUTHENTICATION_LIB_FILE} \
+                ${TEST_RUNNER_OBJS} ${STORAGE_LIB_FILE}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}
+
+${AUTHENTICATION_LIB_FILE}:
+	${MAKE} -C ${AUTHENTICATION_DIR}
 
 storage_server_init:
 	${MAKE} -C ${BASE_DIR}/../storageServer
