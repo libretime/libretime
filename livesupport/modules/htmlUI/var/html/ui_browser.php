@@ -56,6 +56,7 @@ if ($uiBrowser->userid) {
   $Smarty->assign('PLid',        $uiBrowser->PLAYLIST->activeId);
   $Smarty->register_object('PL', $uiBrowser->PLAYLIST);
   $Smarty->register_object('BROWSE', $uiBrowser->BROWSE);
+  $Smarty->register_object('SEARCH', $uiBrowser->SEARCH);
 
   switch ($_REQUEST['act']){
     case "fileBrowse":
@@ -106,24 +107,13 @@ if ($uiBrowser->userid) {
 
 
     case "SEARCH":
-        if (is_array($uiBrowser->SEARCH->criteria['form']) ){
-            $Smarty->assign('searchResults', $uiBrowser->SEARCH->results);
-            $Smarty->assign('showSearchResults', TRUE);
-        };
-
         $Smarty->assign('searchForm', $uiBrowser->SEARCH->form($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
 
     break;
 
     case "BROWSE":
-    /*
-        if (is_array($uiBrowser->SEARCH->criteria) ){
-            $Smarty->assign('searchres', $uiBrowser->SEARCH->results);
-            $Smarty->assign('showSearchRes', TRUE);
-        };       */
-
-        $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask['browse']));
         $Smarty->assign('showLibrary', TRUE);
 
     break;

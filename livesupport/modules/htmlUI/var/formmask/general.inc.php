@@ -367,7 +367,7 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                                1   => 1,
+                                #1   => 1,
                                 5   => 5,
                                 10  => 10,
                                 25  => 25,
@@ -378,7 +378,7 @@ $ui_fmask = array(
         array(
             'element'   => 'clear',
             'type'      => 'button',
-            'label'     => 'Clear',
+            'label'     => 'Reset',
             'attributes'  => array('onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
             'groupit'   => TRUE,
         ),

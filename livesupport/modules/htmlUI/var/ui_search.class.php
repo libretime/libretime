@@ -14,6 +14,12 @@ class uiSearch
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
+
+    function getResult()
+    {
+        return $this->results;
+    }
+
     function form($id, &$mask2)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
@@ -22,8 +28,8 @@ class uiSearch
 
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $v){
-                if (!$v['rule']) {
-                    $col1[$this->Base->_formElementEncode($v['element'])] = $v['label'];
+                if ($v['type']) {
+                    $col1[$this->Base->_formElementEncode($v['element'])] = tra($v['label']);
                     if (isset($val['relation']))
                         $col2[$this->Base->_formElementEncode($v['element'])] = $mask2['relations'][$v['relation']];
                     else

@@ -66,7 +66,7 @@ class uiScratchPad
     function addItem($id)
     {
         if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
-            $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
+            if ($this->verbose) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
             return false;
         }
 
@@ -75,7 +75,7 @@ class uiScratchPad
         foreach ($sp as $key=>$val) {
             if ($val['id'] == $item['id']) {
                 unset($sp[$key]);
-                $this->Base->_retMsg('Entry $1 was already on SP since $2.\nMoved to Top.', $item['title'], $val['added']);
+                if ($this->verbose) $this->Base->_retMsg('Entry $1 was already on SP since $2.\nMoved to Top.', $item['title'], $val['added']);
             } else {
                 #$this->Base->incAccessCounter($id);
             }
@@ -97,10 +97,8 @@ class uiScratchPad
             $ids = array($ids);
 
         foreach ($ids as $id) {
-            #$info = $this->Base->_getMetaInfo($id);
             $sp =& $this->get();
             foreach ($sp as $key=>$val) {
-                #if ($val['id'] == $info['id']) {
                 if ($val['id'] == $id) {
                     unset ($sp[$key]);
                     #$this->Base->decAccessCounter($id);
@@ -117,20 +115,16 @@ class uiScratchPad
         foreach ($this->items as $key=>$val) {
             $s[$key] = $val[$by];
         }
-
         $curr =  $this->order[$by];
         $this->order = array();
         (is_null($curr) || $curr=='DESC') ? $this->order[$by] = 'ASC' : $this->order[$by] = 'DESC';
-
         switch($this->order[$by]) {
             case "ASC":   asort($s); break;
             case "DESC": arsort($s); break;
         }
-
         foreach ($s as $key=>$val) {
             $res[] = $this->items[$key];
         }
-
         $this->items = $res;
     }
 

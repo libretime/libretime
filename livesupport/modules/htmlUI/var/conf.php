@@ -23,7 +23,7 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -142,8 +142,9 @@ define('UI_SCRATCHPAD_MAXLENGTH_KEY', 'djBagMaxlength');
 ## session keys
 define('UI_SCRATCHPAD_SESSNAME',  'SCRATCHPAD');
 define('UI_STATIONINFO_SESSNAME', 'STATIONINFO');
-define('UI_SEARCH_SESSNAME',      'SEARCH');
+define('UI_SEARCH_SESSNAME',      'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',    'PLAYLIST');
+define('UI_BROWSE_SESSNAME',      'L_BROWSE');
 
 define('UI_MDATA_KEY_TITLE',      'dc:title');
 define('UI_MDATA_KEY_ARTIST',     'dc:creator');

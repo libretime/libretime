@@ -2,12 +2,12 @@
 
 {if $searchForm}
     {include file="library/searchForm.tpl"}
+    {SEARCH->getResult assign=searchResults}
 {/if}
 
-{if $showSearchResults}
-    {include file="library/searchResults.tpl"}
-{/if}
-
-{if $browseForm}          
+{if $browseForm}
     {include file="library/browseForm.tpl"}
+    {BROWSE->getResult assign=searchResults}
 {/if}
+
+{include file="library/results.tpl"}

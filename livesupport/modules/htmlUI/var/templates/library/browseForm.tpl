@@ -27,8 +27,4 @@
     </tr>
 </table>
 
-<table>
-    {BROWSE->endResult assign=endResult}
-    {$endResult}
-</table>
-</div
+</div>

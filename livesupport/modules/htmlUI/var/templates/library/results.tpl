@@ -1,7 +1,7 @@
 {*Smarty template*}
-         
+
 <div id="searchres">
-<center>
+<center>   
 {if $searchResults.count > 0}
     <table border="0" width="50%">
         <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
@@ -22,12 +22,6 @@
                 <td align="center">{$i.creator}</td>
                 <td align="center">{$i.duration}</td>
                 <td align="center">{$i.type}</td>
-                <!--
-                <td>
-                    <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.addItem&id={$i.id}', '2PL')">[PL]</a>
-                    <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.addItem&id={$i.id}', '2SP')">[SP]</a>
-                </td>
-                -->
             </tr>
         {/foreach}
         <tr>
