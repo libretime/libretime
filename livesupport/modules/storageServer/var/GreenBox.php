@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.42 $
+    Version  : $Revision: 1.43 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.42 $
+ *  @version $Revision: 1.43 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -541,7 +541,7 @@ class GreenBox extends BasicStor{
             $metaParid = $r;
         }
 
-        // insert new palylist element
+        // insert new playlist element
         $r = $pl->md->insertMetadataEl($parid, 'playlistElement');
         if(PEAR::isError($r)){ return $r; }
         $plElId = $r;
@@ -571,6 +571,7 @@ class GreenBox extends BasicStor{
             $r = $pl->md->setMetadataEl($plLenMid, $newPlLen);
         }
         if(PEAR::isError($r)){ return $r; }
+        /* commented - maybe useless (C++ part doesn't do it)
         // set access to audio clip:
         $r = $this->bsAccess(NULL, '', $acGunid, 'access');
         if(PEAR::isError($r)){ return $r; }
@@ -578,6 +579,7 @@ class GreenBox extends BasicStor{
         // insert token attribute:
         $r = $pl->md->insertMetadataEl($acId, 'accessToken', $acToken, 'A');
         if(PEAR::isError($r)){ return $r; }
+        */
         return $plElGunid;
     }
 
@@ -633,15 +635,19 @@ class GreenBox extends BasicStor{
                 $acLenArr = $pl->md->getMetadataEl('playlength', $storedAcMid);
                 if(PEAR::isError($acLenArr)){ return $acLenArr; }
                 $acLen = $acLenArr[0]['value'];
+                /*
                 $acTokArr = $pl->md->getMetadataEl('accessToken', $storedAcMid);
                 if(PEAR::isError($acTokArr)){ return $acTokArr; }
                 $acToken = $acTokArr[0]['value'];
+                */
                 // remove playlist element:
                 $r = $pl->md->setMetadataEl($el['mid'], NULL);
                 if(PEAR::isError($r)){ return $r; }
+                /*
                 // release audioClip:
                 $r = $this->bsRelease($acToken, 'access');
                 if(PEAR::isError($r)){ return $r; }
+                */
                 $found = TRUE;
                 continue;
             }
