@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ TestWindow :: TestWindow (void)
     button = widgetFactory->createButton("Hello, World!");
 
     // create a blue container
-    blueBin = widgetFactory->createBlueBin();
+    blueBin = widgetFactory->createDarkBlueBin();
 
     // create and set up the layout
     layout.reset(new Gtk::Table());

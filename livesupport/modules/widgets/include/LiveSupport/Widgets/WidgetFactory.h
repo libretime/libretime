@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -172,6 +172,46 @@ class WidgetFactory :
         Glib::RefPtr<Gdk::Pixbuf>       blueBinBottomRightImage;
 
         /**
+         *  The top left image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinTopLeftImage;
+
+        /**
+         *  The left image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinLeftImage;
+
+        /**
+         *  The top image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinTopImage;
+
+        /**
+         *  The top right image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinTopRightImage;
+
+        /**
+         *  The right image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinRightImage;
+
+        /**
+         *  The bottom left image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinBottomLeftImage;
+
+        /**
+         *  The bottom image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinBottomImage;
+
+        /**
+         *  The bottom right image of the border for dark BlueBin.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       darkBlueBinBottomRightImage;
+
+        /**
          *  The default constructor.
          */
         WidgetFactory(void)              throw ()
@@ -246,6 +286,12 @@ class WidgetFactory :
          */
         Ptr<BlueBin>::Ref
         createBlueBin(void)                                 throw ();
+
+        /**
+         *  Create and return a dark blue singular container.
+         */
+        Ptr<BlueBin>::Ref
+        createDarkBlueBin(void)                             throw ();
 };
 
 

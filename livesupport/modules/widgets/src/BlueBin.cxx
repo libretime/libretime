@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,11 +49,13 @@ using namespace LiveSupport::Widgets;
 
 
 /* =============================================================  module code */
+#include <iostream>
 
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BlueBin :: BlueBin(Glib::RefPtr<Gdk::Pixbuf>   topLeftImage,
+BlueBin :: BlueBin(unsigned int                backgroundColor,
+                   Glib::RefPtr<Gdk::Pixbuf>   topLeftImage,
                    Glib::RefPtr<Gdk::Pixbuf>   leftImage,
                    Glib::RefPtr<Gdk::Pixbuf>   topImage,
                    Glib::RefPtr<Gdk::Pixbuf>   topRightImage,
@@ -77,7 +79,10 @@ BlueBin :: BlueBin(Glib::RefPtr<Gdk::Pixbuf>   topLeftImage,
     child = 0;
     
     bgColor = Gdk::Color();
-    bgColor.set_rgb(0xcf00, 0xde00, 0xe700);
+    unsigned int    red   = (backgroundColor & 0xff0000) >> 8;
+    unsigned int    green = (backgroundColor & 0x00ff00);
+    unsigned int    blue  = (backgroundColor & 0x0000ff) << 8;
+    bgColor.set_rgb(red, green, blue);
     Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
     colormap->alloc_color(bgColor);
 }

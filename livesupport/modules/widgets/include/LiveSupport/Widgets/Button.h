@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Button.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  A button holding a text.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class Button : public Gtk::Button
 {
@@ -274,6 +274,28 @@ class Button : public Gtk::Button
          */
         virtual
         ~Button(void)                                  throw ();
+
+        /**
+         *  Set the label of the button.
+         *
+         *  @param label the text the button should display.
+         */
+        virtual void
+        set_label(const Glib::ustring & label)              throw ()
+        {
+            this->label->set_label(label);
+        }
+
+        /**
+         *  Get the label of the button.
+         *
+         *  @return the current label of the button.
+         */
+        Glib::ustring
+        get_label(void) const                               throw ()
+        {
+            return this->label->get_label();
+        }
 };
 
 
