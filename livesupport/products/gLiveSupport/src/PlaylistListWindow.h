@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -120,7 +120,7 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
          *  Lists one playlist per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -215,6 +215,12 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
         Glib::RefPtr<Gtk::TreeSelection>    listTreeSelection;
 
         /**
+         *  The tree selection, as a GTK reference, holding info on
+         *  what's selected from the detail view.
+         */
+        Glib::RefPtr<Gtk::TreeSelection>    detailTreeSelection;
+
+        /**
          *  The container holding the playlist detail tree view and accompanying
          *  label.
          */
@@ -259,6 +265,13 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
          */
         virtual void
         onPlaylistListSelection(void)                           throw ();
+
+        /**
+         *  Signal to catch the event of the user selecting a row
+         *  in the detail tree view.
+         */
+        virtual void
+        onDetailSelection(void)                                 throw ();
 
         /**
          *  Signal handler for the close button clicked.

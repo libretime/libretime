@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -153,6 +153,12 @@ PlaylistListWindow :: PlaylistListWindow (
         std::cerr << e.what() << std::endl;
     }
 
+    // attach the event handler for the user selecting an entry from
+    // the list of playlist details
+    detailTreeSelection = detailTreeView.get_selection();
+    detailTreeSelection->signal_changed().connect(
+                sigc::mem_fun(*this, &PlaylistListWindow::onDetailSelection));
+
     // set up the button box
     buttonBox.pack_start(*closeButton, PACK_SHRINK);
     buttonBox.set_border_width(5);
@@ -184,7 +190,7 @@ PlaylistListWindow :: showAllPlaylists(void)                    throw ()
     playlists  = storage->getAllPlaylists(sessionId);
     it  = playlists->begin();
     end = playlists->end();
-    while (it < end) {
+    while (it != end) {
         playlist  = *it;
         row       = *(listTreeModel->append());
         lengthStr = boost::posix_time::to_simple_string(
@@ -234,6 +240,38 @@ PlaylistListWindow :: onPlaylistListSelection(void)             throw ()
         Ptr<UniqueId>::Ref playlistId(new UniqueId(row[modelColumns.idColumn]));
 
         showPlaylistDetails(playlistId);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for a row being selected in the detail tree view.
+ *----------------------------------------------------------------------------*/
+void
+PlaylistListWindow :: onDetailSelection(void)                   throw ()
+{
+    TreeModel::iterator iter = detailTreeSelection->get_selected();
+    if (iter) {
+        TreeModel::Row     row = *iter;
+        Ptr<UniqueId>::Ref selectedId(new UniqueId(row[modelColumns.idColumn]));
+
+        // TODO: only proceed if the selected item is a playlist,
+        //       not an audio clip
+
+        // find the item in listTreeModel with the same id, and select it
+        // TODO: find a more efficient way of doing this
+        TreeModel::iterator    it  = listTreeModel->children().begin();
+        TreeModel::iterator    end = listTreeModel->children().end();
+
+        while (it != end) {
+            row = *it;
+            Ptr<UniqueId>::Ref  id(new UniqueId(row[modelColumns.idColumn]));
+            if (*id == *selectedId) {
+                listTreeSelection->select(row);
+                break;
+            }
+            ++it;
+        }
     }
 }
 
