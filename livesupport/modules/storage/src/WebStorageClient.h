@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -359,6 +359,9 @@ class WebStorageClient :
          *  Store an audio clip.  The <code>uri</code> field of the audio clip
          *  is expected to contain the valid URI of a binary audio file.
          *  
+         *  If the ID of the audio clip is UniqueId::NoId, a new globally unique
+         *  ID is generated, and the audioClip ID is changed to the new ID.
+         *
          *  In this testing version, the audio clip URI is expected in the
          *  form <code>file:relative_path/file_name.mp3</code>.  Later this
          *  should be changed to an absolute URI.

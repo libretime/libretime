@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <iostream>
 
 #include "LiveSupport/Core/AudioClip.h"
+#include "LiveSupport/Core/Playlist.h"
 #include "AudioClipTest.h"
 
 
@@ -140,3 +141,39 @@ AudioClipTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg);
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Test conversion to and from Playable
+ *----------------------------------------------------------------------------*/
+void
+AudioClipTest :: conversionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<AudioClip>::Ref     audioClip(new AudioClip());
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                                new xmlpp::DomParser(configFileName, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        audioClip->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in configuration file");
+    } catch (xmlpp::exception &e) {
+        std::string  eMsg = "error parsing configuration file\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
+    
+    Ptr<Playable>::Ref      playable = audioClip;
+    CPPUNIT_ASSERT(playable->getType() == Playable::AudioClipType);
+    
+    Ptr<AudioClip>::Ref     otherAudioClip = playable->getAudioClip();
+    CPPUNIT_ASSERT(otherAudioClip == audioClip);
+
+    Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
+    CPPUNIT_ASSERT(!playlist);
+}
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -430,10 +430,12 @@ WebStorageClientTest :: audioClipTest(void)
 
 
     // test storeAudioClip() and getAudioClip()
-    Ptr<UniqueId>::Ref  idxx = UniqueId::generateId();
+    Ptr<const Glib::ustring>::Ref title(new Glib::ustring(
+                                                    "Muppet Show theme"));
     Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
-    Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));
-    audioClip.reset(new AudioClip(idxx, playlength, uri));
+    Ptr<const std::string>::Ref   uri(new std::string(
+                                                    "file:var/test10001.mp3"));
+    audioClip.reset(new AudioClip(title, playlength, uri));
 
     try {    
         wsc->storeAudioClip(sessionId, audioClip);
@@ -441,6 +443,9 @@ WebStorageClientTest :: audioClipTest(void)
     catch (StorageException &e) {
         CPPUNIT_FAIL(e.what());
     }
+
+    CPPUNIT_ASSERT(audioClip->getId());
+    Ptr<UniqueId>::Ref  idxx = audioClip->getId();
 
     try {
         CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, idxx));

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,17 +124,18 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
                   Ptr<time_duration>::Ref       playlength,
                   Ptr<const std::string>::Ref   uri)
                                                            throw ()
+                        : Playable(AudioClipType)
 {
     this->id         = id;
     this->title.reset(new Glib::ustring(""));
     this->playlength = playlength;
     this->uri        = uri;
+
+    setMetadata(title, titleElementName, titleElementPrefix);
     
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                         to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
-
-    setMetadata(title, titleElementName, titleElementPrefix);
 }
 
 /*------------------------------------------------------------------------------
@@ -145,20 +146,40 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref               id,
                        Ptr<time_duration>::Ref          playlength,
                        Ptr<const std::string>::Ref      uri)
                                                            throw ()
+                        : Playable(AudioClipType)
 {
     this->id         = id;
     this->title      = title;
     this->playlength = playlength;
     this->uri        = uri;
 
+    setMetadata(title, titleElementName, titleElementPrefix);
+
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
                                         to_simple_string(*playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
-
-    setMetadata(title, titleElementName, titleElementPrefix);
 }
 
 
+/*------------------------------------------------------------------------------ *  Constructor without ID.
+ *----------------------------------------------------------------------------*/AudioClip :: AudioClip(Ptr<const Glib::ustring>::Ref    title,
+                       Ptr<time_duration>::Ref          playlength,
+                       Ptr<const std::string>::Ref      uri)
+                                                           throw ()
+                        : Playable(AudioClipType)
+{
+    this->title      = title;
+    this->playlength = playlength;
+    this->uri        = uri;
+
+    setMetadata(title, titleElementName, titleElementPrefix);
+ 
+    Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
+                                        to_simple_string(*playlength) ));
+    setMetadata(playlengthString, extentElementName, extentElementPrefix);
+}
+ 
+ 
 /*------------------------------------------------------------------------------
  *  Set the value of the title field.
  *----------------------------------------------------------------------------*/

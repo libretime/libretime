@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,14 @@ namespace Core {
  *  Unit test for the AudioClip class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see AudioClip
  */
 class AudioClipTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(AudioClipTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(conversionTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -76,6 +77,14 @@ class AudioClipTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing conversion to and from Playable.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        conversionTest(void)                    throw (CPPUNIT_NS::Exception);
 
 
     public:

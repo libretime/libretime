@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -185,6 +185,7 @@ class Playlist : public Configurable,
          *  Default constructor.
          */
         Playlist(void)                          throw ()
+                        : Playable(PlaylistType)
         {
             elementList.reset(new PlaylistElementListType);
             this->isLockedForPlaying = false;
@@ -195,6 +196,7 @@ class Playlist : public Configurable,
          *  Create a playlist by specifying its ID only.
          */
         Playlist(Ptr<UniqueId>::Ref id)         throw ()
+                        : Playable(PlaylistType)
         {
             this->id         = id;
             
@@ -216,6 +218,7 @@ class Playlist : public Configurable,
                  Ptr<time_duration>::Ref        playlength,
                  Ptr<const std::string>::Ref    uri = Ptr<std::string>::Ref())
                                                 throw ()
+                        : Playable(PlaylistType)
         {
             this->id         = id;
             this->title.reset(new Glib::ustring(""));
@@ -241,6 +244,7 @@ class Playlist : public Configurable,
                  Ptr<time_duration>::Ref        playlength,
                  Ptr<const std::string>::Ref    uri = Ptr<std::string>::Ref())
                                                 throw ()
+                        : Playable(PlaylistType)
         {
             this->id         = id;
             this->title      = title;

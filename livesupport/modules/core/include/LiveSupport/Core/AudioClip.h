@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -171,6 +171,7 @@ class AudioClip : public Configurable,
          *  Default constructor.
          */
         AudioClip(void)                                    throw ()
+                        : Playable(AudioClipType)
         {
         }
 
@@ -180,8 +181,8 @@ class AudioClip : public Configurable,
          *
          *  @param id the id of the audio clip.
          */
-        AudioClip(Ptr<UniqueId>::Ref         id)
-                                                           throw ()
+        AudioClip(Ptr<UniqueId>::Ref         id)           throw ()
+                        : Playable(AudioClipType)
         {
             this->id         = id;
         }
@@ -216,6 +217,22 @@ class AudioClip : public Configurable,
                   Ptr<const std::string>::Ref   uri = Ptr<string>::Ref())
                                                            throw ();
 
+        /**
+         *  Create an audio clip by specifying all details which need
+         *  to be set by the user.
+         *  The ID is left blank, and can be set later using setId().
+         *  This is used when a new audio clip is uploaded to storage.
+         *
+         *  @param playlength the playing length of the audio clip.
+         *  @param title      the title of the audio clip.
+         *  @param uri the location of the sound file corresponding to
+         *             this audio clip object.
+         */
+        AudioClip(Ptr<const Glib::ustring>::Ref title,
+                  Ptr<time_duration>::Ref       playlength,
+                  Ptr<const std::string>::Ref   uri)
+                                                           throw ();
+                                                                                
         /**
          *  A virtual destructor, as this class has virtual functions.
          */
@@ -260,6 +277,23 @@ class AudioClip : public Configurable,
             return id;
         }
 
+        /**
+         *  Set the ID of the object.  This is only allowed if the ID was
+         *  a null pointer; once the ID is set, it can not be changed.
+         *
+         *  @param the new unique id of the audio clip.
+         */
+        void
+        setId(Ptr<UniqueId>::Ref id)            throw (std::invalid_argument)
+        {
+            if (!this->id) {
+                this->id = id;
+            }
+            else {
+                throw std::invalid_argument("can not set the ID twice");
+            }
+        }
+                                                                                
         /**
          *  Return the total playing length for this audio clip.
          *

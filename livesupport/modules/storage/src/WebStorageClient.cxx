@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1190,9 +1190,7 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     parameters.clear();
     parameters[createPlaylistSessionIdParamName] 
             = sessionId->getId();
-    parameters[createPlaylistPlaylistIdParamName] 
-            = std::string(*UniqueId::generateId());   // TODO: the server
-                                                      // should generate the ID
+
     result.clear();
     if (!xmlRpcClient.execute(createPlaylistMethodName.c_str(),
                               parameters, result)) {
@@ -1443,8 +1441,8 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     parameters.clear();
     parameters[storeAudioClipSessionIdParamName] 
             = sessionId->getId();
-    if (audioClip->getId()->getId() != 0) {             // ID==0 means 'please
-        parameters[storeAudioClipAudioClipIdParamName]  //   generate new ID'
+    if (audioClip->getId()) {
+        parameters[storeAudioClipAudioClipIdParamName]
             = std::string(*audioClip->getId());
     }
     parameters[storeAudioClipMetadataParamName] 
@@ -1549,7 +1547,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     if (! result.hasMember(storeAudioClipAudioClipIdParamName)
             || result[storeAudioClipAudioClipIdParamName].getType() 
                                         != XmlRpcValue::TypeString
-            || (audioClip->getId()->getId() != 0 
+            || (audioClip->getId()
                &&
                std::string(result[storeAudioClipAudioClipIdParamName])
                                         != std::string(*audioClip->getId()))) {
@@ -1559,6 +1557,12 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
              << "' returned unexpected value:\n"
              << result;
         throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    if (!audioClip->getId()) {
+        Ptr<UniqueId>::Ref  newId(new UniqueId(std::string(
+                                result[storeAudioClipAudioClipIdParamName] )));
+        audioClip->setId(newId);
     }
 
     return true;

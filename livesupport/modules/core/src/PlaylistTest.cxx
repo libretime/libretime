@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -389,3 +389,26 @@ PlaylistTest :: fadeInfoTest(void)
     catch (std::invalid_argument &e) {
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Test conversion to and from Playable
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: conversionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{    
+    CPPUNIT_ASSERT(playlist.use_count() == 1);
+
+    Ptr<Playable>::Ref      playable = playlist;
+    CPPUNIT_ASSERT(playable->getType() == Playable::PlaylistType);
+    CPPUNIT_ASSERT(playlist.use_count() == 2);
+    
+    Ptr<Playlist>::Ref      otherPlaylist = playable->getPlaylist();
+    CPPUNIT_ASSERT(otherPlaylist == playlist);
+    CPPUNIT_ASSERT(playlist.use_count() == 3);
+
+    Ptr<AudioClip>::Ref     audioClip = playable->getAudioClip();
+    CPPUNIT_ASSERT(!audioClip);
+}
+

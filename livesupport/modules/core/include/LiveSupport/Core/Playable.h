@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <libxml++/libxml++.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <glibmm/ustring.h>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -53,6 +54,9 @@
 
 namespace LiveSupport {
 namespace Core {
+
+class   AudioClip;      // forward declarations to avoid circularity
+class   Playlist;
 
 using namespace boost::posix_time;
 
@@ -65,15 +69,50 @@ using namespace boost::posix_time;
 /* =============================================================== data types */
 
 /**
- *  A purely abstract class which is extended by AudioClip and Playlist.
+ *  An abstract class which is extended by AudioClip and Playlist.
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
-class Playable
+class Playable : public boost::enable_shared_from_this<Playable>
 {
     public:
+
+        /**
+         *  The sub-types a Playable object can belong to.
+         */
+        enum Type { AudioClipType, PlaylistType };
+ 
+    private:
+ 
+        /**
+         *  The type of this playable object (audio clip or playlist).
+         */
+        Type        type;
+ 
+    protected:
+
+        /**
+         *  Only my children are allowed to instantiate me.
+         *
+         *  @param typeParam  either AudioClipType or PlaylistType.
+         */
+        Playable(Type   typeParam)              throw ()
+                    : type(typeParam)
+        {
+        }
+ 
+
+    public:
+
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~Playable(void)                         throw ()
+        {
+        }
 
         /**
          *  Return the id of the audio clip or playlist.
@@ -185,6 +224,37 @@ class Playable
        virtual Ptr<Glib::ustring>::Ref
        getXmlString(void)                       throw () = 0;
 
+
+        /**
+         *  Return the type of this object.
+         *
+         *  @return either AudioClipType or PlaylistType.
+         */
+        Type
+        getType(void) const                                throw ()
+        {
+            return type;
+        }
+ 
+        /**
+         *  Return an audio clip pointer to this object.  If the object's
+         *  type is not AudioClipType, returns a zero pointer.
+         *
+         *  @see getType()
+         *  @return an audio clip pointer to this object.
+         */
+        Ptr<AudioClip>::Ref
+        getAudioClip(void)                                 throw ();
+ 
+        /**
+         *  Return a playlist pointer to this object.  If the object's
+         *  type is not PlaylistType, returns a zero pointer.
+         *
+         *  @see getType()
+         *  @return a playlist pointer to this object.
+         */
+        Ptr<Playlist>::Ref
+        getPlaylist(void)                                  throw ();
 };
 
 
