@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/Attic/mtree.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see ObjClasses
  */
 class Mtree{
@@ -87,7 +87,13 @@ class Mtree{
     function addObj($name, $type, $parid=1, $aftid=NULL)
     {
         if($name=='' || $type=='') return PEAR::raiseError(
-            'Mtree::addObj: Wrong name or type', ALIBERR_MTREE
+            "Mtree::addObj: Wrong name or type", ALIBERR_MTREE
+        );
+        if(!is_numeric($parid)) return PEAR::raiseError(
+            "Mtree::addObj: Wrong parid ($parid)", ALIBERR_MTREE
+        );
+        if(!is_numeric($aftid) && !is_null($aftid)) return PEAR::raiseError(
+            "Mtree::addObj: Wrong aftid ($aftid)", ALIBERR_MTREE
         );
         $this->dbc->query("BEGIN");
         $r = $this->dbc->query("LOCK TABLE {$this->treeTable}");
@@ -153,6 +159,8 @@ class Mtree{
         $o = $this->dbc->getRow("SELECT * FROM {$this->treeTable}
             WHERE id='$id'");
         if(PEAR::isError($o)) return $o;
+        $parid = $this->getParent($id);
+        if($newParid == $parid) $o['name'] .= "_copy";
         $nid = $this->addObj(
             $o['name'], $o['type'], $newParid, $after, $o['param']
         );
@@ -221,10 +229,12 @@ class Mtree{
     function getObjId($name, $parId=NULL)
     {
         if($name=='' && is_null($parId)) $name = $this->rootNodeName;
-        return $this->dbc->getOne(
+        $r = $this->dbc->getOne(
             "SELECT id FROM {$this->treeTable}
-            WHERE name='$name' and ".($parId ? "parid='$parId'":"parid is null")
+            WHERE name='$name' and ".(is_null($parId) ? "parid is null" : "parid='$parId'")
         );
+        if(PEAR::isError($r)) return $r;
+        return $r;
     }
 
     /**
@@ -255,7 +265,7 @@ class Mtree{
      *   Get parent id
      *
      *   @param oid int
-     *   @return string/err
+     *   @return int/err
      */
     function getParent($oid)
     {

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -497,6 +497,8 @@ class Alib extends Subjects{
             ON {$this->permTable} (permid)");
         $this->dbc->query("CREATE INDEX {$this->permTable}_subj_obj_idx
             ON {$this->permTable} (subj, obj)");
+        $this->dbc->query("CREATE UNIQUE INDEX {$this->permTable}_all_idx
+            ON {$this->permTable} (subj, action, obj)");
         $this->dbc->createSequence("{$this->permTable}_id_seq");
 
         $this->dbc->query("CREATE TABLE {$this->sessTable} (
