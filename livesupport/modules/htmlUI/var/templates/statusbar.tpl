@@ -39,7 +39,7 @@
             <!-- end station time -->
             <!-- start what playing -->
             <div class="whatplaying">
-                {$SCHEDULER->getNowNextClip()}
+                {* {$SCHEDULER->getNowNextClip()} *}
                 <div class="nowplaying">Now Playing: Don Quixote</div>
                 <div class="scala">
                     <div class="scala_in" style="width: 100px;">&nbsp;</div>
