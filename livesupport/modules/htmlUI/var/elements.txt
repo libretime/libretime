@@ -1,0 +1,14 @@
+<?
+void constructor HTML_QuickForm_text::HTML_QuickForm_text           ([string $elementName = NULL [, string $elementLabel = NULL [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_textarea::HTML_QuickForm_textarea   ([string $elementName = NULL [, mixed $elementLabel = NULL  [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_submit::HTML_QuickForm_submit       ([string $elementName = NULL [, string $value = NULL        [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_reset::HTML_QuickForm_reset         ([string $elementName = NULL [, string $value = NULL        [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_button::HTML_QuickForm_button       ([string $elementName = NULL [, string $value = NULL        [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_password::HTML_QuickForm_password   ([string $elementName = NULL [, string $elementLabel = NULL [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_file::HTML_QuickForm_file           ([string $elementName = NULL [, string $elementLabel = NULL [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_hidden::HTML_QuickForm_hidden       ([string $elementName = NULL [, string $value = ''          [, mixed $attributes = NULL]]])
+void constructor HTML_QuickForm_select::HTML_QuickForm_select       ([string $elementName = NULL [, mixed $elementLabel = NULL  [, mixed $options = NULL [, mixed $attributes = NULL]]]])
+void constructor HTML_QuickForm_date::HTML_QuickFormDate            ([string $elementName = NULL [, mixed $elementLabel = NULL  [, array $options = array() [, mixed $attributes = NULL]]]])
+void constructor HTML_QuickForm_checkbox::HTML_QuickForm_checkbox   ([string $elementName = NULL [, string $elementLabel = NULL [, string $text = '' [, mixed $attributes = NULL]]]])
+void constructor HTML_QuickForm_radio::HTML_QuickForm_radio         ([string $elementName = NULL [, mixed $elementLabel = NULL  [, string $text = NULL [, string $value = NULL [, mixed $attributes = NULL]]]]])
+?>

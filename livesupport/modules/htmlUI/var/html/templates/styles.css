@@ -1,0 +1,147 @@
+ body {
+    background-color : ThreedLightShadow;
+    font-family : monospace;
+}
+
+#masterpanel {
+    text-align: center;
+    background-color : ThreedLightShadow;
+    height: 610px;
+    font-family : monospace;
+}
+
+#statusbar {
+    text-align: center;
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    height : 70px;
+}
+
+.statusbaritem {
+    width : 100px;
+    height : 50px;
+    border-style : dotted;
+    padding : 3px;
+    float : left;
+}
+
+#login {
+    width : 300px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 20px;
+}
+
+#tree {
+    text-align : left;
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 20px;
+}
+
+#menu_top {
+    text-align: center;
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#path {
+    text-align: center;
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#objects {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+
+#permissions {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#subjects {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#newfileform {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#searchform {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#searchres {
+    text-align: center;
+    width: 300px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#footer {
+
+    text-align: center;
+    width: 98%;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 20px;
+    font-size : x-small;
+}
+
+#filedata {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+#mdataform {;
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+.dynformelement {
+    padding-bottom : 6px;
+    text-align : right;
+}
+
+#systemPrefs {
+    width: 610px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.header {
+   color: #FFF;
+   background-color: #999;
+}
