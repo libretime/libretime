@@ -9,7 +9,7 @@
      >
         <dc:title  >Fil Title3 txt</dc:title>
         <dcterms:alternative  >Alternative File Title txt</dcterms:alternative>
-        <dcterms:extent  >00:00:00.100000</dcterms:extent>
+        <dcterms:extent  >00:01:00.000000</dcterms:extent>
         <xbmf:contributor>
             <xbmf:role>Author</xbmf:role>
             <xbmf:name>John Y</xbmf:name>
