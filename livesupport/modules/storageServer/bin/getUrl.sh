@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/bin/getUrl.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -39,6 +39,6 @@ RES=`curl -sf ${URL}` || \
   else
    echo "ERROR: $ERN - unknown";
   fi;
-  exit 1;
+  exit $ERN;
  }
 echo $RES
