@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>Getting started with the LiveSupport development environment</title>
-  <meta content="$Author: sebastian $" name="author">
+  <meta content="$Author: maroy $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: sebastian $</li>
-  <li>Version: $Revision: 1.11 $</li>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.12 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -70,13 +70,22 @@ running on the development computer</li>
   <li><a href="http://www.php.net/">PHP</a> interpreter</li>
   <li><a href="http://www.php.net/">PHP</a> apache module</li>
   <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
-  <li><a href="http://pear.php.net/">PEAR</a>
-    modules: DB, XML_Util, XML_Beautifier, HTML_Common, HTML_QuickForm,
-    Calendar (available in Beta Version 0.5.2, so use <code>pear&nbsp;install&nbsp;Calendar-0.5.2</code>)
-    <br>
-    (may be checked: <code>pear list</code> and installed by e.g.:
-    <code>pear install DB</code>)</li>
-
+  <li><a href="http://pear.php.net/">PEAR</a> modules (may be checked: <code>pear
+list</code> and installed by e.g.: <code>pear install DB</code>):</li>
+  <ul>
+    <li>DB</li>
+    <li>XML_Util</li>
+    <li>XML_Beautifier</li>
+    <li>HTML_Common</li>
+    <li>HTML_QuickForm</li>
+    <li>Calendar (available in Beta Version 0.5.2, so use <code>pear&nbsp;install&nbsp;Calendar-0.5.2</code>)
+      <br>
+    </li>
+    <li>File</li>
+    <li>File_Find</li>
+    <li>XML_Serializer-0.15.0<br>
+    </li>
+  </ul>
 <!--  <li><a href="http:///"></a></li>-->
 </ul>
 Please, check settings in <code>var/conf.php</code> files in both
@@ -94,7 +103,9 @@ directory </li>
 should point to the <code>&lt;livesupport-cvs&gt;/modules/htmlUI/var</code>
 directory </li>
 </ul>
-Please make &lt;livesupport-cvs&gt;/modules/htmlUI/var/templates_c/ and &lt;livesupport-cvs&gt;/modules/htmlUI/var/html/img/ writable for apache.
+Please make &lt;livesupport-cvs&gt;/modules/htmlUI/var/templates_c/ and
+&lt;livesupport-cvs&gt;/modules/htmlUI/var/html/img/ writable for
+apache.
 <h2>Check out the sources</h2>
 The LiveSupport development directory tree can be accessed via
 anonymous <a href="https://www.cvshome.org/">CVS</a>, using the
