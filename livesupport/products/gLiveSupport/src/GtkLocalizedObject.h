@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/GtkLocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef UiTestMainWindow_h
-#define UiTestMainWindow_h
+#ifndef GtkLocalizedObject_h
+#define GtkLocalizedObject_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,13 +40,10 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/button.h>
-#include <gtkmm/buttonbox.h>
-#include <gtkmm/window.h>
+#include <glibmm/ustring.h>
 
 #include "LiveSupport/Core/Ptr.h"
-
-#include "GtkLocalizedObject.h"
+#include "LiveSupport/Core/LocalizedObject.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -62,57 +59,57 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A window, enabling interactive testing of UI components.
+ *  Base class for localized objects, using GTK+ strings.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  */
-class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
+class GtkLocalizedObject : public LocalizedObject
 {
-    protected:
-        /**
-         *  The layout used in the window.
-         */
-        Ptr<Gtk::VButtonBox>::Ref   layout;
-
-        /**
-         *  The to quit the applicaiton.
-         */
-        Ptr<Gtk::Button>::Ref       quitButton;
-
-        /**
-         *  The button invoking the LoginWindow.
-         */
-        Ptr<Gtk::Button>::Ref       loginButton;
-
-        /**
-         *  Signal handler for the quit button clicked.
-         */
-        virtual void
-        onQuitButtonClicked(void)                           throw ();
-
-        /**
-         *  Signal handler for the login button clicked.
-         */
-        virtual void
-        onLoginButtonClicked(void)                          throw ();
-
-
     public:
         /**
          *  Constructor.
          *
-         *  @param bundle the resource bundle holding localized resources
+         *  @param bundle the resource bundle holding the localized
+         *         resources for this window
          */
-        UiTestMainWindow(Ptr<ResourceBundle>::Ref   bundle)
-                                                                throw ();
+        GtkLocalizedObject(Ptr<ResourceBundle>::Ref    bundle)     throw ()
+                    : LocalizedObject(bundle)
+        {
+        }
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~UiTestMainWindow(void)                             throw ();
+        ~GtkLocalizedObject(void)                                  throw ()
+        {
+        }
 
+        /**
+         *  Convert an ICU unicode string to a Glib ustring.
+         *
+         *  @param unicodeString the ICU unicode string to conver.
+         *  @return the same string as supplied, in Glib ustring form.
+         */
+        static Ptr<Glib::ustring>::Ref
+        unicodeStringToUstring(Ptr<const UnicodeString>::Ref   unicodeString)
+                                                                    throw ();
+
+        /**
+         *  Get a string from the resource bundle, as a Glib ustring.
+         *
+         *  @param key the key identifying the requested string.
+         *  @return the requested string
+         *  @exception std::invalid_argument if there is no string for the
+         *             specified key.
+         */
+        Ptr<Glib::ustring>::Ref
+        getResourceUstring(const char * key)
+                                                throw (std::invalid_argument)
+        {
+            return unicodeStringToUstring(getResourceString(key));
+        }
 };
 
 /* ================================================= external data structures */
@@ -121,8 +118,8 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
 /* ====================================================== function prototypes */
 
 
-} // namespace GLiveSupport
+} // namespace Core
 } // namespace LiveSupport
 
-#endif // UiTestMainWindow_h
+#endif // GtkLocalizedObject_h
 

@@ -1,0 +1,10 @@
+root:table
+{
+    loginWindow:table
+    {
+        loginLabel:string      { "login:" }
+        passwordLabel:string   { "password:" }
+        okButtonLabel:string   { "OK" }
+    }
+}
+

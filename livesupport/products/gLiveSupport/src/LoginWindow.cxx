@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,9 +34,12 @@
 #endif
 
 #include <iostream>
+#include <stdexcept>
 
 #include "LoginWindow.h"
 
+
+using namespace Glib;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::GLiveSupport;
@@ -55,14 +58,21 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-LoginWindow :: LoginWindow (void)                         throw ()
+LoginWindow :: LoginWindow (Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ()
+                    : GtkLocalizedObject(bundle)
 {
-    table.reset(new Gtk::Table(2, 2, false));
-    loginLabel.reset(new Gtk::Label("login:"));
-    passwordLabel.reset(new Gtk::Label("password:"));
-    loginEntry.reset(new Gtk::Entry());
-    passwordEntry.reset(new Gtk::Entry());
-    okButton.reset(new Gtk::Button("OK"));
+    try {
+        table.reset(new Gtk::Table(2, 2, false));
+        loginLabel.reset(new Gtk::Label(*getResourceUstring("loginLabel")));
+        passwordLabel.reset(new Gtk::Label(
+                                        *getResourceUstring("passwordLabel")));
+        loginEntry.reset(new Gtk::Entry());
+        passwordEntry.reset(new Gtk::Entry());
+        okButton.reset(new Gtk::Button(*getResourceUstring("okButtonLabel")));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     // set up the login label
     loginLabel->set_name("loginLabel");

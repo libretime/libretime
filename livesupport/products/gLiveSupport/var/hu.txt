@@ -1,0 +1,10 @@
+hu:table
+{
+    loginWindow:table
+    {
+        loginLabel:string      { "azonositó:" }
+        passwordLabel:string   { "jelszó:" }
+        okButtonLabel:string   { "Belépés" }
+    }
+}
+

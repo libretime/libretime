@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <string>
 
+#include <unicode/resbund.h>
+
 #include <gtkmm/window.h>
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
@@ -49,6 +51,7 @@
 #include <gtkmm/table.h>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "GtkLocalizedObject.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -67,9 +70,9 @@ using namespace LiveSupport::Core;
  *  A window, handling user login.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class LoginWindow : public Gtk::Window
+class LoginWindow : public Gtk::Window, public GtkLocalizedObject
 {
 
     protected:
@@ -123,8 +126,11 @@ class LoginWindow : public Gtk::Window
     public:
         /**
          *  Constructor.
+         *
+         *  @param bundle the resource bundle holding the localized
+         *         resources for this window
          */
-        LoginWindow(void)                                   throw ();
+        LoginWindow(Ptr<ResourceBundle>::Ref    bundle)     throw ();
 
         /**
          *  Virtual destructor.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,7 +34,6 @@
 #endif
 
 #include <iostream>
-
 #include <gtkmm/main.h>
 
 #include "LoginWindow.h"
@@ -57,7 +56,9 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-UiTestMainWindow :: UiTestMainWindow (void)                         throw ()
+UiTestMainWindow :: UiTestMainWindow (Ptr<ResourceBundle>::Ref  bundle)
+                                                                    throw ()
+                        : GtkLocalizedObject(bundle)
 {
     // set up the quit button
     quitButton.reset(new Gtk::Button("quit"));
@@ -110,9 +111,15 @@ UiTestMainWindow :: onQuitButtonClicked (void)                      throw ()
 void
 UiTestMainWindow :: onLoginButtonClicked (void)                     throw ()
 {
-    std::cout << "invoking loginWindow" << std::endl;
+    Ptr<ResourceBundle>::Ref    loginBundle;
+    try {
+        loginBundle = getBundle("loginWindow");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
 
-    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow());
+    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(loginBundle));
 
     Gtk::Main::run(*loginWindow);
 

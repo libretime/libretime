@@ -22,14 +22,10 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/main.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/GtkLocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
-
-/** @file
- *  This file contains the main entry point to the Scheduler daemon.
- */
 
 /* ============================================================ include files */
 
@@ -37,15 +33,8 @@
 #include "configure.h"
 #endif
 
-#include <iostream>
+#include "GtkLocalizedObject.h"
 
-#include <unicode/resbund.h>
-#include <gtkmm/main.h>
-
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/LocalizedObject.h"
-
-#include "UiTestMainWindow.h"
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::GLiveSupport;
@@ -58,42 +47,26 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ===============================================  local function prototypes */
 
+
 /* =============================================================  module code */
 
-/**
- *  Program entry point.
- *
- *  @param argc the number of command line arguments passed by the user.
- *  @param argv the command line arguments passed by the user.
- *  @return 0 on success, non-0 on failure.
- */
-int main (  int     argc,
-            char  * argv[] )
+/*------------------------------------------------------------------------------
+ *  Create a Glib ustring from an ICU UnicodeString
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+GtkLocalizedObject :: unicodeStringToUstring(
+                            Ptr<const UnicodeString>::Ref   unicodeString)
+                                                                    throw ()
 {
-    Gtk::Main kit(argc, argv);
+    const UChar   * uchars = unicodeString->getBuffer();
+    int32_t         length = unicodeString->length();
+    Ptr<Glib::ustring>::Ref    ustr(new Glib::ustring());
+    ustr->reserve(length);
 
-    UErrorCode                status = U_ZERO_ERROR;
-    Ptr<ResourceBundle>::Ref  bundle(new ResourceBundle("./tmp/" PACKAGE_NAME,
-                                                        "en",
-                                                        status));
-    if (!U_SUCCESS(status)) {
-        std::cerr << "opening resource bundle a failure" << std::endl;
-        exit(EXIT_FAILURE);
+    while (length--) {
+        ustr->push_back((gunichar) (*(uchars++)));
     }
 
-    Ptr<UiTestMainWindow>::Ref  mainWindow(new UiTestMainWindow(bundle));
-
-    Ptr<ResourceBundle>::Ref    loginBundle;
-    try {
-        loginBundle = mainWindow->getBundle("loginWindow");
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    // Shows the window and returns when it is closed.
-    Gtk::Main::run(*mainWindow);
-
-    exit(EXIT_SUCCESS);
+    return ustr;
 }
 
