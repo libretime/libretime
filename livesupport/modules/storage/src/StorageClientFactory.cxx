@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/StorageClientFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,20 +93,30 @@ StorageClientFactory :: configure(const xmlpp::Element & element)
     }
 
     storageClient.reset();
+    xmlpp::Node::NodeList   nodes;
 
     // try to look for a TestStorageClient configuration element
-    xmlpp::Node::NodeList   nodes =
-               element.get_children(TestStorageClient::getConfigElementName());
+    nodes = element.get_children(TestStorageClient::getConfigElementName());
     if (nodes.size() >= 1) {
         const xmlpp::Element  * configElement =
                          dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
         Ptr<TestStorageClient>::Ref     tsc(new TestStorageClient());
         tsc->configure(*configElement);
         storageClient = tsc;
+        return;
     }
 
-    if (!storageClient) {
-        throw std::invalid_argument("no storage client factories to configure");
+    // try to look for a WebStorageClient configuration element
+    nodes = element.get_children(WebStorageClient::getConfigElementName());
+    if (nodes.size() >= 1) {
+        const xmlpp::Element  * configElement =
+                         dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
+        Ptr<WebStorageClient>::Ref     wsc(new WebStorageClient());
+        wsc->configure(*configElement);
+        storageClient = wsc;
+        return;
     }
+
+    throw std::invalid_argument("no storage client factories to configure");
 }
 

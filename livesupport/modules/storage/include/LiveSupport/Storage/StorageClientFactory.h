@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,8 @@ using namespace LiveSupport::Core;
  *  This object has to be configured with an XML configuration element
  *  called storageClientFactory. This element contains a child element
  *  specifying and configuring the kind of StorageClient that the
- *  factory builds. Currently only the TestStorageClient is supported.
+ *  factory builds. Currently TestStorageClient and WebStorageClient
+ *  are supported.
  *
  *  A storageClientFactory configuration element may look like the following:
  *
@@ -78,18 +79,29 @@ using namespace LiveSupport::Core;
  *  &lt;/storageClientFactory&gt;
  *  </code></pre>
  *
- *  For detais of the testStorage element, see the documentation for the
- *  TestStorageClient class.
+ *  or:
+ *
+ *  <pre><code>
+ *  &lt;storageClientFactory&gt;
+ *      &lt;webStorage&gt;
+ *          ...
+ *      &lt;/webStorage&gt;
+ *  &lt;/storageClientFactory&gt;
+ *  </code></pre>
+ *
+ *  For detais of the respective elements, see the documentation for the
+ *  TestStorageClient and WebStorageClient classes.
  *
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT storageClientFactory (testStorage) &gt;
+ *  <!ELEMENT storageClientFactory (testStorage|webStorage) >
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.5 $
  *  @see TestStorageClient
+ *  @see WebStorageClient
  */
 class StorageClientFactory :
                         virtual public Configurable
