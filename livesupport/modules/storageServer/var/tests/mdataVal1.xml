@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <audioClip>
  <metadata
-   xmlns="http://www.streamonthefly.org/"
+   xmlns="http://mdlf.org/livesupport/elements/1.0/"
+   xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:dcterms="http://purl.org/dc/terms/"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
   >
   <dc:title>File Title4 utf-8</dc:title>
   <dcterms:alternative>ěščřžýáíé ĚŠČŘŽÝÁÍÉ úůÚŮ ďťňĎŤŇ é</dcterms:alternative>

@@ -4,17 +4,19 @@
     <playlistElement id="0000000000000101" relativeOffset="0" >
         <audioClip   id="0000000000010001" playlength="01:00:00.000000" 
                                            title="one"/>
+        <fadeinfo fadein="02.000000" fadeout="03.000000"
+            id="15015b4b70a054f1" />
     </playlistElement>
     <playlistElement id="0000000000000102" relativeOffset="01:00:00.000000" >
         <audioClip   id="0000000000010002" playlength="00:30:00.000000" 
                                            title="two"/>
     </playlistElement>
     <metadata
-      xmlns="http://www.streamonthefly.org/"
-      xmlns:dc="http://purl.org/dc/elements/1.1/"
-      xmlns:dcterms="http://purl.org/dc/terms/"
-      xmlns:xbmf="http://www.streamonthefly.org/xbmf"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://mdlf.org/livesupport/elements/1.0/"
+       xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+       xmlns:dc="http://purl.org/dc/elements/1.1/"
+       xmlns:dcterms="http://purl.org/dc/terms/"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace"
      >
         <dc:title>My First Playlist</dc:title>
         <dc:creator>Me, myself and I</dc:creator>

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <audioClip>
     <metadata
-      xmlns="http://www.streamonthefly.org/"
-      xmlns:dc="http://purl.org/dc/elements/1.1/"
-      xmlns:dcterms="http://purl.org/dc/terms/"
-      xmlns:xbmf="http://www.streamonthefly.org/xbmf"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://mdlf.org/livesupport/elements/1.0/"
+       xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+       xmlns:dc="http://purl.org/dc/elements/1.1/"
+       xmlns:dcterms="http://purl.org/dc/terms/"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace"
      >
         <dc:title  >Fil Title3 txt</dc:title>
         <dcterms:alternative  >Alternative File Title txt</dcterms:alternative>
         <dcterms:extent  >00:01:00.000000</dcterms:extent>
-        <xbmf:contributor>
-            <xbmf:role>Author</xbmf:role>
-            <xbmf:name>John Y</xbmf:name>
-            <xbmf:phone>345</xbmf:phone>
-        </xbmf:contributor>
+        <dc:creator>John Y</dc:creator>
     </metadata>
 </audioClip>

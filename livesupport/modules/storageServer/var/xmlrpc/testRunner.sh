@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.24 $
+#   Version  : $Revision: 1.25 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -34,15 +34,19 @@ COMM=$1
 shift
 GUNID=$1
 
-#METADATA="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-#<metadata><title>ěščřžé</title></metadata>"
 METADATA="<?xml version=\"1.0\"?>
-<audioClip><metadata xmlns=\"http://www.streamonthefly.org/\"
- xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
- xmlns:dcterms=\"http://purl.org/dc/terms/\">
-<dc:title>Media title testRunner</dc:title>
-<dcterms:extent>00:00:11</dcterms:extent>
-</metadata></audioClip>"
+<audioClip>
+<metadata
+   xmlns=\"http://mdlf.org/livesupport/elements/1.0/\"
+   xmlns:ls=\"http://mdlf.org/livesupport/elements/1.0/\"
+   xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
+   xmlns:dcterms=\"http://purl.org/dc/terms/\"
+   xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"
+>
+ <dc:title>Media title testRunner</dc:title>
+ <dcterms:extent>00:00:03.000000</dcterms:extent>
+</metadata>
+</audioClip>"
 
 echo ""
 XRDIR=`dirname $0`

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <audioClip>
 <metadata
-  xmlns="http://www.streamonthefly.org/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:dcterms="http://purl.org/dc/terms/"
-  xmlns:xbmf="http://www.streamonthefly.org/xbmf"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- >
-<dc:title  >one</dc:title>
-<dcterms:extent  >01:00:00.000000</dcterms:extent>
+   xmlns="http://mdlf.org/livesupport/elements/1.0/"
+   xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
+>
+ <dc:title>one</dc:title>
+ <dcterms:extent>01:00:00.000000</dcterms:extent>
 </metadata>
 </audioClip>
