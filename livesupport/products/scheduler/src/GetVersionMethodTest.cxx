@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetVersionMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,9 +58,9 @@ using namespace LiveSupport::Scheduler;
 CPPUNIT_TEST_SUITE_REGISTRATION(GetVersionMethodTest);
 
 /**
- *  The persumed version string.
+ *  The prefix of the persumed version string.
  */
-static const std::string versionStr = "Scheduler Daemon (" PACKAGE_VERSION ")";
+static const std::string versionPrefix = "LiveSupport Scheduler Daemon";
 
 
 /* ===============================================  local function prototypes */
@@ -107,6 +107,7 @@ GetVersionMethodTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
     CPPUNIT_ASSERT(result.hasMember("version"));
-    CPPUNIT_ASSERT(result["version"] == versionStr);
+    std::string versionStr = result["version"];
+    CPPUNIT_ASSERT(versionStr.find(versionPrefix) == 0);
 }
 

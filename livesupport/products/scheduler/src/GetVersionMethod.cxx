@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetVersionMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,9 @@ const std::string GetVersionMethod::methodName = "getVersion";
  *  The version string.
  *----------------------------------------------------------------------------*/
 const std::string GetVersionMethod::versionStr =
-                                    "Scheduler Daemon (" PACKAGE_VERSION ")";
+                                               "LiveSupport Scheduler Daemon "
+                                               PACKAGE_VERSION " "
+                                               __DATE__;
 
 
 /* ===============================================  local function prototypes */
