@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ printUsage()
     echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
     echo "                          [default: 3344]";
     echo "  -s, --dbserver      The name of the database server host.";
-    echo "                      [default: same as host]";
+    echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
     echo "                      database. [default: livesupport]";
     echo "  -w, --dbpassword    The database user password.";
@@ -149,7 +149,7 @@ if [ "x$scheduler_port" == "x" ]; then
 fi
 
 if [ "x$dbserver" == "x" ]; then
-    dbserver=$hostname;
+    dbserver=localhost;
 fi
 
 if [ "x$database" == "x" ]; then
@@ -183,6 +183,18 @@ echo "  database user:          $dbuser";
 echo "  database user password: $dbpassword";
 echo "  apache daemon group:    $apache_group";
 echo ""
+
+# check for the apache group to be a real group
+group_tmp_file=/tmp/ls_group_check.$$
+touch $group_tmp_file
+test_result=`chgrp $apache_group $group_tmp_file 2> /dev/null`
+if [ $? != 0 ]; then
+    rm -f $group_tmp_file;
+    echo "Unable to use apache deamon group $apache_group.";
+    echo "Please check if $apache_group is a correct user group.";
+    exit 1;
+fi
+rm -f $group_tmp_file;
 
 
 #-------------------------------------------------------------------------------
