@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.20 $
+#   Version  : $Revision: 1.21 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -117,7 +117,8 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/Thread.o \
                 ${TMP_DIR}/LocalizedObject.o \
                 ${TMP_DIR}/LocalizedConfigurable.o \
-                ${TMP_DIR}/Md5.o
+                ${TMP_DIR}/Md5.o \
+                ${TMP_DIR}/XmlRpcTools.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/UniqueIdTest.o \
@@ -130,7 +131,8 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/ThreadTest.o \
                    ${TMP_DIR}/LocalizedObjectTest.o \
                    ${TMP_DIR}/LocalizedConfigurableTest.o \
-                   ${TMP_DIR}/Md5Test.o
+                   ${TMP_DIR}/Md5Test.o \
+                   ${TMP_DIR}/XmlRpcToolsTest.o
 
 TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_en.res \
@@ -138,7 +140,7 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_jp.res
 
 TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} -lboost_date_time-gcc \
-                   -lcppunit -ldl
+                   -lcppunit -ldl -lxmlrpc++
 
 
 #-------------------------------------------------------------------------------
