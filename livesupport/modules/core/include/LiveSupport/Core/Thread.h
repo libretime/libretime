@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Thread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ namespace Core {
  *  A generic thread executor class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see RunnableInterface
  */
 class Thread
@@ -152,6 +152,18 @@ class Thread
          */
         virtual void
         join(void)                                      throw ();
+
+        /**
+         *  Send a signal to the runnable object inside this thread.
+         *
+         *  @param userData user-specific parameter for the signal.
+         */
+        virtual void
+        signal(int userData)                            throw ()
+        {
+            runnable->signal(userData);
+        }
+
 };
 
 

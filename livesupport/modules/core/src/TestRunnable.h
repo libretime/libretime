@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TestRunnable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ namespace Core {
  *  A sample Runnable object, for testing purposes.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class TestRunnable : public virtual RunnableInterface
 {
@@ -126,6 +126,17 @@ class TestRunnable : public virtual RunnableInterface
         stop(void)                                      throw ()
         {
             shouldRun = false;
+        }
+
+        /**
+         *  Send a signal to this object.
+         *  This currently simply does nothing.
+         *
+         *  @param userData the user data for the signal.
+         */
+        virtual void
+        signal(int userData)                            throw ()
+        {
         }
 
         /**

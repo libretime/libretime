@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/RunnableInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,7 +57,7 @@ namespace Core {
  *  A Runnable object, that can form the main execution body of a thread.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see Thread
  */
 class RunnableInterface
@@ -76,6 +76,14 @@ class RunnableInterface
          */
         virtual void
         run(void)                                       throw ()        = 0;
+
+        /**
+         *  Send a signal to the runnable object.
+         *
+         *  @param userData user-specific parameter for the signal.
+         */
+        virtual void
+        signal(int userData)                            throw ()        = 0;
 
         /**
          *  Signal the thread to stop, gracefully.
