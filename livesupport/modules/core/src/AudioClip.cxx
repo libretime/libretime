@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -192,10 +192,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
             eMsg += idAttrName;
             throw std::invalid_argument(eMsg);
         }
-        std::stringstream           idStream(attribute->get_value());
-        UniqueId::IdType            idValue;
-        idStream >> idValue;
-        id.reset(new UniqueId(idValue));
+        id.reset(new UniqueId(attribute->get_value()));
     }
 
     if (!playlength

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,7 +140,7 @@ XmlRpcToolsTest :: firstTest(void)
     CPPUNIT_ASSERT(int(xmlRpcPlaylist["id"]) == 1);
     CPPUNIT_ASSERT(int(xmlRpcPlaylist["playlength"]) == 90 * 60);
 
-    CPPUNIT_ASSERT(int(xmlRpcAudioClip["id"]) == 10001);
+    CPPUNIT_ASSERT(int(xmlRpcAudioClip["id"]) == 0x10001);
     CPPUNIT_ASSERT(int(xmlRpcAudioClip["playlength"]) == 60 * 60);
 
     XmlRpcValue              xmlRpcPlaylistId;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -173,7 +173,7 @@ DisplayAudioClipMethodTest :: firstTest(void)
 
     // set up a structure for the parameter
     parameter["sessionId"]   = sessionId->getId();
-    parameter["audioClipId"] = 10001;
+    parameter["audioClipId"] = 0x10001;
     rootParameter[0] = parameter;
 
     result.clear();
@@ -186,7 +186,7 @@ DisplayAudioClipMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
-    CPPUNIT_ASSERT(int(result["id"]) == 10001);
+    CPPUNIT_ASSERT(int(result["id"]) == 0x10001);
     CPPUNIT_ASSERT(int(result["playlength"]) == (60 * 60));
 }
 
@@ -206,7 +206,7 @@ DisplayAudioClipMethodTest :: negativeTest(void)
 
     // set up a structure for the parameter
     parameter["sessionId"]   = sessionId->getId();
-    parameter["audioClipId"] = 9999;
+    parameter["audioClipId"] = 0x9999;
     rootParameter[0] = parameter;
 
     result.clear();

@@ -21,17 +21,17 @@
 <!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
 ]>
 
-<playlist id="1" playlength="01:30:00.000">
-    <playlistElement id="101"    relativeOffset="0" >
-        <audioClip   id="10001"  playlength="01:00:00.000" 
+<playlist id="0000000000000001" playlength="01:30:00.000">
+    <playlistElement id="0000000000000101"  relativeOffset="0" >
+        <audioClip   id="0000000000010001"  playlength="01:00:00.000" 
                      title="one"
                      uri="file:var/test1.mp3"/>
     </playlistElement>
-    <playlistElement id="102"    relativeOffset="01:00:00.000" >
-        <audioClip   id="10002"  playlength="00:30:00.000" 
+    <playlistElement id="0000000000000102"  relativeOffset="01:00:00.000" >
+        <audioClip   id="0000000000010002"  playlength="00:30:00.000" 
                      title="two"
                      uri="file:var/test2.mp3"/> 
-        <fadeInfo    id="9901"   fadeIn="00:00:02.000" 
-                                 fadeOut="00:00:01.500000" />
+        <fadeInfo    id="0000000000009901"   fadeIn="00:00:02.000" 
+                                             fadeOut="00:00:01.500000" />
     </playlistElement>
 </playlist>

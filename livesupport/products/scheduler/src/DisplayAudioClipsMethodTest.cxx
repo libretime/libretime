@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,11 +188,11 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     CPPUNIT_ASSERT(result.size() == 2);
 
     audioClip = result[0];
-    CPPUNIT_ASSERT(int(audioClip["id"]) == 10001);
+    CPPUNIT_ASSERT(int(audioClip["id"]) == 0x10001);
     CPPUNIT_ASSERT(int(audioClip["playlength"]) == 60 * 60);
 
     audioClip = result[1];
-    CPPUNIT_ASSERT(int(audioClip["id"]) == 10002);
+    CPPUNIT_ASSERT(int(audioClip["id"]) == 0x10002);
     CPPUNIT_ASSERT(int(audioClip["playlength"]) == 30 * 60);
 }
 

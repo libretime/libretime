@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -185,7 +185,7 @@ WebStorageClientTest :: playlistTest(void)
     catch (StorageException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
+    CPPUNIT_ASSERT(uniqueIdVector->size() >= 3);
     Ptr<UniqueId>::Ref  audioClipId = uniqueIdVector->at(0);
 
     Ptr<SessionId>::Ref sessionId;
@@ -258,8 +258,14 @@ WebStorageClientTest :: playlistTest(void)
     catch (StorageException &e) {
         CPPUNIT_FAIL(e.what());
     }
+
     Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,0,0));    
     playlist->addAudioClip(audioClip, relativeOffset);
+    relativeOffset.reset(new time_duration(0,0,3,0));    
+    playlist->addAudioClip(audioClip, relativeOffset);
+    relativeOffset.reset(new time_duration(0,0,6,0));    
+    playlist->addAudioClip(audioClip, relativeOffset);
+
     CPPUNIT_ASSERT(playlist->valid());      // WARNING: side effect; fixes the
                                             //      playlength of the playlist
     try {
@@ -280,6 +286,7 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_FAIL(e.what());
     }
 
+
     // test getPlaylist()
     Ptr<Playlist>::Ref      newPlaylist;
     try {
@@ -292,6 +299,42 @@ WebStorageClientTest :: playlistTest(void)
     CPPUNIT_ASSERT(newPlaylist->getPlaylength()->total_seconds() 
                    == playlist->getPlaylength()->total_seconds());
     // NOTE: we really ought to define == for playlists...
+
+
+    // test acquirePlaylist() and releasePlaylist()
+    try {
+        newPlaylist = wsc->acquirePlaylist(sessionId, playlistIdxx);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(newPlaylist);
+    CPPUNIT_ASSERT(newPlaylist->getUri());
+//std::cerr << "url:\n" << *newPlaylist->getUri() << "\n";
+
+    std::ifstream ifs(newPlaylist->getUri()->substr(7).c_str());
+    if (!ifs) {                                            // cut off "file://"
+        ifs.close();
+        CPPUNIT_FAIL("playlist temp file not found");
+    }
+//    std::stringstream   playlistSmilFile;
+//    std::string         tempString;
+//    while (ifs) {
+//        std::getline(ifs, tempString);
+//        playlistSmilFile << tempString << "\n";
+//    }
+//std::cerr << "smil:\n" << playlistSmilFile.str() << "\n";
+//sleep(60);
+    ifs.close();
+
+    try {
+        wsc->releasePlaylist(sessionId, newPlaylist);
+    }
+    catch (StorageException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!newPlaylist->getUri());
+
 
     // test deletePlaylist()
     try {
@@ -325,13 +368,13 @@ WebStorageClientTest :: audioClipTest(void)
     catch (StorageException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(uniqueIdVector->size() > 0);
-    Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(0);
+    CPPUNIT_ASSERT(uniqueIdVector->size() >= 2);
+    Ptr<UniqueId>::Ref  id01 = uniqueIdVector->at(1);
     
-/*    std::cout << "\nReset storage result:\n";
-    for (unsigned i=0; i<uniqueIdVector->size(); i++) {
-        std::cout << std::hex << std::string(*uniqueIdVector->at(i)) << std::endl;
-    } */
+//    std::cout << "\nReset storage result:\n";
+//    for (unsigned i=0; i<uniqueIdVector->size(); i++) {
+//        std::cout << std::hex << std::string(*uniqueIdVector->at(i)) << std::endl;
+//    } 
 
     Ptr<SessionId>::Ref sessionId;
     try {

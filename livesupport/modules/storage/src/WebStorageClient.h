@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -362,6 +362,9 @@ class WebStorageClient :
          *  In this testing version, the audio clip URI is expected in the
          *  form <code>file:relative_path/file_name.mp3</code>.  Later this
          *  should be changed to an absolute URI.
+         *
+         *  The size of the binary file must be less than 2 GB, because the
+         *  storage server can not deal with larger files.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.

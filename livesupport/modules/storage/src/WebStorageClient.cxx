@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,6 +148,16 @@ static const std::string    smilAudioClipNodeName = "audio";
  *  The name of the attribute containing the URI of the audio clip element.
  *----------------------------------------------------------------------------*/
 static const std::string    smilAudioClipUriAttrName = "src";
+
+/*------------------------------------------------------------------------------
+ *  The name of the sub-playlist element node in the SMIL file.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilPlaylistNodeName = "audio";
+
+/*------------------------------------------------------------------------------
+ *  The name of the attribute containing the URI of the sub-playlist element.
+ *----------------------------------------------------------------------------*/
+static const std::string    smilPlaylistUriAttrName = "src";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: error reports */
@@ -799,6 +809,7 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
 {
     Ptr<Playlist>::Ref              playlist(new Playlist(id));
     Ptr<const std::string>::Ref     url, token;
+
     editPlaylistGetUrl(sessionId, id, url, token);
 
     try {
@@ -955,8 +966,79 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id) const
                                                 throw (StorageException)
 {
-    Ptr<Playlist>::Ref  playlist(new Playlist);
-    return playlist;
+    Ptr<Playlist>::Ref      oldPlaylist = getPlaylist(sessionId, id);
+    
+    Ptr<time_duration>::Ref playlength = oldPlaylist->getPlaylength();
+    Ptr<Playlist>::Ref      newPlaylist(new Playlist(UniqueId::generateId(),
+                                                     playlength));
+    Ptr<xmlpp::Document>::Ref
+                        smilDocument(new xmlpp::Document(xmlVersion));
+    xmlpp::Element    * smilRootNode 
+                        = smilDocument->create_root_node(smilRootNodeName);
+    smilRootNode->set_attribute(smilLanguageAttrName,
+                                smilLanguageAttrValue);
+    smilRootNode->set_attribute(smilExtensionsAttrName,
+                                smilExtensionsAttrValue);
+
+    xmlpp::Element    * smilBodyNode
+                        = smilRootNode->add_child(smilBodyNodeName);
+    xmlpp::Element    * smilSeqNode
+                        = smilBodyNode->add_child(smilSeqNodeName);
+    
+    Playlist::const_iterator it = oldPlaylist->begin();
+
+    while (it != oldPlaylist->end()) {
+        Ptr<PlaylistElement>::Ref   plElement = it->second;
+        Ptr<FadeInfo>::Ref          fadeInfo = plElement->getFadeInfo();
+
+        if (plElement->getType() == PlaylistElement::AudioClipType) {
+            Ptr<AudioClip>::Ref audioClip 
+                            = acquireAudioClip(sessionId, plElement
+                                                          ->getAudioClip()
+                                                          ->getId());
+            Ptr<time_duration>::Ref relativeOffset
+                            = plElement->getRelativeOffset();
+            newPlaylist->addAudioClip(audioClip, relativeOffset, fadeInfo);
+
+            xmlpp::Element* smilAudioClipNode
+                            = smilSeqNode->add_child(smilAudioClipNodeName);
+            smilAudioClipNode->set_attribute(
+                            smilAudioClipUriAttrName, 
+                            *(audioClip->getUri()) );
+            ++it;
+        }
+        else if (plElement->getType() == PlaylistElement::PlaylistType) {
+            Ptr<Playlist>::Ref playlist 
+                            = acquirePlaylist(sessionId, plElement
+                                                         ->getPlaylist()
+                                                         ->getId());
+            Ptr<time_duration>::Ref relativeOffset
+                            = plElement->getRelativeOffset();
+            newPlaylist->addPlaylist(playlist, relativeOffset, fadeInfo);
+
+            xmlpp::Element* smilPlaylistNode
+                            = smilSeqNode->add_child(smilPlaylistNodeName);
+            smilPlaylistNode->set_attribute(
+                            smilPlaylistUriAttrName, 
+                            *(playlist->getUri()) );
+            ++it;
+        }
+        else {          // this should never happen
+            throw Storage::InvalidArgumentException(
+                                           "unexpected playlist element type "
+                                           "(neither audio clip nor playlist)");
+        }
+    }
+
+    std::stringstream fileName;
+    fileName << localTempStorage << std::string(*newPlaylist->getId())
+             << "-" << std::rand() << ".smil";
+
+    smilDocument->write_to_file(fileName.str(), "UTF-8");
+   
+    Ptr<std::string>::Ref   playlistUri(new std::string(fileName.str()));
+    newPlaylist->setUri(playlistUri);
+    return newPlaylist;
 }
 
 
@@ -968,7 +1050,55 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<Playlist>::Ref  playlist) const
                                                 throw (StorageException)
 {
+    if (! playlist->getUri()) {
+        throw Storage::InvalidArgumentException("playlist URI not found");
+    }
+    
+    std::ifstream ifs(playlist->getUri()->substr(7).c_str());
+    if (!ifs) {                                              // cut of "file://"
+        ifs.close();
+        throw Storage::IOException("playlist temp file not found");
+    }
+    ifs.close();
 
+    std::remove(playlist->getUri()->substr(7).c_str());
+   
+    std::string                 eMsg = "";
+    Playlist::const_iterator    it   = playlist->begin();
+    while (it != playlist->end()) {
+        Ptr<PlaylistElement>::Ref   plElement = it->second;
+        if (plElement->getType() == PlaylistElement::AudioClipType) {
+            try {
+                releaseAudioClip(sessionId, it->second->getAudioClip());
+            }
+            catch (StorageException &e) {
+                eMsg += e.what();
+                eMsg += "\n";
+            }
+            ++it;
+        }
+        else if (plElement->getType() == PlaylistElement::PlaylistType) {
+            try {
+                releasePlaylist(sessionId, it->second->getPlaylist());
+            }
+            catch (StorageException &e) {
+                eMsg += e.what();
+                eMsg += "\n";
+            }
+            ++it;
+        }
+        else {                      // this should never happen
+                eMsg += "unexpected playlist element type\n";
+        }        
+    }
+
+    Ptr<std::string>::Ref   nullPointer;
+    playlist->setUri(nullPointer);
+
+    if (eMsg != "") {
+        eMsg.insert(0, "some playlist elements could not be released:\n");
+        throw Storage::InvalidArgumentException(eMsg);
+    }
 }
 
 
@@ -1094,6 +1224,9 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 
     Ptr<UniqueId>::Ref          newId(new UniqueId(std::string(
                                     result[createPlaylistResultParamName] )));
+// std::cerr << "\nnew id: " 
+//           << std::string(result[createPlaylistResultParamName]) << "\n";
+
     Ptr<const std::string>::Ref url, token;
     
     editPlaylistGetUrl(sessionId, newId, url, token);
@@ -1310,8 +1443,10 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     parameters.clear();
     parameters[storeAudioClipSessionIdParamName] 
             = sessionId->getId();
-    parameters[storeAudioClipAudioClipIdParamName] 
+    if (audioClip->getId()->getId() != 0) {             // ID==0 means 'please
+        parameters[storeAudioClipAudioClipIdParamName]  //   generate new ID'
             = std::string(*audioClip->getId());
+    }
     parameters[storeAudioClipMetadataParamName] 
             = std::string(*audioClip->getMetadataString());
     parameters[storeAudioClipChecksumParamName] 
@@ -1414,8 +1549,10 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     if (! result.hasMember(storeAudioClipAudioClipIdParamName)
             || result[storeAudioClipAudioClipIdParamName].getType() 
                                         != XmlRpcValue::TypeString
-            || std::string(result[storeAudioClipAudioClipIdParamName])
-                                        != std::string(*audioClip->getId())) {
+            || (audioClip->getId()->getId() != 0 
+               &&
+               std::string(result[storeAudioClipAudioClipIdParamName])
+                                        != std::string(*audioClip->getId()))) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
              << storeAudioClipCloseMethodName

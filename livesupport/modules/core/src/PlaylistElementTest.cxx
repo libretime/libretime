@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,13 +106,13 @@ PlaylistElementTest :: firstTest(void)
         playlistElement->configure(*root);
 
         // the playlist element
-        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 103);
+        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 0x103);
         Ptr<const time_duration>::Ref  relativeOffset
                                        = playlistElement->getRelativeOffset();
         CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 11);
 
         CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getId()->getId()
-                                                         == 9901);
+                                                         == 0x9901);
         Ptr<const time_duration>::Ref   fadeIn
                                         = playlistElement->getFadeInfo()
                                                          ->getFadeIn();
@@ -132,7 +132,7 @@ PlaylistElementTest :: firstTest(void)
 
         // the playlist inside the playlist element
         CPPUNIT_ASSERT(playlistElement->getPlaylist()->getId()->getId()
-                                                         == 2);
+                                                         == 0x2);
         Ptr<Playlist>::Ref       playlist   = playlistElement->getPlaylist();
         Playlist::const_iterator it         = playlist->begin();
         CPPUNIT_ASSERT(it != playlist->end());
@@ -141,7 +141,7 @@ PlaylistElementTest :: firstTest(void)
         CPPUNIT_ASSERT(it == playlist->end());
 
         // the playlist element inside the playlist
-        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 111);
+        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 0x111);
         relativeOffset = playlistElement->getRelativeOffset();
         CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 0);
         
@@ -149,16 +149,16 @@ PlaylistElementTest :: firstTest(void)
                                         == PlaylistElement::AudioClipType);
                                         
         CPPUNIT_ASSERT(*playlistElement->getXmlString() ==
-                                "<playlistElement id=\"000000000000006f\" "
+                                "<playlistElement id=\"0000000000000111\" "
                                 "relativeOffset=\"00:00:00\">\n"
-                                        "<audioClip id=\"0000000000002713\" "
+                                        "<audioClip id=\"0000000000010003\" "
                                         "playlength=\"00:00:11\" "
                                         "title=\"three\"/>\n"
                                 "</playlistElement>");
 
         // and the audio clip inside the playlist element
         CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
-                                                         == 10003);
+                                                         == 0x10003);
 
         // check that we can access this audio clip as a Playable instance
         CPPUNIT_ASSERT(playlistElement->getAudioClip()

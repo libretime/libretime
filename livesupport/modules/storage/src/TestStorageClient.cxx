@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -257,7 +257,7 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
     PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
 
     if (playlistMapIt == playlistMap.end()) {
-        throw StorageException("no such playlist");
+        throw Storage::InvalidArgumentException("no such playlist");
     }
 
     Ptr<Playlist>::Ref      oldPlaylist = playlistMapIt->second;
@@ -317,14 +317,15 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
             ++it;
         }
         else {          // this should never happen
-            Ptr<Playlist>::Ref  nullPointer;
-            return nullPointer;
+            throw Storage::InvalidArgumentException(
+                                           "unexpected playlist element type "
+                                           "(neither audio clip nor playlist)");
         }
         
     }
 
     std::stringstream fileName;
-    fileName << localTempStorage << newPlaylist->getId()->getId()
+    fileName << localTempStorage << std::string(*newPlaylist->getId())
              << "-" << std::rand() << ".smil";
 
     smilDocument->write_to_file(fileName.str(), "UTF-8");
@@ -344,20 +345,20 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                                                 throw (StorageException)
 {
     if (! playlist->getUri()) {
-        throw StorageException("playlist URI not found");
+        throw Storage::InvalidArgumentException("playlist URI not found");
     }
-
+    
     std::ifstream ifs(playlist->getUri()->substr(7).c_str());
-    if (!ifs) {
+    if (!ifs) {                                              // cut of "file://"
         ifs.close();
-        throw StorageException("playlist temp file not found");
+        throw Storage::IOException("playlist temp file not found");
     }
     ifs.close();
 
     std::remove(playlist->getUri()->substr(7).c_str());
    
-    int  badPlaylistElements = 0;
-    Playlist::const_iterator    it = playlist->begin();
+    std::string                 eMsg = "";
+    Playlist::const_iterator    it   = playlist->begin();
     while (it != playlist->end()) {
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         if (plElement->getType() == PlaylistElement::AudioClipType) {
@@ -365,7 +366,8 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                 releaseAudioClip(sessionId, it->second->getAudioClip());
             }
             catch (StorageException &e) {
-                ++badPlaylistElements;
+                eMsg += e.what();
+                eMsg += "\n";
             }
             ++it;
         }
@@ -374,23 +376,22 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                 releasePlaylist(sessionId, it->second->getPlaylist());
             }
             catch (StorageException &e) {
-                ++badPlaylistElements;
+                eMsg += e.what();
+                eMsg += "\n";
             }
             ++it;
         }
         else {                      // this should never happen
-            ++badPlaylistElements;
+                eMsg += "unexpected playlist element type\n";
         }        
     }
 
     Ptr<std::string>::Ref   nullPointer;
     playlist->setUri(nullPointer);
 
-    if (badPlaylistElements) {
-        std::stringstream eMsg;
-        eMsg << "could not release " << badPlaylistElements 
-             << " playlist elements in playlist";
-        throw StorageException(eMsg.str());
+    if (eMsg != "") {
+        eMsg.insert(0, "some playlist elements could not be released:\n");
+        throw Storage::InvalidArgumentException(eMsg);
     }
 }
 

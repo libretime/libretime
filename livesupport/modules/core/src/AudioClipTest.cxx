@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ AudioClipTest :: firstTest(void)
 
         audioClip->configure(*root);
 
-        CPPUNIT_ASSERT(audioClip->getId()->getId() == 1);
+        CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x1);
         Ptr<const boost::posix_time::time_duration>::Ref  duration
                                                 = audioClip->getPlaylength();
         CPPUNIT_ASSERT(duration->hours() == 0);

@@ -24,43 +24,47 @@
 <!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
 ]>
 <testStorage tempFiles="file:///tmp/tempPlaylist">
-    <playlist id="1" playlength="00:00:34.000" >
-        <playlistElement id="101"    relativeOffset="0" >
-            <audioClip   id="10001"  playlength="00:00:11.000" 
+    <playlist id="0000000000000001" playlength="00:00:34.000" >
+        <playlistElement id="0000000000000101"    relativeOffset="0" >
+            <audioClip   id="0000000000010001"  playlength="00:00:11.000" 
                          title="one"
                          uri="file:var/test10001.mp3" />
         </playlistElement>
-        <playlistElement id="102"    relativeOffset="00:00:11.000000" >
-            <audioClip   id="10002"  playlength="00:00:12.000000" 
+        <playlistElement id="0000000000000102"    
+                         relativeOffset="00:00:11.000000" >
+            <audioClip   id="0000000000010002"  playlength="00:00:12.000000" 
                          title="two"
                          uri="file:var/test10002.mp3" /> 
-            <fadeInfo    id="9901"   fadeIn="00:00:02.000000" 
+            <fadeInfo    id="0000000000009901"   fadeIn="00:00:02.000000" 
                                      fadeOut="00:00:01.500000" />
         </playlistElement>
-        <playlistElement id="103"    relativeOffset="00:00:23.000000" >
-            <playlist    id="2"      playlength="00:00:11.000000" > 
-                <playlistElement id="111"    relativeOffset="0" >
-                    <audioClip   id="10003"  playlength="00:00:11.000" 
+        <playlistElement id="0000000000000103"    
+                         relativeOffset="00:00:23.000000" >
+            <playlist    id="0000000000000002" 
+                         playlength="00:00:11.000000" > 
+                <playlistElement id="0000000000000111"    relativeOffset="0" >
+                    <audioClip   id="0000000000010003"  
+                                 playlength="00:00:11.000" 
                                  title="three"
                                  uri="file:var/test10003.mp3" />
                 </playlistElement>
             </playlist>
         </playlistElement>
     </playlist>
-    <playlist    id="2"      playlength="00:00:11.000000" > 
-        <playlistElement id="111"    relativeOffset="0" >
-            <audioClip   id="10003"  playlength="00:00:11.000" 
+    <playlist    id="0000000000000002"      playlength="00:00:11.000000" > 
+        <playlistElement id="0000000000000111"    relativeOffset="0" >
+            <audioClip   id="0000000000010003"  playlength="00:00:11.000" 
                          title="three"
                          uri="file:var/test10003.mp3" />
         </playlistElement>
     </playlist>
-    <audioClip id="10001" playlength="01:00:00.000" 
+    <audioClip id="0000000000010001" playlength="01:00:00.000" 
                title="one"
                uri="file:var/test10001.mp3" />
-    <audioClip id="10002" playlength="00:30:00.000" 
+    <audioClip id="0000000000010002" playlength="00:30:00.000" 
                title="two"
                uri="file:var/test10002.mp3" /> 
-    <audioClip id="10003" playlength="00:30:00.000" 
+    <audioClip id="0000000000010003" playlength="00:30:00.000" 
                title="three"
                uri="file:var/test10003.mp3" /> 
 </testStorage>

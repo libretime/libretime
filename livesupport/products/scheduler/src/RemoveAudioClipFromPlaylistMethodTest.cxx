@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -184,7 +184,7 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
 
     parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = 1;
-    parameters["audioClipId"]    = 10001;
+    parameters["audioClipId"]    = 0x10001;
     parameters["relativeOffset"] = 90*60;
     rootParameter[0]             = parameters;
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfoTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ FadeInfoTest :: firstTest(void)
 
         fadeInfo->configure(*root);
 
-        CPPUNIT_ASSERT(fadeInfo->getId()->getId() == 9901);
+        CPPUNIT_ASSERT(fadeInfo->getId()->getId() == 0x9901);
 
         Ptr<const boost::posix_time::time_duration>::Ref
                                             fadeIn = fadeInfo->getFadeIn();
@@ -118,7 +118,7 @@ FadeInfoTest :: firstTest(void)
         CPPUNIT_ASSERT(fadeOut->fractional_seconds() == 500);
 
         CPPUNIT_ASSERT(*fadeInfo->getXmlString() == 
-                                    "<fadeInfo id=\"00000000000026ad\" "
+                                    "<fadeInfo id=\"0000000000009901\" "
                                     "fadeIn=\"00:00:02\" "
                                     "fadeOut=\"00:00:01.000500\"/>");
 

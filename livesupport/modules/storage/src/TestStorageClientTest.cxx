@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,8 +129,8 @@ void
 TestStorageClientTest :: deletePlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<UniqueId>::Ref      id1(new UniqueId(1));
-        Ptr<UniqueId>::Ref      id2(new UniqueId(77));
+        Ptr<UniqueId>::Ref      id1(new UniqueId(0x1));
+        Ptr<UniqueId>::Ref      id2(new UniqueId(0x77));
 
         try {
             tsc->deletePlaylist(dummySessionId, id2);
@@ -162,7 +162,7 @@ TestStorageClientTest :: getAllPlaylistsTest(void)
     CPPUNIT_ASSERT(playlistVector->size() == 2);
 
     Ptr<Playlist>::Ref  playlist = (*playlistVector)[0];
-    CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 1);
+    CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 0x1);
 }
 
 
@@ -186,8 +186,8 @@ void
 TestStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref    id02(new UniqueId(10002));
-    Ptr<UniqueId>::Ref    id77(new UniqueId(10077));
+    Ptr<UniqueId>::Ref    id02(new UniqueId(0x10002));
+    Ptr<UniqueId>::Ref    id77(new UniqueId(0x10077));
 
     CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id02));
     CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id77));
@@ -203,7 +203,7 @@ TestStorageClientTest :: audioClipTest(void)
     CPPUNIT_ASSERT(audioClipVector->size() == 3);
 
     audioClip = (*audioClipVector)[0];
-    CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 10001);
+    CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 0x10001);
 
     tsc->deleteAudioClip(dummySessionId, id02);
     CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id02));
@@ -220,8 +220,8 @@ void
 TestStorageClientTest :: acquireAudioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref    id2(new UniqueId(10002));
-    Ptr<UniqueId>::Ref    id77(new UniqueId(10077));
+    Ptr<UniqueId>::Ref    id2(new UniqueId(0x10002));
+    Ptr<UniqueId>::Ref    id77(new UniqueId(0x10077));
     Ptr<AudioClip>::Ref   audioClip;
     
     try {
@@ -262,8 +262,8 @@ void
 TestStorageClientTest :: acquirePlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref      id1(new UniqueId(1));
-    Ptr<UniqueId>::Ref      id77(new UniqueId(77));
+    Ptr<UniqueId>::Ref      id1(new UniqueId(0x1));
+    Ptr<UniqueId>::Ref      id77(new UniqueId(0x77));
     Ptr<Playlist>::Ref      playlist;
     
     try {

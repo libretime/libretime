@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,7 +108,7 @@ void
 PlaylistTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 0x1);
     Ptr<const boost::posix_time::time_duration>::Ref  duration
                                             = playlist->getPlaylength();
     CPPUNIT_ASSERT(duration->total_seconds() == 34);
@@ -117,18 +117,18 @@ PlaylistTest :: firstTest(void)
 
     CPPUNIT_ASSERT(*playlist->getXmlString() ==
 "<playlist id=\"0000000000000001\" playlength=\"00:00:34\">\n"
-"<playlistElement id=\"0000000000000065\" relativeOffset=\"00:00:00\">\n"
-"<audioClip id=\"0000000000002711\" playlength=\"00:00:11\" title=\"one\"/>\n"
+"<playlistElement id=\"0000000000000101\" relativeOffset=\"00:00:00\">\n"
+"<audioClip id=\"0000000000010001\" playlength=\"00:00:11\" title=\"one\"/>\n"
 "</playlistElement>\n"
-"<playlistElement id=\"0000000000000066\" relativeOffset=\"00:00:11\">\n"
-"<audioClip id=\"0000000000002712\" playlength=\"00:00:12\" title=\"two\"/>\n"
-"<fadeInfo id=\"00000000000026ad\" fadeIn=\"00:00:02\" "
+"<playlistElement id=\"0000000000000102\" relativeOffset=\"00:00:11\">\n"
+"<audioClip id=\"0000000000010002\" playlength=\"00:00:12\" title=\"two\"/>\n"
+"<fadeInfo id=\"0000000000009901\" fadeIn=\"00:00:02\" "
                                   "fadeOut=\"00:00:01.500000\"/>\n"
 "</playlistElement>\n"
-"<playlistElement id=\"0000000000000067\" relativeOffset=\"00:00:23\">\n"
+"<playlistElement id=\"0000000000000103\" relativeOffset=\"00:00:23\">\n"
 "<playlist id=\"0000000000000002\" playlength=\"00:00:11\">\n"
-"<playlistElement id=\"000000000000006f\" relativeOffset=\"00:00:00\">\n"
-"<audioClip id=\"0000000000002713\" playlength=\"00:00:11\" title=\"three\"/>\n"
+"<playlistElement id=\"0000000000000111\" relativeOffset=\"00:00:00\">\n"
+"<audioClip id=\"0000000000010003\" playlength=\"00:00:11\" title=\"three\"/>\n"
 "</playlistElement>\n"
 "</playlist>\n"
 "</playlistElement>\n"
@@ -137,25 +137,25 @@ PlaylistTest :: firstTest(void)
     Playlist::const_iterator        it = playlist->begin();
     CPPUNIT_ASSERT(it != playlist->end());
     Ptr<PlaylistElement>::Ref       playlistElement = it->second;
-    CPPUNIT_ASSERT(playlistElement->getId()->getId() == 101);
+    CPPUNIT_ASSERT(playlistElement->getId()->getId() == 0x101);
     Ptr<const time_duration>::Ref   relativeOffset 
                                     = playlistElement->getRelativeOffset();
     CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 0);
     CPPUNIT_ASSERT(playlistElement->getType() 
                                     == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
-                                                     == 10001);
+                                                     == 0x10001);
 
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
     playlistElement  = it->second;
-    CPPUNIT_ASSERT(playlistElement->getId()->getId() == 102);
+    CPPUNIT_ASSERT(playlistElement->getId()->getId() == 0x102);
     relativeOffset   = playlistElement->getRelativeOffset();
     CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 11);
     CPPUNIT_ASSERT(playlistElement->getType() 
                                     == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
-                                                     == 10002);
+                                                     == 0x10002);
     
     ++it;
 //    CPPUNIT_ASSERT(it == playlist->end());
@@ -198,7 +198,7 @@ void
 PlaylistTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref       clipId(new UniqueId(20001));
+    Ptr<UniqueId>::Ref       clipId(new UniqueId("20001"));
     Ptr<time_duration>::Ref  clipLength(new time_duration(0,30,0,0));
     Ptr<AudioClip>::Ref      audioClip(new AudioClip(clipId, clipLength));
 
@@ -229,7 +229,7 @@ PlaylistTest :: audioClipTest(void)
     CPPUNIT_ASSERT(playlistElement->getType() 
                                 == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
-                                                             == 20001);
+                                                             == 0x20001);
 
     Ptr<const time_duration>::Ref  otherRelativeOffset 
                                    = playlistElement->getRelativeOffset();
@@ -306,7 +306,7 @@ PlaylistTest :: savedCopyTest(void)
     CPPUNIT_ASSERT(playlistElement->getType() 
                                     == PlaylistElement::AudioClipType);
     CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
-                                    == 10002);
+                                    == 0x10002);
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
     ++it;
