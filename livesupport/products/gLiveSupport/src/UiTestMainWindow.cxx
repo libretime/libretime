@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -226,17 +226,23 @@ UiTestMainWindow :: onLoginButtonClicked (void)                     throw ()
 bool
 UiTestMainWindow :: onUpdateTime(int   dummy)                       throw ()
 {
-    // TODO: read current time from scheduler server, via the gLiveSupport
-    // object
-    Ptr<ptime>::Ref     now = TimeConversion::now();
-    time_duration       dayTime = now->time_of_day();
-    // get the time of day, only up to a second precision
-    time_duration       dayTimeSec(dayTime.hours(),
-                                   dayTime.minutes(),
-                                   dayTime.seconds(),
-                                   0);
+    Ptr<SessionId>::Ref     sessionId = gLiveSupport->getSessionId();
 
-    timeLabel->set_text(to_simple_string(dayTimeSec));
+    if (sessionId.get()) {
+        Ptr<const ptime>::Ref   now = gLiveSupport->getScheduler()
+                                                  ->getSchedulerTime(sessionId);
+        
+        if (now.get()) {
+            time_duration           dayTime = now->time_of_day();
+            // get the time of day, only up to a second precision
+            time_duration           dayTimeSec(dayTime.hours(),
+                                               dayTime.minutes(),
+                                               dayTime.seconds(),
+                                               0);
+
+            timeLabel->set_text(to_simple_string(dayTimeSec));
+        }
+    }
 
     return true;
 }
