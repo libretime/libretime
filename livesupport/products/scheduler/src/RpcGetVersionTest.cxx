@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,5 +152,7 @@ RpcGetVersionTest :: simpleTest(void)
     CPPUNIT_ASSERT(result.hasMember("version"));
     std::string versionStr = result["version"];
     CPPUNIT_ASSERT(versionStr.find(versionPrefix) == 0);
+
+    xmlRpcClient.close();
 }
 

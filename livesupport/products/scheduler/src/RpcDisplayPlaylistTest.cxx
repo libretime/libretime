@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -198,6 +198,8 @@ RpcDisplayPlaylistTest :: simpleTest(void)
     
     CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
     CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
+
+    xmlRpcClient.close();
 }
 
 
@@ -219,4 +221,6 @@ RpcDisplayPlaylistTest :: negativeTest(void)
     result.clear();
     xmlRpcClient.execute("displayPlaylist", parameters, result);
     CPPUNIT_ASSERT(xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,5 +188,7 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     CPPUNIT_ASSERT(audioClip.hasMember("playlength"));
     CPPUNIT_ASSERT(audioClip["playlength"].getType() == XmlRpcValue::TypeInt);
     CPPUNIT_ASSERT(int(audioClip["playlength"]) == 30 * 60);
+
+    xmlRpcClient.close();
 }
 

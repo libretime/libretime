@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -191,5 +191,7 @@ RpcUploadPlaylistTest :: simpleTest(void)
     result.clear();
     xmlRpcClient.execute("uploadPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }
 

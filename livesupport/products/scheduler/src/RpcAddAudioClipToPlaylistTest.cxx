@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -217,4 +217,6 @@ RpcAddAudioClipToPlaylistTest :: firstTest(void)
     result.clear();
     xmlRpcClient.execute("addAudioClipToPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+//    xmlRpcClient.close();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveFromScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -199,6 +199,8 @@ RpcRemoveFromScheduleTest :: simpleTest(void)
     result.clear();
     xmlRpcClient.execute("removeFromSchedule", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }
 
 
@@ -220,5 +222,7 @@ RpcRemoveFromScheduleTest :: negativeTest(void)
     result.clear();
     xmlRpcClient.execute("removeFromSchedule", parameters, result);
     CPPUNIT_ASSERT(xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -268,8 +268,10 @@ WebAuthenticationClient :: login(const std::string & login,
     
     result.clear();
     if (!xmlRpcClient.execute(loginMethodName.c_str(), parameters, result)) {
+        xmlRpcClient.close();
         throw Authentication::XmlRpcCommunicationException("Login failed.");
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -319,8 +321,10 @@ WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
     
     result.clear();
     if (!xmlRpcClient.execute(logoutMethodName.c_str(), parameters, result)) {
+        xmlRpcClient.close();
         throw Core::XmlRpcCommunicationException("Logout failed.");
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -366,9 +370,11 @@ WebAuthenticationClient :: loadPreferencesItem(
     result.clear();
     if (!xmlRpcClient.execute(loadPreferencesMethodName.c_str(),
                                                         parameters, result)) {
+        xmlRpcClient.close();
         throw Core::XmlRpcCommunicationException(
                                           "Could not execute XML-RPC method.");
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -428,9 +434,11 @@ WebAuthenticationClient :: savePreferencesItem(
     result.clear();
     if (!xmlRpcClient.execute(savePreferencesMethodName.c_str(),
                                                         parameters, result)) {
+        xmlRpcClient.close();
         throw Core::XmlRpcCommunicationException(
                                           "Could not execute XML-RPC method.");
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -481,9 +489,11 @@ WebAuthenticationClient :: deletePreferencesItem(
     result.clear();
     if (!xmlRpcClient.execute(deletePreferencesMethodName.c_str(),
                                                         parameters, result)) {
+        xmlRpcClient.close();
         throw Core::XmlRpcCommunicationException(
                                           "Could not execute XML-RPC method.");
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -527,11 +537,11 @@ WebAuthenticationClient :: reset(void)
     result.clear();
     if (!xmlRpcClient.execute(resetStorageMethodName.c_str(),
                               parameters, result)) {
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += resetStorageMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
+        xmlRpcClient.close();
+        throw Core::XmlRpcCommunicationException(
+                                          "Could not execute XML-RPC method.");
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -539,7 +549,7 @@ WebAuthenticationClient :: reset(void)
              << resetStorageMethodName
              << "' returned error message:\n"
              << result;
-        throw XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
     if (! result.hasMember(resetStorageResultParamName)
@@ -550,7 +560,7 @@ WebAuthenticationClient :: reset(void)
              << resetStorageMethodName
              << "' returned unexpected value:\n"
              << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
     }
 }
 

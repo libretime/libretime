@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -315,20 +315,6 @@ static const std::string    savePlaylistNewPlaylistParamName = "newPlaylist";
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
 static const std::string    savePlaylistResultParamName = "status";
-
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: acquirePlaylist */
-
-
-
-
-
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: releasePlaylist */
-
-
-
-
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: deletePlaylist */
@@ -667,11 +653,13 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(existsPlaylistMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += existsPlaylistMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
     
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -720,6 +708,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += getPlaylistOpenMethodName;
         eMsg += "'";
@@ -777,12 +766,14 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(getPlaylistCloseMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += getPlaylistCloseMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
-
+    xmlRpcClient.close();
+    
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
@@ -866,11 +857,13 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(editPlaylistMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += editPlaylistMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -929,11 +922,13 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(savePlaylistMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += savePlaylistMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1131,11 +1126,13 @@ WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(deletePlaylistMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += deletePlaylistMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
     
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1200,11 +1197,13 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
     result.clear();
     if (!xmlRpcClient.execute(createPlaylistMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += createPlaylistMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1271,11 +1270,13 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(existsAudioClipMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += existsAudioClipMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
     
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1324,6 +1325,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(getAudioClipOpenMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += getAudioClipOpenMethodName;
         eMsg += "'";
@@ -1383,11 +1385,13 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(getAudioClipCloseMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += getAudioClipCloseMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1462,6 +1466,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(storeAudioClipOpenMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += storeAudioClipOpenMethodName;
         eMsg += "'";
@@ -1538,11 +1543,13 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(storeAudioClipCloseMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += storeAudioClipCloseMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1601,11 +1608,13 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(acquireAudioClipMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += acquireAudioClipMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1665,11 +1674,13 @@ WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(releaseAudioClipMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += releaseAudioClipMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1728,11 +1739,13 @@ WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
     result.clear();
     if (!xmlRpcClient.execute(deleteAudioClipMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += deleteAudioClipMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
     
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
@@ -1797,11 +1810,13 @@ WebStorageClient :: reset(void)
     result.clear();
     if (!xmlRpcClient.execute(resetStorageMethodName.c_str(),
                               parameters, result)) {
+        xmlRpcClient.close();
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += resetStorageMethodName;
         eMsg += "'";
         throw XmlRpcCommunicationException(eMsg);
     }
+    xmlRpcClient.close();
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;

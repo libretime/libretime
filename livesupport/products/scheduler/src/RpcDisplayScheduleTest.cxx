@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -197,5 +197,7 @@ RpcDisplayScheduleTest :: simpleTest(void)
     xmlRpcClient.execute("displaySchedule", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.size() == 0);
+
+    xmlRpcClient.close();
 }
 

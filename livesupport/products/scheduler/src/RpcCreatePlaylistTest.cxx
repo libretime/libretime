@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcCreatePlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -210,4 +210,6 @@ RpcCreatePlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("faultCode"));
     CPPUNIT_ASSERT(int(result["faultCode"]) == 105);
+
+    xmlRpcClient.close();
 }

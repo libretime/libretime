@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetSchedulerTimeTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -160,5 +160,7 @@ RpcGetSchedulerTimeTest :: simpleTest(void)
     CPPUNIT_ASSERT(time1.tm_hour <= time2.tm_hour);
     CPPUNIT_ASSERT(time1.tm_min <= time2.tm_min);
     CPPUNIT_ASSERT(time1.tm_min + 1 >= time2.tm_min);
+
+    xmlRpcClient.close();
 }
 
