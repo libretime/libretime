@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,8 @@ RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                     XmlRpc::XmlRpcValue  & returnValue)
                                                 throw (XmlRpc::XmlRpcException)
 {
-    if (!rootParameter.valid() || rootParameter.size() != 1) {
+    if (!rootParameter.valid() || rootParameter.size() != 1
+                               || !rootParameter[0].valid()) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
                                returnValue);
         return;
