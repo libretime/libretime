@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -864,18 +864,20 @@ class BasicStor extends Alib{
             if($this->dbc->isError($fid)) return $fid;
             $res = $this->addPerm($uid, '_all', $fid, 'A');
             if($this->dbc->isError($res)) return $res;
-            $res =$this->addSubj2Gr($login, $this->config['StationPrefsGr']);
-            if($this->dbc->isError($res)) return $res;
-            $res =$this->addSubj2Gr($login, $this->config['AllGr']);
-            if($this->dbc->isError($res)) return $res;
-            $pfid = $this->bsCreateFolder($fid, 'public');
-            if($this->dbc->isError($pfid)) return $pfid;
-            $res = $this->addPerm($uid, '_all', $pfid, 'A');
-            if($this->dbc->isError($res)) return $res;
-            $allGrId =  $this->getSubjId($this->config['AllGr']);
-            if($this->dbc->isError($allGrId)) return $allGrId;
-            $res = $this->addPerm($allGrId, 'read', $pfid, 'A');
-            if($this->dbc->isError($res)) return $res;
+            if(!$this->config['isArchive']){
+                $res =$this->addSubj2Gr($login, $this->config['StationPrefsGr']);
+                if($this->dbc->isError($res)) return $res;
+                $res =$this->addSubj2Gr($login, $this->config['AllGr']);
+                if($this->dbc->isError($res)) return $res;
+                $pfid = $this->bsCreateFolder($fid, 'public');
+                if($this->dbc->isError($pfid)) return $pfid;
+                $res = $this->addPerm($uid, '_all', $pfid, 'A');
+                if($this->dbc->isError($res)) return $res;
+                $allGrId =  $this->getSubjId($this->config['AllGr']);
+                if($this->dbc->isError($allGrId)) return $allGrId;
+                $res = $this->addPerm($allGrId, 'read', $pfid, 'A');
+                if($this->dbc->isError($res)) return $res;
+            }
         }
         return $uid;
     }
@@ -1320,10 +1322,12 @@ class BasicStor extends Alib{
         $rootUid = parent::addSubj('root', $this->config['tmpRootPass']);
         $res = $this->addPerm($rootUid, '_all', $this->rootId, 'A');
         $fid = $this->bsCreateFolder($this->storId, 'root');
-        $stPrefGr = parent::addSubj($this->config['StationPrefsGr']);
-        $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
-        $stPrefGr = parent::addSubj($this->config['AllGr']);
-        $this->addSubj2Gr('root', $this->config['AllGr']);
+        if(!$this->config['isArchive']){
+            $stPrefGr = parent::addSubj($this->config['StationPrefsGr']);
+            $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
+            $stPrefGr = parent::addSubj($this->config['AllGr']);
+            $this->addSubj2Gr('root', $this->config['AllGr']);
+        }
     }
     /**
      *  install - create tables

@@ -22,7 +22,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see ObjClasses
  *  Original author Tom Hlava
  */
@@ -414,7 +414,7 @@ class M2tree{
         $r = array();
         if($withRoot){
             $r[] = $re = $this->getObjLevel($oid, 'id, name, level', $rootId);
-        }
+        }else $re=NULL;
         if($this->dbc->isError($re)) return $re;
         $dirarr = $this->getDir($oid, 'id, level');
         if($this->dbc->isError($dirarr)) return $dirarr;
