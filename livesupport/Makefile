@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.28 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.29 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ LIBXMLXX_VERSION  = libxml++-2.8.1
 CXXUNIT_DIR       = ${TOOLS_DIR}/cppunit
 CXXUNIT_VERSION   = cppunit-1.10.2
 LIBODBCXX_DIR     = ${TOOLS_DIR}/libodbc++
-LIBODBCXX_VERSION = libodbc++-0.2.3
+LIBODBCXX_VERSION = libodbc++-0.2.3-20050404
 XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
 XMLRPCXX_VERSION  = xmlrpc++-20040713
 LCOV_DIR          = ${TOOLS_DIR}/lcov

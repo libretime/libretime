@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.50 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.51 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -64,6 +64,8 @@ VPATH    = ${SRC_DIR}
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
+LIBODBCXX_CFLAGS=@LIBODBCXX_CFLAGS@
+LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
 
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 
@@ -131,6 +133,7 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${LIBXMLPP_CFLAGS} \
+							 ${LIBODBCXX_CFLAGS} \
                              ${TAGLIB_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
@@ -143,6 +146,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+					 ${LIBODBCXX_LIBS} \
                      ${CURL_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
@@ -198,7 +202,7 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
                      -l${STORAGE_LIB} -l${DB_LIB} -l${AUTHENTICATION_LIB} \
                      -l${CORE_LIB} \
                      ${HELIX_LIBS} \
-                     -lodbc++ -lboost_date_time-gcc \
+                     -lboost_date_time-gcc \
                      -lxmlrpc++ -lssl
 
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \

@@ -1,0 +1,25 @@
+diff -Naur libodbc++-0.2.3-20050404/doc/Makefile.am libodbc++-0.2.3-20050404-dont-install-some-docs/doc/Makefile.am
+--- libodbc++-0.2.3-20050404/doc/Makefile.am	2001-06-12 12:38:12.000000000 +0200
++++ libodbc++-0.2.3-20050404-dont-install-some-docs/doc/Makefile.am	2005-04-04 19:21:37.845039648 +0200
+@@ -37,21 +37,4 @@
+ dist-hook: all-local
+ 	cp -r $(srcdir)/$(instdoc_name) $(distdir)
+ 
+-install-data-local:
+-	$(mkinstalldirs) $(DESTDIR)$(instdoc_dir) $(DESTDIR)$(instdoc_dir)/stylesheet-images
+-	for i in $(srcdir)/$(instdoc_name)/*; do \
+-		fn=`basename $$i` \
+-		$(INSTALL_DATA) $$i $(DESTDIR)$(instdoc_dir)/$$fn; \
+-	done
+-	for i in $(srcdir)/$(instdoc_name)/stylesheet-images/*; do \
+-		fn=`basename $$i` \
+-		$(INSTALL_DATA) $$i $(DESTDIR)$(instdoc_dir)/stylesheet-images/$$fn; \
+-	done
+-
+-uninstall-local:
+-	if test -d $(DESTDIR)$(instdoc_dir); then \
+-		rm -rf $(DESTDIR)$(instdoc_dir)/*; \
+-		rmdir $(DESTDIR)$(instdoc_dir) || true; \
+-	fi
+-
+ EXTRA_DIST=$(instdoc_name).sgml

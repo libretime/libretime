@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ cxxunit_version=cppunit-1.10.2
 cxxunit_tmpdir=$tools_tmpdir/cppunit
 
 libodbcxx_dir=$toolsdir/libodbc++
-libodbcxx_version=libodbc++-0.2.3
+libodbcxx_version=libodbc++-0.2.3-20050404
 libodbcxx_tmpdir=$tools_tmpdir/libodbc++
 
 xmlrpcxx_dir=$toolsdir/xmlrpc++

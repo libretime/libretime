@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -66,6 +66,8 @@ VPATH    = ${SRC_DIR}
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
+LIBODBCXX_CFLAGS=@LIBODBCXX_CFLAGS@
+LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
@@ -87,12 +89,14 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${LIBXMLPP_CFLAGS} \
+							 ${LIBODBCXX_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+					 ${LIBODBCXX_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${LIB_DIR}
@@ -107,7 +111,7 @@ DB_LIB_OBJS = ${TMP_DIR}/SimpleConnectionManager.o \
 TEST_RUNNER_OBJS = ${TMP_DIR}/SimpleConnectionManagerTest.o \
                    ${TMP_DIR}/ConnectionManagerFactoryTest.o \
                    ${TMP_DIR}/TestRunner.o
-TEST_RUNNER_LIBS = -l${DB_LIB} -l${CORE_LIB} -lodbc++ -lcppunit -ldl
+TEST_RUNNER_LIBS = -l${DB_LIB} -l${CORE_LIB} -lcppunit -ldl
 
 
 #-------------------------------------------------------------------------------

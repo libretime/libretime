@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.5 $
+dnl Version  : $Revision: 1.6 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(Db, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.5 $)
+AC_REVISION($Revision: 1.6 $)
 
 AC_CONFIG_SRCDIR(../include/LiveSupport/Db/ConnectionManagerInterface.h)
 
@@ -45,6 +45,7 @@ AC_PROG_CXX()
 AC_CHECK_HEADERS(getopt.h)
 
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.6.0])
+PKG_CHECK_MODULES(LIBODBCXX,[libodbc++])
 AC_SUBST(LIBXMLPP_CFLAGS)
 AC_SUBST(LIBXMLPP_LIBS)
 
