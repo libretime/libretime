@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.48 $
+    Version  : $Revision: 1.49 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.48 $
+ *  @version $Revision: 1.49 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -618,6 +618,30 @@ class GreenBox extends BasicStor{
         return $lc->playlistIsAvailable($sessid, $gunid, TRUE);
     }
 
+    /**
+     *  Convert playlist time value to float seconds
+     *
+     *  @param plt string, playlist time value (HH:mm:ss.dddddd)
+     *  @return int, seconds
+     */
+    function _plTimeToSecs($plt)
+    {
+        require_once"Playlist.php";
+        return Playlist::_plTimeToSecs($plt);
+    }
+
+    /**
+     *  Convert float seconds value to playlist time format
+     *
+     *  @param s0 int, seconds
+     *  @return string, time in playlist time format (HH:mm:ss.dddddd)
+     */
+    function _secsToPlTime($s0)
+    {
+        require_once"Playlist.php";
+        return Playlist::_secsToPlTime($s0);
+    }
+    
     /* ============================================== methods for preferences */
 
     /**
