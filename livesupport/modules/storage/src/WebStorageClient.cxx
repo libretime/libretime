@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1886,7 +1886,7 @@ WebStorageClient :: reset(void)
     for (int i=0; i < playlistArray.size(); i++) {
         if (playlistArray[i].getType() != XmlRpcValue::TypeString) {
             std::stringstream eMsg;
-            eMsg << "Non-string audio clip gunid returned by XML-RPC method '"
+            eMsg << "Non-string playlist gunid returned by XML-RPC method '"
                  << resetStorageMethodName
                  << "':\n"
                  << result;

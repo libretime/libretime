@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -173,9 +173,14 @@ static const std::string    preferencesStatusParamName = "status";
 static const std::string    resetStorageMethodName = "locstor.resetStorage";
 
 /*------------------------------------------------------------------------------
- *  The name of the result parameter returned by the method (ignored here)
+ *  The name of the list of audio clips parameter returned (ignored here)
  *----------------------------------------------------------------------------*/
-static const std::string    resetStorageResultParamName = "gunids";
+static const std::string    resetStorageAudioClipResultParamName = "audioclips";
+
+/*------------------------------------------------------------------------------
+ *  The name of the list of playlists parameter returned (ignored here)
+ *----------------------------------------------------------------------------*/
+static const std::string    resetStoragePlaylistResultParamName = "playlists";
 
 
 /* ===============================================  local function prototypes */
@@ -552,15 +557,18 @@ WebAuthenticationClient :: reset(void)
         throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
     
-    if (! result.hasMember(resetStorageResultParamName)
-       || result[resetStorageResultParamName].getType() 
+    if (! result.hasMember(resetStorageAudioClipResultParamName)
+            || result[resetStorageAudioClipResultParamName].getType() 
+                                                != XmlRpcValue::TypeArray
+            || ! result.hasMember(resetStoragePlaylistResultParamName)
+            || result[resetStoragePlaylistResultParamName].getType() 
                                                 != XmlRpcValue::TypeArray) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
              << resetStorageMethodName
              << "' returned unexpected value:\n"
              << result;
-        throw Core::XmlRpcMethodResponseException(eMsg.str());
+        throw XmlRpcMethodResponseException(eMsg.str());
     }
 }
 
