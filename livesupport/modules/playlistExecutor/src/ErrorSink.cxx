@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/ErrorSink.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,7 +149,7 @@ ErrorSink::ErrorOccurred(const UINT8    unSeverity,
 
     // TODO: do something useful with the error event
     if (lastHelixErrorCode) {
-        std::cerr << "Helix error: " << ulHXCode << std::endl;
+        std::cerr << "Helix error: " << std::hex << ulHXCode << std::endl;
     }
 
     return HXR_OK;
