@@ -48,6 +48,9 @@
     {include file="playlist/simpleManagement.tpl"}
 {/if}
 
+{if $showScheduler}
+    {include file="scheduler/main.tpl"}
+{/if}
 
 </div>
 

@@ -154,6 +154,10 @@ if ($uiBrowser->userid) {
     case "PL.simpleManagement":
         $Smarty->assign('PL_simpleManagement', TRUE);
     break;
+
+    case "SCHEDULER":
+        $Smarty->assign('showScheduler', TRUE);
+    break;
   }
 }
 

@@ -91,7 +91,8 @@ $ui_fmask = array(
             'element'   => 'stationlogo',
             'type'      => 'file',
             'label'     => 'Station Logo',
-            'requiredmsg'=> 'please select Logo file'
+            'requiredmsg'=> 'please select Logo file',
+            'attributes'=> array('multiple' => 'application/pdf')
         ),
         array(
             'element'   =>'Submit',
@@ -370,7 +371,7 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                                #1   => 1,
+                                2   => 2,
                                 5   => 5,
                                 10  => 10,
                                 25  => 25,
@@ -488,7 +489,7 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                                #1   => 1,
+                                2   => 2,
                                 5   => 5,
                                 10  => 10,
                                 25  => 25,

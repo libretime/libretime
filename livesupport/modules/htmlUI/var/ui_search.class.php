@@ -20,6 +20,13 @@ class uiSearch
         return $this->results;
     }
 
+
+    function getCriteria()
+    {
+        return $this->criteria;
+    }
+
+
     function searchForm($id, &$mask2)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
@@ -91,12 +98,14 @@ class uiSearch
 
     function searchDB()
     {
-        $this->results = NULL;
+        $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         foreach ($results['results'] as $rec) {
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
-        #print_r($this->criteria); print_r($this->results);
+        $this->results['cnt'] = $results['cnt'];
+        #print_r($this->criteria);
+        #print_r($this->results);
         $this->pagination($results);
     }
 
@@ -106,18 +115,28 @@ class uiSearch
         if (sizeof($this->results) == 0) {
             return FALSE;
         }
-        $this->results['count'] = $results['cnt'];
-        $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
-        $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
 
-        $p = 1;
-        for ($n = 1; $n <= ceil($results['cnt'] / $this->criteria['limit']); $n = $n+$p) {
-            $p = bcpow(10, floor($n/10));
-            $this->results['pages'][$n-1] = $n;
+        $pot = 0;             # potence
+        $lpr = 10;            # links pro range
+        $width = 1;           # width bettween pages
+        $currp = ($this->criteria['offset']/$this->criteria['limit']) +1 ; # current page
+        $maxp = ceil($results['cnt']/$this->criteria['limit']);            # maximum page
+
+        for ($n = 1; $n <= $maxp; $n = $n+$width) {
+            if ($n<$currp)
+                 $width = pow($lpr, floor(log10(abs($n-$currp))));
+            else
+                 $width = pow($lpr, floor(log10(abs($n-$currp)+1)));
+            $this->results['pagination'][$n] = $n;
+
         }
 
-        array_pop($this->results['pages']);
-        $this->results['pages'][ceil($results['cnt'] / $this->criteria['limit'])-1] = '>>';
+        #array_pop($this->results['pagination']);
+        $this->results['pagination'][$maxp] = '>>|';
+        $this->results['pagination'][1] = '|<<';
+        $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
+        $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
+        ksort($this->results['pagination']);
     }
 
 
@@ -154,7 +173,7 @@ class uiSearch
         } elseif ($page == 'prev') {
             $o -= $l;
         } elseif (is_numeric($page)) {
-            $o = $l * $page;
+            $o = $l * ($page-1);
         }
         $this->setReload();
         $this->searchDB();

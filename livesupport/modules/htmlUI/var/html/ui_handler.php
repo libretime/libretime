@@ -45,7 +45,7 @@ switch($_REQUEST['act']){
         if ($_REQUEST['id']) {
             $uiHandler->editWebstream($_REQUEST, $ui_fmask['webstream']);
         } else {
-            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);  
+            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
     break;
@@ -215,6 +215,16 @@ switch($_REQUEST['act']){
     case "PL.changeTransition":
         $uiHandler->PLAYLIST->changeTransition($_REQUEST['id'], $_REQUEST['type'], $_REQUEST['duration']);
         $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case "SCHEDULER.set":
+        $uiHandler->SCHEDULER->set($_REQUEST);
+        $uiHandler->SCHEDULER->setReload();
+    break;
+
+    case "SCHEDULER.uploadPL":
+        $uiHandler->SCHEDULER->uploadPL($_REQUEST['gunid']);
+        $uiHandler->SCHEDULER->setReload();
     break;
 
     default:

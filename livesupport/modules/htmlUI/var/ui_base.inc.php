@@ -107,6 +107,7 @@ class uiBase
         $this->SEARCH       =& new uiSearch($this);
         $this->BROWSE       =& new uiBrowse($this);
         $this->PLAYLIST     =& new uiPlaylist($this);
+        $this->SCHEDULER    =& new uiScheduler($this);
     }
 
 

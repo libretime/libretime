@@ -6,6 +6,7 @@ class uiBrowse
         $this->Base       =& $uiBase;
         $this->col        =& $_SESSION[UI_BROWSE_SESSNAME]['col'];
         $this->criteria   =& $_SESSION[UI_BROWSE_SESSNAME]['criteria'];
+        $this->results    =& $_SESSION[UI_BROWSE_SESSNAME]['results'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
         $this->criteria['limit'] ? NULL : $this->criteria['limit'] = 5;
@@ -26,6 +27,17 @@ class uiBrowse
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
+
+    function getCriteria()
+    {
+        return $this->criteria;
+    }
+
+
+    function getResult()
+    {
+        return $this->results;
+    }
 
 
     function browseForm($id, $mask2)
@@ -79,11 +91,12 @@ class uiBrowse
 
     function setValue($formdata)
     {
+        $this->criteria['offset'] = 0;
         $which = $formdata['col'];
         $next  = $which + 1;
         $this->col[$which]['form_value'] =  $formdata['value'][0];
         if ($formdata['value'][0] == '%%all%%') {
-            $this->col[$next]['criteria'] = NULL;
+            $this->col[$next]['criteria'] = array('operator' => 'and');
         } else {
             $this->col[$next]['criteria'] = array(
                                             'operator' => 'and',
@@ -105,6 +118,7 @@ class uiBrowse
         #echo "\nvalues: "; print_r($this->col[$next]['values']);
 
         $this->clearHierarchy($next);
+        $this->searchDB();
         $this->Base->redirUrl = UI_BROWSER.'?act=BROWSE';
     }
 
@@ -131,9 +145,10 @@ class uiBrowse
     }
 
 
-    function getResult()
+    function searchDB()
     {
-        $this->results = NULL;
+        $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
+        $this->criteria['conditions'] = array();
         for($col=4; $col>=1; $col--) {
             if (is_array($this->col[$col]['criteria'])) {
                 $this->criteria = array_merge ($this->criteria, $this->col[$col]['criteria']);
@@ -141,33 +156,36 @@ class uiBrowse
             }
         }
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
-        #$this->results['count'] = $results['cnt'];
+        $this->results['cnt'] = $results['cnt'];
         foreach ($results['results'] as $rec) {
             $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
         }
         $this->pagination($results);
+        #print_r($this->criteria);
         #print_r($this->results);
-        return $this->results;
+        return TRUE;
     }
 
 
     function pagination(&$results)
     {
-        if (sizeof($this->results) == 0) {
+        if (sizeof($this->results['items']) == 0) {
             return FALSE;
         }
-        $this->results['count'] = $results['cnt'];
-        $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
-        $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
+        $currp =  ($this->criteria['offset']/$this->criteria['limit']) + 1;   # current page
+        $maxp  =  ceil($results['cnt'] / $this->criteria['limit']);           # maximum page
 
-        $p = 1;
-        for ($n = 1; $n <= ceil($results['cnt'] / $this->criteria['limit']); $n = $n+$p) {
-            $p = bcpow(10, floor($n/10));
-            $this->results['pages'][$n-1] = $n;
+        for ($n = 1; $n <= $maxp; $n = $n+$width) {
+            $width = pow(10, floor(($n)/10));
+            $this->results['pagination'][$n] = $n;
         }
 
-        array_pop($this->results['pages']);
-        $this->results['pages'][ceil($results['cnt'] / $this->criteria['limit'])-1] = '>>';
+        #array_pop($this->results['pagination']);
+        $this->results['pagination'][1] = '|<<';
+        $this->results['pagination'][$maxp] = '>>|';
+        $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
+        $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
+        ksort($this->results['pagination']);
     }
 
 
@@ -182,7 +200,7 @@ class uiBrowse
 
         $this->criteria['orderby'] = $by;
         $this->setReload();
-        #$this->searchDB();
+        $this->searchDB();
     }
 
 
@@ -196,22 +214,24 @@ class uiBrowse
         } elseif ($page == 'prev') {
             $o -= $l;
         } elseif (is_numeric($page)) {
-            $o = $l * $page;
+            $o = $l * ($page-1);
         }
         $this->setReload();
-        #$this->searchDB();
+        $this->searchDB();
     }
 
     function setLimit($limit)
     {
         $this->criteria['limit'] = $limit;
         $this->setReload();
+        $this->searchDB();
     }
 
     function setFiletype($filetype)
     {
         $this->criteria['filetype'] = $filetype;
         $this->setReload();
+        $this->searchDB();
     }
 }
 ?>

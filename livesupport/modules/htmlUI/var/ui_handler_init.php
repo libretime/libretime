@@ -9,9 +9,11 @@ require_once dirname(__FILE__).'/ui_handler.class.php';
 require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
-require_once dirname(__FILE__).'/ui_browse.class.php';  
+require_once dirname(__FILE__).'/ui_browse.class.php';
 require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/general.inc.php';
+require_once dirname(__FILE__).'/ui_calendar.class.php';
+require_once dirname(__FILE__).'/ui_scheduler.class.php';
 
 ## well known classes ###############################################
 require_once 'DB.php';
