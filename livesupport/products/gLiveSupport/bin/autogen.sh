@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ package="gLiveSupport"
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd; cd -`
 test -z "$basedir" && basedir=.
+usrdir=`cd $basedir/../../usr; pwd; cd -`
 
 bindir=$basedir/bin
 etcdir=$basedir/etc
@@ -85,4 +86,10 @@ autoheader ${configure_ac}
 echo "  autoconf -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 
+export CPPFLAGS="-I$usrdir/include"
+export LDFLAGS="-L$usrdir/lib"
+export PKG_CONFIG_PATH="$usrdir/lib/pkgconfig"
+export LD_LIBRARY_PATH="$usrdir/lib"
+
 ${configure} "$@" && echo
+
