@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ LocalizedObject :: getBundle(const char  * key)
 
 
 /*------------------------------------------------------------------------------
- *  Get a string from a resource bunlde un Glib ustring format
+ *  Get a string from a resource bundle un Glib ustring format
  *----------------------------------------------------------------------------*/
 Ptr<UnicodeString>::Ref
 LocalizedObject :: getResourceString(const char * key)
