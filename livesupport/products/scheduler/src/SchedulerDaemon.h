@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,6 +109,9 @@ using namespace LiveSupport::PlaylistExecutor;
  *      &lt;scheduleFactory&gt;
  *          ...
  *      &lt;/scheduleFactory&gt;
+ *      &lt;playLogFactory&gt;
+ *          ...
+ *      &lt;/playLogFactory&gt;
  *      &lt;xmlRpcDaemon&gt;
  *          ...
  *      &lt;/xmlRpcDaemon&gt;
@@ -123,11 +126,11 @@ using namespace LiveSupport::PlaylistExecutor;
  *
  *  <pre><code>
  *  &lt;!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
- *                          scheduleFactory,xmlRpcDaemon) &gt;
+ *                          scheduleFactory,playLogFactory,xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.10 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.11 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory

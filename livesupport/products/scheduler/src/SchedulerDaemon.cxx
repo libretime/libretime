@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,6 +57,7 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "ScheduleFactory.h"
+#include "PlayLogFactory.h"
 #include "SchedulerDaemon.h"
 #include "PlaylistEventContainer.h"
 
@@ -176,6 +177,14 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
     sf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
+    // configure the PlayLogFactory
+    nodes = element.get_children(PlayLogFactory::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no playLogFactory element");
+    }
+    Ptr<PlayLogFactory>::Ref   plf = PlayLogFactory::getInstance();
+    plf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
+
     // configure the XmlRpcDaemon
     nodes = element.get_children(XmlRpcDaemon::getConfigElementName());
     if (nodes.size() < 1) {
@@ -229,6 +238,9 @@ SchedulerDaemon :: install(void)                throw (std::exception)
     // TODO: check if we have already been configured
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
     sf->install();
+
+    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+    plf->install();
 }
 
 
@@ -239,6 +251,14 @@ void
 SchedulerDaemon :: uninstall(void)              throw (std::exception)
 {
     // TODO: check if we have already been configured
+    try {
+        Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+        plf->uninstall();
+    }
+    catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
     sf->uninstall();
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE scheduler [
 
 <!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
-                     scheduleFactory,audioPlayer,xmlRpcDaemon) >
+                     scheduleFactory,playLogFactory,audioPlayer,xmlRpcDaemon) >
 
 <!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
 
@@ -21,8 +21,10 @@
 <!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
 
 <!ELEMENT scheduleFactory (postgresqlSchedule) >
-
 <!ELEMENT postgresqlSchedule EMPTY >
+
+<!ELEMENT playLogFactory (postgresqlPlayLog) >
+<!ELEMENT postgresqlPlayLog EMPTY >
 
 <!ELEMENT audioPlayer   (helixPlayer) >
 
@@ -53,6 +55,10 @@
     <scheduleFactory>
         <postgresqlSchedule/>
     </scheduleFactory>
+
+    <playLogFactory>
+        <postgresqlPlayLog/>
+    </playLogFactory>
 
     <audioPlayer>
         <helixPlayer dllPath = "../../usr/lib/helix"/>
