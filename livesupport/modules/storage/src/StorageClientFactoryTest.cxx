@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/StorageClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,10 +149,32 @@ StorageClientFactoryTest :: firstTest(void)
     Ptr<UniqueId>::Ref  id01(new UniqueId(1));
     Ptr<UniqueId>::Ref  id77(new UniqueId(77));
 
-    CPPUNIT_ASSERT( storage->existsPlaylist(sessionId, id01));
-    CPPUNIT_ASSERT(!storage->existsPlaylist(sessionId, id77));
+    try {
+        CPPUNIT_ASSERT( storage->existsPlaylist(sessionId, id01));
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "existsPlaylist returned error:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
+    
+    try {
+        CPPUNIT_ASSERT(!storage->existsPlaylist(sessionId, id77));
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "existsPlaylist returned error:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
 
-    Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id01);
-    CPPUNIT_ASSERT(playlist->getId()->getId() == id01->getId());
+    try {
+        Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id01);
+        CPPUNIT_ASSERT(playlist->getId()->getId() == id01->getId());
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "getPlaylist returned error:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -137,9 +137,10 @@ DisplayPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         playlist = storage->getPlaylist(sessionId, id);
     }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, "playlist not found", 
-                               returnValue);
+    catch (StorageException &e) {
+        std::string eMsg = "playlist not found:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+3, eMsg, returnValue);
         return;
     }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationException.h"
 
 
 namespace LiveSupport {
@@ -93,7 +94,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,
@@ -156,30 +157,43 @@ class WebAuthenticationClient :
          */
         virtual void
         configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error);
+                                                throw (std::invalid_argument);
 
         /**
          *  Login to the authentication server, using the data read from the
          *  configuration file.
-         *  Returns a new session ID; in case of an error, returns a
-         *  null pointer.
+         *  Returns a new session ID; in case of an error, throws one of three
+         *  types of AuthenticationException.
          *
+         *  @param  login       the login to the server
+         *  @param  password    the password to the server
+         *  @exception XmlRpcCommunicationException problem with performing
+         *                                          XML-RPC call
+         *  @exception XmlRpcMethodFaultException XML-RPC method returned
+         *                                        fault response
+         *  @exception XmlRpcMethodResponseException response from XML-RPC
+         *                                           method is incorrect
          *  @return the new session ID
          */
         virtual Ptr<SessionId>::Ref
         login(const std::string &login, const std::string &password)
-                                                throw ();
+                                                throw (AuthenticationException);
 
         /**
          *  Logout from the authentication server.
          *
          *  @param  sessionId the ID of the session to end
+         *  @exception XmlRpcCommunicationException problem with performing
+         *                                          XML-RPC call
+         *  @exception XmlRpcMethodFaultException XML-RPC method returned
+         *                                        fault response
+         *  @exception XmlRpcMethodResponseException response from XML-RPC
+         *                                           method is incorrect
          *  @return true if logged out successfully, false if not
          */
-        virtual const bool
+        virtual void
         logout(Ptr<SessionId>::Ref sessionId)
-                                                throw ();
+                                                throw (AuthenticationException);
 
 };
 

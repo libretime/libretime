@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -137,8 +137,7 @@ static const std::string    statusParamName = "status";
  *----------------------------------------------------------------------------*/
 void
 WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error)
+                                                throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
@@ -203,28 +202,43 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
 Ptr<SessionId>::Ref
 WebAuthenticationClient :: login(const std::string & login,
                                  const std::string & password)
-                                                throw ()
+                                                throw (AuthenticationException)
 {
     XmlRpcValue             parameters;
     XmlRpcValue             result;
-    Ptr<SessionId>::Ref     sessionId;      // initialized to 0
+    Ptr<SessionId>::Ref     sessionId;
 
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
+    parameters.clear();
     parameters[loginParamName] = login.c_str();
     parameters[passwordParamName] = password.c_str();
     
+    result.clear();
     if (!xmlRpcClient.execute(loginMethodName.c_str(), parameters, result)) {
-        return sessionId;
+        throw Authentication::XmlRpcCommunicationException("Login failed.");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "Login method returned fault response:\n"
+             << result;
+        throw Authentication::XmlRpcMethodFaultException(eMsg.str());
     }
 
     if (! result.hasMember(outputSessionIdParamName)) {
-        return sessionId;
+        std::stringstream eMsg;
+        eMsg << "Login method returned unexpected response:\n"
+             << result;
+        throw Authentication::XmlRpcMethodResponseException(eMsg.str());
     }
 
     if (result[outputSessionIdParamName].getType() != XmlRpcValue::TypeString) {
-        return sessionId;
+        std::stringstream eMsg;
+        eMsg << "Login method returned unexpected response:\n"
+             << result;
+        throw Authentication::XmlRpcMethodResponseException(eMsg.str());
     }
 
     sessionId.reset(new SessionId(result[outputSessionIdParamName]));
@@ -235,9 +249,9 @@ WebAuthenticationClient :: login(const std::string & login,
 /*------------------------------------------------------------------------------
  *  Logout from the authentication server.
  *----------------------------------------------------------------------------*/
-const bool
+void
 WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
-                                                throw ()
+                                                throw (AuthenticationException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -245,28 +259,28 @@ WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
+    parameters.clear();
     parameters[inputSessionIdParamName] = sessionId->getId().c_str();
     
+    result.clear();
     if (!xmlRpcClient.execute(logoutMethodName.c_str(), parameters, result)) {
-        return false;
+        throw Authentication::XmlRpcCommunicationException("Logout failed.");
     }
 
     if (xmlRpcClient.isFault()) {
-        return false;
-    }
-    
-    if (! result.hasMember(statusParamName)) {
-        return sessionId;
-    }
-
-    if (result[statusParamName].getType() != XmlRpcValue::TypeBoolean) {
-        return sessionId;
+        std::stringstream eMsg;
+        eMsg << "Logout method returned fault response:\n"
+             << result;
+        throw Authentication::XmlRpcMethodFaultException(eMsg.str());
     }
 
-    if (!(bool(result[statusParamName]))) {
-        return sessionId;
+    if (! result.hasMember(statusParamName)
+            || result[statusParamName].getType() != XmlRpcValue::TypeBoolean
+            || ! bool(result[statusParamName])) {
+        std::stringstream eMsg;
+        eMsg << "Logout method returned unexpected response:\n"
+             << result;
+        throw Authentication::XmlRpcMethodResponseException(eMsg.str());
     }
-
-    return true;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -275,8 +275,7 @@ static const std::string    storeAudioClipMethodMetadataFileParamName
  *----------------------------------------------------------------------------*/
 void
 WebStorageClient :: configure(const xmlpp::Element   &  element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error)
+                                                throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
@@ -349,7 +348,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
 const bool
 WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
                                    Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     return false;
 }
@@ -361,7 +360,7 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                 Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
@@ -374,7 +373,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
@@ -387,7 +386,7 @@ WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<Playlist>::Ref  playlist) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
 }
 
@@ -398,7 +397,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
@@ -411,7 +410,7 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<Playlist>::Ref  playlist) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
 
 }
@@ -423,7 +422,7 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
                                    Ptr<UniqueId>::Ref  id)
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
 
 }
@@ -434,7 +433,7 @@ WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
 WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector(
                                         new std::vector<Ptr<Playlist>::Ref>);
@@ -447,7 +446,7 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
@@ -460,7 +459,7 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 const bool
 WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -480,7 +479,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += existsAudioClipMethodName;
         eMsg += "'";
-        throw std::logic_error(eMsg);
+        throw StorageException(eMsg);
     }
     
     if (xmlRpcClient.isFault()
@@ -492,7 +491,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
              << existsAudioClipMethodName
              << "' returned error message:\n"
              << result;
-        throw std::logic_error(eMsg.str());
+        throw StorageException(eMsg.str());
     }
     
     return bool(result[existsAudioClipMethodResultParamName]);
@@ -505,7 +504,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<AudioClip>::Ref
 WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -525,7 +524,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += getAudioClipOpenMethodName;
         eMsg += "'";
-        throw std::logic_error(eMsg);
+        throw StorageException(eMsg);
     }
 
     if (xmlRpcClient.isFault() 
@@ -540,35 +539,12 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
              << getAudioClipOpenMethodName
              << "' returned error message:\n"
              << result;
-        throw std::logic_error(eMsg.str());
+        throw StorageException(eMsg.str());
     }
     
     std::string         url     = result[getAudioClipMethodUrlParamName];
     std::string         token   = result[getAudioClipMethodTokenParamName];
-/*
-int offset = 353;
-std::cout << "\n" << xmlAudioClip.at(offset+0) << "\n";
-std::cout << xmlAudioClip.at(offset+1) << "\n";
-std::cout << xmlAudioClip.at(offset+2) << "\n";
-std::cout << xmlAudioClip.at(offset+3) << "\n";
-std::cout << xmlAudioClip.at(offset+4) << "\n";
-std::cout << xmlAudioClip.at(offset+5) << "\n";
-std::cout << xmlAudioClip.at(offset+6) << "\n";
-std::cout << xmlAudioClip.at(offset+7) << "\n";
-std::cout << xmlAudioClip.at(offset+8) << "\n";
-std::cout << xmlAudioClip.at(offset+9) << "\n";
-std::cout << xmlAudioClip.at(offset+10) << "\n";
-std::cout << xmlAudioClip.at(offset+11) << "\n";
-std::cout << xmlAudioClip.at(offset+12) << "\n";
-std::cout << xmlAudioClip.at(offset+13) << "\n";
-std::cout << xmlAudioClip.at(offset+14) << "\n";
-std::cout << xmlAudioClip.at(offset+15) << "\n";
-std::cout << xmlAudioClip.at(offset+16) << "\n";
-std::cout << xmlAudioClip.at(offset+17) << "\n";
-std::cout << xmlAudioClip.at(offset+18) << "\n";
-std::cout << xmlAudioClip.at(offset+19) << "\n";
-std::cout << xmlAudioClip.at(offset+20) << "\n";
-*/
+
     Ptr<AudioClip>::Ref audioClip(new AudioClip(id));
 
     try {
@@ -579,9 +555,9 @@ std::cout << xmlAudioClip.at(offset+20) << "\n";
 
         audioClip->configure(*root);
     } catch (std::invalid_argument &e) {
-        throw std::logic_error("semantic error in audio clip metafile");
+        throw StorageException("semantic error in audio clip metafile");
     } catch (xmlpp::exception &e) {
-        throw std::logic_error("error parsing audio clip metafile");
+        throw StorageException("error parsing audio clip metafile");
     }
 
     parameters.clear();
@@ -596,7 +572,7 @@ std::cout << xmlAudioClip.at(offset+20) << "\n";
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += getAudioClipCloseMethodName;
         eMsg += "'";
-        throw std::logic_error(eMsg);
+        throw StorageException(eMsg);
     }
 
     if (xmlRpcClient.isFault() 
@@ -610,7 +586,7 @@ std::cout << xmlAudioClip.at(offset+20) << "\n";
              << getAudioClipCloseMethodName
              << "' returned error message:\n"
              << result;
-        throw std::logic_error(eMsg.str());
+        throw StorageException(eMsg.str());
     }
 
     return audioClip;
@@ -618,22 +594,22 @@ std::cout << xmlAudioClip.at(offset+20) << "\n";
 
 
 /*------------------------------------------------------------------------------
- *  Store an audio clip.
+ *  Upload an audio clip to the local storage.
  *----------------------------------------------------------------------------*/
 bool
 WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                    Ptr<AudioClip>::Ref audioClip)
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     if (!audioClip || !audioClip->getUri()) {
-        throw std::logic_error("binary audio clip file not found");
+        throw StorageException("binary audio clip file not found");
     }
     
     Ptr<xmlpp::Document>::Ref   metadata = audioClip->getMetadata();
     
     std::stringstream metadataFileName;
     metadataFileName << localTempStorage << "-audioClipMetadata-" 
-                     << audioClip->getId()->getId()
+                     << std::string(*audioClip->getId())
                      << "-" << rand() << ".xml";
 
     metadata->write_to_file(metadataFileName.str(), "UTF-8");
@@ -644,7 +620,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     std::ifstream   ifs(binaryFileName.c_str());
     if (!ifs) {
         ifs.close();
-        throw std::logic_error("could not read audio clip");
+        throw StorageException("could not read audio clip");
     }
     ifs.close();
     std::string     binaryFilePrefix("file://");
@@ -661,7 +637,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     parameters[storeAudioClipMethodSessionIdParamName] 
             = sessionId->getId();
     parameters[storeAudioClipMethodAudioClipIdParamName] 
-            = int(audioClip->getId()->getId());
+            = std::string(*audioClip->getId());
     parameters[storeAudioClipMethodBinaryFileParamName] 
             = binaryFileName;
     parameters[storeAudioClipMethodMetadataFileParamName] 
@@ -675,7 +651,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += storeAudioClipMethodName;
         eMsg += "'";
-        throw std::logic_error(eMsg);
+        throw StorageException(eMsg);
     }
 
     if (xmlRpcClient.isFault() 
@@ -685,7 +661,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
              << storeAudioClipMethodName
              << "' returned error message:\n"
              << result;
-        throw std::logic_error(eMsg.str());
+        throw StorageException(eMsg.str());
     }
     
     return true;
@@ -698,7 +674,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<AudioClip>::Ref
 WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<AudioClip>::Ref  playlist(new AudioClip);
     return playlist;
@@ -712,7 +688,7 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<AudioClip>::Ref audioClip) const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
 
 }
@@ -724,7 +700,7 @@ WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id)
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
 
 }
@@ -736,7 +712,7 @@ WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
 WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
                                                                         const
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector(
                                         new std::vector<Ptr<AudioClip>::Ref>);
@@ -749,7 +725,7 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
 WebStorageClient :: reset(void)
-                                                throw (std::logic_error)
+                                                throw (StorageException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -766,7 +742,7 @@ WebStorageClient :: reset(void)
         std::string eMsg = "cannot execute XML-RPC method '";
         eMsg += resetStorageMethodName;
         eMsg += "'";
-        throw std::logic_error(eMsg);
+        throw StorageException(eMsg);
     }
 
     if (xmlRpcClient.isFault() 
@@ -778,7 +754,7 @@ WebStorageClient :: reset(void)
              << resetStorageMethodName
              << "' returned error message:\n"
              << result;
-        throw std::logic_error(eMsg.str());
+        throw StorageException(eMsg.str());
     }
     
     XmlRpcValue uniqueIdArray = result[resetStorageMethodResultParamName];
@@ -792,7 +768,7 @@ WebStorageClient :: reset(void)
                  << resetStorageMethodName
                  << "':\n"
                  << result;
-            throw std::logic_error(eMsg.str());
+            throw StorageException(eMsg.str());
         }
         Ptr<UniqueId>::Ref  uniqueId(new UniqueId(std::string(uniqueIdArray[i])));
         returnValue->push_back(uniqueId);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,9 +174,10 @@ UpdateFadeInFadeOutMethod :: execute(
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
     }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+6, "playlist does not exist", 
-                               returnValue);
+    catch (StorageException &e) {
+        std::string eMsg = "playlist does not exist:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+6, eMsg, returnValue);
         return;
     }
 

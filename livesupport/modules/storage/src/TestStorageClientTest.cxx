@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -135,17 +135,17 @@ TestStorageClientTest :: deletePlaylistTest(void)
         try {
             tsc->deletePlaylist(dummySessionId, id2);
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (std::invalid_argument &e) {
+        } catch (StorageException &e) {
         }
         try {
             tsc->deletePlaylist(dummySessionId, id1);
-        } catch (std::invalid_argument &e) {
+        } catch (StorageException &e) {
             CPPUNIT_FAIL("cannot delete existing playlist");
         }
         try {
             tsc->deletePlaylist(dummySessionId, id1);
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (std::invalid_argument &e) {
+        } catch (StorageException &e) {
         }
 }
 
@@ -227,7 +227,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     try {
         audioClip = tsc->acquireAudioClip(dummySessionId, id2);
     }
-    catch (std::logic_error &e) {
+    catch (StorageException &e) {
         std::string     eMsg = "could not acquire audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -240,7 +240,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     try {
         tsc->releaseAudioClip(dummySessionId, audioClip);
     }
-    catch (std::logic_error &e) {
+    catch (StorageException &e) {
         std::string     eMsg = "could not release audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -250,7 +250,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
         audioClip = tsc->acquireAudioClip(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent audio clip");
     }
-    catch (std::logic_error &e) {
+    catch (StorageException &e) {
     }
 }
 
@@ -269,7 +269,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     try {
         playlist = tsc->acquirePlaylist(dummySessionId, id1);
     }
-    catch (std::logic_error &e) {
+    catch (StorageException &e) {
         std::string     eMsg = "could not acquire playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -288,7 +288,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     try {
         tsc->releasePlaylist(dummySessionId, playlist);
     }
-    catch (std::logic_error &e) {
+    catch (StorageException &e) {
         std::string     eMsg = "could not release playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -305,6 +305,6 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         playlist = tsc->acquirePlaylist(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent playlist");
     }
-    catch (std::logic_error &e) {
+    catch (StorageException &e) {
     }  
 }

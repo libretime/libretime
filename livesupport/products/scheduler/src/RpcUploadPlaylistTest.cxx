@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,11 +123,11 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
 //    daemon->start();
 //    sleep(5);
 
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
-        Ptr<AuthenticationClientFactory>::Ref acf;
         acf = AuthenticationClientFactory::getInstance();
         configure(acf, authenticationClientConfigFileName);
-        authentication = acf->getAuthenticationClient();
+
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         CPPUNIT_FAIL("semantic error in authentication configuration file");
@@ -136,8 +136,14 @@ RpcUploadPlaylistTest :: setUp(void)                        throw ()
         CPPUNIT_FAIL("error parsing authentication configuration file");
     }
     
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
+    authentication = acf->getAuthenticationClient();
+    try {
+        sessionId = authentication->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        std::string eMsg = "could not log in:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     }
 }
 

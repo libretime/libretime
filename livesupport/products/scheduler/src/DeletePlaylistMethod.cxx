@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,9 +126,10 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
     }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, "playlist not found", 
-                               returnValue);
+    catch (StorageException &e) {
+        std::string eMsg = "playlist not found:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+3, eMsg, returnValue);
         return;
     }
 
@@ -141,9 +142,10 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         storage->deletePlaylist(sessionId, playlistId);
     }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+5, "playlist could not be deleted", 
-                               returnValue);
+    catch (StorageException &e) {
+        std::string eMsg = "playlist could not be deleted:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+5, eMsg, returnValue);
         return;
     }
 }

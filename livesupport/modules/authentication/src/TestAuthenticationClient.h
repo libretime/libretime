@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -164,8 +164,7 @@ class TestAuthenticationClient :
          */
         virtual void
         configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error);
+                                                throw (std::invalid_argument);
 
         /**
          *  Login to the authentication server, using the data read from the
@@ -174,20 +173,23 @@ class TestAuthenticationClient :
          *  null pointer.
          *
          *  @return the new session ID
+         *  @exception AuthenticationException login or password is incorrect
+         *             (does not match those given in the configuration file)
          */
         virtual Ptr<SessionId>::Ref
         login(const std::string &login, const std::string &password)
-                                                throw ();
+                                                throw (AuthenticationException);
 
         /**
          *  Logout from the authentication server.
          *
          *  @param  sessionId the ID of the session to end
-         *  @return true if logged out successfully, false if not
+         *  @exception AuthenticationException the sessionId does not match
+         *                                     one issued by login()
          */
-        virtual const bool
+        virtual void
         logout(Ptr<SessionId>::Ref sessionId)
-                                                throw ();
+                                                throw (AuthenticationException);
 
 };
 

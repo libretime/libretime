@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -138,9 +138,10 @@ OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         playlist = storage->getPlaylist(sessionId, id);
     }
-    catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+4, "playlist not found", 
-                               returnValue);
+    catch (StorageException &e) {
+        std::string eMsg = "playlist not found:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+4, eMsg, returnValue);
         return;
     }
 

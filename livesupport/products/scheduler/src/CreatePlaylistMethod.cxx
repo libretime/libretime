@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,11 +122,22 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
- 
-    Ptr<Playlist>::Ref  playlist = storage->createPlaylist(sessionId);
+
+    Ptr<Playlist>::Ref  playlist;
+    try {
+        playlist = storage->createPlaylist(sessionId);
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "could not create playlist:\n";
+        eMsg += e.what();
+        XmlRpcTools :: markError(errorId+2,
+                                 eMsg,
+                                 returnValue);
+        return;
+    }
 
     if (!playlist->setLockedForEditing(true)) {    // this should never happen
-        XmlRpcTools :: markError(errorId+1,
+        XmlRpcTools :: markError(errorId+3,
                                  "could not open new playlist for editing",
                                  returnValue);
         return;

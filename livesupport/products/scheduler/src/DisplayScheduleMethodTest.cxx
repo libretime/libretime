@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,6 +122,7 @@ DisplayScheduleMethodTest :: configure(
 void
 DisplayScheduleMethodTest :: setUp(void)                         throw ()
 {
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
@@ -137,10 +138,8 @@ DisplayScheduleMethodTest :: setUp(void)                         throw ()
         schedule = sf->getSchedule();
         schedule->install();
 
-        Ptr<AuthenticationClientFactory>::Ref
-                    acf = AuthenticationClientFactory::getInstance();
+        acf = AuthenticationClientFactory::getInstance();
         configure(acf, authenticationClientConfig);
-        authentication = acf->getAuthenticationClient();
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -150,8 +149,14 @@ DisplayScheduleMethodTest :: setUp(void)                         throw ()
         CPPUNIT_FAIL(e.what());
     }
     
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
+    authentication = acf->getAuthenticationClient();
+    try {
+        sessionId = authentication->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        std::string eMsg = "could not log in:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     }
 
     insertEntries();    // this can only be called after sessionId is obtained

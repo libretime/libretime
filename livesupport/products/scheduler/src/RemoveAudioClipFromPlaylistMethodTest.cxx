@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -141,8 +141,13 @@ RemoveAudioClipFromPlaylistMethodTest :: setUp(void)                         thr
     }
 
     authentication = acf->getAuthenticationClient();
-    if (!(sessionId = authentication->login("root", "q"))) {
-        CPPUNIT_FAIL("could not log in to authentication server");
+    try {
+        sessionId = authentication->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        std::string eMsg = "could not log in:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
     }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -113,8 +113,16 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
 
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector = 
-                                        storage->getAllAudioClips(sessionId);
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref audioClipVector;
+    try {
+        audioClipVector = storage->getAllAudioClips(sessionId);
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "getAllAudioClips returned error:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+2, eMsg, returnValue);
+        return;
+    }        
 
     XmlRpcTools::audioClipVectorToXmlRpcValue(audioClipVector, returnValue);
 }

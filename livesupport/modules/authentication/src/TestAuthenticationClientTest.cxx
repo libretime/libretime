@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,13 +111,41 @@ TestAuthenticationClientTest :: firstTest(void)
 {
     Ptr<SessionId>::Ref     sessionId;
 
-    CPPUNIT_ASSERT(!(sessionId = tac->login("Piszkos Fred", "malnaszor")));
+    try {
+        sessionId = tac->login("Piszkos Fred", "malnaszor");
+        CPPUNIT_FAIL("Allowed login with incorrect login and password.");
+    }
+    catch (AuthenticationException &e) {
+    }
 
+    // TODO: this call writes some garbage to cerr; it should be told not to
     sessionId.reset(new SessionId("ceci n'est pas un session ID"));
-    CPPUNIT_ASSERT(!tac->logout(sessionId));
+    try {
+        tac->logout(sessionId);
+        CPPUNIT_FAIL("Allowed logout without previous login.");
+    }
+    catch (AuthenticationException &e) {
+    }
     
-    CPPUNIT_ASSERT( sessionId = tac->login("root", "q"));
-    CPPUNIT_ASSERT( tac->logout(sessionId));
-    CPPUNIT_ASSERT(!tac->logout(sessionId));
+    try {
+        sessionId = tac->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        tac->logout(sessionId);
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        tac->logout(sessionId);
+        CPPUNIT_FAIL("Allowed to logout twice.");
+    }
+    catch (AuthenticationException &e) {
+    }
 }
 

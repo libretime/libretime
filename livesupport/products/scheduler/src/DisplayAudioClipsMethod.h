@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,11 +93,13 @@ using namespace LiveSupport::Core;
  *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
  *  possible errors are:
  *  <ul>
+ *     <li>1801 - invalid argument format </li>
+ *     <li>1802 - XML-RPC error </li>
  *     <li>1820 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class DisplayAudioClipsMethod : public XmlRpc::XmlRpcServerMethod
 {

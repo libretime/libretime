@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,15 +111,40 @@ WebAuthenticationClientTest :: firstTest(void)
 {
     Ptr<SessionId>::Ref     sessionId;
 
-    CPPUNIT_ASSERT(!(sessionId = wac->login("Piszkos Fred", "malnaszor")));
+    try {
+        sessionId = wac->login("Piszkos Fred", "malnaszor");
+        CPPUNIT_FAIL("Allowed login with incorrect login and password.");
+    }
+    catch (AuthenticationException &e) {
+    }
 
-    // TODO: this call writes some garbage to cerr; it should be told not to
-    sessionId.reset(new SessionId("ceci n'est pas un session ID"));
-    CPPUNIT_ASSERT(!wac->logout(sessionId));
-    
-    CPPUNIT_ASSERT( sessionId = wac->login("root", "q"));
-    CPPUNIT_ASSERT( wac->logout(sessionId));
-//    this does not work due to a bug in the storage server
-//    CPPUNIT_ASSERT(!wac->logout(sessionId));
+    sessionId.reset(new SessionId("bad_session_ID"));
+    try {
+        wac->logout(sessionId);
+        CPPUNIT_FAIL("Allowed logout without previous login.");
+    }
+    catch (AuthenticationException &e) {
+    }
+
+    try {
+        sessionId = wac->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        wac->logout(sessionId);
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        wac->logout(sessionId);
+        CPPUNIT_FAIL("Allowed to logout twice.");
+    }
+    catch (AuthenticationException &e) {
+    }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,8 +96,7 @@ static const std::string    dummySessionIdString = "dummySessionId";
  *----------------------------------------------------------------------------*/
 void
 TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error)
+                                                throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
@@ -155,10 +154,10 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
  *----------------------------------------------------------------------------*/
 Ptr<SessionId>::Ref
 TestAuthenticationClient :: login(const std::string & login,
-                                 const std::string & password)
-                                                throw ()
+                                  const std::string & password)
+                                                throw (AuthenticationException)
 {
-    Ptr<SessionId>::Ref     sessionId;      // initialized to 0
+    Ptr<SessionId>::Ref     sessionId;
 
     if (login == userLogin && password == userPassword) {
         std::stringstream   sessionIdStream;
@@ -168,24 +167,27 @@ TestAuthenticationClient :: login(const std::string & login,
                         << rand();
         sessionIdList.insert(sessionIdStream.str());
         sessionId.reset(new SessionId(sessionIdStream.str()));
+        return sessionId;
     }
-    return sessionId;
+    else {
+        throw AuthenticationException("Incorrect login or password.");
+    }
 }
 
 
 /*------------------------------------------------------------------------------
  *  Logout from the authentication server.
  *----------------------------------------------------------------------------*/
-const bool
+void
 TestAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
-                                                throw ()
+                                                throw (AuthenticationException)
 {
     // this returns the number of entries found and erased
     if (sessionIdList.erase(sessionId->getId())) {
-        return true;
+        return;
     }
     else {
-        return false;
+        throw AuthenticationException("Logout called without previous login.");
     }
 }
 

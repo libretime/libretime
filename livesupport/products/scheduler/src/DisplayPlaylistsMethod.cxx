@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,9 +114,17 @@ DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
 
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector = 
-                                           storage->getAllPlaylists(sessionId);
-
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref playlistVector;
+    try {
+        playlistVector = storage->getAllPlaylists(sessionId);
+    }
+    catch (StorageException &e) {
+        std::string eMsg = "getAllPlaylists() returned error:\n";
+        eMsg += e.what();
+        XmlRpcTools::markError(errorId+2, eMsg, returnValue);
+        return;
+    }
+    
     XmlRpcTools::playlistVectorToXmlRpcValue(playlistVector, returnValue);
 }
 

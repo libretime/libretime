@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,8 +116,20 @@ AuthenticationClientFactoryTest :: firstTest(void)
 
     Ptr<SessionId>::Ref     sessionId;
     
-    sessionId = authentication->login("root", "q");
+    try {
+        sessionId = authentication->login("root", "q");
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
     CPPUNIT_ASSERT(sessionId);
-    CPPUNIT_ASSERT(authentication->logout(sessionId));
+
+    try {
+        authentication->logout(sessionId);
+    }
+    catch (AuthenticationException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 }
 
