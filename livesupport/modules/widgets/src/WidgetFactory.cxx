@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -344,5 +344,16 @@ Gtk::Image *
 WidgetFactory :: createResizeImage(void)                        throw ()
 {
     return new Gtk::Image(resizeImage);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a ZebraTreeView table
+ *----------------------------------------------------------------------------*/
+ZebraTreeView *
+WidgetFactory :: createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
+                                                                throw ()
+{
+    return new ZebraTreeView(treeModel);
 }
 

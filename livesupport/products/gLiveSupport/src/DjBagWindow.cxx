@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,8 +111,26 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     add(vBox);
 
+    // Create the Tree model:
+    treeModel = Gtk::ListStore::create(modelColumns);
+    treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
+
+    // Add the TreeView's view columns:
+    try {
+        treeView->append_column(*getResourceUstring("typeColumnLabel"),
+                               modelColumns.typeColumn);
+        treeView->append_column(*getResourceUstring("titleColumnLabel"),
+                               modelColumns.titleColumn);
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    // register the signal handler for treeview entries being clicked
+    treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
+                                            &DjBagWindow::onEntryClicked));
+
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
-    scrolledWindow.add(treeView);
+    scrolledWindow.add(*treeView);
 
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
@@ -132,25 +150,6 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     bottomButtonBox.set_layout(Gtk::BUTTONBOX_END);
     bottomButtonBox.pack_start(*clearListButton, Gtk::PACK_SHRINK);
     bottomButtonBox.pack_start(*removeButton, Gtk::PACK_SHRINK);
-
-    // Create the Tree model:
-    treeModel = Gtk::ListStore::create(modelColumns);
-    treeView.set_model(treeModel);
-
-    // Add the TreeView's view columns:
-    try {
-        treeView.append_column(*getResourceUstring("typeColumnLabel"),
-                               modelColumns.typeColumn);
-        treeView.append_column(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn);
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-    }
-
-    // register the signal handler for treeview entries being clicked
-    treeView.signal_button_press_event().connect_notify(sigc::mem_fun(*this,
-                                            &DjBagWindow::onEntryClicked));
-
 
     // create the right-click entry context menu for audio clips
     audioClipMenu = Gtk::manage(new Gtk::Menu());
@@ -298,7 +297,7 @@ DjBagWindow :: onEntryClicked (GdkEventButton     * event)      throw ()
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         // only show the context menu, if something is already selected
         Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                      treeView.get_selection();
+                                                      treeView->get_selection();
         if (refSelection) {
             Gtk::TreeModel::iterator iter = refSelection->get_selected();
             if (iter) {
@@ -330,7 +329,7 @@ void
 DjBagWindow :: onRemoveItem(void)                               throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
@@ -351,7 +350,7 @@ void
 DjBagWindow :: onUpItem(void)                               throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
@@ -396,7 +395,7 @@ void
 DjBagWindow :: onDownItem(void)                             throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
@@ -444,7 +443,7 @@ void
 DjBagWindow :: onDeleteItem(void)                               throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
@@ -508,7 +507,7 @@ void
 DjBagWindow :: onAddToPlaylist(void)                            throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
@@ -529,7 +528,7 @@ void
 DjBagWindow :: onSchedulePlaylist(void)                       throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
@@ -574,7 +573,7 @@ void
 DjBagWindow :: onPlayItem(void)                               throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView.get_selection();
+                                                    treeView->get_selection();
 
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,7 @@
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 #include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 
 
 namespace LiveSupport {
@@ -86,7 +87,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -318,6 +319,17 @@ class WidgetFactory :
          */
         Gtk::Image *
         createResizeImage(void)                             throw ();
+
+        /**
+         *  Create and return a ZebraTreeView instance.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @return the ZebraTreeView object.
+         */
+        ZebraTreeView *
+        createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
+                                                            throw ();
 };
 
 

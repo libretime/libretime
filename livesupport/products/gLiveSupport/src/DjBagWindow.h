@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class DjBagWindow : public WhiteWindow, public LocalizedObject
 {
@@ -83,7 +83,7 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.8 $
+         *  @version $Revision: 1.9 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -138,7 +138,7 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The tree view, now only showing rows.
          */
-        Gtk::TreeView               treeView;
+        Gtk::TreeView             * treeView;
 
         /**
          *  The tree model, as a GTK reference.
