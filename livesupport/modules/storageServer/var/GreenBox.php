@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -200,8 +200,8 @@ class GreenBox extends BasicStor{
      *  Replace metadata with new XML file or string
      *
      *  @param id int, virt.file's local id
-     *  @param mdata string, local path of metadata XML file
-     *  @param mdataLoc string 'file'|'string'
+     *  @param mdata string, XML string or local path of metadata XML file
+     *  @param mdataLoc string, metadata location: 'file'|'string'
      *  @param sessid string, session id
      *  @return boolean or PEAR::error
      */
