@@ -1,45 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE webStorage [
 
-<!ELEMENT webStorage (location, identity, playlist*, audioClip*) >
+<!ELEMENT webStorage (location, identity) >
 <!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
 
 <!ELEMENT location EMPTY >
 <!ATTLIST location server   CDATA       #REQUIRED >
 <!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
 
 <!ELEMENT identity EMPTY >
 <!ATTLIST identity login    CDATA       #REQUIRED >
 <!ATTLIST identity pass     CDATA       #REQUIRED >
-
-<!ELEMENT playlist (playlistElement*) >
-<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
-<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
-
-<!ELEMENT playlistElement (audioClip) >
-<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
-<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
-
-<!ELEMENT audioClip EMPTY >
-<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
-<!ATTLIST audioClip uri             CDATA       #REQUIRED >
 ]>
 <webStorage tempFiles="file:///tmp/tempPlaylist" >
-    <location server="localhost" port="80" />
+    <location server="localhost" port="80" 
+              path="/storage/var/xmlrpc/xrLocStor.php" />
     <identity login="root" pass="q" />
-    <playlist id="1" playlength="01:30:00.000">
-        <playlistElement id="101" relativeOffset="0" >
-                <audioClip id="10001" playlength="01:00:00.000" 
-                           uri="file:var/test1.mp3" />
-        </playlistElement>
-        <playlistElement id="102" relativeOffset="01:00:00.000" >
-                <audioClip id="10002"  playlength="00:30:00.000" 
-                           uri="file:var/test2.mp3" />
-        </playlistElement>
-    </playlist>
-    <audioClip id="10001" playlength="01:00:00.000" 
-               uri="file:var/test1.mp3" />
-    <audioClip id="10002" playlength="00:30:00.000" 
-               uri="file:var/test2.mp3" /> 
 </webStorage>

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  An interface to the (possibly remote) php storage server.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -78,28 +78,6 @@ class WebStorageClient :
          *  The name of the configuration XML elmenent used by WebStorageClient
          */
         static const std::string    configElementNameStr;
-
-        /**
-         *  The map type containing the playlists by their ids.
-         */
-        typedef std::map<const UniqueId::IdType, Ptr<Playlist>::Ref>
-                                                                PlaylistMap;
-
-        /**
-         *  The map holding all contained playlists, by ids.
-         */
-        PlaylistMap                 playlistMap;
-
-        /**
-         *  The map type containing the audio clips by their ids.
-         */
-        typedef std::map<const UniqueId::IdType, Ptr<AudioClip>::Ref>
-                                                                AudioClipMap;
-
-        /**
-         *  The map holding all contained audio clips, by ids.
-         */
-        AudioClipMap                audioClipMap;
 
         /**
          *  The path where the temporary SMIL files are strored.
@@ -117,14 +95,38 @@ class WebStorageClient :
         int                         storageServerPort;
 
         /**
+         *  The path to the storage server php page.
+         */
+        std::string                 storageServerPath;
+
+        /**
          *  The login name to the storage server.
          */
-        std::string                 loginName;
+        std::string                 storageServerLogin;
 
         /**
          *  The password to the storage server.
          */
-        std::string                 password;
+        std::string                 storageServerPassword;
+
+        /**
+         *  Login to the storage server, using the data read from the
+         *  configuration file.  If successful, a new session ID is returned.
+         *
+         *  @return the new session ID
+         */
+        std::string
+        loginToStorageServer(void) const               throw ();
+
+        /**
+         *  Logout from the storage server.  The parameter is the ID of
+         *  the session to end (returned previously by storageServerLogin()).
+         *
+         *  @param sessionId the ID of the session to end
+         */
+        void
+        logoutFromStorageServer(std::string sessionId) const
+                                                       throw ();
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,16 +108,13 @@ WebStorageClientTest :: tearDown(void)                      throw ()
 void
 WebStorageClientTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
-{/*
-        Ptr<UniqueId>::Ref      id1(new UniqueId(1));
-        Ptr<UniqueId>::Ref      id2(new UniqueId(77));
+{
+    Ptr<UniqueId>::Ref      id01(new UniqueId(10001));
+    Ptr<UniqueId>::Ref      id77(new UniqueId(10077));
 
-        CPPUNIT_ASSERT(wsc->existsPlaylist(id1));
-        CPPUNIT_ASSERT(!wsc->existsPlaylist(id2));
-
-        Ptr<Playlist>::Ref      playlist = wsc->getPlaylist(id1);
-        CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
-*/}
+    CPPUNIT_ASSERT( wsc->existsAudioClip(id01));
+    CPPUNIT_ASSERT(!wsc->existsAudioClip(id77));
+}
 
 
 /*------------------------------------------------------------------------------

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,12 +39,16 @@
 #error "Need unistd.h"
 #endif
 
+#include <iostream>             // for testing only, REMOVE THIS later
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <XmlRpcClient.h>
+#include <XmlRpcValue.h>
 
 #include "WebStorageClient.h"
 
 using namespace boost::posix_time;
+using namespace XmlRpc;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Storage;
@@ -53,6 +57,8 @@ using namespace LiveSupport::Storage;
 
 
 /* ================================================  local constants & macros */
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  configuration file constants */
 
 /*------------------------------------------------------------------------------
  *  The name of the config element for this class
@@ -80,6 +86,11 @@ static const std::string    locationServerAttrName = "server";
 static const std::string    locationPortAttrName = "port";
 
 /*------------------------------------------------------------------------------
+ *  The name of the config element attribute for the storage server php page
+ *----------------------------------------------------------------------------*/
+static const std::string    locationPathAttrName = "path";
+
+/*------------------------------------------------------------------------------
  *  The name of the config child element for the storage server login
  *----------------------------------------------------------------------------*/
 static const std::string    identityConfigElementName = "identity";
@@ -87,12 +98,15 @@ static const std::string    identityConfigElementName = "identity";
 /*------------------------------------------------------------------------------
  *  The name of the config child element for the storage server login name
  *----------------------------------------------------------------------------*/
-static const std::string    identityLoginNameAttrName = "login";
+static const std::string    identityLoginAttrName = "login";
 
 /*------------------------------------------------------------------------------
  *  The name of the config child element for the storage server login password
  *----------------------------------------------------------------------------*/
 static const std::string    identityPasswordAttrName = "pass";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  constants for the SMIL file */
 
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
@@ -145,6 +159,69 @@ static const std::string    smilAudioClipNodeName = "audio";
  *  The name of the attribute containing the URI of the audio clip element.
  *----------------------------------------------------------------------------*/
 static const std::string    smilAudioClipUriAttrName = "src";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: error reports */
+
+/*------------------------------------------------------------------------------
+ *  The name of the error code parameter in the returned struct
+ *----------------------------------------------------------------------------*/
+static const std::string    errorCodeParamName = "faultCode";
+
+/*------------------------------------------------------------------------------
+ *  The name of the error message parameter in the returned struct
+ *----------------------------------------------------------------------------*/
+static const std::string    errorMessageParamName = "faultString";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: login */
+
+/*------------------------------------------------------------------------------
+ *  The name of the login method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    loginMethodName = "locstor.login";
+
+/*------------------------------------------------------------------------------
+ *  The name of the login parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    loginMethodLoginParamName = "login";
+
+/*------------------------------------------------------------------------------
+ *  The name of the password parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    loginMethodPasswordParamName = "pass";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: logout */
+
+/*------------------------------------------------------------------------------
+ *  The name of the logout method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    logoutMethodName = "locstor.logout";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    logoutMethodSessionIdParamName = "sessid";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsAudioClip */
+
+/*------------------------------------------------------------------------------
+ *  The name of the exists audio clip method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    existsAudioClipMethodName 
+                            = "locstor.existsAudioClip";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    existsAudioClipMethodSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip unique ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    existsAudioClipMethodAudioClipIdParamName = "gunid";
 
 
 /* ===============================================  local function prototypes */
@@ -207,6 +284,14 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
     std::stringstream   storageServerPortValue(attribute->get_value());
     storageServerPortValue >> storageServerPort;
     
+    if (!(attribute = locationConfigElement
+                      ->get_attribute(locationPathAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += locationPathAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    storageServerPath = attribute->get_value();
+
     ++it;
     if (it != childNodes.end()) {
         std::string eMsg = "more than one ";
@@ -229,12 +314,12 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
     const xmlpp::Element      * identityConfigElement 
                                 = dynamic_cast<const xmlpp::Element*> (*it);
     if (!(attribute = identityConfigElement
-                      ->get_attribute(identityLoginNameAttrName))) {
+                      ->get_attribute(identityLoginAttrName))) {
         std::string eMsg = "Missing attribute ";
-        eMsg += identityLoginNameAttrName;
+        eMsg += identityLoginAttrName;
         throw std::invalid_argument(eMsg);
     }
-    loginName = attribute->get_value();
+    storageServerLogin = attribute->get_value();
 
     if (!(attribute = identityConfigElement
                       ->get_attribute(identityPasswordAttrName))) {
@@ -242,7 +327,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
         eMsg += identityPasswordAttrName;
         throw std::invalid_argument(eMsg);
     }
-    password = attribute->get_value();
+    storageServerPassword = attribute->get_value();
     
     ++it;
     if (it != childNodes.end()) {
@@ -251,33 +336,58 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
         eMsg += " XML element";
         throw std::invalid_argument(eMsg);
     }
+}
 
-    // iterate through the playlist elements ...
-    childNodes  = element.get_children(Playlist::getConfigElementName());
-    it          = childNodes.begin();
-    playlistMap.clear();
 
-    while (it != childNodes.end()) {
-        Ptr<Playlist>::Ref      playlist(new Playlist);
-        const xmlpp::Element  * element =
-                                    dynamic_cast<const xmlpp::Element*> (*it);
-        playlist->configure(*element);
-        playlistMap[playlist->getId()->getId()] = playlist;
-        ++it;
+/*------------------------------------------------------------------------------
+ *  Login to the storage server.
+ *----------------------------------------------------------------------------*/
+std::string
+WebStorageClient :: loginToStorageServer(void) const
+                                                throw ()
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters[loginMethodLoginParamName] = storageServerLogin.c_str();
+    parameters[loginMethodPasswordParamName] = storageServerPassword.c_str();
+    
+    if (!xmlRpcClient.execute(loginMethodName.c_str(), parameters, result)) {
+        // throw exception;
     }
 
-    // ... and the the audio clip elements
-    childNodes  = element.get_children(AudioClip::getConfigElementName());
-    it          = childNodes.begin();
-    audioClipMap.clear();
+    if (result.getType() != XmlRpcValue::TypeString) {
+        return std::string("");             // change to throw exception
+    }
+    
+    return std::string(result);
+}
 
-    while (it != childNodes.end()) {
-        Ptr<AudioClip>::Ref     audioClip(new AudioClip);
-        const xmlpp::Element  * element =
-                                    dynamic_cast<const xmlpp::Element*> (*it);
-        audioClip->configure(*element);
-        audioClipMap[audioClip->getId()->getId()] = audioClip;
-        ++it;
+
+/*------------------------------------------------------------------------------
+ *  Logout from the storage server.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: logoutFromStorageServer(std::string sessionId) const
+                                                throw ()
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters[logoutMethodSessionIdParamName] = sessionId.c_str();
+    
+    if (!xmlRpcClient.execute(logoutMethodName.c_str(), parameters, result)) {
+        //throw exception;
+    }
+
+    if (xmlRpcClient.isFault()) {
+        // throw exception
     }
 }
 
@@ -287,9 +397,9 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
  *----------------------------------------------------------------------------*/
 const bool
 WebStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
-                                                                throw ()
+                                                throw ()
 {
-    return playlistMap.count(id->getId()) == 1 ? true : false;
+    return false;
 }
  
 
@@ -300,13 +410,8 @@ Ptr<Playlist>::Ref
 WebStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::invalid_argument)
 {
-    PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
-
-    if (it == playlistMap.end()) {
-        throw std::invalid_argument("no such playlist");
-    }
-
-    return it->second;
+    Ptr<Playlist>::Ref  playlist(new Playlist);
+    return playlist;
 }
 
 
@@ -317,66 +422,8 @@ Ptr<Playlist>::Ref
 WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::logic_error)
 {
-    PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
-
-    if (playlistMapIt == playlistMap.end()) {
-        throw std::invalid_argument("no such playlist");
-    }
-
-    Ptr<Playlist>::Ref      oldPlaylist = playlistMapIt->second;
-    Ptr<time_duration>::Ref playlength(new time_duration(
-                                       *(oldPlaylist->getPlaylength()) ));
-    Ptr<Playlist>::Ref      newPlaylist(new Playlist(UniqueId::generateId(),
-                                                     playlength));
-    Ptr<xmlpp::Document>::Ref
-                        smilDocument(new xmlpp::Document(xmlVersion));
-    xmlpp::Element    * smilRootNode 
-                        = smilDocument->create_root_node(smilRootNodeName);
-    smilRootNode->set_attribute(smilLanguageAttrName,
-                                smilLanguageAttrValue);
-    smilRootNode->set_attribute(smilExtensionsAttrName,
-                                smilExtensionsAttrValue);
-
-    xmlpp::Element    * smilBodyNode
-                        = smilRootNode->add_child(smilBodyNodeName);
-    xmlpp::Element    * smilSeqNode
-                        = smilBodyNode->add_child(smilSeqNodeName);
-    
-    Playlist::const_iterator it = oldPlaylist->begin();
-
-    while (it != oldPlaylist->end()) {
-        Ptr<AudioClip>::Ref audioClip = acquireAudioClip( it->second
-                                                            ->getAudioClip()
-                                                            ->getId() );
-        Ptr<time_duration>::Ref relativeOffset(new time_duration(
-                                    *(it->second->getRelativeOffset()) ));
-        Ptr<const FadeInfo>::Ref    oldFadeInfo = it->second->getFadeInfo();
-        Ptr<FadeInfo>::Ref          newFadeInfo;
-        if (oldFadeInfo) {                      // careful: fadeInfo may be 0
-            newFadeInfo.reset(new FadeInfo(*oldFadeInfo));
-        } 
-
-        newPlaylist->addAudioClip(audioClip,
-                                  relativeOffset,
-                                  newFadeInfo);
-
-        xmlpp::Element    * smilAudioClipNode
-                            = smilSeqNode->add_child(smilAudioClipNodeName);
-        smilAudioClipNode->set_attribute(
-                    smilAudioClipUriAttrName, 
-                    *(audioClip->getUri()) );
-        ++it;
-    }
-
-    std::stringstream fileName;
-    fileName << localTempStorage << newPlaylist->getId()->getId()
-             << "#" << std::rand() << ".smil";
-
-    smilDocument->write_to_file(fileName.str(), "UTF-8");
-   
-    Ptr<std::string>::Ref   playlistUri(new std::string(fileName.str()));
-    newPlaylist->setUri(playlistUri);
-    return newPlaylist;
+    Ptr<Playlist>::Ref  playlist(new Playlist);
+    return playlist;
 }
 
 
@@ -387,40 +434,7 @@ void
 WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
                                                 throw (std::logic_error)
 {
-    if (! playlist->getUri()) {
-        throw std::logic_error("playlist URI not found");
-    }
 
-    std::ifstream ifs(playlist->getUri()->substr(7).c_str());
-    if (!ifs) {
-        ifs.close();
-        throw std::logic_error("playlist temp file not found");
-    }
-    ifs.close();
-
-    std::remove(playlist->getUri()->substr(7).c_str());
-   
-    int                         badAudioClips = 0;
-    Playlist::const_iterator    it = playlist->begin();
-    while (it != playlist->end()) {
-        try {
-            releaseAudioClip(it->second->getAudioClip());
-        }
-        catch (std::invalid_argument &e) {
-            ++badAudioClips;
-        }
-        ++it;
-    }
-
-    Ptr<std::string>::Ref   nullPointer;
-    playlist->setUri(nullPointer);
-
-    if (badAudioClips) {
-        std::stringstream eMsg;
-        eMsg << "could not release " << badAudioClips 
-             << " audio clips in playlist";
-        throw std::logic_error(eMsg.str());
-    }
 }
 
 
@@ -431,10 +445,7 @@ void
 WebStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
                                                 throw (std::invalid_argument)
 {
-    // erase() returns the number of entries found & erased
-    if (!playlistMap.erase(id->getId())) {
-        throw std::invalid_argument("no such playlist");
-    }
+
 }
 
 
@@ -445,15 +456,8 @@ Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
 WebStorageClient :: getAllPlaylists(void) const
                                                 throw ()
 {
-    PlaylistMap::const_iterator         it = playlistMap.begin();
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-                         playlistVector (new std::vector<Ptr<Playlist>::Ref>);
-
-    while (it != playlistMap.end()) {
-        playlistVector->push_back(it->second);
-        ++it;
-    }
-
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector(
+                                        new std::vector<Ptr<Playlist>::Ref>);
     return playlistVector;
 }
 
@@ -464,20 +468,8 @@ WebStorageClient :: getAllPlaylists(void) const
 Ptr<Playlist>::Ref
 WebStorageClient :: createPlaylist()                                throw ()
 {
-    // generate a new UniqueId -- TODO: fix UniqueId to make sure
-    //     this is really unique; not checked here!
-    Ptr<UniqueId>::Ref       playlistId = 
-                     Ptr<UniqueId>::Ref(UniqueId :: generateId());
-
-    Ptr<time_duration>::Ref  playLength = 
-                     Ptr<time_duration>::Ref(new time_duration(0,0,0));
-
-    Ptr<Playlist>::Ref       playlist =
-                     Ptr<Playlist>::Ref(new Playlist(playlistId, playLength));
-
-    playlistMap[playlistId->getId()] = playlist;
-
-    return playlist;   
+    Ptr<Playlist>::Ref  playlist(new Playlist);
+    return playlist;
 }
 
 
@@ -488,7 +480,29 @@ const bool
 WebStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
                                                                 throw ()
 {
-    return audioClipMap.count(id->getId()) == 1 ? true : false;
+    std::string     sessionId = loginToStorageServer();
+    
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters[existsAudioClipMethodSessionIdParamName] = sessionId.c_str();
+    parameters[existsAudioClipMethodAudioClipIdParamName] = int(id->getId());
+    
+    if (!xmlRpcClient.execute(existsAudioClipMethodName.c_str(),
+                              parameters, result)) {
+        // throw exception
+    }
+
+    logoutFromStorageServer(sessionId);
+    
+    if (result.getType() != XmlRpcValue::TypeBoolean) {
+        return false;                       // change to throw exception
+    }
+    
+    return bool(result);
 }
  
 
@@ -499,13 +513,8 @@ Ptr<AudioClip>::Ref
 WebStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::invalid_argument)
 {
-    AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
-
-    if (it == audioClipMap.end()) {
-        throw std::invalid_argument("no such audio clip");
-    }
-
-    return it->second;
+    Ptr<AudioClip>::Ref  playlist(new AudioClip);
+    return playlist;
 }
 
 
@@ -516,36 +525,9 @@ Ptr<AudioClip>::Ref
 WebStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::logic_error)
 {
-    AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
+    Ptr<AudioClip>::Ref  playlist(new AudioClip);
+    return playlist;
 
-    if (it == audioClipMap.end()) {
-        throw std::invalid_argument("no such audio clip");
-    }
-
-    Ptr<AudioClip>::Ref storedAudioClip = it->second;
-    
-    if (! storedAudioClip->getUri()) {
-        throw std::logic_error("audio clip URI not found");
-    }
-                                                        // cut the "file:" off
-    std::string     audioClipFileName = storedAudioClip->getUri()->substr(5);
-    
-    std::ifstream ifs(audioClipFileName.c_str());
-    if (!ifs) {
-        ifs.close();
-        throw std::logic_error("could not read audio clip");
-    }
-    ifs.close();
-
-    Ptr<AudioClip>::Ref audioClip(new AudioClip(*storedAudioClip));
-
-    Ptr<std::string>::Ref  audioClipUri(new std::string("file://"));
-    *audioClipUri += get_current_dir_name();        // doesn't work if current
-    *audioClipUri += "/";                           // dir = /, but OK for now
-    *audioClipUri += audioClipFileName;
-
-    audioClip->setUri(audioClipUri);
-    return audioClip;
 }
 
 
@@ -556,12 +538,7 @@ void
 WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                                 throw (std::logic_error)
 {
-    if (*(audioClip->getUri()) == "") {
-        throw std::logic_error("audio clip URI not found");
-    }
-    
-    Ptr<std::string>::Ref   nullPointer;
-    audioClip->setUri(nullPointer);
+
 }
 
 
@@ -572,10 +549,7 @@ void
 WebStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
                                                 throw (std::invalid_argument)
 {
-    // erase() returns the number of entries found & erased
-    if (!audioClipMap.erase(id->getId())) {
-        throw std::invalid_argument("no such audio clip");
-    }
+
 }
 
 
@@ -586,15 +560,8 @@ Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
 WebStorageClient :: getAllAudioClips(void) const
                                                 throw ()
 {
-    AudioClipMap::const_iterator        it = audioClipMap.begin();
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-                        audioClipVector (new std::vector<Ptr<AudioClip>::Ref>);
-
-    while (it != audioClipMap.end()) {
-        audioClipVector->push_back(it->second);
-        ++it;
-    }
-
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector(
+                                        new std::vector<Ptr<AudioClip>::Ref>);
     return audioClipVector;
 }
 
