@@ -1,4 +1,6 @@
 <?php
+define('UI_VERBOSE', TRUE);
+
 define('UI_HANDLER', 'ui_handler.php');
 define('UI_BROWSER', 'ui_browser.php');
 define('UI_FORM_STANDARD_METHOD', 'POST');

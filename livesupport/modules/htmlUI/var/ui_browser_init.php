@@ -2,7 +2,7 @@
 session_start();
 
 ## LS classes/functions #############################################
-require_once dirname(__FILE__).'/conf.php';
+require_once dirname(__FILE__).'/ui_conf.php';
 require_once dirname(__FILE__).'/ui_browser.class.php';
 
 
@@ -39,7 +39,7 @@ $Smarty->assign('USER', array('sessid' => &$uiBrowser->sessid,
                         ));
 $uiBrowser->loadStationPrefs($ui_fmask['stationPrefs']);
 $Smarty->assign('STATIONPREFS', $uiBrowser->STATIONPREFS);
-                             
+
 ## retransfer incomplete formdata from SESSION to POST-data #########
 if (is_array($_SESSION['retransferFormData'])){
     foreach($_SESSION['retransferFormData'] as $k=>$v){
