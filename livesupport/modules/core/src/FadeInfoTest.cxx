@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfoTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -43,26 +43,24 @@
 #include <string>
 #include <iostream>
 
-#include "LiveSupport/Core/Playlist.h"
-#include "LiveSupport/Core/PlaylistElement.h"
+#include "LiveSupport/Core/FadeInfo.h"
+#include "FadeInfoTest.h"
 
-#include "PlaylistElementTest.h"
 
 using namespace std;
 using namespace LiveSupport::Core;
-using namespace boost::posix_time;
 
 /* ===================================================  local data structures */
 
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(PlaylistElementTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(FadeInfoTest);
 
 /**
- *  The name of the configuration file for the playlist element.
+ *  The name of the configuration file for the audio clip.
  */
-static const std::string configFileName = "etc/playlistElement.xml";
+static const std::string configFileName = "etc/fadeInfo.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -74,7 +72,7 @@ static const std::string configFileName = "etc/playlistElement.xml";
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-PlaylistElementTest :: setUp(void)                         throw ()
+FadeInfoTest :: setUp(void)                         throw ()
 {
 }
 
@@ -83,7 +81,7 @@ PlaylistElementTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-PlaylistElementTest :: tearDown(void)                      throw ()
+FadeInfoTest :: tearDown(void)                      throw ()
 {
 }
 
@@ -92,36 +90,32 @@ PlaylistElementTest :: tearDown(void)                      throw ()
  *  Test to see if the singleton Hello object is accessible
  *----------------------------------------------------------------------------*/
 void
-PlaylistElementTest :: firstTest(void)
+FadeInfoTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<PlaylistElement>::Ref      playlistElement(new PlaylistElement);
     try {
-
         Ptr<xmlpp::DomParser>::Ref  parser(
                                     new xmlpp::DomParser(configFileName, true));
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
+        Ptr<FadeInfo>::Ref     fadeInfo(new FadeInfo());
 
-        playlistElement->configure(*root);
+        fadeInfo->configure(*root);
 
-        CPPUNIT_ASSERT(playlistElement->getId()->getId() == 707);
-        Ptr<const time_duration>::Ref  relativeOffset
-                                       = playlistElement->getRelativeOffset();
-        CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 12*60 + 34);
-        CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
-                                                         == 10001);
-        CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getId()->getId()
-                                                         == 9901);
-        Ptr<const time_duration>::Ref   fadeIn
-                                        = playlistElement->getFadeInfo()
-                                                         ->getFadeIn();
-        CPPUNIT_ASSERT(fadeIn->total_milliseconds()  == 2000);
+        CPPUNIT_ASSERT(fadeInfo->getId()->getId() == 9901);
 
-        Ptr<const time_duration>::Ref   fadeOut
-                                        = playlistElement->getFadeInfo()
-                                                         ->getFadeOut();
-        CPPUNIT_ASSERT(fadeOut->total_milliseconds() == 1500);
+        Ptr<const boost::posix_time::time_duration>::Ref
+                                            fadeIn = fadeInfo->getFadeIn();
+        CPPUNIT_ASSERT(fadeIn->hours()   == 0);
+        CPPUNIT_ASSERT(fadeIn->minutes() == 0);
+        CPPUNIT_ASSERT(fadeIn->seconds() == 2);
+
+        Ptr<const boost::posix_time::time_duration>::Ref
+                                            fadeOut = fadeInfo->getFadeOut();
+        CPPUNIT_ASSERT(fadeOut->hours()   == 0);
+        CPPUNIT_ASSERT(fadeOut->minutes() == 0);
+        CPPUNIT_ASSERT(fadeOut->seconds() == 1);
+        CPPUNIT_ASSERT(fadeOut->fractional_seconds() == 500);
 
     } catch (std::invalid_argument &e) {
         std::string eMsg = "semantic error in configuration file:\n";

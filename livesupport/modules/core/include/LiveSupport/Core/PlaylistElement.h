@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/AudioClip.h"
+#include "LiveSupport/Core/FadeInfo.h"
 
 
 namespace LiveSupport {
@@ -73,7 +74,7 @@ using namespace LiveSupport::Core;
  *  An item in a playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -98,6 +99,11 @@ class PlaylistElement : public Configurable
          */
         Ptr<AudioClip>::Ref         audioClip;
 
+        /**
+         *  The fade in / fade out info associated with the entry.
+         */
+        Ptr<FadeInfo>::Ref          fadeInfo;
+
 
     public:
 
@@ -112,38 +118,44 @@ class PlaylistElement : public Configurable
          *  Create a playlist element by specifying all details.
          *  This is used for testing purposes.
          *
-         *  @param id the id of the entry.
-         *  @param audioClipId the ID of the audio clip associated 
-         *                                        with the playlist element.
+         *  @param id             the id of the entry.
          *  @param relativeOffset the start time of this element, relative to 
          *                                        the start of the playlist.
+         *  @param audioClip      (a pointer to) the audio clip associated 
+         *                                        with the playlist element.
          */
         PlaylistElement(Ptr<UniqueId>::Ref       id,
                         Ptr<time_duration>::Ref  relativeOffset,
-                        Ptr<AudioClip>::Ref      audioClip)
+                        Ptr<AudioClip>::Ref      audioClip,
+                        Ptr<FadeInfo>::Ref       fadeInfo 
+                                                 = Ptr<FadeInfo>::Ref())
                                                            throw ()
         {
             this->id             = id;
             this->relativeOffset = relativeOffset;
             this->audioClip      = audioClip;
+            this->fadeInfo       = fadeInfo;
         }
 
         /**
          *  Create a new playlist element, with a new UniqueId,
          *  to be added to a playlist.
          *
-         *  @param audioClipId the ID of the audio clip associated 
-         *                                        with the playlist element.
          *  @param relativeOffset the start time of this element, relative to 
          *                                        the start of the playlist.
+         *  @param audioClip      (a pointer to) the audio clip associated 
+         *                                        with the playlist element.
          */
         PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
-                        Ptr<AudioClip>::Ref      audioClip)
+                        Ptr<AudioClip>::Ref      audioClip,
+                        Ptr<FadeInfo>::Ref       fadeInfo 
+                                                 = Ptr<FadeInfo>::Ref())
                                                            throw ()
         {
             this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
             this->audioClip      = audioClip;
+            this->fadeInfo       = fadeInfo;
         }
 
         /**
@@ -210,6 +222,28 @@ class PlaylistElement : public Configurable
         getAudioClip(void) const                           throw ()
         {
             return audioClip;
+        }
+
+        /**
+         *  Set the fade info associated with the playlist element.
+         *
+         *  @param fadeInfo the fade info to be associated with the element.
+         */
+        void
+        setFadeInfo(Ptr<FadeInfo>::Ref fadeInfo)           throw ()
+        {
+            this->fadeInfo = fadeInfo;
+        }
+
+        /**
+         *  Return the fade info associated with the playlist element.
+         *
+         *  @return the fade info associated with the element.
+         */
+        Ptr<const FadeInfo>::Ref
+        getFadeInfo(void) const                            throw ()
+        {
+            return fadeInfo;
         }
 
 };

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/FadeInfo.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Core_AudioClip_h
-#define LiveSupport_Core_AudioClip_h
+#ifndef LiveSupport_Core_FadeInfo_h
+#define LiveSupport_Core_FadeInfo_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -65,68 +65,81 @@ using namespace boost::posix_time;
 /* =============================================================== data types */
 
 /**
- *  A class representing an audio clip.
- *  AudioClips contain the basic information about the audio clip.
- *  They are contained in PlaylistElements, which provide the relative offset
- *  and fade in/fade out info.  PlaylistElements, in turn, are contained
- *  in a Playlist.
+ *  A class representing fade in / fade out information of a playlist element.
+ *  These are contained in a PlaylistElement, a list of which, in turn, is
+ *  contained in a Playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.1 $
  */
-class AudioClip : public Configurable
+class FadeInfo : public Configurable
 {
     private:
         /**
-         *  The name of the configuration XML elmenent used by AudioClip.
+         *  The name of the configuration XML elmenent used by FadeInfo.
          */
         static const std::string    configElementNameStr;
 
         /**
-         *  The unique id of the audio clip.
+         *  The unique id of the fade info.
          */
         Ptr<UniqueId>::Ref          id;
 
         /**
-         *  The playling length of the audio clip.
+         *  The length of fade in period.
          */
-        Ptr<time_duration>::Ref     playlength;
+        Ptr<time_duration>::Ref     fadeIn;
 
         /**
-         *  The title of the audio clip.
+         *  The length of fade out period.
          */
-//        Ptr<string>::Ref            title;
+        Ptr<time_duration>::Ref     fadeOut;
 
 
     public:
         /**
          *  Default constructor.
          */
-        AudioClip(void)                                    throw ()
+        FadeInfo(void)                                    throw ()
         {
         }
 
         /**
-         *  Create an audio clip by specifying all details.
+         *  Create a fade info instance by specifying all details.
          *  This is used for testing purposes.
          *
-         *  @param id the id of the audio clip.
-         *  @param playlength the playing length of the audio clip.
+         *  @param id       the id of the fade info.
+         *  @param fadeIn   the length of the fade in period.
+         *  @param fadeOut  the length of the fade in period.
          */
-        AudioClip(Ptr<UniqueId>::Ref         id,
-                  Ptr<time_duration>::Ref    playlength)   throw()
-//                  Ptr<string>::Ref           title)        throw ()
+        FadeInfo(Ptr<UniqueId>::Ref         id,
+                 Ptr<time_duration>::Ref    fadeIn,
+                 Ptr<time_duration>::Ref    fadeOut)      throw()
         {
-            this->id         = id;
-            this->playlength = playlength;
-//            this->title      = title;
+            this->id        = id;
+            this->fadeIn    = fadeIn;
+            this->fadeOut   = fadeOut;
+        }
+
+        /**
+         *  Create a fade info instance by specifying the fade in and fade out.
+         *
+         *  @param fadeIn   the length of the fade in period.
+         *  @param fadeOut  the length of the fade in period.
+         */
+        FadeInfo(Ptr<time_duration>::Ref    fadeIn,
+                 Ptr<time_duration>::Ref    fadeOut)      throw()
+        {
+            this->id        = UniqueId::generateId();
+            this->fadeIn    = fadeIn;
+            this->fadeOut   = fadeOut;
         }
 
         /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~AudioClip(void)                                   throw ()
+        ~FadeInfo(void)                                   throw ()
         {
         }
 
@@ -156,9 +169,9 @@ class AudioClip : public Configurable
                                                 throw (std::invalid_argument);
 
         /**
-         *  Return the id of the audio clip.
+         *  Return the id of the fade info instance.
          *
-         *  @return the unique id of the audio clip.
+         *  @return the unique id of the fade info instance.
          */
         Ptr<const UniqueId>::Ref
         getId(void) const                       throw ()
@@ -167,27 +180,26 @@ class AudioClip : public Configurable
         }
 
         /**
-         *  Return the total playing length for this audio clip.
+         *  Return the length of the fade in period.
          *
-         *  @return the playing length of this audio clip, in microseconds.
+         *  @return the length of the fade in period, in microseconds.
          */
         Ptr<const time_duration>::Ref
-        getPlaylength(void) const               throw ()
+        getFadeIn(void) const                   throw ()
         {
-            return playlength;
+            return fadeIn;
         }
 
         /**
-         *  Return the title of this audio clip.
+         *  Return the length of the fade in period.
          *
-         *  @return the title of this audio clip.
+         *  @return the length of the fade in period, in microseconds.
          */
-//        Ptr<const string>::Ref
-//        getTitle(void) const                    throw ()
-//        {
-//            return title;
-//        }
-
+        Ptr<const time_duration>::Ref
+        getFadeOut(void) const                  throw ()
+        {
+            return fadeOut;
+        }
 };
 
 
@@ -200,5 +212,5 @@ class AudioClip : public Configurable
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // LiveSupport_Core_AudioClip_h
+#endif // LiveSupport_Core_FadeInfo_h
 

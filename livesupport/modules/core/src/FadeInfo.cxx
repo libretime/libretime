@@ -20,10 +20,10 @@
     along with LiveSupport; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
-
+ 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfo.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -35,7 +35,7 @@
 
 #include <sstream>
 
-#include "LiveSupport/Core/PlaylistElement.h"
+#include "LiveSupport/Core/FadeInfo.h"
 
 using namespace boost::posix_time;
 
@@ -49,27 +49,22 @@ using namespace LiveSupport::Core;
 /*------------------------------------------------------------------------------
  *  The name of the config element for this class
  *----------------------------------------------------------------------------*/
-const std::string PlaylistElement::configElementNameStr = "playlistElement";
+const std::string FadeInfo::configElementNameStr = "fadeInfo";
 
 /**
- *  The name of the attribute of the id of the playlist element.
+ *  The name of the attribute to get the id of the audio clip.
  */
 static const std::string    idAttrName = "id";
 
 /**
- *  The name of the attribute of the relative offset of the playlist element.
+ *  The name of the attribute to get the fade in.
  */
-static const std::string    relativeOffsetAttrName = "relativeOffset";
+static const std::string    fadeInAttrName = "fadeIn";
 
 /**
- *  The name of the audio clip child element of the playlist element.
+ *  The name of the attribute to get the fade out.
  */
-static const std::string    audioClipElementName = "audioClip";
-
-/**
- *  The name of the fade info child element of the playlist element.
- */
-static const std::string    fadeInfoElementName = "fadeInfo";
+static const std::string    fadeOutAttrName = "fadeOut";
 
 
 /* ===============================================  local function prototypes */
@@ -78,11 +73,11 @@ static const std::string    fadeInfoElementName = "fadeInfo";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Create a playlist element object based on an XML element.
+ *  Create a fade info object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
-PlaylistElement :: configure(const xmlpp::Element & element)
-                                                throw (std::invalid_argument)
+FadeInfo :: configure(const xmlpp::Element  & element)
+                                               throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "bad configuration element ";
@@ -90,10 +85,9 @@ PlaylistElement :: configure(const xmlpp::Element & element)
         throw std::invalid_argument(eMsg);
     }
 
-    // set id
     const xmlpp::Attribute    * attribute;
     std::stringstream           strStr;
-    UniqueId::IdType            idValue;
+    unsigned long int           idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
         std::string eMsg = "missing attribute ";
@@ -104,58 +98,19 @@ PlaylistElement :: configure(const xmlpp::Element & element)
     strStr >> idValue;
     id.reset(new UniqueId(idValue));
 
-    // set relative offset
-    if (!(attribute = element.get_attribute(relativeOffsetAttrName))) {
+    if (!(attribute = element.get_attribute(fadeInAttrName))) {
         std::string eMsg = "missing attribute ";
-        eMsg += relativeOffsetAttrName;
+        eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    relativeOffset.reset(new time_duration(
+    fadeIn.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
 
-    // set audio clip
-    xmlpp::Node::NodeList       childNodes 
-                                = element.get_children(audioClipElementName);
-    xmlpp::Node::NodeList::iterator it = childNodes.begin();
-
-    if (it == childNodes.end()) {
-        std::string eMsg = "missing ";
-        eMsg += audioClipElementName;
-        eMsg += " XML element";
+    if (!(attribute = element.get_attribute(fadeOutAttrName))) {
+        std::string eMsg = "missing attribute ";
+        eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-
-    const xmlpp::Element      * audioClipElement 
-                                = dynamic_cast<const xmlpp::Element*> (*it);
-    audioClip.reset(new AudioClip);
-    audioClip->configure(*audioClipElement);        // may throw exception
-    
-    ++it;
-    if (it != childNodes.end()) {
-        std::string eMsg = "more than one ";
-        eMsg += audioClipElementName;
-        eMsg += " XML element";
-        throw std::invalid_argument(eMsg);
-    }
-
-    // set fade info
-    childNodes  = element.get_children(fadeInfoElementName);
-    it          = childNodes.begin();
-
-    if (it == childNodes.end()) {                   // no fade info is OK
-        return;
-    }
-
-    const xmlpp::Element      * fadeInfoElement 
-                                = dynamic_cast<const xmlpp::Element*> (*it);
-    fadeInfo.reset(new FadeInfo);
-    fadeInfo->configure(*fadeInfoElement);          // may throw exception
-    
-    ++it;
-    if (it != childNodes.end()) {
-        std::string eMsg = "more than one ";
-        eMsg += fadeInfoElementName;
-        eMsg += " XML element";
-        throw std::invalid_argument(eMsg);
-    }
+    fadeOut.reset(new time_duration(
+                            duration_from_string(attribute->get_value())));
 }

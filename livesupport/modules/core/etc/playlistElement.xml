@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE playlistElement [
 
-<!ELEMENT playlistElement (audioClip) >
+<!ELEMENT playlistElement (audioClip, fadeInfo?) >
 <!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
 <!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
 
 <!ELEMENT audioClip EMPTY >
 <!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+
+<!ELEMENT fadeInfo EMPTY >
+<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
 ]>
 
 <playlistElement id="707" relativeOffset="00:12:34.000" >
-    <audioClip id="10001" playlength="01:00:00.000"/>
-</playlistElement>
+    <audioClip id="10001" playlength="01:00:00.000" />
+    <fadeInfo  id="9901"  fadeIn="00:00:02.000" fadeOut="00:00:01.500000" />
+</playlistElement >

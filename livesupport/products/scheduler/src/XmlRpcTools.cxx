@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,6 +94,18 @@ const std::string XmlRpcTools::scheduleEntryIdName =
  *  structure.
  *----------------------------------------------------------------------------*/
 const std::string XmlRpcTools::playtimeName = "playtime";
+
+/*------------------------------------------------------------------------------
+ *  The name of the fade in member in the XML-RPC parameter
+ *  structure.
+ *----------------------------------------------------------------------------*/
+const std::string XmlRpcTools::fadeInName = "fadeIn";
+
+/*------------------------------------------------------------------------------
+ *  The name of the fade out member in the XML-RPC parameter
+ *  structure.
+ *----------------------------------------------------------------------------*/
+const std::string XmlRpcTools::fadeOutName = "fadeOut";
 
 
 /* ================================================  local constants & macros */
@@ -403,6 +415,40 @@ XmlRpcTools :: extractPlayschedule(
 
 
 /*------------------------------------------------------------------------------
+ *  Extract the fade in time from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+XmlRpcTools :: extractFadeIn(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(fadeInName)) {
+        throw std::invalid_argument("missing fade in argument");
+    }
+
+    Ptr<time_duration>::Ref     fadeIn(new time_duration(0,0,
+                                (int) xmlRpcValue[fadeInName], 0));
+    return fadeIn;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract the fade out time from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+XmlRpcTools :: extractFadeOut(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(fadeOutName)) {
+        throw std::invalid_argument("missing fade out argument");
+    }
+
+    Ptr<time_duration>::Ref     fadeOut(new time_duration(0,0,
+                                (int) xmlRpcValue[fadeOutName], 0));
+    return fadeOut;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Convert a schedule entry ID (a UniqueId) to an XmlRpcValue
  *----------------------------------------------------------------------------*/
 void
@@ -438,7 +484,7 @@ XmlRpcTools :: playLogEntryToXmlRpcValue(
  *----------------------------------------------------------------------------*/
 void
 XmlRpcTools :: playLogVectorToXmlRpcValue(
-             Ptr<const std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
+             Ptr<const std::vector<Ptr<PlayLogEntry>::Ref> >::Ref
                                     playLogVector,
              XmlRpc::XmlRpcValue  & returnValue)
                                                 throw ()
@@ -447,11 +493,11 @@ XmlRpcTools :: playLogVectorToXmlRpcValue(
                             // a call to setSize() makes sure it's an XML-RPC
                             // array
 
-    std::vector<Ptr<const PlayLogEntry>::Ref>::const_iterator it =
+    std::vector<Ptr<PlayLogEntry>::Ref>::const_iterator it =
                                                         playLogVector->begin();
     int  arraySize = 0;
     while (it != playLogVector->end()) {
-        Ptr<const PlayLogEntry>::Ref    playLog = *it;
+        Ptr<PlayLogEntry>::Ref          playLog = *it;
         XmlRpc::XmlRpcValue             returnStruct;
         playLogEntryToXmlRpcValue(playLog, returnStruct);
         returnValue[arraySize++] =      returnStruct;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -283,5 +283,74 @@ PlaylistTest :: savedCopyTest(void)
         CPPUNIT_FAIL("allowed to revert to deleted state");
     }
     catch (std::logic_error &e) {
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if we can add a fade info
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: fadeInfoTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Playlist::const_iterator       it = playlist->begin();
+    CPPUNIT_ASSERT(it != playlist->end());
+    Ptr<PlaylistElement>::Ref      playlistElement = it->second;
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo().get() == 0);
+
+    ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    playlistElement  = it->second;
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
+                                  ->total_milliseconds() == 2000);
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
+                                  ->total_milliseconds() == 1500);
+    
+    ++it;
+    CPPUNIT_ASSERT(it == playlist->end());
+
+    Ptr<time_duration>::Ref relativeOffset (new time_duration(0,0,0,0));
+    Ptr<time_duration>::Ref fadeIn (new time_duration(0,0,3,200000));
+    Ptr<time_duration>::Ref fadeOut(new time_duration(0,0,4,0));
+    Ptr<FadeInfo>::Ref      fadeInfo(new FadeInfo(fadeIn, fadeOut));
+
+    try {
+        playlist->setFadeInfo(relativeOffset, fadeInfo);
+    }
+    catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("could not add new fade info");
+    }
+
+    it = playlist->begin();
+    playlistElement  = it->second;
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
+                                  ->total_milliseconds() == 3200);
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
+                                  ->total_milliseconds() == 4000);
+    
+    relativeOffset.reset(new time_duration(1,00,0,0));
+
+    try {
+        playlist->setFadeInfo(relativeOffset, fadeInfo);
+    }
+    catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("could not update fade info");
+    }
+
+    ++it;
+    playlistElement  = it->second;
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
+                                  ->total_milliseconds() == 3200);
+    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
+                                  ->total_milliseconds() == 4000);
+
+    relativeOffset.reset(new time_duration(0,18,0,0));
+
+    try {
+        playlist->setFadeInfo(relativeOffset, fadeInfo);
+        CPPUNIT_FAIL("allowed to set fade info for non-existent element");
+    }
+    catch (std::invalid_argument &e) {
     }
 }

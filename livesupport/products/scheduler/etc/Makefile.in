@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -132,7 +132,8 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/SavePlaylistMethod.o \
                  ${TMP_DIR}/PlayLogFactory.o \
                  ${TMP_DIR}/PostgresqlPlayLog.o \
-                 ${TMP_DIR}/GeneratePlayReportMethod.o
+                 ${TMP_DIR}/GeneratePlayReportMethod.o \
+                 ${TMP_DIR}/UpdateFadeInFadeOutMethod.o
 
 
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
@@ -168,6 +169,7 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RevertEditedPlaylistMethodTest.o \
                    ${TMP_DIR}/PostgresqlPlayLogTest.o \
                    ${TMP_DIR}/GeneratePlayReportMethodTest.o \
+                   ${TMP_DIR}/UpdateFadeInFadeOutMethodTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 

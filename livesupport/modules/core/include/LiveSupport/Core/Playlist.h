@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class Playlist : public Configurable
 {
@@ -203,7 +203,7 @@ class Playlist : public Configurable
         /**
          *  Return the total playing length for this playlist.
          *
-         *  @return the playling length of this playlist, in milliseconds.
+         *  @return the playling length of this playlist, in microseconds.
          */
         Ptr<const time_duration>::Ref
         getPlaylength(void) const                throw ()
@@ -279,17 +279,49 @@ class Playlist : public Configurable
         }
 
         /**
+         *  Get an iterator pointing to a playlist element at a given
+         *  relative offset.
+         *  @param relativeOffset (a pointer to) the relative offset where
+         *                        the playlist element is.
+         *  @return a constant iterator to the playlist element if it exists,
+         *          or playlist->end() if it does not.
+         */
+        const_iterator
+        find(Ptr<const time_duration>::Ref relativeOffset) const
+                                                throw ()
+        {
+            return elementList->find(*relativeOffset);
+        }
+
+        /**
          *  Add a new audio clip to the playlist.
          *
+         *  @param audioClip the new audio clip to be added
          *  @param relativeOffset the start of the audio clip, relative
          *             to the start of the playlist
-         *  @param audioClip the new audio clip to be added
+         *  @param fadeInfo the fade in / fade out info (optional)
          *  @exception std::invalid_argument if the playlist already contains
          *             an audio clip with the same relative offset
          */
          void
          addAudioClip(Ptr<AudioClip>::Ref      audioClip,
-                      Ptr<time_duration>::Ref  relativeOffset)
+                      Ptr<time_duration>::Ref  relativeOffset,
+                      Ptr<FadeInfo>::Ref       fadeInfo
+                                               = Ptr<FadeInfo>::Ref())
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Set the fade in / fade out info for a playlist element.
+         *
+         *  @param relativeOffset the start of the playlist element, relative
+         *             to the start of the playlist
+         *  @param fadeInfo the new fade in / fade out info
+         *  @exception std::invalid_argument if there is no playlist element
+         *             at the given relative offset
+         */
+         void
+         setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
+                     Ptr<FadeInfo>::Ref       fadeInfo)
                                                 throw (std::invalid_argument);
 
         /**

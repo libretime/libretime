@@ -5,20 +5,27 @@
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
 <!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
 
-<!ELEMENT playlistElement (audioClip) >
+<!ELEMENT playlistElement (audioClip, fadeInfo?) >
 <!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
 <!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
 
 <!ELEMENT audioClip EMPTY >
 <!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+
+<!ELEMENT fadeInfo EMPTY >
+<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
 ]>
 
 <playlist id="1" playlength="01:30:00.000">
-    <playlistElement id="101" relativeOffset="0" >
-        <audioClip id="10001" playlength="01:00:00.000"/>
+    <playlistElement id="101"    relativeOffset="0" >
+        <audioClip   id="10001"  playlength="01:00:00.000"/>
     </playlistElement>
-    <playlistElement id="102" relativeOffset="01:00:00.000" >
-        <audioClip id="10002"  playlength="00:30:00.000"/> 
+    <playlistElement id="102"    relativeOffset="01:00:00.000" >
+        <audioClip   id="10002"  playlength="00:30:00.000"/> 
+        <fadeInfo    id="9901"   fadeIn="00:00:02.000" 
+                                 fadeOut="00:00:01.500000" />
     </playlistElement>
 </playlist>

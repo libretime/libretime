@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class XmlRpcTools
 {
@@ -118,6 +118,18 @@ class XmlRpcTools
          *  structure.
          */
         static const std::string        playtimeName;
+
+        /**
+         *  The name of the fade in member in the XML-RPC parameter
+         *  structure.
+         */
+        static const std::string        fadeInName;
+
+        /**
+         *  The name of the fade out member in the XML-RPC parameter
+         *  structure.
+         */
+        static const std::string        fadeOutName;
 
         /**
          *  Convert a boost::posix_time::ptime to an XmlRpcValue
@@ -304,6 +316,30 @@ class XmlRpcTools
                                                 throw (std::invalid_argument);
 
         /**
+         *  Extract the fade in time from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a time_duration that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no fadeIn
+         *             member in xmlRpcValue
+         */
+        static Ptr<time_duration>::Ref
+        extractFadeIn(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the fade out time from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a time_duration that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no fadeOut
+         *             member in xmlRpcValue
+         */
+        static Ptr<time_duration>::Ref
+        extractFadeOut(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
          *  Convert a vector of ScheduleEntries to an XML-RPC return value.
          *
          *  @param scheduleEntries a list of ScheduleEntries.
@@ -337,7 +373,7 @@ class XmlRpcTools
          */
         static void
         playLogVectorToXmlRpcValue(
-            Ptr<const std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
+            Ptr<const std::vector<Ptr<PlayLogEntry>::Ref> >::Ref
                                     playLogVector,
             XmlRpc::XmlRpcValue   & returnValue)
                                                                      throw ();

@@ -14,7 +14,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.6 $</li>
+  <li>Version: $Revision: 1.7 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/model/Scheduler/index.html,v $</li>
 </ul>
@@ -3229,8 +3229,9 @@ with the Playlist is removed, with the related FadeInfo instances<br>
       <td valign="top"><b>Name</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">updateFadeInFadeOut<br>
-(audioClip : AudioClip,<br>
-playlist : Playlist)<br>
+(playlist : Playlist,<br>
+ relativeOffset: Time,<br>
+ fadeInfo: FadeInfo)<br>
 : void<br>
       </td>
     </tr>
@@ -3238,7 +3239,8 @@ playlist : Playlist)<br>
       <td valign="top"><b>Responsibilities</b><br>
       </td>
       <td colspan="2" rowspan="1" valign="top">Update the fade-in and
-fade-out parameters for an audio clip playing in a playlist.<br>
+fade-out parameters for an audio clip in a playlist, the start time of which
+is at a given relative offset.<br>
       </td>
     </tr>
     <tr>
@@ -3262,8 +3264,9 @@ fade-out parameters for an audio clip playing in a playlist.<br>
     <tr>
       <td valign="top"><b>Exceptions</b><br>
       </td>
-      <td colspan="2" rowspan="1" valign="top">If the Audio clip is not
-in the playlist, indicate as an error.<br>
+      <td colspan="2" rowspan="1" valign="top">If there is no Audio clip 
+with a start time at the given relative offset in the playlist, indicate 
+as an error.<br>
       </td>
     </tr>
     <tr>

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfoTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef PlaylistTest_h
-#define PlaylistTest_h
+#ifndef FadeInfoTest_h
+#define FadeInfoTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -55,28 +55,17 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the UploadPlaylistMetohd class.
+ *  Unit test for the FadeInfo class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
- *  @see Playlist
+ *  @version $Revision: 1.1 $
+ *  @see FadeInfo
  */
-class PlaylistTest : public CPPUNIT_NS::TestFixture
+class FadeInfoTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(PlaylistTest);
+    CPPUNIT_TEST_SUITE(FadeInfoTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(lockTest);
-    CPPUNIT_TEST(audioClipTest);
-    CPPUNIT_TEST(savedCopyTest);
-    CPPUNIT_TEST(fadeInfoTest);
     CPPUNIT_TEST_SUITE_END();
-
-    private:
-
-        /**
-         *  A playlist to play with.
-         */
-        Ptr<Playlist>::Ref  playlist;
 
     protected:
 
@@ -87,38 +76,6 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the locks.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        lockTest(void)                          throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Trying to add a new audio clip.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        audioClipTest(void)                  throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the "save/revert to current state" mechanism.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        savedCopyTest(void)                  throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Trying to add a new fade info.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        fadeInfoTest(void)                   throw (CPPUNIT_NS::Exception);
 
 
     public:
@@ -146,5 +103,5 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // PlaylistTest_h
+#endif // FadeInfoTest_h
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,7 +149,8 @@ Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
  *----------------------------------------------------------------------------*/
 void
 Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
-                       Ptr<time_duration>::Ref  relativeOffset)
+                       Ptr<time_duration>::Ref  relativeOffset,
+                       Ptr<FadeInfo>::Ref       fadeInfo)
                                             throw (std::invalid_argument)
 {
     if (elementList->find(*relativeOffset) != elementList->end()) {
@@ -158,9 +159,28 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
     }
 
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
-                                   relativeOffset, audioClip));
+                                   relativeOffset, audioClip, fadeInfo));
 
     (*elementList)[*relativeOffset] = playlistElement;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the fade in / fade out info of a playlist element.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
+                      Ptr<FadeInfo>::Ref       fadeInfo)
+                                            throw (std::invalid_argument)
+{
+    PlaylistElementListType::iterator it = elementList->find(*relativeOffset);
+
+    if (it == elementList->end()) {
+        std::string eMsg = "no audio clip at this relative offset";
+        throw std::invalid_argument(eMsg);
+    }
+
+    it->second->setFadeInfo(fadeInfo);
 }
 
 

@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethod.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -42,11 +42,15 @@
 
 #include <string>
 
-#include "PlayLogInterface.h"
-#include "PlayLogFactory.h"
+#include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Core/Playlist.h"
+#include "LiveSupport/Core/FadeInfo.h"
+#include "ScheduleInterface.h"
+#include "ScheduleFactory.h"
 #include "XmlRpcTools.h"
 
-#include "GeneratePlayReportMethod.h"
+#include "UpdateFadeInFadeOutMethod.h"
 
 
 using namespace boost;
@@ -54,6 +58,7 @@ using namespace boost::posix_time;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Storage;
 
 using namespace LiveSupport::Scheduler;
 
@@ -65,12 +70,13 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of this XML-RPC method.
  *----------------------------------------------------------------------------*/
-const std::string GeneratePlayReportMethod::methodName = "generatePlayReport";
+const std::string UpdateFadeInFadeOutMethod::methodName 
+                                                = "updateFadeInFadeOut";
 
 /*------------------------------------------------------------------------------
  *  The ID of this method for error reporting purposes.
  *----------------------------------------------------------------------------*/
-const int GeneratePlayReportMethod::errorId = 1500;
+const int UpdateFadeInFadeOutMethod::errorId = 1600;
 
 
 /* ===============================================  local function prototypes */
@@ -81,20 +87,21 @@ const int GeneratePlayReportMethod::errorId = 1500;
 /*------------------------------------------------------------------------------
  *  Construct the method and register it right away.
  *----------------------------------------------------------------------------*/
-GeneratePlayReportMethod :: GeneratePlayReportMethod (
+UpdateFadeInFadeOutMethod :: UpdateFadeInFadeOutMethod (
                         Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)   throw()
     : XmlRpc::XmlRpcServerMethod(methodName, xmlRpcServer.get())
 {
 }
 
-
+ 
 /*------------------------------------------------------------------------------
  *  Execute the stop XML-RPC function call.
  *----------------------------------------------------------------------------*/
 void
-GeneratePlayReportMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
-                                    XmlRpc::XmlRpcValue  & returnValue)
-                                                                    throw ()
+UpdateFadeInFadeOutMethod :: execute(
+                                XmlRpc::XmlRpcValue  & rootParameter,
+                                XmlRpc::XmlRpcValue  & returnValue)
+                                                                       throw ()
 {
     if (!rootParameter.valid() || rootParameter.size() != 1) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
@@ -103,31 +110,81 @@ GeneratePlayReportMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     }
     XmlRpc::XmlRpcValue      parameters = rootParameter[0];
 
-    Ptr<ptime>::Ref     fromTime;
-    try {
-        fromTime = XmlRpcTools::extractFromTime(parameters);
+    Ptr<UniqueId>::Ref       playlistId;
+    try{
+        playlistId = XmlRpcTools::extractPlaylistId(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+2, "missing or invalid 'from' argument", 
+        XmlRpcTools::markError(errorId+2, 
+                               "missing playlist ID argument",
+                                returnValue);
+        return;
+    }
+
+    Ptr<time_duration>::Ref  relativeOffset;
+    try{
+        relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+3, 
+                               "missing relative offset argument",
                                returnValue);
         return;
     }
 
-    Ptr<ptime>::Ref     toTime;
-    try {
-        toTime = XmlRpcTools::extractToTime(parameters);
+    Ptr<time_duration>::Ref  fadeIn;
+    try{
+        fadeIn = XmlRpcTools::extractFadeIn(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, "missing or invalid 'to' argument", 
+        XmlRpcTools::markError(errorId+4, 
+                               "missing fade in argument",
                                returnValue);
         return;
     }
 
-    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
-    Ptr<PlayLogInterface>::Ref  playLog = plf->getPlayLog();
+    Ptr<time_duration>::Ref  fadeOut;
+    try{
+        fadeOut = XmlRpcTools::extractFadeOut(parameters);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+5, 
+                               "missing fade out argument",
+                               returnValue);
+        return;
+    }
 
-    Ptr<std::vector<Ptr<PlayLogEntry>::Ref> >::Ref  playLogVector
-                                = playLog->getPlayLogEntries(fromTime, toTime);
+    Ptr<StorageClientFactory>::Ref     scf;
+    Ptr<StorageClientInterface>::Ref   storage;
+    scf     = StorageClientFactory::getInstance();
+    storage = scf->getStorageClient();
+ 
+    Ptr<Playlist>::Ref playlist;
+    try {
+        playlist = storage->getPlaylist(playlistId);
+    }
+    catch (std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+6, "playlist does not exist", 
+                               returnValue);
+        return;
+    }
 
-    XmlRpcTools::playLogVectorToXmlRpcValue(playLogVector, returnValue);
+    if (!playlist->canBeEdited()) {
+        XmlRpcTools::markError(errorId+7, 
+                               "playlist has not been opened for editing", 
+                               returnValue);
+        return;
+    }
+
+    Ptr<FadeInfo>::Ref  fadeInfo(new FadeInfo(fadeIn, fadeOut));
+    try {                                        // and finally, the beef
+        playlist->setFadeInfo(relativeOffset, fadeInfo);
+    }
+    catch(std::invalid_argument &e) {
+        XmlRpcTools::markError(errorId+8,
+                               "no audio clip at the specified "
+                               "relative offset",
+                               returnValue);
+        return;
+    }
 }
