@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/EventScheduler.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,6 +73,16 @@ void
 LiveSupport::EventScheduler::EventScheduler :: start(void)      throw ()
 {
     thread->start();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the events.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport::EventScheduler::EventScheduler :: update(void)     throw ()
+{
+    thread->signal(SchedulerThread::UpdateSignal);
 }
 
 

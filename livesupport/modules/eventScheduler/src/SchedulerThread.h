@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,10 +67,18 @@ using namespace LiveSupport::Core;
  *  The main, executing thread of the scheduler.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class SchedulerThread : public virtual RunnableInterface
 {
+    public:
+        /**
+         *  Enumerated type for the signals accepted by this object.
+         *
+         *  @see #signal
+         */
+        typedef enum {  UpdateSignal }  SignalTypes;
+
     private:
         /**
          *  The event container, to get the events from.
@@ -176,6 +184,20 @@ class SchedulerThread : public virtual RunnableInterface
          */
         virtual void
         run(void)                                       throw ();
+
+        /**
+         *  Accept a signal.
+         *  Currently supported signal values are:
+         *  <ul>
+         *      <li>UpdateSignal - re-read the event container</li>
+         *  </ul>
+         *
+         *  @param signalId a value from SignalTypes.
+         *  @see #signalTypes
+         */
+        virtual void
+        signal(int signalId)                            throw ();
+        
 
         /**
          *  Signal the thread to stop, gracefully.

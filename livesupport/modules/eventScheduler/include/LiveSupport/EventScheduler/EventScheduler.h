@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/include/LiveSupport/EventScheduler/EventScheduler.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A generic event scheduler, for non-everlapping subsequent events.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class EventScheduler
 {
@@ -111,6 +111,14 @@ class EventScheduler
          */
         virtual void
         start(void)                                     throw ();
+
+        /**
+         *  Forces the scheduler to re-read its event container.
+         *  Call this if the events held in the event container have
+         *  changed.
+         */
+        virtual void
+        update(void)                                    throw ();
 
         /**
          *  Stop the event scheduler.

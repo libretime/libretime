@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,4 +144,22 @@ SchedulerThread :: run(void)                                    throw ()
         }
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Accept a signal.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerThread :: signal(int signalId)                         throw ()
+{
+    switch (signalId) {
+        case UpdateSignal:
+            getNextEvent(TimeConversion::now());
+            break;
+
+        default:
+            break;
+    }
+}
+
 
