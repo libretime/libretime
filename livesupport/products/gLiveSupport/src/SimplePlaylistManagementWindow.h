@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,7 +83,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SimplePlaylistManagementWindow : public Gtk::Window,
                                        public LocalizedObject
@@ -96,7 +96,7 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -107,9 +107,19 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
                 Gtk::TreeModelColumn<Ptr<const UniqueId>::Ref>  idColumn;
 
                 /**
+                 *  The column for the start of the playlist entry.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         startColumn;
+
+                /**
                  *  The column for the title of the audio clip or playlist.
                  */
                 Gtk::TreeModelColumn<Glib::ustring>     titleColumn;
+
+                /**
+                 *  The column for the length of the playlist entry.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         lengthColumn;
 
                 /**
                  *  Constructor.
@@ -117,7 +127,9 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
                 ModelColumns(void)                  throw ()
                 {
                     add(idColumn);
+                    add(startColumn);
                     add(titleColumn);
+                    add(lengthColumn);
                 }
         };
 

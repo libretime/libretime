@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,8 +92,12 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     // Add the TreeView's view columns:
     try {
+        entriesView->append_column(*getResourceUstring("startColumnLabel"),
+                                   modelColumns.startColumn);
         entriesView->append_column(*getResourceUstring("titleColumnLabel"),
                                    modelColumns.titleColumn);
+        entriesView->append_column(*getResourceUstring("lengthColumnLabel"),
+                                   modelColumns.lengthColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -198,7 +202,11 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
         Gtk::TreeModel::Row        row           = *(entriesModel->append());
 
         row[modelColumns.idColumn]    = playable->getId();
+        row[modelColumns.startColumn] =
+                          to_simple_string(*playlistElem->getRelativeOffset());
         row[modelColumns.titleColumn] = *playable->getTitle();
+        row[modelColumns.lengthColumn]   =
+                          to_simple_string(*playable->getPlaylength());
 
         it++;
     }

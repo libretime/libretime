@@ -79,7 +79,9 @@ root:table
     {
         windowTitle:string            { "LiveSupport Simple Playlist Management Window" }
 
+        startColumnLabel:string       { "start" }
         titleColumnLabel:string       { "title" }
+        lengthColumnLabel:string      { "length" }
         nameLabel:string              { "name" }
         saveButtonLabel:string        { "save" }
         closeButtonLabel:string       { "close" }

@@ -79,7 +79,9 @@ hu:table
     {
         windowTitle:string            { "LiveSupport Egyszerű Playlist Szerkesztő Ablak" }
 
+        startColumnLabel:string       { "kezdet" }
         titleColumnLabel:string       { "cím" }
+        lengthColumnLabel:string      { "hossz" }
         nameLabel:string              { "név" }
         saveButtonLabel:string        { "elment" }
         closeButtonLabel:string       { "bezár" }
