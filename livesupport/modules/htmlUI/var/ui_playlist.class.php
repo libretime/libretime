@@ -110,10 +110,10 @@ class uiPlaylist
         return $this->activeId;
     }
 
-    function reportLookedPL($setMsg)
+    function reportLookedPL($setMsg=FALSE)
     {
         if(is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
-            if ($setMsg === TRUE) $this->Base->_retMsg('Found looked Playlist');
+            if ($setMsg == TRUE) $this->Base->_retMsg('Found looked Playlist');
             return TRUE;
         }
         return FALSE;
@@ -351,6 +351,66 @@ class uiPlaylist
         $form->accept($renderer);
         return $renderer->toArray();
     }
+
+
+    function metaDataForm($get=TRUE)
+    {
+        include dirname(__FILE__).'/formmask/metadata.inc.php';
+        foreach ($mask['playlist'] as $k=>$v) {
+            $mask['playlist'][$k]['element']    = $this->Base->_formElementEncode($v['element']);
+
+            ## recive data from GreenBox
+            if ($get) {
+                $mask['playlist'][$k]['default'] = $this->Base->_getMDataValue($this->activeId, $v['element']);
+            }
+
+            ## get data from parameter
+            if (is_array($data)) {
+                $mask['playlist'][$k]['default'] = $data[strtr($v['element'], '_', '.')];
+            }
+        }
+        $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $this->Base->_parseArr2Form($form, $mask['basics']);
+        $this->Base->_parseArr2Form($form, $mask['playlist']);
+        $this->Base->_parseArr2Form($form, $mask['buttons']);
+        $form->setConstants(array('act'  => 'PL.editMetaData',
+                                  'id'   => $this->activeId));
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        $output['main'] = $renderer->toArray();
+
+        $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
+        $this->Base->_parseArr2Form($form, $mask['langswitch']);
+        $output['langswitch'] = $form->toHTML();
+
+        #print_r($output);
+        return $output;
+    }
+
+
+    function editMetaData(&$formdata)
+    {
+        include dirname(__FILE__).'/formmask/metadata.inc.php';
+
+        ## first remove old entrys
+        #$this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
+
+
+        foreach ($mask['playlist'] as $k=>$v) {
+            $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;
+        }
+
+        $data = $this->Base->_dateArr2Str($mData);
+        foreach ($data as $key=>$val) {
+            $r = $this->Base->gb->setMDataValue($this->activeId, $key, $this->Base->sessid, $val);
+            if (PEAR::isError($r)) {
+                $this->Base->_retMsg('Unable to set $1: $2', $key, $val);
+            }
+        }
+        $this->Base->_retMsg('Metadata saved');
+        $this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=".$this->activeId;
+    }
+
 
     function _plTimeToSecs($plt, $length=4)
     {

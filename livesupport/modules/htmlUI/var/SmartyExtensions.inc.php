@@ -1,8 +1,8 @@
 <?php
 $Smarty->register_object('UIBROWSER', $uiBrowser);
-$Smarty->register_object('PL',        $uiBrowser->PLAYLIST);
 $Smarty->register_object('BROWSE',    $uiBrowser->BROWSE);
 $Smarty->register_object('SEARCH',    $uiBrowser->SEARCH);
+$Smarty->assign_by_ref  ('PL',        $uiBrowser->PLAYLIST);  
 $Smarty->assign_by_ref  ('SCHEDULER', $uiBrowser->SCHEDULER);
 
 $Smarty->register_function('str_repeat', 'S_str_repeat');

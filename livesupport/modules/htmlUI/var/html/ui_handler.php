@@ -226,6 +226,10 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReload();
     break;
 
+    case "PL.editMetaData":
+        $uiHandler->PLAYLIST->editMetaData($_REQUEST);
+    break;
+
     case "SCHEDULER.set":
         $uiHandler->SCHEDULER->set($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
@@ -233,7 +237,7 @@ switch($_REQUEST['act']){
 
     case "SCHEDULER.uploadPlaylistMethod":
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
-        $uiHandler->SCHEDULER->setReload(); 
+        $uiHandler->SCHEDULER->setReload();
     break;
 
     default:

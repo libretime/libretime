@@ -4,7 +4,6 @@ $mask = array(
         array(
             'element' => 'act',
             'type'    => 'hidden',
-            'constant'=> 'editMetaData'
         ),
         array(
             'element' => 'id',
@@ -502,6 +501,35 @@ $mask = array(
                 'label'     => 'Copyright',
             ),
         )
+    ),
+    'playlist'  => array(
+            array(
+                'element'   => 'dc:title',
+                'type'      => 'text',
+                'label'     => 'Title',
+                'required'  => TRUE,
+                'id3'       => 'Title'
+            ),
+            array(
+                'element'   => 'dc:creator',
+                'type'      => 'text',
+                'label'     => 'Creator',
+                'required'  => TRUE,
+                'id3'       => 'Artist'
+            ),
+            array(
+                'element'   => 'dcterms:extent',
+                'type'      => 'text',
+                'label'     => 'Length',
+                'attributes'=> array('readonly' => 'on'),
+                'id3'       => FALSE
+            ),
+            array(
+                'element'   => 'dc:description',
+                'type'      => 'textarea',
+                'label'     => 'Description',
+                'id3'       => 'Comment'
+            ),
     )
 );
 ?>

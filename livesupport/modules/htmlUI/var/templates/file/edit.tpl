@@ -10,7 +10,7 @@
 {$editItem.type|capitalize}
 </h4>
 
-{if $editItem.type == 'audioclip'}
+{if $editItem.type == 'audioclip' || $editItem.type == 'file'}
 <input type="button" onClick="showData()" value="Data">
 <input type="button" onClick="showMData()" value="MData">
 <div id="div_Data">

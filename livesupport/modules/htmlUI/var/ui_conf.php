@@ -32,7 +32,7 @@ define('UI_BROWSE_SESSNAME',      'L_BROWSE');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',      'dc:title');
-define('UI_MDATA_KEY_ARTIST',     'dc:creator');
+define('UI_MDATA_KEY_CREATOR',    'dc:creator');
 define('UI_MDATA_KEY_DURATION',   'dcterms:extent');
 define('UI_MDATA_KEY_URL',        'ls:url');
 

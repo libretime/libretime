@@ -1,8 +1,9 @@
+<form name="PL">
+<table border="0">
 <tr><th colspan="4">active Playlist: {$PL.children.0.children.0.content}</th></tr>
 <tr align="center" style="background-color: {cycle values='#eeeeee, #dadada'}"><td></td><td>Title</td><td>Duration</td><td>Type</td></tr>
 
-{PL->getFlat assign='FLAT'}
-{foreach from=$FLAT key='pos' item='i'}
+{foreach from=$PL->getFlat() key='pos' item='i'}
     <!-- {$n++} -->
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
@@ -42,5 +43,7 @@
     <td><input type="button" value="Save" onClick="hpopup('{$UI_HANDLER}?act=PL.save')"></td>
     <td><input type="button" value="Revert" onClick="hpopup('{$UI_HANDLER}?act=PL.revert')"></td>
     <td><input type="button" value="Release" onClick="hpopup('{$UI_HANDLER}?act=PL.release')"></td>
-    <td><input type="button" value="Delete" onClick="hpopup('{$UI_HANDLER}?act=PL.delete')"></td>
+    <td><input type="button" value="MData" onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'"></td>
 </tr>
+</table>
+</form>

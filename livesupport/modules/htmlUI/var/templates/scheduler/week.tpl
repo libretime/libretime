@@ -7,7 +7,7 @@
 <tr>
     <td rowspan="2"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=--')"><<</a> </td>
     {foreach from=$SCHEDULER->Week item="_Weekday"}
-        <td>{$_Weekday.label.full}</td>
+        <th>{$_Weekday.label.full}</th>
     {/foreach}
     <td rowspan="2"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=%2B%2B')">>></a></td>
 </tr>
@@ -17,29 +17,29 @@
     <td valign="top">
         <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')"><b>{$_Day.day}</b></a>
 
-            {assign var="_oneday" value=$SCHEDULER->getDayTiming($_Day.year, $_Day.month, $_Day.day)}
-            <table border="0" cellspacing="0" cellpadding="0">
-
-            {foreach from=$_oneday item="i"}
-                <tr height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}" style="font-family: monospace" valign="top">
-                {if is_array($i.entry)}
-                    <td bgcolor="pink" width="80" height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}">
-                    {if $i.length/$_divisor > $_minwidth}
-                    <small>
-                    Start:{$i.entry.start|regex_replace:"/[0-9]+T/":""}
-                    <br>
-                    End:&nbsp;&nbsp;{$i.entry.end|regex_replace:"/[0-9]+T/":""}
-                    </small>
-                    {/if}
-                    </td>
-                {else}
-                    <td bgcolor="lightblue" width="80" height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}">
-                    </td>
+        {assign var="_oneday" value=$SCHEDULER->getDayTiming($_Day.year, $_Day.month, $_Day.day)}
+        <table border="0" cellspacing="0" cellpadding="0">
+        {foreach from=$_oneday item="i"}
+            <tr height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}" style="font-family: monospace" valign="top">
+            {if is_array($i.entry)}
+                <td bgcolor="#ffcacb" width="100" height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}" onMouseover="" onMouseout="">
+                {if $i.length/$_divisor > $_minwidth}
+                <small>
+                <b>{$i.entry.title}</b>
+                <br>
+                {$i.entry.start|regex_replace:"/[0-9]+T/":""|truncate:5:""}-{$i.entry.end|regex_replace:"/[0-9]+T/":""|truncate:5:""}
+                <br>
+                {$i.entry.creator}
+                </small>
                 {/if}
-                </tr>
-            {/foreach}
-
-            </table>
+                </td>
+            {else}
+                <td bgcolor="#97bacf" width="100" height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}">
+                </td>
+            {/if}
+            </tr>
+        {/foreach}
+        </table>
 
     </td>
 {/foreach}

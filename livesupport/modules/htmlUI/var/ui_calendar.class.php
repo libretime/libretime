@@ -99,7 +99,8 @@ class uiCalendar
         $Day = new Calendar_Day ($this->curr['year'], $this->curr['month'], $this->curr['day']);
         $Day->build();
         while ($Hour = $Day->fetch()) {
-            $this->Day[] = array('hour'         => $Hour->thisHour());
+            $this->Day[] = array('hour'         => $Hour->thisHour(),
+                                 'timestamp'    => $Hour->thisHour(TRUE));
         }
 
     }

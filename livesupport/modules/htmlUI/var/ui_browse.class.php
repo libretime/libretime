@@ -63,12 +63,10 @@ class uiBrowse
         }
 
         ## just to change limit and file-type
-        $form = new HTML_QuickForm('shitcher', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        #$mask2['browse_global']['limit']['default'] = $this->criteria['limit'];
-        #$mask2['browse_global']['filetype']['default'] = $this->criteria['filetype'];
+        $form = new HTML_QuickForm('switch', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask2['browse_global']);
         $form->setDefaults(array('limit'    => $this->criteria['limit'],
-                                'filetype' => $this->criteria['filetype']));
+                                 'filetype' => $this->criteria['filetype']));
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['global']['dynform'] = $renderer->toArray();

@@ -307,7 +307,7 @@ class uiBase
         $data = array('id'          => $id,
                       'gunid'       => $this->gb->_gunidFromId($id),
                       'title'       => $this->_getMDataValue($id, UI_MDATA_KEY_TITLE),
-                      'creator'     => $this->_getMDataValue($id, UI_MDATA_KEY_ARTIST),
+                      'creator'     => $this->_getMDataValue($id, UI_MDATA_KEY_CREATOR),
                       'duration'    => $this->_niceTime($this->_getMDataValue($id, UI_MDATA_KEY_DURATION)),
                       'type'        => $this->gb->getFileType($id),
                 );
@@ -336,7 +336,7 @@ class uiBase
 
 
     function _getMDataValue($id, $key)
-    {
+    {   
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid))) {
             $value = current($arr);
             return $value['value'];

@@ -289,7 +289,7 @@ class uiBrowser extends uiBase {
     function addGroupMember($id)
     {
         $g = $this->groupMembers($id);
-        foreach($g['subj'] as $s) {  
+        foreach($g['subj'] as $s) {
             $this->logins[($s['login'])]=$s['login'];
         }
         $form = new HTML_QuickForm('addGroupMember', UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -379,11 +379,10 @@ class uiBrowser extends uiBase {
 
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->_parseArr2Form($form, $mask['basics']);
-        $form->setConstants( array('id'     => $id,
-                                   #!!!!!'langid' => array_pop($this->gb->getMDataValue($id, 'langid', $this->sessid))
-                                   'langid'  => 'en'
-                             )
-                           );
+        $form->setConstants(array('act'     => 'editMetaData',
+                                  'id'      => $id,
+                                  #!!!!!'langid' => array_pop($this->gb->getMDataValue($id, 'langid', $this->sessid))
+                                  'langid'  => 'en'));
 
         ## convert element names to be unique over different forms-parts, add javascript to spread values over parts, add existing values from database
         foreach ($mask['pages'] as $key=>$val) {

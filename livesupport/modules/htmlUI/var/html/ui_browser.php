@@ -159,6 +159,11 @@ if ($uiBrowser->userid) {
         $Smarty->assign('PL_simpleManagement', TRUE);
     break;
 
+    case "PL.editMetaData":
+        $Smarty->assign('PL_editMetaData', TRUE);
+        $Smarty->assign('PL_simpleManagement', TRUE);
+    break;
+
     case "SCHEDULER":
         $Smarty->assign('showScheduler', TRUE);
     break;

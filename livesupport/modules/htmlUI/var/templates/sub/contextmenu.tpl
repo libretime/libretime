@@ -1,4 +1,4 @@
-{PL->getActiveId assign=_PL_activeId}
+{assign var="_PL_activeId" value=$PL->getActiveId()}
 
 onMouseOver="highlight()"
 onMouseOut="darklight()"
