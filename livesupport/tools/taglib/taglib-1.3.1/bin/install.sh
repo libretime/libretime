@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/taglib/taglib-1.3.1/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ cd taglib-api
 doxygen taglib.doxygen
 cd ..
 mkdir -p $docdir
-cp -af taglib-api/* $docdir
+cp -pPRf taglib-api/* $docdir
 
 cd $basedir
 rm -rf tmp

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -388,27 +388,27 @@ mkdir -p $install_var
 #  Copy the PHP files
 #-------------------------------------------------------------------------------
 mkdir $install_var/getid3
-cp -a $modules_dir/getid3/var $install_var/getid3
+cp -pPR $modules_dir/getid3/var $install_var/getid3
 
 mkdir $install_var/alib
-cp -a $modules_dir/alib/var $install_var/alib
+cp -pPR $modules_dir/alib/var $install_var/alib
 
 mkdir $install_var/storageServer
-cp -a $modules_dir/storageServer/var $install_var/storageServer
+cp -pPR $modules_dir/storageServer/var $install_var/storageServer
 
 mkdir $install_var/archiveServer
-cp -a $modules_dir/archiveServer/var $install_var/archiveServer
+cp -pPR $modules_dir/archiveServer/var $install_var/archiveServer
 
 mkdir $install_var/htmlUI
-cp -a $modules_dir/htmlUI/var $install_var/htmlUI
+cp -pPR $modules_dir/htmlUI/var $install_var/htmlUI
 
 
 #-------------------------------------------------------------------------------
 #  Copy scheduler related files
 #-------------------------------------------------------------------------------
-cp -a $usrdir/lib/* $install_lib
-cp -a $products_dir/scheduler/tmp/scheduler $install_bin
-cp -a $products_dir/scheduler/bin/scheduler.sh $install_bin
+cp -pPR $usrdir/lib/* $install_lib
+cp -pPR $products_dir/scheduler/tmp/scheduler $install_bin
+cp -pPR $products_dir/scheduler/bin/scheduler.sh $install_bin
 
 
 #-------------------------------------------------------------------------------

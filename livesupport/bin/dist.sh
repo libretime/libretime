@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -140,16 +140,16 @@ mkdir -p $products_tmpdir
 #-------------------------------------------------------------------------------
 #  Copy the modules and products
 #-------------------------------------------------------------------------------
-cp -a $modules_dir/* $modules_tmpdir
-cp -a $products_dir/* $products_tmpdir
+cp -pPR $modules_dir/* $modules_tmpdir
+cp -pPR $products_dir/* $products_tmpdir
 
 
 #-------------------------------------------------------------------------------
 #  Copy additional files
 #-------------------------------------------------------------------------------
-cp -a $docdir $ls_tmpdir
-cp -a $etcdir $ls_tmpdir
-cp -a README Makefile $ls_tmpdir
+cp -pPR $docdir $ls_tmpdir
+cp -pPR $etcdir $ls_tmpdir
+cp -pPR README Makefile $ls_tmpdir
 
 
 #-------------------------------------------------------------------------------
@@ -189,40 +189,40 @@ mkdir -p $tools_tmpdir
 #  Copy the tools sources
 #-------------------------------------------------------------------------------
 mkdir -p $boost_tmpdir
-cp -a $boost_dir/$boost_version $boost_tmpdir
+cp -pPR $boost_dir/$boost_version $boost_tmpdir
 
 mkdir -p $libxmlxx_tmpdir
-cp -a $libxmlxx_dir/$libxmlxx_version $libxmlxx_tmpdir
+cp -pPR $libxmlxx_dir/$libxmlxx_version $libxmlxx_tmpdir
 
 mkdir -p $cxxunit_tmpdir
-cp -a $cxxunit_dir/$cxxunit_version $cxxunit_tmpdir
+cp -pPR $cxxunit_dir/$cxxunit_version $cxxunit_tmpdir
 
 mkdir -p $libodbcxx_tmpdir
-cp -a $libodbcxx_dir/$libodbcxx_version $libodbcxx_tmpdir
+cp -pPR $libodbcxx_dir/$libodbcxx_version $libodbcxx_tmpdir
 
 mkdir -p $xmlrpcxx_tmpdir
-cp -a $xmlrpcxx_dir/$xmlrpcxx_version $xmlrpcxx_tmpdir
+cp -pPR $xmlrpcxx_dir/$xmlrpcxx_version $xmlrpcxx_tmpdir
 
 mkdir -p $lcov_tmpdir
-cp -a $lcov_dir/$lcov_version $lcov_tmpdir
+cp -pPR $lcov_dir/$lcov_version $lcov_tmpdir
 
 mkdir -p $helix_tmpdir
-cp -a $helix_dir/$helix_version $helix_tmpdir
+cp -pPR $helix_dir/$helix_version $helix_tmpdir
 
 mkdir -p $gtk_tmpdir
-cp -a $gtk_dir/$gtk_version $gtk_tmpdir
+cp -pPR $gtk_dir/$gtk_version $gtk_tmpdir
 
 mkdir -p $gtkmm_tmpdir
-cp -a $gtkmm_dir/$gtkmm_version $gtkmm_tmpdir
+cp -pPR $gtkmm_dir/$gtkmm_version $gtkmm_tmpdir
 
 mkdir -p $icu_tmpdir
-cp -a $icu_dir/$icu_version $icu_tmpdir
+cp -pPR $icu_dir/$icu_version $icu_tmpdir
 
 mkdir -p $curl_tmpdir
-cp -a $curl_dir/$curl_version $curl_tmpdir
+cp -pPR $curl_dir/$curl_version $curl_tmpdir
 
 mkdir -p $taglib_tmpdir
-cp -a $taglib_dir/$taglib_version $taglib_tmpdir
+cp -pPR $taglib_dir/$taglib_version $taglib_tmpdir
 
 
 #-------------------------------------------------------------------------------

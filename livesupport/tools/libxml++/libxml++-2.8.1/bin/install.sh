@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/libxml++/libxml++-2.8.1/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ make install
 # autoconf thing doesn't :(
 make -C docs/reference
 mkdir -p $docdir
-cp -a docs/reference/2.8 $docdir
+cp -pPR docs/reference/2.8 $docdir
 
 cd $basedir
 rm -rf tmp

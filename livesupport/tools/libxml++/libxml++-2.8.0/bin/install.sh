@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/libxml++/libxml++-2.8.0/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ make install
 # autoconf thing doesn't :(
 make -C docs/reference
 mkdir -p $docdir
-cp -a docs/reference/2.8 $docdir
+cp -pPR docs/reference/2.8 $docdir
 
 cd $basedir
 rm -rf tmp
