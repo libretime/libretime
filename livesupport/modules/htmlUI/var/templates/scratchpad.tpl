@@ -31,14 +31,14 @@
                         {/if}
                     </td>
                     <td>{$i.duration}</td>
-                    <td style="border: 0">{$i.type|truncate:8}</td>
+                    <td style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type}" /></td>
                 </tr>
                 {/foreach}
                 <!-- end item -->
             </table>
         </div>
 
-        <div class="footer" style="width:250px;">
+        <div class="footer" style="width:255px;">
             <select name="SP_multiaction">
                 <option>##Multiple Action:##</option>
                 <option onClick="collector_submit('SP', 'SP.removeItem')">##Remove##</option>

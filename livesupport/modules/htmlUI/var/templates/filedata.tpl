@@ -1,4 +1,3 @@
-{* Smarty template *}
 <div id="filedata">
 {include file="sub/x.tpl"}
 <center>

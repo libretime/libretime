@@ -27,7 +27,7 @@ $ui_fmask = array(
             'element'   => 'stationName',
             'isPref'    => TRUE,
             'type'      => 'text',
-            'label'     => 'Staion Name',
+            'label'     => 'Station Name',
             'required'  => TRUE
         ),
         array(

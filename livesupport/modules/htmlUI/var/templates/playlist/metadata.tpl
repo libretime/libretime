@@ -1,3 +1,5 @@
+<div class="container_elements" style="width: 607px;">
+<h1>##Playlist Metadata##</h1>
 {assign var="_form" value=$PL->metaDataForm($_PL.curr_langid)}
 
 {assign var="dynform" value=$_form.langswitch}
@@ -5,7 +7,7 @@
 
 {assign var="dynform" value=$_form.main}
 {include file="sub/dynForm_plain.tpl"}
-
+</div>
 <script type="text/javascript">
 {literal}
 
