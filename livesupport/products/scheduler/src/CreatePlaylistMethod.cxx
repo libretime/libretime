@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,6 +70,11 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string CreatePlaylistMethod::methodName = "createPlaylist";
 
+/*------------------------------------------------------------------------------
+ *  The ID of this method for error reporting purposes.
+ *----------------------------------------------------------------------------*/
+const int CreatePlaylistMethod::errorId = 2000;
+
 
 /* ===============================================  local function prototypes */
 
@@ -102,5 +107,11 @@ CreatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
  
     Ptr<Playlist>::Ref  playlist = storage->createPlaylist();
 
+    if (!playlist->setLockedForEditing(true)) {    // this should never happen
+        XmlRpcTools :: markError(errorId+1,
+                                 "could not open new playlist for editing",
+                                 returnValue);
+        return;
+    }
     XmlRpcTools :: playlistToXmlRpcValue(playlist, returnValue);
 }

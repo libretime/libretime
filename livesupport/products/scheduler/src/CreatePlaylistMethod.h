@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,9 +75,15 @@ using namespace LiveSupport::Core;
  *      <li>playlength - int - the playlist length of the playlist, in seconds
  *      </li>
  *  </ul>
+ *  If there is an error, an XML-RPC structure is returned, with the following
+ *  fields:
+ *  <ul>
+ *      <li>errorCode - int - a numerical code for the error</li>
+ *      <li>errorMessage - string - a description of the error</li>
+ *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -87,6 +93,11 @@ class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
          *  XML-RPC server.
          */
         static const std::string        methodName;
+
+        /**
+         *  The ID of this method for error reporting purposes.
+         */
+        static const int                errorId;
 
 
     public:

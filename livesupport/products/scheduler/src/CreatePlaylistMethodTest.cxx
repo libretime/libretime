@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,8 +47,10 @@
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "CreatePlaylistMethod.h"
+#include "OpenPlaylistForEditingMethod.h"
 #include "CreatePlaylistMethodTest.h"
 
+using namespace XmlRpc;
 
 using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
@@ -138,11 +140,23 @@ void
 CreatePlaylistMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<CreatePlaylistMethod>::Ref  method(new CreatePlaylistMethod());
+    Ptr<XmlRpcServerMethod>::Ref    method(new CreatePlaylistMethod());
     XmlRpc::XmlRpcValue             parameter;
     XmlRpc::XmlRpcValue             result;
 
     method->execute(parameter, result);
     CPPUNIT_ASSERT(result.hasMember("id"));
     CPPUNIT_ASSERT(((int) result["playlength"]) == 0);
+
+    int playlistId = (int) result["id"];
+    method.reset(new OpenPlaylistForEditingMethod());
+    parameter.clear();
+    result.clear();
+    parameter["playlistId"] = playlistId;
+
+    // should not allow to open the same playlist for editing again
+    method->execute(parameter, result);
+    CPPUNIT_ASSERT((int) result["errorCode"] == 1005);
+    CPPUNIT_ASSERT((const std::string) result["errorMessage"] ==
+                                                    "playlist cannot be edited");
 }
