@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,6 +140,26 @@ Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
         std::string eMsg = "Two playlist elements at the same relative offset";
         throw std::invalid_argument(eMsg);
     }
+
+    (*elementList)[*relativeOffset] = playlistElement;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a new audio clip to the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::addAudioClip(Ptr<UniqueId>::Ref       audioClipId,
+                       Ptr<time_duration>::Ref  relativeOffset)
+                                            throw (std::invalid_argument)
+{
+    if (elementList->find(*relativeOffset) != elementList->end()) {
+        std::string eMsg = "Two playlist elements at the same relative offset";
+        throw std::invalid_argument(eMsg);
+    }
+
+    Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
+                                   relativeOffset, audioClipId));
 
     (*elementList)[*relativeOffset] = playlistElement;
 }

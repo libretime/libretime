@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class Playlist : public Configurable
 {
@@ -112,6 +112,17 @@ class Playlist : public Configurable
          *  The list of playlist elements for this playlist.
          */
         Ptr<PlaylistElementListType>::Ref  elementList;
+
+        /**
+         *  Add a new playlist element to the playlist.
+         *
+         *  @param playlistElement the new playlist element to be added
+         *  @exception std::invalid_argument if the playlist already contains
+         *             a playlist element with the same relative offset
+         */
+        void
+        addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
+                                                throw (std::invalid_argument);
 
 
     public:
@@ -196,9 +207,31 @@ class Playlist : public Configurable
         }
 
         /**
+         *  Test whether the playlist is locked for editing.
+         *
+         *  @return true if playlist is locked, false if not
+         */
+        bool
+        getIsLockedForEditing()                 throw ()
+        {
+            return isLockedForEditing;
+        }
+
+        /**
+         *  Test whether the playlist is locked for playing.
+         *
+         *  @return true if playlist is locked, false if not
+         */
+        bool
+        getIsLockedForPlaying()                 throw ()
+        {
+            return isLockedForPlaying;
+        }
+
+        /**
          *  Lock or unlock the playlist for editing.
          *
-         *  @return true if successfully obtained or releasedlock;
+         *  @return true if successfully obtained or released lock;
          *          false otherwise.
          */
         bool
@@ -208,24 +241,12 @@ class Playlist : public Configurable
         /**
          *  Lock or unlock the playlist for playing.
          *
-         *  @return true if successfully obtained or releasedlock;
+         *  @return true if successfully obtained or released lock;
          *          false otherwise.
          */
         bool
         setLockedForPlaying(bool lockStatus)
                                                 throw ();
-
-        /**
-         *  Add a new playlist element to the playlist.
-         *
-         *  @param playlistElement the new playlist element to be added
-         *  @exception std::invalid_argument if the playlist already contains
-         *             a playlist element with the same relative offset as the
-         *             new playlist element
-         */
-        void
-        addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
-                                                throw (std::invalid_argument);
 
         /**
          *  The iterator type for this class.
@@ -252,6 +273,20 @@ class Playlist : public Configurable
         {
             return elementList->end();
         }
+
+        /**
+         *  Add a new audio clip to the playlist.
+         *
+         *  @param relativeOffset the start of the audio clip, relative
+         *             to the start of the playlist
+         *  @param audioClip the new audio clip to be added
+         *  @exception std::invalid_argument if the playlist already contains
+         *             an audio clip with the same relative offset
+         */
+         void
+         addAudioClip(Ptr<UniqueId>::Ref       audioClipId,
+                      Ptr<time_duration>::Ref  relativeOffset)
+                                                throw (std::invalid_argument);
 };
 
 

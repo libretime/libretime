@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -280,7 +280,7 @@ DisplayScheduleMethodTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_mon == 7);
     CPPUNIT_ASSERT(time.tm_mday == 31);
     CPPUNIT_ASSERT(time.tm_hour == 11);
-    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_min == 30);
     CPPUNIT_ASSERT(time.tm_sec == 0);
 
     // check for the interval 2004-07-31 between 9 and 13 o'clock
@@ -317,7 +317,7 @@ DisplayScheduleMethodTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_mon == 7);
     CPPUNIT_ASSERT(time.tm_mday == 31);
     CPPUNIT_ASSERT(time.tm_hour == 11);
-    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_min == 30);
     CPPUNIT_ASSERT(time.tm_sec == 0);
 
     CPPUNIT_ASSERT((int)(result[1]["playlistId"]) == 1);
@@ -333,7 +333,7 @@ DisplayScheduleMethodTest :: intervalTest(void)
     CPPUNIT_ASSERT(time.tm_mon == 7);
     CPPUNIT_ASSERT(time.tm_mday == 31);
     CPPUNIT_ASSERT(time.tm_hour == 13);
-    CPPUNIT_ASSERT(time.tm_min == 0);
+    CPPUNIT_ASSERT(time.tm_min == 30);
     CPPUNIT_ASSERT(time.tm_sec == 0);
 
     // check for the interval 2004-07-31 between 8 and 9 o'clock

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class XmlRpcTools
 {
@@ -80,15 +80,51 @@ class XmlRpcTools
         static const std::string        playlistIdName;
 
         /**
+         *  The name of the playlistId member in the XML-RPC parameter
+         *  structure given as the input to an XmlRpcServerMethod.
+         */
+        static const std::string        audioClipIdName;
+
+        /**
+         *  The name of the playlistId member in the XML-RPC parameter
+         *  structure given as the input to an XmlRpcServerMethod.
+         */
+        static const std::string        relativeOffsetName;
+
+        /**
          *  Extract the playlist id from the XML-RPC parameters.
          *
          *  @param xmlRpcValue the XML-RPC parameter to extract from.
          *  @return a UniqueId that was found in the XML-RPC parameter.
-         *  @exception std::invalid_argument if there was no UniqueId
-         *             in xmlRpcValue
+         *  @exception std::invalid_argument if there was no playlistId
+         *             member in xmlRpcValue
          */
         static Ptr<UniqueId>::Ref
         extractPlaylistId(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the audio clip id from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a UniqueId that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no audioClipId
+         *             member in xmlRpcValue
+         */
+        static Ptr<UniqueId>::Ref
+        extractAudioClipId(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the relative offset from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a time_duration that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no relativeOffset
+         *             member in xmlRpcValue
+         */
+        static Ptr<time_duration>::Ref
+        extractRelativeOffset(XmlRpc::XmlRpcValue  & xmlRpcValue)
                                                 throw (std::invalid_argument);
 
         /**

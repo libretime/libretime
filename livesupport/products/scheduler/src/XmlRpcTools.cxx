@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,10 +56,19 @@ using namespace LiveSupport::Scheduler;
 /* ===================================================  local data structures */
 
 /*------------------------------------------------------------------------------
- *  The name of the playlistId member in the XML-RPC parameter
- *  structure.
+ *  The name of the playlist ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
 const std::string XmlRpcTools::playlistIdName = "playlistId";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip ID member in the XML-RPC parameter structure
+ *----------------------------------------------------------------------------*/
+const std::string XmlRpcTools::audioClipIdName = "audioClipId";
+
+/*------------------------------------------------------------------------------
+ *  The name of the relative offset member in the XML-RPC parameter structure
+ *----------------------------------------------------------------------------*/
+const std::string XmlRpcTools::relativeOffsetName = "relativeOffset";
 
 
 /* ================================================  local constants & macros */
@@ -71,7 +80,7 @@ const std::string XmlRpcTools::playlistIdName = "playlistId";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Extract the UniqueId from an XML-RPC function call parameter
+ *  Extract the playlist ID from an XML-RPC function call parameter
  *----------------------------------------------------------------------------*/
 Ptr<UniqueId>::Ref
 XmlRpcTools :: extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
@@ -83,6 +92,40 @@ XmlRpcTools :: extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
 
     Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
     return id;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract the audio clip ID from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+XmlRpcTools :: extractAudioClipId(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(audioClipIdName)) {
+        throw std::invalid_argument("no audio clip id in parameter structure");
+    }
+
+    Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[audioClipIdName]));
+    return id;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Extract the relative offset from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+XmlRpcTools :: extractRelativeOffset(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(relativeOffsetName)) {
+        throw std::invalid_argument("no relative offset "
+                                     "in parameter structure");
+    }
+
+    Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,
+                               (int) xmlRpcValue[relativeOffsetName], 0));
+    return relativeOffset;
 }
 
 

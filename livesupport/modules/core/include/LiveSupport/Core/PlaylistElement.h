@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Core;
  *  An item in a playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -123,6 +123,24 @@ class PlaylistElement : public Configurable
                                                            throw ()
         {
             this->id             = id;
+            this->relativeOffset = relativeOffset;
+            this->audioClipId    = audioClipId;
+        }
+
+        /**
+         *  Create a new playlist element, with a new UniqueId,
+         *  to be added to a playlist.
+         *
+         *  @param audioClipId the ID of the audio clip associated 
+         *                                        with the playlist element.
+         *  @param relativeOffset the start time of this element, relative to 
+         *                                        the start of the playlist.
+         */
+        PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
+                        Ptr<UniqueId>::Ref       audioClipId)
+                                                           throw ()
+        {
+            this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
             this->audioClipId    = audioClipId;
         }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class StorageClientInterface
 {
@@ -119,6 +119,17 @@ class StorageClientInterface
          */
         virtual Ptr<Playlist>::Ref
         createPlaylist()                    throw ()                    = 0;
+
+        /**
+         *  Tell if an audio clip with a given id exists.
+         *
+         *  @param id the id of the audio clip to check for.
+         *  @return true if an audio clip with the specified id exists,
+         *          false otherwise.
+         */
+        virtual const bool
+        existsAudioClip(Ptr<const UniqueId>::Ref id) const       throw ()
+                                                                        = 0;
 
 };
 

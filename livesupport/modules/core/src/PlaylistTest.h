@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see Playlist
  */
 class PlaylistTest : public CPPUNIT_NS::TestFixture
@@ -66,7 +66,15 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(PlaylistTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(lockTest);
+    CPPUNIT_TEST(addAudioClipTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        /**
+         *  A playlist to play with.
+         */
+        Ptr<Playlist>::Ref  playlist;
 
     protected:
 
@@ -85,6 +93,14 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         lockTest(void)                          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Trying to add a new audio clip.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        addAudioClipTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:

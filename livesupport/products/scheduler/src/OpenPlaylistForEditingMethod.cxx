@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,8 @@ using namespace LiveSupport::Scheduler;
 /*------------------------------------------------------------------------------
  *  The name of this XML-RPC method.
  *----------------------------------------------------------------------------*/
-const std::string OpenPlaylistForEditingMethod::methodName = "openPlaylistForEditing";
+const std::string OpenPlaylistForEditingMethod::methodName 
+                                                = "openPlaylistForEditing";
 
 /*------------------------------------------------------------------------------
  *  The ID of this method for error reporting purposes.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -136,26 +136,38 @@ XmlRpcToolsTest :: firstTest(void)
     CPPUNIT_ASSERT(((int) xmlRpcPlaylist["id"]) == 1);
     CPPUNIT_ASSERT(((int) xmlRpcPlaylist["playlength"]) == (90 * 60));
 
-    XmlRpcValue         xmlRpcPlaylistId;
-    Ptr<UniqueId>::Ref  playlistId;
-    int                 randomNumber = rand();
+    XmlRpcValue              xmlRpcPlaylistId;
+    Ptr<UniqueId>::Ref       playlistId;
+    Ptr<UniqueId>::Ref       audioClipId;
+    Ptr<time_duration>::Ref  relativeOffset;
 
-    xmlRpcPlaylistId["playlistId"] = randomNumber;
+    int                 playlistIdNum = rand();
+    int                 audioClipIdNum = rand();
+    int                 relativeOffsetNum = rand();
 
-    // run the unpacking method
+    xmlRpcPlaylistId["playlistId"] = playlistIdNum;
+    xmlRpcPlaylistId["audioClipId"] = audioClipIdNum;
+    xmlRpcPlaylistId["relativeOffset"] = relativeOffsetNum;
+
+    // run the unpacking methods
     try {
-        playlistId = XmlRpcTools :: extractPlaylistId(xmlRpcPlaylistId);
+        playlistId     = XmlRpcTools::extractPlaylistId(xmlRpcPlaylistId);
+        audioClipId    = XmlRpcTools::extractAudioClipId(xmlRpcPlaylistId);
+        relativeOffset = XmlRpcTools::extractRelativeOffset(xmlRpcPlaylistId);
     }
     catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
 
-    CPPUNIT_ASSERT((int)(playlistId->getId()) == randomNumber);
+    CPPUNIT_ASSERT((int)(playlistId->getId())  == playlistIdNum);
+    CPPUNIT_ASSERT((int)(audioClipId->getId()) == audioClipIdNum);
+    CPPUNIT_ASSERT((int)(relativeOffset->total_seconds()) 
+                                               == relativeOffsetNum);
 }
 
 
 /*------------------------------------------------------------------------------
- *  Testint markError()
+ *  Testing markError()
  *----------------------------------------------------------------------------*/
 void
 XmlRpcToolsTest :: errorTest(void)

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -167,7 +167,7 @@ class TestStorageClient :
          *  @return a vector containing the playlists.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-        getAllPlaylists(void) const             throw ();
+        getAllPlaylists(void) const         throw ();
 
 
         /**
@@ -177,6 +177,21 @@ class TestStorageClient :
          */
         virtual Ptr<Playlist>::Ref
         createPlaylist()                    throw ();
+
+        /**
+         *  Tell if an audio clip with a given id exists.
+         *
+         *  @param id the id of the audio clip to check for.
+         *  @return true if an audio clip with the specified id exists,
+         *          false otherwise.
+         *  Note: at this point, this function always returns 'true'.
+         */
+        virtual const bool
+        existsAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw ()
+        {
+            return true;
+        }
 
 };
 

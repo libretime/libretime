@@ -5,12 +5,27 @@
 
 <!ELEMENT testStorage (playlist*) >
 
-<!ELEMENT playlist EMPTY >
+<!ELEMENT playlist (playlistElement*) >
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
 <!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+
+<!ELEMENT playlistElement (audioClip) >
+<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
+<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
+
+<!ELEMENT audioClip EMPTY >
+<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
 ]>
 <storageClientFactory>
     <testStorage>
-        <playlist id="1" playlength="01:00:00.000"/>
+        <playlist id="1" playlength="01:30:00.000">
+            <playlistElement id="101" relativeOffset="0" >
+                <audioClip id="10001" playlength="01:00:00.000"/>
+            </playlistElement>
+            <playlistElement id="102" relativeOffset="01:00:00.000" >
+                <audioClip id="10002"  playlength="00:30:00.000"/> 
+            </playlistElement>
+        </playlist>
     </testStorage>
 </storageClientFactory>

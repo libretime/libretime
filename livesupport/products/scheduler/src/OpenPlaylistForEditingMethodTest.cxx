@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,7 +149,7 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
 
     method->execute(parameter, result);
     CPPUNIT_ASSERT((int) result["id"] == 1);
-    CPPUNIT_ASSERT((int) result["playlength"] == (60 * 60));
+    CPPUNIT_ASSERT((int) result["playlength"] == (90 * 60));
 
     parameter.clear();
     result.clear();

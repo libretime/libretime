@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,7 +149,7 @@ DisplayPlaylistMethodTest :: firstTest(void)
 
     method->execute(rootParameter, result);
     CPPUNIT_ASSERT(((int) result["id"]) == 1);
-    CPPUNIT_ASSERT(((int) result["playlength"]) == (60 * 60));
+    CPPUNIT_ASSERT(((int) result["playlength"]) == (90 * 60));
 }
 
 

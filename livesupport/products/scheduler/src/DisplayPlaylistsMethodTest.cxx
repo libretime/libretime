@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,5 +149,5 @@ DisplayPlaylistsMethodTest :: firstTest(void)
 
     playlist = result[0];
     CPPUNIT_ASSERT(((int) playlist["id"]) == 1);
-    CPPUNIT_ASSERT(((int) playlist["playlength"]) == (60 * 60));
+    CPPUNIT_ASSERT(((int) playlist["playlength"]) == (90 * 60));
 }
