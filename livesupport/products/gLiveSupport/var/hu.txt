@@ -4,7 +4,7 @@ hu:table
     notLoggedInMsg:string    { "Nincs bejelentkezve" }
     loggedInMsg:string       { "Bejelentkezve {0} felhasználóként" }
     loginButtonLabel:string  { "Bejelentkezés" }
-    logoutButtonLabel:string { "Kijelentkezés }
+    logoutButtonLabel:string { "Kijelentkezés" }
 
     loginWindow:table
     {
