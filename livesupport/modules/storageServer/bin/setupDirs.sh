@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/bin/setupDirs.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -33,6 +33,8 @@
 WWW_ROOT=`cd var/install; php -q getWwwRoot.php` || exit $?
 echo "#StorageServer step 1:"
 echo "# root URL: $WWW_ROOT"
+PHP_PWD=`bin/getUrl.sh $WWW_ROOT/install/getPwd.php` || exit $?
+echo "# php_pwd: $PHP_PWD"
 
 HTTP_GROUP=`bin/getUrl.sh $WWW_ROOT/install/getGname.php` || \
  {
