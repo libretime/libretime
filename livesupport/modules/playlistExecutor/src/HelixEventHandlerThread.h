@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixEventHandlerThread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ using namespace LiveSupport::Core;
  *  A thread that checks on Helix events every once in a while.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class HelixEventHandlerThread : public virtual RunnableInterface
 {
@@ -120,6 +120,17 @@ class HelixEventHandlerThread : public virtual RunnableInterface
          */
         virtual void
         run(void)                                       throw ();
+
+        /**
+         *  Send a signal to the runnable object.
+         *  This function simply does nothing.
+         *
+         *  @param userData user-specific parameter for the signal.
+         */
+        virtual void
+        signal(int userData)                            throw ()
+        {
+        }
 
         /**
          *  Signal the thread to stop, gracefully.

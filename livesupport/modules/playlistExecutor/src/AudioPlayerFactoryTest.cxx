@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,7 +152,7 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
     audioPlayerFactory = AudioPlayerFactory::getInstance();
     audioPlayer        = audioPlayerFactory->getAudioPlayer();
 
-    audioPlayer->playThis("file:var/test.mp3");
+    audioPlayer->open("file:var/test.mp3");
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
     audioPlayer->start();
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
@@ -160,5 +160,6 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
+    audioPlayer->close();
 }
 
