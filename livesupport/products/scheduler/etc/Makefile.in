@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.37 $
+#   Version  : $Revision: 1.38 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -65,7 +65,7 @@ VPATH    = ${SRC_DIR}
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
+CURL_LIBS=`${USR_DIR}/bin/curlpp-config --libs`
 
 MODULES_DIR = ${BASE_DIR}/../../modules
 
