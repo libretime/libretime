@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/AudioClip.h"
 
 
 namespace LiveSupport {
@@ -72,7 +73,7 @@ using namespace LiveSupport::Core;
  *  An item in a playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -93,9 +94,9 @@ class PlaylistElement : public Configurable
         Ptr<time_duration>::Ref     relativeOffset;
 
         /**
-         *  The id of the audio clip associated with the entry.
+         *  The audio clip associated with the entry.
          */
-        Ptr<UniqueId>::Ref          audioClipId;
+        Ptr<AudioClip>::Ref         audioClip;
 
 
     public:
@@ -119,12 +120,12 @@ class PlaylistElement : public Configurable
          */
         PlaylistElement(Ptr<UniqueId>::Ref       id,
                         Ptr<time_duration>::Ref  relativeOffset,
-                        Ptr<UniqueId>::Ref       audioClipId)
+                        Ptr<AudioClip>::Ref      audioClip)
                                                            throw ()
         {
             this->id             = id;
             this->relativeOffset = relativeOffset;
-            this->audioClipId    = audioClipId;
+            this->audioClip      = audioClip;
         }
 
         /**
@@ -137,12 +138,12 @@ class PlaylistElement : public Configurable
          *                                        the start of the playlist.
          */
         PlaylistElement(Ptr<time_duration>::Ref  relativeOffset,
-                        Ptr<UniqueId>::Ref       audioClipId)
+                        Ptr<AudioClip>::Ref      audioClip)
                                                            throw ()
         {
             this->id             = UniqueId::generateId();
             this->relativeOffset = relativeOffset;
-            this->audioClipId    = audioClipId;
+            this->audioClip      = audioClip;
         }
 
         /**
@@ -172,9 +173,7 @@ class PlaylistElement : public Configurable
          *
          *  @param element the XML element to configure the object from.
          *  @exception std::invalid_argument if the supplied XML element
-         *             contains bad configuraiton information
-         *  @exception std::logic_error if the object has already
-         *             been configured, and can not be reconfigured.
+         *             contains bad configuration information
          */
         virtual void
         configure(const xmlpp::Element    & element)
@@ -192,7 +191,7 @@ class PlaylistElement : public Configurable
         }
 
         /**
-         *  Return the relative offset of the element.
+         *  Return the relative offset of the playlist element.
          *
          *  @return the relative offset of the element.
          */
@@ -203,14 +202,14 @@ class PlaylistElement : public Configurable
         }
 
         /**
-         *  Return the id of the audio clip associated with the element.
+         *  Return the audio clip associated with the playlist element.
          *
-         *  @return the id of the audio clip associated with the element.
+         *  @return the audio clip associated with the element.
          */
-        Ptr<const UniqueId>::Ref
-        getAudioClipId(void) const                         throw ()
+        Ptr<const AudioClip>::Ref
+        getAudioClip(void) const                           throw ()
         {
-            return audioClipId;
+            return audioClip;
         }
 
 };

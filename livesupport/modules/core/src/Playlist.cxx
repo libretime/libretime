@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,7 @@ Playlist :: configure(const xmlpp::Element    & element)
                                             throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
-        std::string eMsg = "Bad configuration element ";
+        std::string eMsg = "bad configuration element ";
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
@@ -90,7 +90,7 @@ Playlist :: configure(const xmlpp::Element    & element)
     unsigned long int           idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
@@ -99,14 +99,13 @@ Playlist :: configure(const xmlpp::Element    & element)
     id.reset(new UniqueId(idValue));
 
     if (!(attribute = element.get_attribute(playlengthAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
 
-    // no exception thrown here: it's OK to have an empty playlist element list
     elementList.reset(new PlaylistElementListType);
     xmlpp::Node::NodeList  childNodes 
                            = element.get_children(elementListAttrName);
@@ -116,7 +115,7 @@ Playlist :: configure(const xmlpp::Element    & element)
         Ptr<PlaylistElement>::Ref  newPlaylistElement(new PlaylistElement);
         const xmlpp::Element       * childElement 
                                    = dynamic_cast<const xmlpp::Element*> (*it);
-        newPlaylistElement->configure(*childElement);
+        newPlaylistElement->configure(*childElement);    // may throw exception
         addPlaylistElement(newPlaylistElement);
         ++it;
     }
@@ -137,7 +136,7 @@ Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
                                    = playlistElement->getRelativeOffset();
 
     if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "Two playlist elements at the same relative offset";
+        std::string eMsg = "two playlist elements at the same relative offset";
         throw std::invalid_argument(eMsg);
     }
 
@@ -149,17 +148,17 @@ Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
  *  Add a new audio clip to the playlist.
  *----------------------------------------------------------------------------*/
 void
-Playlist::addAudioClip(Ptr<UniqueId>::Ref       audioClipId,
+Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                        Ptr<time_duration>::Ref  relativeOffset)
                                             throw (std::invalid_argument)
 {
     if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "Two playlist elements at the same relative offset";
+        std::string eMsg = "two playlist elements at the same relative offset";
         throw std::invalid_argument(eMsg);
     }
 
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
-                                   relativeOffset, audioClipId));
+                                   relativeOffset, audioClip));
 
     (*elementList)[*relativeOffset] = playlistElement;
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class StorageClientInterface
 {
@@ -129,6 +129,18 @@ class StorageClientInterface
          */
         virtual const bool
         existsAudioClip(Ptr<const UniqueId>::Ref id) const       throw ()
+                                                                        = 0;
+        /**
+         *  Return an audio clip with the specified id.
+         *
+         *  @param id the id of the playlist to return.
+         *  @return the requested audio clip.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists.
+         */
+        virtual Ptr<AudioClip>::Ref
+        getAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument)
                                                                         = 0;
 
 };

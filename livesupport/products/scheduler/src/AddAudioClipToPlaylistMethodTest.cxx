@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,7 +157,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     openPlaylistMethod->execute(parameter, result);
     addAudioClipMethod->execute(parameter, result);
     CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int)(result["errorCode"]) == 308);
+    CPPUNIT_ASSERT((int)(result["errorCode"]) == 306);
 
     parameter.clear();
     result.clear();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,17 +88,14 @@ using namespace LiveSupport::Core;
  *  The possible error codes are:
  *  <ul>
  *     <li>301 - invalid argument format </li>
- *     <li>301 - missing playlist ID argument </li>
- *     <li>301 - missing audio clip ID argument </li>
- *     <li>301 - missing relative offset argument </li>
- *     <li>301 - playlist does not exist </li>
- *     <li>301 - could not load playlist </li>
- *     <li>301 - playlist has not been opened for editing </li>
- *     <li>301 - two audio clips at the same relative offset
- *               (from Playlist::addAudioClipToPlaylist()) </li>
+ *     <li>302 - missing ... argument </li>
+ *     <li>303 - playlist does not exist </li>
+ *     <li>304 - playlist has not been opened for editing </li>
+ *     <li>305 - audio clip does not exist </li>
+ *     <li>306 - two audio clips at the same relative offset</li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

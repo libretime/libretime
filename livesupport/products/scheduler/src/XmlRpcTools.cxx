@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ XmlRpcTools :: extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
     if (!xmlRpcValue.hasMember(playlistIdName)) {
-        throw std::invalid_argument("no playlist id in parameter structure");
+        throw std::invalid_argument("missing playlist ID");
     }
 
     Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[playlistIdName]));
@@ -103,7 +103,7 @@ XmlRpcTools :: extractAudioClipId(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
     if (!xmlRpcValue.hasMember(audioClipIdName)) {
-        throw std::invalid_argument("no audio clip id in parameter structure");
+        throw std::invalid_argument("missing audio clip ID");
     }
 
     Ptr<UniqueId>::Ref id(new UniqueId((int) xmlRpcValue[audioClipIdName]));
@@ -119,8 +119,7 @@ XmlRpcTools :: extractRelativeOffset(XmlRpc::XmlRpcValue & xmlRpcValue)
                                                 throw (std::invalid_argument)
 {
     if (!xmlRpcValue.hasMember(relativeOffsetName)) {
-        throw std::invalid_argument("no relative offset "
-                                     "in parameter structure");
+        throw std::invalid_argument("missing relative offset");
     }
 
     Ptr<time_duration>::Ref relativeOffset(new time_duration(0,0,

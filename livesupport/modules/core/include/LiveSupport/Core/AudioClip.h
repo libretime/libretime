@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace boost::posix_time;
  *  in a Playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class AudioClip : public Configurable
 {
@@ -150,13 +150,10 @@ class AudioClip : public Configurable
          *  @param element the XML element to configure the object from.
          *  @exception std::invalid_argument if the supplied XML element
          *             contains bad configuraiton information
-         *  @exception std::logic_error if the object has already
-         *             been configured, and can not be reconfigured.
          */
         virtual void
         configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument,
-                                                       std::logic_error);
+                                                throw (std::invalid_argument);
 
         /**
          *  Return the id of the audio clip.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,7 @@ AudioClip :: configure(const xmlpp::Element    & element)
                                                              std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
-        std::string eMsg = "Bad configuration element ";
+        std::string eMsg = "bad configuration element ";
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
@@ -90,7 +90,7 @@ AudioClip :: configure(const xmlpp::Element    & element)
     unsigned long int           idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
@@ -107,11 +107,10 @@ AudioClip :: configure(const xmlpp::Element    & element)
     title.reset(new std::string(titleValue));
 */
     if (!(attribute = element.get_attribute(playlengthAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
 }
-

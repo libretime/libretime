@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,11 +93,11 @@ using namespace LiveSupport::Core;
  *     <li>101 - invalid argument format</li>
  *     <li>102 - argument is not a playlist ID</li>
  *     <li>103 - playlist does not exist</li>
- *     <li>104 - could not open playlist</li>
- *     <li>105 - playlist could not be opened (already open?)</li>
+ *     <li>104 - could not load playlist</li>
+ *     <li>105 - could not open playlist for editing (already open?)</li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class OpenPlaylistForEditingMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -120,16 +120,18 @@ PlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(playlistElement->getId()->getId() == 101);
     Ptr<const time_duration>::Ref  relativeOffset 
                                    = playlistElement->getRelativeOffset();
-    CPPUNIT_ASSERT(relativeOffset->total_seconds() == 0);
-    CPPUNIT_ASSERT(playlistElement->getAudioClipId()->getId() == 10001);
+    CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 0);
+    CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
+                                                     == 10001);
 
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
     playlistElement  = it->second;
     CPPUNIT_ASSERT(playlistElement->getId()->getId() == 102);
     relativeOffset   = playlistElement->getRelativeOffset();
-    CPPUNIT_ASSERT(relativeOffset->total_seconds() == 60 * 60);
-    CPPUNIT_ASSERT(playlistElement->getAudioClipId()->getId() == 10002);
+    CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 60 * 60);
+    CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId() 
+                                                     == 10002);
     
     ++it;
     CPPUNIT_ASSERT(it == playlist->end());
@@ -166,11 +168,14 @@ void
 PlaylistTest :: addAudioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<UniqueId>::Ref       audioClipId(new UniqueId(20001));
+    Ptr<UniqueId>::Ref       clipId(new UniqueId(20001));
+    Ptr<time_duration>::Ref  clipLength(new time_duration(0,30,0,0));
+    Ptr<AudioClip>::Ref      audioClip(new AudioClip(clipId, clipLength));
+
     Ptr<time_duration>::Ref  relativeOffset(new time_duration(0,10,0,0));
                                                 // hour, min, sec, frac_sec
     try {
-        playlist->addAudioClip(audioClipId, relativeOffset);
+        playlist->addAudioClip(audioClip, relativeOffset);
     }
     catch (std::invalid_argument &e) {
         string eMsg = "addAudioClip returned with error: ";
@@ -183,7 +188,8 @@ PlaylistTest :: addAudioClipTest(void)
 
     ++it;
     Ptr<PlaylistElement>::Ref      playlistElement = it->second;
-    CPPUNIT_ASSERT(playlistElement->getAudioClipId()->getId() == 20001);
+    CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
+                                                             == 20001);
 
     Ptr<const time_duration>::Ref  otherRelativeOffset 
                                    = playlistElement->getRelativeOffset();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,8 +108,9 @@ PlaylistElementTest :: firstTest(void)
         CPPUNIT_ASSERT(playlistElement->getId()->getId() == 707);
         Ptr<const time_duration>::Ref  relativeOffset
                                        = playlistElement->getRelativeOffset();
-        CPPUNIT_ASSERT(relativeOffset->total_seconds() == 12*60 + 34);
-        CPPUNIT_ASSERT(playlistElement->getAudioClipId()->getId() == 10001);
+        CPPUNIT_ASSERT(relativeOffset->total_seconds()   == 12*60 + 34);
+        CPPUNIT_ASSERT(playlistElement->getAudioClip()->getId()->getId()
+                                                         == 10001);
 
     } catch (std::invalid_argument &e) {
         std::string eMsg = "semantic error in configuration file:\n";

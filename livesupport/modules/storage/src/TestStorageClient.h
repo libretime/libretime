@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -178,6 +178,7 @@ class TestStorageClient :
         virtual Ptr<Playlist>::Ref
         createPlaylist()                    throw ();
 
+
         /**
          *  Tell if an audio clip with a given id exists.
          *
@@ -191,6 +192,28 @@ class TestStorageClient :
                                             throw ()
         {
             return true;
+        }
+
+
+        /**
+         *  Return an audio clip with the specified id.
+         *
+         *  @param id the id of the audio clip to return.
+         *  @return the requested audio clip.
+         *  @exception std::invalid_argument if no audio clip with the 
+         *             specified id exists.
+         *  Note: at this point, this function returns a fake new audio
+         *        clip with play length 30 minutes.
+         */
+        virtual Ptr<AudioClip>::Ref
+        getAudioClip(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument)
+        {
+            Ptr<UniqueId>::Ref       nonConstId(new UniqueId(id->getId()));
+            Ptr<time_duration>::Ref  length(new time_duration(0,30,0,0));
+            Ptr<AudioClip>::Ref      audioClip(new AudioClip(nonConstId,
+                                                             length));
+            return audioClip;
         }
 
 };

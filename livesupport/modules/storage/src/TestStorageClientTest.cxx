@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -172,4 +172,22 @@ TestStorageClientTest :: createPlaylistTest(void)
     Ptr<Playlist>::Ref playlist = tsc->createPlaylist();
 
     CPPUNIT_ASSERT(tsc->existsPlaylist(playlist->getId()));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if the fake audio clips are correctly counterfeited
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: audioClipTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+        Ptr<const UniqueId>::Ref  id(new UniqueId(rand()));
+
+        CPPUNIT_ASSERT(tsc->existsAudioClip(id));
+
+        Ptr<AudioClip>::Ref       audioClip = tsc->getAudioClip(id);
+        CPPUNIT_ASSERT(audioClip->getId()->getId() == id->getId());
+        CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
+                                                   == 30*60);
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,11 +67,6 @@ static const std::string    relativeOffsetAttrName = "relativeOffset";
  */
 static const std::string    audioClipElementName = "audioClip";
 
-/**
- *  The name of the attribute of the id of the audio clip element.
- */
-static const std::string    audioClipIdAttrName = "id";
-
 
 /* ===============================================  local function prototypes */
 
@@ -86,7 +81,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
                                                 throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
-        std::string eMsg = "Bad configuration element ";
+        std::string eMsg = "bad configuration element ";
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
@@ -96,7 +91,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
     UniqueId::IdType            idValue;
 
     if (!(attribute = element.get_attribute(idAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
@@ -105,7 +100,7 @@ PlaylistElement :: configure(const xmlpp::Element & element)
     id.reset(new UniqueId(idValue));
 
     if (!(attribute = element.get_attribute(relativeOffsetAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += relativeOffsetAttrName;
         throw std::invalid_argument(eMsg);
     }
@@ -117,32 +112,20 @@ PlaylistElement :: configure(const xmlpp::Element & element)
     xmlpp::Node::NodeList::iterator it = childNodes.begin();
 
     if (it == childNodes.end()) {
-        std::string eMsg = "Missing ";
+        std::string eMsg = "missing ";
         eMsg += audioClipElementName;
         eMsg += " XML element";
         throw std::invalid_argument(eMsg);
     }
 
-    const xmlpp::Element        * audioClipElement 
+    const xmlpp::Element      * audioClipElement 
                                 = dynamic_cast<const xmlpp::Element*> (*it);
-
-    if (!(attribute= audioClipElement->get_attribute(audioClipIdAttrName))) {
-        std::string eMsg = "Missing ";
-        eMsg += audioClipElementName;
-        eMsg += "attribute ";
-        eMsg += audioClipIdAttrName;
-        throw std::invalid_argument(eMsg);
-    }
-
-    std::stringstream           audioClipStrStr;
-    UniqueId::IdType            audioClipIdValue;
-    audioClipStrStr.str(attribute->get_value());
-    audioClipStrStr >> audioClipIdValue;
-    audioClipId.reset(new UniqueId(audioClipIdValue));
-
+    audioClip.reset(new AudioClip);
+    audioClip->configure(*audioClipElement);    // may throw exception
+    
     ++it;
     if (it != childNodes.end()) {
-        std::string eMsg = "More than one ";
+        std::string eMsg = "more than one ";
         eMsg += audioClipElementName;
         eMsg += " XML element";
         throw std::invalid_argument(eMsg);
