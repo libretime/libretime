@@ -27,7 +27,7 @@
                     {foreach from=$PL->getFlat() key='pos' item='i'}
                         <!-- {$n++} -->
                         <!-- fade information -->
-                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #999">
+                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
                         </tr>
@@ -47,7 +47,7 @@
                     {/foreach}
                         {if $n}
                         <!-- fade information -->
-                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #999">
+                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
                         </tr>

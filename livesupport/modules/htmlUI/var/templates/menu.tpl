@@ -26,6 +26,7 @@
                     </ul>
                     *}
                 </li>
+                <li><a href="#" onClick="window.open('help.html','','scrollbars=yes,resizable=yes,width=500,height=400')">##Help##</a></li>
 			</ul>
 		</div>
 	<!-- end nav -->
