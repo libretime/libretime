@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -42,7 +42,7 @@
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "TestStorageClient.h"
+#include "WebStorageClient.h"
 
 using namespace boost::posix_time;
 
@@ -57,12 +57,42 @@ using namespace LiveSupport::Storage;
 /*------------------------------------------------------------------------------
  *  The name of the config element for this class
  *----------------------------------------------------------------------------*/
-const std::string TestStorageClient::configElementNameStr = "testStorage";
+const std::string WebStorageClient::configElementNameStr = "webStorage";
 
 /*------------------------------------------------------------------------------
  *  The name of the config element attribute for the temp files
  *----------------------------------------------------------------------------*/
 static const std::string    localTempStorageAttrName = "tempFiles";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config child element for the storage server location
+ *----------------------------------------------------------------------------*/
+static const std::string    locationConfigElementName = "location";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element attribute for the storage server name
+ *----------------------------------------------------------------------------*/
+static const std::string    locationServerAttrName = "server";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element attribute for the storage server port
+ *----------------------------------------------------------------------------*/
+static const std::string    locationPortAttrName = "port";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config child element for the storage server login
+ *----------------------------------------------------------------------------*/
+static const std::string    identityConfigElementName = "identity";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config child element for the storage server login name
+ *----------------------------------------------------------------------------*/
+static const std::string    identityLoginNameAttrName = "login";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config child element for the storage server login password
+ *----------------------------------------------------------------------------*/
+static const std::string    identityPasswordAttrName = "pass";
 
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
@@ -123,10 +153,10 @@ static const std::string    smilAudioClipUriAttrName = "src";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure the test storage client.
+ *  Configure the web storage client.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: configure(const xmlpp::Element   &  element)
+WebStorageClient :: configure(const xmlpp::Element   &  element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error)
 {
@@ -146,14 +176,88 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
 
     localTempStorage = attribute->get_value();
 
+    // read the storage server location
+    xmlpp::Node::NodeList   childNodes 
+                            = element.get_children(locationConfigElementName);
+    xmlpp::Node::NodeList::iterator it = childNodes.begin();
+
+    if (it == childNodes.end()) {
+        std::string eMsg = "missing ";
+        eMsg += locationConfigElementName;
+        eMsg += " XML element";
+        throw std::invalid_argument(eMsg);
+    }
+
+    const xmlpp::Element      * locationConfigElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
+    if (!(attribute = locationConfigElement
+                      ->get_attribute(locationServerAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += locationServerAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    storageServerName = attribute->get_value();
+
+    if (!(attribute = locationConfigElement
+                      ->get_attribute(locationPortAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += locationPortAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    std::stringstream   storageServerPortValue(attribute->get_value());
+    storageServerPortValue >> storageServerPort;
+    
+    ++it;
+    if (it != childNodes.end()) {
+        std::string eMsg = "more than one ";
+        eMsg += locationConfigElementName;
+        eMsg += " XML element";
+        throw std::invalid_argument(eMsg);
+    }
+
+    // read the login and password to the storage server
+    childNodes  = element.get_children(identityConfigElementName);
+    it          = childNodes.begin();
+
+    if (it == childNodes.end()) {
+        std::string eMsg = "missing ";
+        eMsg += identityConfigElementName;
+        eMsg += " XML element";
+        throw std::invalid_argument(eMsg);
+    }
+
+    const xmlpp::Element      * identityConfigElement 
+                                = dynamic_cast<const xmlpp::Element*> (*it);
+    if (!(attribute = identityConfigElement
+                      ->get_attribute(identityLoginNameAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += identityLoginNameAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    loginName = attribute->get_value();
+
+    if (!(attribute = identityConfigElement
+                      ->get_attribute(identityPasswordAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += identityPasswordAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+    password = attribute->get_value();
+    
+    ++it;
+    if (it != childNodes.end()) {
+        std::string eMsg = "more than one ";
+        eMsg += identityConfigElementName;
+        eMsg += " XML element";
+        throw std::invalid_argument(eMsg);
+    }
+
     // iterate through the playlist elements ...
-    xmlpp::Node::NodeList            nodes 
-                  = element.get_children(Playlist::getConfigElementName());
-    xmlpp::Node::NodeList::iterator  it 
-                                     = nodes.begin();
+    childNodes  = element.get_children(Playlist::getConfigElementName());
+    it          = childNodes.begin();
     playlistMap.clear();
 
-    while (it != nodes.end()) {
+    while (it != childNodes.end()) {
         Ptr<Playlist>::Ref      playlist(new Playlist);
         const xmlpp::Element  * element =
                                     dynamic_cast<const xmlpp::Element*> (*it);
@@ -163,11 +267,11 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
     }
 
     // ... and the the audio clip elements
-    nodes = element.get_children(AudioClip::getConfigElementName());
-    it    = nodes.begin();
+    childNodes  = element.get_children(AudioClip::getConfigElementName());
+    it          = childNodes.begin();
     audioClipMap.clear();
 
-    while (it != nodes.end()) {
+    while (it != childNodes.end()) {
         Ptr<AudioClip>::Ref     audioClip(new AudioClip);
         const xmlpp::Element  * element =
                                     dynamic_cast<const xmlpp::Element*> (*it);
@@ -182,7 +286,7 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
  *  Tell if a playlist exists.
  *----------------------------------------------------------------------------*/
 const bool
-TestStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
                                                                 throw ()
 {
     return playlistMap.count(id->getId()) == 1 ? true : false;
@@ -193,7 +297,7 @@ TestStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
  *  Return a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::invalid_argument)
 {
     PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
@@ -210,7 +314,7 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
  *  Acquire resources for a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::logic_error)
 {
     PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
@@ -280,7 +384,7 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
+WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
                                                 throw (std::logic_error)
 {
     if (! playlist->getUri()) {
@@ -324,7 +428,7 @@ TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
  *  Delete a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
+WebStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
                                                 throw (std::invalid_argument)
 {
     // erase() returns the number of entries found & erased
@@ -338,7 +442,7 @@ TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
  *  Return a listing of all the playlists in the playlist store.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-TestStorageClient :: getAllPlaylists(void) const
+WebStorageClient :: getAllPlaylists(void) const
                                                 throw ()
 {
     PlaylistMap::const_iterator         it = playlistMap.begin();
@@ -358,7 +462,7 @@ TestStorageClient :: getAllPlaylists(void) const
  *  Create a new playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: createPlaylist()                                throw ()
+WebStorageClient :: createPlaylist()                                throw ()
 {
     // generate a new UniqueId -- TODO: fix UniqueId to make sure
     //     this is really unique; not checked here!
@@ -381,7 +485,7 @@ TestStorageClient :: createPlaylist()                                throw ()
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
-TestStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
                                                                 throw ()
 {
     return audioClipMap.count(id->getId()) == 1 ? true : false;
@@ -392,7 +496,7 @@ TestStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Return an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::invalid_argument)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
@@ -409,7 +513,7 @@ TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Acquire resources for an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::logic_error)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
@@ -449,7 +553,7 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
+WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                                 throw (std::logic_error)
 {
     if (*(audioClip->getUri()) == "") {
@@ -465,7 +569,7 @@ TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
  *  Delete an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
+WebStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
                                                 throw (std::invalid_argument)
 {
     // erase() returns the number of entries found & erased
@@ -479,7 +583,7 @@ TestStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
  *  Return a listing of all the audio clips in the audio clip store.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-TestStorageClient :: getAllAudioClips(void) const
+WebStorageClient :: getAllAudioClips(void) const
                                                 throw ()
 {
     AudioClipMap::const_iterator        it = audioClipMap.begin();

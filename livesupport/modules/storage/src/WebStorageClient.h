@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef TestStorageClient_h
-#define TestStorageClient_h
+#ifndef WebStorageClient_h
+#define WebStorageClient_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,18 +64,18 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A dummy storage client, only used for test purposes.
+ *  An interface to the (possibly remote) php storage server.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.1 $
  */
-class TestStorageClient :
+class WebStorageClient :
                     virtual public Configurable,
                     virtual public StorageClientInterface
 {
     private:
         /**
-         *  The name of the configuration XML elmenent used by TestStorageClient
+         *  The name of the configuration XML elmenent used by WebStorageClient
          */
         static const std::string    configElementNameStr;
 
@@ -106,13 +106,33 @@ class TestStorageClient :
          */
         std::string                 localTempStorage;
 
+        /**
+         *  The name of the storage server, e.g. "myserver.mycompany.com".
+         */
+        std::string                 storageServerName;
+
+        /**
+         *  The port wher the storage server is listening (default is 80).
+         */
+        int                         storageServerPort;
+
+        /**
+         *  The login name to the storage server.
+         */
+        std::string                 loginName;
+
+        /**
+         *  The password to the storage server.
+         */
+        std::string                 password;
+
 
     public:
         /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~TestStorageClient(void)                        throw ()
+        ~WebStorageClient(void)                        throw ()
         {
         }
 
@@ -186,7 +206,8 @@ class TestStorageClient :
 
         /**
          *  Release the resources (audio clips, other playlists) used 
-         *  in a playlist.
+         *  in a playlist.  The uri of the playlist is no longer valid, and 
+         *  the uri field is deleted.
          *
          *  @param playlist the playlist to release.
          *  @exception std::logic_error if the playlist has no uri field,
@@ -251,8 +272,6 @@ class TestStorageClient :
          *
          *  Returns an AudioClip instance with a valid uri field, which points
          *  to the binary sound file.
-         *  Assumes URIs in the config file are relative paths prefixed by
-         *  "file:"; e.g., "file:var/test1.mp3".
          *
          *  @param id the id of the audio clip to acquire.
          *  @return a new AudioClip instance, containing a uri field which
@@ -265,7 +284,9 @@ class TestStorageClient :
                                             throw (std::logic_error);
 
         /**
-         *  Release the resource (sound file) used by an audio clip.
+         *  Release the resource (sound file) used by an audio clip.  The
+         *  uri of the audio clip is no longer valid, and the uri field is
+         *  deleted.
          *
          *  @param id the id of the audio clip to release.
          *  @exception std::logic_error if the audio clip has no uri field, 
@@ -306,5 +327,5 @@ class TestStorageClient :
 } // namespace Core
 } // namespace LiveSupport
 
-#endif // TestStorageClient_h
+#endif // WebStorageClient_h
 
