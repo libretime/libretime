@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -47,11 +47,6 @@ echo ${tmpdir}
 
 cd "$tmpdir"
 DIE=0
-
-# look at all other directories as seen from ${basedir}/tmp
-#tmpdir=.
-#bindir=../bin
-#etcdir=../etc
 
 (autoheader --version) < /dev/null > /dev/null 2>&1 || {
     echo
