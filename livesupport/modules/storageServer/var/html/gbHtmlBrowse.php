@@ -168,10 +168,10 @@ $tpldata['showMenu']=true;
     </td><td>
     <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R', 'audioclip'=>'A', 'playlist'=>'P', 'webstream'=>'S'); echo$a[$o['type']]?>
     &nbsp;<a href="javascript:frename('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">rename</a>
-    <?php if($o['type']!='Folder'){?>
+    <?#php if($o['type']!='Folder'){?>
     &nbsp;<a href="javascript:fmove('<?php echo$o['id']?>', '')" class="button">move</a>
     &nbsp;<a href="javascript:fcopy('<?php echo$o['id']?>', '')" class="button">copy</a>
-    <?php }?>
+    <?#php }?>
 <?php /*?>
     &nbsp;<a href="javascript:freplicate('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">replicate</a>
 <?php */?>
@@ -251,7 +251,7 @@ $tpldata['showMenu']=true;
 <?php if($tpldata['msg']){?>
 <script type="text/javascript">
 <!--
- alert('<?php echo$tpldata['msg']?>');
+ alert('<?php echo str_replace("'", "\\'", $tpldata['msg'])?>');
 -->
 </script><noscript><?php echo$tpldata['msg']?></noscript>
 <?php }?>
