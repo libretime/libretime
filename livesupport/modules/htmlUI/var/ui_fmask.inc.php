@@ -16,11 +16,8 @@ $ui_fmask = array(
             'element'   => 'maxfilesize',
             'type'      => 'text',
             'label'     => 'Maximum File Size for Upload',
-            'required'  => TRUE
-        ),
-        array(
-            'rule'      => 'numeric',
-            'element'   => 'maxfilesize',
+            'required'  => TRUE,
+            'default'   => ini_get('upload_max_filesize')
         ),
         array(
             'rule'      => 'nopunctuation',
@@ -63,7 +60,8 @@ $ui_fmask = array(
         array(
             'element'   => 'stationlogo',
             'type'      => 'file',
-            'label'     => 'Station Logo'
+            'label'     => 'Station Logo',
+            'requiredmsg'=> 'please select Logo file'
         ),
         array(
             'element'   =>'Submit',
@@ -197,16 +195,13 @@ $ui_fmask = array(
                         'audio/mpeg'    => 'audio/mpeg'
                      )
                 ),
-                /*
                 array(
                     'element'   => 'Format_Extent',
-                    'type'      => 'date',
-                    'options'   => array(
-                                    'format'    => 'His'
-                                   ),
+                    'type'      => 'text',
                     'label'     => 'Format_Extent',
-                    'required'  => TRUE
-                ), */
+                    #'attributes'=> array('readonly' => 'on')
+                ),
+                /*
                 array(
                     'element'   => 'Format_Extent_h',
                     'type'      => 'select',
@@ -234,7 +229,7 @@ $ui_fmask = array(
                     #'format'    => '/([1-9]0)|([1-9]{2})|(0[1-9])/',
                     #'arg1'      => 'Please enter Format_Extent',
                     #'howmany'   => 1
-                ),
+                ), */
             ),
             'Music_Basic'  => array(
                 array(
@@ -296,37 +291,11 @@ $ui_fmask = array(
                     'label'     => 'Description_Rating',
                     'rule'      => 'numeric',
                 ),
-                /*
                 array(
                     'element'   => 'Format_Extent',
-                    'type'      => 'date',
-                    'options'   => array(
-                                    'format'    => 'His'
-                                   ),
-                    'label'     => 'Format_Extent'
-                ), */
-                array(
-                    'element'   => 'Format_Extent_h',
-                    'type'      => 'select',
-                    'options'   => $uiBase->_getDArr('h'),
-                    'groupit'   => TRUE
-                ),
-                array(
-                    'element'   => 'Format_Extent_m',
-                    'type'      => 'select',
-                    'options'   => $uiBase->_getDArr('m'),
-                    'groupit'   => TRUE
-                ),
-                array(
-                    'element'   => 'Format_Extent_s',
-                    'type'      => 'select',
-                    'options'   => $uiBase->_getDArr('h'),
-                    'groupit'   => TRUE
-                ),
-                array(
-                    'group'     => array('Music_Basic__Format_Extent_h', 'Music_Basic__Format_Extent_m', 'Music_Basic__Format_Extent_s'),
-                    #'name'      => 'gr_Format_Extent',
+                    'type'      => 'text',
                     'label'     => 'Format_Extent',
+                    'attributes'=> array('readonly' => 'on')
                 ),
             ),
             'Music_Advanced'=> array(
@@ -681,11 +650,6 @@ $ui_fmask = array(
             'requiredmsg'=> 'please select Media file'
         ),
         array(
-            'element'   => 'new_filename',
-            'type'      => 'text',
-            'label'     => 'New Filename'
-        ),
-        array(
             'element'   => 'mdatafile',
             'type'      => 'file',
             'label'     => 'Metadata',
@@ -715,11 +679,6 @@ $ui_fmask = array(
             'label'     => 'Mediafile',
             'required'  => TRUE,
             'requiredmsg'=> 'please select Media file'
-        ),
-        array(
-            'element'   => 'new_filename',
-            'type'      => 'text',
-            'label'     => 'New Filename'
         ),
         array(
             'element'   => 'Submit',
@@ -754,6 +713,16 @@ $ui_fmask = array(
             'options'   => array(
                             'or'    => 'Or',
                             'and'   => 'And',
+                            )
+        ),
+        array(
+            'element'   => 'filetype',
+            'type'      => 'select',
+            'label'     => 'Filetype',
+            'options'   => array(
+                            'File'      => '*',
+                            'audioclip' => 'Audioclip',
+                            'playlist'  => 'Playlist'
                             )
         ),
         array(

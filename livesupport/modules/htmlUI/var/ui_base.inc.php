@@ -106,7 +106,7 @@ class uiBase
             } elseif (isset($v['type'])) {
                 $elem[$v['element']] =& $form->createElement($v['type'], $v['element'], $this->tra($v['label']),
                                             ($v[type]=='text' || $v['type']=='file' || $v['type']=='password') ? array_merge($v['attributes'], array('size'=>UI_INPUT_STANDARD_SIZE, 'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH)) :
-                                            ($v['type']=='textarea'                  ? array_merge($v['attributes'], array('rows'=>UI_TEXTAREA_STANDART_ROWS, 'cols'=>UI_TEXTAREA_STANDART_COLS)) : $v['attributes'])
+                                            ($v['type']=='textarea' ? array_merge($v['attributes'], array('rows'=>UI_TEXTAREA_STANDART_ROWS, 'cols'=>UI_TEXTAREA_STANDART_COLS)) : $v['attributes'])
                                         );
                 if (!$v['groupit'])     $form->addElement($elem[$v['element']]);
             }
@@ -149,7 +149,6 @@ class uiBase
         }
 
         reset($mask);
-
         $form->validate();
     }
 
@@ -172,20 +171,20 @@ class uiBase
 
 
     /**
-     *  getInfo
+     *  _getInfo
      *
      *  Call getid3 library to analyze media file and show some results
      *
      *  @param $id int local ID of file
      *  @param $format string
      */
-    function getInfo($id, $format)
+    function _getInfo($id, $format)
     {
         $ia = $this->gb->analyzeFile($id, $this->sessid);
 
         if ($format=='array') {
             return array(
-                    'Format.Extent'             => $ia['playtime_seconds'],
+                    'Format.Extent'             => $ia['playtime_string'],
                     'Format.Medium.Bitrate'     => $ia['audio']['bitrate'],
                     'Format.Medium.Channels'    => $ia['audio']['channelmode'],
                     'Format.Medium.Samplerate'  => $ia['audio']['sample_rate'],
@@ -211,8 +210,8 @@ class uiBase
                     xmlns:xbmf="http://www.streamonthefly.org/xbmf"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    >
-                  <dc:title  >taken from test xml</dc:title>
-                  <dcterms:extent  >00:30:00.000000</dcterms:extent>
+                  <dc:title>'.$this->_getFileTitle($id).'</dc:title>
+                  <dc:format.extent>'.$ia['playtime_string'].'</dc:format.extent>
                   </metadata>
                   </audioClip>';
 
@@ -253,17 +252,17 @@ class uiBase
 
     function getSP()
     {
-        $spData = $this->gb->loadPref($this->sessid, 'scratchPadContents');
-        if (!PEAR::isError($spData)) {
+        $spData = $this->gb->loadPref($this->sessid, UI_SCRATCHPAD_KEY);
+        if (!PEAR::isError($spData) && trim($spData) != '') {
             $arr = explode(' ', $spData);
             foreach($arr as $val) {
                 $pieces = explode(':', $val);
-                $filedata = $this->getFileInfo($pieces[0]);
-                $res[] = array('id'         => $pieces[0],
-                               #'added'      => $pieces[1],
-                               'name'       => $filedata['name'],
-                               'duration'   => $filedata['playtime_string']
-                         );
+
+                if (preg_match(UI_SCRATCHPAD_REGEX, $val)) {
+                    $res[] = array_merge($this->_getMetaInfo($this->gb->_idFromGunid($pieces[0])),
+                                         array('added' => $pieces[1])
+                             );
+                }
             }
 
             return ($res);
@@ -272,58 +271,96 @@ class uiBase
         }
     }
 
-    function saveSP($data)
+    function _saveSP($data)
     {
-        foreach($data as $val) {
-            $str .= $val['id'].':'.$val['added'].' ';
+        if (is_array($data)) {
+            foreach($data as $val) {
+                $str .= $val['gunid'].':'.$val['added'].' ';
+            }
         }
 
-        $this->gb->savePref($this->sessid, 'scratchPadContents', trim($str));
+        $this->gb->savePref($this->sessid, UI_SCRATCHPAD_KEY, trim($str));
     }
 
     function add2SP($id)
     {
+        $info = $this->_getMetaInfo($id);
+        $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+
         if ($sp = $this->getSP()) {
             foreach ($sp as $val) {
-                if ($val['id'] == $id) $exists = TRUE;
+                if ($val['gunid'] == $info['gunid']) {
+                    $exists = TRUE;
+                }
             }
         }
 
         if(!$exists) {
-            $sp[] = array('id'      => $id,
-                          'added'   => date('Y-m-d')
-                    );
-            $this->saveSP($sp);
-            $this->_retmsg('Entry $1 added', $id);
+            $sp = array_merge(array(array('gunid'   => $info['gunid'],
+                                          'added'   => date('Y-m-d')
+                                   ),
+                              ),
+                              is_array($sp) ? $sp : NULL);
+            #print_r($sp);
+            $this->_saveSP($sp);
+            #$this->_retmsg('Entry $1 added', $gunid);
+            return TRUE;
         } else {
-            $this->_retmsg('Entry $1 already exists', $id);
+            $this->_retmsg('Entry $1 already exists', $info['title']);
+            return FALSE;
         }
-
-        $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
     }
 
-    function _retmsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
+
+    function remFromSP($id)
     {
-        $_SESSION['alertMsg'] = $this->tra($msg, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9);
+        $info = $this->_getMetaInfo($id);
+        $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+
+        if ($sp = $this->getSP()) {
+            foreach ($sp as $val) {
+                if ($val['gunid'] != $info['gunid']) {
+                    $new[] = $val;
+                }
+            }
+
+            $this->_saveSP($new);
+            $this->_retmsg('Entry $1 deleted', $info['title']);
+            return TRUE;
+        }
     }
 
 
-    function getFileName($id)
+    function _retMsg($msg, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL)
+    {
+        $_SESSION['alertMsg'] .= $this->tra($msg, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9).'\n';
+    }
+
+
+    function _getMetaInfo($id)
+    {
+        $data['id']         = $id;
+        $data['gunid']      = $this->gb->_gunidFromId($id);
+        $data['title']      = $this->_getMDataValue($id, 'Title');
+        $data['artist']     = $this->_getMDataValue($id, 'Artist');
+        $data['duration']   = substr($this->_getMDataValue($id, 'format.extent'), 0 ,8);
+        $data['type']       = $this->gb->existsPlaylist($this->sessid, $this->gb->_idFromgunid($id)) ? $this->tra('playlist') : $this->tra('file');
+
+        return ($data);
+    }
+
+
+    function _getMDataValue($id, $key)
+    {
+        $value = array_pop($this->gb->getMDataValue($id, $key, $this->sessid));
+        return $value['value'];
+    }
+
+
+    function _getFileTitle($id)
     {
         $file = array_pop($this->gb->getPath($id));
         return $file['name'];
-    }
-
-    function getFileInfo($id)
-    {
-        $f = $this->gb->analyzeFile($id, $this->sessid);
-        return array(
-                    'name'              => $this->getFileName($id),
-                    'type'              => 0,
-                    'filename'          => $f['filename'],
-                    'playtime_seconds'  => $f['playtime_seconds'],
-                    'playtime_string'   => $f['playtime_string']
-                );
     }
 }
 ?>

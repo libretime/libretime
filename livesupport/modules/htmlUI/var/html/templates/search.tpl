@@ -21,18 +21,25 @@
 
 {if $showSearchRes}
     <div id="searchres">
-
-    {if (count($searchres.search))}
-        {foreach from=$searchres.search item=s}
-            <div style="background-color: {cycle values='#eeeeee, #dadada'}">{$s.gunid}
-                <a href="{$UI_BROWSER}?act=getMdata&id={$s.par_id}">[XML]</a>
-                <a href="{$UI_BROWSER}?act=editMetaDataValues&id={$s.par_id}">[Form]</a>
-                <a href="#" onClick="popup('{$UI_HANDLER}?act=add2SP&id={$s.par_id}', '2SP', 1, 1)">[SP]</a>
-            </div>
-        {/foreach}
+    <center>
+    {if ( is_array($searchres.search))}
+        <table>
+          <tr><th>{tra 0=Title}</th><th>{tra 0=Duration}</th><th></th></tr>
+            {foreach from=$searchres.search item=s}
+                <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
+                    <td>{$s.title}</td>
+                    <td>{$s.duration}</td>
+                    <td><a href="{$UI_BROWSER}?act=getMdata&id={$s.id}">[XML]</a>
+                        <a href="{$UI_BROWSER}?act=editMetaDataValues&id={$s.id}">[Form]</a>
+                        <a href="#" onClick="popup('{$UI_HANDLER}?act=add2SP&id={$s.id}', '2SP', 1, 1)">[SP]</a>
+                    </td>
+                  </tr>
+                </div>
+            {/foreach}
+        </table>
     {else}
         No match found.
     {/if}
-
+    </center>
     </div>
 {/if}

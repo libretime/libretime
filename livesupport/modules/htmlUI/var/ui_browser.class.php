@@ -116,6 +116,13 @@ class uiBrowser extends uiBase {
         if(PEAR::isError($data['listdata'])){
             $data['msg'] = $data['listdata']->getMessage();
             $data['listdata'] = array();
+        } else {
+            foreach ($data['listdata'] as $key=>$val) {
+                if ($val['type'] != 'Folder')
+                    $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], 'title');
+                else
+                    $data['listdata'][$key]['title'] = $val['name'];
+            }
         }
 
         return $data;
@@ -134,7 +141,9 @@ class uiBrowser extends uiBase {
     function getNewFileForm($id, $mask)
     {
         $form = new HTML_QuickForm('newfile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize'));
+        $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
+                                                $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
+                                                : ini_get('upload_max_filesize'));
         $form->setConstants(array('id' => $id));
 
         $this->_parseArr2Form($form, $mask);
@@ -155,7 +164,9 @@ class uiBrowser extends uiBase {
     function getUploadFileForm($id, $mask)
     {
         $form = new HTML_QuickForm('upload', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize'));
+        $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
+                                                $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
+                                                : ini_get('upload_max_filesize'));
         $form->setConstants(array('id' => $id));
 
         $this->_parseArr2Form($form, $mask);
@@ -353,15 +364,14 @@ class uiBrowser extends uiBase {
                              );
             }
         }
-        $searchCriteria = array('filetype'  => 'audioclip',
+        $searchCriteria = array('filetype'  => $formdata['filetype'],
                                 'operator'  => $formdata['operator'],
                                 'conditions'=> $critArr
                           );
 
         $results = $this->gb->localSearch($searchCriteria, $this->sessid);
         foreach ($results['results'] as $rec) {
-                $res[] = array('gunid'  => $rec,
-                               'par_id' => $this->gb->_idFromGunid($rec));
+                $res[] = $this->_getMetaInfo($this->gb->_idFromGunid($rec));
             }
 
         return array('search'   => $res,
@@ -389,7 +399,7 @@ class uiBrowser extends uiBase {
     /**
      *  getMdata
      *
-     *  Show file's metadata as XML
+     *  Get file's metadata as XML
      *
      *  @param id int, local id of stored file
      *  @return array
@@ -401,21 +411,6 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  getMdataValue
-     *
-     *  Get Files Metadata Record
-     *
-     *  @param id int, local id of stored file
-     *  @param cetagory string, metadata element name
-     *  @return array
-     */
-    function _getMdataValue($id, $category)
-    {
-        return($this->gb->getMdataValue($id, $category, $this->sessid));
-    }
-
-
-    /**
      *  getMetaDataForm
      *
      *  create a form to edit Metadata
@@ -423,7 +418,7 @@ class uiBrowser extends uiBase {
      *  @param id int
      *  @return string (html)
      */
-    function getMetadataForm($id, &$mask, $get=FALSE, $data=NULL)
+    function getMetadataForm($id, $mask, $get=FALSE, $data=NULL)
     {
         $form = new HTML_QuickForm('tabs', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['tabs']);
@@ -444,11 +439,11 @@ class uiBrowser extends uiBase {
         foreach ($mask['tabs']['group']['group'] as $key) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 $mask['pages'][$key][$k]['element']    = $key.'__'.$v['element'];
-                $mask['pages'][$key][$k]['attributes'] = array ('onChange' => "spread(this, '".$v['element']."')");
+                $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$v['element']."')"));
 
                 ## recive data from GreenBox
                 if ($get) {
-                    $mask['pages'][$key][$k]['default'] = array_pop($this->gb->getMDataValue($id, strtr($v['element'], '_', '.'), $this->sessid));
+                    $mask['pages'][$key][$k]['default'] = $this->_getMDataValue($id, strtr($v['element'], '_', '.'));
                 }
 
                 ## get data from parameter

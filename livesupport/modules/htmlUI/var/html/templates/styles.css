@@ -102,8 +102,7 @@
 }
 
 #searchres {
-    text-align: center;
-    width: 300px;
+	width: 800px;
     border-style : dotted;
     padding : 5px;
     margin-top: 10px;

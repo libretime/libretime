@@ -23,7 +23,7 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,4 +123,6 @@ define('UI_QFORM_ERROR',        'templates/form_parts/error.tpl');
 define('UI_SEARCH_MAX_ROWS', 8);
 define('UI_SEARCH_MIN_ROWS', 2);
 define('UI_REGEX_URL', '/^(ht|f)tps?:\/\/[^ ]+$/');
+define('UI_SCRATCHPAD_KEY', 'djBagContents');
+define('UI_SCRATCHPAD_REGEX', '/^([0-9a-f]{16}:[0-9]{4}-[0-9]{2}-[0-9]{2}( )?)+$/');
 ?>

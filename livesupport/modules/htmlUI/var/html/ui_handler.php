@@ -91,6 +91,10 @@ switch($_REQUEST['act']){
         $uiHandler->add2SP($uiHandler->id);
     break;
 
+    case "remFromSP":
+        $uiHandler->remFromSP($uiHandler->id);
+    break;
+
     default:
         $_SESSION["alertMsg"] = $uiHandler->tra("Unknown method: ").$_REQUEST["act"];
         header("Location: ".UI_BROWSER);

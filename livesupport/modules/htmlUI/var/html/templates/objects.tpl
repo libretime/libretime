@@ -18,7 +18,7 @@
             {else}
                 {str_repeat str='&nbsp;' count=3}       <span id="ID{$o.id}">
             {/if}
-            <a {if $o.type eq 'Folder'}href="{$UI_BROWSER}?id={$o.id}" {/if}>[{$o.name}]</a>:&nbsp;&nbsp;
+            <a {if $o.type eq 'Folder'}href="{$UI_BROWSER}?id={$o.id}" {/if}>[{$o.title}]</a>:&nbsp;&nbsp;
                                                         </span>
 
           </td>
@@ -43,7 +43,8 @@
               {if $o.type != 'Folder'}
                   &nbsp;<a href="{$UI_BROWSER}?act=getFile&id={$o.id}" class="button">[Access]</a>
                   &nbsp;<a href="{$UI_BROWSER}?act=getInfo&id={$o.id}" class="button">[Analyze]</a>
-                  &nbsp;<a href="{$UI_BROWSER}?act=editMetaDataValues&id={$o.id}" class="button">[MetaData]</a>
+                  &nbsp;<a href="{$UI_BROWSER}?act=editMetaDataValues&id={$o.id}" class="button">[MData]</a>
+                  &nbsp;<a href="#" onclick="popup('{$UI_HANDLER}?act=add2SP&id={$o.id}', '2SP', 1, 1)" class="button">[SP]</a>
               {/if}
               {if $o.type eq 'Replica'}
                   &nbsp; (-&gt;$o.target})

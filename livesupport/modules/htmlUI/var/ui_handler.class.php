@@ -33,7 +33,7 @@ class uiHandler extends uiBase {
      *  @param pass  string, password
      */
     function login(&$formdata, &$mask)
-    {           
+    {
         if ($this->_validateForm($formdata, $mask)) {
             $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
             if($sessid && !PEAR::isError($sessid)){
@@ -96,16 +96,19 @@ class uiHandler extends uiBase {
                     chmod($mdtmp, 0664);
                 }
             }
-            $r = $this->gb->putFile($id, $formdata['new_filename'] ? $formdata['new_filename'] : $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
+            $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
             if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
             else{
             #            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
                 @unlink($ntmp);
                 @unlink($mdtmp);
             }
+            $this->add2SP($r);
             $this->redirUrl = UI_BROWSER."?id=".$id;
+            return $r;
          } else {
             $this->redirUrl = UI_BROWSER."?act=newfile&id=".$id;
+            return FALSE;
          }
     }
 
@@ -130,21 +133,22 @@ class uiHandler extends uiBase {
             move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
             chmod($ntmp, 0664);
 
-            $r = $this->gb->putFile($id, $formdata['new_filename'] ? $formdata['new_filename'] : $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid);
+            $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid);
             if(PEAR::isError($r)) $this->alertMsg = $r->getMessage();
             else{
             #            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
                 @unlink($ntmp);
                 @unlink($mdtmp);
             }
-
             ## extract some metadata with getID3
-            $this->gb->replaceMetadata($r, $this->getInfo($r, 'xml'), $mdataLoc = 'string', $this->sessid);
+            $this->gb->replaceMetadata($r, $this->_getInfo($r, 'xml'), 'string', $this->sessid);
 
-
+            $this->add2SP($r);
             $this->redirUrl = UI_BROWSER."?act=editMetaDataValues&id=$r";
+            return $r;
         } else {
             $this->redirUrl = UI_BROWSER."?act=upload_1&id=$id";
+            return FALSE;
         }
     }
 
@@ -453,7 +457,7 @@ class uiHandler extends uiBase {
         $this->_dateArr2Str(&$mData);
 
         foreach ($mData as $key=>$val) {
-            #$this->gb->setMDataValue($formdata['id'], $key, $val, $this->sessid)
+            $this->gb->setMDataValue($formdata['id'], $key, $this->sessid, $val);
         }
 
         $this->alertMsg = $this->tra('Metadata saved');
@@ -469,6 +473,24 @@ class uiHandler extends uiBase {
             return FALSE;
         }
         ## test for uploadet files bacause HTMLQuickForm::validate() ignores them ####
+        if (is_array($form->_submitFiles)) {
+            foreach ($form->_submitFiles as $key => $val) {
+                if ($val['error']) {
+
+                    switch ($val['error']) {
+                        case 1: $was_error = TRUE; $this->_retMsg('Uploaded File $1 is greater than System setting.', $mask[$key]['label']); break;
+                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded File $1 is greater than LS setting.', $mask[$key]['label']); break;
+                        case 3: $was_error = TRUE; $this->_retMsg('File $1 was uploadet partly.', $mask[$key]['label']); break;
+                        case 4: if ($mask[$key]['required']) {$was_error = TRUE; $this->_retMsg('File $1 was not uploadet.', $mask[$key]['label']);} break;
+                    }
+                }
+            }
+            if ($was_error) {
+                $_SESSION['retransferFormData'] = array_merge($_REQUEST, $_FILES);
+                return FALSE;
+            }
+        }
+        /*
         foreach($mask as $k) {
             if ($k['type']=='file' && $k['required']==TRUE) {
                 if ($_FILES[$k['element']]['error']) {
@@ -476,9 +498,7 @@ class uiHandler extends uiBase {
                     return FALSE;
                 }
             }
-        }
-
-        reset($mask);
+        }  */
         return TRUE;
     }
 
@@ -504,10 +524,12 @@ class uiHandler extends uiBase {
                 }
             }
 
-            $this->alertMsg = $this->tra('Settings saved');
-            return;
+            $this->_retMsg('Settings saved');
+            return TRUE;
+        } else {
+            $this->_retMsg('Error saving Settings');
+            return FALSE;
         }
-        $this->alertMsg = $this->tra('Error saving Settings');
     }
 
 
