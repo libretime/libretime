@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ class StoredFile{
         $this->resDir     =  $this->_getResDir($this->gunid);
         $this->accessDir  =  $this->gb->accessDir;
         $this->rmd        =& new RawMediaData($this->gunid, $this->resDir);
-        $this->md         =& new MetaData(&$gb, $this->gunid, $this->resDir);
+        $this->md         =& new MetaData($gb, $this->gunid, $this->resDir);
         return $this->gunid;
     }
 
@@ -87,7 +87,7 @@ class StoredFile{
         $mediaFileLP='', $metadata='', $mdataLoc='file',
         $gunid=NULL, $ftype=NULL)
     {
-        $ac =& new StoredFile(&$gb, ($gunid ? $gunid : NULL));
+        $ac =& new StoredFile($gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
         $ac->id   = $oid;
         $ac->mime = "unKnown";
@@ -172,7 +172,7 @@ class StoredFile{
             );
         }
         $gunid = StoredFile::_normalizeGunid($row['gunid']);
-        $ac =& new StoredFile(&$gb, $gunid);
+        $ac =& new StoredFile($gb, $gunid);
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id   = $row['id'];
@@ -189,7 +189,7 @@ class StoredFile{
      */
     function recallByGunid(&$gb, $gunid='')
     {
-      return StoredFile::recall(&$gb, '', $gunid);
+      return StoredFile::recall($gb, '', $gunid);
     }
 
     /**
@@ -211,7 +211,7 @@ class StoredFile{
         if(is_null($gunid)) return PEAR::raiseError(
             "StoredFile::recallByToken: invalid token ($token)", GBERR_AOBJNEX);
         $gunid = StoredFile::_normalizeGunid($gunid);
-        return StoredFile::recall(&$gb, '', $gunid);
+        return StoredFile::recall($gb, '', $gunid);
     }
 
     /**
@@ -223,7 +223,7 @@ class StoredFile{
     function copyOf(&$src, $nid)
     {
         $ac =& StoredFile::insert(
-            &$src->gb, $nid, $src->name, $src->_getRealRADFname(),
+            $src->gb, $nid, $src->name, $src->_getRealRADFname(),
             '', '', NULL, $src->gb->_getType($src->gunid)
         );
         if(PEAR::isError($ac)) return $ac;
@@ -470,7 +470,7 @@ class StoredFile{
      */
     function isEdited($playlistId=NULL)
     {
-        if(is_null($playlistId)) $playlistId = $this->playlistId;
+        if(is_null($playlistId)) $playlistId = $this->gunid;
         $state = $this->_getState($playlistId);
         if($state == 'edited'){ return TRUE; }
         return FALSE;
@@ -506,8 +506,9 @@ class StoredFile{
      */
     function _createGunid()
     {
+        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
         $initString =
-            microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport";
+            microtime().$ip.rand()."org.mdlf.livesupport";
         $hash = md5($initString);
         // non-negative int8
         $hsd = substr($hash, 0, 1);

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -416,6 +416,7 @@ class MetaData{
         $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
         $object_sql = (is_null($object)? "NULL" : "'$object'");
         $predicate  = strtolower($predicate);
+        $id = NULL;
         if($mode == 'update'){
             $cond = "gunid = x'{$this->gunid}'::bigint AND predns=$predns_sql
                 AND predicate='$predicate'";
@@ -477,9 +478,9 @@ class MetaData{
 //                "MetaData::genXMLDoc: not exists ({$this->gunid})"
 //            );
             $nxn =& $domd->create_element('metadata');
-            $domd->append_child(&$nxn);
+            $domd->append_child($nxn);
         }else{
-            $rr = $this->genXMLNode(&$domd, &$domd, $row);
+            $rr = $this->genXMLNode($domd, $domd, $row);
             if(PEAR::isError($rr)) return $rr;
         }
         //return preg_replace("|</([^>]*)>|", "</\\1>\n", $domd->dump_mem())."\n";
@@ -501,7 +502,7 @@ class MetaData{
         }else{
             $nxn =& $domd->create_attribute($row['predicate'], '');
         }
-        $xn->append_child(&$nxn);
+        $xn->append_child($nxn);
         $uri = $this->dbc->getOne("
             SELECT object FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint AND predicate='_namespace'
@@ -515,9 +516,9 @@ class MetaData{
         }
         if($row['object'] != 'NULL'){
             $tn =& $domd->create_text_node($row['object']);
-            $nxn->append_child(&$tn);
+            $nxn->append_child($tn);
         }
-        $this->genXMLTree(&$domd, &$nxn, $row['id']);
+        $this->genXMLTree($domd, $nxn, $row['id']);
     }
 
     /**
@@ -538,7 +539,7 @@ class MetaData{
         ");
         if(PEAR::isError($qh)) return $qh;
         while($row = $qh->fetchRow()){
-            $this->genXMLNode(&$domd, &$xn, $row);
+            $this->genXMLNode($domd, $xn, $row);
         }
         $qh->free();
     }

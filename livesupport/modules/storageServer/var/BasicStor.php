@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -75,7 +75,7 @@ class BasicStor extends Alib{
      */
     function BasicStor(&$dbc, $config)
     {
-        parent::Alib(&$dbc, $config);
+        parent::Alib($dbc, $config);
         $this->config = $config;
         $this->filesTable = $config['tblNamePrefix'].'files';
         $this->mdataTable = $config['tblNamePrefix'].'mdata';
@@ -123,7 +123,7 @@ class BasicStor extends Alib{
         $name   = "$fileName";
         $id = $this->addObj($name , 'File', $parid);
         $ac =&  StoredFile::insert(
-            &$this, $id, $name, $mediaFileLP, $mdataFileLP, $mdataLoc,
+            $this, $id, $name, $mediaFileLP, $mdataFileLP, $mdataLoc,
             $gunid, $ftype
         );
         if(PEAR::isError($ac)){
@@ -147,7 +147,7 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
-                $ac =& StoredFile::recall(&$this, $id);
+                $ac =& StoredFile::recall($this, $id);
                 if(PEAR::isError($ac)){
                     // catch nonerror exception:
                     //if($ac->getCode() != GBERR_FOBJNEX)
@@ -362,7 +362,7 @@ class BasicStor extends Alib{
      */
     function bsOpenDownload($id, $part='media')
     {
-        $ac =& StoredFile::recall(&$this, $id);
+        $ac =& StoredFile::recall($this, $id);
         if(PEAR::isError($ac)) return $ac;
         $gunid      = $ac->gunid;
         switch($part){
@@ -579,7 +579,7 @@ class BasicStor extends Alib{
      */
     function bsReplaceMetadata($id, $mdata, $mdataLoc='file')
     {
-        $ac =& StoredFile::recall(&$this, $id);
+        $ac =& StoredFile::recall($this, $id);
         if(PEAR::isError($ac)) return $ac;
         return $ac->replaceMetaData($mdata, $mdataLoc);
     }
@@ -592,7 +592,7 @@ class BasicStor extends Alib{
      */
     function bsGetMetadata($id)
     {
-        $ac =& StoredFile::recall(&$this, $id);
+        $ac =& StoredFile::recall($this, $id);
         if(PEAR::isError($ac)) return $ac;
         return $ac->getMetaData();
     }
@@ -607,7 +607,7 @@ class BasicStor extends Alib{
     function bsGetMetadataValue($id, $category)
     {   
         require_once "DataEngine.php";
-        $de =& new DataEngine(&$this);
+        $de =& new DataEngine($this);
         return $de->getMetadataValue($id, $category);
     }
     
@@ -645,7 +645,7 @@ class BasicStor extends Alib{
     function bsLocalSearch($criteria, $limit=0, $offset=0)
     {
         require_once "DataEngine.php";
-        $de =& new DataEngine(&$this);
+        $de =& new DataEngine($this);
         return $de->localSearch($criteria, $limit, $offset);
     }
 
@@ -665,7 +665,7 @@ class BasicStor extends Alib{
     function bsBrowseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
         require_once "DataEngine.php";
-        $de =& new DataEngine(&$this);
+        $de =& new DataEngine($this);
         return $de->browseCategory($category, $limit, $offset, $criteria);
     }
 
@@ -705,7 +705,7 @@ class BasicStor extends Alib{
      */
     function bsAnalyzeFile($id)
     {
-        $ac =& StoredFile::recall(&$this, $id);
+        $ac =& StoredFile::recall($this, $id);
         if(PEAR::isError($ac)) return $ac;
         $ia = $ac->analyzeMediaFile();
         return $ia;
@@ -916,9 +916,9 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
-                $ac =& StoredFile::recall(&$this, $id);
+                $ac =& StoredFile::recall($this, $id);
                 if(PEAR::isError($ac)){ return $ac; }
-                $ac2 =& StoredFile::copyOf(&$ac, $nid);
+                $ac2 =& StoredFile::copyOf($ac, $nid);
                 $ac2->rename($this->getObjName($nid));
                 break;
             case"File":
@@ -953,7 +953,7 @@ class BasicStor extends Alib{
         switch($ot = $this->getObjType($id)){
             case"audioclip":
             case"playlist":
-                $ac =& StoredFile::recall(&$this, $id);
+                $ac =& StoredFile::recall($this, $id);
                 if(PEAR::isError($ac)) return $ac;
                 if($ac->isEdited() && !$forced){
                     return PEAR::raiseError(
@@ -1063,6 +1063,7 @@ class BasicStor extends Alib{
      */
     function test()
     {
+        $this->test_log = '';
 //        if(PEAR::isError($p = parent::test())) return $p;
         $this->deleteData();
         $this->testData();

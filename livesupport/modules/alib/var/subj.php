@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -55,7 +55,7 @@ class Subjects extends ObjClasses{
      */
     function Subjects(&$dbc, $config)
     {
-        parent::ObjClasses(&$dbc, $config);
+        parent::ObjClasses($dbc, $config);
         $this->subjTable = $config['tblNamePrefix'].'subjs';
         $this->smembTable = $config['tblNamePrefix'].'smemb';
     }

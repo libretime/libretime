@@ -9,8 +9,8 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$gb = &new LocStor(&$dbc, $config);
-$tr =& new Transport(&$dbc, &$gb, $config);
+$gb = &new LocStor($dbc, $config);
+$tr =& new Transport($dbc, $gb, $config);
 $cnt = 1;
 
 #$res = $gb->cronJob();

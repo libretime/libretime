@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -293,6 +293,7 @@ logout() {
 }
 
 searchTest() {
+    echo "#XMLRPC search test"
     login
     storeAudioClip
     GUNID=$RGUNID
@@ -310,6 +311,8 @@ searchTest() {
     fi
     deleteAudioClip
     logout
+    echo "#XMLRPC: search: OK."
+    echo ""
 }
 
 preferenceTest(){

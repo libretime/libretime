@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/class.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "mtree.php";
  *  class for 'object classes' handling - i.e. groups of object in tree
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see Mtree
  *  @see Subj
  */
@@ -51,7 +51,7 @@ class ObjClasses extends Mtree{
      */
     function ObjClasses(&$dbc, $config)
     {
-        parent::MTree(&$dbc, $config);
+        parent::MTree($dbc, $config);
         $this->classTable = $config['tblNamePrefix'].'classes';
         $this->cmembTable = $config['tblNamePrefix'].'cmemb';
     }

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -56,7 +56,7 @@ class Alib extends Subjects{
      */
     function Alib(&$dbc, $config)
     {
-        parent::Subjects(&$dbc, $config);
+        parent::Subjects($dbc, $config);
         $this->permTable = $config['tblNamePrefix'].'perms';
         $this->sessTable = $config['tblNamePrefix'].'sess';
     }

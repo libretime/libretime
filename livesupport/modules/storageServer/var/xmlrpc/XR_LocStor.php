@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1317,7 +1317,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Prefs.php';
-        $pr =& new Prefs(&$this);
+        $pr =& new Prefs($this);
         $res = $pr->loadPref($r['sessid'], $r['key']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1368,7 +1368,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Prefs.php';
-        $pr =& new Prefs(&$this);
+        $pr =& new Prefs($this);
         $res = $pr->savePref($r['sessid'], $r['key'], $r['value']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1418,7 +1418,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Prefs.php';
-        $pr =& new Prefs(&$this);
+        $pr =& new Prefs($this);
         $res = $pr->delPref($r['sessid'], $r['key']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1470,7 +1470,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Prefs.php';
-        $pr =& new Prefs(&$this);
+        $pr =& new Prefs($this);
         $res = $pr->loadGroupPref($r['sessid'], $r['group'], $r['key']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1526,7 +1526,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Prefs.php';
-        $pr =& new Prefs(&$this);
+        $pr =& new Prefs($this);
         $res = $pr->saveGroupPref($r['sessid'], $r['group'], $r['key'], $r['value']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1576,7 +1576,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Transport.php';
-        $tr =& new Transport(&$this->dbc, &$this, $this->config);
+        $tr =& new Transport($this->dbc, $this, $this->config);
         $res = $tr->uploadToArchive($r['gunid'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1625,7 +1625,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Transport.php';
-        $tr =& new Transport(&$this->dbc, &$this, $this->config);
+        $tr =& new Transport($this->dbc, $this, $this->config);
         $res = $tr->downloadFromArchive($r['gunid'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
@@ -1682,7 +1682,7 @@ class XR_LocStor extends LocStor{
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         require_once '../../../storageServer/var/Transport.php';
-        $tr =& new Transport(&$this->dbc, &$this, $this->config);
+        $tr =& new Transport($this->dbc, $this, $this->config);
         $res = $tr->getTransportInfo($r['trtok'], $r['sessid']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());

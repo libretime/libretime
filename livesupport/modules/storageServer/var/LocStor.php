@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ class LocStor extends BasicStor{
                 "LocStor.php: storeAudioClipOpen: Wrong gunid ($gunid)"
             );
         }
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(!PEAR::isError($ac)){
             // gunid exists - do replace
             $oid = $ac->getId();
@@ -85,7 +85,7 @@ class LocStor extends BasicStor{
             $oid = $this->addObj($tmpFname , 'File', $parid);
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
-                &$this, $oid, '', '', $metadata, 'string',
+                $this, $oid, '', '', $metadata, 'string',
                 $gunid, $ftype
             );
             if(PEAR::isError($ac)){
@@ -113,7 +113,7 @@ class LocStor extends BasicStor{
      */
     function storeAudioClipClose($sessid, $token)
     {
-        $ac =& StoredFile::recallByToken(&$this, $token);
+        $ac =& StoredFile::recallByToken($this, $token);
         if(PEAR::isError($ac)){ return $ac; }
         $tmpFname = $this->bsClosePut($token);
         if(PEAR::isError($tmpFname)){ $ac->delete(); return $tmpFname; }
@@ -146,7 +146,7 @@ class LocStor extends BasicStor{
      */
     function accessRawAudioData($sessid, $gunid)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -162,7 +162,7 @@ class LocStor extends BasicStor{
      */
     function releaseRawAudioData($sessid, $token)
     {
-        $ac =& StoredFile::recallByToken(&$this, $token);
+        $ac =& StoredFile::recallByToken($this, $token);
         if(PEAR::isError($ac)) return $ac;
         return $ac->releaseRawMediaData($token);
     }
@@ -248,7 +248,7 @@ class LocStor extends BasicStor{
      */
     function getAudioClip($sessid, $gunid)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -369,7 +369,7 @@ class LocStor extends BasicStor{
     {
         $ex = $this->existsFile($sessid, $gunid, 'audioclip');
         if(!$ex) return FALSE;
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)){ return $ac; }
         return $ac->exists();
     }
@@ -385,7 +385,7 @@ class LocStor extends BasicStor{
      */
     function existsFile($sessid, $gunid, $ftype=NULL)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)){
             // catch some exceptions
             switch($ac->getCode()){
@@ -411,7 +411,7 @@ class LocStor extends BasicStor{
      */
     function deleteAudioClip($sessid, $gunid)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -430,7 +430,7 @@ class LocStor extends BasicStor{
      */
     function updateAudioClipMetadata($sessid, $gunid, $metadata)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -507,7 +507,7 @@ class LocStor extends BasicStor{
             return $res;
         $oid = $this->addObj($tmpFname , 'File', $parid);
         if(PEAR::isError($oid)) return $oid;
-        $ac =&  StoredFile::insert(&$this, $oid, '', '',
+        $ac =&  StoredFile::insert($this, $oid, '', '',
             '<?xml version="1.0" encoding="UTF-8"?><smil><body/></smil>',
             'string', $playlistId, 'playlist'
         );
@@ -550,7 +550,7 @@ class LocStor extends BasicStor{
                 'LocStor.php: editPlaylist: playlist already edited'
             );
         }
-        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
         if(PEAR::isError($ac)){ return $ac; }
         $id = $ac->getId();
         $res = $this->bsOpenDownload($id, 'metadata');
@@ -571,7 +571,7 @@ class LocStor extends BasicStor{
     function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
         $playlistId = $this->bsCloseDownload($playlistToken, $part='metadata');
-        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
         if(PEAR::isError($ac)){ return $ac; }
         $res = $ac->replaceMetaData($newPlaylist, $mdataLoc='string');
         if(PEAR::isError($res)){ return $res; }
@@ -595,7 +595,7 @@ class LocStor extends BasicStor{
                 'LocStor.php: deletePlaylist: playlist not exists'
             );
         }
-        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
             return $res;
@@ -684,7 +684,7 @@ class LocStor extends BasicStor{
      */
     function _isEdited($playlistId)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
         return $ac->isEdited($playlistId);
     }
 
@@ -697,7 +697,7 @@ class LocStor extends BasicStor{
      */
     function _setEditFlag($playlistId, $val=TRUE)
     {
-        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
         $state = $ac->_getState();
         if($val){ $ac->setState('edited'); }
         else{ $ac->setState('ready'); }

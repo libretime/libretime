@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$locStor = &new LocStor(&$dbc, $config);
+$locStor = &new LocStor($dbc, $config);
 
 function http_error($code, $err){
     header("HTTP/1.1 $code");
@@ -95,7 +95,7 @@ if(PEAR::isError($ex_pl)){
     }else{ http_error(500, $ex_pl->getMessage()); }
 }
 if(!$ex_ac && !$ex_pl){ http_error(404, "404 File not found"); }
-$ac =& StoredFile::recallByGunid(&$locStor, $gunid);
+$ac =& StoredFile::recallByGunid($locStor, $gunid);
 if(PEAR::isError($ac)){ http_error(500, $ac->getMessage()); }
 if($ex_ac){
     $realFname  = $ac->_getRealRADFname();

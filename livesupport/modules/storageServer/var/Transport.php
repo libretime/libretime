@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Transport.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -223,7 +223,7 @@ class Transport{
         $this->trLog("INIT UP id={$row['id']}, trtok={$row['trtok']}");
         switch($row['trtype']){
             case"audioclip":
-                $ac =& StoredFile::recallByGunid(&$this->gb, $row['gunid']);
+                $ac =& StoredFile::recallByGunid($this->gb, $row['gunid']);
                 if(PEAR::isError($ac)) return $ac;
                 $fpath = $ac->_getRealRADFname();
                 $fname = $ac->_getFileName();
@@ -261,7 +261,7 @@ class Transport{
                 );
                 break;
             case"playlist":
-                $ac =& StoredFile::recallByGunid(&$this->gb, $row['gunid']);
+                $ac =& StoredFile::recallByGunid($this->gb, $row['gunid']);
                 if(PEAR::isError($ac)) return $ac;
                 $fname = $ac->_getFileName();
                 $size  = filesize($fpath);
@@ -671,7 +671,7 @@ class Transport{
         $name   = $row['fname'];
         $this->trLog("FIN1 DOWN id={$row['id']}, trtok={$row['trtok']}".
             "\n   ".serialize($row));
-        $ac =& StoredFile::recallByGunid(&$this->gb, $row['gunid']);
+        $ac =& StoredFile::recallByGunid($this->gb, $row['gunid']);
         if(!PEAR::isError($ac)){
             // gunid exists - do replace
             $id = $ac->getId();
@@ -684,7 +684,7 @@ class Transport{
             $id = $this->gb->addObj($name , 'File', $row['parid']);
             if(PEAR::isError($id)) return $id;
             $ac =&  StoredFile::insert(
-                &$this->gb, $id, $name, $row['localfile'], $mdata, 'string',
+                $this->gb, $id, $name, $row['localfile'], $mdata, 'string',
                 $row['gunid'], 'audioclip'
             );
             if(PEAR::isError($ac)) return $ac;
@@ -806,8 +806,9 @@ class Transport{
      */
     function _createTrtok()
     {
+        $ip = (isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '');
         $initString =
-            microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport";
+            microtime().$ip.rand()."org.mdlf.livesupport";
         $hash = md5($initString);
         $res = substr($hash, 0, 16);
         return $res;

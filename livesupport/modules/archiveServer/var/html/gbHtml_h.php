@@ -20,6 +20,6 @@ function errCallBack($err)
 
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox(&$dbc, $config);
+$gb = &new GreenBox($dbc, $config);
 
 ?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,9 +56,9 @@ if(PEAR::isError($dbc)){
 
 echo "#StorageServer uninstall:\n";
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox(&$dbc, $config);
-$tr =& new Transport(&$dbc, &$gb, $config);
-$pr =& new Prefs(&$gb);
+$gb = &new GreenBox($dbc, $config);
+$tr =& new Transport($dbc, $gb, $config);
+$pr =& new Prefs($gb);
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
 
 echo "# Uninstall Prefs submodule";

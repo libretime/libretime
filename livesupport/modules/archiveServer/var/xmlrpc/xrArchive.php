@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xrArchive.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
-$archive = &new XR_Archive(&$dbc, $config);
+$archive = &new XR_Archive($dbc, $config);
 
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.
