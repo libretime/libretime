@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElementTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -150,9 +150,9 @@ PlaylistElementTest :: firstTest(void)
                                         
         CPPUNIT_ASSERT(*playlistElement->getXmlElementString() ==
                                 "<playlistElement id=\"0000000000000111\" "
-                                "relativeOffset=\"00:00:00\">\n"
+                                "relativeOffset=\"00:00:00.000000\">\n"
                                         "<audioClip id=\"0000000000010003\" "
-                                        "playlength=\"00:00:11\" "
+                                        "playlength=\"00:00:11.000000\" "
                                         "title=\"three\"/>\n"
                                 "</playlistElement>");
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,20 +115,20 @@ PlaylistTest :: firstTest(void)
 
     CPPUNIT_ASSERT(playlist->valid());
     CPPUNIT_ASSERT(*playlist->getXmlElementString() ==
-"<playlist id=\"0000000000000001\" playlength=\"00:00:34\" "
+"<playlist id=\"0000000000000001\" playlength=\"00:00:34.000000\" "
                                   "title=\"My First Playlist\">\n"
-"<playlistElement id=\"0000000000000101\" relativeOffset=\"00:00:00\">\n"
-"<audioClip id=\"0000000000010001\" playlength=\"00:00:11\" title=\"one\"/>\n"
+"<playlistElement id=\"0000000000000101\" relativeOffset=\"00:00:00.000000\">\n"
+"<audioClip id=\"0000000000010001\" playlength=\"00:00:11.000000\" title=\"one\"/>\n"
 "</playlistElement>\n"
-"<playlistElement id=\"0000000000000102\" relativeOffset=\"00:00:11\">\n"
-"<audioClip id=\"0000000000010002\" playlength=\"00:00:12\" title=\"two\"/>\n"
-"<fadeInfo id=\"0000000000009901\" fadeIn=\"00:00:02\" "
+"<playlistElement id=\"0000000000000102\" relativeOffset=\"00:00:11.000000\">\n"
+"<audioClip id=\"0000000000010002\" playlength=\"00:00:12.000000\" title=\"two\"/>\n"
+"<fadeInfo id=\"0000000000009901\" fadeIn=\"00:00:02.000000\" "
                                   "fadeOut=\"00:00:01.500000\"/>\n"
 "</playlistElement>\n"
-"<playlistElement id=\"0000000000000103\" relativeOffset=\"00:00:23\">\n"
-"<playlist id=\"0000000000000002\" playlength=\"00:00:11\" title=\"\">\n"
-"<playlistElement id=\"0000000000000111\" relativeOffset=\"00:00:00\">\n"
-"<audioClip id=\"0000000000010003\" playlength=\"00:00:11\" title=\"three\"/>\n"
+"<playlistElement id=\"0000000000000103\" relativeOffset=\"00:00:23.000000\">\n"
+"<playlist id=\"0000000000000002\" playlength=\"00:00:11.000000\" title=\"\">\n"
+"<playlistElement id=\"0000000000000111\" relativeOffset=\"00:00:00.000000\">\n"
+"<audioClip id=\"0000000000010003\" playlength=\"00:00:11.000000\" title=\"three\"/>\n"
 "</playlistElement>\n"
 "</playlist>\n"
 "</playlistElement>\n"

@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -199,8 +199,9 @@ PlaylistElement :: getXmlElementString(void)    throw ()
                                  + std::string(*id) 
                                  + "\" ");
     xmlString->append(relativeOffsetAttrName + "=\"" 
-                                             + to_simple_string(*relativeOffset)
-                                             + "\">\n");
+                                        + toFixedString(relativeOffset)
+                                        + "\">\n");
+
     xmlString->append(*getPlayable()->getXmlElementString() + "\n");
     if (fadeInfo) {
         xmlString->append(*fadeInfo->getXmlElementString() + "\n");

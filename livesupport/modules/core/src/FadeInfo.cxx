@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfo.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,11 +126,11 @@ FadeInfo :: getXmlElementString(void)           throw ()
                                  + std::string(*id) 
                                  + "\" ");
     xmlString->append(fadeInAttrName + "=\"" 
-                                         + to_simple_string(*fadeIn)
-                                         + "\" ");
+                                     + toFixedString(fadeIn)
+                                     + "\" ");
     xmlString->append(fadeOutAttrName + "=\"" 
-                                         + to_simple_string(*fadeOut)
-                                         + "\"/>");
+                                      + toFixedString(fadeOut)
+                                      + "\"/>");
     return xmlString;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfoTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ FadeInfoTest :: firstTest(void)
 
         CPPUNIT_ASSERT(*fadeInfo->getXmlElementString() == 
                                     "<fadeInfo id=\"0000000000009901\" "
-                                    "fadeIn=\"00:00:02\" "
+                                    "fadeIn=\"00:00:02.000000\" "
                                     "fadeOut=\"00:00:01.000500\"/>");
 
     } catch (std::invalid_argument &e) {

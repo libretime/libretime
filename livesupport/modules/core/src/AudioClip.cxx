@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -161,7 +161,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref       id,
     setMetadata(title, titleElementName, titleElementPrefix);
     
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
-                                        to_simple_string(*playlength) ));
+                                        toFixedString(playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
 
@@ -184,7 +184,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref               id,
     setMetadata(title, titleElementName, titleElementPrefix);
 
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
-                                        to_simple_string(*playlength) ));
+                                        toFixedString(playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
 
@@ -204,7 +204,7 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref               id,
     setMetadata(title, titleElementName, titleElementPrefix);
  
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
-                                        to_simple_string(*playlength) ));
+                                        toFixedString(playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
  
@@ -522,7 +522,7 @@ AudioClip :: getXmlElementString(void) const    throw ()
                                  + std::string(*id) 
                                  + "\" ");
     xmlString->append(playlengthAttrName + "=\"" 
-                                         + to_simple_string(*playlength)
+                                         + toFixedString(playlength)
                                          + "\" ");
     xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
                                                    + *title

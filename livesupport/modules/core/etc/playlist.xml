@@ -24,11 +24,11 @@
 
 <playlist id="0000000000000001" 
           title="My First Playlist" 
-          playlength="00:00:34.000" >
+          playlength="00:00:34.000000" >
     <playlistElement id="0000000000000101" 
-                     relativeOffset="0" >
+                     relativeOffset="00:00:00.000000" >
         <audioClip   id="0000000000010001" 
-                     playlength="00:00:11.000" 
+                     playlength="00:00:11.000000" 
                      title = "one"
                      uri="file:var/test1.mp3" />
     </playlistElement>
@@ -47,9 +47,9 @@
         <playlist    id="0000000000000002" 
                      playlength="00:00:11.000000" >
             <playlistElement id="0000000000000111" 
-                             relativeOffset="0" >
+                             relativeOffset="00:00:00.000000" >
                 <audioClip   id="0000000000010003" 
-                             playlength="00:00:11.000" 
+                             playlength="00:00:11.000000" 
                              title = "three"
                              uri="file:var/test3.mp3" />
             </playlistElement>

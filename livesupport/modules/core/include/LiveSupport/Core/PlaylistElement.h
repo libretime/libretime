@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,7 +104,7 @@ class Playlist;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -156,6 +156,19 @@ class PlaylistElement : public Configurable
          *  The fade in / fade out info associated with the entry.
          */
         Ptr<FadeInfo>::Ref          fadeInfo;
+
+        /**
+         *  Convert a time_duration to string, in format HH:MM:SS.ssssss.
+         */
+        std::string
+        toFixedString(Ptr<time_duration>::Ref time) const  throw ()
+        {
+            if (time->fractional_seconds()) {
+                return to_simple_string(*time);
+            } else {
+                return to_simple_string(*time) + ".000000";
+            }
+        }
 
 
     public:

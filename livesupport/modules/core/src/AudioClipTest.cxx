@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -133,7 +133,7 @@ AudioClipTest :: firstTest(void)
 
         CPPUNIT_ASSERT(*audioClip->getXmlElementString() ==
                                             "<audioClip id=\"0000000000000001\" "
-                                            "playlength=\"00:18:30\" "
+                                            "playlength=\"00:18:30.000000\" "
                                             "title=\"File Title txt\"/>");
 
     } catch (std::invalid_argument &e) {

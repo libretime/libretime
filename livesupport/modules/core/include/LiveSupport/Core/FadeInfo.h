@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/FadeInfo.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class FadeInfo : public Configurable
 {
@@ -113,6 +113,19 @@ class FadeInfo : public Configurable
          *  The length of fade out period.
          */
         Ptr<time_duration>::Ref     fadeOut;
+
+        /**
+         *  Convert a time_duration to string, in format HH:MM:SS.ssssss.
+         */
+        std::string
+        toFixedString(Ptr<time_duration>::Ref time) const throw ()
+        {
+            if (time->fractional_seconds()) {
+                return to_simple_string(*time);
+            } else {
+                return to_simple_string(*time) + ".000000";
+            }
+        }
 
 
     public:

@@ -26,14 +26,14 @@
     <playlist    id="0000000000000002" 
                  playlength="00:00:11.000000" > 
         <playlistElement id="0000000000000111" 
-                         relativeOffset="0" >
+                         relativeOffset="00:00:00.000000" >
             <audioClip   id="0000000000010003" 
-                         playlength="00:00:11.000" 
+                         playlength="00:00:11.000000" 
                          title = "three"
                          uri="file:var/test3.mp3" />
         </playlistElement>
     </playlist>
     <fadeInfo  id="0000000000009901" 
-               fadeIn="00:00:02.000" 
+               fadeIn="00:00:02.000000" 
                fadeOut="00:00:01.500000" />
 </playlistElement>

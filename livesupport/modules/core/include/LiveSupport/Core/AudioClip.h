@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,7 +130,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -182,6 +182,19 @@ class AudioClip : public Configurable,
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
                     const std::string &name, const std::string &prefix)
                                                 throw ();
+
+        /**
+         *  Convert a time_duration to string, in format HH:MM:SS.ssssss.
+         */
+        std::string
+        toFixedString(Ptr<time_duration>::Ref time) const  throw ()
+        {
+            if (time->fractional_seconds()) {
+                return to_simple_string(*time);
+            } else {
+                return to_simple_string(*time) + ".000000";
+            }
+        }
 
 
     public:

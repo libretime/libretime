@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -244,7 +244,7 @@ Playlist :: setPlaylength(Ptr<time_duration>::Ref playlength)
                                                 throw ()
 {
     Ptr<const Glib::ustring>::Ref playlengthString(new const Glib::ustring(
-                                        to_simple_string(*playlength) ));
+                                        toFixedString(playlength) ));
     setMetadata(playlengthString, extentElementName, extentElementPrefix);
 }
 
@@ -705,8 +705,9 @@ Playlist :: getXmlElementString(void) const     throw ()
                                  + std::string(*getId()) 
                                  + "\" ");
     xmlString->append(playlengthAttrName + "=\"" 
-                                         + to_simple_string(*getPlaylength())
+                                         + toFixedString(getPlaylength())
                                          + "\" ");
+
     xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
                                                    + *getTitle()
                                                    + "\">\n");

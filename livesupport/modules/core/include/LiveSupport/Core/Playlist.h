@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.32 $
+ *  @version $Revision: 1.33 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -236,6 +236,20 @@ class Playlist : public Configurable,
         iterator
         find(Ptr<UniqueId>::Ref playlistElementId)
                                                 throw ();
+
+        /**
+         *  Convert a time_duration to string, in format HH:MM:SS.ssssss.
+         */
+        std::string
+        toFixedString(Ptr<time_duration>::Ref time) const
+                                                throw ()
+        {
+            if (time->fractional_seconds()) {
+                return to_simple_string(*time);
+            } else {
+                return to_simple_string(*time) + ".000000";
+            }
+        }
 
 
     public:
