@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.44 $
+    Version  : $Revision: 1.45 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.44 $
+ *  @version $Revision: 1.45 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -485,10 +485,8 @@ class GreenBox extends BasicStor{
      *  @param token string, playlist access token
      *  @param acId string, local ID of added file
      *  @param sessid string, session ID
-     *  <span style="color:red">
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
      *  @param fadeOut string, dtto
-     *  </span>
      *  @return string, generated playlistElement gunid
      */
     function addAudioClipToPlaylist($token, $acId, $sessid,
@@ -606,14 +604,16 @@ class GreenBox extends BasicStor{
      *  Remove audioclip from playlist
      *
      *  @param token string, playlist access token
-     *  @param acId int, local id  of deleted audioClip
+     *  <span style="color:red">
+     *  @param plElGunid string, global id of deleted playlistElement
+     *  </span>
      *  @param sessid string, session ID
      *  @return boolean
      */
-    function delAudioClipFromPlaylist($token, $acId, $sessid)
+    function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
-        $acGunid = $this->_gunidFromId($acId);
-        if(PEAR::isError($acGunid)) return $acGunid;
+#        $acGunid = $this->_gunidFromId($acId);
+#        if(PEAR::isError($acGunid)) return $acGunid;
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
         if(is_null($plGunid)){
@@ -644,13 +644,13 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($plElArr)){ return $plElArr; }
         $found = FALSE;
         foreach($plElArr as $el){
-            $acArr = $pl->md->getMetadataEl('audioClip', $el['mid']);
-            if(PEAR::isError($acArr)){ return $acArr; }
-            $storedAcMid = $acArr[0]['mid'];
-            $acGunidArr = $pl->md->getMetadataEl('id', $storedAcMid);
-            if(PEAR::isError($acGunidArr)){ return $acGunidArr; }
+            $plElGunidArr = $pl->md->getMetadataEl('id', $el['mid']);
+            if(PEAR::isError($plElGunidArr)){ return $plElGunidArr; }
             // select playlist element to remove
-            if($acGunidArr[0]['value'] == $acGunid){
+            if($plElGunidArr[0]['value'] == $plElGunid){
+                $acArr = $pl->md->getMetadataEl('audioClip', $el['mid']);
+                if(PEAR::isError($acArr)){ return $acArr; }
+                $storedAcMid = $acArr[0]['mid'];
                 $acLenArr = $pl->md->getMetadataEl('playlength', $storedAcMid);
                 if(PEAR::isError($acLenArr)){ return $acLenArr; }
                 $acLen = $acLenArr[0]['value'];
@@ -682,6 +682,12 @@ class GreenBox extends BasicStor{
                 $r = $pl->md->setMetadataEl($acOffArr[0]['mid'], $newOff);
                 if(PEAR::isError($r)){ return $r; }
             }
+        }
+        if(!$found){
+            return PEAR::raiseError(
+                "GreenBox::delAudioClipFromPlaylist: playlistElement not found".
+                " ($plElGunid)"
+            );
         }
         // correct total length:
         $newPlLen = $this->_secsToPlTime(
