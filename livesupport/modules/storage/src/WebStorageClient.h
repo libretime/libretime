@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -533,7 +533,9 @@ class WebStorageClient :
          *
          *  @param sessionId the session ID from the authentication client
          *  @param searchCriteria an object containing the search criteria
-         *  @return the number of items found.
+         *  @return the number of items found; this may not be equal to the 
+         *          number of items returned: see SearchCriteria::setLimit()
+         *          and SearchCriteria::setOffset()
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */

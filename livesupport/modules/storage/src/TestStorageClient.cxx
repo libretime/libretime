@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -743,13 +743,10 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         AudioClipMapType::const_iterator    it = audioClipMap.begin();
         while (it != audioClipMap.end()) {
             if (matchesCriteria(it->second, searchCriteria)) {
-                if (counter >= first) {
+                if (counter >= first && (!last || counter < last)) {
                     audioClipIds->push_back(it->second->getId());
                 }
                 ++counter;
-                if (last && counter >= last) {
-                    return (counter - first);
-                }
             }
             ++it;
         }
@@ -759,19 +756,16 @@ TestStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
         PlaylistMapType::const_iterator    it = playlistMap.begin();
         while (it != playlistMap.end()) {
             if (matchesCriteria(it->second, searchCriteria)) {
-                if (counter >= first) {
+                if (counter >= first && (!last || counter < last)) {
                     playlistIds->push_back(it->second->getId());
                 }
                 ++counter;
-                if (last && counter >= last) {
-                    return (counter - first);
-                }
             }
             ++it;
         }
     }
     
-    return (counter - first);
+    return counter;
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/SearchCriteria.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,9 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
     XmlRpc::XmlRpcValue     returnValue;
     
     returnValue["filetype"] = type;
-    returnValue["operator"] = logicalOperator;
+    if (searchConditions.size() > 1) {
+        returnValue["operator"] = logicalOperator;
+    }
     
     XmlRpc::XmlRpcValue     conditionList;
     conditionList.setSize(searchConditions.size());
@@ -110,8 +112,13 @@ SearchCriteria :: operator XmlRpc::XmlRpcValue() const
     }
     returnValue["conditions"] = conditionList;
 
-    returnValue["limit"]    = limit;
-    returnValue["offset"]   = offset;
+    if (limit) {
+        returnValue["limit"]    = limit;
+    }
+    
+    if (offset) {
+        returnValue["offset"]   = offset;
+    }
     
     return returnValue;
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/Attic/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,9 +62,9 @@ class TestStorageClient;        // forward declaration of friend class
  * 
  *  Its fields are:
  *  <ul>
- *    <li>type     - mandatory, values in (audioClip | playlist | all)</li>
- *    <li>operator - values in (and | or); 
- *                            optional, default is <i>and</i></li>
+ *    <li>type     - values in (audioClip | playlist | all); the default is
+ *                          <i>audioClip</i></li>
+ *    <li>operator - values in (and | or); the default is <i>and</i></li>
  *    <li>condition1 : { key : string, comparison: string, value : string }
  *                          - a search condition, where <i>key</i> is one of the
  *                            fields in the metadata, and <i>comparison</i> is
@@ -72,16 +72,17 @@ class TestStorageClient;        // forward declaration of friend class
  *                                        | "<" | "<=" | ">" | ">=")</li>
  *    <li>...</li>
  *    <li>conditionN</li>
- *    <li>limit  : int - the maximum number of results to be returned; optional,
- *                       the default is 0, which means there is no limit</li>
- *    <li>offset : int - start at the <i>offset</i>+1-th result; optional,
+ *    <li>limit  : int - the maximum number of results to be returned;
+ *                       the default is 0, which means unlimited</li>
+ *    <li>offset : int - ignore the first <i>offset</i> matches;
  *                       the default is 0.</li>
  *  </ul>
  *
  *  Usage: construct a SearchCriteria object either directly using the 
- *  constructor with 4 string arguments, or in several steps using the setter
- *  methods; then pass this object to Storage::search() to search the local
- *  storage.
+ *  constructor with 4 string arguments, or in several steps using 
+ *  addCondition() and the setter methods; 
+ *  then pass this object to StorageClientInterface::search() 
+ *  to search the local storage.
  *
  *  The <i>key</i> and <i>value</i> fields are case-sensitive, all the other
  *  strings (type, operator names) are case-insensitive.

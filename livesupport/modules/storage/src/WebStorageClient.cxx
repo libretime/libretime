@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1947,7 +1947,6 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
             = sessionId->getId();
     parameters[searchCriteriaParamName] 
             = *searchCriteria;
-// std::cerr << "\nparams: " << parameters.toXml() << "\n";
 
     result.clear();
     if (!xmlRpcClient.execute(searchMethodName.c_str(),
@@ -1960,7 +1959,6 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
     }
     xmlRpcClient.close();
 
-// std::cerr << "result: " << result.toXml() << "\n";
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 

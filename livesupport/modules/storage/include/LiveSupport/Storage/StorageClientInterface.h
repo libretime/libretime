@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class StorageClientInterface
 {
@@ -372,7 +372,9 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @param searchCriteria an object containing the search criteria
-         *  @return the number of items found.
+         *  @return the number of items found; this may not be equal to the 
+         *          number of items returned: see SearchCriteria::setLimit()
+         *          and SearchCriteria::setOffset()
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call.
          */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -431,7 +431,7 @@ TestStorageClientTest :: searchTest(void)
         criteria->setLimit(2);
         criteria->setOffset(1);
         int numberFound = tsc->search(dummySessionId, criteria);
-        CPPUNIT_ASSERT(numberFound == 2);
+        CPPUNIT_ASSERT(numberFound == 4);
         CPPUNIT_ASSERT(tsc->getAudioClipIds()->size() == 1);
         CPPUNIT_ASSERT(tsc->getAudioClipIds()->at(0)->getId() == 0x10003);
         CPPUNIT_ASSERT(tsc->getPlaylistIds()->size() == 1);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -591,7 +591,6 @@ void
 WebStorageClientTest :: searchTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-/*
     try {
         wsc->reset();
     } catch (XmlRpcException &e) {
@@ -615,23 +614,23 @@ WebStorageClientTest :: searchTest(void)
     try {
         Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
                                             "audioClip",
-                                            "dc:title", "prefix", "File"));
-        int results = wsc->search(sessionId, criteria);
-        CPPUNIT_ASSERT(results == 2);
+                                            "dc:title", "prefix", "File "));
+        int numberFound = wsc->search(sessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 2);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
     CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip0);
-    CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip1);
+    CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip2);
     
     try {
         Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
                                                             "playlist", "or"));
         criteria->addCondition("dcterms:extent", ">=", "0");
         criteria->setLimit(10);
-        int results = wsc->search(sessionId, criteria);
-        CPPUNIT_ASSERT(results == 1);
+        int numberFound = wsc->search(sessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 1);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -643,6 +642,5 @@ WebStorageClientTest :: searchTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-*/
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/SearchCriteriaTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,24 +85,15 @@ SearchCriteriaTest :: firstTest(void)
     }
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("filetype"));
     CPPUNIT_ASSERT(xmlRpcValue["filetype"] == "audioclip");
-    CPPUNIT_ASSERT(xmlRpcValue.hasMember("operator"));
-    CPPUNIT_ASSERT(xmlRpcValue["operator"] == "and");
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("conditions"));
     CPPUNIT_ASSERT(xmlRpcValue["conditions"].getType() 
                                 == XmlRpc::XmlRpcValue::TypeArray);
     CPPUNIT_ASSERT(xmlRpcValue["conditions"].size() == 0);
-    CPPUNIT_ASSERT(xmlRpcValue.hasMember("limit"));
-    CPPUNIT_ASSERT(xmlRpcValue["limit"].getType() 
-                                            == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcValue["limit"]) == 0);
-    CPPUNIT_ASSERT(xmlRpcValue.hasMember("offset"));
-    CPPUNIT_ASSERT(xmlRpcValue["offset"].getType() 
-                                            == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcValue["offset"]) == 0);
 
     try {
         SearchCriteria      secondCriteria("playlist", "Or");
         secondCriteria.setLimit(50);
+        secondCriteria.setOffset(100);
         secondCriteria.addCondition("dc:title", "PREFIX", "My ");
         secondCriteria.addCondition("DcTerms:Extent", "<", "180");
         xmlRpcValue = secondCriteria;
@@ -141,7 +132,7 @@ SearchCriteriaTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("offset"));
     CPPUNIT_ASSERT(xmlRpcValue["offset"].getType() 
                                             == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcValue["offset"]) == 0);
+    CPPUNIT_ASSERT(int(xmlRpcValue["offset"]) == 100);
 
     try {
         SearchCriteria      thirdCriteria("all", "dc:creator", "partial", "X");
@@ -163,14 +154,5 @@ SearchCriteriaTest :: firstTest(void)
     CPPUNIT_ASSERT(condition0["op"] == "partial");
     CPPUNIT_ASSERT(condition0.hasMember("val"));
     CPPUNIT_ASSERT(condition0["val"] == "X");
-
-    CPPUNIT_ASSERT(xmlRpcValue.hasMember("limit"));
-    CPPUNIT_ASSERT(xmlRpcValue["limit"].getType() 
-                                            == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcValue["limit"]) == 0);
-    CPPUNIT_ASSERT(xmlRpcValue.hasMember("offset"));
-    CPPUNIT_ASSERT(xmlRpcValue["offset"].getType() 
-                                            == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcValue["offset"]) == 0);
 }
 
