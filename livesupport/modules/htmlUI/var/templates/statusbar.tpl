@@ -24,6 +24,12 @@
     </div>
 
     <div class="statusbaritem">
+        {$SCHEDULER->getNowNextClip()}
+        <br>
+        {$STATIONPREFS.frequency}
+    </div>
+
+    <div class="statusbaritem">
         {include file="userinfo.tpl"}
     </div>
 

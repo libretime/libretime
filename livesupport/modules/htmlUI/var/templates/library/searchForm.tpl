@@ -1,6 +1,4 @@
-{*Smarty template*}
-
-{include file="script/search.js.tpl"}
+{include file="library/search.js.tpl"}
 
 
 {literal}

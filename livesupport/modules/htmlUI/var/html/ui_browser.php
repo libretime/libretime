@@ -55,25 +55,24 @@ if (is_array($_REQUEST['popup'])){
 };
 
 if ($uiBrowser->userid) {
-  $Smarty->assign('showMenuTop', TRUE);
-  $Smarty->assign('SCRATCHPAD',  $uiBrowser->SCRATCHPAD->get());
-  #$Smarty->assign('PLid',        $uiBrowser->PLAYLIST->activeId);
+    $Smarty->assign('showMenuTop',        TRUE);
+    $Smarty->assign('SCRATCHPAD',         $uiBrowser->SCRATCHPAD->get());
 
-  switch ($_REQUEST['act']){
+    switch ($_REQUEST['act']){
     case "fileList":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
-
         $Smarty->assign('fileList', TRUE);
+
         if ($_REQUEST['tree']=='Y')
             $Smarty->assign('showTree', TRUE);
         else
             $Smarty->assign('showObjects', TRUE);
+
         $Smarty->assign('delOverride', $_REQUEST['delOverride']);
     break;
 
     case "permissions":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-
         $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
         $Smarty->assign('fileList', TRUE);
     break;
@@ -81,7 +80,6 @@ if ($uiBrowser->userid) {
 
     case "uploadFileM":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-
         $Smarty->assign('uploadform', $uiBrowser->uploadFileM($ui_fmask['uploadFileM'], $uiBrowser->id));
     break;
 
@@ -103,13 +101,11 @@ if ($uiBrowser->userid) {
     case "SEARCH":
         $Smarty->assign('searchForm', $uiBrowser->SEARCH->searchForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
-
     break;
 
     case "BROWSE":
         $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
-
     break;
 
     case "subjects":
@@ -168,7 +164,10 @@ if ($uiBrowser->userid) {
     case "SCHEDULER":
         $Smarty->assign('showScheduler', TRUE);
     break;
-  }
+    }
+
+    if ($_REQUEST['act'] != 'SCHEDULER')
+        $Smarty->assign('simpleSearchForm',   $uiBrowser->SEARCH->simpleSearchForm($ui_fmask['simplesearch']));
 }
 
 $Smarty->display('main.tpl');

@@ -1,0 +1,1 @@
+<small><b>{$_title}</b><br>{$_period}<br>{$_creator}</small>

@@ -36,6 +36,21 @@ define('UI_MDATA_KEY_CREATOR',    'dc:creator');
 define('UI_MDATA_KEY_DURATION',   'dcterms:extent');
 define('UI_MDATA_KEY_URL',        'ls:url');
 
+## Simple Search Preferences
+define('UI_SIMPLESEARCH_FILETYPE',  'File');
+define('UI_SIMPLESEARCH_OPERATOR',  'OR');
+define('UI_SIMPLESEARCH_LIMIT',     5);
+define('UI_SIMPLESEARCH_ROWS',      3);
+define('UI_SIMPLESEARCH_CAT1',      'dc:title');
+define('UI_SIMPLESEARCH_OP1',       'partial');
+define('UI_SIMPLESEARCH_CAT2',      'dc:creator');
+define('UI_SIMPLESEARCH_OP2',       'partial');
+define('UI_SIMPLESEARCH_CAT3',      'dc:source');
+define('UI_SIMPLESEARCH_OP3',       'partial');
+
+## Scheduler / Calendar
+define('UI_SCHEDULER_FIRSTWEEKDAY', 1);
+
 require_once dirname(__FILE__).'/../../storageServer/var/conf.php';
 ## LS classes/functions #############################################
 require_once dirname(__FILE__).'/ui_base.inc.php';

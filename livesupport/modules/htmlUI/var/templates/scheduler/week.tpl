@@ -6,11 +6,11 @@
 <table border="1">
 
 <tr>
-    <td rowspan="3"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=--')"><<</a> </td>
+    <td rowspan="3" valign="top"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=--')"><<</a> </td>
     {foreach from=$SCHEDULER->Week item="_Day"}
-        <th colspan="2" width="100">{$_Day.label.full}</th>
+        <th colspan="2" width="100"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.label.full}</a></th>
     {/foreach}
-    <td rowspan="3"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=%2B%2B')">>></a></td>
+    <td rowspan="3" valign="top"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=%2B%2B')">>></a></td>
 </tr>
 
 <tr>
@@ -24,6 +24,10 @@
 <tr>
 {foreach from=$SCHEDULER->Week item="_Day"}
     {assign var="_oneday" value=$SCHEDULER->getDayTiming($_Day.year, $_Day.month, $_Day.day)}
+    {assign var="_year"  value=$_Day.year}
+    {assign var="_month" value=$_Day.month}
+    {assign var="_day"   value=$_Day.day}
+    {assign var="_hour"  value=$_Day.hour}
 
     <td valign="top">
         <table border="1" cellspacing="0" cellpadding="0">

@@ -4,7 +4,10 @@
 
 <table border=1 bgcolor="#97bacf">
 {foreach from=$SCHEDULER->Day item="_Hour"}
-    {assign var="_hour" value=$_Hour.hour}
+    {assign var="_year"  value=$_Hour.year}
+    {assign var="_month" value=$_Hour.month}
+    {assign var="_day"   value=$_Hour.day}
+    {assign var="_hour"  value=$_Hour.hour}
 
     <tr>
         <td {include file="scheduler/contextmenu.tpl"} bgcolor="#d4d0c8" height="50" valign="top">

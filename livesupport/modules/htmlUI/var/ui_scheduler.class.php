@@ -36,7 +36,7 @@ class uiScheduler extends uiCalendar
         if (is_numeric($month))
                     $this->curr['month'] = sprintf('%02d', $month);
 
-        $stampNow    = $this->_datetime2timestamp($this->curr['year'].$this->curr['month'].$this->curr['day']);
+        $stampNow    = $this->_datetime2timestamp($this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$this->curr['hour'].':00:00');
         $stampTarget = $stampNow;
         if ($month=='++')
             $stampTarget = strtotime("+1 month", $stampNow);
@@ -46,9 +46,15 @@ class uiScheduler extends uiCalendar
             $stampTarget = strtotime("+1 week", $stampNow);
         if ($week=='--')
             $stampTarget = strtotime("-1 week", $stampNow);
+        if ($today)
+            $stampTarget = time();
+
         $this->curr['year']     = strftime("%Y", $stampTarget);
         $this->curr['month']    = strftime("%m", $stampTarget);
         $this->curr['day']      = strftime("%d", $stampTarget);
+        $this->curr['hour']     = strftime("%H", $stampTarget);
+
+        #print_r($this->curr);
     }
 
 
@@ -162,6 +168,49 @@ class uiScheduler extends uiCalendar
     }
 
 
+    function getScheduleForm()
+    {
+        global $ui_fmask;
+        foreach ($this->playlists as $val)
+            $ui_fmask['schedule']['playlist']['options'][$val['gunid']] = $val['title'];
+        #print_r($ui_fmask);
+        $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $this->Base->_parseArr2Form($form, $ui_fmask['schedule']);
+        $settime = array('H' => $this->curr['hour']);
+        $setdate = array('Y' => $this->curr['year'],
+                         'm' => $this->curr['month'],
+                         'd' => $this->curr['day']);
+        $form->setDefaults(array('time'     => $settime,
+                                 'date'     => $setdate,
+                                 'playlist' => $setplaylist));
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        $output = $renderer->toArray();
+        #print_r($output);
+        return $output;
+
+    }
+
+
+    function _copyPlFromSP()
+    {
+        if (!count($this->Base->SCRATCHPAD->get()))
+            return FALSE;
+        foreach ($this->Base->SCRATCHPAD->get() as $val) {
+            if (strtolower($val['type'])=='playlist' && $val['id']!=$this->Base->PLAYLIST->activeId)
+                $this->playlists[] = $val;
+        }
+        return TRUE;
+    }
+
+
+    function getNowNextClip()
+    {
+        $playingNow = $this->GeneratePlayReportMethod(strftime('%Y%m%dT%H:%M:%S'), strftime('%Y%m%dT%H:%M:%S'));
+        #print_r ($playingNow);
+    }
+
+
     function _oneOrMore($in)
     {
         return $id < 1 ? ceil($in) : round($in);
@@ -238,14 +287,6 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function copyPlFromSP()
-    {
-        foreach ($this->Base->SCRATCHPAD->get() as $val) {
-            if (strtolower($val['type'])=='playlist' && $val['id']!=$this->Base->PLAYLIST->activeId)
-                $this->playlists[] = $val;
-        }
-    }
-
     function _isError($r)
     {
         if (is_array($r['error'])) {
@@ -264,10 +305,14 @@ class uiScheduler extends uiCalendar
 
 
     function uploadPlaylistMethod(&$formdata)
-    {
-        $gunid = $formdata['gunid'];
-        $datetime = $this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$formdata['time'];
-        #echo "Schedule Gunid: $gunid  At: ".$datetime;
+    {    print_r($formdata);
+        #$gunid = $formdata['gunid'];
+        #$datetime = $this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$formdata['time'];
+
+        $gunid = $formdata['playlist'];
+        $datetime = $formdata['date']['Y'].sprintf('%02d', $formdata['date']['m']).sprintf('%02d', $formdata['date']['d']).'T'.sprintf('%02d', $formdata['time']['H']).':'.sprintf('%02d', $formdata['time']['i']).':'.sprintf('%02d', $formdata['time']['s']);
+
+        echo "Schedule Gunid: $gunid  At: ".$datetime;
         $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime.UI_TIMEZONE);
         #print_r($r);
         if ($this->_isError($r))
@@ -295,6 +340,19 @@ class uiScheduler extends uiCalendar
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
         if ($this->_isError($r))
             return FALSE;
+        return $r;
+    }
+
+
+    function GeneratePlayReportMethod($from, $to)
+    {
+        #$from = '2005-03-01T00:00:00';
+        #$to   = '2005-03-31T00:00:00';
+        #echo $from.$to;
+        $r = $this->spc->GeneratePlayReportMethod($this->Base->sessid, $from, $to);
+        if ($this->_isError($r))
+            return FALSE;
+        #print_r($r);
         return $r;
     }
 }

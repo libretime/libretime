@@ -1,8 +1,3 @@
-{*Smarty template*}
-
-{* {include file="script/search.js.tpl"}   *}
-
-
 {literal}
 <style type="text/css">
     .dynformelement {

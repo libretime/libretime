@@ -132,6 +132,10 @@ switch($_REQUEST['act']){
         $uiHandler->SEARCH->newSearch($_REQUEST);
     break;
 
+    case "SEARCH.simpleSearch":
+        $uiHandler->SEARCH->simpleSearch($_REQUEST);
+    break;
+
     case "SEARCH.reOrder":
         $uiHandler->SEARCH->reOrder($_REQUEST['by']);
     break;

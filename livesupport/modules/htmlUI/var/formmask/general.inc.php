@@ -21,7 +21,7 @@ $ui_fmask = array(
             'attributes'   => array(
                                 'onClick'  => 'alert ("Note: System Maximum is set to '.
                                                 ini_get('upload_max_filesize')
-                                                .' in php.ini\n You can just reduce this amount this here.")'
+                                                .' in php.ini\n You can just reduce this amount here.")'
                            )
         ),
         array(
@@ -76,10 +76,9 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Maximun length of ScratchPad',
             'options'   => array(
-                            0   => '--',
                             5   => 5,
                             10  => 10,
-                            20  => 20
+                            25  => 25
                            )
         ),
         array(
@@ -279,9 +278,20 @@ $ui_fmask = array(
             'requiredmsg'=> 'please select Media file'
         ),
         array(
+            'element'   => 'cancel',
+            'type'      => 'button',
+            'label'     => 'Cancel',
+            'attributes'=> array('onClick'  => "location.href='".UI_BROWSER."'"),
+            'groupit'   => TRUE
+        ),
+        array(
             'element'   => 'Submit',
             'type'      => 'submit',
-            'label'     => 'Submit'
+            'label'     => 'Submit',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'Submit')
         )
     ),
 
@@ -321,9 +331,20 @@ $ui_fmask = array(
             'options'   => array('format' => 'His'),
         ),
         array(
+            'element'   => 'cancel',
+            'type'      => 'button',
+            'label'     => 'Cancel',
+            'attributes'=> array('onClick'  => "location.href='".UI_BROWSER."'"),
+            'groupit'   => TRUE
+        ),
+        array(
             'element'   => 'Submit',
             'type'      => 'submit',
-            'label'     => 'Submit'
+            'label'     => 'Submit',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'Submit')
         )
     ),
 
@@ -371,12 +392,11 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                                2   => 2,
-                                5   => 5,
-                                10  => 10,
-                                25  => 25,
-                                50  => 50,
-                                100 => 100
+                            5   => 5,
+                            10  => 10,
+                            25  => 25,
+                            50  => 50,
+                            100 => 100
                            )
         ),
         array(
@@ -461,9 +481,10 @@ $ui_fmask = array(
             'type'      => 'select',
             'multiple'  => TRUE,
             'attributes'=> array(
-                            'size' => 10,
-                            'STYLE' => 'width: 220px',
-                            'onChange' => 'this.form.act.value="BROWSE.setValue"; this.form.submit()')
+                'size' => 10,
+                'STYLE' => 'width: 220px',
+                'onChange' => 'this.form.act.value="BROWSE.setValue"; this.form.submit()'
+            )
         )
     ),
 
@@ -489,117 +510,185 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                                2   => 2,
-                                5   => 5,
-                                10  => 10,
-                                25  => 25,
-                                50  => 50,
-                                100 => 100
+                            5   => 5,
+                            10  => 10,
+                            25  => 25,
+                            50  => 50,
+                            100 => 100
                            ),
             'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act=BROWSE.setLimit&limit=" + this.form.limit.value)')
         )
     ),
 
+    'simplesearch'  => array(
+        array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+            'constant'  => 'SEARCH.simpleSearch'
+        ),
+        array(
+            'element'   => 'criterium',
+            'type'      => 'text',
+            'label'     => NULL,
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'submit',
+            'type'      => 'submit',
+            'label'     => 'Search',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('criterium', 'submit')
+        )
+    ),
+
     'PL.changeTransition'  => array(
         'transition' => array(
-                array(
-                    'element'   => 'headline',
-                    'type'      => 'static'
-                ),
-                array(
-                    'element'   => 'type',
-                    'type'      => 'radio',
-                    'label'     => 'Type',
-                    'options'   => array(
-                                    'fadeX'      => 'Crossfade',
-                                    'pause'      => 'Pause'
-                                   ),
-                    'default'   => 'fadeX'
-                )
+            array(
+                'element'   => 'headline',
+                'type'      => 'static'
+            ),
+            array(
+                'element'   => 'type',
+                'type'      => 'radio',
+                'label'     => 'Type',
+                'options'   => array(
+                                'fadeX'      => 'Crossfade',
+                                'pause'      => 'Pause'
+                               ),
+                'default'   => 'fadeX'
+            )
         ),
         'fadeIn' => array(
-                array(
-                    'element'   => 'headline',
-                    'type'      => 'static'
-                ),
-                array(
-                    'element'   => 'type',
-                    'type'      => 'radio',
-                    'label'     => 'Type',
-                    'options'   => array('fadeIn' => 'Fade in'),
-                    'default'   => 'fadeIn'
-                )
+            array(
+                'element'   => 'headline',
+                'type'      => 'static'
+            ),
+            array(
+                'element'   => 'type',
+                'type'      => 'radio',
+                'label'     => 'Type',
+                'options'   => array('fadeIn' => 'Fade in'),
+                'default'   => 'fadeIn'
+            )
         ),
         'fadeOut' => array(
-                array(
-                    'element'   => 'headline',
-                    'type'      => 'static'
-                ),
-                array(
-                    'element'   => 'type',
-                    'type'      => 'radio',
-                    'label'     => 'Type',
-                    'options'   => array('fadeOut' => 'Fade out'),
-                    'default'   => 'fadeOut'
-                )
-        ),
-        'all'           => array(
-               array(
-                   'element'   => 'act',
-                   'type'      => 'hidden',
-                   'constant'  => 'PL.changeTransition'
-               ),
-               array(
-                   'element'   => 'id',
-                   'type'      => 'hidden'
-               ),
-               array(
-                   'element'   => 'duration',
-                   'type'      => 'text',
-                   'rule'      => 'numeric',
-                   'attributes'=> array('size' => 4, 'maxlength' => 4),
-                   'groupit'   => TRUE
-               ),
-               array(
-                   'element'   => 'switchdown',
-                   'type'      => 'button',
-                   'label'     => '-',
-                   'attributes'=> array('onClick' => 'pl_switchDown()', 'onMousedown' => 'pl_start("Down")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
-                   'groupit'   => TRUE
-               ),
-               array(
-                   'element'   => 'switchup',
-                   'type'      => 'button',
-                   'label'     => '+',
-                   'attributes'=> array('onClick' => 'pl_switchUp()', 'onMousedown' => 'pl_start("Up")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
-                   'groupit'   => TRUE
-               ),
-               array(
-                   'group'     => array('duration', 'switchdown', 'switchup'),
-                   'label'     => 'Duration'
-               ),
-               array(
-                   'element'   => 'cancel',
-                   'type'      => 'button',
-                   'label'     => 'Cancel',
-                   'attributes'=> array('onClick' => 'window.close()'),
-                   'groupit'   => TRUE,
-               ),
-               array(
-                   'element'   => 'reset',
-                   'type'      => 'reset',
-                   'label'     => 'Reset',
-                   'groupit'   => TRUE,
-               ),
-               array(
-                   'element'   => 'submit',
-                   'type'      => 'submit',
-                   'label'     => 'Submit',
-                   'groupit'   => TRUE,
-               ),
-               array(
-                   'group'     => array('cancel', 'reset', 'submit')
-               )
+            array(
+                'element'   => 'headline',
+                'type'      => 'static'
+            ),
+            array(
+                'element'   => 'type',
+                'type'      => 'radio',
+                'label'     => 'Type',
+                'options'   => array('fadeOut' => 'Fade out'),
+                'default'   => 'fadeOut'
             )
+        ),
+        'all'   => array(
+            array(
+                'element'   => 'act',
+                'type'      => 'hidden',
+                'constant'  => 'PL.changeTransition'
+            ),
+            array(
+                'element'   => 'id',
+                'type'      => 'hidden'
+            ),
+            array(
+                'element'   => 'duration',
+                'type'      => 'text',
+                'rule'      => 'numeric',
+                'attributes'=> array('size' => 4, 'maxlength' => 4),
+                'groupit'   => TRUE
+            ),
+            array(
+                'element'   => 'switchdown',
+                'type'      => 'button',
+                'label'     => '-',
+                'attributes'=> array('onClick' => 'pl_switchDown()', 'onMousedown' => 'pl_start("Down")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
+                'groupit'   => TRUE
+            ),
+            array(
+                'element'   => 'switchup',
+                'type'      => 'button',
+                'label'     => '+',
+                'attributes'=> array('onClick' => 'pl_switchUp()', 'onMousedown' => 'pl_start("Up")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
+                'groupit'   => TRUE
+            ),
+            array(
+                'group'     => array('duration', 'switchdown', 'switchup'),
+                'label'     => 'Duration'
+            ),
+            array(
+                'element'   => 'cancel',
+                'type'      => 'button',
+                'label'     => 'Cancel',
+                'attributes'=> array('onClick' => 'window.close()'),
+                'groupit'   => TRUE,
+            ),
+            array(
+                'element'   => 'reset',
+                'type'      => 'reset',
+                'label'     => 'Reset',
+                'groupit'   => TRUE,
+            ),
+            array(
+                'element'   => 'submit',
+                'type'      => 'submit',
+                'label'     => 'Submit',
+                'groupit'   => TRUE,
+            ),
+            array(
+                'group'     => array('cancel', 'reset', 'submit')
+            )
+        )
+    ),
+    'schedule'  => array(
+        array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+            'constant'  => 'SCHEDULER.uploadPlaylistMethod'
+        ),
+        'date'      => array(
+            'element'   => 'date',
+            'type'      => 'date',
+            'label'     => 'Date',
+            'options'   => array('format' => 'Ymd'),
+        ),
+        'time'      => array(
+            'element'   => 'time',
+            'type'      => 'date',
+            'label'     => 'Time',
+            'options'   => array('format' => 'His'),
+        ),
+        'playlist'  => array(
+            'element'   => 'playlist',
+            'type'      => 'select',
+            'label'     => 'Playlist',
+            'required'  => TRUE,
+        ),
+        array(
+            'element'   => 'cancel',
+            'type'      => 'button',
+            'label'     => 'Cancel',
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'reset',
+            'type'      => 'reset',
+            'label'     => 'Reset',
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'submit',
+            'type'      => 'submit',
+            'label'     => 'Submit',
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('cancel', 'reset', 'submit')
+        )
     )
 );

@@ -164,3 +164,10 @@ a {
     padding : 5px;
     margin-top: 10px;
 }
+
+#simplesearchform {
+    width: 400px;
+    border-style : dotted;
+    padding : 5px;
+    margin-top: 10px;
+}

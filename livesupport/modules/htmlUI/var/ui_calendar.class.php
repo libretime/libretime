@@ -4,12 +4,12 @@ class uiCalendar
 
     function uiCalendar()
     {
-        $this->firstDayOfWeek = 1;
+
     }
 
     function buildDecade()
     {
-        for ($Year=$this->curr['year']-3; $Year<=$this->curr['year']+5; $Year++) {
+        for ($Year = $this->curr['year']-5; $Year<=$this->curr['year']+5; $Year++) {
             $this->Decade[] = array(
                                 'year'          => $Year,
                                 'isSelected'    => $Year==$this->curr['year'] ? TRUE : FALSE
@@ -29,7 +29,7 @@ class uiCalendar
         $sel =   new Calendar_Month($this->curr['year'], $this->curr['month']);
         $selections = array($sel);
 
-        $Year->build($selections, $this->firstDayOfWeek);
+        $Year->build($selections, UI_SCHEDULER_FIRSTWEEKDAY);
         while ($Month = $Year->fetch()) {
             $this->Year[] = array(
                                 'month'         => sprintf('%02d', $Month->thisMonth()),
@@ -47,7 +47,7 @@ class uiCalendar
         require_once 'Calendar/Month/Weekdays.php';
         require_once 'Calendar/Day.php';
 
-        $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
+        $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], UI_SCHEDULER_FIRSTWEEKDAY);
         $Month->build($this->_scheduledDays('month'));                                                       ## scheduled days are selected
         while ($Day = $Month->fetch()) {
             $corrMonth = $Day->thisMonth()<=12 ? sprintf('%02d', $Day->thisMonth()) : '01';   ## due to bug in
@@ -62,7 +62,8 @@ class uiCalendar
                                 'isFirst'       => $Day->isFirst(),
                                 'isLast'        => $Day->isLast(),
                                 'isSelected'    => $Day->isSelected(),
-                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE
+                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE,
+                                'timestamp'     => $Day->thisDay(TRUE)
                              );
         }
     }
@@ -74,7 +75,7 @@ class uiCalendar
 
         require_once 'Calendar/Week.php';
 
-        $Week = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
+        $Week = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], UI_SCHEDULER_FIRSTWEEKDAY);
         $Week->build($this->_scheduledDays('week'));
         while ($Day = $Week->fetch()) {
             $this->Week[] = array(
@@ -84,7 +85,8 @@ class uiCalendar
                                 'year'          => $Day->thisYear(),
                                 'label'         => $this->_getDayName($Day),
                                 'isSelected'    => $Day->isSelected(),
-                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE
+                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE,
+                                'timestamp'     => $Day->thisDay(TRUE)
                             );
         }
     }
@@ -99,8 +101,16 @@ class uiCalendar
         $Day = new Calendar_Day ($this->curr['year'], $this->curr['month'], $this->curr['day']);
         $Day->build();
         while ($Hour = $Day->fetch()) {
-            $this->Day[] = array('hour'         => $Hour->thisHour(),
-                                 'timestamp'    => $Hour->thisHour(TRUE));
+            $this->Day[] = array(
+                                'day'          => sprintf('%02d', $Hour->thisDay()),
+                                'week'         => $this->_getWeekNr($Hour),
+                                'month'        => sprintf('%02d', $Hour->thisMonth()),
+                                'year'         => $Hour->thisYear(),
+                                'hour'         => $Hour->thisHour(),
+                                'isSelected'   => $Hour->isSelected(),
+                                'isCurrent'    => $Hour->thisDay()==$this->curr['day'] ? TRUE : FALSE,
+                                'timestamp'    => $Hour->thisHour(TRUE)
+                           );
         }
 
     }
@@ -113,7 +123,16 @@ class uiCalendar
         $Hour = new Calendar_Hour ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->curr['hour']);
         $Hour->build();
         while ($Min = $Hour->fetch()) {
-            $this->Hour[] = $Min->thisMinute();
+            $this->Hour[] = array(
+                                'day'          => sprintf('%02d', $Min->thisDay()),
+                                'week'         => $this->_getWeekNr($Min),
+                                'month'        => sprintf('%02d', $Min->thisMonth()),
+                                'year'         => $Min->thisYear(),
+                                'hour'         => $Min->thisHour(),
+                                'minute'       => $Min->thisMinute(),
+                                'isSelected'   => $Min->isSelected(),
+                                'isCurrent'    => $Min->thisDay()==$this->curr['day'] ? TRUE : FALSE
+                            );
         }
     }
 

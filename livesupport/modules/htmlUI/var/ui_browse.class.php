@@ -12,7 +12,7 @@ class uiBrowse
         $this->criteria['limit'] ? NULL : $this->criteria['limit'] = 5;
 
         if (!is_array($this->col)) {
-            $this->col[1]['category'] = 'ls:genre';
+            $this->col[1]['category'] = 'dc:type';
             $this->col[2]['category'] = 'dc:creator';
             $this->col[3]['category'] = 'dc:source';
             for ($col=1; $col<=3; $col++) {
@@ -43,7 +43,7 @@ class uiBrowse
     function browseForm($id, $mask2)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-        $mask2['browse_columns']['category']['options'][0] = tra('Select a Value');
+        #$mask2['browse_columns']['category']['options'][0] = tra('Select a Value');
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $v){
                 if ($v['type']) $mask2['browse_columns']['category']['options'][$this->Base->_formElementEncode($v['element'])] = tra($v['label']);

@@ -22,6 +22,13 @@ $mask = array(
             'groupit' => TRUE,
         ),
         array(
+            'element'   => 'cancel',
+            'type'      => 'button',
+            'label'     => 'Cancel',
+            'attributes'=> array('onClick'  => "location.href='".UI_BROWSER."'"),
+            'groupit'   => TRUE
+        ),
+        array(
             'element' =>'button',
             'type'    =>'button',
             'label'   =>'Submit',
@@ -31,7 +38,7 @@ $mask = array(
                           ),
         ),
         array(
-            'group'   => array('reset', 'button'),
+            'group'   => array('reset', 'cancel', 'button'),
         )
     ),
     'tabs'  => array(

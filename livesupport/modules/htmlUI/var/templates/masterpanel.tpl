@@ -12,6 +12,10 @@
     {include file="scratchPad.tpl"}
 {/if}
 
+{if $simpleSearchForm}
+    {include file="library/simpleSearchForm.tpl"}
+{/if}
+
 {if $structure}
     {include file="file/path.tpl"}
 {/if}

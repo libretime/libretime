@@ -20,14 +20,10 @@
         <tr>
     {/if}
 
-    {if $_Day.isEmpty}
-        <td>&nbsp;</td>
-    {else}
         <td width="80">
-            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&&day={$_Day.day}')"><b>{$_Day.day}</b>
+            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&year={$_Day.year}&month={$_Day.month}&day={$_Day.day}')"><b>{$_Day.day}</b>
             <div><img src="img/percentage_red.png" width="{if $percentage>50}{$percentage}{elseif $percentage>0}{$percentage+2}{else}0{/if}%" height="10" border="0"><img src="img/percentage_blue.png" width="{if $percentage>50}{$null-$percentage+100}{elseif $percentage>0}{$NULL-$percentage-2+100}{else}100{/if}%" height="10" border="0"></div>
         </td>
-    {/if}
 
     {if $_Day.isLast}
         </tr>

@@ -1,6 +1,6 @@
 onMouseOver="highlight()"
 onMouseOut="darklight()"
-onContextmenu="return menu('{$_hour}', {$moreContextBefore} 'SCHEDULER.schedule' {$moreContextAfter})"
+onContextmenu="return menu('year={$_year}&month={$_month}&day={$_day}&hour={$_hour}', {$moreContextBefore} 'SCHEDULER.schedule' {$moreContextAfter})"
 
 
 {assign var="moreContextBefore" value=""}

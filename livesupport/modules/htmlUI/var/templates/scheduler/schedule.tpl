@@ -1,5 +1,19 @@
 {include file="header.tpl"}
-{$SCHEDULER->copyPlFromSP()}
+
+<center>
+{if $SCHEDULER->_copyPlFromSP()}
+    {assign var="dynform" value=$SCHEDULER->getScheduleForm()}
+    {include file="sub/dynForm_plain.tpl}
+{else}
+    First add Playlists to Scratchpad!
+{/if}
+</center>
+
+
+
+
+{*
+{$SCHEDULER->_copyPlFromSP()}
 
 <form name="schedule_it">
 <table>
@@ -7,7 +21,7 @@
     <tr>
         <td><b>Select Playlist</b></td>
         <td>
-            <select name="gunid" multiple>
+            <select name="gunid">
                 {foreach from=$SCHEDULER->playlists item="_pl"}
                     <option value="{$_pl.gunid}">{$_pl.title}</option>
                 {/foreach}
@@ -118,5 +132,6 @@ function sc_check_int(element)
 {/literal}
 </script>
 
+*}
 </body>
 </html>

@@ -85,8 +85,7 @@ function menu(param) {
             break;
 
             case "SCHEDULER.schedule":
-                //menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SCHEDULER.set&view=schedule&hour="+param+"')\" "+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>";
-                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&hour="+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.schedule', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>";
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' {/literal}onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.schedule', 'Schedule', 600, 400)\"'){literal}"+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>";
 
             break;
         }
