@@ -49,7 +49,7 @@
      }
      {/literal}
 
-     {uiBrowser->getAlertMsg assign='alertMsg'}
+     {UIBROWSER->getAlertMsg assign='alertMsg'}
      {if $alertMsg}
         alert('{$alertMsg}');
      {/if}

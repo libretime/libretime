@@ -1,5 +1,8 @@
 <?php
-$Smarty->register_object('uiBrowser', $uiBrowser);
+$Smarty->register_object('UIBROWSER', $uiBrowser);
+$Smarty->register_object('PL',        $uiBrowser->PLAYLIST);
+$Smarty->register_object('BROWSE',    $uiBrowser->BROWSE);
+$Smarty->register_object('SEARCH',    $uiBrowser->SEARCH);
 
 $Smarty->register_function('str_repeat', 'S_str_repeat');
 $Smarty->register_function('urlencode',  'S_urlencode');

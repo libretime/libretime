@@ -155,6 +155,26 @@ switch($_REQUEST['act']){
         $uiHandler->BROWSE->setValue($_REQUEST);
     break;
 
+    case "BROWSE.reOrder":
+        $uiHandler->BROWSE->reOrder($_REQUEST['by']);
+    break;
+
+    case "BROWSE.clear":
+        $uiHandler->BROWSE->clear();
+    break;
+
+    case "BROWSE.setOffset":
+        $uiHandler->BROWSE->setOffset($_REQUEST['page']);
+    break;
+
+    case "BROWSE.setLimit":
+        $uiHandler->BROWSE->setLimit($_REQUEST['limit']);
+    break;
+
+    case "BROWSE.setFiletype":
+        $uiHandler->BROWSE->setFiletype($_REQUEST['filetype']);
+    break;
+
     case "PL.activate":
         $uiHandler->PLAYLIST->setReload();
         if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE) {

@@ -20,7 +20,7 @@ class uiSearch
         return $this->results;
     }
 
-    function form($id, &$mask2)
+    function searchForm($id, &$mask2)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);

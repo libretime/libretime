@@ -398,6 +398,7 @@ $ui_fmask = array(
         array('group'   => array('clear', 'addrow', 'submit')
         ),
     ),
+
     'relations'     => array(
         'standard'    => array(
                 'partial'    => 'partial',
@@ -409,13 +410,15 @@ $ui_fmask = array(
                 '>'         => '>',
                 '>='        => '>='
         ),
-        1  => array(
+        1             => array(
                 'partial'    => 'partial',
                 'full'       => 'full',
                 'prefix'     => 'prefix',
                 '='          => '='
-              ),
         ),
+
+    ),
+
     'languages'    => array(
             array(
                 'element'  => 'langid',
@@ -429,7 +432,8 @@ $ui_fmask = array(
                               )
             )
     ),
-    'browse'    => array(
+
+    'browse_columns'    => array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
@@ -457,15 +461,12 @@ $ui_fmask = array(
                             'STYLE' => 'width: 220px',
                             'onChange' => 'this.form.act.value="BROWSE.setValue"; this.form.submit()')
         )
-        /*
+    ),
+
+    'browse_global'  => array(
         array(
-            'element'   => 'operator',
-            'type'      => 'select',
-            'label'     => 'Operator',
-            'options'   => array(
-                            'or'    => 'Or',
-                            'and'   => 'And',
-                            )
+            'element'   => 'act',
+            'type'      => 'hidden',
         ),
         array(
             'element'   => 'filetype',
@@ -476,44 +477,25 @@ $ui_fmask = array(
                             'audioclip' => 'Audioclip',
                             'webstream' => 'Webstream',
                             'playlist'  => 'Playlist'
-                            )
+                            ),
+            'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act=BROWSE.setFiletype&filetype=" + this.form.filetype.value)')
         ),
         array(
             'element'   => 'limit',
             'type'      => 'select',
             'label'     => 'Rows per Page',
             'options'   => array(
-                                1   => 1,
+                                #1   => 1,
                                 5   => 5,
                                 10  => 10,
                                 25  => 25,
                                 50  => 50,
                                 100 => 100
-                           )
-        ),
-        array(
-            'element'   => 'clear',
-            'type'      => 'button',
-            'label'     => 'Clear',
-            'attributes'  => array('onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
-            'groupit'   => TRUE,
-        ),
-        array(
-            'element'   => 'addrow',
-            'type'      => 'button',
-            'label'     => 'One more Row',
-            'attributes'  => array('onClick' => 'SearchForm_addRow()'),
-            'groupit'   => TRUE,
-        ),
-        array(
-            'element'   => 'submit',
-            'type'      => 'submit',
-            'label'     => 'Submit',
-            'groupit'   => TRUE,
-        ),
-        array('group'   => array('clear', 'addrow', 'submit')
-        ), */
+                           ),
+            'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act=BROWSE.setLimit&limit=" + this.form.limit.value)')
+        )
     ),
+
     'PL.changeTransition'  => array(
         'transition' => array(
                 array(

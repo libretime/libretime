@@ -1,5 +1,8 @@
+{PL->getActiveId assign=_PL_activeId}
+
 <div id="objects">
 {include file="sub/x.tpl"}
+
 
 <table border="0" width="90%" align="center">
     <tr bgcolor="{cycle values='#eeeeee, #dadada"'}">
@@ -17,7 +20,7 @@
                     {if $i.type eq 'Folder'}
                          <a href="{$UI_BROWSER}?act=fileBrowse&id={$i.id}" >[{$i.title|truncate:30}]</b>
                     {else}
-                        {if $PLid == $i.id}
+                        {if $_PL_activeId == $i.id}
                             <b>{$i.title|truncate:30}</b>
                         {else}
                             {$i.title|truncate:30}
@@ -42,11 +45,11 @@
                   {if $i.type != 'Folder'}
                       <br>
                       &nbsp;<a href="{$UI_BROWSER}?act=getMData&id={$i.id}">[MDataXML]</a>
-                      &nbsp;<a href="{$UI_BROWSER}?act=editMetaData&id={$i.id}">[MDataForm]</a>
+                      <!-- &nbsp;<a href="{$UI_BROWSER}?act=editMetaData&id={$i.id}">[MDataForm]</a> -->
                       {if $i.type eq 'webstream'}
-                          &nbsp;<a href="{$UI_BROWSER}?act=addWebstream&id={$i.id}&replace=1">[Replace]</a>
+                          &nbsp;<a href="{$UI_BROWSER}?act=addWebstream&id={$i.id}&replace=1">[Edit]</a>
                       {elseif $i.type eq 'audioclip'}
-                          &nbsp;<a href="{$UI_BROWSER}?act=uploadFile&id={$i.id}&replace=1">[Replace]</a>
+                          &nbsp;<a href="{$UI_BROWSER}?act=uploadFile&id={$i.id}&replace=1">[Edit]</a>
                           &nbsp;<a href="{$CONFIG.accessRawAudioUrl}?id={$i.gunid}&sessid={$START.sessid}">[Access]</a>
                           &nbsp;<a href="{$UI_BROWSER}?act=_analyzeFile&id={$i.id}">[RawAnalyze]</a>
                       {/if}

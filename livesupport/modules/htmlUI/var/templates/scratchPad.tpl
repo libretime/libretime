@@ -1,4 +1,4 @@
-{*Smarty template*}
+{PL->getActiveId assign=_PL_activeId}
 
 <div id="scratchpad">
 <center><b>%%ScratchPad%%</b>
@@ -18,7 +18,7 @@
                 <tr style="background-color: {cycle values='#eeeeee, #dadada'}" {assign var="moreContextBefore" value=", 'SP.removeItem'"} {include file="sub/contextmenu.tpl"}>
                     <td><input type="checkbox" name="{$i.id}"></td>
                     <td>
-                        {if $PLid == $i.id}
+                        {if $_PL_activeId == $i.id}
                             <b>{$i.title|truncate:30}</b>
                         {else}
                             {$i.title|truncate:30}

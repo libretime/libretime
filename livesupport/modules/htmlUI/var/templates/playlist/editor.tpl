@@ -18,11 +18,13 @@
         <td>{$i.type}</td>
     </tr>
 {/foreach}
+    {if $n}
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
         onContextmenu="return menu('{$i.attrs.id}', 'PL.changeFadeOut')" style="background-color: lightblue">
         <td colspan="4" align="center">{$i.fadeout_ms} ms</td>
     </tr>
+    {/if}
 
 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
     <td><input type="checkbox" name="all" onClick="form_switchAll('PL')"></th>

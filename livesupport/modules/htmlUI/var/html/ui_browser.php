@@ -53,10 +53,7 @@ if (is_array($_REQUEST['popup'])){
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
   $Smarty->assign('SCRATCHPAD',  $uiBrowser->SCRATCHPAD->get());
-  $Smarty->assign('PLid',        $uiBrowser->PLAYLIST->activeId);
-  $Smarty->register_object('PL', $uiBrowser->PLAYLIST);
-  $Smarty->register_object('BROWSE', $uiBrowser->BROWSE);
-  $Smarty->register_object('SEARCH', $uiBrowser->SEARCH);
+  #$Smarty->assign('PLid',        $uiBrowser->PLAYLIST->activeId);
 
   switch ($_REQUEST['act']){
     case "fileBrowse":
@@ -87,15 +84,17 @@ if ($uiBrowser->userid) {
 
     case "uploadFile":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-
-        $Smarty->assign('uploadform',  $uiBrowser->uploadFile($ui_fmask['uploadFile'], $uiBrowser->id, $_REQUEST['replace']));
+        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, TRUE));
+             # booth masks on one page
+             $Smarty->assign('uploadform',  $uiBrowser->uploadFile($ui_fmask['uploadFile'], $uiBrowser->id, $_REQUEST['replace']));
     break;
 
 
     case "addWebstream":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-
         $Smarty->assign('uploadform',  $uiBrowser->addWebstream($ui_fmask['addWebstream'], $uiBrowser->id, $_REQUEST['replace']));
+            # booth masks on one page
+            $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, TRUE));
     break;
 
 
@@ -107,13 +106,13 @@ if ($uiBrowser->userid) {
 
 
     case "SEARCH":
-        $Smarty->assign('searchForm', $uiBrowser->SEARCH->form($uiBrowser->id, $ui_fmask));
+        $Smarty->assign('searchForm', $uiBrowser->SEARCH->searchForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
 
     break;
 
     case "BROWSE":
-        $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask['browse']));
+        $Smarty->assign('browseForm', $uiBrowser->BROWSE->browseForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showLibrary', TRUE);
 
     break;

@@ -23,6 +23,14 @@ class uiPlaylist
         return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
     }
 
+    function getActiveId()
+    {   
+        if (!$this->activeId) {
+            return FALSE;
+        }
+        return $this->activeId;
+    }
+
     function activate($plid, $msg=TRUE)
     {
         # test if PL available
