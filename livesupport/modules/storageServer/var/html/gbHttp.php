@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -286,6 +286,42 @@ switch($_REQUEST['act']){
         $redirUrl="gbHtmlSubj.php";
         if($gb->checkPerm($userid, 'subjects')){
             $res = $gb->removeSubj($_REQUEST['login']);
+        }else{
+            $_SESSION['alertMsg']='Access denied.';
+            break;
+        }
+        if(PEAR::isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
+    break;
+/**
+ *  addSubj2
+ *
+ *  add subject to group
+ *
+ *  @param login string, login name of user added to group
+ *  @param gname string, group name
+ */
+    case"addSubj2Gr";
+        $redirUrl="gbHtmlSubj.php?id={$_REQUEST['reid']}";
+        if($gb->checkPerm($userid, 'subjects')){
+            $res = $gb->addSubj2Gr($_REQUEST['login'], $_REQUEST['gname']);
+        }else{
+            $_SESSION['alertMsg']='Access denied.';
+            break;
+        }
+        if(PEAR::isError($res)) $_SESSION['alertMsg'] = $res->getMessage();
+    break;
+/**
+ *  removeSubjFromGr
+ *
+ *  remove subject from group
+ *
+ *  @param login string, login name of user removed from group
+ *  @param gname string, group name
+ */
+    case"removeSubjFromGr";
+        $redirUrl="gbHtmlSubj.php?id={$_REQUEST['reid']}";
+        if($gb->checkPerm($userid, 'subjects')){
+            $res=$gb->removeSubjFromGr($_REQUEST['login'], $_REQUEST['gname']);
         }else{
             $_SESSION['alertMsg']='Access denied.';
             break;
