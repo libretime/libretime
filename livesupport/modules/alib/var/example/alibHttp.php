@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/example/alibHttp.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ switch($act)
     break;
     case"removePerm";
         $a = $alib->isClass($_REQUEST['oid']) ? 'classes':'editPerms';
-        $oid = $alib->isClass($_REQUEST['oid']) ? '':$_REQUEST['oid'];
+        $oid = $alib->isClass($_REQUEST['oid']) ? NULL:$_REQUEST['oid'];
         if($alib->checkPerm($userid, $a, $oid))
             $alib->removePerm($_GET['permid']);
         else $_SESSION['alertMsg']='Access denied.';

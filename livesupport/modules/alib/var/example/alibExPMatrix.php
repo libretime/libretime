@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/example/alibExPMatrix.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -31,14 +31,20 @@ require_once "alib_h.php";
 
 $sid=$_GET['subj'];
 
-foreach($alib->getAllObjects() as $it){
+$all = $alib->getAllObjects();
+foreach($alib->getClasses() as $cl)
+    $all[] = array('name'=>$cl['cname']." (class)", 'id'=>$cl['id']);
+    
+foreach($all as $it){
  $aa=array();
  foreach($alib->getAllActions() as $a){
-  $aa[$a]=$alib->checkPerm($sid, $a, $it['id']);
-#  if(PEAR::isError($aa[$a])){ errCallback($aa[$a]); }
+  $aa[$a] = $r = $alib->checkPerm($sid, $a, $it['id']);
+  if(PEAR::isError($r)){
+    echo $r->getMessage()." ".$r->getUserInfo()."\n"; exit; }
  }
  $m[]=array($it['name'], $aa);
 }
+#echo"<pre>\n"; var_dump($m);
 $u=$alib->getSubjName($sid);
 
 ?>
@@ -58,7 +64,7 @@ $u=$alib->getSubjName($sid);
 <tr class="<?php echo(($o=1-$o) ? 'odd' : 'ev')?>">
  <td><?php echo$obj?></td>
  <?php foreach($aa as $pr){?>
-  <td><?php echo($pr ? 'Y' : '-')?></td>
+  <td><?php echo($pr===TRUE ? 'Y' : '-')?></td>
  <?php }?>
 </tr>
 <?php }?>

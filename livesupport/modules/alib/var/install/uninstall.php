@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,7 +41,6 @@ function errCallback($err)
 }
 
 
-PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){
     echo "Database connection problem.\n";
@@ -50,6 +49,8 @@ if(PEAR::isError($dbc)){
     exit;
 }
 
+#PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $alib =& new Alib($dbc, $config);
 

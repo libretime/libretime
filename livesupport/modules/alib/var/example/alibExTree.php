@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/example/alibExTree.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@ $d = array(
 );
 $d['msg'] = preg_replace(array("|\n|","|'|"), array("\\n","\\'"), $_SESSION['alertMsg']); unset($_SESSION['alertMsg']);
 
+#echo"<pre>\n"; var_dump($d['path']);exit;
 require_once "alib_f.php";
 // template follows:
 ?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,7 +41,6 @@ function errCallback($err)
 }
 
 
-PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){
     echo "Database connection problem.\n";
@@ -49,20 +48,35 @@ if(PEAR::isError($dbc)){
     echo "Database access is defined by 'dsn' values in conf.php.\n";
     exit;
 }
-
+#$dbc->setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
+#$$dbc->setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
+
 $alib =& new Alib($dbc, $config);
 
-echo "Alib: Install ...\n";
+echo "\n\n======\n". 
+    "This is Alib standalone installation script, it is NOT needed to run ".
+    "for Livesupport.\nAlib is automatically used by storageServer without it.".
+    "\n======\n\n";
+
+echo "Alib: uninstall ...\n";
+$alib->uninstall();
+
+$dbc->setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
+echo "Alib: install ...\n";
 $alib->install();
 
+#$alib->testData(); echo $alib->dumpTree(); exit;
+
 echo " Testing ...\n";
-$alib->test();
+$r = $alib->test();
+if($dbc->isError($r)) if($dbc->isError($r)){ echo $r->getMessage()."\n".$r->getUserInfo()."\n"; exit; }
 $log = $alib->test_log;
 echo " TESTS:\n$log\n---\n";
 
-echo " Reinstall + testdata insert ...\n";
-$alib->reinstall();
+echo " clean up + testdata insert ...\n";
+$alib->deleteData();
 $alib->testData();
 
 echo " TREE DUMP:\n";
