@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -153,9 +153,16 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
         throw std::invalid_argument(eMsg);
     }
 
-    Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
-                                   relativeOffset, audioClip, fadeInfo));
+    Ptr<PlaylistElement>::Ref   playlistElement(new PlaylistElement(
+                                    relativeOffset, audioClip, fadeInfo));
     (*elementList)[*relativeOffset] = playlistElement;
+    
+    Ptr<time_duration>::Ref     endOffset(new time_duration(
+                                                *relativeOffset 
+                                              + *audioClip->getPlaylength()));
+    if (*endOffset > *playlength) {
+        playlength = endOffset;
+    }
 }
 
 
@@ -176,6 +183,13 @@ Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
                                    relativeOffset, playlist, fadeInfo));
     (*elementList)[*relativeOffset] = playlistElement;
+    
+    Ptr<time_duration>::Ref     endOffset(new time_duration(
+                                                *relativeOffset 
+                                              + *playlist->getPlaylength()));
+    if (*endOffset > *playlength) {
+        playlength = endOffset;
+    }
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -212,6 +212,9 @@ PlaylistTest :: audioClipTest(void)
         eMsg += e.what(); 
         CPPUNIT_FAIL(eMsg);
     }
+
+    CPPUNIT_ASSERT(playlist->getPlaylength());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() == *relativeOffset + *clipLength);
 
     CPPUNIT_ASSERT(!playlist->valid());    // big gap in playlist
 

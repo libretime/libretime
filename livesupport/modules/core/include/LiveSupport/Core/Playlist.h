@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -476,6 +476,10 @@ class Playlist : public Configurable,
         /**
          *  Add a new audio clip to the playlist.
          *
+         *  The playlist is not checked for gaps (use valid() for that),
+         *  but the playlength is adjusted if the new audio clip is added
+         *  at the end of the playlist.
+         *
          *  @param audioClip the new audio clip to be added
          *  @param relativeOffset the start of the audio clip, relative
          *             to the start of the playlist
@@ -492,6 +496,10 @@ class Playlist : public Configurable,
 
         /**
          *  Add a new sub-playlist to the playlist.
+         *
+         *  The playlist is not checked for gaps (use valid() for that),
+         *  but the playlength is adjusted if the new sub-playlist is added
+         *  at the end of the playlist.
          *
          *  @param playlist the sub-playlist to be added
          *  @param relativeOffset the start of the sub-playlist, relative
