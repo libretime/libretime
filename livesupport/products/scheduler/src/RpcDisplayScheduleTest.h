@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,13 +63,14 @@ using namespace LiveSupport::Core;
  *  Unit test to test the displaySchedule XML-RPC call.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see SchedulerDaemon
  */
 class RpcDisplayScheduleTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(RpcDisplayScheduleTest);
     CPPUNIT_TEST(simpleTest);
+    CPPUNIT_TEST(faultTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -88,6 +89,14 @@ class RpcDisplayScheduleTest : public CPPUNIT_NS::TestFixture
          */
         void
         simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test some error conditions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        faultTest(void)                      throw (CPPUNIT_NS::Exception);
 
     public:
         

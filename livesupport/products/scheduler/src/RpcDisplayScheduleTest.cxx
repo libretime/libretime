@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -167,6 +167,63 @@ RpcDisplayScheduleTest :: simpleTest(void)
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.size() == 0);
 
+    xmlRpcClient.close();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing some error conditions.
+ *----------------------------------------------------------------------------*/
+void
+RpcDisplayScheduleTest :: faultTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    XmlRpcValue                 parameters;
+    XmlRpcValue                 result;
+
+    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+
+    result.clear();
+    xmlRpcClient.execute("displaySchedule", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 1101);
+
+    parameters.clear();
+    parameters["sessionId"] = sessionId->getId();
+    parameters["from"]      = "the beginning";
+    parameters["to"]        = "the end";
+
+    result.clear();
+    xmlRpcClient.execute("displaySchedule", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 1102);
+/*
+    struct tm                   time;
+
+    parameters.clear();
+    parameters["sessionId"] = sessionId->getId();
+    time.tm_year = 2044;
+    time.tm_mon  = 11;
+    time.tm_mday = 12;
+    time.tm_hour = 10;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["from"] = &time;
+    time.tm_year = 2044;
+    time.tm_mon  = 11;
+    time.tm_mday = 12;
+    time.tm_hour = 11;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["to"] = &time;
+
+    result.clear();
+    xmlRpcClient.execute("displaySchedule", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.size() == 0);
+*/
     xmlRpcClient.close();
 }
 

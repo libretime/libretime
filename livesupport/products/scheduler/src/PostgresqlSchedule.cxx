@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,12 +116,10 @@ const std::string PostgresqlSchedule::reschedulePlaylistStmt =
  *  The parameters for this call are: from, to
  *  and returns the properties: id, playlist, starts, ends for all
  *  schedule entries between from and to, ordered by starts.
- *  TODO: the below query only lists entries starting inside [from:to[
- *        but what about entries starting before, but flowing into [from:to[ ?
  *----------------------------------------------------------------------------*/
 const std::string PostgresqlSchedule::getScheduleEntriesStmt =
     "SELECT id, playlist, starts, ends FROM schedule WHERE "
-    "(? <= starts) AND (starts < ?) "
+    "(? < ends) AND (starts < ?) "
     "ORDER BY starts";
 
 /*------------------------------------------------------------------------------

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,8 +69,8 @@ using namespace LiveSupport::Core;
 /**
  *  The generic interface for the component scheduling events.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.7 $
  */
 class ScheduleInterface : virtual public Installable
 {
@@ -104,11 +104,11 @@ class ScheduleInterface : virtual public Installable
 
         /**
          *  Return the list of scheduled entries for a specified time interval.
+         *  It returns all entries which intersect the interval (i.e., start
+         *  before toTime, and end later than fromTime).
          *
-         *  @param fromTime the start of the time of the interval queried,
-         *          inclusive
-         *  @param toTime to end of the time of the interval queried,
-         *          non-inclusive
+         *  @param fromTime the start of the time of the interval queried
+         *  @param toTime to end of the time of the interval queried
          *  @return a vector of the scheduled entries for the time region.
          */
         virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
