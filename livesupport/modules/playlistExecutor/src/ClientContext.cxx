@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/ClientContext.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 #include "ErrorSink.h"
 #include "AuthenticationManager.h"
 #include "ClientContext.h"
+#include "HelixPlayer.h"
 
 using namespace LiveSupport::PlaylistExecutor;
 
@@ -61,13 +62,14 @@ using namespace LiveSupport::PlaylistExecutor;
 /*------------------------------------------------------------------------------
  *  Construct the Client Context
  *----------------------------------------------------------------------------*/
-ClientContext::ClientContext()                              throw ()
+ClientContext::ClientContext(Ptr<HelixPlayer>::Ref  helixPlayer)    throw ()
     : lRefCount(0)
     , pClientSink(NULL)
     , pErrorSink(NULL)
     , pAuthMgr(NULL)
     , pDefaultPrefs(NULL)
 {
+    this->helixPlayer = helixPlayer;
 }
 
 
@@ -90,7 +92,7 @@ ClientContext::Init(IUnknown         * pUnknown,
 {
     char* pszCipher = NULL;
 
-    pClientSink    = new AdviseSink(pUnknown);
+    pClientSink    = new AdviseSink(pUnknown, helixPlayer);
     pErrorSink     = new ErrorSink(pUnknown);
     pAuthMgr       = new AuthenticationManager();
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -120,6 +120,26 @@ HelixPlayerTest :: firstTest(void)
 
 
 /*------------------------------------------------------------------------------
+ *  Check the length of an audio file
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: playlengthTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    helixPlayer->initialize();
+    helixPlayer->open("file:var/test.mp3");
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    Ptr<time_duration>::Ref     playlength = helixPlayer->getPlaylength();
+    CPPUNIT_ASSERT(playlength->seconds() == 14);
+    CPPUNIT_ASSERT(playlength->fractional_seconds() == 785000);
+    helixPlayer->close();
+    helixPlayer->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Play something simple
  *----------------------------------------------------------------------------*/
 void
@@ -129,7 +149,7 @@ HelixPlayerTest :: simplePlayTest(void)
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
     helixPlayer->initialize();
-    helixPlayer->playThis("file:var/test.mp3");
+    helixPlayer->open("file:var/test.mp3");
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -137,6 +157,7 @@ HelixPlayerTest :: simplePlayTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->close();
     helixPlayer->deInitialize();
 }
 
@@ -172,7 +193,7 @@ HelixPlayerTest :: checkErrorConditions(void)
 
     gotException = false;
     try {
-        helixPlayer->playThis("totally/bad/URL");
+        helixPlayer->open("totally/bad/URL");
     } catch (std::invalid_argument &e) {
         gotException = true;
     }
@@ -201,7 +222,7 @@ HelixPlayerTest :: smilTest(void)
 
     helixPlayer->initialize();
 
-    helixPlayer->playThis("file:var/simpleSmil.smil");
+    helixPlayer->open("file:var/simpleSmil.smil");
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -209,6 +230,9 @@ HelixPlayerTest :: smilTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+
+    helixPlayer->close();
+    helixPlayer->deInitialize();
 }
 
 
@@ -222,7 +246,7 @@ HelixPlayerTest :: playFile(const std::string   & fileName)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    helixPlayer->playThis(fileName.c_str());
+    helixPlayer->open(fileName.c_str());
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -230,6 +254,7 @@ HelixPlayerTest :: playFile(const std::string   & fileName)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->close();
 }
 
 
@@ -307,7 +332,7 @@ HelixPlayerTest :: smilSoundAnimationTest(void)
     /* TODO: there is a bug with sound level animation, it causes a segfault
              see https://bugs.helixcommunity.org/show_bug.cgi?id=3310
     */
-    helixPlayer->playThis("file:var/animateSound.smil");
+    helixPlayer->open("file:var/animateSound.smil");
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -315,6 +340,7 @@ HelixPlayerTest :: smilSoundAnimationTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->close();
 
     helixPlayer->deInitialize();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/ClientContext.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,12 +43,13 @@
 #include <hxprefs.h>
 #include <ihxpckts.h>
 
+#include "LiveSupport/Core/Ptr.h"
 #include "AdviseSink.h"
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
 
-using namespace LiveSupport;
+using namespace LiveSupport::Core;
 
 
 /* ================================================================ constants */
@@ -60,12 +61,13 @@ using namespace LiveSupport;
 /* =============================================================== data types */
 
 class ExampleErrorMessages;
+class HelixPlayer;
 
 /**
  *  A Helix client context.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ClientContext : public IHXPreferences
 {
@@ -74,6 +76,11 @@ class ClientContext : public IHXPreferences
          *  The reference count of this object.
          */
         LONG32                  lRefCount;
+
+        /**
+         *  The HelixPlayer object this is the client context for,
+         */
+        Ptr<HelixPlayer>::Ref   helixPlayer;
 
         /**
          *  The advise sink recieving event notifications.
@@ -105,8 +112,10 @@ class ClientContext : public IHXPreferences
 
         /**
          *  Constructor.
+         *
+         *  @param helixPlayer the HelixPlayer this is a client context for.
          */
-        ClientContext()                                 throw ();
+        ClientContext(Ptr<HelixPlayer>::Ref  helixPlayer)   throw ();
 
         /**
          *  Destructor.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,11 +43,17 @@
 #include <exception>
 #include <stdexcept>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
+#include "LiveSupport/Core/Ptr.h"
+
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
 
-using namespace LiveSupport;
+using namespace boost;
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -61,7 +67,7 @@ using namespace LiveSupport;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class AudioPlayerInterface
 {
@@ -95,15 +101,35 @@ class AudioPlayerInterface
          *  will be accessed automatically.
          *  Note: this call will <b>not</b> start playing! You will
          *  have to call the start() function to begin playing.
+         *  Always close any opened resources with a call to close().
          *
          *  @param fileUrl a URL to a file
          *  @exception std::invalid_argument if the supplied fileUrl
          *             seems to be invalid.
+         *  @see #close
          *  @see #start
          */
         virtual void
-        playThis(const std::string  fileUrl)    throw (std::invalid_argument)
+        open(const std::string  fileUrl)        throw (std::invalid_argument)
                                                                         = 0;
+
+        /**
+         *  Close an audio source that was opened.
+         *
+         *  @see #open
+         */
+        virtual void
+        close(void)                             throw ()                = 0;
+
+        /**
+         *  Get the length of the currently opened audio clip.
+         *  This function waits as long as necessary to get the length.
+         *
+         *  @return the length of the currently playing audio clip, or 0,
+         *          if nothing is openned.
+         */
+        virtual Ptr<posix_time::time_duration>::Ref
+        getPlaylength(void)                                 throw () = 0;
 
         /**
          *  Start playing.

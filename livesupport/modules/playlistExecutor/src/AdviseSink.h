@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AdviseSink.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,11 +46,13 @@
 #include <hxengin.h>
 #include <hxclsnk.h>
 
+#include "LiveSupport/Core/Ptr.h"
+
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
 
-using namespace LiveSupport;
+using namespace LiveSupport::Core;
 
 
 /* ================================================================ constants */
@@ -61,12 +63,15 @@ using namespace LiveSupport;
 
 /* =============================================================== data types */
 
+class HelixPlayer;
+
+
 /**
  *  A Helix client advise sink, receiving notifications on the status
  *  of the client playing.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class AdviseSink : public IHXClientAdviseSink
 {
@@ -100,15 +105,24 @@ class AdviseSink : public IHXClientAdviseSink
          *  The time playing os stopped.
          */
         UINT32          ulStopTime;
-    
- 
+
+        /**
+         *  The HelixPlayer object this advise sink is associated with.
+         */
+        Ptr<HelixPlayer>::Ref       helixPlayer;
+
+
     public:
 
         /**
          *  Constructor
+         *
+         *  @param pUknown the Helix object to initialize this sink with
+         *  @param helixPlayer the HelixPlayer object this sink is
+         *         associated with
          */
-        AdviseSink(IUnknown   * pUnknown)               throw ();
-
+        AdviseSink(IUnknown                   * pUnknown,
+                   Ptr<HelixPlayer>::Ref        helixPlayer)    throw ();
 
         /**
          *  Destructor.

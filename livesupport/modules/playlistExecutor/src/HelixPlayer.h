@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include "configure.h"
 #endif
 
+#include <boost/enable_shared_from_this.hpp>
 
 #include <dllacces.h>
 #include <dllpath.h>
@@ -48,7 +49,6 @@
 #include "LiveSupport/Core/Thread.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 
-#include "AdviseSink.h"
 #include "ErrorSink.h"
 #include "AuthenticationManager.h"
 #include "ClientContext.h"
@@ -56,6 +56,8 @@
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
+
+using namespace boost;
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
@@ -89,10 +91,11 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class HelixPlayer : virtual public Configurable,
-                    virtual public AudioPlayerInterface
+                    virtual public AudioPlayerInterface,
+                    public boost::enable_shared_from_this<HelixPlayer>
 {
     private:
         /**
@@ -141,6 +144,12 @@ class HelixPlayer : virtual public Configurable,
         std::string             url;
 
         /**
+         *  The length of the currently playing audio clip,
+         *  in milliseconds.
+         */
+        unsigned long           playlength;
+
+        /**
          *  Flag to indicate if this object has been initialized.
          */
         bool                    initialized;
@@ -168,6 +177,7 @@ class HelixPlayer : virtual public Configurable,
         {
             playing     = false;
             initialized = false;
+            playlength  = 0UL;
         }
 
         /**
@@ -226,14 +236,32 @@ class HelixPlayer : virtual public Configurable,
          *  will be accessed automatically.
          *  Note: this call will <b>not</b> start playing! You will
          *  have to call the start() function to begin playing.
+         *  Always close any opened resources with a call to close().
          *
          *  @param fileUrl a URL to a file
          *  @exception std::invalid_argument if the supplied fileUrl
          *             seems to be invalid.
+         *  @see #close
          *  @see #start
          */
         virtual void
-        playThis(const std::string  fileUrl)    throw (std::invalid_argument);
+        open(const std::string  fileUrl)        throw (std::invalid_argument);
+
+        /**
+         *  Close an audio source that was opened.
+         *
+         *  @see #open
+         */
+        virtual void
+        close(void)                             throw ()
+        {
+            if (isPlaying()) {
+                stop();
+            }
+
+            // nothing else to do here, the Helix Player object does not
+            // have a close() function...
+        }
 
         /**
          *  Start playing.
@@ -266,6 +294,30 @@ class HelixPlayer : virtual public Configurable,
          */
         virtual void
         stop(void)                              throw (std::logic_error);
+
+        /**
+         *  Set the length of the currenlty playing audio clip.
+         *  This is called by AdviseSink only!
+         *
+         *  @param playlength the length of the currently playing audio clip.
+         *         in milliseconds
+         *  @see AdviseSink#OnPosLength
+         */
+        void
+        setPlaylength(unsigned long     playlength)
+        {
+            this->playlength = playlength;
+        }
+
+        /**
+         *  Get the length of the currently opened audio clip.
+         *  This function waits as long as necessary to get the length.
+         *
+         *  @return the length of the currently playing audio clip, or 0,
+         *          if nothing is openned.
+         */
+        virtual Ptr<posix_time::time_duration>::Ref
+        getPlaylength(void)                                 throw ();
 };
 
 

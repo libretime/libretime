@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,14 @@ namespace PlaylistExecutor {
  *  Unit test for the HelixPlayer class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see HelixPlayer
  */
 class HelixPlayerTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(HelixPlayerTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(playlengthTest);
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST(checkErrorConditions);
     CPPUNIT_TEST(smilTest);
@@ -73,7 +74,7 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(smilParallelTest2);
     CPPUNIT_TEST(smilParallelTest3);
     CPPUNIT_TEST(smilParallelTest4);
-//    CPPUNIT_TEST(smilSoundAnimationTest);
+    CPPUNIT_TEST(smilSoundAnimationTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -103,6 +104,14 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Check the length of an audio file
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        playlengthTest(void)                    throw (CPPUNIT_NS::Exception);
 
         /**
          *  Play something simple.

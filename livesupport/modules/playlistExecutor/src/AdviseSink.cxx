@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AdviseSink.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 
 #include <hxcom.h>
 
+#include "HelixPlayer.h"
 #include "AdviseSink.h"
 
 using namespace LiveSupport::PlaylistExecutor;
@@ -56,12 +57,15 @@ using namespace LiveSupport::PlaylistExecutor;
 /*------------------------------------------------------------------------------
  *  Construct the advise sink
  *----------------------------------------------------------------------------*/
-AdviseSink::AdviseSink(IUnknown   * pUnknown)           throw ()
+AdviseSink::AdviseSink(IUnknown               * pUnknown,
+                       Ptr<HelixPlayer>::Ref    helixPlayer)            throw ()
     : lRefCount(0)
     , pUnknown(NULL)
     , pRegistry(NULL)
     , pScheduler(NULL)
 {
+    this->helixPlayer = helixPlayer;
+
     if (pUnknown) {
         this->pUnknown = pUnknown;
         this->pUnknown->AddRef();
@@ -168,6 +172,7 @@ STDMETHODIMP
 AdviseSink::OnPosLength(UINT32      ulPosition,
                         UINT32      ulLength)               throw ()
 {
+    helixPlayer->setPlaylength(ulLength);
     return HXR_OK;
 }
 

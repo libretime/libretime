@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -158,7 +158,7 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
     }
 
     // create and attach the client context
-    clientContext = new ClientContext();
+    clientContext = new ClientContext(shared_from_this());
     clientContext->AddRef();
 
     IHXPreferences    * preferences = 0;
@@ -227,9 +227,10 @@ HelixPlayer :: deInitialize(void)                       throw ()
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 void
-HelixPlayer :: playThis(const std::string   fileUrl)
+HelixPlayer :: open(const std::string   fileUrl)
                                                 throw (std::invalid_argument)
 {
+    playlength = 0UL;
     // the only way to check if this is a valid URL is to see if the
     // source count increases for the player.
     UINT16  sourceCount = player->GetSourceCount();
@@ -239,6 +240,33 @@ HelixPlayer :: playThis(const std::string   fileUrl)
     if (sourceCount == player->GetSourceCount()) {
         throw std::invalid_argument("can't open URL");
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the length of the current audio clip.
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+HelixPlayer :: getPlaylength(void)                      throw ()
+{
+    Ptr<time_duration>::Ref   length;
+
+    // only bother if there is something to check for.
+    if (player->GetSourceCount() > 0) {
+        Ptr<time_duration>::Ref   sleepT(new time_duration(microseconds(100)));
+
+        // wait until the playlength is set to a sensible value
+        // by the advise sink. this may take a while
+        while (playlength == 0) {
+            TimeConversion::sleep(sleepT);
+        }
+
+        unsigned long       secs      = playlength / 1000UL;
+        unsigned long       millisecs = playlength - (secs * 1000UL);
+        length.reset(new time_duration(seconds(secs) + millisec(millisecs)));
+    }
+
+    return length;
 }
 
 
