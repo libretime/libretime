@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.5 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/xmlrpc++/xmlrpc++-20040713/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -37,6 +37,9 @@ installdir=`cd $basedir/../../../usr; pwd; cd -`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 tar=$basedir/src/$product.tar.gz
+
+# the automake patch expects automake 1.4
+export WANT_AUTOMAKE=1.4
 
 echo "installing $product from $basedir to $installdir"
 
