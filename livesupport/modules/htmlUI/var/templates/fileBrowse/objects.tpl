@@ -22,9 +22,9 @@
               <td align="center">
                 <span id="ID{$i.id}">
                     {if $i.type eq 'Folder'}
-                         <a href="{$UI_BROWSER}?act=fileBrowse&id={$i.id}" >[{$i.title}]</b>
+                         <a href="{$UI_BROWSER}?act=fileBrowse&id={$i.id}" >[{$i.title|truncate:30}]</b>
                     {else}
-                         {$i.title}
+                         {$i.title|truncate:30}
                     {/if}
                 </span>
               </td>

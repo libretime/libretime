@@ -26,7 +26,7 @@
                         )"
                 >
                     <td><input type="checkbox" name="{$i.id}"></td>
-                    <td>{$i.title}</a></td>
+                    <td>{$i.title|truncate:10}</a></td>
                     <td>{$i.duration}</td>
                     <td>{$i.type} </td>
                     <th><a href="#" onclick="hpopup('{$UI_HANDLER}?act=SP.removeItem&id={$i.id}', 'SP')">X</th>
