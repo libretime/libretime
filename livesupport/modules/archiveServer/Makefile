@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -90,7 +90,7 @@ TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean dist \
-  db_init db_clean
+  db_init db_clean testonly
 
 all: dir_setup db_init
 
@@ -115,10 +115,13 @@ dist:
 
 distclean: clean docclean
 
-#check: all ${TEST_RUNNER}
-#	${TEST_RUNNER}
+testonly: ${TEST_RUNNER}
+	${TEST_RUNNER}
+
 check: all
-#	$(MAKE) -C ../storageServer transtest
+#testonly
+
+recheck: clean check
 	
 #-------------------------------------------------------------------------------
 #   Specific targets
