@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace boost::posix_time;
  *  in a Playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class AudioClip : public Configurable
 {
@@ -93,9 +93,9 @@ class AudioClip : public Configurable
         Ptr<time_duration>::Ref     playlength;
 
         /**
-         *  The title of the audio clip.
+         *  The location of the audio clip.
          */
-//        Ptr<string>::Ref            title;
+        Ptr<string>::Ref            uri;
 
 
     public:
@@ -114,12 +114,12 @@ class AudioClip : public Configurable
          *  @param playlength the playing length of the audio clip.
          */
         AudioClip(Ptr<UniqueId>::Ref         id,
-                  Ptr<time_duration>::Ref    playlength)   throw()
-//                  Ptr<string>::Ref           title)        throw ()
+                  Ptr<time_duration>::Ref    playlength,
+                  Ptr<string>::Ref           uri = Ptr<string>::Ref())     throw ()
         {
             this->id         = id;
             this->playlength = playlength;
-//            this->title      = title;
+            this->uri        = uri;
         }
 
         /**
@@ -178,15 +178,15 @@ class AudioClip : public Configurable
         }
 
         /**
-         *  Return the title of this audio clip.
+         *  Return the URI of this audio clip.
          *
-         *  @return the title of this audio clip.
+         *  @return the URI of this audio clip.
          */
-//        Ptr<const string>::Ref
-//        getTitle(void) const                    throw ()
-//        {
-//            return title;
-//        }
+        Ptr<const string>::Ref
+        getUri(void) const                      throw ()
+        {
+            return uri;
+        }
 
 };
 

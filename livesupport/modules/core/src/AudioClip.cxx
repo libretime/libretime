@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,9 +57,9 @@ const std::string AudioClip::configElementNameStr = "audioClip";
 static const std::string    idAttrName = "id";
 
 /**
- *  The name of the attribute to get the title of the audio clip.
+ *  The name of the attribute to get the URI of the audio clip.
  */
-//static const std::string    titleAttrName = "title";
+static const std::string    uriAttrName = "uri";
 
 /**
  *  The name of the attribute to get the playlength of the audio clip.
@@ -96,15 +96,15 @@ AudioClip :: configure(const xmlpp::Element  & element)
     strStr.str(attribute->get_value());
     strStr >> idValue;
     id.reset(new UniqueId(idValue));
-/*
-    if (!(attribute = element.get_attribute(titleAttrName))) {
+
+    if (!(attribute = element.get_attribute(uriAttrName))) {
         std::string eMsg = "Missing attribute ";
-        eMsg += idAttrName;
+        eMsg += uriAttrName;
         throw std::invalid_argument(eMsg);
     }
-    std::string  titleValue = attribute->get_value();
-    title.reset(new std::string(titleValue));
-*/
+    std::string  uriValue = attribute->get_value();
+    uri.reset(new std::string(uriValue));
+
     if (!(attribute = element.get_attribute(playlengthAttrName))) {
         std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
