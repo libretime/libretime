@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,6 +96,14 @@ echo "# Install Transport submodule\n";
 require_once "../Transport.php";
 $tr =& new Transport(&$dbc, $config);
 $r = $tr->install();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+echo "\n";
+
+echo "# Install Prefs submodule\n";
+require_once "../Prefs.php";
+$pr =& new Prefs(&$gb);
+$r = $pr->install();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 echo "\n";
 
 $dbc->disconnect();

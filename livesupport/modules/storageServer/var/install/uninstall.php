@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,6 +63,15 @@ echo "# Uninstall Transport submodule ...\n";
 require_once "../Transport.php";
 $tr =& new Transport(&$dbc, $config);
 $r = $tr->uninstall();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+echo "\n";
+
+echo "# Uninstall Prefs submodule\n";
+require_once "../Prefs.php";
+$pr =& new Prefs(&$gb);
+$r = $pr->uninstall();
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+echo "\n";
 
 $dbc->disconnect();
 ?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ class MetaData{
      */
     function delete()
     {
-        if(file_exists($fname)) @unlink($this->fname);
+        if(file_exists($this->fname)) @unlink($this->fname);
         $res = $this->dbc->query("
             DELETE FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1216,6 +1216,105 @@ class XR_LocStor extends LocStor{
             );
         }
         return new XML_RPC_Response(XML_RPC_encode(array('gunids'=>$res)));
+    }
+
+    /**
+     *  Load user preference value
+     *
+     *  The XML-RPC name of this method is "locstor.loadPref".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> key : string - preference key:<br>
+     *   <ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> value : string - preference value </li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_loadPref:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::getAudioClip
+     */
+    function xr_loadPref($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs(&$this);
+        $res = $pr->loadPref($r['sessid'], $r['key']);
+        if(PEAR::isError($res)){
+            $ec = intval($res->getCode());
+            return new XML_RPC_Response(0, 800+($ec == 48 ? 48 : 5 ),
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+                
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('value'=>$res)));
+    }
+
+    /**
+     *  Save user preference value
+     *
+     *  The XML-RPC name of this method is "locstor.savePref".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> key : string - preference key:<br>
+     *      <li> value : string - preference value:<br>
+     *   <ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> status : boolean</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_savePref:
+     *                      &lt;message from lower layer&gt; </li>
+     *      <li> 848  -  invalid session id.</li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::getAudioClip
+     */
+    function xr_savePref($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        require_once '../../../storageServer/var/Prefs.php';
+        $pr =& new Prefs(&$this);
+        $res = $pr->savePref($r['sessid'], $r['key'], $r['value']);
+        if(PEAR::isError($res)){
+            #return new XML_RPC_Response(0, 805,
+            $ec = intval($res->getCode());
+            return new XML_RPC_Response(0, 800+($ec == 48 ? 48 : 5 ),
+                "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
     }
 
 

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -113,6 +113,9 @@ $methods = array(
     'existsPlaylist'          => 'Check whether a Playlist exists.',
     'playlistIsAvailable'     => 'Check whether a Playlist is available '.
                                     'for editing.',
+
+    'loadPref'                => 'Load user preference value.',
+    'savePref'                => 'Save user preference value.',
 );
 
 $defs = array();

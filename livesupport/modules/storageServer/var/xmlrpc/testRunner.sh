@@ -23,11 +23,12 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.12 $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
 #DEBUG=yes
+#DEBUG_I=yes
 
 COMM=$1
 shift
@@ -67,19 +68,19 @@ existsAudioClip() {
 storeAudioClip() {
     MEDIA=var/tests/ex1.mp3
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
-    echo "md5=$MD5"
+    if [ $DEBUG_I ]; then echo "md5=$MD5"; fi
     echo -n "# storeAudioClipOpen: "
     RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' "$METADATA" "stored file.mp3" "$MD5"` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo $URL
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo $URL; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl (PUT): "
     curl -C 0 -T $MEDIA $URL || { ERN=$?; echo $RGUNID; exit $ERN; }
     echo "status: $?"
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# storeAudioClipClose: "
     RGUNID=`$XR_CLI storeAudioClipClose "$SESSID" "$TOKEN"` || \
     	{ ERN=$?; echo $RGUNID; exit $ERN; }
@@ -87,27 +88,27 @@ storeAudioClip() {
 }
 
 accessRawAudioData() {
-    echo "# accessRawAudioData: "
+    echo -n "# accessRawAudioData: "
     RES=`$XR_CLI accessRawAudioData $SESSID $GUNID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo $URL
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo $URL; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# releaseRawAudioData: "
     $XR_CLI releaseRawAudioData $SESSID $TOKEN || exit $?
 }
 
 downloadRAD() {
-    echo "# downloadRawAudioDataOpen: "
+    echo -n "# downloadRawAudioDataOpen: "
     RES=`$XR_CLI downloadRawAudioDataOpen $SESSID $GUNID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo $URL
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo $URL; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl: "
     curl -Ifs $URL > /dev/null || { ERN=$?; echo $RES; exit $ERN; }
     echo "status: $?"
@@ -116,18 +117,18 @@ downloadRAD() {
 }
 
 downloadMeta() {
-    echo "# downloadMetadataOpen: "
+    echo -n "# downloadMetadataOpen: "
     RES=`$XR_CLI downloadMetadataOpen $SESSID $GUNID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo $URL
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo $URL; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl: "
     METAOUT=`curl -fs $URL;` || { ERN=$?; echo $RES; exit $ERN; }
     echo "OK"
-    if [ $DEBUG ]; then echo $METAOUT; echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo $METAOUT; echo -n "Press enter ..."; read KEY; fi
     echo -n "#  metadata check:"
     if [ "x$METAOUT" != "x$METADATA" ] ; then
         echo " NOT MATCH"
@@ -170,18 +171,19 @@ createPlaylist() {
 }
 
 accessPlaylist() {
-    echo "# accessPlaylist: "
+    echo -n "# accessPlaylist: "
     RES=`$XR_CLI accessPlaylist $SESSID $PLID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo $URL
+    if [ $DEBUG_I ]; then echo $URL; fi
     echo "# curl: "
-    curl -fs $URL  || { ERN=$?; echo $RES; exit $ERN; }
-    echo ""
+    CURLOUT=`curl -fs $URL;` || { ERN=$?; echo $RES; exit $ERN; }
+    if [ $DEBUG ]; then echo $CURLOUT; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo "#  status: $?"
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# releasePlaylist: "
     $XR_CLI releasePlaylist $SESSID $TOKEN || exit $?
 }
@@ -197,16 +199,15 @@ editPlaylist() {
    <audio src=\"123456789abcdefa\"/>
    <audio src=\"123456789abcdefb\"/>
 </seq></body></smil>"
-    echo "# editPlaylist: "
+    echo -n "# editPlaylist: "
     RES=`$XR_CLI editPlaylist $SESSID $PLID` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
     echo $TOKEN
-    echo $URL
-    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
-    echo " Playlist:"
-    echo $PLAYLIST
+    if [ $DEBUG_I ]; then echo $URL; fi
+    if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
+    if [ $DEBUG_I ]; then echo " Playlist:"; echo $PLAYLIST; fi
     echo -n "# savePlaylist: "
     $XR_CLI savePlaylist $SESSID $TOKEN "$PLAYLIST" || exit $?
 }
@@ -223,9 +224,76 @@ deletePlaylist() {
     echo "#  status: $?"
 }
 
+prefTest() {
+    PREFKEY="testKey"
+    PREFVAL="test preference value"
+    echo -n "# savePref: "
+    $XR_CLI savePref $SESSID "$PREFKEY" "$PREFVAL"|| exit $?
+    echo -n "# loadPref: "
+    VAL=`$XR_CLI loadPref $SESSID "$PREFKEY"` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    echo "$VAL  "
+    if [ "x$VAL" != "x$PREFVAL" ] ; then
+        echo " NOT MATCH"
+        echo " Expected:"; echo $PREFVAL
+        echo " Returned:"; echo $VAL
+        exit 1
+    else
+        echo "# pref value check: OK"
+    fi
+    echo -n "# savePref: "
+    $XR_CLI savePref $SESSID "$PREFKEY" ""|| exit $?
+    echo -n "# loadPref: "
+    VAL=`$XR_CLI loadPref $SESSID "$PREFKEY"` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    echo $VAL
+}
+
 logout() {
     echo -n "# logout: "
     $XR_CLI logout $SESSID || exit $?
+}
+
+preferenceTest(){
+    echo "#XMLRPC preference test"
+    login
+    prefTest
+    logout
+    echo "#XMLRPC: preference: OK."
+    echo ""
+}
+
+playlistTest(){
+    echo "#XMLRPC playlists test"
+    login
+    existsPlaylist
+    deletePlaylist
+    createPlaylist
+    existsPlaylist
+    accessPlaylist
+    editPlaylist
+    accessPlaylist
+    deletePlaylist
+    existsPlaylist
+    logout
+    echo "#XMLRPC: playlists: OK."
+    echo ""
+}
+
+storageTest(){
+    echo "#XMLRPC: storage test"
+    login
+    storeAudioClip
+    GUNID=$RGUNID
+    existsAudioClip
+    accessRawAudioData
+    downloadRAD
+    downloadMeta
+    deleteAudioClip
+    existsAudioClip
+    logout
+    echo "#XMLRPC: storage: OK."
+    echo ""
 }
 
 usage(){
@@ -267,35 +335,16 @@ elif [ "$COMM" == "searchMetadata" ]; then
     login
     searchMetadata
     logout
+elif [ "$COMM" == "preferences" ]; then
+    preferenceTest
 elif [ "$COMM" == "playlists" ]; then
-    echo "#XMLRPC playlists test"
-    login
-    existsPlaylist
-    deletePlaylist
-    createPlaylist
-    existsPlaylist
-    accessPlaylist
-    editPlaylist
-    accessPlaylist
-    deletePlaylist
-    existsPlaylist
-    logout
-    echo "#XMLRPC: playlists: OK."
-    echo ""
+    playlistTest
+elif [ "$COMM" == "storage" ]; then
+    storageTest
 elif [ "x$COMM" == "x" ]; then
-    echo "#XMLRPC: storage test"
-    login
-    storeAudioClip
-    GUNID=$RGUNID
-    existsAudioClip
-    accessRawAudioData
-    downloadRAD
-    downloadMeta
-    deleteAudioClip
-    existsAudioClip
-    logout
-    echo "#XMLRPC: storage: OK."
-    echo ""
+    storageTest
+    playlistTest
+    preferenceTest
 elif [ "$COMM" == "help" ]; then
     usage
 else

@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.11 $
+#    Version  : $Revision: 1.12 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -184,6 +184,10 @@ try:
     elif method=="getAudioClip":
         r = server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
         print r['metadata']
+    elif method=="loadPref":
+        print server.locstor.loadPref({'sessid':pars[0], 'key':pars[1]})['value']
+    elif method=="savePref":
+        print server.locstor.savePref({'sessid':pars[0], 'key':pars[1], 'value':pars[2]})
     elif method=="resetStorage":
         print server.locstor.resetStorage({})
     elif method=="openPut":
