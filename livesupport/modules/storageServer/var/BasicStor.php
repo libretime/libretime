@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -987,12 +987,8 @@ class BasicStor extends Alib{
      */
     function _checkGunid($gunid)
     {
-        if(!preg_match("|^([0-9a-fA-F]{16})?$|", $gunid)){
-            return PEAR::raiseError(
-                "BasicStor.php: Wrong gunid ($gunid)"
-            );
-        }
-        return TRUE;
+        $res = preg_match("|^([0-9a-fA-F]{16})?$|", $gunid);
+        return $res;
     }
 
     /**

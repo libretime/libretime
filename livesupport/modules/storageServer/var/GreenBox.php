@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.36 $
+ *  @version $Revision: 1.37 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -394,8 +394,11 @@ class GreenBox extends BasicStor{
      *  @param sessid string, session ID
      *  @return int, local id of created playlist
      */
-    function createPlaylist($parid, $fname, $gunid, $sessid)
+    function createPlaylist($parid, $fname, $gunid=NULL, $sessid='')
     {
+        if(!$this->_checkGunid($gunid)){
+            $gunid  = StoredFile::_createGunid();
+        }
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
         $gunid2 = $lc->createPlaylist($sessid, $gunid, $fname);
@@ -708,7 +711,7 @@ class GreenBox extends BasicStor{
     /**
      *  Delete a Playlist metafile.
      *
-     *  @param parid int, parent id
+     *  @param id int, local id
      *  @param sessid string, session ID
      *  @return boolean
      */
@@ -723,11 +726,11 @@ class GreenBox extends BasicStor{
     /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
-     *  @param parid int, parent id
+     *  @param id int, local id
      *  @param sessid string, session ID
      *  @return boolean
      */
-    function existsPlaylist($gunid, $sessid)
+    function existsPlaylist($id, $sessid)
     {
         $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
@@ -740,11 +743,11 @@ class GreenBox extends BasicStor{
      *  is available for editing, i.e., exists and is not marked as
      *  beeing edited.
      *
-     *  @param parid int, parent id
+     *  @param id int, local id
      *  @param sessid string, session ID
      *  @return boolean
      */
-    function playlistIsAvailable($gunid, $sessid)
+    function playlistIsAvailable($id, $sessid)
     {
         $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
