@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,11 @@ function errCallback($err)
     echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
         "\nui:\n".$err->getUserInfo()."\n</pre>\n";
     exit(1);
+}
+
+if(!function_exists('domxml_open_file')){
+  trigger_error("DOMXML PHP extension required and not found.", E_USER_ERROR);
+  exit(2);
 }
 
 PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
@@ -77,10 +82,11 @@ echo " TESTS:\n{$log}";
 echo "#  Delete test data ...\n";
 $gb->deleteData();
 
-if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w')))
+if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))){
     echo "\n<b>make {$config['storageDir']} dir webdaemon-writeable</b>".
         "\nand run install again\n\n";
-else{
+    exit(1);
+}else{
     fclose($fp); unlink($config['storageDir']."/_writeTest");
     echo "#storageServer install: OK\n\n";
 }
