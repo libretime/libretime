@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -386,6 +386,69 @@ PostgresqlScheduleTest :: removeFromScheduleTest(void)
         CPPUNIT_ASSERT(schedule->scheduleEntryExists(entryId2));
         schedule->removeFromSchedule(entryId2);
         CPPUNIT_ASSERT(!schedule->scheduleEntryExists(entryId2));
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test rescheduling.
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlScheduleTest :: rescheduleTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // create a 1 hour long playlist
+    Ptr<UniqueId>::Ref      playlistId = UniqueId::generateId();
+    Ptr<time_duration>::Ref playlength(new time_duration(1, 0, 0));
+    Ptr<Playlist>::Ref      playlist(new Playlist(playlistId, playlength));
+
+    Ptr<ptime>::Ref         from;
+    Ptr<ptime>::Ref         to;
+
+    Ptr<UniqueId>::Ref      entryId1;
+    Ptr<UniqueId>::Ref      entryId2;
+
+    Ptr<ScheduleEntry>::Ref entry;
+
+    // at the very first, try to reschedule something not scheduled
+    bool                    gotException = false;
+    try {
+        entryId1.reset(new UniqueId(9999));
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        schedule->reschedule(entryId1, from);
+    } catch (std::invalid_argument &e) {
+        gotException = true;
+    }
+    CPPUNIT_ASSERT(gotException);
+
+    try {
+        // schedule our playlist for 2004-07-23, 10 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 10:00:00")));
+        entryId1 = schedule->schedulePlaylist(playlist, from);
+
+        // schedule our playlist for 2004-07-23, 12 o'clock
+        from.reset(new ptime(time_from_string("2004-07-23 12:00:00")));
+        entryId2 = schedule->schedulePlaylist(playlist, from);
+
+        // now let's reschedule the first to a valid timepoint
+        from.reset(new ptime(time_from_string("2004-07-23 08:00:00")));
+        schedule->reschedule(entryId1, from);
+        entry = schedule->getScheduleEntry(entryId1);
+        CPPUNIT_ASSERT((bool) entry);
+        CPPUNIT_ASSERT(*(entry->getStartTime()) == *from);
+
+        // try to reschedule the second one into the first, should fail
+        gotException = false;
+        try {
+            from.reset(new ptime(time_from_string("2004-07-23 08:30:00")));
+            schedule->reschedule(entryId1, from);
+        } catch (std::invalid_argument &e) {
+            gotException = true;
+        }
+        CPPUNIT_ASSERT(gotException);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());

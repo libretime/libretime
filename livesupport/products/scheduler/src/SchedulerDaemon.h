@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,6 +64,7 @@
 #include "DisplayScheduleMethod.h"
 #include "DisplayPlaylistMethod.h"
 #include "RemoveFromScheduleMethod.h"
+#include "RescheduleMethod.h"
 #include "XmlRpcDaemon.h"
 
 
@@ -119,7 +120,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
@@ -157,6 +158,11 @@ class SchedulerDaemon : public Installable,
         Ptr<RemoveFromScheduleMethod>::Ref  removeFromScheduleMethod;
 
         /**
+         *  The RescheduleMethod the daemon is providing.
+         */
+        Ptr<RescheduleMethod>::Ref  rescheduleMethod;
+
+        /**
          *  Default constructor.
          */
         SchedulerDaemon (void)                          throw ()
@@ -166,6 +172,7 @@ class SchedulerDaemon : public Installable,
             displayScheduleMethod.reset(new DisplayScheduleMethod());
             displayPlaylistMethod.reset(new DisplayPlaylistMethod());
             removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
+            rescheduleMethod.reset(new RescheduleMethod());
         }
 
     protected:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the PostgresqlSchedule class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see PostgresqlSchedule
  */
 class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
@@ -76,6 +76,7 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(getScheduleEntriesTest);
     CPPUNIT_TEST(scheduleEntryExistsTest);
     CPPUNIT_TEST(removeFromScheduleTest);
+    CPPUNIT_TEST(rescheduleTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -140,6 +141,14 @@ class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture
          */
         void
         removeFromScheduleTest(void)           throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Schedule some playlists, then reschedule them.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        rescheduleTest(void)                    throw (CPPUNIT_NS::Exception);
 
     public:
         

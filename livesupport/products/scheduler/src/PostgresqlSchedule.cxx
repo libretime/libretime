@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,6 +95,21 @@ const std::string PostgresqlSchedule::isTimeframaAvailableStmt =
  *----------------------------------------------------------------------------*/
 const std::string PostgresqlSchedule::schedulePlaylistStmt =
     "INSERT INTO schedule(id, playlist, starts, ends) VALUES(?, ?, ?, ?)";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for getting a schedule entry based on its id
+ *  The parameters for this call are: entryId
+ *  and returns the properties: id, playlist, starts, ends for the entry
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::getScheduleEntryStmt =
+    "SELECT id, playlist, starts, ends FROM schedule WHERE id = ?";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for rescheduling a playlist (an UPDATE call).
+ *  There parameters for this call are: new start, new end, id.
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::reschedulePlaylistStmt =
+    "UPDATE schedule SET starts = ?, ends = ? WHERE id = ?";
 
 /*------------------------------------------------------------------------------
  *  The SQL statement for querying scheduled entries for a time interval
@@ -397,4 +412,104 @@ PostgresqlSchedule :: removeFromSchedule(
         throw std::invalid_argument("specified schedule entry does not exist");
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Get a ScheduleEntry based on a schedule entry id.
+ *----------------------------------------------------------------------------*/
+Ptr<ScheduleEntry>::Ref
+PostgresqlSchedule :: getScheduleEntry(Ptr<UniqueId>::Ref   entryId)
+                                                throw (std::invalid_argument)
+{
+    Ptr<Connection>::Ref    conn;
+    Ptr<ScheduleEntry>::Ref entry;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                                        getScheduleEntryStmt));
+        pstmt->setInt(1, entryId->getId());
+
+        Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
+        if (rs->next()) {
+            Ptr<Timestamp>::Ref     timestamp(new Timestamp());
+
+            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getInt(1)));
+            Ptr<UniqueId>::Ref      playlistId(new UniqueId(rs->getInt(2)));
+
+            *timestamp = rs->getTimestamp(3);
+            Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
+
+            *timestamp = rs->getTimestamp(4);
+            Ptr<ptime>::Ref endTime = Conversion::timestampToPtime(timestamp);
+
+            entry.reset(new ScheduleEntry(id, playlistId, startTime, endTime));
+        }
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        // TODO: report error
+        return entry;
+    }
+
+    if (!entry) {
+        throw std::invalid_argument("no schedule entry by the specified id");
+    }
+
+    return entry;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reschedule an entry
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlSchedule :: reschedule(Ptr<UniqueId>::Ref   entryId,
+                                 Ptr<ptime>::Ref      playtime)
+                                                throw (std::invalid_argument)
+{
+    Ptr<ScheduleEntry>::Ref entry = getScheduleEntry(entryId);
+
+    Ptr<ptime>::Ref         ends(new ptime((*playtime)
+                                         + *(entry->getPlaylength())));
+
+    if (!isTimeframeAvailable(playtime, ends)) {
+        throw std::invalid_argument("new playtime not available");
+    }
+
+    Ptr<Connection>::Ref    conn;
+    bool                    result = false;
+
+    try {
+        conn = cm->getConnection();
+        Ptr<Timestamp>::Ref         timestamp;
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                                      reschedulePlaylistStmt));
+
+        timestamp = Conversion::ptimeToTimestamp(playtime);
+        pstmt->setTimestamp(1, *timestamp);
+
+        timestamp = Conversion::ptimeToTimestamp(ends);
+        pstmt->setTimestamp(2, *timestamp);
+
+        pstmt->setInt(3, entryId->getId());
+
+        result = pstmt->executeUpdate() == 1;
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        throw std::invalid_argument(e.what());
+    }
+
+    if (!result) {
+        throw std::invalid_argument("couldn't insert into database");
+    }
+}
+
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/ScheduleEntry.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  A scheduled event.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ScheduleEntry
 {
@@ -92,6 +92,11 @@ class ScheduleEntry
          *  The end time for the event.
          */
         Ptr<ptime>::Ref             endTime;
+
+        /**
+         *  The playling length of the event.
+         */
+        Ptr<time_duration>::Ref     playlength;
 
         /**
          *  The default constructor.
@@ -121,6 +126,8 @@ class ScheduleEntry
             this->playlistId = playlistId;
             this->startTime  = startTime;
             this->endTime    = endTime;
+
+            playlength.reset(new time_duration(*endTime - *startTime));
         }
 
         /**
@@ -165,6 +172,17 @@ class ScheduleEntry
         getEndTime(void) const                          throw ()
         {
             return endTime;
+        }
+
+        /**
+         *  Return the playlength of the schedule entry.
+         *
+         *  @return the playing length of the schedule entry.
+         */
+        Ptr<const time_duration>::Ref
+        getPlaylength(void) const                       throw ()
+        {
+            return playlength;
         }
 };
 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -113,6 +113,7 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/DisplayScheduleMethod.o \
                  ${TMP_DIR}/DisplayPlaylistMethod.o \
                  ${TMP_DIR}/RemoveFromScheduleMethod.o \
+                 ${TMP_DIR}/RescheduleMethod.o \
                  ${TMP_DIR}/ScheduleFactory.o \
                  ${TMP_DIR}/PostgresqlSchedule.o
 
@@ -128,10 +129,12 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/SchedulerDaemonDisplayScheduleTest.o \
                    ${TMP_DIR}/SchedulerDaemonDisplayPlaylistTest.o \
                    ${TMP_DIR}/SchedulerDaemonRemoveFromScheduleTest.o \
+                   ${TMP_DIR}/SchedulerDaemonRescheduleTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayScheduleMethodTest.o \
                    ${TMP_DIR}/DisplayPlaylistMethodTest.o \
                    ${TMP_DIR}/RemoveFromScheduleMethodTest.o \
+                   ${TMP_DIR}/RescheduleMethodTest.o \
                    ${TMP_DIR}/PostgresqlScheduleTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl

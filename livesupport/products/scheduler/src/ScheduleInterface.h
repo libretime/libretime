@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class ScheduleInterface : virtual public Installable
 {
@@ -93,7 +93,7 @@ class ScheduleInterface : virtual public Installable
          *  @param playlist the playlist to schedule.
          *  @param playtime the time to schedule the playlist for.
          *  @return the id of the newly created playlist.
-         *  @exception std::invalid_argument if the there is something
+         *  @exception std::invalid_argument if there is something
          *             already scheduled for the duration of the playlist.
          */
         virtual Ptr<UniqueId>::Ref
@@ -140,6 +140,33 @@ class ScheduleInterface : virtual public Installable
         removeFromSchedule(Ptr<const UniqueId>::Ref     entryId)
                                                 throw (std::invalid_argument)
                                                                     = 0;
+
+        /**
+         *  Return a schedule entry for a specified id.
+         *
+         *  @param entryId the id of the entry to get.
+         *  @return the ScheduleEntry for the specified id.
+         *  @exception std::invalid_argument if no entry by the specified
+         *             id exists.
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getScheduleEntry(Ptr<UniqueId>::Ref entryId)
+                                            throw (std::invalid_argument)
+                                                                        = 0;
+
+        /**
+         *  Reschedule an event to a different time.
+         *
+         *  @param entryId the id of the entry to reschedule.
+         *  @param playtime the new time for the schedule.
+         *  @exception std::invalid_argument if there is something already
+         *             scheduled for the new duration.
+         */
+        virtual void
+        reschedule(Ptr<UniqueId>::Ref   entryId,
+                   Ptr<ptime>::Ref      playtime)
+                                            throw (std::invalid_argument)
+                                                                        = 0;
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class PostgresqlSchedule : public Configurable,
                            public ScheduleInterface
@@ -111,6 +111,16 @@ class PostgresqlSchedule : public Configurable,
          *  The SQL statement for scheduling a playlist.
          */
         static const std::string    schedulePlaylistStmt;
+
+        /**
+         *  The SQL statement for rescheduling an entry.
+         */
+        static const std::string    reschedulePlaylistStmt;
+
+        /**
+         *  The SQL statement for getting a schedule entry based on its id
+         */
+        static const std::string    getScheduleEntryStmt;
 
         /**
          *  The SQL statement for getting the schedules for a time interval
@@ -270,6 +280,31 @@ class PostgresqlSchedule : public Configurable,
         virtual void
         removeFromSchedule(Ptr<const UniqueId>::Ref     entryId)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  Return a schedule entry for a specified id.
+         *
+         *  @param entryId the id of the entry to get.
+         *  @return the ScheduleEntry for the specified id.
+         *  @exception std::invalid_argument if no entry by the specified
+         *             id exists.
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getScheduleEntry(Ptr<UniqueId>::Ref entryId)
+                                            throw (std::invalid_argument);
+
+        /**
+         *  Reschedule an event to a different time.
+         *
+         *  @param entryId the id of the entry to reschedule.
+         *  @param playtime the new time for the schedule.
+         *  @exception std::invalid_argument if there is something already
+         *             scheduled for the new duration.
+         */
+        virtual void
+        reschedule(Ptr<UniqueId>::Ref   entryId,
+                   Ptr<ptime>::Ref      playtime)
+                                            throw (std::invalid_argument);
 };
 
 
