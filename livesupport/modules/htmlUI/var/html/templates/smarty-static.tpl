@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!--  $Id: smarty-static.tpl,v 1.6 2005/02/10 14:03:50 sebastian Exp $ -->
+<!--  $Id: smarty-static.tpl,v 1.7 2005/02/10 14:27:04 sebastian Exp $ -->
 <html>
 <head>
     <title>Smarty template for ArraySmarty renderer: 2 column layout example</title>

@@ -39,7 +39,7 @@ if (is_array($_REQUEST['popup'])){
 
 $Smarty->assign('statusbar', $uiBrowser->getStationInfo($ui_fmask['systemPrefs']));
 
-if ($uiBrowser->userid) {
+if ($uiBrowser->userid) {  
   $Smarty->assign('showMenuTop', TRUE);
   $Smarty->assign('sp', $uiBrowser->getSP());
   $Smarty->assign('showSP', TRUE);

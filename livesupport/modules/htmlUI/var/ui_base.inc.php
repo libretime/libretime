@@ -34,6 +34,7 @@ class uiBase
         }
         $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
         $this->gb =& new GreenBox(&$dbc, $config);
+        $this->config = $config;
         $this->sessid = $_REQUEST[$config['authCookieName']];
         $this->userid = $this->gb->getSessUserId($this->sessid);
         $this->login  = $this->gb->getSessLogin($this->sessid);
@@ -315,7 +316,7 @@ class uiBase
 
     function getFileInfo($id)
     {
-        $f = $this->gb->analyzeFile($id, $this->sessid); 
+        $f = $this->gb->analyzeFile($id, $this->sessid);
         return array(
                     'name'              => $this->getFileName($id),
                     'type'              => 0,

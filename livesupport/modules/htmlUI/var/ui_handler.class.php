@@ -33,7 +33,7 @@ class uiHandler extends uiBase {
      *  @param pass  string, password
      */
     function login(&$formdata, &$mask)
-    {
+    {           
         if ($this->_validateForm($formdata, $mask)) {
             $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
             if($sessid && !PEAR::isError($sessid)){

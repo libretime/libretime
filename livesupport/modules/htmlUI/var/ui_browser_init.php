@@ -22,7 +22,7 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 // some global vars/objects
 $Smarty    = new Smarty;
 $uiBrowser = new uiBrowser($config);
-$uiBase    = new uiBase($config);
+$uiBase    = new uiBase($config);    
 
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
 
