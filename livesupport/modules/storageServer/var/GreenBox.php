@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.47 $
+    Version  : $Revision: 1.48 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.47 $
+ *  @version $Revision: 1.48 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -530,8 +530,7 @@ class GreenBox extends BasicStor{
     }
 
     /**
-     *  <span style="color:red">
-     *  Change fadInfo values
+     *  <span style="color:red">Change fadInfo values</span>
      *
      *  @param token string, playlist access token
      *  @param plElGunid string, global id of deleted playlistElement
@@ -539,7 +538,6 @@ class GreenBox extends BasicStor{
      *  @param fadeOut string, dtto
      *  @param sessid string, session ID
      *  @return boolean
-     *  </span>
      */
     function changeFadeInfo($token, $plElGunid, $fadeIn, $fadeOut, $sessid)
     {
