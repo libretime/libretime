@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -407,6 +407,7 @@ class Alib extends Subjects{
     function deleteData()
     {
         $this->dbc->query("DELETE FROM {$this->permTable}");
+        $this->dbc->query("DELETE FROM {$this->sessTable}");
         parent::deleteData();
     }
     /**
