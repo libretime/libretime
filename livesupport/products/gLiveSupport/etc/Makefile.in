@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -68,8 +68,8 @@ STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
 STORAGE_LIB         = livesupport_storage
 STORAGE_LIB_FILE    = ${STORAGE_LIB_DIR}/lib${STORAGE_LIB}.a
 
-GTKMM_CFLAGS=`pkg-config gtkmm-2.0 --cflags`
-GTKMM_LIBS=`pkg-config gtkmm-2.0 --libs`
+GTKMM_CFLAGS=@GTKMM_CFLAGS@
+GTKMM_LIBS=@GTKMM_LIBS@
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
@@ -146,7 +146,7 @@ depclean: clean
 	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
-	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
+	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/*.m4
 
 check: all ${TEST_RUNNER} run_tests
 
