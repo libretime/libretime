@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/schedulerPhpClient.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@ include_once "../conf.php";
  *   <li>p</li> array of input parameter names
  *   <li>r</li> array of result element names (not used there at present)
  *   <li>e</li> array of error codes/messages (not used there at present)
- *  <ul>
+ *  </ul>
  */
 $mdefs = array(
     "AddAudioClipToPlaylistMethod" => array(

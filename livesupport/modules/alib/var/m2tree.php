@@ -22,7 +22,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see ObjClasses
  *  Original author Tom Hlava
  */
@@ -333,6 +333,7 @@ class M2tree{
      *
      *   @param oid int
      *   @param flds string, optional
+     *   @param withSelf boolean - flag for include specified object to the path
      *   @return array/err
      */
     function getPath($oid, $flds='id', $withSelf=TRUE)
