@@ -23,13 +23,15 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
 require_once '../conf.php';
 require_once 'DB.php';
 require_once '../GreenBox.php';
+require_once "../Transport.php";
+require_once "../Prefs.php";
 
 function errCallback($err)
 {
@@ -52,26 +54,26 @@ if(PEAR::isError($dbc)){
     exit(1);
 }
 
+echo "#StorageServer uninstall:\n";
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox(&$dbc, $config);
-#    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
-
-echo "# Uninstall Prefs submodule\n";
-require_once "../Prefs.php";
+$tr =& new Transport(&$dbc, $config);
 $pr =& new Prefs(&$gb);
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
+
+echo "# Uninstall Prefs submodule";
 $r = $pr->uninstall();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 echo "\n";
 
-echo "# Uninstall Transport submodule ...\n";
-require_once "../Transport.php";
-$tr =& new Transport(&$dbc, $config);
+echo "# Uninstall Transport submodule ...";
 $r = $tr->uninstall();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 echo "\n";
 
-echo "# StorageServer uninstall ...\n";
+echo "# Uninstall StorageServer ...\n";
 $gb->uninstall();
+echo "#StorageServer uninstall: OK\n";
 
 $dbc->disconnect();
 ?>

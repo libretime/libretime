@@ -23,13 +23,15 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
 require_once '../conf.php';
 require_once 'DB.php';
 require_once '../GreenBox.php';
+require_once "../Transport.php";
+require_once "../Prefs.php";
 
 function errCallback($err)
 {
@@ -57,19 +59,26 @@ if(PEAR::isError($dbc)){
 }
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox(&$dbc, $config);
+$gb =& new GreenBox(&$dbc, $config);
+$tr =& new Transport(&$dbc, $config);
+$pr =& new Prefs(&$gb);
 
-echo "\n# storageServer: Install ...\n";
+echo "#StorageServer step 2:\n# trying uninstall ...\n";
 $dbc->setErrorHandling(PEAR_ERROR_RETURN);
+$pr->uninstall();
+$tr->uninstall();
 $gb->uninstall();
-PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+
+echo "# Install ...\n";
+#PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
+PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
 $r = $gb->install();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 
-echo "#  Testing ...\n";
+echo "# Testing ...\n";
 $gb->test();
 $log = $gb->test_log;
-echo " TESTS:\n{$log}";
+if($log) echo "# testlog:\n{$log}";
 
 #echo "#  Reinstall + testdata insert ...\n";
 #$gb->reinstall();
@@ -80,7 +89,7 @@ echo " TESTS:\n{$log}";
 #echo "#  TREE DUMP:\n";
 #echo $gb->dumpTree();
 
-echo "#  Delete test data ...\n";
+echo "# Delete test data ...\n";
 $gb->deleteData();
 
 if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))){
@@ -89,22 +98,20 @@ if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))){
     exit(1);
 }else{
     fclose($fp); unlink($config['storageDir']."/_writeTest");
-    echo "#storageServer install: OK\n\n";
+    echo "#storageServer main: OK\n";
 }
 
-echo "# Install Transport submodule\n";
-require_once "../Transport.php";
-$tr =& new Transport(&$dbc, $config);
+echo "# Install Transport submodule ...";
 $r = $tr->install();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 echo "\n";
 
-echo "# Install Prefs submodule\n";
-require_once "../Prefs.php";
-$pr =& new Prefs(&$gb);
+echo "# Install Prefs submodule ...";
 $r = $pr->install();
 if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
 echo "\n";
 
+echo "#storageServer submodules: OK\n";
+echo "\n";
 $dbc->disconnect();
 ?>
