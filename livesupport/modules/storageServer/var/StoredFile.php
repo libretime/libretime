@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ class StoredFile{
         $this->accessDir  =  $this->gb->accessDir;
         $this->rmd        =& new RawMediaData($this->gunid, $this->resDir);
         $this->md         =& new MetaData($gb, $this->gunid, $this->resDir);
-        return $this->gunid;
+#        return $this->gunid;
     }
 
     /* ========= 'factory' methods - should be called to construct StoredFile */
@@ -152,9 +152,10 @@ class StoredFile{
      *  @param gb reference to GreenBox object
      *  @param oid int, optional, local object id in the tree
      *  @param gunid string, optional, global unique id of file
+     *  @param className string, optional classname to recall
      *  @return instace of StoredFile object
      */
-    function recall(&$gb, $oid='', $gunid='')
+    function recall(&$gb, $oid='', $gunid='', $className='StoredFile')
     {
         $cond = ($oid != ''
             ? "id='".intval($oid)."'"
@@ -172,7 +173,7 @@ class StoredFile{
             );
         }
         $gunid = StoredFile::_normalizeGunid($row['gunid']);
-        $ac =& new StoredFile($gb, $gunid);
+        $ac =& new $className($gb, $gunid);
         $ac->mime = $row['mime'];
         $ac->name = $row['name'];
         $ac->id   = $row['id'];
@@ -185,11 +186,12 @@ class StoredFile{
      *
      *  @param gb reference to GreenBox object
      *  @param gunid string, optional, global unique id of file
+     *  @param className string, optional classname to recall
      *  @return instace of StoredFile object
      */
-    function recallByGunid(&$gb, $gunid='')
+    function recallByGunid(&$gb, $gunid='', $className='StoredFile')
     {
-      return StoredFile::recall($gb, '', $gunid);
+      return StoredFile::recall($gb, '', $gunid, $className);
     }
 
     /**
@@ -198,9 +200,10 @@ class StoredFile{
      *
      *  @param gb reference to GreenBox object
      *  @param token string, access token
+     *  @param className string, optional classname to recall
      *  @return instace of StoredFile object
      */
-    function recallByToken(&$gb, $token)
+    function recallByToken(&$gb, $token, $className='StoredFile')
     {
         $gunid = $gb->dbc->getOne("
             SELECT to_hex(gunid)as gunid
@@ -211,7 +214,7 @@ class StoredFile{
         if(is_null($gunid)) return PEAR::raiseError(
             "StoredFile::recallByToken: invalid token ($token)", GBERR_AOBJNEX);
         $gunid = StoredFile::_normalizeGunid($gunid);
-        return StoredFile::recall($gb, '', $gunid);
+        return StoredFile::recall($gb, '', $gunid, $className);
     }
 
     /**
