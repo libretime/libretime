@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "PlayLogFactory.h"
 
 #include "PlaylistEventContainer.h"
 #include "PlaylistEventContainerTest.h"
@@ -95,6 +96,11 @@ static const std::string scheduleConfigFileName = "etc/scheduleFactory.xml";
  */
 static const std::string authenticationClientConfigFileName =
                                           "etc/authenticationClient.xml";
+
+/**
+ *  The name of the configuration file for the play log factory.
+ */
+static const std::string playLogConfigFileName = "etc/playLogFactory.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -149,6 +155,12 @@ PlaylistEventContainerTest :: setUp(void)                        throw ()
         acf->configure(*(parser->get_document()->get_root_node()));
         authentication = acf->getAuthenticationClient();
 
+        // get an playlog factory
+        Ptr<PlayLogFactory>::Ref   plf = PlayLogFactory::getInstance();
+        parser.reset(new xmlpp::DomParser(playLogConfigFileName, true));
+        plf->configure(*(parser->get_document()->get_root_node()));
+        playLog = plf->getPlayLog();
+
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -159,6 +171,7 @@ PlaylistEventContainerTest :: setUp(void)                        throw ()
 
     try {
         scheduleFactory->install();
+        playLog->install();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         CPPUNIT_FAIL("can't install schedule factory");
@@ -179,7 +192,9 @@ PlaylistEventContainerTest :: tearDown(void)                     throw ()
 {
     audioPlayer->deInitialize();
     scheduleFactory->uninstall();
+    playLog->uninstall();
 
+    playLog.reset();
     schedule.reset();
     scheduleFactory.reset();
     storage.reset();
@@ -202,7 +217,8 @@ PlaylistEventContainerTest :: simpleTest(void)
     container.reset(new PlaylistEventContainer(sessionId,
                                                storage,
                                                schedule,
-                                               audioPlayer));
+                                               audioPlayer,
+                                               playLog));
 
     // see that there are no events scheduled
     Ptr<ScheduledEventInterface>::Ref   scheduledEvent;
@@ -222,7 +238,8 @@ PlaylistEventContainerTest :: scheduleTest(void)
     container.reset(new PlaylistEventContainer(sessionId,
                                                storage,
                                                schedule,
-                                               audioPlayer));
+                                               audioPlayer,
+                                               playLog));
 
     // schedule playlist 1 at 10 seconds from now
     Ptr<UniqueId>::Ref      playlistId(new UniqueId(1));

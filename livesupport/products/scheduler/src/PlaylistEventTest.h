@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
+#include "PlayLogInterface.h"
 
 
 namespace LiveSupport {
@@ -68,8 +69,8 @@ using namespace LiveSupport::PlaylistExecutor;
 /**
  *  Unit test for the PlaylistEvent class
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.5 $
  *  @see PlaylistEvent
  */
 class PlaylistEventTest : public CPPUNIT_NS::TestFixture
@@ -100,6 +101,11 @@ class PlaylistEventTest : public CPPUNIT_NS::TestFixture
          *  An authentication client.
          */
         Ptr<AuthenticationClientInterface>::Ref authentication;
+
+        /**
+         *  A playlog interface.
+         */
+        Ptr<PlayLogInterface>::Ref              playLog;
 
         /**
          *  A session ID from the authentication client login() method.

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
+#include "PlayLogFactory.h"
 
 #include "PlaylistEvent.h"
 #include "PlaylistEventTest.h"
@@ -81,6 +82,11 @@ static const std::string authenticationClientConfigFileName =
  *  The name of the configuration file for the storage client
  */
 static const std::string storageClientConfigFileName = "etc/storageClient.xml";
+
+/**
+ *  The name of the configuration file for the play log factory.
+ */
+static const std::string playLogConfigFileName = "etc/playLogFactory.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -121,6 +127,12 @@ PlaylistEventTest :: setUp(void)                        throw ()
         acf->configure(*(parser->get_document()->get_root_node()));
         authentication = acf->getAuthenticationClient();
 
+        // get an playlog factory
+        Ptr<PlayLogFactory>::Ref   plf = PlayLogFactory::getInstance();
+        parser.reset(new xmlpp::DomParser(playLogConfigFileName, true));
+        plf->configure(*(parser->get_document()->get_root_node()));
+        playLog = plf->getPlayLog();
+
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -130,6 +142,7 @@ PlaylistEventTest :: setUp(void)                        throw ()
     }
 
     audioPlayer->initialize();
+    playLog->install();
 
     duration.reset(new time_duration(seconds(30)));
 
@@ -145,11 +158,13 @@ PlaylistEventTest :: setUp(void)                        throw ()
 void
 PlaylistEventTest :: tearDown(void)                     throw ()
 {
+    playLog->uninstall();
     audioPlayer->deInitialize();
 
     duration.reset();
     storage.reset();
     audioPlayer.reset();
+    playLog.reset();
 
     authentication->logout(sessionId);
     sessionId.reset();
@@ -178,6 +193,7 @@ PlaylistEventTest :: createTestEvent(void)              throw ()
     Ptr<PlaylistEvent>::Ref     playlistEvent(new PlaylistEvent(sessionId,
                                                                 audioPlayer,
                                                                 storage,
+                                                                playLog,
                                                                 scheduleEntry));
 
     return playlistEvent;
