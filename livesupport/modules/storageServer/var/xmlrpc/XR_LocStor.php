@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1217,7 +1217,7 @@ class XR_LocStor extends LocStor{
                     : XML_RPC_encode($res['playlistResults'])
             ),
         ));
-        return $xv;
+        return new XML_RPC_Response($xv);
     }
 
     /* ---------------------------------------------- methods for preferences */
