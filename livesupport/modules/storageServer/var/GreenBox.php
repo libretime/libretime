@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -224,6 +224,21 @@ class GreenBox extends BasicStor{
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
         return $this->bsGetMetadata($id);
+    }
+
+    /**
+     *  Get metadata element value
+     *
+     *  @param id int, virt.file's local id
+     *  @param category string, metadata element name
+     *  @param sessid string, session id
+     *  @return array of matching records
+     */
+    function getMdataValue($id, $category, $sessid='')
+    {
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsGetMetadataValue($id, $category);
     }
 
     /**

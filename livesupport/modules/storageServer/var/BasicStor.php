@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -598,6 +598,43 @@ class BasicStor extends Alib{
     }
 
     /**
+     *  Get metadata element value
+     *
+     *  @param id int, virt.file's local id
+     *  @param category string, metadata element name
+     *  @return array of matching records
+     */
+    function bsGetMetadataValue($id, $category)
+    {   
+        $gunid = $this->_gunidFromId($id);
+        if(PEAR::isError($gunid)) return $gunid;
+        if(is_null($gunid)){
+            return PEAR::raiseError(
+                "BasicStor::bsGetMdataValue: file not found ($id)",
+                GBERR_NOTF
+            );
+        }
+        $catOrig = strtolower($category);
+        // handle predicate namespace shortcut
+        if(preg_match("|^([^:]+):([^:]+)$|", $catOrig, $catOrigArr)){
+            $catNs = $catOrigArr[1]; $cat = $catOrigArr[2];
+        }else{ $catNs=NULL; $cat=$catOrig; }
+        $cond = "
+                gunid=x'$gunid'::bigint AND objns='_L' AND
+                predicate='$cat'
+        ";
+        if(!is_null($catNs)) $cond .= " AND predns='$catNs'";
+        $sql = "
+            SELECT object
+            FROM {$this->mdataTable}
+            WHERE $cond
+        ";
+        $res = $this->dbc->getCol($sql);
+        if(PEAR::isError($res)) return $res;
+        return $res;
+    }
+
+    /**
      *  Search in local metadata database.
      *
      *  @param criteria hash, with following structure:<br>
@@ -688,6 +725,7 @@ class BasicStor extends Alib{
         }
         $rh = $this->dbc->query($sql); $cnt = $rh->numRows(); $rh->free();
         $res = $this->dbc->getCol($sql.$limitPart);
+        if(PEAR::isError($res)) return $res;
         if(!is_array($res)) $res = array();
         $res = array_map(array("StoredFile", "_normalizeGunid"), $res);
 #        return array('sql'=>$sql, 'results'=>$res);
