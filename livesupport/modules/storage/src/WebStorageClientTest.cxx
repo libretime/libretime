@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -228,8 +228,7 @@ WebStorageClientTest :: audioClipTest(void)
     }
     CPPUNIT_ASSERT(!exists);
 
-//  Ptr<UniqueId>::Ref  id02 = UniqueId::generateId();
-    Ptr<UniqueId>::Ref  id02(new UniqueId("11111111111111112222222222222222"));
+    Ptr<UniqueId>::Ref  id02 = UniqueId::generateId();
     Ptr<time_duration>::Ref playlength(new time_duration(0,0,11,0));
     Ptr<std::string>::Ref   uri(new std::string("file:var/test10001.mp3"));
     audioClip.reset(new AudioClip(id02, playlength, uri));
