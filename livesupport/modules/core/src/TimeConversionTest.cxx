@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,8 @@
 #include "LiveSupport/Core/TimeConversion.h"
 #include "TimeConversionTest.h"
 
+
+using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 
@@ -83,7 +85,7 @@ TimeConversionTest :: timevalToPtimeTest(void)
     struct tm       tm;
     time_t          time;
     struct timeval  timeval;
-    Ptr<ptime>::Ref ptime;
+    Ptr<ptime>::Ref pTime;
 
     // first create a time_t with the time for 2004-11-04 12:58:30
     tm.tm_year   = 104;     // number of years since 1900, 104 means 2004
@@ -100,15 +102,15 @@ TimeConversionTest :: timevalToPtimeTest(void)
     timeval.tv_usec = 1234;
 
     // and now convert, and see if it is correct
-    ptime = TimeConversion::timevalToPtime(&timeval);
-    CPPUNIT_ASSERT(ptime->date().year() == 2004);
-    CPPUNIT_ASSERT(ptime->date().month() == 11);
-    CPPUNIT_ASSERT(ptime->date().day() == 4);
-    CPPUNIT_ASSERT(ptime->time_of_day().hours() == 12);
-    CPPUNIT_ASSERT(ptime->time_of_day().minutes() == 58);
-    CPPUNIT_ASSERT(ptime->time_of_day().seconds() == 30);
-    CPPUNIT_ASSERT((ptime->time_of_day().total_microseconds()
-              - ((uint64_t) (ptime->time_of_day().total_seconds()) * 1000000UL))
+    pTime = TimeConversion::timevalToPtime(&timeval);
+    CPPUNIT_ASSERT(pTime->date().year() == 2004);
+    CPPUNIT_ASSERT(pTime->date().month() == 11);
+    CPPUNIT_ASSERT(pTime->date().day() == 4);
+    CPPUNIT_ASSERT(pTime->time_of_day().hours() == 12);
+    CPPUNIT_ASSERT(pTime->time_of_day().minutes() == 58);
+    CPPUNIT_ASSERT(pTime->time_of_day().seconds() == 30);
+    CPPUNIT_ASSERT((pTime->time_of_day().total_microseconds()
+              - ((uint64_t) (pTime->time_of_day().total_seconds()) * 1000000UL))
               == 1234);
 }
 
@@ -121,7 +123,7 @@ TimeConversionTest :: tmToPtimeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     struct tm       tm;
-    Ptr<ptime>::Ref ptime;
+    Ptr<ptime>::Ref pTime;
 
     // first create a time_t with the time for 2004-11-04 12:58:30
     tm.tm_year   = 104;     // number of years since 1900, 104 means 2004
@@ -133,13 +135,13 @@ TimeConversionTest :: tmToPtimeTest(void)
     tm.tm_isdst  = 0;
 
     // and now convert, and see if it is correct
-    ptime = TimeConversion::tmToPtime(&tm);
-    CPPUNIT_ASSERT(ptime->date().year() == 2004);
-    CPPUNIT_ASSERT(ptime->date().month() == 11);
-    CPPUNIT_ASSERT(ptime->date().day() == 4);
-    CPPUNIT_ASSERT(ptime->time_of_day().hours() == 12);
-    CPPUNIT_ASSERT(ptime->time_of_day().minutes() == 58);
-    CPPUNIT_ASSERT(ptime->time_of_day().seconds() == 30);
+    pTime = TimeConversion::tmToPtime(&tm);
+    CPPUNIT_ASSERT(pTime->date().year() == 2004);
+    CPPUNIT_ASSERT(pTime->date().month() == 11);
+    CPPUNIT_ASSERT(pTime->date().day() == 4);
+    CPPUNIT_ASSERT(pTime->time_of_day().hours() == 12);
+    CPPUNIT_ASSERT(pTime->time_of_day().minutes() == 58);
+    CPPUNIT_ASSERT(pTime->time_of_day().seconds() == 30);
 }
 
 
@@ -151,9 +153,9 @@ TimeConversionTest :: ptimeToTmTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     struct tm       tm;
-    Ptr<ptime>::Ref ptime(new ptime(time_from_string("1770-12-17 10:20:30")));
+    Ptr<ptime>::Ref pTime(new ptime(time_from_string("1770-12-17 10:20:30")));
 
-    TimeConversion::ptimeToTm(ptime, tm);
+    TimeConversion::ptimeToTm(pTime, tm);
     CPPUNIT_ASSERT(tm.tm_year + 1900    == 1770);
     CPPUNIT_ASSERT(tm.tm_mon  + 1       == 12);
     CPPUNIT_ASSERT(tm.tm_mday           == 17);
@@ -172,22 +174,22 @@ TimeConversionTest :: nowTest(void)
 {
     struct tm       tm;
     time_t          tTime;
-    Ptr<ptime>::Ref ptime;
+    Ptr<ptime>::Ref pTime;
 
     tTime = time(0);
-    ptime = TimeConversion::now();
+    pTime = TimeConversion::now();
 
     localtime_r(&tTime, &tm);
 
     // the below checking is a bit phone, what if the two times actually
     // spill over the second barrier (or, for that instance, the year
     // barrier?)
-    CPPUNIT_ASSERT(ptime->date().year() == (1900 + tm.tm_year));
-    CPPUNIT_ASSERT(ptime->date().month() == (1 + tm.tm_mon));
-    CPPUNIT_ASSERT(ptime->date().day() == tm.tm_mday);
-    CPPUNIT_ASSERT(ptime->time_of_day().hours() == tm.tm_hour);
-    CPPUNIT_ASSERT(ptime->time_of_day().minutes() == tm.tm_min);
-    CPPUNIT_ASSERT(ptime->time_of_day().seconds() == tm.tm_sec);
+    CPPUNIT_ASSERT(pTime->date().year() == (1900 + tm.tm_year));
+    CPPUNIT_ASSERT(pTime->date().month() == (1 + tm.tm_mon));
+    CPPUNIT_ASSERT(pTime->date().day() == tm.tm_mday);
+    CPPUNIT_ASSERT(pTime->time_of_day().hours() == tm.tm_hour);
+    CPPUNIT_ASSERT(pTime->time_of_day().minutes() == tm.tm_min);
+    CPPUNIT_ASSERT(pTime->time_of_day().seconds() == tm.tm_sec);
 }
 
 
