@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -107,6 +107,39 @@ class GreenBox extends BasicStor{
             $oid, 'ls:url', $url, NULL, NULL, 'audioClip');
         if(PEAR::isError($r)) return $r;
         return $oid;
+    }
+
+
+    /**
+     *  Access stored file - increase access counter
+     *
+     *  @param id int, virt.file's local id
+     *  @param sessid string, session id
+     *  @return string access token
+     */
+    function accessFile($id, $sessid='')
+    {
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        $gunid = $this->_gunidFromId($id);
+        $r = $this->bsAccess(NULL, '', $gunid, 'access');
+        if(PEAR::isError($r)){ return $r; }
+        $token = $r['token'];
+        return $token;
+    }
+
+    /**
+     *  Release stored file - decrease access counter
+     *
+     *  @param token string, access token
+     *  @param sessid string, session id
+     *  @return boolean
+     */
+    function releaseFile($token, $sessid='')
+    {
+        $r = $this->bsRelease($token, 'access');
+        if(PEAR::isError($r)){ return $r; }
+        return FALSE;
     }
 
     /**
@@ -355,31 +388,326 @@ class GreenBox extends BasicStor{
      *  Create a new empty playlist.
      *
      *  @param sessid string, session ID
-     *  @param playlistId string, playlist global unique ID
+     *  @param gunid string, playlist global unique ID
      *  @param fname string, human readable menmonic file name
      *  @return string, playlist global unique ID
      */
-    function createPlaylist($sessid, $playlistId, $fname)
+    function createPlaylist($sessid, $gunid, $fname)
     {
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->createPlaylist($sessid, $playlistId, $fname);
+        return $lc->createPlaylist($sessid, $gunid, $fname);
     }
 
+    /**
+     *  Return playlist as XML string
+     *
+     *  @param sessid string, session ID
+     *  @param id int, local object id
+     *  @return string, XML
+     */
+    function getPlaylistXml($sessid, $id)
+    {
+        return $this->getMdata($id, $sessid);
+    }
+
+    /**
+     *  Return playlist as hierarchical PHP hash-array
+     *
+     *  @param sessid string, session ID
+     *  @param id int, local object id
+     *  @return array
+     */
+    function getPlaylistArray($sessid, $id)
+    {
+        $gunid = $this->_gunidFromId($id);
+        $pl =& StoredFile::recall($this, $id);
+        if(PEAR::isError($pl)){ return $pl; }
+        $gunid = $pl->gunid;
+        return $pl->md->genPhpArray();
+    }
+
+    /**
+     *  Mark playlist as edited and return edit token
+     *
+     *  @param sessid string, session ID
+     *  @param id int, local object id
+     *  @return string, playlist access token
+     */
+    function lockPlaylistForEdit($sessid, $id)
+    {
+        $gunid = $this->_gunidFromId($id);
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        $res = $lc->editPlaylist($sessid, $gunid);
+        if(PEAR::isError($res)) return $res;
+        return $res['token'];
+    }
+
+    /**
+     *  Release token, regenerate XML from DB and clear edit flag.
+     *
+     *  @param sessid string, session ID
+     *  @param token string, playlist access token
+     *  @return string gunid
+     */
+    function releaseLockedPlaylist($sessid, $token)
+    {
+        $gunid = $this->bsCloseDownload($token, 'metadata');
+        if(PEAR::isError($gunid)) return $gunid;
+        $ac =& StoredFile::recallByGunid($this, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        $r = $ac->md->regenerateXmlFile();
+        if(PEAR::isError($r)) return $r;
+        $this->_setEditFlag($gunid, FALSE);
+        return $gunid;
+    }
+
+    /**
+     *  Add audioclip specified by gunid to the playlist
+     *
+     *  @param sessid string, session ID
+     *  @param token string, playlist access token
+     *  @param acGunid string, global unique ID of added file
+     *  @return string, generated playlistElement gunid
+     */
+    function addAudioClipToPlaylist($sessid, $token, $acGunid)
+    {
+        $plGunid = $this->_gunidFromToken($token, 'download');
+        if(PEAR::isError($plGunid)) return $plGunid;
+        if(is_null($plGunid)){
+            return PEAR::raiseError(
+                "GreenBox::addClipToPlaylist: invalid token"
+            );
+        }
+        $pl =& StoredFile::recallByGunid($this, $plGunid);
+        if(PEAR::isError($pl)){ return $pl; }
+        $id = $pl->getId();
+        // get playlist length and record id:
+        $r = $pl->md->getMetadataEl('dcterms:extent');
+        if(PEAR::isError($r)){ return $r; }
+        $plLen = $r[0]['value'];
+        $plLenMid = $r[0]['mid'];
+        if(is_null($plLen)) $plLen = '00:00:00.000000';
+
+        // get audioClip legth and title
+        $ac =& StoredFile::recallByGunid($this, $acGunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        $r = $ac->md->getMetadataEl('dcterms:extent');
+        if(PEAR::isError($r)){ return $r; }
+        $acLen = $r[0]['value'];
+        $r = $ac->md->getMetadataEl('dc:title');
+        if(PEAR::isError($r)){ return $r; }
+        $acTit = $r[0]['value'];
+        
+        // get main playlist container
+        $r = $pl->md->getMetadataEl('playlist');
+        if(PEAR::isError($r)){ return $r; }
+        $parid = $r[0]['mid'];
+        if(is_null($parid)){
+            return PEAR::raiseError(
+                "GreenBox::addClipToPlaylist: can't find main container"
+            );
+        }
+        // get metadata container (optionally insert it)
+        $r = $pl->md->getMetadataEl('metadata');
+        if(PEAR::isError($r)){ return $r; }
+        $metaParid = $r[0]['mid'];
+        if(is_null($metaParid)){
+            $r = $pl->md->insertMetadataEl($parid, 'metadata');
+            if(PEAR::isError($r)){ return $r; }
+            $metaParid = $r;
+        }
+        
+        // insert new palylist element
+        $r = $pl->md->insertMetadataEl($parid, 'playlistElement');
+        if(PEAR::isError($r)){ return $r; }
+        $plElId = $r;
+        $plElGunid = StoredFile::_createGunid();
+        $r = $pl->md->insertMetadataEl($plElId, 'id', $plElGunid, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        $r = $pl->md->insertMetadataEl(
+            $plElId, 'relativeOffset', $plLen, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        $r = $pl->md->insertMetadataEl($plElId, 'audioClip');
+        if(PEAR::isError($r)){ return $r; }
+        $acId = $r;
+        $r = $pl->md->insertMetadataEl($acId, 'id', $acGunid, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        $r = $pl->md->insertMetadataEl($acId, 'playlength', $acLen, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        $r = $pl->md->insertMetadataEl($acId, 'title', $acTit, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        // calculate and insert total length:
+        $newPlLen = $this->_secsToPlTime(
+            $this->_plTimeToSecs($plLen) + $this->_plTimeToSecs($acLen)
+        );
+        if(is_null($plLenMid)){
+            $r = $pl->md->insertMetadataEl(
+                $metaParid, 'dcterms:extent', $newPlLen);
+        }else{
+            $r = $pl->md->setMetadataEl($plLenMid, $newPlLen);
+        }
+        if(PEAR::isError($r)){ return $r; }
+        // set access to audio clip:
+        $r = $this->bsAccess(NULL, '', $acGunid, 'access');
+        if(PEAR::isError($r)){ return $r; }
+        $acToken = $r['token'];
+        // insert token attribute:
+        $r = $pl->md->insertMetadataEl($acId, 'accessToken', $acToken, 'A');
+        if(PEAR::isError($r)){ return $r; }
+        return $plElGunid;
+    }
+
+    /**
+     *  Remove audioclip from playlist
+     *
+     *  @param sessid string, session ID
+     *  @param token string, playlist access token
+     *  @param plElGunid string, global unique ID of deleted playlistElement
+     *  @return boolean
+     */
+    function delAudioClipFromPlaylist($sessid, $token, $plElGunid)
+    {
+        $plGunid = $this->_gunidFromToken($token, 'download');
+        if(PEAR::isError($plGunid)) return $plGunid;
+        if(is_null($plGunid)){
+            return PEAR::raiseError(
+                "GreenBox::addClipToPlaylist: invalid token"
+            );
+        }
+        $pl =& StoredFile::recallByGunid($this, $plGunid);
+        if(PEAR::isError($pl)){ return $pl; }
+        $id = $pl->getId();
+
+        // get main playlist container:
+        $r = $pl->md->getMetadataEl('playlist');
+        if(PEAR::isError($r)){ return $r; }
+        $parid = $r[0]['mid'];
+        if(is_null($parid)){
+            return PEAR::raiseError(
+                "GreenBox::addClipToPlaylist: can't find main container"
+            );
+        }
+        // get playlist length and record id:
+        $r = $pl->md->getMetadataEl('dcterms:extent');
+        if(PEAR::isError($r)){ return $r; }
+        $plLen = $r[0]['value'];
+        $plLenMid = $r[0]['mid'];
+        // get array of playlist elements:
+        $plElArr = $pl->md->getMetadataEl('playlistElement', $parid);
+        if(PEAR::isError($plElArr)){ return $plElArr; }
+        $found = FALSE;
+        foreach($plElArr as $el){
+            $plElGunidArr = $pl->md->getMetadataEl('id', $el['mid']);
+            if(PEAR::isError($plElGunidArr)){ return $plElGunidArr; }
+            // select playlist element to remove
+            if($plElGunidArr[0]['value'] == $plElGunid){
+                $acArr = $pl->md->getMetadataEl('audioClip', $el['mid']);
+                if(PEAR::isError($acArr)){ return $acArr; }
+                $acLenArr = $pl->md->getMetadataEl('playlength', $acArr[0]['mid']);
+                if(PEAR::isError($acLenArr)){ return $acLenArr; }
+                $acLen = $acLenArr[0]['value'];
+                $acTokArr = $pl->md->getMetadataEl('accessToken', $acArr[0]['mid']);
+                if(PEAR::isError($acTokArr)){ return $acTokArr; }
+                $acToken = $acTokArr[0]['value'];
+                // remove playlist element:
+                $r = $pl->md->setMetadataEl($el['mid'], NULL);
+                if(PEAR::isError($r)){ return $r; }
+                // release audioClip:
+                $r = $this->bsRelease($acToken, 'access');
+                if(PEAR::isError($r)){ return $r; }
+                $found = TRUE;
+                continue;
+            }
+            if($found){
+                // corect relative offsets in remaining elements:
+                $acOffArr = $pl->md->getMetadataEl('relativeOffset', $el['mid']);
+                if(PEAR::isError($acOffArr)){ return $acOffArr; }
+                $newOff = $this->_secsToPlTime(
+                    $this->_plTimeToSecs($acOffArr[0]['value'])
+                    -
+                    $this->_plTimeToSecs($acLen)
+                );
+                $r = $pl->md->setMetadataEl($acOffArr[0]['mid'], $newOff);
+                if(PEAR::isError($r)){ return $r; }
+            }
+        }
+        // correct total length:
+        $newPlLen = $this->_secsToPlTime(
+            $this->_plTimeToSecs($plLen) - $this->_plTimeToSecs($acLen)
+        );
+        $r = $pl->md->setMetadataEl($plLenMid, $newPlLen);
+        if(PEAR::isError($r)){ return $r; }
+        return TRUE;
+    }
+
+    /**
+     *  RollBack playlist changes to the locked state
+     *
+     *  @param sessid string, session ID
+     *  @param token string, playlist access token
+     *  @return string gunid of playlist
+     */
+    function revertEditedPlaylist($sessid, $token)
+    {
+        $gunid = $this->bsCloseDownload($token, 'metadata');
+        if(PEAR::isError($gunid)) return $gunid;
+        $ac =& StoredFile::recallByGunid($this, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        $id = $ac->getId();
+        $mdata = $ac->getMetaData();
+        if(PEAR::isError($mdata)){ return $mdata; }
+        $res = $ac->replaceMetaData($mdata, 'string');
+        if(PEAR::isError($res)){ return $res; }
+        $this->_setEditFlag($gunid, FALSE);
+        return $gunid;
+    }
+
+    /**
+     *  Convert playlist time value to float seconds
+     *
+     *  @param plt string, playlist time value (HH:mm:ss.dddddd)
+     *  @return int, seconds
+     */
+    function _plTimeToSecs($plt)
+    {
+        $arr = split(':', $plt);
+        if(isset($arr[2])){ return ($arr[0]*60 + $arr[1])*60 + $arr[2]; }
+        if(isset($arr[1])){ return $arr[0]*60 + $arr[1]; }
+        return $arr[0];
+    }
+
+    /**
+     *  Convert float seconds value to playlist time format
+     *
+     *  @param s0 int, seconds
+     *  @return string, time in playlist time format (HH:mm:ss.dddddd)
+     */
+    function _secsToPlTime($s0)
+    {
+        $m = intval($s0 / 60);
+        $r = $s0 - $m*60;
+        $h = $m  / 60;
+        $m = $m  % 60;
+        return sprintf("%02d:%02d:%09.6f", $h, $m, $r);
+    }
+
+    /* ---------- */
     /**
      *  Open a Playlist metafile for editing.
      *  Open readable URL and mark file as beeing edited.
      *
      *  @param sessid string, session ID
-     *  @param playlistId string, playlist global unique ID
+     *  @param gunid string, playlist global unique ID
      *  @return struct
      *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
      */
-    function editPlaylist($sessid, $playlistId)
+    function editPlaylist($sessid, $gunid)
     {
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->editPlaylist($sessid, $playlistId);
+        return $lc->editPlaylist($sessid, $gunid);
     }
     
     /**
@@ -388,7 +716,7 @@ class GreenBox extends BasicStor{
      *  @param sessid string, session ID
      *  @param playlistToken string, playlist access token
      *  @param newPlaylist string, new playlist as XML string
-     *  @return string, playlistId
+     *  @return string, gunid
      */
     function savePlaylist($sessid, $playlistToken, $newPlaylist)
     {
@@ -401,28 +729,28 @@ class GreenBox extends BasicStor{
      *  Delete a Playlist metafile.
      *
      *  @param sessid string, session ID
-     *  @param playlistId string, playlist global unique ID
+     *  @param gunid string, playlist global unique ID
      *  @return boolean
      */
-    function deletePlaylist($sessid, $playlistId)
+    function deletePlaylist($sessid, $gunid)
     {
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->deletePlaylist($sessid, $playlistId);
+        return $lc->deletePlaylist($sessid, $gunid);
     }
     
     /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
      *  @param sessid string, session ID
-     *  @param playlistId string, playlist global unique ID
+     *  @param gunid string, playlist global unique ID
      *  @return boolean
      */
-    function existsPlaylist($sessid, $playlistId)
+    function existsPlaylist($sessid, $gunid)
     {
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->existsPlaylist($sessid, $playlistId);
+        return $lc->existsPlaylist($sessid, $gunid);
     }
 
     /**
@@ -431,14 +759,14 @@ class GreenBox extends BasicStor{
      *  beeing edited.
      *
      *  @param sessid string, session ID
-     *  @param playlistId string, playlist global unique ID
+     *  @param gunid string, playlist global unique ID
      *  @return boolean
      */
-    function playlistIsAvailable($sessid, $playlistId)
+    function playlistIsAvailable($sessid, $gunid)
     {
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->playlistIsAvailable($sessid, $playlistId);
+        return $lc->playlistIsAvailable($sessid, $gunid);
     }
     
     /* ============================================== methods for preferences */
@@ -569,6 +897,5 @@ class GreenBox extends BasicStor{
         return $pa;
     }
 
-    /* ==================================================== "private" methods */
 }
 ?>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -270,9 +270,29 @@ class BasicStor extends Alib{
     }
     
     /**
+     *  Get gunid from token
+     *
+     *  @param token string, access/put token
+     *  @param type string 'put'|'access'|'download'
+     *  @return string
+     */
+    function _gunidFromToken($token, $type='put')
+    {
+        $acc = $this->dbc->getRow("
+            SELECT to_hex(gunid)as gunid, ext FROM {$this->accessTable}
+            WHERE token=x'{$token}'::bigint AND type='$type'
+        ");
+        if(PEAR::isError($acc)){ return $acc; }
+        $gunid = StoredFile::_normalizeGunid($acc['gunid']);
+        if(PEAR::isError($gunid)){ return $gunid; }
+        return $gunid;
+    }
+    
+    /**
      *  Create and return access link to real file
      *
      *  @param realFname string, local filepath to accessed file
+     *      (NULL for only increase access counter, no symlink)
      *  @param ext string, useful filename extension for accessed file
      *  @param gunid int, global unique id
      *  @param type string 'access'|'download'
@@ -281,16 +301,18 @@ class BasicStor extends Alib{
     function bsAccess($realFname, $ext, $gunid, $type='access')
     {
         $token  = StoredFile::_createGunid();
-        $linkFname = "{$this->accessDir}/$token.$ext";
-        if(!file_exists($realFname)){
-            return PEAR::raiseError(
-                "BasicStor::bsAccess: real file not found ($realFname)",
-                GBERR_FILEIO);
-        }
-        if(! @symlink($realFname, $linkFname)){
-            return PEAR::raiseError(
-                "BasicStor::bsAccess: symlink create failed ($linkFname)",
-                GBERR_FILEIO);
+        if(!is_null($realFname)){
+            $linkFname = "{$this->accessDir}/$token.$ext";
+            if(!file_exists($realFname)){
+                return PEAR::raiseError(
+                    "BasicStor::bsAccess: real file not found ($realFname)",
+                    GBERR_FILEIO);
+            }
+            if(! @symlink($realFname, $linkFname)){
+                return PEAR::raiseError(
+                    "BasicStor::bsAccess: symlink create failed ($linkFname)",
+                    GBERR_FILEIO);
+            }
         }
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("
@@ -334,7 +356,7 @@ class BasicStor extends Alib{
         $ext = $acc['ext'];
         $gunid = StoredFile::_normalizeGunid($acc['gunid']);
         $linkFname = "{$this->accessDir}/$token.$ext";
-        if(! @unlink($linkFname)){
+        if(file_exists($linkFname)) if(! @unlink($linkFname)){
             return PEAR::raiseError(
                 "BasicStor::bsRelease: unlink failed ($linkFname)",
                 GBERR_FILEIO);
@@ -839,7 +861,7 @@ class BasicStor extends Alib{
         return TRUE;
     }  
     
-    /* ==================================================== "private" methods */
+    /* ================================================== "protected" methods */
     /**
      *  Check authorization - auxiliary method
      *
@@ -944,7 +966,51 @@ class BasicStor extends Alib{
         return TRUE;
     }
 
-    /* ------------------------------------------ redefined "private" methods */
+    /**
+     *  Returns if gunid is free
+     *
+     */
+    function _gunidIsFree($gunid)
+    {
+        $cnt = $this->dbc->getOne("
+            SELECT count(*) FROM {$this->filesTable}
+            WHERE gunid=x'{$this->gunid}'::bigint
+        ");
+        if(PEAR::isError($cnt)) return $cnt;
+        if($cnt > 0) return FALSE;
+        return TRUE;
+    }    
+
+    /**
+     *  Set playlist edit flag
+     *
+     *  @param playlistId string, playlist global unique ID
+     *  @param val boolean, set/clear of edit flag
+     *  @return boolean, previous state
+     */
+    function _setEditFlag($playlistId, $val=TRUE)
+    {
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
+        if(PEAR::isError($ac)) return $ac;
+        $state = $ac->_getState();
+        if($val){ $ac->setState('edited'); }
+        else{ $ac->setState('ready'); }
+        return ($state == 'edited');
+    }
+
+    /**
+     *  Check if playlist is marked as edited
+     *
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function _isEdited($playlistId)
+    {
+        $ac =& StoredFile::recallByGunid($this, $playlistId);
+        return $ac->isEdited($playlistId);
+    }
+
+    /* ---------------------------------------- redefined "protected" methods */
     /**
      *  Copy virtual file.<br>
      *  Redefined from parent class.
