@@ -1,0 +1,100 @@
+diff -Naur cppunit-1.10.2/include/cppunit/XmlOutputter.h cppunit-1.10.2-nostandalone/include/cppunit/XmlOutputter.h
+--- cppunit-1.10.2/include/cppunit/XmlOutputter.h	2002-09-17 01:31:29.000000000 +0700
++++ cppunit-1.10.2-nostandalone/include/cppunit/XmlOutputter.h	2004-07-24 15:44:00.816814688 +0700
+@@ -94,6 +94,16 @@
+   virtual void addSuccessfulTests( FailedTests &failedTests,
+                                    XmlElement *rootNode );
+ 
++  /*! \brief set the output document as standalone or not.
++   *
++   *  For the output document, specify wether it's a standalone XML
++   *  document, or not.
++   *
++   *  \param standalone if true, the output will be specified as standalone.
++   *         if false, it will be not.
++   */
++  virtual void setStandalone(bool standalone);
++
+   /*! \brief Adds the statics element to the root node.
+    * 
+    * Creates a new element containing statistics data and adds it to the root element.
+diff -Naur cppunit-1.10.2/include/cppunit/tools/XmlDocument.h cppunit-1.10.2-nostandalone/include/cppunit/tools/XmlDocument.h
+--- cppunit-1.10.2/include/cppunit/tools/XmlDocument.h	2002-08-29 14:36:50.000000000 +0700
++++ cppunit-1.10.2-nostandalone/include/cppunit/tools/XmlDocument.h	2004-07-24 15:39:03.516011280 +0700
+@@ -42,6 +42,9 @@
+   std::string styleSheet() const;
+   void setStyleSheet( const std::string &styleSheet = "" );
+ 
++  bool standalone(void) const;
++  void setStandalone(bool standalone);
++
+   void setRootElement( XmlElement *rootElement );
+   XmlElement &rootElement() const;
+ 
+@@ -58,6 +61,7 @@
+   std::string m_encoding;
+   std::string m_styleSheet;
+   XmlElement *m_rootElement;
++  bool        m_standalone;
+ };
+ 
+ 
+diff -Naur cppunit-1.10.2/src/cppunit/XmlDocument.cpp cppunit-1.10.2-nostandalone/src/cppunit/XmlDocument.cpp
+--- cppunit-1.10.2/src/cppunit/XmlDocument.cpp	2002-08-28 04:51:18.000000000 +0700
++++ cppunit-1.10.2-nostandalone/src/cppunit/XmlDocument.cpp	2004-07-24 15:40:03.344915904 +0700
+@@ -11,6 +11,7 @@
+   , m_styleSheet( styleSheet )
+ {
+   setEncoding( encoding );
++  m_standalone = true;
+ }
+ 
+ 
+@@ -67,11 +68,29 @@
+ }
+ 
+ 
++bool
++XmlDocument::standalone() const
++{
++  return m_standalone;
++}
++
++
++void
++XmlDocument::setStandalone(bool standalone)
++{
++  m_standalone = standalone;
++}
++
++
+ std::string 
+ XmlDocument::toString() const
+ {
+   std::string asString = "<?xml version=\"1.0\" "
+-                         "encoding='" + m_encoding + "' standalone='yes' ?>\n";
++                         "encoding='" + m_encoding + "'";
++  if (m_standalone) {
++      asString += " standalone='yes'";
++  }
++  asString += " ?>\n";
+ 
+   if ( !m_styleSheet.empty() )
+     asString += "<?xml-stylesheet type=\"text/xsl\" href=\"" + m_styleSheet + "\"?>\n";
+diff -Naur cppunit-1.10.2/src/cppunit/XmlOutputter.cpp cppunit-1.10.2-nostandalone/src/cppunit/XmlOutputter.cpp
+--- cppunit-1.10.2/src/cppunit/XmlOutputter.cpp	2003-03-15 15:55:29.000000000 +0700
++++ cppunit-1.10.2-nostandalone/src/cppunit/XmlOutputter.cpp	2004-07-24 15:42:59.090198560 +0700
+@@ -43,6 +43,13 @@
+ }
+ 
+ 
++void
++XmlOutputter::setStandalone(bool standalone)
++{
++  m_xml->setStandalone(standalone);
++}
++
++
+ void 
+ XmlOutputter::write()
+ {

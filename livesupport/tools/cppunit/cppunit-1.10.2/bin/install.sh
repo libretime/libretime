@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/cppunit/cppunit-1.10.2/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -36,6 +36,7 @@ reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd; cd -`
 installdir=`cd $basedir/../../../usr; pwd; cd -`
 tmpdir=$basedir/tmp
+etcdir=$basedir/etc
 tar=$basedir/src/$product.tar.gz
 
 echo "installing $product from $basedir to $installdir"
@@ -46,6 +47,7 @@ cd $tmpdir
 
 tar xfz $tar
 cd $product
+patch -p1 < $etcdir/cppunit-1.10.2-nostandalone.patch
 ./configure --prefix=$installdir
 make install
 
