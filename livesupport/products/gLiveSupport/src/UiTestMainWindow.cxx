@@ -23,7 +23,7 @@
  
     Author   : $Author: maroy $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/HelloWorld.cxx,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -35,7 +35,10 @@
 
 #include <iostream>
 
-#include "HelloWorld.h"
+#include <gtkmm/main.h>
+
+#include "LoginWindow.h"
+#include "UiTestMainWindow.h"
 
 
 using namespace LiveSupport::GLiveSupport;
@@ -44,11 +47,6 @@ using namespace LiveSupport::GLiveSupport;
 
 
 /* ================================================  local constants & macros */
-
-/**
- *  The Hello, World! string
- */
-static std::string      helloWorld("Hello, World!");
 
 
 /* ===============================================  local function prototypes */
@@ -59,37 +57,66 @@ static std::string      helloWorld("Hello, World!");
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-HelloWorld :: HelloWorld (void)                         throw ()
-                : button(helloWorld)
+UiTestMainWindow :: UiTestMainWindow (void)                         throw ()
 {
-    // Sets the border width of the window.
+    // set up the quit button
+    quitButton.reset(new Gtk::Button("quit"));
+    quitButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                      &UiTestMainWindow::onQuitButtonClicked));
+
+    // set up the login button
+    loginButton.reset(new Gtk::Button("loginWindow"));
+    loginButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                      &UiTestMainWindow::onLoginButtonClicked));
+
+    // set up the layout, which is a button box
+    layout.reset(new Gtk::VButtonBox());
+
+    // set up the main window, and show everything
     set_border_width(10);
+    layout->add(*loginButton);
+    layout->add(*quitButton);
+    add(*layout);
 
-    // Register the signal handler for the button getting clicked.
-    button.signal_clicked().connect(slot(*this, &HelloWorld::onButtonClicked));
-
-    // This packs the button into the Window (a container).
-    add(button);
-
-    // The final step is to display this newly created widget...
-    button.show();
+    // show everything
+    loginButton->show();
+    quitButton->show();
+    layout->show();
+    show();
 }
 
 
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-HelloWorld :: ~HelloWorld (void)                        throw ()
+UiTestMainWindow :: ~UiTestMainWindow (void)                        throw ()
 {
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the button getting clicked.
+ *  Event handler for the quit getting clicked.
  *----------------------------------------------------------------------------*/
 void
-HelloWorld :: onButtonClicked (void)                    throw ()
+UiTestMainWindow :: onQuitButtonClicked (void)                      throw ()
 {
-    std::cout << helloWorld << std::endl;
+    hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the login button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+UiTestMainWindow :: onLoginButtonClicked (void)                     throw ()
+{
+    std::cout << "invoking loginWindow" << std::endl;
+
+    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow());
+
+    Gtk::Main::run(*loginWindow);
+
+    std::cout << "login: " << *loginWindow->getLogin() << std::endl;
+    std::cout << "password: " << *loginWindow->getPassword() << std::endl;
 }
 

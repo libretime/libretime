@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,8 +39,11 @@
 
 #include <gtkmm/main.h>
 
-#include "HelloWorld.h"
+#include "LiveSupport/Core/Ptr.h"
 
+#include "UiTestMainWindow.h"
+
+using namespace LiveSupport::Core;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -65,9 +68,10 @@ int main (  int     argc,
 {
     Gtk::Main kit(argc, argv);
 
-    HelloWorld helloworld;
+    Ptr<UiTestMainWindow>::Ref  mainWindow(new UiTestMainWindow());
+
     // Shows the window and returns when it is closed.
-    Gtk::Main::run(helloworld);
+    Gtk::Main::run(*mainWindow);
 
     return 0;
 }

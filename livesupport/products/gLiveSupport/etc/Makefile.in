@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -103,7 +103,8 @@ LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} \
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
-G_LIVESUPPORT_OBJS = ${TMP_DIR}/HelloWorld.o
+G_LIVESUPPORT_OBJS = ${TMP_DIR}/UiTestMainWindow.o \
+                     ${TMP_DIR}/LoginWindow.o
 
 
 G_LIVESUPPORT_EXE_OBJS = ${G_LIVESUPPORT_OBJS} \

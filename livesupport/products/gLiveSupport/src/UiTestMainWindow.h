@@ -23,11 +23,11 @@
  
     Author   : $Author: maroy $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/HelloWorld.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef HelloWorld_h
-#define HelloWorld_h
+#ifndef UiTestMainWindow_h
+#define UiTestMainWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -41,10 +41,15 @@
 #endif
 
 #include <gtkmm/button.h>
+#include <gtkmm/buttonbox.h>
 #include <gtkmm/window.h>
+
+#include "LiveSupport/Core/Ptr.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -55,38 +60,53 @@ namespace GLiveSupport {
 /* =============================================================== data types */
 
 /**
- *  A simple window, just saying "Hello, World!"
+ *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
  *  @version $Revision: 1.1 $
  */
-class HelloWorld : public Gtk::Window
+class UiTestMainWindow : public Gtk::Window
 {
-
     protected:
         /**
-         *  The only button in the window.
+         *  The layout used in the window.
          */
-        Gtk::Button         button;
+        Ptr<Gtk::VButtonBox>::Ref   layout;
 
         /**
-         *  Signal handler for the only button clicked.
+         *  The to quit the applicaiton.
+         */
+        Ptr<Gtk::Button>::Ref       quitButton;
+
+        /**
+         *  The button invoking the LoginWindow.
+         */
+        Ptr<Gtk::Button>::Ref       loginButton;
+
+        /**
+         *  Signal handler for the quit button clicked.
          */
         virtual void
-        onButtonClicked(void)                           throw ();
+        onQuitButtonClicked(void)                           throw ();
+
+        /**
+         *  Signal handler for the login button clicked.
+         */
+        virtual void
+        onLoginButtonClicked(void)                          throw ();
 
 
     public:
         /**
          *  Constructor.
          */
-        HelloWorld(void)                                throw ();
+        UiTestMainWindow(void)                              throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~HelloWorld(void)                               throw ();
+        ~UiTestMainWindow(void)                             throw ();
 
 };
 
@@ -99,5 +119,5 @@ class HelloWorld : public Gtk::Window
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // HelloWorld_h
+#endif // UiTestMainWindow_h
 
