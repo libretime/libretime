@@ -33,7 +33,7 @@
      {
         var screenX;
         var screenY;
-
+        url = url + '&was_popup=1';
         screenX = (window.screenX + window.innerWidth/2 - width/2);
         screenY = (window.screenY + window.innerHeight/2 - height/2);
         arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
@@ -44,6 +44,7 @@
 
      function hpopup(url, name)                 //hidden popup!       'width=1, height=1'
      {
+        url = url + '&was_popup=1';
         popupwin = window.open(url, name);
         //window.parent.focus();
      }

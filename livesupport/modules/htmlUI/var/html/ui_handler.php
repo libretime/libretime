@@ -222,17 +222,22 @@ switch($_REQUEST['act']){
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.displaySchedule":
-        $uiHandler->SCHEDULER->displaySchedule();
+    case "SCHEDULER.uploadPlaylistMethod":
+        $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;
 
     default:
-        $_SESSION["alertMsg"] = tra("Unknown method: $1", $_REQUEST["act"]);
-        #header("Location: ".UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close');
-        die();
+        $uiHandler->_retMsg("Unknown method: $1", $_REQUEST["act"]);
+        $uiHandler->redirUrl = UI_BROWSER;
+        if ($_REQUEST['was_popup'])
+             $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';
 }
 if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 #header('Location: '.$uiHandler->redirUrl);
+if (ob_get_contents()) {
+    $ui_wait = 5;
+}
+ob_end_clean
 ?>
-<meta http-equiv="refresh" content="0; URL=<?php echo $uiHandler->redirUrl; ?>">
+<meta http-equiv="refresh" content="<?php echo $ui_wait ? $ui_wait : 0; ?>; URL=<?php echo $uiHandler->redirUrl; ?>">

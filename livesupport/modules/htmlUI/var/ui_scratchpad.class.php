@@ -66,7 +66,7 @@ class uiScratchPad
     function addItem($id)
     {
         if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
-            if ($this->verbose) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
+            if (!$this->verbose) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
             return false;
         }
 

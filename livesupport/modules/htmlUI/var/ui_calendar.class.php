@@ -26,6 +26,8 @@ class uiCalendar
             $this->Month[] = array(
                                 'day'           => $this->Base->_twoDigits($Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
+                                'month'         => $this->Base->_twoDigits($Day->thisMonth()),
+                                'year'          => $Day->thisYear(),
                                 'isEmpty'       => $Day->isEmpty(),
                                 'isFirst'       => $Day->isFirst(),
                                 'isLast'        => $Day->isLast(),
@@ -52,6 +54,7 @@ class uiCalendar
 
     }
 
+
     function buildDay()
     {
         if (is_array($this->Day)) return FALSE;
@@ -65,6 +68,7 @@ class uiCalendar
         }
 
     }
+
 
     function buildHour()
     {

@@ -12,7 +12,7 @@
                     {/if}
                 </td>
                 <td align="center">{$i.type}</td>
-                <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.uploadPL&gunid={$i.gunid}')">{$i.gunid}</td>
+                <td><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.uploadPlaylistMethod&gunid={$i.gunid}')">{$i.gunid}</td>
             </tr>
         {/foreach}
     </table>

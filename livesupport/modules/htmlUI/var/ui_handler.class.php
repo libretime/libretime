@@ -175,9 +175,13 @@ class uiHandler extends uiBase {
     function transMData($id)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-        $this->gb->replaceMetadata($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
+        #$this->gb->replaceMetadata($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
         $ia = $this->gb->analyzeFile($id, $this->sessid);
+        $s  = $ia['playtime_seconds'];
+        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
+        $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $extent);
+
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if ($v['id3'] != FALSE) {

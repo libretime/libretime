@@ -259,7 +259,8 @@ class uiBase
         if ($format=='text') {
             return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
         } elseif ($format=='xml') {
-            return '<?xml version="1.0" encoding="utf-8"?>
+            return '!!!XML IS DEPRICATED!!!
+                    <?xml version="1.0" encoding="utf-8"?>
                     <audioClip>
                     <metadata
                       xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -268,7 +269,7 @@ class uiBase
                       xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
                      >
                    <dc:title>'.$this->_getFileTitle($id).'</dc:title>
-                   <dcterms:extent>'.date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')).'</dcterms:extent>
+                   <dcterms:extent>'.$extent.'</dcterms:extent>
                    </metadata>
                    </audioClip>';
 

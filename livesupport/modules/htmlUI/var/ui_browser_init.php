@@ -3,37 +3,17 @@ session_start();
 
 ## LS classes/functions #############################################
 require_once dirname(__FILE__).'/conf.php';
-require_once dirname(__FILE__).'/ui_base.inc.php';
 require_once dirname(__FILE__).'/ui_browser.class.php';
-require_once dirname(__FILE__).'/ui_scratchpad.class.php';
-require_once dirname(__FILE__).'/ui_playlist.class.php'; #
-require_once dirname(__FILE__).'/ui_search.class.php';
-require_once dirname(__FILE__).'/ui_browse.class.php';
-require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
-require_once dirname(__FILE__).'/formmask/general.inc.php';
-require_once dirname(__FILE__).'/ui_calendar.class.php';
-require_once dirname(__FILE__).'/ui_scheduler.class.php';
+
 
 ## well known classes ###############################################
 require_once dirname(__FILE__).'/Smarty/libs/Smarty.class.php';
-
-require_once 'DB.php';
-require_once 'HTML/QuickForm.php';
 require_once 'HTML/QuickForm/Renderer/ArraySmarty.php';
-
-#PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
-#PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-#PEAR::setErrorHandling(PEAR_ERROR_PRINT);
-
 
 ## initialize objects ###############################################
 $Smarty         =& new Smarty;
 $uiBrowser      =& new uiBrowser($config);
-#$uiBase            = new uiBase($config);
 $uiBase         =& $uiBrowser;
-#$uiScratchPad   = new uiScratchPad(&$uiBrowser);
-
 
 ## load Smarty+filters ##############################################
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
@@ -59,8 +39,7 @@ $Smarty->assign('USER', array('sessid' => &$uiBrowser->sessid,
                         ));
 $uiBrowser->loadStationPrefs($ui_fmask['stationPrefs']);
 $Smarty->assign('STATIONPREFS', $uiBrowser->STATIONPREFS);
-
-
+                             
 ## retransfer incomplete formdata from SESSION to POST-data #########
 if (is_array($_SESSION['retransferFormData'])){
     foreach($_SESSION['retransferFormData'] as $k=>$v){

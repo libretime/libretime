@@ -1,126 +1,4 @@
 <?php
-/*------------------------------------------------------------------------------
-
-    Copyright (c) 2004 Media Development Loan Fund
-
-    This file is part of the LiveSupport project.
-    http://livesupport.campware.org/
-    To report bugs, send an e-mail to bugs@campware.org
-
-    LiveSupport is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    LiveSupport is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with LiveSupport; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
-    Author   : $Author: sebastian $
-    Version  : $Revision: 1.21 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
-
-------------------------------------------------------------------------------*/
-
-/**
- *  \file conf.php
- *  storageServer configuration file
- */
-
-/**
- *  configuration structure:
- *
- *  <dl>
- *   <dt>dsn<dd> datasource setting
- *   <dt>tblNamePrefix <dd>prefix for table names in the database
- *   <dt>authCookieName <dd>secret token cookie name
- *   <dt>storageDir <dd>main directory for storing binary media files
- *   <dt>bufferDir <dd>directory for temporary files
- *   <dt>transDir <dd>directory for incomplete transferred files
- *   <dt>accessDir <dd>directory for symlinks to accessed files
- *   <dt>isArchive <dd>local/central flag
- *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
- *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
- *   <dt>storageUrlHost, storageUrlPort<dd>host and port of storageServer
- *   <dt>archiveUrlPath<dd>path-URL-part of archiveServer base dir
- *   <dt>archiveXMLRPC<dd>XMLRPC server script address relative to archiveUrlPath
- *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
- *  </dl>
- */
-$config = array(
-    /* ================================================== basic configuration */
-    'dsn'           => array(
-        'username'      => 'test',
-        'password'      => 'test',
-        'hostspec'      => 'localhost',
-        'phptype'       => 'pgsql',
-        'database'      => 'LiveSupport-test',
-    ),
-    'tblNamePrefix' => 'ls_',
-    'authCookieName'=> 'lssid',
-    'StationPrefsGr'=> 'StationPrefs',
-    'AllGr'         => 'All',
-    'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
-    'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
-    'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
-    'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
-    'isArchive'     =>  FALSE,
-
-    /* ==================================================== URL configuration */
-    'storageUrlPath'        => '/livesupportStorageServer',
-    'storageXMLRPC'         => 'xmlrpc/xrLocStor.php',
-    'storageUrlHost'        => 'localhost',
-    'storageUrlPort'        => 80,
-
-    /* ================================================ archive configuration */
-    'archiveUrlPath'        => '/livesupportArchiveServer',
-    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
-    'archiveUrlHost'        => 'localhost',
-    'archiveUrlPort'        => 80,
-    'archiveAccountLogin'   => 'root',
-    'archiveAccountPass'    => 'q',
-
-    /* ============================================== scheduler configuration */
-    'schedulerUrlPath'        => '',
-    'schedulerXMLRPC'         => 'RC2',
-    'schedulerUrlHost'        => 'localhost',
-    'schedulerUrlPort'        => 3344,
-
-    /* ==================================== aplication-specific configuration */
-    'objtypes'      => array(
-        'RootNode'      => array('Folder'),
-        'Storage'       => array('Folder', 'File', 'Replica'),
-        'Folder'        => array('Folder', 'File', 'Replica'),
-        'File'          => array(),
-        'audioclip'     => array(),
-        'playlist'      => array(),
-        'Replica'       => array(),
-    ),
-    'allowedActions'=> array(
-        'RootNode'      => array('classes', 'subjects'),
-        'Folder'        => array('editPrivs', 'write', 'read'),
-        'File'          => array('editPrivs', 'write', 'read'),
-        'audioclip'     => array('editPrivs', 'write', 'read'),
-        'playlist'      => array('editPrivs', 'write', 'read'),
-        'Replica'       => array('editPrivs', 'write', 'read'),
-        '_class'        => array('editPrivs', 'write', 'read'),
-    ),
-    'allActions'    =>  array(
-        'editPrivs', 'write', 'read', 'classes', 'subjects'
-    ),
-
-    /* ============================================== auxiliary configuration */
-    'RootNode'        => 'RootNode',
-    'tmpRootPass'   => 'q',
-);
-
-
 define('UI_HANDLER', 'ui_handler.php');
 define('UI_BROWSER', 'ui_browser.php');
 define('UI_FORM_STANDARD_METHOD', 'POST');
@@ -135,19 +13,41 @@ define('UI_SEARCH_MAX_ROWS', 8);
 define('UI_SEARCH_MIN_ROWS', 2);
 define('UI_REGEX_URL', '/^(ht|f)tps?:\/\/[^ ]+$/');
 define('UI_PL_ACCESSTOKEN_KEY', 'playlistToken');
-define('UI_SCRATCHPAD_KEY', 'djBagContents');
+define('UI_SCRATCHPAD_KEY',     'djBagContents');
 define('UI_SCRATCHPAD_MAXLENGTH_KEY', 'djBagMaxlength');
 #define('UI_SCRATCHPAD_REGEX', '/^[0-9a-f]{16}:[0-9]{4}-[0-9]{2}-[0-9]{2}$/');
 
-## session keys
+## Session Keys
 define('UI_SCRATCHPAD_SESSNAME',  'SCRATCHPAD');
 define('UI_STATIONINFO_SESSNAME', 'STATIONINFO');
 define('UI_SEARCH_SESSNAME',      'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',    'PLAYLIST');
 define('UI_BROWSE_SESSNAME',      'L_BROWSE');
 
+## Metadata Keys
 define('UI_MDATA_KEY_TITLE',      'dc:title');
 define('UI_MDATA_KEY_ARTIST',     'dc:creator');
 define('UI_MDATA_KEY_DURATION',   'dcterms:extent');
 define('UI_MDATA_KEY_URL',        'ls:url');
+
+require_once dirname(__FILE__).'/../../storageServer/var/conf.php';
+## LS classes/functions #############################################
+require_once dirname(__FILE__).'/ui_base.inc.php';
+require_once dirname(__FILE__).'/ui_scratchpad.class.php';
+require_once dirname(__FILE__).'/ui_playlist.class.php';
+require_once dirname(__FILE__).'/ui_search.class.php';
+require_once dirname(__FILE__).'/ui_browse.class.php';
+require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
+require_once dirname(__FILE__).'/formmask/general.inc.php';
+require_once dirname(__FILE__).'/ui_calendar.class.php';
+require_once dirname(__FILE__).'/ui_scheduler.class.php';
+
+## well known classes ###############################################
+require_once 'DB.php';
+require_once 'HTML/QuickForm.php';
+
+#PEAR::setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
+#PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
+PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+#PEAR::setErrorHandling(PEAR_ERROR_PRINT);
 ?>
