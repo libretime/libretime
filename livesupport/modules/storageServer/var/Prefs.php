@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Prefs.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -353,8 +353,12 @@ class Prefs{
             ON {$this->prefTable} (subjid, keystr)");
         $this->dbc->query("CREATE INDEX {$this->prefTable}_subjid_idx
             ON {$this->prefTable} (subjid)");
-        $stPrefGr = $this->gb->getSubjId('StationPrefs');
+        $stPrefGr = $this->gb->getSubjId($this->gb->config['StationPrefsGr']);
+        if(PEAR::isError($stPrefGr)) echo $stPrefGr->getMessage()."\n";
         $r = $this->insert($stPrefGr, 'stationName', "Radio Station 1");
+        if(PEAR::isError($r)) echo $r->getMessage()."\n";
+        $genres = file_get_contents( dirname(__FILE__).'/genres.xml');
+        $r = $this->insert($stPrefGr, 'genres', $genres);
         if(PEAR::isError($r)) echo $r->getMessage()."\n";
         return TRUE;
     }
