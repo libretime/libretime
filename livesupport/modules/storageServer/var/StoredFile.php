@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -468,10 +468,10 @@ class StoredFile{
      *  @param playlistId string, playlist global unique ID
      *  @return boolean
      */
-    function isEdited($gunid=NULL)
+    function isEdited($playlistId=NULL)
     {
-        if(is_null($gunid)) $gunid = $this->gunid;
-        $state = $this->_getState($gunid);
+        if(is_null($playlistId)) $playlistId = $this->playlistId;
+        $state = $this->_getState($playlistId);
         if($state == 'edited'){ return TRUE; }
         return FALSE;
     }

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -412,9 +412,10 @@ class MetaData{
         $objns=NULL, $object=NULL, $mode='insert')
     {
         //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object, $mode\n";
-        $predns_sql = (is_null($predns) ? "NULL":"'$predns'" );
-        $objns_sql  = (is_null($objns) ? "NULL":"'$objns'" );
-        $object_sql = (is_null($object)? "NULL":"'$object'");
+        $predns_sql = (is_null($predns) ? "NULL" : "'".strtolower($predns)."'" );
+        $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
+        $object_sql = (is_null($object)? "NULL" : "'$object'");
+        $predicate  = strtolower($predicate);
         if($mode == 'update'){
             $cond = "gunid = x'{$this->gunid}'::bigint AND predns=$predns_sql
                 AND predicate='$predicate'";
