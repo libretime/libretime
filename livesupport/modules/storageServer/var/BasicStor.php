@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.38 $
+ *  @version $Revision: 1.39 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -626,6 +626,7 @@ class BasicStor extends Alib{
     function bsGetMetadataValue($id, $category, $lang=NULL)
     {   
         $ac =& StoredFile::recall($this, $id);
+        if($this->dbc->isError($ac)) return $ac;
         return $ac->md->getMetadataValue($category, $lang);
     }
     
@@ -644,6 +645,7 @@ class BasicStor extends Alib{
         $id, $category, $value, $lang=NULL, $mid=NULL, $container='metadata')
     {
         $ac =& StoredFile::recall($this, $id);
+        if($this->dbc->isError($ac)) return $ac;
         $res = $ac->md->setMetadataValue(
             $category, $value, $lang, $mid, $container);
         if($this->dbc->isError($res)) return $res;
@@ -1046,6 +1048,7 @@ class BasicStor extends Alib{
     function _isEdited($playlistId)
     {
         $ac =& StoredFile::recallByGunid($this, $playlistId);
+        if($this->dbc->isError($ac)) return $ac;
         return $ac->isEdited($playlistId);
     }
 
