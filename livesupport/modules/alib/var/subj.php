@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -273,6 +273,24 @@ class Subjects extends ObjClasses{
         return $this->dbc->getAll("SELECT s.id, s.login, s.type
             FROM {$this->smembTable} m, {$this->subjTable} s
             WHERE m.uid=s.id AND m.mid is null AND m.gid='$gid'");
+    }
+
+    /**
+     *   Return true if uid is [id]direct member of gid
+     *
+     *   @param uid int, local user id
+     *   @param gid int, local group id
+     *   @return boolean
+     */
+    function isMemberOf($uid, $gid)
+    {
+        $res = $this->dbc->getOne("
+            SELECT count(*)as cnt
+            FROM {$this->smembTable}
+            WHERE uid='$uid' AND gid='$gid'
+        ");
+        if(PEAR::isError($res)) return $res;
+        return (intval($res) > 0);
     }
 
     /* ==================================================== "private" methods */
