@@ -27,11 +27,11 @@ This document contains the generated unit test results for the
     </tr>
     <tr>
         <td><b>Tests passed:</b></td>
-        <td><xsl:value-of select="count(/*/SuccessfulTests/Test)"/></td>
+        <td><xsl:value-of select="count(//SuccessfulTests/Test)"/></td>
     </tr>
     <tr>
         <td><b>Tests failed:</b></td>
-        <td><xsl:value-of select="count(/*/FailedTests/FailedTest)"/></td>
+        <td><xsl:value-of select="count(//FailedTests/FailedTest)"/></td>
     </tr>
 </table>
 <h1>Tests</h1>
