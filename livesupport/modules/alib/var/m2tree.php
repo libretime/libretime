@@ -22,7 +22,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see ObjClasses
  *  Original author Tom Hlava
  */
@@ -597,7 +597,7 @@ class M2tree{
      */
     function install()
     {
-        $this->dbc->query("BEGIN");
+        $r = $this->dbc->query("BEGIN");
         if(PEAR::isError($r)) return $r;
         $r = $this->dbc->query("CREATE TABLE {$this->treeTable} (
             id int not null PRIMARY KEY,
