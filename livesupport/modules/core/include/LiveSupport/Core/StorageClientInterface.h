@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class StorageClientInterface
 {
@@ -91,18 +91,34 @@ class StorageClientInterface
                                                                         = 0;
 
         /**
-         *  Release the lock on a playlist with the specified id.
+         *  Acquire the resources for the playlist
+         *  At this point, this does not do anything.
+         *
+         *  @param id the id of the playlist to release.
+         *  @return something
+         *  @exception std::invalid_argument if no playlist with the specified
+         *             specified id exists. 
+         */
+        virtual Ptr<std::string>::Ref
+        acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument,
+                                                   std::logic_error)
+                                                                        = 0;
+
+        /**
+         *  Release the resources (audio clips, other playlists) used 
+         *  in a playlist.
+         *  At this point, this does not do anything.
          *
          *  @param id the id of the playlist to release.
          *  @exception std::invalid_argument if no playlist with the specified
-         *             id exists.
+         *             specified id exists. 
          */
         virtual void
         releasePlaylist(Ptr<const UniqueId>::Ref id) const
                                             throw (std::invalid_argument,
                                                    std::logic_error)
                                                                         = 0;
-
         /**
          *  Delete a playlist with the specified id.
          *
