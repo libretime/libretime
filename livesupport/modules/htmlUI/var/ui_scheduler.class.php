@@ -359,13 +359,11 @@ class uiScheduler extends uiCalendar
 
     function GeneratePlayReportMethod($from, $to)
     {
-        #$from = '2005-03-01T00:00:00';
-        #$to   = '2005-03-31T00:00:00';
-        #echo $from.$to;
+        echo $from.$to;
         $r = $this->spc->GeneratePlayReportMethod($this->Base->sessid, $from, $to);
         if ($this->_isError($r))
             return FALSE;
-        #print_r($r);
+        print_r($r);
         return $r;
     }
 }
