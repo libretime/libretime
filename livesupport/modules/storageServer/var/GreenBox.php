@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.40 $
+ *  @version $Revision: 1.41 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -344,6 +344,8 @@ class GreenBox extends BasicStor{
      *     </li>
      *     <li>limit : int - limit for result arrays (0 means unlimited)</li>
      *     <li>offset : int - starting point (0 means without offset)</li>
+     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
      *           <li>cat - string, metadata category name</li>

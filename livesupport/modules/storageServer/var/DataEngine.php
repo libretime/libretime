@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@ require_once "XML/Util.php";
  *       (may be empty or ommited only with less then 2 items in
  *       &quot;conditions&quot; field)
  *     </li>
+ *     <li>orderby : string - metadata category for sorting (optional)</li>
+ *     <li>desc : boolean - flag for descending order (optional)</li>
  *     <li>conditions - array of hashes with structure:
  *       <ul>
  *           <li>cat - string, metadata category name</li>
@@ -273,10 +275,19 @@ class DataEngine{
     {
         $filetype   = $this->filetypes[strtolower($criteria['filetype'])];
         $operator   = strtolower($criteria['operator']);
+        $desc       = $criteria['desc'];
         $whereArr   = $this->_makeWhereArr($criteria['conditions']);
+        $orderbyQn  = strtolower($criteria['orderby']);
+        $obSplitQn  = XML_Util::splitQualifiedName($orderbyQn);
+        $obNs       = $obSplitQn['namespace'];
+        $orderby    = $obSplitQn['localPart'];
         $browse     = !is_null($brFld);
         if(!$browse){
-            $fldsPart = "DISTINCT to_hex(f.gunid)as gunid";
+            if(!$orderby){
+                $fldsPart = "DISTINCT to_hex(f.gunid)as gunid";
+            }else{
+                $fldsPart = "DISTINCT f.gunid";
+            }
         }else{
             $fldsPart = "DISTINCT br.object";
         }
@@ -291,7 +302,16 @@ class DataEngine{
             $sql = $this->_makeOrSql(
                 $fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         }
-        // echo "\n---\n$sql\n---\n";
+        if(!$browse && $orderby){
+            $sql =
+                "SELECT to_hex(sq2.gunid)as gunid, m.object\n".
+                "FROM (\n$sql\n)sq2\n".
+                "LEFT JOIN ls_mdata m\n".
+                "  ON m.gunid = sq2.gunid AND m.predicate='$orderby' AND m.objns='_L'".
+                (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
+                "ORDER BY m.object".($desc? ' DESC':'')."\n";
+        }
+        echo "\n---\n$sql\n---\n";
         $cnt = $this->_getNumRows($sql);
         if(PEAR::isError($cnt)) return $cnt;
         $res = $this->dbc->getCol($sql.$limitPart);

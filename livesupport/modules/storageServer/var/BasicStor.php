@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.33 $
+ *  @version $Revision: 1.34 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -665,6 +665,8 @@ class BasicStor extends Alib{
      *       (may be empty or ommited only with less then 2 items in
      *       &quot;conditions&quot; field)
      *     </li>
+     *     <li>orderby : string - metadata category for sorting (optional)</li>
+     *     <li>desc : boolean - flag for descending order (optional)</li>
      *     <li>conditions - array of hashes with structure:
      *       <ul>
      *           <li>cat - string, metadata category name</li>
