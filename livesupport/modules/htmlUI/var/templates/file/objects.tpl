@@ -9,7 +9,7 @@
             <th>Title</th>
             <th>Type</th>
             <td align="right" width='70%'>  &nbsp;
-                {if $START.pid}<a href="{$UI_BROWSER}?act=fileBrowse&id={$GLOBALS.pid}">[go up]</a>{/if}
+                {if $START.pid}<a href="{$UI_BROWSER}?act=fileList&id={$START.pid}">[go up]</a>{/if}
             </td>
         </tr>
     {if count($structure.listdata)}
@@ -18,7 +18,7 @@
               <td align="center">
                 <span id="ID{$i.id}">
                     {if $i.type eq 'Folder'}
-                         <a href="{$UI_BROWSER}?act=fileBrowse&id={$i.id}" >[{$i.title|truncate:30}]</b>
+                         <a href="{$UI_BROWSER}?act=fileList&id={$i.id}" >[{$i.title|truncate:30}]</b>
                     {else}
                         {if $_PL_activeId == $i.id}
                             <b>{$i.title|truncate:30}</b>

@@ -1,5 +1,19 @@
 <div class="standardFrame">
 {include file="sub/x.tpl"}
+
+<h4>
+{if $editItem.id}
+    Edit
+{else}
+    New
+{/if}
+{if $editItem.type == 'file'}
+    File
+{else}
+    Webstream
+{/if}
+</h4>
+
 <input type="button" onClick="showData()" value="Data">
 <input type="button" onClick="showMData()" value="MData">
 
@@ -42,9 +56,15 @@ function showMData()
     document.getElementById('div_Data').style.visibility='hidden';
     document.getElementById('div_Data').style.height='0';
 }
+{/literal}
 
-document.getElementById('div_MData').style.visibility='hidden';
-document.getElementById('div_MData').style.height='0';
+{if $editItem.id}
+    document.getElementById('div_Data').style.visibility='hidden';
+    document.getElementById('div_Data').style.height='0';
+{else}
+    document.getElementById('div_MData').style.visibility='hidden';
+    document.getElementById('div_MData').style.height='0';
+{/if}
 </script>
 
-{/literal}
+

@@ -12,7 +12,7 @@
             {str_repeat str='&nbsp;&nbsp;' count=$o.level}
         {/if}
         {if $o.type == 'Folder'}
-            <a href="{$UI_BROWSER}?act=fileBrowse&id={$o.id}">[{$o.name}]</a>
+            <a href="{$UI_BROWSER}?act=fileList&id={$o.id}">[{$o.name}]</a>
         {else}
             {$o.name}
         {/if}

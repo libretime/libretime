@@ -10,7 +10,7 @@ onContextmenu="return menu('{$i.id}'
         {else}
             , 'PL.create'
         {/if}
-        , 'delete'
+        , 'edit', 'delete'
     {/if}
 
     {if ($i.type == 'playlist')}
@@ -23,6 +23,10 @@ onContextmenu="return menu('{$i.id}'
         {else}
             , 'PL.activate', 'PL.create', 'delete'
         {/if}
+    {/if}
+
+    {if ($i.type == 'Folder')}
+        , 'fileList', 'delete'
     {/if}
     {$moreContextAfter}
 )"

@@ -68,8 +68,16 @@ function menu(id) {
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.removeItem&id="+id+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></td></tr>";
             break;
 
+            case "edit":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=editItem&id="+id+"'"+oF+">&nbsp;Edit&nbsp;</a></td></tr>";
+            break;
+
             case "delete":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_HANDLER}{literal}?act=delete&id="+id+"'"+oF+">&nbsp;!Delete Item!&nbsp;</a></td></tr>";
+            break;
+
+            case "fileList":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=fileList&id="+id+"'"+oF+">&nbsp;List Folder&nbsp;</a></td></tr>";
             break;
         }
     }
