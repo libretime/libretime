@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.24 $
+#   Version  : $Revision: 1.25 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -73,6 +73,9 @@ LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 ICU_CFLAGS=
 ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
 
+TAGLIB_CFLAGS   =`${USR_DIR}/bin/taglib-config --cflags`
+TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
+
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
@@ -93,12 +96,14 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${ICU_CFLAGS} \
+                             ${TAGLIB_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${ICU_LIBS} \
+                     ${TAGLIB_LIBS} \
                      ${LIBXMLPP_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${LIB_DIR}
@@ -142,8 +147,8 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_hu.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_jp.res
 
-TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} -lboost_date_time-gcc \
-                   -lcppunit -ldl -lxmlrpc++
+TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} \
+                   -lboost_date_time-gcc -lcppunit -ldl -lxmlrpc++
 
 
 #-------------------------------------------------------------------------------

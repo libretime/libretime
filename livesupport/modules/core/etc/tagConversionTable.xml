@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE tagConversionTable [
 <!ELEMENT tagConversionTable (tag*) >
-<!ELEMENT tag ((id3, dc)*) >
+<!ELEMENT tag (id3+, dc) >
 <!ELEMENT id3 (CDATA) >
 <!ELEMENT dc  (CDATA) >
 ]>
@@ -9,14 +9,22 @@
 <tagConversionTable>
     <tag>
         <id3>Title</id3>
+        <id3>TIT2</id3>
         <dc>dc:title</dc>
     </tag>
     <tag>
+        <id3>TPE1</id3>
         <id3>Artist</id3>
         <dc>dc:creator</dc>
     </tag>
     <tag>
         <id3>Length</id3>
+        <id3>TLEN</id3>
         <dc>dcterms:extent</dc>
+    </tag>
+    <tag>
+        <!-- beats per minute -->
+        <id3>TBPM</id3>
+        <dc>ourdcextension:bpm</dc>
     </tag>
 </tagConversionTable>

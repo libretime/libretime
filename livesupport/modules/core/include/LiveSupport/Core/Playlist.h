@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.28 $
+ *  @version $Revision: 1.29 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -618,12 +618,11 @@ class Playlist : public Configurable,
          *  Return the value of a metadata field in this playlist.
          *
          *  @param  key  the name of the metadata field
-         *  @param  ns   the namespace of the metadata field (optional)
          *  @return the value of the metadata field; 0 if there is 
          *          no such field;
          */
         virtual Ptr<Glib::ustring>::Ref
-        getMetadata(const std::string &key, const std::string &ns = "") const
+        getMetadata(const std::string &key) const
                                                 throw ();
 
         /**
@@ -631,11 +630,10 @@ class Playlist : public Configurable,
          *
          *  @param value the new value of the metadata field.
          *  @param  key  the name of the metadata field
-         *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
-                    const std::string &key, const std::string &ns = "")
+                    const std::string &key)
                                                 throw ();
 
 

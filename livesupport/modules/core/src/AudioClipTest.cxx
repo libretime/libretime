@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 
 #include "LiveSupport/Core/AudioClip.h"
 #include "LiveSupport/Core/Playlist.h"
+#include "LiveSupport/Core/TagConversion.h"
 #include "AudioClipTest.h"
 
 
@@ -62,6 +63,11 @@ CPPUNIT_TEST_SUITE_REGISTRATION(AudioClipTest);
  *  The name of the configuration file for the audio clip.
  */
 static const std::string configFileName = "etc/audioClip.xml";
+
+/**
+ *  The name of the configuration file for the tag conversion table.
+ */
+static const std::string tagConversionConfig = "etc/tagConversionTable.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -115,12 +121,12 @@ AudioClipTest :: firstTest(void)
         CPPUNIT_ASSERT(*title == "File Title txt");
 
         Ptr<const Glib::ustring>::Ref     subject = audioClip
-                                        ->getMetadata("subject", "dc");
+                                        ->getMetadata("dc:subject");
         CPPUNIT_ASSERT(subject);
         CPPUNIT_ASSERT(*subject == "Keywords: qwe, asd, zcx");
 
         Ptr<const Glib::ustring>::Ref     alternativeTitle = audioClip
-                                        ->getMetadata("alternative", "dcterms");
+                                        ->getMetadata("dcterms:alternative");
         CPPUNIT_ASSERT(alternativeTitle);
         CPPUNIT_ASSERT(*alternativeTitle ==
                             "Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ");
@@ -175,5 +181,44 @@ AudioClipTest :: conversionTest(void)
 
     Ptr<Playlist>::Ref      playlist = playable->getPlaylist();
     CPPUNIT_ASSERT(!playlist);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test id3v2 tag extraction
+ *----------------------------------------------------------------------------*/
+void
+AudioClipTest :: tagTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                            new xmlpp::DomParser(tagConversionConfig, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+        TagConversion::configure(*root);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<AudioClip>::Ref     audioClip(new AudioClip());
+    
+    Ptr<std::string>::Ref   uri(new std::string("var/test10001.mp3"));
+    audioClip->setUri(uri);
+    try {
+        audioClip->readTag();
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<const Glib::ustring>::Ref   title
+                                    = audioClip->getMetadata("dc:title");
+    CPPUNIT_ASSERT(*title == "Theme Song");
+
+    Ptr<const Glib::ustring>::Ref   artist 
+                                    = audioClip->getMetadata("dc:creator");
+    CPPUNIT_ASSERT(*artist == "The Muppets");
 }
 

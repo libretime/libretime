@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the AudioClip class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see AudioClip
  */
 class AudioClipTest : public CPPUNIT_NS::TestFixture
@@ -66,6 +66,7 @@ class AudioClipTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(AudioClipTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(conversionTest);
+    CPPUNIT_TEST(tagTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -85,6 +86,14 @@ class AudioClipTest : public CPPUNIT_NS::TestFixture
          */
         void
         conversionTest(void)                    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Id3v2 tag extraction test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        tagTest(void)                           throw (CPPUNIT_NS::Exception);
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -397,11 +397,10 @@ Playlist::revertToSavedCopy(void)        throw (std::invalid_argument)
  *  Return the value of a metadata field.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-Playlist :: getMetadata(const string &key, const string &ns) const
+Playlist :: getMetadata(const string &key) const
                                                 throw ()
 {
-    std::string                   completeKey = ns + ":" + key;
-    metadataType::const_iterator  it = metadata.find(completeKey);
+    metadataType::const_iterator  it = metadata.find(key);
 
     if (it != metadata.end()) {
         Ptr<Glib::ustring>::Ref data(new Glib::ustring(*it->second));
@@ -418,17 +417,16 @@ Playlist :: getMetadata(const string &key, const string &ns) const
  *----------------------------------------------------------------------------*/
 void
 Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
-                        const string &key, const string &ns)
+                        const string &key)
                                                 throw ()
 {
-    std::string     completeKey = ns + ":" + key;
-    metadata[completeKey] = value;
+    metadata[key] = value;
     
-    if (completeKey == "dcterms:extent") {
+    if (key == "dcterms:extent") {
         playlength.reset(new time_duration(duration_from_string(*value)));
     }
     
-    if (completeKey == "dc:title") {
+    if (key == "dc:title") {
         title = value;
     }        
 }

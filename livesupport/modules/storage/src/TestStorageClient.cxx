@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -817,10 +817,7 @@ TestStorageClient :: satisfiesCondition(
                         const SearchCriteria::SearchConditionType & condition)
                                                 throw (XmlRpcException)
 {
-    std::string             name, nameSpace;
-    separateNameAndNameSpace(condition.key, name, nameSpace);
-    
-    Ptr<Glib::ustring>::Ref value = playable->getMetadata(name, nameSpace);
+    Ptr<Glib::ustring>::Ref value = playable->getMetadata(condition.key);
     if (!value) {
         return false;
     }
@@ -855,16 +852,16 @@ TestStorageClient :: satisfiesCondition(
 void
 LiveSupport::Storage :: separateNameAndNameSpace(const std::string & key,
                                                  std::string &       name,
-                                                 std::string &       nameSpace)
+                                                 std::string &       prefix)
                                                             throw ()
 {
     unsigned int    colonPosition = key.find(':');
 
     if (colonPosition != std::string::npos) {               // there is a colon
-        nameSpace   = key.substr(0, colonPosition);
+        prefix   = key.substr(0, colonPosition);
         name        = key.substr(colonPosition+1);
     } else {                                                // no colon found
-        nameSpace   = "";
+        prefix   = "";
         name        = key;
     }
 }

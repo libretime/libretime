@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/TagConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -77,15 +77,27 @@ using namespace LiveSupport::Core;
  *             &lt;dc&gt;dc:title&lt;/dc&gt;
  *         &lt;/tag&gt;
  *         &lt;tag&gt;
- *             &lt;id3&gt;Length&lt;/id3&gt;
+ *             &lt;id3&gt;Artist&lt;/id3&gt;
+ *             &lt;id3&gt;TPE1&lt;/id3&gt;
  *             &lt;dc&gt;dcterms:extent&lt;/dc&gt;
  *         &lt;/tag&gt;
  *             ...
  *  &lt;/tagConversionTable&gt;
  *  </code></pre>
  *
+ *  Note that more than one id3 tag name can map to the same dc tag name.
+ *
+ *  The DTD for the above element is:
+ *
+ *  <pre><code>
+ *  &lt;!ELEMENT tagConversionTable (tag*) &gt;
+ *  &lt;!ATTLIST tag    (id3+, dc) &gt;
+ *  &lt;!ATTLIST id3    (#CDATA) &gt;
+ *  &lt;!ATTLIST dc     (#CDATA) &gt;
+ *  </code></pre>
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class TagConversion
 {
@@ -155,6 +167,8 @@ class TagConversion
          *  Check whether a given id3v2 tag is listed in the table.
          *
          *  @return true or false
+         *  @exception std::invalid_argument if the conversion table has not
+         *             not been configured yet
          */
         static bool
         existsId3Tag(const std::string &id3Tag) throw (std::invalid_argument)
@@ -171,6 +185,9 @@ class TagConversion
          *  Convert an id3v2 tag to a Dublin Core tag (with namespace).
          *
          *  @return the converted tag
+         *  @exception std::invalid_argument if the conversion table has not
+         *             not been configured yet, or if the id3Tag name does
+         *             not exist in the table
          */
         static const std::string &
         id3ToDublinCore(const std::string &id3Tag)

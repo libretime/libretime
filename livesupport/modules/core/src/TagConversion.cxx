@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Attic/TagConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,19 +100,23 @@ TagConversion :: configure(const xmlpp::Element  & element)
         Node::NodeList  id3Tags = (*listIt)->get_children(id3TagElementName);
         Node::NodeList  dcTags  = (*listIt)->get_children(dcTagElementName);
         
-        if (id3Tags.size() != 1 || dcTags.size() != 1) {
+        if (id3Tags.size() < 1 || dcTags.size() != 1) {
             std::string eMsg = "bad <";
             eMsg += tagElementName;
             eMsg += "> element found";
             throw std::invalid_argument(eMsg);
         }
 
-        Element*    id3Element  = dynamic_cast<Element*> (id3Tags.front());
         Element*    dcElement   = dynamic_cast<Element*> (dcTags.front());
-
-        table->insert(std::make_pair(
+        Node::NodeList::iterator
+                    id3Iterator = id3Tags.begin();
+        while (id3Iterator != id3Tags.end()) {
+            Element*    id3Element  = dynamic_cast<Element*> (*id3Iterator);
+            table->insert(std::make_pair(
                                 id3Element->get_child_text()->get_content(),
                                 dcElement ->get_child_text()->get_content() ));
+            ++id3Iterator;
+        }
         ++listIt;
     }
 }

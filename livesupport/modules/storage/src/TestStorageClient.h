@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -556,7 +556,7 @@ class TestStorageClient :
         void
         separateNameAndNameSpace(const std::string & key,
                                  std::string &       name,
-                                 std::string &       nameSpace)
+                                 std::string &       prefix)
                                                 throw ();
 
 } // namespace Storage

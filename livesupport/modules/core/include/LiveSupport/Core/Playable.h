@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {
@@ -194,12 +194,11 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  Return the value of a metadata field in this audio clip or playlist.
          *
          *  @param  key  the name of the metadata field
-         *  @param  ns   the namespace of the metadata field (optional)
          *  @return the value of the metadata field; 0 if there is 
          *          no such field;
          */
         virtual Ptr<Glib::ustring>::Ref
-        getMetadata(const std::string &key, const std::string &ns = "") const
+        getMetadata(const std::string &key) const
                                                 throw () = 0;
 
         /**
@@ -207,12 +206,10 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *
          *  @param value the new value of the metadata field.
          *  @param  key  the name of the metadata field
-         *  @param  ns   the namespace of the metadata field (optional)
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
-                    const std::string &key, 
-                    const std::string &ns = "")
+                    const std::string &key)
                                                 throw () = 0;
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,7 +34,13 @@
 #endif
 
 #include <sstream>
+#include <typeinfo>
+#include <fileref.h>    // for TagLib
+#include <mpegfile.h>   // for TagLib
+#include <id3v1tag.h>   // for TagLib
+#include <id3v2tag.h>   // for TagLib
 
+#include "LiveSupport/Core/TagConversion.h"
 #include "LiveSupport/Core/AudioClip.h"
 
 using namespace boost::posix_time;
@@ -344,9 +350,12 @@ AudioClip :: configure(const xmlpp::Element  & element)
  *  Return the value of a metadata field.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-AudioClip :: getMetadata(const string &key, const std::string &ns) const
+AudioClip :: getMetadata(const string &key) const
                                                 throw ()
 {
+    std::string name, prefix;
+    separateNameAndNameSpace(key, name, prefix);
+
     Ptr<Glib::ustring>::Ref value;
 
     if (! xmlAudioClip) {
@@ -362,12 +371,12 @@ AudioClip :: getMetadata(const string &key, const std::string &ns) const
     }
     
     xmlpp::Node*            metadata = rootList.front();
-    xmlpp::Node::NodeList   nodeList = metadata->get_children(key);
+    xmlpp::Node::NodeList   nodeList = metadata->get_children(name);
     xmlpp::Node::NodeList::iterator it = nodeList.begin();
     
     while (it != nodeList.end()) {
         xmlpp::Node*        node = *it;
-        if (node->get_namespace_prefix() == ns) {
+        if (node->get_namespace_prefix() == prefix) {
             xmlpp::Element* element = dynamic_cast<xmlpp::Element*> (node);
             value.reset(new Glib::ustring(element->get_child_text()
                                                  ->get_content()));
@@ -381,20 +390,33 @@ AudioClip :: getMetadata(const string &key, const std::string &ns) const
 
 
 /*------------------------------------------------------------------------------
- *  Set the value of a metadata field.
+ *  Set the value of a metadata field (public).
  *----------------------------------------------------------------------------*/
 void
 AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
-                         const std::string &key,
-                         const std::string &ns)
+                         const std::string &key)
                                                 throw ()
 {
-    if (ns == extentElementPrefix && key == extentElementName) {
+    std::string name, prefix;
+    separateNameAndNameSpace(key, name, prefix);
+    setMetadata(value, name, prefix);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the value of a metadata field (private).
+ *----------------------------------------------------------------------------*/
+void
+AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                         const std::string &name, const std::string &prefix)
+                                                throw ()
+{
+    if (prefix == extentElementPrefix && name == extentElementName) {
         playlength.reset(new time_duration(
                                 duration_from_string(*value) ));
     }
     
-    if (ns == titleElementPrefix && key == titleElementName) {
+    if (prefix == titleElementPrefix && name == titleElementName) {
         title = value;
     }
 
@@ -418,13 +440,13 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                                             extentElementPrefix);
     }
 
-    xmlpp::Node::NodeList   nodeList    = metadata->get_children(key);
+    xmlpp::Node::NodeList   nodeList    = metadata->get_children(name);
     xmlpp::Node::NodeList::iterator it  = nodeList.begin();
     xmlpp::Element*         element     = 0;
 
     while (it != nodeList.end()) {
         xmlpp::Node*        node = *it;
-        if (node->get_namespace_prefix() == ns) {
+        if (node->get_namespace_prefix() == prefix) {
             element = dynamic_cast<xmlpp::Element*> (nodeList.front());
             break;
         }
@@ -432,9 +454,9 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
     }
     
     if (it == nodeList.end()) {
-        element = metadata->add_child(key);
+        element = metadata->add_child(name);
         try {
-            element->set_namespace(ns);
+            element->set_namespace(prefix);
         }
         catch (xmlpp::exception &e) {
         // this namespace has not been declared; well OK, do nothing then
@@ -483,5 +505,114 @@ AudioClip :: getMetadataString()                throw ()
     metadataString.reset(new Glib::ustring(xmlAudioClip->write_to_string() ));
 
     return metadataString;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read the metadata contained in the id3v2 tag of the binary sound file.
+ *----------------------------------------------------------------------------*/
+void
+AudioClip :: readTag()                          throw (std::invalid_argument)
+{
+    if (!TagConversion::isConfigured()) {
+        throw std::invalid_argument("tag conversion table not loaded");
+    }
+
+    if (!getUri()) {
+        throw std::invalid_argument("audio clip has no uri field");
+    }
+    
+    if (!TagLib::File::isReadable(getUri()->c_str())) {
+        throw std::invalid_argument("binary sound file not found");
+    }
+    
+    TagLib::FileRef         genericFileRef(getUri()->c_str());
+    TagLib::Tag*            tag = genericFileRef.tag();
+    if (!tag) {
+        return;
+    }
+
+    Ptr<const Glib::ustring>::Ref   value;                  // true = unicode
+    if (TagConversion::existsId3Tag("Artist")) {
+        value.reset(new const Glib::ustring(tag->artist().to8Bit(true)));
+        setMetadata(value, TagConversion::id3ToDublinCore("Artist"));
+    }
+    
+    if (TagConversion::existsId3Tag("Title")) {
+        value.reset(new const Glib::ustring(tag->title().to8Bit(true)));
+        setMetadata(value, TagConversion::id3ToDublinCore("Title"));
+    }
+    
+    if (TagConversion::existsId3Tag("Album")) {
+        value.reset(new const Glib::ustring(tag->album().to8Bit(true)));
+        setMetadata(value, TagConversion::id3ToDublinCore("Album"));
+    }
+    
+    if (TagConversion::existsId3Tag("Comment")) {
+        value.reset(new const Glib::ustring(tag->comment().to8Bit(true)));
+        setMetadata(value, TagConversion::id3ToDublinCore("Comment"));
+    }
+    
+    if (TagConversion::existsId3Tag("Genre")) {
+        value.reset(new const Glib::ustring(tag->genre().to8Bit(true)));
+        setMetadata(value, TagConversion::id3ToDublinCore("Genre"));
+    }
+    
+    if (TagConversion::existsId3Tag("Year")) {
+        std::stringstream   yearString;
+        yearString << tag->year();
+        value.reset(new const Glib::ustring(yearString.str()));
+        setMetadata(value, TagConversion::id3ToDublinCore("Year"));
+    }
+
+    if (TagConversion::existsId3Tag("Track")) {
+        std::stringstream   trackString;
+        trackString << tag->track();
+        value.reset(new const Glib::ustring(trackString.str()));
+        setMetadata(value, TagConversion::id3ToDublinCore("Track"));
+    }
+    
+    TagLib::MPEG::File      mpegFile(getUri()->c_str());
+    TagLib::ID3v2::Tag*     id3v2Tag = mpegFile.ID3v2Tag();
+    if (!id3v2Tag) {
+        return;
+    }
+    
+    TagLib::ID3v2::FrameListMap         frameListMap = id3v2Tag->frameListMap();
+    TagLib::ID3v2::FrameListMap::ConstIterator it = frameListMap.begin();
+    while (it != frameListMap.end()) {
+        const char*     keyBuffer = it->first.data();
+        std::string     keyString(keyBuffer, 4);
+        if (TagConversion::existsId3Tag(keyString)) {
+            TagLib::ID3v2::FrameList        frameList = it->second;
+            if (!frameList.isEmpty()) {
+                value.reset(new const Glib::ustring(frameList.front()
+                                                    ->toString().to8Bit(true)));
+                setMetadata(value, TagConversion::id3ToDublinCore(keyString));
+            }
+        }
+        ++it;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Separate a key into the metadata name and its namespace
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport::Core :: separateNameAndNameSpace(const std::string & key,
+                                                 std::string &       name,
+                                                 std::string &       prefix)
+                                                            throw ()
+{
+    unsigned int    colonPosition = key.find(':');
+
+    if (colonPosition != std::string::npos) {               // there is a colon
+        prefix   = key.substr(0, colonPosition);
+        name     = key.substr(colonPosition+1);
+    } else {                                                // no colon found
+        prefix   = "";
+        name     = key;
+    }
 }
 

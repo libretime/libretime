@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Attic/TagConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,19 +86,6 @@ TagConversionTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     try {
-        TagConversion::existsId3Tag("Title");
-        CPPUNIT_FAIL("allowed to use class before configuration");
-    } catch (std::invalid_argument &e) {
-    }
-
-    try {
-        TagConversion::id3ToDublinCore("Title");
-        CPPUNIT_FAIL("allowed to use class before configuration");
-    } catch (std::invalid_argument &e) {
-    }
-
-    CPPUNIT_ASSERT(!TagConversion::isConfigured());
-    try {
         Ptr<xmlpp::DomParser>::Ref  parser(
                                 new xmlpp::DomParser(configFileName, false));
         const xmlpp::Document * document = parser->get_document();
@@ -122,6 +109,14 @@ TagConversionTest :: firstTest(void)
         CPPUNIT_ASSERT(TagConversion::id3ToDublinCore("Title") == "dc:title");
         std::string    dcTag = TagConversion::id3ToDublinCore("Artist");
         CPPUNIT_ASSERT(dcTag == "dc:creator");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        CPPUNIT_ASSERT(TagConversion::id3ToDublinCore("TIT2") == "dc:title");
+        std::string    dcTag = TagConversion::id3ToDublinCore("TBPM");
+        CPPUNIT_ASSERT(dcTag == "ourdcextension:bpm");
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }

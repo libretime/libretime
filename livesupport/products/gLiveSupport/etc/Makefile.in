@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.21 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.22 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -119,6 +119,8 @@ GTKMM_LIBS=@GTKMM_LIBS@
 ICU_CFLAGS=
 ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags-toolutil --ldflags-icuio`
 
+TAGLIB_LIBS=`${USR_DIR}/bin/taglib-config --libs`
+
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
@@ -155,6 +157,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
                      ${CURL_LIBS} \
                      ${GTKMM_LIBS} \
+                     ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${HELIX_LIB_DIR} \
                      -L${CORE_LIB_DIR} \

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -164,6 +164,18 @@ class AudioClip : public Configurable,
          *  This audio clip in XML format.
          */
         Ptr<xmlpp::Document>::Ref       xmlAudioClip;
+
+        /**
+         *  Set the value of a metadata field in this audio clip.
+         *
+         *  @param value the new value of the metadata field.
+         *  @param name    the name of the metadata field (without prefix)
+         *  @param prefix  the prefix of the metadata field
+         */
+        virtual void
+        setMetadata(Ptr<const Glib::ustring>::Ref value, 
+                    const std::string &name, const std::string &prefix)
+                                                throw ();
 
 
     public:
@@ -424,25 +436,23 @@ class AudioClip : public Configurable,
         /**
          *  Return the value of a metadata field in this audio clip.
          *
-         *  @param  key  the name of the metadata field
-         *  @param  ns   the namespace of the metadata field (optional)
+         *  @param  key the name of the metadata field
          *  @return the value of the metadata field; 0 if there is 
          *          no such field;
          */
         virtual Ptr<Glib::ustring>::Ref
-        getMetadata(const std::string &key, const std::string &ns = "") const
+        getMetadata(const std::string &key) const
                                                 throw ();
 
         /**
          *  Set the value of a metadata field in this audio clip.
          *
          *  @param value the new value of the metadata field.
-         *  @param  key  the name of the metadata field
-         *  @param  ns   the namespace of the metadata field (optional)
+         *  @param key   the name of the metadata field
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
-                    const std::string &key, const std::string &ns = "")
+                    const std::string &key)
                                                 throw ();
 
 
@@ -478,6 +488,30 @@ class AudioClip : public Configurable,
          */
         Ptr<Glib::ustring>::Ref
         getMetadataString()                     throw ();
+
+
+        /**
+         *  Read the metadata contained in the id3v2 tag of the mp3 sound
+         *  file.  The id3v1 tag is also read; if a field is present in both,
+         *  the id3v2 tag is used.
+         *
+         *  Ogg Vorbis sound files are not supported yet.  If the 
+         *  sound file is not in mp3 format, the method returns normally
+         *  and does not do anything; however, some junk is printed on
+         *  the standard error.
+         *
+         *  The tags are processed and translated into Dublin Core
+         *  metadata fields using the TagConversion class.  Only those fields
+         *  are processed which have a Dublin Core equivalent listed in the
+         *  xml element used for configuring TagConversion.
+         *
+         *  @exception std::invalid_argument if TagConversion has not been
+         *             configured yet, or if the AudioClip instance does not
+         *             have a uri field, or the file name contained in the uri
+         *             field is invalid
+         */
+        void
+        readTag()                               throw (std::invalid_argument);
 };
 
 
@@ -486,6 +520,15 @@ class AudioClip : public Configurable,
 
 /* ====================================================== function prototypes */
 
+
+        /**
+         *  Auxilliary method used by satisfiesCondition().
+         */
+        void
+        separateNameAndNameSpace(const std::string & key,
+                                 std::string &       name,
+                                 std::string &       nameSpace)
+                                                throw ();
 
 } // namespace Core
 } // namespace LiveSupport
