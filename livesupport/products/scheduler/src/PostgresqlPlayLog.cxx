@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLog.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,15 +165,15 @@ PostgresqlPlayLog :: uninstall(void)                   throw (std::exception)
 /*------------------------------------------------------------------------------
  *  Add a new play log entry
  *----------------------------------------------------------------------------*/
-Ptr<const UniqueId>::Ref
+Ptr<UniqueId>::Ref
 PostgresqlPlayLog :: addPlayLogEntry(
                         Ptr<const UniqueId>::Ref  audioClipId,
                         Ptr<const ptime>::Ref     clipTimestamp)
                                                 throw (std::invalid_argument)
 {
-    Ptr<Connection>::Ref        conn;
-    bool                        result = false;
-    Ptr<const UniqueId>::Ref    id;
+    Ptr<Connection>::Ref    conn;
+    bool                    result = false;
+    Ptr<UniqueId>::Ref      id;
 
     try {
         conn = cm->getConnection();
@@ -209,15 +209,15 @@ PostgresqlPlayLog :: addPlayLogEntry(
 /*------------------------------------------------------------------------------
  *  Get the play log entries for a given time interval
  *----------------------------------------------------------------------------*/
-Ptr<std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
+Ptr<std::vector<Ptr<PlayLogEntry>::Ref> >::Ref
 PostgresqlPlayLog :: getPlayLogEntries(
                                     Ptr<const ptime>::Ref  fromTime,
                                     Ptr<const ptime>::Ref  toTime)
                                                 throw (std::invalid_argument)
 {
     Ptr<Connection>::Ref                                    conn;
-    Ptr<std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref    result(
-                            new std::vector<Ptr<const PlayLogEntry>::Ref>());
+    Ptr<std::vector<Ptr<PlayLogEntry>::Ref> >::Ref    result(
+                            new std::vector<Ptr<PlayLogEntry>::Ref>());
 
     try {
         conn = cm->getConnection();
@@ -238,7 +238,7 @@ PostgresqlPlayLog :: getPlayLogEntries(
             Ptr<ptime>::Ref clipTimestamp 
                             = Conversion::timestampToPtime(timestamp);
 
-            Ptr<const PlayLogEntry>::Ref entry(new PlayLogEntry(id,
+            Ptr<PlayLogEntry>::Ref entry(new PlayLogEntry(id,
                                                           audioClipId,
                                                           clipTimestamp));
             result->push_back(entry);

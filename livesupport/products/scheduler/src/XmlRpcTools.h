@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class XmlRpcTools
 {
@@ -245,8 +245,9 @@ class XmlRpcTools
         /**
          *  Convert an error code, message pair to an XmlRpcValue
          *
-         *  @param playlist the Playlist to convert.
-         *  @param xmlRpcValue the output parameter holding the result of
+         *  @param errorCode    the numerical code of the error.
+         *  @param errorMessage a short English description of the error.
+         *  @param xmlRpcValue  the output parameter holding the result of
          *         the conversion.
          */
         static void
@@ -319,7 +320,7 @@ class XmlRpcTools
          *  Convert a schedule entry ID (a UniqueId) to an XmlRpcValue
          *
          *  @param scheduleEntryId the UniqueId to convert.
-         *  @param xmlRpcValue the output parameter holding the result of
+         *  @param returnValue the output parameter holding the result of
          *         the conversion.
          */
         static void

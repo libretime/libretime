@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLog.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class PostgresqlPlayLog : public Configurable,
                           public PlayLogInterface
@@ -202,7 +202,7 @@ class PostgresqlPlayLog : public Configurable,
          *  @param timeStamp the time the clip was played (started).
          *  @return the id of the newly created play log entry.
          */
-        virtual Ptr<const UniqueId>::Ref
+        virtual Ptr<UniqueId>::Ref
         addPlayLogEntry(Ptr<const UniqueId>::Ref   audioClipId,
                         Ptr<const ptime>::Ref      timeStamp)
                                                 throw (std::invalid_argument);
@@ -216,7 +216,7 @@ class PostgresqlPlayLog : public Configurable,
          *          non-inclusive
          *  @return a vector of the play log entries for the time region.
          */
-        virtual Ptr<std::vector<Ptr<const PlayLogEntry>::Ref> >::Ref
+        virtual Ptr<std::vector<Ptr<PlayLogEntry>::Ref> >::Ref
         getPlayLogEntries(Ptr<const ptime>::Ref  fromTime,
                           Ptr<const ptime>::Ref  toTime)
                                                 throw (std::invalid_argument);

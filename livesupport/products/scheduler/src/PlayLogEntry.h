@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/PlayLogEntry.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,7 +47,6 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
-#include "LiveSupport/Core/Configurable.h"
 
 
 namespace LiveSupport {
@@ -69,7 +68,7 @@ using namespace LiveSupport::Core;
  *  PlayLogEntries contain information about the audio clips played.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class PlayLogEntry
 {
