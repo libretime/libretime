@@ -23,18 +23,26 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /**
+ *  Auxiliary class for GB playlist editing methods
  *
+ *  remark: dcterms:extent format: hh:mm:ss.ssssss
  */
 class Playlist extends StoredFile{
     
     /**
-     *  
+     *  Create instace of Playlist object and recall existing file
+     *  by access token.<br/>
+     *
+     *  @param gb reference to GreenBox object
+     *  @param token string, access token
+     *  @param className string, optional classname to recall
+     *  @return instace of StoredFile object
      */
     function recallByToken(&$gb, $token, $className='Playlist')
     {
@@ -43,6 +51,14 @@ class Playlist extends StoredFile{
 
     /**
      *  Get audioClip legth and title
+     *
+     *  @param acId int, local id of audioClip inserted to playlist
+     *  @return array with fields:
+     *  <ul>
+     *   <li>acGunid, string - audioClip gunid</li>
+     *   <li>acLen string - length of clip in dcterms:extent format</li>
+     *   <li>acTit string - clip title</li>
+     *  </ul>
      */
     function getAcInfo($acId)
     {
@@ -61,7 +77,15 @@ class Playlist extends StoredFile{
     }
 
     /**
-     *  Get 
+     *  Get info about playlist
+     *
+     *  @return array with fields:
+     *  <ul>
+     *   <li>plLen string - length of playlist in dcterms:extent format</li>
+     *   <li>plLenMid int - metadata record id of dcterms:extent record</li>
+     *   <li>parid int - metadata record id of playlist container</li>
+     *   <li>metaParid int - metadata record id of metadata container</li>
+     *  </ul>
      */
     function getPlInfo()
     {
@@ -85,7 +109,13 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Get 
+     *  Get container record id, optionally insert new container
+     *
+     *  @param containerName string
+     *  @param parid int - parent record id
+     *  @param insertIfNone boolean - flag if insert may be done
+     *      if container wouldn't be found
+     *  @return int - metadata record id of container
      */
     function getContainer($containerName, $parid=NULL, $insertIfNone=FALSE)
     {
@@ -104,7 +134,22 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Get 
+     *  Inserting of new playlistEelement
+     *
+     *  @param parid int - parent record id
+     *  @param offset string - relative offset in extent format
+     *  @param acGunid string - audioClip gunid
+     *  @param acLen string - audiClip length in extent format
+     *  @param acTit string - audioClip title
+     *  @param fadeIn string - fadein value in ss.ssssss or extent format
+     *  @param fadeOut string - fadeout value in ss.ssssss or extent format
+     *  @return array with fields:
+     *  <ul>
+     *   <li>plElId int - record id of playlistElement</li>
+     *   <li>plElGunid string - gl.unique id of playlistElement</li>
+     *   <li>fadeInId int - record id</li>
+     *   <li>fadeOutId int - record id</li>
+     *  </ul>
      */
     function insertPlaylistElement($parid, $offset,
         $acGunid, $acLen, $acTit, $fadeIn=NULL, $fadeOut=NULL)
@@ -152,7 +197,13 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Set
+     *  Return record id, optionally insert new record
+     *
+     *  @param category string - qualified name of metadata category
+     *  @param parid int - parent record id
+     *  @param value string - value for inserted record
+     *  @param predxml string - 'A' | 'T' (attribute or tag)
+     *  @return int - metadata record id
      */
     function _getMidOrInsert($category, $parid, $value=NULL, $predxml='T')
     {
@@ -167,7 +218,13 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Set
+     *  Set value of metadata record, optionally insert new record
+     *
+     *  @param mid int - record id
+     *  @param value string - value for inserted record
+     *  @param parid int - parent record id
+     *  @param category string - qualified name of metadata category
+     *  @return boolean
      */
     function _setValueOrInsert($mid, $value, $parid, $category)
     {
@@ -177,11 +234,16 @@ class Playlist extends StoredFile{
             $r = $this->md->setMetadataEl($mid, $value);
         }
         if(PEAR::isError($r)){ return $r; }
-        return $r;
+        return TRUE;
     }
     
     /**
-     *  Set
+     *  Set playlist length - dcterm:extent
+     *
+     *  @param newPlLen string - new length in extent format
+     *  @param plLenMid int - playlist length record id
+     *  @param metaParid int - metadata container record id
+     *  @return boolean
      */
     function setPlaylistLength($newPlLen, $plLenMid, $metaParid)
     {
@@ -192,7 +254,7 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Add audioclip specified by gunid to the playlist
+     *  Add audioclip specified by local id to the playlist
      *
      *  @param acId string, local ID of added file
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
@@ -292,8 +354,12 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  
+     *  Change fadeIn and fadeOut values for plaulist Element
      *
+     *  @param plElGunid string - playlistElement gunid
+     *  @param fadeIn string - new value in ss.ssssss or extent format
+     *  @param fadeOut string - new value in ss.ssssss or extent format
+     *  @return boolean
      */
     function changeFadeInfo($plElGunid, $fadeIn, $fadeOut)
     {
@@ -335,7 +401,10 @@ class Playlist extends StoredFile{
     }
     
     /**
+     *  Recalculate total length of playlist and  relativeOffset values
+     *  of all playlistElements according to legth and fadeIn values
      *
+     *  @return boolean
      */
     function recalculateTimes()
     {

@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.49 $
+    Version  : $Revision: 1.50 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.49 $
+ *  @version $Revision: 1.50 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -483,7 +483,7 @@ class GreenBox extends BasicStor{
     }
 
     /**
-     *  Add audioclip specified by gunid to the playlist
+     *  Add audioclip specified by local id to the playlist
      *
      *  @param token string, playlist access token
      *  @param acId string, local ID of added file
