@@ -33,6 +33,11 @@
                 'type'  => 'playlist',
                 'xml'   => '../tests/plist1.xml',
                 'gunid' => '0000000000000001'
+            ),
+            array(
+                'type'  => 'webstream',
+                'xml'   => '../tests/wstream1.xml',
+                'gunid' => 'f000000000000001'
             )
         );
 ?>
