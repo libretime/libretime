@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <iostream>
 
+#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "TestWindow.h"
 
 
@@ -57,6 +58,8 @@ using namespace LiveSupport::Widgets;
 TestWindow :: TestWindow (void)
                                                                     throw ()
 {
+    Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
+
     // init the imageButton
     Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
     Glib::RefPtr<Gdk::Pixbuf>   rollImage;
@@ -66,41 +69,11 @@ TestWindow :: TestWindow (void)
 
     imageButton.reset(new ImageButton(passiveImage, rollImage));
 
-    // init the button
-    Glib::RefPtr<Gdk::Pixbuf>   passiveImageLeft;
-    Glib::RefPtr<Gdk::Pixbuf>   passiveImageCenter;
-    Glib::RefPtr<Gdk::Pixbuf>   passiveImageRight;
-    Glib::RefPtr<Gdk::Pixbuf>   rollImageLeft;
-    Glib::RefPtr<Gdk::Pixbuf>   rollImageCenter;
-    Glib::RefPtr<Gdk::Pixbuf>   rollImageRight;
+    // create a button
+    button = widgetFactory->createButton("Hello, World!");
 
-    passiveImageLeft   = Gdk::Pixbuf::create_from_file("var/button_left.png");
-    passiveImageCenter = Gdk::Pixbuf::create_from_file("var/button_centre.png");
-    passiveImageRight  = Gdk::Pixbuf::create_from_file("var/button_right.png");
-    rollImageLeft   = Gdk::Pixbuf::create_from_file("var/button_left_roll.png");
-    rollImageCenter = Gdk::Pixbuf::create_from_file(
-                                                  "var/button_centre_roll.png");
-    rollImageRight  = Gdk::Pixbuf::create_from_file(
-                                                  "var/button_right_roll.png");
-
-    button.reset(new Button("Hello, World!",
-                            passiveImageLeft,
-                            passiveImageCenter,
-                            passiveImageRight,
-                            rollImageLeft,
-                            rollImageCenter,
-                            rollImageRight));
-
-    // init the blue container
-    blueBin.reset(new BlueBin(
-                  Gdk::Pixbuf::create_from_file("var/corner_topleft.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_leftside.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_topcentre.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_topright.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_rightside.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_botleft.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_botcentre.png"),
-                  Gdk::Pixbuf::create_from_file("var/corner_botright.png")));
+    // create a blue container
+    blueBin = widgetFactory->createBlueBin();
 
     // create and set up the layout
     layout.reset(new Gtk::Table());

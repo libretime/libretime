@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@
 #include <gtkmm/main.h>
 
 #include "LiveSupport/Core/Ptr.h"
-
+#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "TestWindow.h"
 
 using namespace LiveSupport::Core;
@@ -149,19 +149,13 @@ int main (  int     argc,
 
     std::cerr << "using config file '" << configFileName << '\'' << std::endl;
 
-
-    TestWindow      testWindow;
-    Gtk::Main::run(testWindow);
-
-/*
-    Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref
-                    gLiveSupport(new LiveSupport::GLiveSupport::GLiveSupport());
+    Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
     try {
         std::auto_ptr<xmlpp::DomParser> 
                             parser(new xmlpp::DomParser(configFileName, true));
         const xmlpp::Document * document = parser->get_document();
-        gLiveSupport->configure(*(document->get_root_node()));
+        widgetFactory->configure(*(document->get_root_node()));
     } catch (std::invalid_argument &e) {
         std::cerr << "semantic error in configuration file" << std::endl
                   << e.what() << std::endl;
@@ -172,8 +166,9 @@ int main (  int     argc,
         exit(EXIT_FAILURE);
     }
 
-    gLiveSupport->show();
-*/
+    TestWindow      testWindow;
+    Gtk::Main::run(testWindow);
+
     exit(EXIT_SUCCESS);
 }
 
