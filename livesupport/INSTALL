@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/INSTALL,v $
 
 --------------------------------------------------------------------------------
@@ -32,8 +32,8 @@ For detailed installation instructions, see the doc/install.html document.
 For the impatient, do the following (make sure to run at least the
 bin/install.sh script as root):
 
-wget http://ls-demo.campware.org/download/livesupport-<version>.tar.bz2
-wget http://ls-demo.campware.org/download/livesupport-libraries-<version>.tar.bz2
+wget http://livesupport.campware.org/look/campware/download/livesupport-<version>.tar.bz2
+wget http://livesupport.campware.org/look/campware/download/livesupport-libraries-<version>.tar.bz2
 tar xfj livesupport-<version>.tar.bz2
 tar xfj livesupport-libraries-<version>.tar.bz2
 cd livesupport-<version>
