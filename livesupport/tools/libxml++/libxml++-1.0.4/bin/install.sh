@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/libxml++/libxml++-1.0.4/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -36,6 +36,8 @@ reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd; cd -`
 installdir=`cd $basedir/../../../usr; pwd; cd -`
 tmpdir=$basedir/tmp
+sharedir=$installdir/share
+docdir=$sharedir/doc/libxml++
 tar=$basedir/src/$product.tar.bz2
 
 echo "installing $product from $basedir to $installdir"
@@ -48,6 +50,12 @@ tar xfj $tar
 cd $product
 ./configure --prefix=$installdir
 make install
+
+# make the reference documentation and install that as well, as the
+# autoconf thing doesn't :(
+make -C docs/reference
+mkdir -p $docdir
+cp -a docs/reference/1.0 $docdir
 
 cd $basedir
 rm -rf tmp
