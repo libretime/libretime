@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,12 +66,13 @@ $config = array(
     'tblNamePrefix' => 'as_',
     'authCookieName'=> 'assid',
     'StationPrefsGr'=> '',
-    'AllGr'         => '',
-    'storageDir'    =>  dirname(getcwd()).'/stor',
-    'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
-    'transDir'      =>  dirname(getcwd()).'/trans',
-    'accessDir'     =>  dirname(getcwd()).'/access',
+    'AllGr'         => 'All',
+    'storageDir'    =>  dirname(__FILE__).'/../../archiveServer/var/stor',
+    'bufferDir'     =>  dirname(__FILE__).'/../../archiveServer/var/stor/buffer',
+    'transDir'      =>  dirname(__FILE__).'/../../archiveServer/var/trans',
+    'accessDir'     =>  dirname(__FILE__).'/../../archiveServer/var/access',
     'isArchive'     =>  TRUE,
+    'validate'      =>  TRUE,
 
     /* ==================================================== URL configuration */
     // on central archive side: archive is the storage !
