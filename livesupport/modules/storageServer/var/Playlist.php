@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -303,9 +303,6 @@ class Playlist extends StoredFile{
         $r = $this->md->insertMetadataEl($acId, 'accessToken', $acToken, 'A');
         if(PEAR::isError($r)){ return $r; }
         */
-        // recalculate offsets and total length:
-        $r = $this->recalculateTimes();
-        if(PEAR::isError($r)){ return $r; }
         return $plElGunid;
     }
 
@@ -361,9 +358,6 @@ class Playlist extends StoredFile{
                 " ($plElGunid)"
             );
         }
-        // recalculate offsets and total length:
-        $r = $this->recalculateTimes();
-        if(PEAR::isError($r)){ return $r; }
         return TRUE;
     }
     
@@ -409,8 +403,51 @@ class Playlist extends StoredFile{
                 $fadeOutId, $fadeOut, $fiMid, 'fadeOut');
             if(PEAR::isError($r)){ return $r; }
         }
-        $r = $this->recalculateTimes();
-        if(PEAR::isError($r)){ return $r; }
+        return TRUE;
+    }
+    
+    /**
+     *  Move audioClip to the new position in the playlist
+     *
+     *  @param plElGunid string - playlistElement gunid
+     *  @param newPos int - new position in playlist
+     *  @return
+     */
+    function moveAudioClip($plElGunid, $newPos)
+    {
+        $plGunid = $this->gunid;
+        $arr = $this->md->genPhpArray();
+        $els =& $arr['children'];
+        foreach($els as $i=>$el){
+            if($el['elementname'] != 'playlistelement'){
+                $metadata = array_splice($els, $i, 1);
+                continue;
+            }
+        }
+        foreach($els as $i=>$el){
+            if($el['attrs']['id'] == $plElGunid){
+                $movedi = $i;
+            }
+            $r = $this->delAudioClip($el['attrs']['id']);
+            if(PEAR::isError($r)){ return $r; }
+        }
+        $movedel = array_splice($els, $movedi, 1);
+        array_splice($els, $newPos, 0, $movedel);
+//        var_dump($els);
+        foreach($els as $i=>$el){
+            foreach($el['children'] as $j=>$af){
+                if($af['elementname'] == 'audioclip'){
+                    $acGunid = $af['attrs']['id'];
+                }elseif($af['elementname'] == 'fadeinfo'){
+                    $fadeIn = $af['attrs']['fadein'];
+                    $fadeOut = $af['attrs']['fadeout'];
+                }else{
+                }
+            }
+            $acId = $this->gb->_idFromGunid($acGunid);
+            $r = $this->addAudioClip($acId, $fadeIn, $fadeOut);
+            if(PEAR::isError($r)){ return $r; }
+        }
         return TRUE;
     }
     

@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.52 $
+    Version  : $Revision: 1.53 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.52 $
+ *  @version $Revision: 1.53 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -506,6 +506,9 @@ class GreenBox extends BasicStor{
         }
         $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut);
         if(PEAR::isError($res)) return $res;
+        // recalculate offsets and total length:
+        $r = $pl->recalculateTimes();
+        if(PEAR::isError($r)){ return $r; }
         return $res;
     }
 
@@ -513,9 +516,7 @@ class GreenBox extends BasicStor{
      *  Remove audioclip from playlist
      *
      *  @param token string, playlist access token
-     *  <span style="color:green">
      *  @param plElGunid string, global id of deleted playlistElement
-     *  </span>
      *  @param sessid string, session ID
      *  @return boolean
      */
@@ -526,11 +527,14 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->delAudioClip($plElGunid);
         if(PEAR::isError($res)) return $res;
+        // recalculate offsets and total length:
+        $r = $pl->recalculateTimes();
+        if(PEAR::isError($r)){ return $r; }
         return $res;
     }
 
     /**
-     *  <span style="color:red">Change fadInfo values</span>
+     *  Change fadeInfo values
      *
      *  @param token string, playlist access token
      *  @param plElGunid string, global id of deleted playlistElement
@@ -546,7 +550,32 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->changeFadeInfo($plElGunid, $fadeIn, $fadeOut);
         if(PEAR::isError($res)) return $res;
-        return $res;
+        // recalculate offsets and total length:
+        $r = $pl->recalculateTimes();
+        if(PEAR::isError($r)){ return $r; }
+        return TRUE;
+    }
+
+    /**
+     *  <span style="color:green">Move audioClip to the new position in the playlist</span>
+     *
+     *  @param token string, playlist access token
+     *  @param plElGunid string, global id of deleted playlistElement
+     *  @param newPos int - new position in playlist
+     *  @param sessid string, session ID
+     *  @return boolean
+     */
+    function moveAudioClipInPlaylist($token, $plElGunid, $newPos, $sessid)
+    {
+        require_once"Playlist.php";
+        $pl =& Playlist::recallByToken($this, $token);
+        if(PEAR::isError($pl)) return $pl;
+        $res = $pl->moveAudioClip($plElGunid, $newPos);
+        if(PEAR::isError($res)) return $res;
+        // recalculate offsets and total length:
+        $r = $pl->recalculateTimes();
+        if(PEAR::isError($r)){ return $r; }
+        return TRUE;
     }
 
     /**
