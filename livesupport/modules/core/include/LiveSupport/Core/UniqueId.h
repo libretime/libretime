@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/UniqueId.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ namespace Core {
  *  A class representing globally unique identifiers.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class UniqueId
 {
@@ -170,7 +170,7 @@ class UniqueId
          *
          *  @return the numeric value of this id.
          */
-        operator long long int () const         throw ()
+        operator IdType () const                throw ()
         {
             return id;
         }
