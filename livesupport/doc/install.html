@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>LiveSupport installation documentation</title>
+  <meta content="$Author: maroy $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
+</ul>
+<h1>Scope</h1>
+This document describes how to compile and install LiveSupport on your
+system.<br>
+<h1>Introduction</h1>
+LiveSupport has an installation procedure to make sure LiveSupport will
+work properly on your system. This procedure consists of the following
+steps:<br>
+<ul>
+  <li>installing required compilation tools</li>
+  <li>installing and configuring required external services</li>
+  <li>obtaining LiveSupport sources</li>
+  <li>compiling LiveSupport</li>
+  <li>installing LiveSupport</li>
+  <li>try it out</li>
+</ul>
+<h2>For the impatient</h2>
+Those who think they know everything, the quick steps to install
+LiveSupport are (make sure to run at least the <code>./bin/install.sh</code>
+script as root):<br>
+<br>
+<pre><code>wget </code><code>http://ls-demo.campware.org/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code>http://ls-demo.campware.org/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>make setup &amp;&amp; make compile<br>./bin/install.sh -d /usr/local/livesupport -g apache<br>ln -s /usr/local/livesupport/var /var/www/livesupport<br></code></pre>
+<br>
+Then try the URL <code>http://localhost/livesupport/htmlUI/var/html/ </code>,
+and log in using username: <code>root</code>, password: <code>q</code>.<br>
+<br>
+Everyone else, please read the lines below carefully.<br>
+<h1>Installing required compilation tools</h1>
+This steps makes sure that all the required compilation tools and
+libraries are installed.&nbsp; Please refer to your systems package
+management or the appropriate tools documentation for installation
+instructions for the tools and libraries listed below.<br>
+<h2>Tools</h2>
+The following tools are expected on the system.<br>
+<ul>
+  <li><a href="http://sources.redhat.com/binutils/">binutils</a> &gt;=
+2.13</li>
+  <li><a href="http://gcc.gnu.org/">gcc</a> &gt;= 3.3</li>
+  <li><a href="http://www.gnu.org/software/make/make.html">make</a>
+&gt;= 3.80</li>
+  <li><a href="http://www.gnu.org/software/automake/">automake</a> &lt;
+1.9</li>
+  <li><a href="http://www.gnu.org/software/autoconf/">autoconf</a>
+&gt;= 2.5<br>
+(If you have an older version installed as well, don't forget to set
+the
+environment variable WANT_AUTOCONF_2_5="1" before compiling the tools.)</li>
+  <li><a href="http://www.gnu.org/software/libtool/libtool.html">libtool</a><br>
+  </li>
+  <li><a href="http://www.freedesktop.org/software/pkgconfig/">pkgconfig</a>
+&gt;= 0.15</li>
+  <li><a href="http://www.fsf.org/software/patch/patch.html">patch</a>
+&gt;= 2.5.9<br>
+  </li>
+  <li><a href="http://www.doxygen.org/">doxygen</a></li>
+  <li><a href="http://www.gnu.org/software/tar/">tar</a></li>
+  <li><a href="http://www.gzip.org/">gzip</a></li>
+  <li><a href="http://sources.redhat.com/bzip2/">bzip2</a></li>
+  <li><a href="http://curl.haxx.se/">curl</a><br>
+  </li>
+</ul>
+<h2>Libraries</h2>
+The following development libraries are expected on the system. Please
+note that for all the libraries below, the development packages are
+expected to be installed as well.<br>
+<ul>
+  <li><a href="http://www.unixodbc.org/">unixODBC</a> &gt;= 2.2</li>
+  <li><a href="http://xorg.freedesktop.org/">xorg-x11</a> or <a
+ href="http://www.xfree86.org/">XFree86</a></li>
+  <li><a href="http://freedesktop.org/Software/fontconfig">fontconfig</a><br>
+  </li>
+  <li><a href="http://www.libpng.org/">libpng</a></li>
+  <li><a href="http://www.ijg.org/">libjpeg</a><br>
+  </li>
+  <li><a href="http://www.openssl.org/">openssl</a></li>
+  <li><a href="http://xmlsoft.org/">libxml2</a></li>
+</ul>
+<h1>Installing and configuring required external services</h1>
+LiveSupport depends on some external services to be able to run, most
+importantly a PHP-capable web server (we assume apache), and a database
+server (we assume PostgreSQL). <br>
+<h2>Database</h2>
+LiveSupport expects a <a href="http://www.postgresql.org/">PostgreSQL</a>
+database, version 7.4 or later, to be installed on your system. The
+database will be accessed through TCP/IP, usually via the localhost
+interface. To achieve this, make sure to make the following changes to
+the PostgreSQL configuration files.<br>
+<br>
+Edit <code>postgresql.conf</code>
+(usually <code>/var/lib/postgres/data/postgresql.conf</code>), to have
+to following line:<br>
+<br>
+<pre><code>tcpip_socket = true</code></pre>
+<br>
+and also edit <code>pg_hba.conf</code> (usually <code>/var/lib/postgres/data/pg_hba.conf</code>)
+to include the following line, before any other lines related to access
+through localhost:<br>
+<br>
+<pre><code>host&nbsp;&nbsp;&nbsp; all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 127.0.0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 255.255.255.255&nbsp;&nbsp; password<br><br></code></pre>
+These changes will make sure that the PostgreSQL database is accessible
+via TCP/IP from localhost.<br>
+<h2>Web server</h2>
+LiveSupport expects an apache web server with PHP and some additional
+PHP modules installed. In particular:
+<ul>
+  <li><a href="http://httpd.apache.org/">Apache</a> httpd server,
+either version 1.x or 2.x<br>
+  </li>
+  <li><a href="http://www.php.net/">PHP</a> interpreter</li>
+  <li><a href="http://www.php.net/">PHP</a> apache module</li>
+  <li><a href="http://www.php.net/domxml">DOMXML</a> PHP extension - an
+XMLv2 module for PHP<br>
+  </li>
+  <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
+  <li><a href="http://pear.php.net/">PEAR</a> modules (may be checked: <code>pear
+list</code> and installed by e.g.: <code>pear install DB</code>):</li>
+  <ul>
+    <li>DB</li>
+    <li>Calendar (available in Beta Version 0.5.2, so use <code>pear&nbsp;install&nbsp;Calendar-0.5.2</code>)
+      <br>
+    </li>
+    <li>File</li>
+    <li>File_Find</li>
+    <li>HTML_Common</li>
+    <li>HTML_QuickForm</li>
+    <li>XML_Beautifier</li>
+    <li>XML_Parser</li>
+    <li>XML_RPC</li>
+    <li>XML_Serializer-0.15.0</li>
+    <li>XML_Util</li>
+  </ul>
+</ul>
+Please note the user group your apache daemon is running as (usually <code>apache</code>
+or <code>www-data</code>), you will need this information later. Later
+on in this document, this group will be referred to as <code>&lt;apache-group&gt;</code>.<br>
+<h1>Obtaining LiveSupport sources</h1>
+LiveSupport sources come in two different tarballs:<br>
+<ul>
+  <li><code>livesupport-&lt;version&gt;.tar.bz2</code> - the
+LiveSupport source files<code><br>
+    </code></li>
+  <li><code>livesupport-libraries-&lt;version&gt;.tar.bz2</code> -
+external libraries used by LiveSupport<code><br>
+    </code></li>
+</ul>
+These files are accessible through the following URLs:<br>
+<ul>
+  <li><code>http://ls-demo.campware.org/download/livesupport-&lt;version&gt;.tar.bz2</code></li>
+  <li><code>http://ls-demo.campware.org/download/livesupport-libraries-&lt;version&gt;.tar.bz2</code></li>
+</ul>
+After downloading the files, untar them in the same directory:<br>
+<br>
+<pre><code>tar xfj livesupport-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br></code></pre>
+<br>
+which will create a <code>livesupport-&lt;version&gt;</code>
+directory, with all the required files to compile and install
+LiveSupport.<br>
+<h1>Compiling LiveSupport</h1>
+To compile LiveSupport, enter the LiveSupport directory, and execute
+the following commands:<br>
+<br>
+<pre><code>cd livesupport-&lt;version&gt;<br>make setup &amp;&amp; make compile<br></code></pre>
+<br>
+This will take quite a while, so go have a tea, watch a movie, relax,
+etc.<br>
+<h1>Installing LiveSupport<br>
+</h1>
+After a successful compilation, to install LiveSupport, you have to
+decide which directory you want LiveSupport installed into. This
+directory will be referred to as <code>&lt;ls-installdir&gt;</code>
+later on in this document.<br>
+<br>
+The installation is done using the <code>bin/install.sh</code> script
+found in the LiveSupport base directory. This script has to be run as <code>root</code>.
+To see the possible options to the script, invoke it with the <code>--help</code>
+parameter. A brief overview of the most frequently used parameters:<br>
+<br>
+<pre><code>  -d, --directory     The installation directory, required.<br><br></code></pre>
+The installation directory, a required parameter. Supply the previously
+decided LiveSupport installation directory here, <code>&lt;ls-installdir&gt;</code>
+(as mentioned above). A sensible value to use here is <code>/usr/local/livesupport</code>.<br>
+<pre><code><br>  -g, --apache-group  The group the apache daemon runs as.<br>                      [default: apache]<br><br></code></pre>
+The user group the apache web server daemon runs at (see the section
+above on installing apache). Supply the <code>&lt;apache-group&gt;</code>
+value here, as mentioned above, which is usually either <code>apache</code>
+or <code>www-data</code>.<br>
+<pre><code><br>  -H, --host          The fully qualified host name of the system<br>                      [default: guess].<br></code><br></pre>
+The fully qualified domain name of your system. If the install script
+cannot determine your host name correctly, please supply the FQDN via
+this parameter.<br>
+<br>
+Thus a typical invocation of the install script is the following:<br>
+<br>
+<pre><code>./bin/install.sh -d &lt;ls-installdir&gt; -g &lt;apache-group&gt;</code><br></pre>
+<br>
+The install script has more options, which enable you to customize your
+installation of LiveSupport. Note that the defaults are usually quite
+sensible values, which will create the following setup:<br>
+<br>
+<ul>
+  <li>a PostgreSQL database user named <code>livesupport</code>, with
+password <code>livesupport</code>.</li>
+  <li>a PostgreSQL database named <code>LiveSupport</code>.</li>
+  <li>an ODBC data source named <code>LiveSupport</code>, connecting
+to the database of the same name.</li>
+  <li>initialize the database with appropriate tables</li>
+</ul>
+<h2>Configuring apache</h2>
+After a successful run of the installation script, all LiveSupport
+files are copied to <code>&lt;ls-installdir&gt;</code>. An additional
+manual installation step is required, to make sure that the LiveSupport
+web and XML-RPC interfaces are accessible through your apache web
+server. LiveSupport expects that the URL <code>http://&lt;yourhost&gt;/livesupport</code>
+points to the directory <code>&lt;ls-installdir&gt;/var</code>. To
+achieve this, create a symbolic link from your apache document root to
+the LiveSupport installation directory:<br>
+<br>
+<pre><code>ln -s &lt;ls-installdir&gt;/var &lt;apache-docroot&gt;/livesupport<br></code></pre>
+<br>
+Where <code>&lt;apache-docroot&gt;</code> is dependent on your
+installation, but is usually something like <code>/var/www</code> or <code>/var/www/htdocs</code>
+or <code>/var/www/&lt;yourhost&gt;/htdocs</code>. <br>
+<h1>Try it out</h1>
+The only thing left to do is to try out the LiveSupport web interface.
+For this purpose, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/htmlUI/var/html/</code>
+. For your first login, use the following values:<br>
+<ul>
+  <li>username: root</li>
+  <li>password: q</li>
+</ul>
+Have fun!<br>
+<br>
+<br>
+<pre><code></code></pre>
+</body>
+</html>

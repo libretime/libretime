@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.13 $</li>
+  <li>Version: $Revision: 1.14 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -43,7 +43,10 @@ see the <a href="developmentTools.html">development tools</a> document
 for a list of tools needed.<br>
 <h2>Set up additional system resources</h2>
 The LiveSupport development environment uses some system resources,
-that are not reasonable to include in the environment itself. One such
+that are not reasonable to include in the environment itself.<br>
+<h3>Test database<br>
+</h3>
+One such
 resource is an ODBC datasource to a test database. This
 database has to be accessible for executing the test suites and
 applications within the LiveSupport development environment.<br>
@@ -63,12 +66,34 @@ This data source should point to a PostgreSQL instance. Only one
 developer at the time should access this datasource, as the test suites
 regularly create and destroy database tables.<br>
 <br>
+The test environment assumes that it can connect to the PostgreSQL
+database as localhost via a TCP/IP connection, as the user test. To
+achieve this access, please make sure to edit <code>postgresql.conf</code>
+(usually <code>/var/lib/postgres/data/postgresql.conf</code>), to have
+to following line:<br>
+<br>
+<pre><code>tcpip_socket = true</code></pre>
+<br>
+and also edit <code>pg_hba.conf</code> (usually <code>/var/lib/postgres/data/pg_hba.conf</code>)
+to include the following line, before other lines related to access
+through localhost:<br>
+<br>
+<pre><code>host&nbsp;&nbsp;&nbsp; all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 127.0.0.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 255.255.255.255&nbsp;&nbsp; password</code></pre>
+<br>
+After the above two manual edits to the PostgreSQL configuration,
+execute the script <code>livesupport/bin/setup_test_db.sh</code> , as
+root to create the required database user, database and ODBC datasource.<br>
+<h3>Web server<br>
+</h3>
 Second, LiveSupport expects:
 <ul>
   <li><a href="http://httpd.apache.org/">Apache</a> httpd server
 running on the development computer</li>
   <li><a href="http://www.php.net/">PHP</a> interpreter</li>
   <li><a href="http://www.php.net/">PHP</a> apache module</li>
+  <li><a href="http://www.php.net/domxml">DOMXML</a> PHP extension - an
+XMLv2 module for PHP<br>
+  </li>
   <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
   <li><a href="http://pear.php.net/">PEAR</a> modules (may be checked: <code>pear
 list</code> and installed by e.g.: <code>pear install DB</code>):</li>
