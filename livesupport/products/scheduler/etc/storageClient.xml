@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE storageClientFactory [
 
-<!ELEMENT storageClientFactory (testStorage?) >
+<!ELEMENT storageClientFactory (webStorage|testStorage) >
 
 <!ELEMENT testStorage (playlist*, audioClip*) >
 <!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
@@ -10,7 +10,7 @@
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
 <!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
 
-<!ELEMENT playlistElement (audioClip, fadeInfo?) >
+<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
 <!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
 <!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
 

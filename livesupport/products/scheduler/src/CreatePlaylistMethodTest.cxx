@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -171,7 +171,15 @@ CreatePlaylistMethodTest :: firstTest(void)
     result.clear();
     parameter["sessionId"]  = sessionId->getId();
     rootParameter[0]        = parameter;
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("id"));
     CPPUNIT_ASSERT(((int) result["playlength"]) == 0);
 
@@ -182,9 +190,12 @@ CreatePlaylistMethodTest :: firstTest(void)
     parameter["playlistId"] = playlistId;
     rootParameter[0]        = parameter;
 
-    // should not allow to open the same playlist for editing again
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int) result["errorCode"] == 105);
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to open playlist twice");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 105);
+    }
 }

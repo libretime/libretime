@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 
@@ -83,13 +84,9 @@ using namespace LiveSupport::Core;
  *      <li>fadeOut - int - the length (in milliseconds) of the fade out. </li>
  *  </ul>
  *
- *  In case of an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - the id of the error condition</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>1601 - invalid argument format </li>
  *     <li>1602 - missing playlist ID argument </li>
@@ -99,10 +96,10 @@ using namespace LiveSupport::Core;
  *     <li>1606 - playlist does not exist </li>
  *     <li>1607 - playlist has not been opened for editing </li>
  *     <li>1608 - no audio clip at the specified relative offset </li>
- *     <li>1622 - missing session ID argument </li>
+ *     <li>1620 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class UpdateFadeInFadeOutMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -145,7 +142,8 @@ class UpdateFadeInFadeOutMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute(XmlRpc::XmlRpcValue  & parameters,
-                XmlRpc::XmlRpcValue  & returnValue)                 throw ();
+                XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -171,7 +171,15 @@ DisplayAudioClipsMethodTest :: firstTest(void)
     result.clear();
     parameter["sessionId"]  = sessionId->getId();
     rootParameter[0]        = parameter;
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.size() == 2);
 
     audioClip = result[0];

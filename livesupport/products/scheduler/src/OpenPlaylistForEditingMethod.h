@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
@@ -85,22 +86,19 @@ using namespace LiveSupport::Core;
  *      <li>playlength - int - the playlist length of the playlist, in seconds
  *      </li>
  *  </ul>
- *  In case of an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - the id of the error condition</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>101 - invalid argument format </li>
  *     <li>102 - argument is not a playlist ID </li>
  *     <li>104 - playlist not found </li>
  *     <li>105 - could not open playlist </li>
- *     <li>122 - missing session ID argument </li>
+ *     <li>120 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class OpenPlaylistForEditingMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -143,7 +141,8 @@ class OpenPlaylistForEditingMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)                throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

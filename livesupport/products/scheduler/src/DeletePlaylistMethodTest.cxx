@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -180,21 +180,46 @@ DeletePlaylistMethodTest :: firstTest(void)
     rootParameter[0] = parameter;
 
     result.clear();
-    openMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+       openMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     result.clear();
-    deleteMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 904);   // playlist is locked
+    try {
+        deleteMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to delete locked playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 904);   // playlist is locked
+    }
 
     result.clear();
-    saveMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        saveMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     result.clear();
-    deleteMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));    // OK
+    try {
+        deleteMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 }
 
 
@@ -217,8 +242,12 @@ DeletePlaylistMethodTest :: negativeTest(void)
     rootParameter[0] = parameter;
 
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 903);   // playlist not found
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to delete non-existent playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 903);   // playlist not found
+    }
 }
 

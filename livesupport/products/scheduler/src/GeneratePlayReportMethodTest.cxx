@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -205,7 +205,15 @@ GeneratePlayReportMethodTest :: firstTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.size() == 0);
 }
 
@@ -265,7 +273,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
@@ -298,7 +314,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
@@ -331,7 +355,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 2);
@@ -373,7 +405,15 @@ GeneratePlayReportMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 0);

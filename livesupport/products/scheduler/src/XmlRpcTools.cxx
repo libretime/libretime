@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -270,15 +270,14 @@ XmlRpcTools :: audioClipVectorToXmlRpcValue(
 
 
 /*------------------------------------------------------------------------------
- *  Convert an error code, error message pair to an XmlRpcValue
+ *  Convert an error code, error message pair to an XML-RPC fault response
  *----------------------------------------------------------------------------*/
 void
 XmlRpcTools :: markError(int errorCode, const std::string errorMessage,
                          XmlRpc::XmlRpcValue            & xmlRpcValue)
-                                                throw ()
+                                                throw (XmlRpc::XmlRpcException)
 {
-    xmlRpcValue["errorCode"]    = errorCode;
-    xmlRpcValue["errorMessage"] = errorMessage;
+    throw XmlRpc::XmlRpcException(errorMessage, errorCode);
 }
 
 

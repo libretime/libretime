@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "PlayLogEntry.h"
@@ -92,22 +93,18 @@ using namespace LiveSupport::Core;
  *      <li>timestamp   - datetime - the time the clip was played (started) </li>
  *  </ul>
  *
- *  If there is an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - a numerical code for the error</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>1501 - invalid argument format </li>
  *     <li>1502 - missing or invalid 'from' argument </li>
  *     <li>1503 - missing or invalid 'to' argument </li>
- *     <li>1522 - missing session ID argument </li>
+ *     <li>1520 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class GeneratePlayReportMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -128,7 +125,7 @@ class GeneratePlayReportMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        GeneratePlayReportMethod(void)                                  throw ()
+        GeneratePlayReportMethod(void)                              throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -140,7 +137,7 @@ class GeneratePlayReportMethod : public XmlRpc::XmlRpcServerMethod
          */
         GeneratePlayReportMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
-                                                                        throw ();
+                                                                    throw ();
 
         /**
          *  Execute the generatePlayReport command on the Scheduler daemon.
@@ -150,7 +147,8 @@ class GeneratePlayReportMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute(XmlRpc::XmlRpcValue  & parameters,
-                XmlRpc::XmlRpcValue  & returnValue)                     throw ();
+                XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

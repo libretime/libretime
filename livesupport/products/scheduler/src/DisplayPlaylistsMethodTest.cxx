@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -171,7 +171,15 @@ DisplayPlaylistsMethodTest :: firstTest(void)
     result.clear();
     parameters["sessionId"]  = sessionId->getId();
     rootParameter[0] = parameters;
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.size() == 1);
 
     playlist = result[0];

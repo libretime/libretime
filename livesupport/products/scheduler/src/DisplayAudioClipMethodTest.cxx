@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -172,7 +172,15 @@ DisplayAudioClipMethodTest :: firstTest(void)
     rootParameter[0] = parameter;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(int(result["id"]) == 10001);
     CPPUNIT_ASSERT(int(result["playlength"]) == (60 * 60));
 }
@@ -197,7 +205,11 @@ DisplayAudioClipMethodTest :: negativeTest(void)
     rootParameter[0] = parameter;
 
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 603);    // audio clip not found
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to display non-existent audio clip");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 603);    // audio clip not found
+    }
 }

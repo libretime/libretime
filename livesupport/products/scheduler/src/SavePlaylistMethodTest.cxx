@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,20 +174,47 @@ SavePlaylistMethodTest :: firstTest(void)
     rootParameter[0]        = parameter;
 
     result.clear();
-    saveMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 703);    // playlist not found
+    try {
+        saveMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to save non-existent playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 703);    // playlist not found
+    }
 
     parameter["playlistId"] = 1;
     rootParameter[0]        = parameter;
     result.clear();
-    openMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
-    result.clear();
-    saveMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));     // open then save OK
+    try {
+        openMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     result.clear();
-    openMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));     // save then open OK
+    try {                                               // open then save OK
+        saveMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
+
+    result.clear();
+    try {                                               // save then open OK
+        saveMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 }

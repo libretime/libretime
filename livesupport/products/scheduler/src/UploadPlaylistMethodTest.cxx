@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -194,7 +194,15 @@ UploadPlaylistMethodTest :: firstTest(void)
     rootParameter[0]        = parameters;    
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 }
 
@@ -226,7 +234,15 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     rootParameter[0]        = parameters;    
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 
     // try to load the same one, but in an overlapping time region
@@ -243,9 +259,13 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     rootParameter[0]       = parameters;    
 
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 1405); // timeframe not available
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to schedule overlapping playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 1405);    // timeframe not available
+    }
 
     // try to load the same one, but now in good timing
     parameters["sessionId"]  = sessionId->getId();
@@ -260,7 +280,15 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     rootParameter[0]       = parameters;    
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
 
     // try to load the same one, this time overlapping both previos instances
@@ -276,7 +304,11 @@ UploadPlaylistMethodTest :: overlappingPlaylists(void)
     rootParameter[0]       = parameters;    
 
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 1405); // timeframe not available
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to schedule doubly overlapping playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 1405);    // timeframe not available
+    }
 }

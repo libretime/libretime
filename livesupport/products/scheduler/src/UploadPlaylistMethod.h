@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
@@ -87,13 +88,9 @@ using namespace LiveSupport::Core;
  *                                  by the upload </li>
  *  </ul>
  *
- *  In case of an error, an XML-RPC structure is returned with the following
- *  members:
- *  <ul>
- *      <li>errorCode - int - the id of the error condition</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>1401 - invalid argument format </li>
  *     <li>1402 - missing playlist ID argument </li>
@@ -101,11 +98,11 @@ using namespace LiveSupport::Core;
  *     <li>1404 - playlist not found </li>
  *     <li>1405 - timeframe not available </li>
  *     <li>1406 - could not schedule playlist </li>
- *     <li>1422 - missing session ID argument </li>
+ *     <li>1420 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -126,7 +123,7 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        UploadPlaylistMethod(void)                      throw ()
+        UploadPlaylistMethod(void)                              throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -138,7 +135,7 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         UploadPlaylistMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
-                                                                    throw ();
+                                                                throw ();
 
         /**
          *  Execute the upload playlist command on the Scheduler daemon.
@@ -148,7 +145,8 @@ class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)            throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RevertEditedPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,32 +183,83 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     rootParameter[0]        = parameters;
 
     result.clear();
-    revertMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 804);    // no saved copy yet
+    try {
+        revertMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to revert playlist without saving it first");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 804);    // no saved copy
+    }
 
     result.clear();
-    openMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        openMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+    
     result.clear();
-    removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
-    result.clear();
-    removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));      // can't remove it twice
+    try {
+        removeMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     result.clear();
-    revertMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
-    result.clear();
-    removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));     // but now we can again
+    try {
+        removeMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to remove the same playlist element twice");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+    }
 
     result.clear();
-    saveMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        revertMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
     result.clear();
-    revertMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));      // saved copy has been
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 804);    //   discarded
+    try {                                               // but now we can again
+        removeMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
+    result.clear();
+    try {
+        saveMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
+    result.clear();
+    try {
+        revertMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to revert playlist after discarding saved copy");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 804);    // no saved copy
+    }
 }

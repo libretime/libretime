@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -205,7 +205,15 @@ DisplayScheduleMethodTest :: firstTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.size() == 0);
 }
 
@@ -237,7 +245,15 @@ DisplayScheduleMethodTest :: insertEntries(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // insert a playlist for 2004-07-31, at 12 o'clock
     parameters["sessionId"]  = sessionId->getId();
@@ -252,7 +268,15 @@ DisplayScheduleMethodTest :: insertEntries(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // insert a playlist for 2004-07-31, at 14 o'clock
     parameters["sessionId"]  = sessionId->getId();
@@ -267,7 +291,15 @@ DisplayScheduleMethodTest :: insertEntries(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 }
 
  
@@ -304,7 +336,15 @@ DisplayScheduleMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 1);
@@ -343,7 +383,15 @@ DisplayScheduleMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 2);
@@ -398,7 +446,15 @@ DisplayScheduleMethodTest :: intervalTest(void)
     rootParameter[0] = parameters;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // check the returned values
     CPPUNIT_ASSERT(result.size() == 0);

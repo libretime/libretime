@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -98,7 +98,7 @@ AddAudioClipToPlaylistMethod :: AddAudioClipToPlaylistMethod (
 void
 AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
                                         XmlRpc::XmlRpcValue  & returnValue)
-                                                                    throw ()
+                                                throw (XmlRpc::XmlRpcException)
 {
     if (!rootParameter.valid() || rootParameter.size() != 1) {
         XmlRpcTools::markError(errorId+1, "invalid argument format", 
@@ -112,7 +112,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         sessionId = XmlRpcTools::extractSessionId(parameters);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+22, 
+        XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
         return;

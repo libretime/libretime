@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include <vector>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/AudioClip.h"
@@ -88,19 +89,15 @@ using namespace LiveSupport::Core;
  *      </li>
  *  </ul>
  *
- *  In case of an error, an XML-RPC structure is returned, with the following
- *  fields:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
- *      <li>errorCode - int - the id of the error condition</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
- *  <ul>
- *     <li>1822 - missing session ID argument </li>
+ *     <li>1820 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class DisplayAudioClipsMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -143,7 +140,8 @@ class DisplayAudioClipsMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)            throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

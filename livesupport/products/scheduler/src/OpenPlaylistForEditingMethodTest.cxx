@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -173,7 +173,15 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
     rootParameter[0]        = parameter;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT((int) result["id"] == 1);
     CPPUNIT_ASSERT((int) result["playlength"] == (90 * 60));
 
@@ -182,22 +190,26 @@ OpenPlaylistForEditingMethodTest :: firstTest(void)
     parameter["playlistId"] = 6376;
     rootParameter[0]        = parameter;
 
-    // no such playlist
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT((int) result["errorCode"] == 104);
-    CPPUNIT_ASSERT((const std::string) result["errorMessage"] ==
-                                              "playlist not found");
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to open non-existent playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 104);    // playlist not found
+    }
+
     parameter.clear();
     parameter["sessionId"]  = sessionId->getId();
     parameter["playlistId"] = 1;
     rootParameter[0]        = parameter;
 
-    // should not allow to open the same playlist for editing again
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT((int) result["errorCode"] == 105);
-    CPPUNIT_ASSERT((const std::string) result["errorMessage"] ==
-                                              "could not open playlist");
-
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to open the same playlist twice");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 105);    // could not open playlist
+    }
 }

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,6 +67,8 @@
 #include "DisplayPlaylistMethod.h"
 #include "RemoveFromScheduleMethod.h"
 #include "RescheduleMethod.h"
+#include "AddAudioClipToPlaylistMethod.h"
+#include "OpenPlaylistForEditingMethod.h"
 #include "XmlRpcDaemon.h"
 
 
@@ -123,8 +125,8 @@ using namespace LiveSupport::PlaylistExecutor;
  *                          scheduleFactory,xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.9 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
@@ -152,29 +154,39 @@ class SchedulerDaemon : public Installable,
         Ptr<AudioPlayerInterface>::Ref      audioPlayer;
 
         /**
-         *  The UploadPlaylistMethod the daemon is providing.
+         *  The uploadPlaylistMethod the daemon is providing.
          */
         Ptr<UploadPlaylistMethod>::Ref      uploadPlaylistMethod;
 
         /**
-         *  The DisplayScheduleMethod the daemon is providing.
+         *  The displayScheduleMethod the daemon is providing.
          */
         Ptr<DisplayScheduleMethod>::Ref     displayScheduleMethod;
 
         /**
-         *  The DisplayPlaylistMethod the daemon is providing.
+         *  The displayPlaylistMethod the daemon is providing.
          */
         Ptr<DisplayPlaylistMethod>::Ref     displayPlaylistMethod;
 
         /**
-         *  The RemoveFromScheduleMethod the daemon is providing.
+         *  The removeFromScheduleMethod the daemon is providing.
          */
         Ptr<RemoveFromScheduleMethod>::Ref  removeFromScheduleMethod;
 
         /**
-         *  The RescheduleMethod the daemon is providing.
+         *  The rescheduleMethod the daemon is providing.
          */
         Ptr<RescheduleMethod>::Ref  rescheduleMethod;
+
+        /**
+         *  The addAudioClipToPlaylistMethod the daemon is providing.
+         */
+        Ptr<AddAudioClipToPlaylistMethod>::Ref  addAudioClipToPlaylistMethod;
+
+        /**
+         *  The openPlaylistForEditingMethod the daemon is providing.
+         */
+        Ptr<OpenPlaylistForEditingMethod>::Ref  openPlaylistForEditingMethod;
 
         /**
          *  Default constructor.

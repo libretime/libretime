@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
@@ -82,20 +83,17 @@ using namespace LiveSupport::Core;
  *      <li>playlength - int - the playlist length of the playlist, in seconds
  *      </li>
  *  </ul>
- *  If there is an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - a numerical code for the error</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>201 - could not open new playlist for editing</li>
- *     <li>222 - missing session ID argument </li>
+ *     <li>220 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -138,7 +136,8 @@ class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)            throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

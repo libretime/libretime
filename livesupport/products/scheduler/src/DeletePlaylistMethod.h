@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
@@ -77,24 +78,20 @@ using namespace LiveSupport::Core;
  *                                                   to be deleted.</li>
  *  </ul>
  *
- *  If there is an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - a numerical code for the error</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>901 - invalid argument format </li>
  *     <li>902 - missing playlist ID argument </li>
  *     <li>903 - playlist not found </li>
  *     <li>904 - playlist is locked </li>
  *     <li>905 - playlist could not be deleted </li>
- *     <li>922 - missing session ID argument </li>
+ *     <li>920- missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -137,7 +134,8 @@ class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)            throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,6 +106,8 @@ SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
     displayPlaylistMethod.reset(new DisplayPlaylistMethod());
     removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
     rescheduleMethod.reset(new RescheduleMethod());
+    openPlaylistForEditingMethod.reset(new OpenPlaylistForEditingMethod());
+    addAudioClipToPlaylistMethod.reset(new AddAudioClipToPlaylistMethod());
 }
 
 
@@ -211,6 +213,8 @@ SchedulerDaemon :: registerXmlRpcFunctions(
     xmlRpcServer->addMethod(displayPlaylistMethod.get());
     xmlRpcServer->addMethod(removeFromScheduleMethod.get());
     xmlRpcServer->addMethod(rescheduleMethod.get());
+    xmlRpcServer->addMethod(addAudioClipToPlaylistMethod.get());
+    xmlRpcServer->addMethod(openPlaylistForEditingMethod.get());
 }
 
 

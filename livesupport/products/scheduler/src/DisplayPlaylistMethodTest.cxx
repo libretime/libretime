@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -172,7 +172,15 @@ DisplayPlaylistMethodTest :: firstTest(void)
     rootParameter[0] = parameter;
 
     result.clear();
-    method->execute(rootParameter, result);
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(int(result["id"]) == 1);
     CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
 }
@@ -197,8 +205,12 @@ DisplayPlaylistMethodTest :: negativeTest(void)
     rootParameter[0] = parameter;
 
     result.clear();
-    method->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 1003);    // playlist not found
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to display non-existent playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 1003);    // playlist not found
+    }
 }
 

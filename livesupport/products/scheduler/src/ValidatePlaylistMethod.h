@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
@@ -83,22 +84,18 @@ using namespace LiveSupport::Core;
  *      <li>valid - bool - true if the playlist is valid, false otherwise</li>
  *  </ul>
  *
- *  In case of an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - the id of the error condition</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>501 - invalid argument format </li>
  *     <li>502 - missing playlist ID argument </li>
  *     <li>503 - playlist does not exist </li>
  *     <li>504 - playlist has not been opened for editing </li>
- *     <li>522 - missing session ID argument </li>
+ *     <li>520 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -119,7 +116,7 @@ class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        ValidatePlaylistMethod(void)                          throw ()
+        ValidatePlaylistMethod(void)                            throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -131,7 +128,7 @@ class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         ValidatePlaylistMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
-                                                                    throw ();
+                                                                throw ();
 
         /**
          *  Execute the display schedule command on the Scheduler daemon.
@@ -141,7 +138,8 @@ class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)                throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

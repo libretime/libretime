@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -178,30 +178,66 @@ ValidatePlaylistMethodTest :: firstTest(void)
     result.clear();
     parameter["sessionId"]  = sessionId->getId();
     parameter["playlistId"] = 275;
-    rootParameter[0]        = parameter;    
-    validatePlaylistMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 503);  // no such playlist
+    rootParameter[0]        = parameter;
+    try {
+        validatePlaylistMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to validate non-existent playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 503);  // no such playlist
+    }
 
     result.clear();
     parameter.clear();
     parameter["sessionId"]  = sessionId->getId();
     parameter["playlistId"] = 1;
     rootParameter[0]        = parameter;    
-    openPlaylistMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        openPlaylistMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
     result.clear();
-    validatePlaylistMethod->execute(rootParameter, result);
+    try {
+        validatePlaylistMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("valid"));
     CPPUNIT_ASSERT(bool(result["valid"]));
 
     result.clear();
     parameter["relativeOffset"] = 0;
     rootParameter[0]            = parameter;    
-    removeAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        removeAudioClipMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
     result.clear();
-    validatePlaylistMethod->execute(rootParameter, result);
+    try {
+        validatePlaylistMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("valid"));
     CPPUNIT_ASSERT(!bool(result["valid"]));  // has a gap at the beginning
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -184,22 +184,53 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
     rootParameter[0]             = parameters;
 
     result.clear();
-    removeAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int)(result["errorCode"]) == 405);  // not open for editing
+    try {
+        removeAudioClipMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to edit playlist without opening it first");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 405);      // not open for editing
+    }
+    
+    result.clear();
+    try {
+        openPlaylistMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+    
+    result.clear();
+    try {
+        removeAudioClipMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to remove non-existent audio clip from playlist");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 406);  // no audio clip at this rel offset
+    }
 
     result.clear();
-    openPlaylistMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        addAudioClipMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+
     result.clear();
-    removeAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int)(result["errorCode"]) == 406);  // no audio clip at
-                                                        //  this rel offset
-    result.clear();
-    addAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
-    result.clear();
-    removeAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        removeAudioClipMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 }

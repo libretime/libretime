@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <string>
 #include <vector>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -73,7 +74,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class XmlRpcTools
 {
@@ -272,7 +273,7 @@ class XmlRpcTools
         static void
         markError(int errorCode, const std::string errorMessage,
                   XmlRpc::XmlRpcValue            & xmlRpcValue)
-                                                                     throw ();
+                                                throw (XmlRpc::XmlRpcException);
 
         /**
          *  Convert the valid status of a playlist to an XmlRpcValue

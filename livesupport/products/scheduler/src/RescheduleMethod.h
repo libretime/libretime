@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <XmlRpcServerMethod.h>
 #include <XmlRpcValue.h>
+#include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/UniqueId.h"
@@ -79,24 +80,20 @@ using namespace LiveSupport::Core;
  *      <li>playtime - datetime - the new playing time for the entry</li>
  *  </ul>
  *
- *  In case of an error, an XML-RPC structure is returned, with the following
- *  fields:
- *  <ul>
- *      <li>errorCode - int - the id of the error condition</li>
- *      <li>errorMessage - string - a description of the error</li>
- *  </ul>
- *  The possible error codes are:
+ *  In case of an error, a standard XML-RPC fault response is generated, 
+ *  and a {&nbsp;faultCode, faultString&nbsp;} structure is returned.  The
+ *  possible errors are:
  *  <ul>
  *     <li>1301 - invalid argument format </li>
  *     <li>1302 - missing schedule entry ID argument </li>
  *     <li>1303 - missing playtime argument </li>
  *     <li>1304 - schedule entry not found </li>
  *     <li>1305 - could not reschedule entry </li>
- *     <li>1322 - missing session ID argument </li>
+ *     <li>1320 - missing session ID argument </li>
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
@@ -117,7 +114,7 @@ class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
         /**
          *  A default constructor, for testing purposes.
          */
-        RescheduleMethod(void)                      throw ()
+        RescheduleMethod(void)                                  throw ()
                             : XmlRpc::XmlRpcServerMethod(methodName)
         {
         }
@@ -129,7 +126,7 @@ class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
          */
         RescheduleMethod(
                     Ptr<XmlRpc::XmlRpcServer>::Ref xmlRpcServer)
-                                                                    throw ();
+                                                                throw ();
 
         /**
          *  Execute the upload playlist command on the Scheduler daemon.
@@ -139,7 +136,8 @@ class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
          */
         void
         execute( XmlRpc::XmlRpcValue  & parameters,
-                 XmlRpc::XmlRpcValue  & returnValue)            throw ();
+                 XmlRpc::XmlRpcValue  & returnValue)
+                                            throw (XmlRpc::XmlRpcException);
 };
 
 

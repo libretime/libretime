@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -178,13 +178,25 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     rootParameter[0]             = parameters;
 
     result.clear();
-    openPlaylistMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
-    result.clear();
-    addAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-    CPPUNIT_ASSERT((int)(result["errorCode"]) == 308);
+    try {
+        openPlaylistMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
+    result.clear();
+    try {
+        addAudioClipMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to add overlapping audio clip");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 308);
+    }
+    
     parameters.clear();
     parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = 1;
@@ -193,6 +205,13 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
     rootParameter[0]             = parameters;
 
     result.clear();
-    addAudioClipMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        addAudioClipMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 }

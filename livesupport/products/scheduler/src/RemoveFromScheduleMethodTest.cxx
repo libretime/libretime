@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -176,7 +176,15 @@ RemoveFromScheduleMethodTest :: firstTest(void)
     rootParameter[0]       = parameters;
 
     result.clear();
-    uploadMethod->execute(rootParameter, result);
+    try {
+        uploadMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
     entryId.reset(new UniqueId(int(result["scheduleEntryId"])));
 
@@ -186,8 +194,15 @@ RemoveFromScheduleMethodTest :: firstTest(void)
     rootParameter[0]              = parameters;
 
     result.clear();
-    removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        removeMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 }
 
 
@@ -211,7 +226,11 @@ RemoveFromScheduleMethodTest :: negativeTest(void)
     rootParameter[0]              = parameters;
 
     result.clear();
-    removeMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
+    try {
+        removeMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to remove non-existent schedule entry");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+    }
 }
 

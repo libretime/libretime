@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -176,8 +176,15 @@ RescheduleMethodTest :: firstTest(void)
     rootParameter[0]       = parameters;
 
     result.clear();
-    uploadMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        uploadMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
     CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
     entryId.reset(new UniqueId(int(result["scheduleEntryId"])));
 
@@ -195,8 +202,15 @@ RescheduleMethodTest :: firstTest(void)
     rootParameter[0]       = parameters;
 
     result.clear();
-    rescheduleMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(!result.hasMember("errorCode"));
+    try {
+        rescheduleMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
 
     // now let's reschedule unto itself, should fail
     parameters.clear();
@@ -212,9 +226,12 @@ RescheduleMethodTest :: firstTest(void)
     rootParameter[0]       = parameters;
 
     result.clear();
-    rescheduleMethod->execute(rootParameter, result);
-    CPPUNIT_ASSERT(result.hasMember("errorCode"));
-
-    CPPUNIT_ASSERT(int(result["errorCode"]) == 1305);
+    try {
+        rescheduleMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to schedule playlist onto itself");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 1305);
+    }
 }
 
