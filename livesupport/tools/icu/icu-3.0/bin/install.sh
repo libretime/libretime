@@ -20,13 +20,13 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/icu/icu-3.0/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 # Run this script to install ICU into the development system usr
 # environment.
-# For more information on ICU, see http://oss.software.ibm.com/icu/
+# For more information on ICU, see http://ibm.com/software/globalization/icu
 #-------------------------------------------------------------------------------
 product=icu-3.0
 
