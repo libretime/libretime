@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -416,15 +416,11 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref      audioClip)
                                                     throw (XmlRpcException)
 {
-std::cerr << "GLiveSupport :: uploadFile #1" << std::endl;
     storage->storeAudioClip(sessionId, audioClip);
-std::cerr << "GLiveSupport :: uploadFile #2" << std::endl;
 
     // add the uploaded file to the DJ Bag, and update it
     djBagContents->push_front(audioClip);
-std::cerr << "GLiveSupport :: uploadFile #3" << std::endl;
     masterPanel->updateDjBagWindow();   
-std::cerr << "GLiveSupport :: uploadFile #4" << std::endl;
 }
 
 
@@ -578,12 +574,6 @@ GLiveSupport :: playAudio(Ptr<Playable>::Ref playable)
                                                         std::logic_error,
                                                         std::runtime_error)
 {
-    if (audioPlayerIsPaused) {
-        audioPlayer->start();
-        audioPlayerIsPaused = false;
-        return;
-    }    
-    
     stopAudio();        // stop the audio player and release old resources
     
     switch (playable->getType()) {
@@ -605,6 +595,25 @@ GLiveSupport :: playAudio(Ptr<Playable>::Ref playable)
     }
     
     audioPlayerIsPaused = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Pause the audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: pauseAudio(void)
+                                                    throw (std::logic_error)
+{
+    if (!audioPlayerIsPaused && audioPlayer->isPlaying()) {
+        audioPlayer->pause();
+        audioPlayerIsPaused = true;
+
+    } else if (audioPlayerIsPaused) {
+        audioPlayer->start();
+        audioPlayerIsPaused = false;
+    }
 }
 
 
@@ -637,20 +646,5 @@ GLiveSupport :: stopAudio(void)
     }
 
     audioPlayerIsPaused = false;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Pause the audio player.
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: pauseAudio(void)
-                                                    throw (std::logic_error)
-{
-    if (audioPlayer->isPlaying()) {
-        audioPlayer->pause();
-        audioPlayerIsPaused = true;
-    }
 }
 

@@ -38,10 +38,8 @@ hu:table
 
         typeColumnLabel:string        { "típus" }
         titleColumnLabel:string       { "cím" }
-        playButtonLabel:string        { "lejátszás" }
-        pauseButtonLabel:string       { "szünet" }
-        stopButtonLabel:string        { "stop" }
-        closeButtonLabel:string       { "bezár" }
+        clearListButtonLabel:string   { "Egész lista törlése" }
+        removeButtonLabel:string      { "Törlés" }
 
         upMenuItem:string               { "_Fel" }
         downMenuItem:string             { "_Le" }

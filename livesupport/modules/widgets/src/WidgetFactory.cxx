@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,6 +100,42 @@ static const std::string    deleteButtonPassiveName = "imageButton/delete.png";
  *  The name of the rollover image for the delete button.
  */
 static const std::string    deleteButtonRollName = "imageButton/deleteRoll.png";
+
+/**
+ *  The name of the passive image for the small play button.
+ */
+static const std::string    smallPlayButtonPassiveName 
+                            = "imageButton/smallPlay.png";
+
+/**
+ *  The name of the rollover image for the small play button.
+ */
+static const std::string    smallPlayButtonRollName 
+                            = "imageButton/smallPlayRoll.png";
+
+/**
+ *  The name of the passive image for the small pause button.
+ */
+static const std::string    smallPauseButtonPassiveName 
+                            = "imageButton/smallPause.png";
+
+/**
+ *  The name of the rollover image for the small pause button.
+ */
+static const std::string    smallPauseButtonRollName 
+                            = "imageButton/smallPauseRoll.png";
+
+/**
+ *  The name of the passive image for the small stop button.
+ */
+static const std::string    smallStopButtonPassiveName 
+                            = "imageButton/smallStop.png";
+
+/**
+ *  The name of the rollover image for the small stop button.
+ */
+static const std::string    smallStopButtonRollName 
+                            = "imageButton/smallStopRoll.png";
 
 /**
  *  The name of the combo box left image.
@@ -268,6 +304,21 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
         case deleteButton:
             passiveImage = loadImage(deleteButtonPassiveName);
             rollImage    = loadImage(deleteButtonRollName);
+            break;
+
+        case smallPlayButton:
+            passiveImage = loadImage(smallPlayButtonPassiveName);
+            rollImage    = loadImage(smallPlayButtonRollName);
+            break;
+
+        case smallPauseButton:
+            passiveImage = loadImage(smallPauseButtonPassiveName);
+            rollImage    = loadImage(smallPauseButtonRollName);
+            break;
+
+        case smallStopButton:
+            passiveImage = loadImage(smallStopButtonPassiveName);
+            rollImage    = loadImage(smallStopButtonRollName);
             break;
 
         default:

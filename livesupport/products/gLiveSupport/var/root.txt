@@ -38,10 +38,8 @@ root:table
 
         typeColumnLabel:string        { "type" }
         titleColumnLabel:string       { "title" }
-        playButtonLabel:string        { "play" }
-        pauseButtonLabel:string       { "pause" }
-        stopButtonLabel:string        { "stop" }
-        closeButtonLabel:string       { "close" }
+        clearListButtonLabel:string   { "Clear List" }
+        removeButtonLabel:string      { "Remove Selected Item" }
 
         upMenuItem:string               { "Move _Up" }
         downMenuItem:string             { "Move D_own" }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,12 +48,15 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
+#include "LiveSupport/Widgets/Button.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -68,9 +71,9 @@ using namespace LiveSupport::Core;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
-class DjBagWindow : public Gtk::Window, public LocalizedObject
+class DjBagWindow : public WhiteWindow, public LocalizedObject
 {
 
     protected:
@@ -80,7 +83,7 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.7 $
+         *  @version $Revision: 1.8 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -143,46 +146,56 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         Glib::RefPtr<Gtk::ListStore>    treeModel;
 
         /**
-         *  The box containing the play button.
+         *  The box containing the box containing the audio buttons.
          */
-        Gtk::HButtonBox             playButtonBox;
+        Gtk::HBox                   topButtonBox;
+
+        /**
+         *  The box containing the audio buttons.
+         */
+        Gtk::HBox                   audioButtonBox;
 
         /**
          *  The play button.
          */
-        Ptr<Gtk::Button>::Ref       playButton;
+        ImageButton               * playButton;
 
         /**
          *  The pause button.
          */
-        Ptr<Gtk::Button>::Ref       pauseButton;
+        ImageButton               * pauseButton;
 
         /**
          *  The stop button.
          */
-        Ptr<Gtk::Button>::Ref       stopButton;
+        ImageButton               * stopButton;
 
         /**
          *  The box containing the close button.
          */
-        Gtk::HButtonBox             buttonBox;
+        Gtk::HButtonBox             bottomButtonBox;
 
         /**
-         *  The close button.
+         *  The "clear list" button.
          */
-        Ptr<Gtk::Button>::Ref       closeButton;
+        Button                    * clearListButton;
+
+        /**
+         *  The "delete selected item" button.
+         */
+        Button                    * removeButton;
 
         /**
          *  The right-click context menu for audio clips,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Ptr<Gtk::Menu>::Ref         audioClipMenu;
+        Gtk::Menu                 * audioClipMenu;
 
         /**
          *  The right-click context menu for playlists,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Ptr<Gtk::Menu>::Ref         playlistMenu;
+        Gtk::Menu                 * playlistMenu;
 
         /**
          *  Signal handler for the play button clicked.
@@ -203,10 +216,10 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         onStopButtonClicked(void)                               throw ();
 
         /**
-         *  Signal handler for the close button clicked.
+         *  Signal handler for the clear list button clicked.
          */
         virtual void
-        onCloseButtonClicked(void)                              throw ();
+        onClearListButtonClicked(void)                          throw ();
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.

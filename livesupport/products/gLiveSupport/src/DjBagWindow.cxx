@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
 #include "DjBagWindow.h"
 
@@ -43,6 +44,7 @@
 using namespace Glib;
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -62,58 +64,50 @@ using namespace LiveSupport::GLiveSupport;
 DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                             Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-                    : LocalizedObject(bundle)
+          : WhiteWindow("",
+                        0xffffff,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+            LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
 
+    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
+
     try {
         set_title(*getResourceUstring("windowTitle"));
-        playButton.reset(new Gtk::Button(
-                                    *getResourceUstring("playButtonLabel")));
-        pauseButton.reset(new Gtk::Button(
-                                    *getResourceUstring("pauseButtonLabel")));
-        stopButton.reset(new Gtk::Button(
-                                    *getResourceUstring("stopButtonLabel")));
-        closeButton.reset(new Gtk::Button(
-                                    *getResourceUstring("closeButtonLabel")));
+        playButton  = Gtk::manage(widgetFactory->createButton(
+                                WidgetFactory::smallPlayButton));
+        pauseButton = Gtk::manage(widgetFactory->createButton(
+                                WidgetFactory::smallPauseButton));
+        stopButton  = Gtk::manage(widgetFactory->createButton(
+                                WidgetFactory::smallStopButton));
+        clearListButton = Gtk::manage(widgetFactory->createButton(
+                                *getResourceUstring("clearListButtonLabel")));
+        removeButton = Gtk::manage(widgetFactory->createButton(
+                                *getResourceUstring("removeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
 
-    // set up the play button
     playButton->set_name("playButton");
-    playButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
-    playButton->set_relief(Gtk::RELIEF_NORMAL);
-    // Register the signal handler for the button getting clicked.
     playButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                          &DjBagWindow::onPlayButtonClicked));
+                                    &DjBagWindow::onPlayButtonClicked));
 
-    // set up the pause button
     pauseButton->set_name("pauseButton");
-    pauseButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
-    pauseButton->set_relief(Gtk::RELIEF_NORMAL);
-    // Register the signal handler for the button getting clicked.
     pauseButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                          &DjBagWindow::onPauseButtonClicked));
+                                    &DjBagWindow::onPauseButtonClicked));
 
-    // set up the stop button
     stopButton->set_name("stopButton");
-    stopButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
-    stopButton->set_relief(Gtk::RELIEF_NORMAL);
-    // Register the signal handler for the button getting clicked.
     stopButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                          &DjBagWindow::onStopButtonClicked));
+                                    &DjBagWindow::onStopButtonClicked));
 
-    // set up the close button
-    closeButton->set_name("closeButton");
-    closeButton->set_flags(Gtk::CAN_FOCUS|Gtk::CAN_DEFAULT|Gtk::HAS_DEFAULT);
-    closeButton->set_relief(Gtk::RELIEF_NORMAL);
-    // Register the signal handler for the button getting clicked.
-    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                          &DjBagWindow::onCloseButtonClicked));
+    clearListButton->set_name("clearListButton");
+    clearListButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &DjBagWindow::onClearListButtonClicked));
 
-    set_border_width(5);
-    set_default_size(400, 200);
+    removeButton->set_name("removeButton");
+    removeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &DjBagWindow::onRemoveItem));
 
     add(vBox);
 
@@ -123,25 +117,21 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-    vBox.pack_start(playButtonBox, Gtk::PACK_SHRINK);
+    vBox.pack_start(topButtonBox, Gtk::PACK_SHRINK);
     vBox.pack_start(scrolledWindow);
-    vBox.pack_start(buttonBox, Gtk::PACK_SHRINK);
+    vBox.pack_start(bottomButtonBox, Gtk::PACK_SHRINK);
 
-    playButtonBox.pack_start(*playButton, Gtk::PACK_SHRINK);
-    playButtonBox.set_border_width(5);
-    playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
+    topButtonBox.pack_start(audioButtonBox, Gtk::PACK_EXPAND_PADDING);
+    
+    audioButtonBox.set_border_width(5);
+    audioButtonBox.pack_start(*playButton, Gtk::PACK_SHRINK);
+    audioButtonBox.pack_start(*pauseButton, Gtk::PACK_SHRINK);
+    audioButtonBox.pack_start(*stopButton, Gtk::PACK_SHRINK);
 
-    playButtonBox.pack_start(*pauseButton, Gtk::PACK_SHRINK);
-    playButtonBox.set_border_width(5);
-    playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
-
-    playButtonBox.pack_start(*stopButton, Gtk::PACK_SHRINK);
-    playButtonBox.set_border_width(5);
-    playButtonBox.set_layout(Gtk::BUTTONBOX_SPREAD);
-
-    buttonBox.pack_start(*closeButton, Gtk::PACK_SHRINK);
-    buttonBox.set_border_width(5);
-    buttonBox.set_layout(Gtk::BUTTONBOX_END);
+    bottomButtonBox.set_border_width(5);
+    bottomButtonBox.set_layout(Gtk::BUTTONBOX_END);
+    bottomButtonBox.pack_start(*clearListButton, Gtk::PACK_SHRINK);
+    bottomButtonBox.pack_start(*removeButton, Gtk::PACK_SHRINK);
 
     // Create the Tree model:
     treeModel = Gtk::ListStore::create(modelColumns);
@@ -163,7 +153,7 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
 
     // create the right-click entry context menu for audio clips
-    audioClipMenu.reset(new Gtk::Menu());
+    audioClipMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& audioClipMenuList = audioClipMenu->items();
     // register the signal handlers for the popup menu
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
@@ -193,7 +183,7 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     audioClipMenu->accelerate(*this);
 
     // create the right-click entry context menu for playlists
-    playlistMenu.reset(new Gtk::Menu());
+    playlistMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& playlistMenuList = playlistMenu->items();
     // register the signal handlers for the popup menu
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
@@ -227,8 +217,13 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     playlistMenu->accelerate(*this);
 
     // show
+    set_name("scratchpadWindow");
+    set_default_size(300, 300);
+    set_modal(false);
+    property_window_position().set_value(Gtk::WIN_POS_NONE);
+    set_resizable(true);
+    
     showContents();
-
     show_all_children();
 }
 
@@ -276,18 +271,21 @@ DjBagWindow :: showContents(void)                       throw ()
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-DjBagWindow :: ~DjBagWindow (void)                        throw ()
+DjBagWindow :: ~DjBagWindow (void)                              throw ()
 {
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the close button getting clicked.
+ *  Event handler for the clear list button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onCloseButtonClicked (void)                  throw ()
+DjBagWindow :: onClearListButtonClicked (void)                  throw ()
 {
-    hide();
+    Ptr<GLiveSupport::PlayableList>::Ref    djBagContents
+                                            = gLiveSupport->getDjBagContents();
+    djBagContents->clear();
+    showContents();
 }
 
 

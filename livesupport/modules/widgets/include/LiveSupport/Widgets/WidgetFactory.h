@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,8 +84,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST widgetFactory   path        CDATA   #REQUIRED >
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.8 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -94,12 +94,14 @@ class WidgetFactory :
         /**
          *  The types of available buttons.
          */
-        typedef enum { pushButton, tabButton } ButtonType;
+        typedef enum { pushButton, tabButton }      ButtonType;
 
         /**
          *  The types of available image buttons.
          */
-        typedef enum { deleteButton } ImageButtonType;
+        typedef enum { deleteButton, 
+                       smallPlayButton, smallPauseButton, smallStopButton }
+                                                    ImageButtonType;
 
 
     private:
