@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,13 +67,28 @@ WhiteWindow :: WhiteWindow(unsigned int                 backgroundColor,
 
     layout.reset(new Gtk::Table());
 
+    // create the background color, as it is needed by the event box
+    Gdk::Color      bgColor = Gdk::Color();
+    unsigned int    red   = (backgroundColor & 0xff0000) >> 8;
+    unsigned int    green = (backgroundColor & 0x00ff00);
+    unsigned int    blue  = (backgroundColor & 0x0000ff) << 8;
+    bgColor.set_rgb(red, green, blue);
+    Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
+    colormap->alloc_color(bgColor);
+
+    // set the window title
     title.reset(new Gtk::Label("Window Title"));
     titleAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                             Gtk::ALIGN_CENTER,
                                             0, 0));
+    titleEventBox.reset(new Gtk::EventBox());
+    titleEventBox->set_visible_window();
+    titleEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
     titleAlignment->add(*title);
-    layout->attach(*titleAlignment, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
+    titleEventBox->add(*titleAlignment);
+    layout->attach(*titleEventBox, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
+    // create the close button
     closeButton = wf->createButton(WidgetFactory::deleteButton);
     closeButtonAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
                                                   Gtk::ALIGN_CENTER,
@@ -81,19 +96,21 @@ WhiteWindow :: WhiteWindow(unsigned int                 backgroundColor,
     closeButtonAlignment->add(*closeButton);
     layout->attach(*closeButtonAlignment, 1, 2, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
+    // add the child container
     childContainer.reset(new Gtk::Alignment(Gtk::ALIGN_CENTER));
     layout->attach(*childContainer, 0, 2, 1, 2);
 
+    // add the corners
     blueBin.reset(new BlueBin(backgroundColor, cornerImages));
     blueBin->add(*layout);
     Gtk::Window::add(*blueBin);
 
+    // show all
     show_all();
 
     // register signal handlers
-    add_events(Gdk::ALL_EVENTS_MASK);
-    title->add_events(Gdk::ALL_EVENTS_MASK);
-    title->signal_button_press_event().connect(sigc::mem_fun(*this,
+    titleEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
+    titleEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
                                                 &WhiteWindow::onTitleClicked));
 
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -238,6 +255,13 @@ WhiteWindow :: on_expose_event(GdkEventExpose* event)           throw ()
 bool
 WhiteWindow :: onTitleClicked(GdkEventButton     * event)          throw ()
 {
+    if (event->button == 1) {
+        begin_move_drag(event->button,
+                        (int) event->x_root,
+                        (int) event->y_root,
+                        event->time);
+    }
+
     return false;
 }
 

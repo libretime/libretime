@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/table.h>
 #include <gtkmm/alignment.h>
+#include <gtkmm/eventbox.h>
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -68,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -82,6 +83,11 @@ class WhiteWindow : public Gtk::Window
          *  The layout of the window.
          */
         Ptr<Gtk::Table>::Ref            layout;
+
+        /**
+         *  The event box for the title, enabling capturing mouse events.
+         */
+        Ptr<Gtk::EventBox>::Ref         titleEventBox;
 
         /**
          *  The left alignment contaner for the title.
