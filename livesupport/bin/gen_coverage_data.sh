@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/gen_coverage_data.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ $modules_dir/db/bin/gen_coverage_data.sh
 $modules_dir/storage/bin/gen_coverage_data.sh
 $modules_dir/eventScheduler/bin/gen_coverage_data.sh
 $modules_dir/playlistExecutor/bin/gen_coverage_data.sh
-#$products_dir/scheduler/bin/gen_coverage_data.sh
+$products_dir/scheduler/bin/gen_coverage_data.sh
 
 
 #-------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ cat $db_coverage_file | sed -e "s/db\/tmp\//db\//g" >> $coverage_file
 cat $storage_coverage_file | sed -e "s/storage\/tmp\//storage\//g" >> $coverage_file
 cat $eventScheduler_coverage_file | sed -e "s/eventScheduler\/tmp\//eventScheduler\//g" >> $coverage_file
 cat $playlistExecutor_coverage_file | sed -e "s/playlistExecutor\/tmp\//playlistExecutor\//g" >> $coverage_file
-#cat $scheduler_coverage_file | sed -e "s/scheduler\/tmp\//scheduler\//g" >> $coverage_file
+cat $scheduler_coverage_file | sed -e "s/scheduler\/tmp\//scheduler\//g" >> $coverage_file
 
 rm -rf $coverage_report_dir
 mkdir -p $coverage_report_dir
