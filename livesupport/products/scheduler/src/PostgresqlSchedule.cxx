@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -331,8 +331,10 @@ PostgresqlSchedule :: getScheduleEntries(
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         while (rs->next()) {
-            Ptr<UniqueId>::Ref      id(new UniqueId(rs->getLong(1)));
-            Ptr<UniqueId>::Ref      playlistId(new UniqueId(rs->getLong(2)));
+            Ptr<UniqueId>::Ref  id = UniqueId::fromDecimalString(
+                                                            rs->getString(1));
+            Ptr<UniqueId>::Ref  playlistId = UniqueId::fromDecimalString(
+                                                            rs->getString(2));
 
             *timestamp = rs->getTimestamp(3);
             Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
