@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/Attic/mtree.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see ObjClasses
  */
 class Mtree{
@@ -323,7 +323,7 @@ class Mtree{
         if($withRoot) $r[] = $re = $this->dbc->getRow(
             "SELECT id, name, level FROM {$this->treeTable} WHERE id='$id'"
         );
-        if(PEAR::isError($re)) return $re;
+        if(PEAR::isError($r)) return $r;
         $dirarr = $this->getDir($id); if(PEAR::isError($dirarr)) return $dirarr;
         foreach($dirarr as $k=>$snod)
         {
