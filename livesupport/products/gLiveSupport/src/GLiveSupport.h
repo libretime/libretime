@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.20 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,8 +99,8 @@ class MasterPanelWindow;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.20 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.21 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -507,6 +507,17 @@ class GLiveSupport : public LocalizedConfigurable,
         deletePlayable(Ptr<Playable>::Ref   playable)
                                                     throw (XmlRpcException);
          
+        /**
+         *  Play a Playable object using the audio player.
+         *
+         *  @param playable the Playable object to play.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         *  @exception std::runtime_error in case of audio player errors.
+         */
+        virtual void
+        play(Ptr<Playable>::Ref   playable)
+                                                    throw (XmlRpcException,
+                                                           std::runtime_error);
 
 };
 

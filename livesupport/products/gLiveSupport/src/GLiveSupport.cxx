@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.20 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,12 +41,14 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "MasterPanelWindow.h"
 #include "GLiveSupport.h"
 
 
 using namespace boost;
+using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
@@ -564,4 +566,46 @@ GLiveSupport :: deletePlayable(Ptr<Playable>::Ref   playable)
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Play a Playable object using the audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: play(Ptr<Playable>::Ref   playable)
+                                                    throw (XmlRpcException,
+                                                           std::runtime_error)
+{
+    Ptr<AudioClip>::Ref     tempAudioClip;
+    Ptr<Playlist>::Ref      tempPlaylist;
+    Ptr<time_duration>::Ref sleepT(new time_duration(microseconds(10)));
+
+    switch (playable->getType()) {
+        case Playable::AudioClipType:
+            tempAudioClip = storage->acquireAudioClip(sessionId, 
+                                                            playable->getId());
+            audioPlayer->open(*tempAudioClip->getUri());
+            audioPlayer->start();
+            while (audioPlayer->isPlaying()) {
+                TimeConversion::sleep(sleepT);
+            }
+            audioPlayer->close();
+            storage->releaseAudioClip(sessionId, tempAudioClip);
+            break;
+
+        case Playable::PlaylistType:
+            tempPlaylist = storage->acquirePlaylist(sessionId, 
+                                                            playable->getId());
+            audioPlayer->openAndStart(tempPlaylist);
+            while (audioPlayer->isPlaying()) {
+                TimeConversion::sleep(sleepT);
+            }
+            audioPlayer->close();
+            storage->releasePlaylist(sessionId, tempPlaylist);
+            break;
+
+        default:
+            break;
+    }
+}
 

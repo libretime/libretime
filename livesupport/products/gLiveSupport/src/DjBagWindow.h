@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,8 +67,8 @@ using namespace LiveSupport::Core;
  *  The DJ Bag window, showing recent and relevant audio clips and
  *  playlists.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.5 $
  */
 class DjBagWindow : public Gtk::Window, public LocalizedObject
 {
@@ -79,8 +79,8 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
-         *  @author $Author: maroy $
-         *  @version $Revision: 1.4 $
+         *  @author $Author: fgerlits $
+         *  @version $Revision: 1.5 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -219,6 +219,13 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onSchedulePlaylist(void)                                throw ();
+
+        /**
+         *  Signal handler for the "play item" menu item selected
+         *  from the entry context menu.
+         */
+        virtual void
+        onPlayItem(void)                                        throw ();
 
         /**
          *  Delete an item from the storage and remove it from the dj bag.

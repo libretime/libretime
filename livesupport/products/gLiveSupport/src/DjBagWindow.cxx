@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,6 +144,10 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
                                                &DjBagWindow::onDeleteItem)));
+    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("playMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onPlayItem)));
     audioClipMenu->accelerate(*this);
 
     // create the right-click entry context menu for playlists
@@ -174,7 +178,11 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
                                                &DjBagWindow::onDeleteItem)));
-    audioClipMenu->accelerate(*this);
+    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("playMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onPlayItem)));
+    playlistMenu->accelerate(*this);
 
     // show
     showContents();
@@ -514,6 +522,26 @@ DjBagWindow :: onSchedulePlaylist(void)                       throw ()
                                                             playlist));
 
             Gtk::Main::run(*scheduleWindow);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Play menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onPlayItem(void)                               throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView.get_selection();
+
+    if (refSelection) {
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        if (iter) {
+            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+            gLiveSupport->play(playable);
         }
     }
 }

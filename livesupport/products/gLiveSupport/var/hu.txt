@@ -46,6 +46,7 @@ hu:table
         addToPlaylistMenuItem:string    { "_Hozzáad Playlist-hez" }
         schedulePlaylistMenuItem:string { "_Playlist időzítése" }
         deleteMenuItem:string           { "_Töröl" }
+        playMenuItem:string             { "Le_játszâs" }
     }
 
     playlistListWindow:table
