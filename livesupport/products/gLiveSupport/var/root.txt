@@ -27,6 +27,14 @@ root:table
         closeButtonLabel:string       { "close" }
     }
 
+    djBagWindow:table
+    {
+        windowTitle:string            { "LiveSupport Dj Bag" }
+
+        titleColumnLabel:string       { "title" }
+        closeButtonLabel:string       { "close" }
+    }
+
     playlistListWindow:table
     {
         windowTitle:string            { "LiveSupport Playlist Window" }

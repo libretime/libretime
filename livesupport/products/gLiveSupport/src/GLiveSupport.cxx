@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -321,6 +321,10 @@ GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
                                                     playlength,
                                                     uri));
     storage->storeAudioClip(sessionId, audioClip);
+
+    // add the uploaded file to the DJ Bag, and update it
+    djBagContents->push_front(audioClip);
+    masterPanel->updateDjBagWindow();   
 
     return audioClip;
 }

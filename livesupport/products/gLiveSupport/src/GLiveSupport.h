@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 #endif
 
 #include <string>
+#include <list>
 #include <map>
 #include <boost/enable_shared_from_this.hpp>
 #include <unicode/resbund.h>
@@ -94,7 +95,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -112,6 +113,12 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         typedef std::map<const std::string,
                          Ptr<const UnicodeString>::Ref>     LanguageMap;
+
+        /**
+         *  The type of the list for storing the DjBag contents.
+         *  This is a list holding Ptr<Playable>::Ref references.
+         */
+        typedef std::list<Ptr<Playable>::Ref>       PlayableList;
 
 
     private:
@@ -143,17 +150,22 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  The session id for the user.
          */
-        Ptr<SessionId>::Ref         sessionId;
+        Ptr<SessionId>::Ref             sessionId;
 
         /**
          *  The map of supported languages.
          */
-        Ptr<LanguageMap>::Ref       supportedLanguages;
+        Ptr<LanguageMap>::Ref           supportedLanguages;
 
         /**
          *  The master panel window.
          */
-        Ptr<MasterPanelWindow>::Ref  masterPanel;
+        Ptr<MasterPanelWindow>::Ref     masterPanel;
+
+        /**
+         *  The contents of a DJ Bag, stored as a list.
+         */
+        Ptr<PlayableList>::Ref          djBagContents;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -174,6 +186,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         GLiveSupport(void)                                  throw ()
         {
+            djBagContents.reset(new PlayableList());
         }
 
         /**
@@ -327,6 +340,17 @@ class GLiveSupport : public LocalizedConfigurable,
         uploadFile(Ptr<const Glib::ustring>::Ref    title,
                    Ptr<const std::string>::Ref      fileName)
                                                     throw (StorageException);
+
+        /**
+         *  Return the DJ Bag contents.
+         *
+         *  @return the list holding the DJ Bag contents.
+         */
+        Ptr<PlayableList>::Ref
+        getDjBagContents(void)                                  throw ()
+        {
+            return djBagContents;
+        }
 
 };
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "UploadFileWindow.h"
+#include "DjBagWindow.h"
 #include "MasterPanelWindow.h"
 
 
@@ -74,6 +75,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     radioLogoWidget.reset(new Gtk::Label("radio logo"));
     userInfoWidget.reset(new MasterPanelUserInfoWidget(gLiveSupport, bundle));
     uploadFileButton.reset(new Gtk::Button("upload file"));
+    djBagButton.reset(new Gtk::Button("dj bag"));
 
     // set up the time label
     timeWidget.reset(new Gtk::Label("time"));
@@ -92,6 +94,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*radioLogoWidget  , 5, 6, 0, 1);
     layout->attach(*userInfoWidget   , 4, 6, 1, 2);
     layout->attach(*uploadFileButton,  0, 1, 2, 3);
+    layout->attach(*djBagButton,       1, 2, 2, 3);
 
     add(*layout);
 
@@ -101,6 +104,8 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // bind events
     uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelWindow::onUploadFileButtonClicked));
+    djBagButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onDjBagButtonClicked));
 
     // show what's there to see
     showAnonymousUI();
@@ -212,6 +217,30 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  The event when the DJ Bag button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: onDjBagButtonClicked(void)                     throw ()
+{
+    if (!djBagWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("djBagWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        djBagWindow.reset(new DjBagWindow(gLiveSupport, bundle));
+    }
+    
+    if (!djBagWindow->is_visible()) {
+        djBagWindow->show();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Show only the UI components that are visible when no one is logged in
  *----------------------------------------------------------------------------*/
 void
@@ -219,6 +248,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
 {
     show_all();
     uploadFileButton->hide();
+    djBagButton->hide();
 }
 
 

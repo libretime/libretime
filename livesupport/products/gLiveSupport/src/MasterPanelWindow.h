@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,8 @@
 
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
+#include "DjBagWindow.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -79,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -141,9 +143,19 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Button>::Ref       uploadFileButton;
 
         /**
+         *  The button to invoke the DJ Bag window.
+         */
+        Ptr<Gtk::Button>::Ref       djBagButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
+
+        /**
+         *  The one and only DJ Bag window.
+         */
+        Ptr<DjBagWindow>::Ref       djBagWindow;
 
         /**
          *  Function that updates timeLabel with the current time.
@@ -178,6 +190,13 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onUploadFileButtonClicked(void)                     throw ();
+
+        /**
+         *  Function to catch the event of the DJ Bag button being
+         *  pressed.
+         */
+        virtual void
+        onDjBagButtonClicked(void)                          throw ();
 
 
     public:
@@ -222,6 +241,15 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         showLoggedInUI(void)                                    throw ();
+
+        /**
+         *  Update the DJ Bag window.
+         */
+        void
+        updateDjBagWindow(void)                                 throw ()
+        {
+            djBagWindow->showContents();
+        }
 
 };
 
