@@ -22,11 +22,14 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script creates a distribution tarball for livesupport
+#  This script creates a distribution tarball for livesupport.
+#  Creates two tarballs:
+#  livesupport-<version>.tar.bz2            - the LiveSupport source files
+#  livesupport-libraries-<version>.tar.bz2  - dependent libraries
 #
 #  Invoke as:
 #  ./bin/dist.sh <version.number>
@@ -39,11 +42,12 @@ fi
 
 version=$1
 tarball=livesupport-$version.tar.bz2
+tarball_libs=livesupport-libraries-$version.tar.bz2
 
 echo "WARNING! make sure to run this script on a freshly checked-out copy";
 echo "         of LiveSupport, with NO generated files!";
 echo "";
-echo "Creating $tarball";
+echo "Creating $tarball and $tarball_libs";
 
 #-------------------------------------------------------------------------------
 #  Determine directories, files
@@ -118,14 +122,62 @@ taglib_tmpdir=$tools_tmpdir/taglib
 
 
 #-------------------------------------------------------------------------------
-#  Create temprorary directory structure
+#  Create the sources tarball first
+#-------------------------------------------------------------------------------
+echo "Creating $tarball...";
+
+
+#-------------------------------------------------------------------------------
+#  Create the directories again
 #-------------------------------------------------------------------------------
 mkdir -p $ls_tmpdir
 mkdir -p $ls_tmpdir/usr
 mkdir -p $tmp_tmpdir
-mkdir -p $tools_tmpdir
 mkdir -p $modules_tmpdir
 mkdir -p $products_tmpdir
+
+
+#-------------------------------------------------------------------------------
+#  Copy the modules and products
+#-------------------------------------------------------------------------------
+cp -a $modules_dir/* $modules_tmpdir
+cp -a $products_dir/* $products_tmpdir
+
+
+#-------------------------------------------------------------------------------
+#  Copy additional files
+#-------------------------------------------------------------------------------
+cp -a $docdir $ls_tmpdir
+cp -a $etcdir $ls_tmpdir
+cp -a README Makefile $ls_tmpdir
+
+
+#-------------------------------------------------------------------------------
+#  Get rid of the remnants of the CVS system
+#-------------------------------------------------------------------------------
+rm -rf `find $ls_tmpdir -name CVS -type d`
+
+
+#-------------------------------------------------------------------------------
+#  Create the tarball
+#-------------------------------------------------------------------------------
+cd $tmpdir
+tar cfj $basedir/$tarball livesupport-$version
+cd $basedir
+
+
+#-------------------------------------------------------------------------------
+#  Create the libraries tarball second
+#-------------------------------------------------------------------------------
+echo "Creating $tarball_libs...";
+
+
+#-------------------------------------------------------------------------------
+#  Create temprorary directory structure again
+#-------------------------------------------------------------------------------
+rm -rf $ls_tmpdir
+mkdir -p $ls_tmpdir
+mkdir -p $tools_tmpdir
 
 
 #-------------------------------------------------------------------------------
@@ -174,31 +226,16 @@ cp -a $taglib_dir/$taglib_version $taglib_tmpdir
 
 
 #-------------------------------------------------------------------------------
-#  Copy the modules and products
-#-------------------------------------------------------------------------------
-cp -a $modules_dir/* $modules_tmpdir
-cp -a $products_dir/* $products_tmpdir
-
-
-#-------------------------------------------------------------------------------
-#  Copy additional files
-#-------------------------------------------------------------------------------
-cp -a $docdir $ls_tmpdir
-cp -a $etcdir $ls_tmpdir
-cp -a README Makefile $ls_tmpdir
-
-
-#-------------------------------------------------------------------------------
 #  Get rid of the remnants of the CVS system
 #-------------------------------------------------------------------------------
 rm -rf `find $ls_tmpdir -name CVS -type d`
 
 
 #-------------------------------------------------------------------------------
-#  Create the tarball
+#  Create the libraries tarball
 #-------------------------------------------------------------------------------
 cd $tmpdir
-tar cfj $basedir/$tarball livesupport-$version
+tar cfj $basedir/$tarball_libs livesupport-$version
 cd $basedir
 
 
@@ -207,4 +244,9 @@ cd $basedir
 #-------------------------------------------------------------------------------
 rm -rf $ls_tmpdir
 
+
+#-------------------------------------------------------------------------------
+#  We're done
+#-------------------------------------------------------------------------------
+echo "Done."
 
