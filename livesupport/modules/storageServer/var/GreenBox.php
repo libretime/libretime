@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.45 $
+    Version  : $Revision: 1.46 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.45 $
+ *  @version $Revision: 1.46 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -612,8 +612,8 @@ class GreenBox extends BasicStor{
      */
     function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
-#        $acGunid = $this->_gunidFromId($acId);
-#        if(PEAR::isError($acGunid)) return $acGunid;
+        // $acGunid = $this->_gunidFromId($acId);
+        // if(PEAR::isError($acGunid)) return $acGunid;
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
         if(is_null($plGunid)){
