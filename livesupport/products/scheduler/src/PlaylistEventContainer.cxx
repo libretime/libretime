@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,13 +66,15 @@ PlaylistEventContainer :: PlaylistEventContainer(
                         Ptr<SessionId>::Ref                 sessionId,
                         Ptr<StorageClientInterface>::Ref    storage,
                         Ptr<ScheduleInterface>::Ref         schedule,
-                        Ptr<AudioPlayerInterface>::Ref      audioPlayer)
+                        Ptr<AudioPlayerInterface>::Ref      audioPlayer,
+                        Ptr<PlayLogInterface>::Ref          playLog)
                                                                     throw ()
 {
     this->sessionId   = sessionId;
     this->storage     = storage;
     this->schedule    = schedule;
     this->audioPlayer = audioPlayer;
+    this->playLog     = playLog;
 }
 
 
@@ -86,7 +88,11 @@ PlaylistEventContainer :: getNextEvent(Ptr<ptime>::Ref  when)       throw ()
     Ptr<PlaylistEvent>::Ref     event;
 
     if (entry.get()) {
-        event.reset(new PlaylistEvent(sessionId, audioPlayer, storage, entry));
+        event.reset(new PlaylistEvent(sessionId,
+                                      audioPlayer,
+                                      storage,
+                                      playLog,
+                                      entry));
     }
 
     return event;

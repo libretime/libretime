@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,12 +69,14 @@ PlaylistEvent :: PlaylistEvent(
                         Ptr<SessionId>::Ref                 sessionId,
                         Ptr<AudioPlayerInterface>::Ref      audioPlayer,
                         Ptr<StorageClientInterface>::Ref    storage,
+                        Ptr<PlayLogInterface>::Ref          playLog,
                         Ptr<ScheduleEntry>::Ref             scheduleEntry)
                                                                     throw ()
 {
     this->sessionId     = sessionId;
     this->audioPlayer   = audioPlayer;
     this->storage       = storage;
+    this->playLog       = playLog;
     this->scheduleEntry = scheduleEntry;
 
     // this init time is a wild guess, say 5 seconds should be enough
@@ -115,6 +117,8 @@ PlaylistEvent :: start(void)                       throw ()
     try {
         audioPlayer->open(*playlist->getUri());
         audioPlayer->start();
+
+        playLog->addPlayLogEntry(playlist->getId(), TimeConversion::now());
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         // TODO: handle error?

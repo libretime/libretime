@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,8 @@
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/ScheduledEventInterface.h"
+
+#include "PlayLogInterface.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -70,7 +72,7 @@ using namespace LiveSupport::Storage;
  *  A scheduled event for playing a playlist.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {
@@ -79,6 +81,11 @@ class PlaylistEvent : public virtual ScheduledEventInterface
          *  The audio player to play the playlist with.
          */
         Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+
+        /**
+         *  The play log facility.
+         */
+        Ptr<PlayLogInterface>::Ref          playLog;
 
         /**
          *  The storage containing the playlist and all related audio clips.
@@ -114,12 +121,14 @@ class PlaylistEvent : public virtual ScheduledEventInterface
          *  @param audioPlayer the audio player to play the playlist with.
          *  @param storage the storage containing the playlist to play,
          *         and all the related audio clips.
+         *  @param playLog the play log facility.
          *  @param scheduleEntry the schedule entry this event is
          *         playing.
          */
         PlaylistEvent(Ptr<SessionId>::Ref               sessionId,
                       Ptr<AudioPlayerInterface>::Ref    audioPlayer,
                       Ptr<StorageClientInterface>::Ref  storage,
+                      Ptr<PlayLogInterface>::Ref        playLog,
                       Ptr<ScheduleEntry>::Ref           scheduleEntry)
                                                                     throw ();
 

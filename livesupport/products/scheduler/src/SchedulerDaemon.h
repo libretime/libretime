@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,6 +88,7 @@
 #include "LoginMethod.h"
 #include "LogoutMethod.h"
 #include "ResetStorageMethod.h"
+#include "PlayLogInterface.h"
 
 
 namespace LiveSupport {
@@ -160,8 +161,8 @@ using namespace LiveSupport::PlaylistExecutor;
  *                       xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.17 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -199,6 +200,11 @@ class SchedulerDaemon : public Installable,
          *  The audio player.
          */
         Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+
+        /**
+         *  The play logging facility.
+         */
+        Ptr<PlayLogInterface>::Ref          playLog;
 
         /**
          *  The addAudioClipToPlaylistMethod the daemon is providing.

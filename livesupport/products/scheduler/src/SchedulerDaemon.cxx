@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -271,13 +271,15 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     }
 
     audioPlayer = apf->getAudioPlayer();
+    playLog     = plf->getPlayLog();
 
     Ptr<PlaylistEventContainer>::Ref    eventContainer;
     Ptr<time_duration>::Ref             granularity;
     eventContainer.reset(new PlaylistEventContainer(sessionId,
                                                     scf->getStorageClient(),
                                                     sf->getSchedule(),
-                                                    audioPlayer));
+                                                    audioPlayer,
+                                                    playLog));
     // TODO: read granularity from config file
     granularity.reset(new time_duration(seconds(1)));
 

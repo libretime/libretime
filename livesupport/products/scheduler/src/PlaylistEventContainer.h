@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventContainerInterface.h"
 
+#include "PlayLogInterface.h"
 #include "ScheduleInterface.h"
 
 
@@ -72,7 +73,7 @@ using namespace LiveSupport::Storage;
  *  An event container holding the scheduled playlists.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class PlaylistEventContainer : public virtual EventContainerInterface
 {
@@ -98,6 +99,11 @@ class PlaylistEventContainer : public virtual EventContainerInterface
          */
         Ptr<AudioPlayerInterface>::Ref      audioPlayer;
 
+        /**
+         *  The play log facility.
+         */
+        Ptr<PlayLogInterface>::Ref          playLog;
+
 
     public:
         /**
@@ -109,11 +115,13 @@ class PlaylistEventContainer : public virtual EventContainerInterface
          *         audio clips
          *  @param schedule the schedule to get the events from.
          *  @param audioPlayer the audio player to play the playlists with.
+         *  @param playLog the play log facility.
          */
         PlaylistEventContainer(Ptr<SessionId>::Ref              sessionId,
                                Ptr<StorageClientInterface>::Ref storage,
                                Ptr<ScheduleInterface>::Ref      schedule,
-                               Ptr<AudioPlayerInterface>::Ref   audioPlayer)
+                               Ptr<AudioPlayerInterface>::Ref   audioPlayer,
+                               Ptr<PlayLogInterface>::Ref       playLog)
                                                                     throw ();
 
         /**
