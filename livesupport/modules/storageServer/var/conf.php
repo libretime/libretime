@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
+ *   <dt>isArchive <dd>local/central flag
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
  *   <dt>storageUrlHost, storageUrlPort<dd>host and port of storageServer
@@ -68,6 +69,7 @@ $config = array(
     'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
     'transDir'      =>  dirname(getcwd()).'/trans',
     'accessDir'     =>  dirname(getcwd()).'/access',
+    'isArchive'     =>  FALSE,
 
     /* ==================================================== URL configuration */
     'storageUrlPath'        => '/livesupportStorageServer',
