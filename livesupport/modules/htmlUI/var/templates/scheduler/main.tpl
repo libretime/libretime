@@ -4,7 +4,7 @@
 <input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day')" value="Day">
 <input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=week')" value="Week">
 <input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month')" value="Month">
-<input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=input')" value="Input">
+<input type="button" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.displaySchedule')" value="Display Scheduler">
 
 {include file="scheduler/calendar.tpl"}
 

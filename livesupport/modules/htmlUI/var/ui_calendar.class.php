@@ -54,12 +54,14 @@ class uiCalendar
 
     function buildDay()
     {
+        if (is_array($this->Day)) return FALSE;
+
         require_once 'Calendar/Day.php';
 
         $Day = new Calendar_Day ($this->curr['year'], $this->curr['month'], $this->curr['day']);
         $Day->build();
         while ($Hour = $Day->fetch()) {
-            $this->Day[] = $Hour->thisHour();
+            $this->Day[] = array('hour'         => $Hour->thisHour());
         }
 
     }

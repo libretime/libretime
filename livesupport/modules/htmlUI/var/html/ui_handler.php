@@ -222,16 +222,17 @@ switch($_REQUEST['act']){
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.uploadPL":
-        $uiHandler->SCHEDULER->uploadPL($_REQUEST['gunid']);
+    case "SCHEDULER.displaySchedule":
+        $uiHandler->SCHEDULER->displaySchedule();
         $uiHandler->SCHEDULER->setReload();
     break;
 
     default:
         $_SESSION["alertMsg"] = tra("Unknown method: $1", $_REQUEST["act"]);
-        header("Location: ".UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close');
+        #header("Location: ".UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close');
         die();
 }
 if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;
-header('Location: '.$uiHandler->redirUrl);
+#header('Location: '.$uiHandler->redirUrl);
 ?>
+<meta http-equiv="refresh" content="0; URL=<?php echo $uiHandler->redirUrl; ?>">
