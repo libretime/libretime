@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include <iostream>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "SchedulerDaemonXmlRpcClientTest.h"
 
@@ -156,9 +157,13 @@ void
 SchedulerDaemonXmlRpcClientTest :: getVersionTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<const std::string>::Ref     version = schedulerClient->getVersion();
+    try {
+        Ptr<const std::string>::Ref     version = schedulerClient->getVersion();
 
-    CPPUNIT_ASSERT(version.get());
+        CPPUNIT_ASSERT(version.get());
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 }
 
 
@@ -169,12 +174,168 @@ void
 SchedulerDaemonXmlRpcClientTest :: getSchedulerTimeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<const ptime>::Ref   time = schedulerClient->getSchedulerTime();
-    Ptr<const ptime>::Ref   now  = TimeConversion::now();
+    try {
+        Ptr<const ptime>::Ref   time = schedulerClient->getSchedulerTime();
+        Ptr<const ptime>::Ref   now  = TimeConversion::now();
 
-    CPPUNIT_ASSERT(time.get());
-    // assume that the scheduler and the client is in the same year
-    // this can break at new year's eve - so don't run the test then :)
-    CPPUNIT_ASSERT(time->date().year() == now->date().year());
+        CPPUNIT_ASSERT(time.get());
+        // assume that the scheduler and the client is in the same year
+        // this can break at new year's eve - so don't run the test then :)
+        CPPUNIT_ASSERT(time->date().year() == now->date().year());
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the displaySchedule XML-RPC method, when the schedule is empty
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: displayScheduleEmptyTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
+        Ptr<ptime>::Ref                                     from;
+        Ptr<ptime>::Ref                                     to;
+
+        // check from now until 1 hour later
+        from = TimeConversion::now();
+        to.reset(new ptime(*from + hours(1)));
+
+        entries = schedulerClient->displaySchedule(sessionId, from, to);
+        CPPUNIT_ASSERT(entries->empty());
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test playlist management functions.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: playlistMgmtTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
+        Ptr<ScheduleEntry>::Ref                             entry;
+        Ptr<UniqueId>::Ref                                  entryId;
+        Ptr<UniqueId>::Ref                                  playlistId;
+        Ptr<ptime>::Ref                                     now;
+        Ptr<ptime>::Ref                                     playtime;
+        Ptr<ptime>::Ref                                     from;
+        Ptr<ptime>::Ref                                     to;
+
+        now = TimeConversion::now();
+        // make sure now is only second resolution, not micro-second
+        long    fsec = now->time_of_day().fractional_seconds();
+        now.reset(new ptime(*now - microsec(fsec)));
+
+        // the test assumes that there's a playlist with the id of 1 in
+        // the storage accessed by the scheduler
+
+        // schedule playlist #1 for one hour from now
+        playlistId.reset(new UniqueId(1));
+        playtime.reset(new ptime(*now + hours(1)));
+
+        entryId = schedulerClient->uploadPlaylist(sessionId,
+                                                  playlistId,
+                                                  playtime);
+
+        // now check if our playlist has indeed been scheduled
+        from = now;
+        to.reset(new ptime(*from + hours(2)));
+
+        entries = schedulerClient->displaySchedule(sessionId, from, to);
+        CPPUNIT_ASSERT(entries->size() == 1);
+        entry = (*entries)[0];
+        CPPUNIT_ASSERT(*entry->getId() == *entryId);
+        CPPUNIT_ASSERT(*entry->getPlaylistId() == *playlistId);
+        CPPUNIT_ASSERT(*entry->getStartTime() == *playtime);
+
+
+        // and now, remove the entry, and see that it's not there anymore
+        schedulerClient->removeFromSchedule(sessionId, entryId);
+        entries = schedulerClient->displaySchedule(sessionId, from, to);
+        CPPUNIT_ASSERT(entries->empty());
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test for some XML-RPC error conditions
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClientTest :: xmlRpcErrorTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
+    Ptr<ScheduleEntry>::Ref                             entry;
+    Ptr<UniqueId>::Ref                                  entryId;
+    Ptr<UniqueId>::Ref                                  playlistId;
+    Ptr<ptime>::Ref                                     now;
+    Ptr<ptime>::Ref                                     playtime;
+    bool                                                gotException;
+
+    try {
+        now = TimeConversion::now();
+        // make sure now is only second resolution, not micro-second
+        long    fsec = now->time_of_day().fractional_seconds();
+        now.reset(new ptime(*now - microsec(fsec)));
+
+        // the test assumes that there's a playlist with the id of 1 in
+        // the storage accessed by the scheduler
+
+        // schedule playlist #1 for one hour from now
+        playlistId.reset(new UniqueId(1));
+        playtime.reset(new ptime(*now + hours(1)));
+
+        entryId = schedulerClient->uploadPlaylist(sessionId,
+                                                  playlistId,
+                                                  playtime);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    gotException = false;
+    try {
+        // try to upload the same entry again, for the same time
+        // this should result in an error
+        schedulerClient->uploadPlaylist(sessionId, playlistId, playtime);
+    } catch (LiveSupport::Core::XmlRpcMethodFaultException &e) {
+        gotException = true;
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(gotException);
+
+    try {
+        // and now, remove the entry, and see that it's not there anymore
+        Ptr<ptime>::Ref     from = now;
+        Ptr<ptime>::Ref     to(new ptime(*from + hours(2)));
+
+        schedulerClient->removeFromSchedule(sessionId, entryId);
+        entries = schedulerClient->displaySchedule(sessionId, from, to);
+        CPPUNIT_ASSERT(entries->empty());
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    gotException = false;
+    try {
+        // and now, try to remove it again, which should result in an
+        // exception
+        schedulerClient->removeFromSchedule(sessionId, entryId);
+    } catch (LiveSupport::Core::XmlRpcMethodFaultException &e) {
+        gotException = true;
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(gotException);
 }
 

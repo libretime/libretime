@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,11 @@
 #include <XmlRpcValue.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/XmlRpcTools.h"
+#include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
+#include "LiveSupport/Core/XmlRpcCommunicationException.h"
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
+#include "LiveSupport/Core/XmlRpcMethodResponseException.h"
 #include "SchedulerDaemonXmlRpcClient.h"
 
 using namespace boost::posix_time;
@@ -130,7 +135,8 @@ SchedulerDaemonXmlRpcClient :: configure(const xmlpp::Element   &  element)
  *  Get the version string from the scheduler daemon
  *----------------------------------------------------------------------------*/
 Ptr<const std::string>::Ref
-SchedulerDaemonXmlRpcClient :: getVersion(void)                 throw ()
+SchedulerDaemonXmlRpcClient :: getVersion(void)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue             xmlRpcParams;
     XmlRpcValue             xmlRpcResult;
@@ -142,11 +148,27 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)                 throw ()
                                          false);
 
     xmlRpcResult.clear();
-    xmlRpcClient.execute("getVersion", xmlRpcParams, xmlRpcResult);
-
-    if (xmlRpcResult.hasMember("version")) {
-        result.reset(new std::string(xmlRpcResult["version"]));
+    if (!xmlRpcClient.execute("getVersion", xmlRpcParams, xmlRpcResult)) {
+        throw XmlRpcCommunicationException(
+                                "cannot execute XML-RPC method 'getVersion'");
     }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'getVersion' returned error message:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (!xmlRpcResult.hasMember("version")
+      || xmlRpcResult["version"].getType() != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'getVersion' returned unexpected value:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    result.reset(new std::string(xmlRpcResult["version"]));
 
     xmlRpcClient.close();
 
@@ -159,7 +181,7 @@ SchedulerDaemonXmlRpcClient :: getVersion(void)                 throw ()
  *----------------------------------------------------------------------------*/
 Ptr<const ptime>::Ref
 SchedulerDaemonXmlRpcClient :: getSchedulerTime(void)
-                                                                    throw ()
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue             xmlRpcParams;
     XmlRpcValue             xmlRpcResult;
@@ -171,21 +193,174 @@ SchedulerDaemonXmlRpcClient :: getSchedulerTime(void)
                                          false);
 
     xmlRpcResult.clear();
-    xmlRpcClient.execute("getSchedulerTime", xmlRpcParams, xmlRpcResult);
+    if (!xmlRpcClient.execute("getSchedulerTime", xmlRpcParams, xmlRpcResult)) {
+        throw XmlRpcCommunicationException(
+                            "cannot execute XML-RPC method 'getSchedulerTime'");
+    }
 
-    if (xmlRpcResult.hasMember("schedulerTime")) {
-        struct tm   time = xmlRpcResult["schedulerTime"];
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'getSchedulerTime' returned error message:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
 
-        try {
-            result = TimeConversion::tmToPtime(&time);
-        } catch (std::out_of_range &e) {
-            // TODO: report error, for some reason the returned time is wrong
-        }
+    if (!xmlRpcResult.hasMember("schedulerTime")
+     || xmlRpcResult["schedulerTime"].getType() != XmlRpcValue::TypeDateTime) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'getSchedulerTime' returned unexpected value:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
 
+    struct tm   time = xmlRpcResult["schedulerTime"];
+
+    try {
+        result = TimeConversion::tmToPtime(&time);
+    } catch (std::out_of_range &e) {
+        throw XmlRpcException("time conversion error", e);
     }
 
     xmlRpcClient.close();
 
     return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Schedule a playlist in the scheduler.
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+SchedulerDaemonXmlRpcClient :: uploadPlaylist(
+                        Ptr<SessionId>::Ref                  sessionId,
+                        Ptr<UniqueId>::Ref                   playlistId,
+                        Ptr<boost::posix_time::ptime>::Ref   playtime)
+                                                throw (Core::XmlRpcException)
+{
+    Ptr<UniqueId>::Ref  scheduleEntryId;
+
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::playlistIdToXmlRpcValue(playlistId, xmlRpcParams);
+    XmlRpcTools::playtimeToXmlRpcValue(playtime, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("uploadPlaylist", xmlRpcParams, xmlRpcResult)) {
+        throw XmlRpcCommunicationException(
+                            "cannot execute XML-RPC method 'uploadPlaylist'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'uploadPlaylist' returned error message:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    try {
+        scheduleEntryId = XmlRpcTools::extractScheduleEntryId(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw XmlRpcInvalidArgumentException(e);
+    }
+
+    xmlRpcClient.close();
+
+    return scheduleEntryId;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the scheduled items for a time interval
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+SchedulerDaemonXmlRpcClient :: displaySchedule(
+                                Ptr<SessionId>::Ref     sessionId,
+                                Ptr<ptime>::Ref         from,
+                                Ptr<ptime>::Ref         to)
+                                                throw (Core::XmlRpcException)
+{
+    Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref     entries;
+
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::fromTimeToXmlRpcValue(from, xmlRpcParams);
+    XmlRpcTools::toTimeToXmlRpcValue(to, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("displaySchedule", xmlRpcParams, xmlRpcResult)) {
+        throw XmlRpcCommunicationException(
+                            "cannot execute XML-RPC method 'displaySchedule'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'displaySchedule' returned error message:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    try {
+        entries = XmlRpcTools::extractScheduleEntries(xmlRpcResult);
+    } catch (std::invalid_argument &e) {
+        throw XmlRpcInvalidArgumentException(e);
+    }
+
+    xmlRpcClient.close();
+
+    return entries;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove a scheduled entry from the schedule.
+ *----------------------------------------------------------------------------*/
+void
+SchedulerDaemonXmlRpcClient :: removeFromSchedule(
+                                Ptr<SessionId>::Ref  sessionId,
+                                Ptr<UniqueId>::Ref   scheduleEntryId)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue             xmlRpcParams;
+    XmlRpcValue             xmlRpcResult;
+    Ptr<const ptime>::Ref   result;
+
+    XmlRpcClient            xmlRpcClient(xmlRpcHost->c_str(),
+                                         xmlRpcPort,
+                                         xmlRpcUri->c_str(),
+                                         false);
+
+    XmlRpcTools::sessionIdToXmlRpcValue(sessionId, xmlRpcParams);
+    XmlRpcTools::scheduleEntryIdToXmlRpcValue(scheduleEntryId, xmlRpcParams);
+
+    xmlRpcResult.clear();
+    if (!xmlRpcClient.execute("removeFromSchedule",
+                              xmlRpcParams,
+                              xmlRpcResult)) {
+        throw XmlRpcCommunicationException(
+                        "cannot execute XML-RPC method 'removeFromSchedule'");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method 'removeFromSchedule' returned error message:\n"
+             << xmlRpcResult;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
 }
 

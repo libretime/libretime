@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,8 +62,8 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the SchedulerDaemonXmlRpcClient class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.4 $
  *  @see SchedulerDaemonXmlRpcClient
  */
 class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
@@ -71,6 +71,9 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(SchedulerDaemonXmlRpcClientTest);
     CPPUNIT_TEST(getVersionTest);
     CPPUNIT_TEST(getSchedulerTimeTest);
+    CPPUNIT_TEST(displayScheduleEmptyTest);
+    CPPUNIT_TEST(playlistMgmtTest);
+    CPPUNIT_TEST(xmlRpcErrorTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -121,6 +124,31 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
          */
         void
         getSchedulerTimeTest(void)              throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to check the displaySchedule XML-RPC method, when
+         *  the schedule is empty.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        displayScheduleEmptyTest(void)          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test playlist management.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        playlistMgmtTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test for some XML-RPC error conditions.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        xmlRpcErrorTest(void)                   throw (CPPUNIT_NS::Exception);
 
 
     public:

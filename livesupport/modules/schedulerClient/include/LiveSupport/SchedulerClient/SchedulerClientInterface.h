@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/include/LiveSupport/SchedulerClient/SchedulerClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,10 @@
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/SessionId.h"
+#include "LiveSupport/Core/ScheduleEntry.h"
+#include "LiveSupport/Core/XmlRpcException.h"
 
 namespace LiveSupport {
 namespace SchedulerClient {
@@ -64,7 +67,7 @@ using namespace LiveSupport::Core;
  *  An interface to access the scheduler daemon as a client.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class SchedulerClientInterface
 {
@@ -74,19 +77,68 @@ class SchedulerClientInterface
          *  is connected to.
          *
          *  @return the version string of the scheduler daemon.
+         *  @exception XmlRpcException in case of XML-RPC errors.
          */
         virtual Ptr<const std::string>::Ref
-        getVersion(void)                            throw ()
-                                                                    = 0;
+        getVersion(void)                        throw (XmlRpcException)
+                                                                        = 0;
 
         /**
          *  Return the current time at the scheduler server.
          *
          *  @return the current time at the scheduler server.
+         *  @exception XmlRpcException in case of XML-RPC errors.
          */
         virtual Ptr<const boost::posix_time::ptime>::Ref
-        getSchedulerTime(void)                      throw ()
-                                                                    = 0;
+        getSchedulerTime(void)                  throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Schedule a playlist at a given time.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param playlistId the id of the playlist to schedule.
+         *  @param playtime the time for which to schedule.
+         *  @return the schedule entry id for which the playlist has been
+         *          scheduled.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<UniqueId>::Ref
+        uploadPlaylist(Ptr<SessionId>::Ref                  sessionId,
+                       Ptr<UniqueId>::Ref                   playlistId,
+                       Ptr<boost::posix_time::ptime>::Ref   playtime)
+                                                    throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Return the scheduled entries for a specified time interval.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param from the start of the interval, inclusive
+         *  @param to the end of the interval, exclusive
+         *  @return a vector of the schedule entries for the time period.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual Ptr<std::vector<Ptr<ScheduleEntry>::Ref> >::Ref
+        displaySchedule(Ptr<SessionId>::Ref                 sessionId,
+                        Ptr<boost::posix_time::ptime>::Ref  from,
+                        Ptr<boost::posix_time::ptime>::Ref  to)
+                                                    throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Remove a scheduled item.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param scheduledEntryId the id of the scheduled entry to remove.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual void
+        removeFromSchedule(Ptr<SessionId>::Ref  sessionId,
+                           Ptr<UniqueId>::Ref   scheduleEntryId)
+                                                    throw (XmlRpcException)
+                                                                        = 0;
+
 };
 
 
