@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Validator.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,9 @@ define('VAL_NOTDEF', 115);
 #require_once "";
 
 /**
+ *  Simple XML validator against structure stored in PHP hash-array hierarchy.
  *
+ *  It should be replaced by XML schema validation in the future.
  */
 class Validator{
     /**
@@ -83,19 +85,11 @@ class Validator{
         $attrs = array();
         foreach($node->attrs as $i=>$attr){
             $attrs[$attr->name] =& $node->attrs[$i];
-            $permr = (
-                isset($format[$fname]['attrs']['required']) ?
-                array_search($attr->name, $format[$fname]['attrs']['required']) :
-                FALSE
-            );
-            $permi = (
-                isset($format[$fname]['attrs']['implied']) ?
-                array_search($attr->name, $format[$fname]['attrs']['implied']) :
-                FALSE
-            );
-            if($permr===FALSE && $permi===FALSE)
+            $listr = $this->isListedAs($fname, $attr->name, 'attrs', 'required');
+            $listi = $this->isListedAs($fname, $attr->name, 'attrs', 'implied');
+            $listn = $this->isListedAs($fname, $attr->name, 'attrs', 'normal');
+            if($listr===FALSE && $listi===FALSE && $listn===FALSE)
                 return $this->_err(VAL_UNKNOWNA, $attr->name);
-            //else{ var_dump($permr); var_dump($permi); }
         }
         if(isset($format[$fname]['attrs'])){
             $fattrs =& $format[$fname]['attrs'];
@@ -109,22 +103,10 @@ class Validator{
         foreach($node->children as $i=>$ch){
             $chname = strtolower(($ch->ns? $ch->ns.":" : '').$ch->name);
             $childs[$chname] =& $node->children[$i];
-            $permo = (
-                isset($format[$fname]['childs']['optional']) ?
-                array_search($chname, $format[$fname]['childs']['optional']) :
-                FALSE
-            );
-            $permr = (
-                isset($format[$fname]['childs']['required']) ?
-                array_search($chname, $format[$fname]['childs']['required']) :
-                FALSE
-            );
-            $perm1 = (
-                isset($format[$fname]['childs']['oneof']) ?
-                array_search($chname, $format[$fname]['childs']['oneof']) :
-                FALSE
-            );
-            if($permo===FALSE && $permr===FALSE && $perm1===FALSE)
+            $listo = $this->isListedAs($fname, $chname, 'childs', 'optional');
+            $listr = $this->isListedAs($fname, $chname, 'childs', 'required');
+            $list1 = $this->isListedAs($fname, $chname, 'childs', 'oneof');
+            if($listo===FALSE && $listr===FALSE && $list1===FALSE)
                 return $this->_err(VAL_UNKNOWNE, $chname);
         }
         //var_dump($childs);
@@ -148,6 +130,20 @@ class Validator{
             if(PEAR::isError($r)) return $r;
         }
         return TRUE;
+    }
+
+    /**
+     *
+     */
+    function isListedAs($fname, $chname, $nType='childs', $reqType='required')
+    {
+        $format =& $this->format;
+        $listed = (
+            isset($format[$fname][$nType][$reqType]) ?
+            array_search($chname, $format[$fname][$nType][$reqType]) :
+            FALSE
+        );
+        return $listed;
     }
 
     /**
