@@ -81,16 +81,20 @@ class uiBase
             die($this->dbc->getMessage());
         }
         $this->dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-        $this->gb =& new GreenBox(&$this->dbc, $config);
-        $this->config = $config;
-        $this->sessid = $_REQUEST[$config['authCookieName']];
-        $this->userid = $this->gb->getSessUserId($this->sessid);
-        $this->login  = $this->gb->getSessLogin($this->sessid);
-        $this->id =  $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
+        $this->gb       =& new GreenBox($this->dbc, $config);
+        $this->config   = $config;
+        $this->sessid   = $_REQUEST[$config['authCookieName']];
+        $this->userid   = $this->gb->getSessUserId($this->sessid);
+        $this->login    = $this->gb->getSessLogin($this->sessid);
+        $this->id       = $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
+        $this->pid      = $this->gb->getparent($this->id) != 1 ? $this->gb->getparent($this->id) : FALSE;
+        $this->type     = $this->gb->getFileType($this->id);
+        $this->fid      = $this->type=='Folder' ? $this->id : $this->pid; 
+
         $this->InputTextStandardAttrib = array('size'     =>UI_INPUT_STANDARD_SIZE,
                                                'maxlength'=>UI_INPUT_STANDARD_MAXLENGTH);
 
-        $this->SP          =& new uiScratchPad(&$this);
+        $this->SP          =& new uiScratchPad($this);
         $this->systemPrefs =& $_SESSION[UI_STATIONINFO_SESSNAME];
         $this->search      =& $_SESSION[UI_SEARCH_SESSNAME];
     }
@@ -313,6 +317,7 @@ class uiBase
 
     function _niceTime($in)
     {
+        list ($in, $lost) = explode('.', $in);
         if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in))
             list($h, $i, $s) = explode(':', $in);
         elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))
@@ -335,22 +340,27 @@ class uiBase
 
     function _getMDataValue($id, $key)
     {
-        $value = array_pop($this->gb->getMDataValue($id, $key, $this->sessid));
-        return $value['value'];
+        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid))) {
+            $value = array_pop($arr);
+            return $value['value'];
+        }
+        return FALSE;
     }
 
 
     function _getFileTitle($id)
     {
-        $file = array_pop($this->gb->getPath($id));
-        return $file['name'];
+        if (is_array($arr = $this->gb->getPath($id))) {
+            $file = array_pop($arr);
+            return $file['name'];
+        }
+        return FALSE;
     }
 
 
     function _isFolder($id)
     {
         if (strtolower($this->gb->getFileType($id)) != 'folder') {
-            $this->_retMsg('Parent is not Folder');
             return FALSE;
         }
         return TRUE;

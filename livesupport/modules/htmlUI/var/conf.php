@@ -23,7 +23,7 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,9 +117,9 @@ define('UI_INPUT_STANDARD_SIZE', 20);
 define('UI_INPUT_STANDARD_MAXLENGTH', 50);
 define('UI_TEXTAREA_STANDART_ROWS', 5);
 define('UI_TEXTAREA_STANDART_COLS', 17);
-define('UI_QFORM_REQUIRED',     'templates/form_parts/required.tpl');
-define('UI_QFORM_REQUIREDNOTE', 'templates/form_parts/requirednote.tpl');
-define('UI_QFORM_ERROR',        'templates/form_parts/error.tpl');
+define('UI_QFORM_REQUIRED',     'templates/sub/form_required.tpl');
+define('UI_QFORM_REQUIREDNOTE', 'templates/sub/form_requirednote.tpl');
+define('UI_QFORM_ERROR',        'templates/sub/form_error.tpl');
 define('UI_SEARCH_MAX_ROWS', 8);
 define('UI_SEARCH_MIN_ROWS', 2);
 define('UI_REGEX_URL', '/^(ht|f)tps?:\/\/[^ ]+$/');

@@ -1,5 +1,6 @@
 {* Smarty template *}
 <div id="subjects">
+{include file="sub/x.tpl"}
 
 {if $chgPasswd}
     {$chgPasswd}

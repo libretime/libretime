@@ -42,17 +42,15 @@ class uiHandler extends uiBase {
             $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
             if($sessid && !PEAR::isError($sessid)){
                 setcookie($this->config['authCookieName'], $sessid);
-
-                $fid = $this->gb->getObjId($formdata['login'], $this->gb->storId);
-                if(!PEAR::isError($fid)) $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+                $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
+                if(!PEAR::isError($id)) $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
             }else{
                 $this->_retMsg('Login failed.');
                 $_SESSION['retransferFormData']['login']=$formdata['login'];
                 $this->redirUrl = UI_BROWSER.'?popup[]=login';
             }
         }
-
-    }
+     }
 
     /**
      *  logout
@@ -86,40 +84,35 @@ class uiHandler extends uiBase {
      */
     function uploadFileM(&$formdata, $id, &$mask)
     {
-    if ($this->_isFolder($id)) {
-            if ($this->_validateForm($formdata, $mask)) {
-                $tmpgunid = md5(
-                    microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport"
-                );
-                $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
-                $mdtmp = "";
-                move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
-                chmod($ntmp, 0664);
-                if($formdata['mdatafile']['tmp_name']){
-                    $mdtmp = "$ntmp.xml";
-                    if(move_uploaded_file($formdata['mdatafile']['tmp_name'], $mdtmp)){
-                        chmod($mdtmp, 0664);
-                    }
-                }
-                $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
-                if(PEAR::isError($r)) {
-                    $this->_retMsg($r->getMessage());
-                    $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
-                    return FALSE;
-                } else{
-                    @unlink($ntmp);
-                    @unlink($mdtmp);
-                    $this->redirUrl = UI_BROWSER."?id=".$id;
-                    return $r;
-                }
-             } else {
-                $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
-                return FALSE;
-             }
-        } else {
-            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+        if (!$this->_isFolder($id)) {
+            $this->_retMsg('Target is not Folder');
+            $this->redirUrl = UI_BROWSER.'?act=fileBrowse&id='.$id;
             return FALSE;
         }
+        if (!$this->_validateForm($formdata, $mask)) {
+            $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
+            return FALSE;
+        }
+        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport");
+        $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
+        move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
+        chmod($ntmp, 0664);
+        if($formdata['mdatafile']['tmp_name']){
+            $mdtmp = "$ntmp.xml";
+            if(move_uploaded_file($formdata['mdatafile']['tmp_name'], $mdtmp)){
+                chmod($mdtmp, 0664);
+            }
+        }
+        $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
+        @unlink($ntmp);
+        @unlink($mdtmp);
+        if(PEAR::isError($r)) {
+            $this->_retMsg($r->getMessage());
+            $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
+            return FALSE;
+        }
+        $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$id;
+        return $r;
     }
 
 
@@ -131,38 +124,32 @@ class uiHandler extends uiBase {
      *  @param formdata array, submitted text and file
      *  @param id int, destination folder id
      */
-    function uploadFile(&$formdata, $id, &$mask)
+    function uploadFile(&$formdata, $id, &$mask, $replace=NULL)
     {
-        if ($this->_isFolder($id)) {
-            if ($this->_validateForm($formdata, $mask)) {
-                $tmpgunid = md5(
-                    microtime().$_SERVER['SERVER_ADD3R'].rand()."org.mdlf.livesupport"
-                );
-                $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
-                $mdtmp = "";
-                move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
-                chmod($ntmp, 0664);
-
-                $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid);
-                if(PEAR::isError($r)) {
-                    $this->_retMsg($r->getMessage());
-                    $this->redirUrl = UI_BROWSER."?act=uploadFile&id=$id";
-                    return FALSE;
-                } else{
-                    @unlink($ntmp);
-                    @unlink($mdtmp);
-                    $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
-                    $this->gb->replaceMetadata($r, $this->_analyzeFile($r, 'xml'), 'string', $this->sessid);
-                    return $r;
-                }
-            } else {
-                $this->redirUrl = UI_BROWSER."?act=uploadFile&id=$id";
-                return FALSE;
-            }
-        } else {
-            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+        if (!$replace && $this->type!='Folder') {
+            $this->_retMsg ('Target is not Folder');
+            $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$pid;
             return FALSE;
         }
+        if (!$this->_validateForm($formdata, $mask)) {
+            $this->redirUrl = UI_BROWSER."?act=addWebstream&id=".$id;
+            return FALSE;
+        }
+        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADD3R'].rand()."org.mdlf.livesupport");
+        $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
+        move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
+        chmod($ntmp, 0664);
+
+        $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid, $replace);
+        @unlink($ntmp);
+        if(PEAR::isError($r)) {
+            $this->_retMsg($r->getMessage());
+            $this->redirUrl = UI_BROWSER."?act=uploadFile&id=".$pid;
+            return FALSE;
+        }
+        $this->gb->replaceMetadata($r, $this->_analyzeFile($r, 'xml'), 'string', $this->sessid);
+        $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
+        return $r;
     }
 
 
@@ -174,32 +161,28 @@ class uiHandler extends uiBase {
      *  @param formdata array, submitted text and file
      *  @param id int, destination folder id
      */
-    function addWebstream(&$formdata, $id, &$mask)
+    function addWebstream(&$formdata, $id, &$mask, $replace=NULL)
     {
-        if ($this->_isFolder($id)) {
-            if ($this->_validateForm($formdata, $mask)) {
-
-                $r = $this->gb->storeWebstream($id, $formdata['name'], NULL, $this->sessid, NULL, $formdata['url']);
-                if(PEAR::isError($r)) {
-                    $this->_retMsg($r->getMessage());
-                    $this->redirUrl = UI_BROWSER."?act=addWebstream&id=$id";
-                    return FALSE;
-                    }
-                else{
-                    $data = $this->_dateArr2Str($formdata);
-                    $this->gb->setMDataValue($r, 'dc:title', $this->sessid, $data['name']);
-                    $this->gb->setMDataValue($r, 'dcterms:extent', $this->sessid, $data['duration']);
-                    $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
-                    return $r;
-                }
-            } else {
-                $this->redirUrl = UI_BROWSER."?act=addWebstream&id=$id";
-                return FALSE;
-            }
-        } else {
-            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+        if (!$replace && $this->type != 'Folder') {
+            $this->_retMsg ('Target is not Folder');
+            $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$pid;
             return FALSE;
         }
+        if (!$this->_validateForm($formdata, $mask)) {
+            $this->redirUrl = UI_BROWSER."?act=addWebstream&id=".$id;
+            return FALSE;
+        }
+        $r = $this->gb->storeWebstream($id, $formdata['name'], NULL, $this->sessid, $replace, $formdata['url']);
+        if(PEAR::isError($r)) {
+            $this->_retMsg($r->getMessage());
+            $this->redirUrl = UI_BROWSER."?act=addWebstream&id=".$id;
+            return FALSE;
+        }
+        $data = $this->_dateArr2Str($formdata);
+        $this->gb->setMDataValue($r, 'dc:title', $this->sessid, $data['name']);
+        $this->gb->setMDataValue($r, 'dcterms:extent', $this->sessid, $data['duration']);
+        $this->redirUrl = UI_BROWSER."?act=editMetaData&id=$r";
+        return $r;
     }
 
 
@@ -209,18 +192,14 @@ class uiHandler extends uiBase {
      *  Create new folder in the storage
      *
      *  @param newname string, name for the new folder
-     *  @param id int, destination folder id
+     *  @param id int, local id to create folder in
      */
-    function newFolder($newname, $id)
+    function newFolder($name, $id)
     {
-        if ($this->_isFolder($id)) {
-            $r = $this->gb->createFolder($id, $newname, $this->sessid);
-            if(PEAR::isError($r))
-                $this->_retMsg($r->getMessage());
-            $this->redirUrl = UI_BROWSER.'?id='.$id;
-        } else {
-            $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
-        }
+        $r = $this->gb->createFolder($id, $name, $this->sessid);
+        if(PEAR::isError($r))
+            $this->_retMsg($r->getMessage());
+        $this->redirUrl = UI_BROWSER.'?act=fileBrowse&id='.$this->id;
     }
 
     /**
@@ -233,10 +212,9 @@ class uiHandler extends uiBase {
      */
     function rename($newname, $id)
     {
-        $parid = $this->gb->getparent($this->id);
         $r = $this->gb->renameFile($id, $newname, $this->sessid);
         if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
-        $this->redirUrl = UI_BROWSER."?id=$parid";
+        $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$this->pid;
     }
 
     /**
@@ -250,15 +228,14 @@ class uiHandler extends uiBase {
      */
     function move($newPath, $id)
     {
-        $newPath = urlencode($newPath);
+        $newPath = urldecode($newPath);
         $did = $this->gb->getObjIdFromRelPath($id, $newPath);
-        $parid = $this->gb->getparent($id);
         $r = $this->gb->moveFile($id, $did, $this->sessid);
         if(PEAR::isError($r)){
             $this->_retMsg($r->getMessage());
-            $this->redirUrl  = UI_BROWSER."?id=$parid";
+            $this->redirUrl  = UI_BROWSER."?act=fileBrowse&id=".$this->pid;
         }
-        else $this->redirUrl = UI_BROWSER."?id=$did";
+        else $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$did;
     }
 
     /**
@@ -274,13 +251,12 @@ class uiHandler extends uiBase {
     {
         $newPath = urldecode($newPath);
         $did = $this->gb->getObjIdFromRelPath($id, $newPath);
-        $parid = $this->gb->getparent($id);
         $r = $this->gb->copyFile($id, $did, $this->sessid);
         if(PEAR::isError($r)){
             $this->_retMsg($r->getMessage());
-            $this->redirUrl  = UI_BROWSER."?id=$parid";
+            $this->redirUrl  = UI_BROWSER."?act=fileBrowse&id=".$this->pid;
         }
-        else $this->redirUrl = UI_BROWSER."?id=$did";
+        else $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$did;
     }
 
     /**
@@ -293,20 +269,21 @@ class uiHandler extends uiBase {
      */
     function delete($id, $delOverride=FALSE)
     {
-        $parid = $this->gb->getparent($id);
+        $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$this->pid;
 
-        ## add emtyness-test here ###
         if (!($delOverride==$id) && (count($this->gb->getObjType($id)=='Folder'?
                       $this->gb->listFolder($id, $this->sessid):NULL))) {
             $this->_retMsg("Folder is not empty. You can override this protection by clicking DEL again");
-            $this->redirUrl = UI_BROWSER."?id=$parid&delOverride=$id";
-            return;
+            $this->redirUrl = UI_BROWSER."?act=fileBrowse&id=".$this->pid."&delOverride=$id";
+            return FALSE;
         }
-        #############################
 
         $r = $this->gb->deleteFile($id, $this->sessid);
-        if(PEAR::isError($r)) $this->_retMsg($r->getMessage());
-        $this->redirUrl = UI_BROWSER."?id=$parid";
+        if(PEAR::isError($r)) {
+            $this->_retMsg($r->getMessage());
+            return FALSE;
+        }
+        return TRUE;
     }
 
 
@@ -439,7 +416,7 @@ class uiHandler extends uiBase {
         }else{
             $this->_retMsg('Access denied.');
         }
-        $this->redirUrl = UI_BROWSER.'?id='.$id.'&act=permissions';
+        $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$id;
     }
 
     /**
@@ -504,9 +481,11 @@ class uiHandler extends uiBase {
     }
 
 
-    function editMetaData($id, &$formdata, &$mask)
+    function editMetaData($id, &$formdata)
     {
-        $this->redirUrl = UI_BROWSER.'?id='.$this->gb->getParent($id);
+        include dirname(__FILE__).'/formmask/metadata.inc.php';
+
+        $this->redirUrl = UI_BROWSER.'?act=fileBrowse&id='.$this->pid;
         ## first remove old entrys
         $this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
@@ -546,6 +525,7 @@ class uiHandler extends uiBase {
             }
             if ($was_error) {
                 $_SESSION['retransferFormData'] = array_merge($_REQUEST, $_FILES);
+                $this->retMsg('Invalid Form Data');
                 return FALSE;
             }
         }
@@ -601,30 +581,33 @@ class uiHandler extends uiBase {
      */
     function search(&$formdata)
     {
-        $this->search = FALSE;;
-        $this->search['criteria']['operator'] = $formdata['operator'];
-        $this->search['criteria']['filetype'] = $formdata['filetype'];
+        $this->search = FALSE;
+        if ($formdata['clear']) {
+            $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        } else {
+            $this->redirUrl = UI_BROWSER.'?act=search&id='.$formdata['id'];
+            $this->search['criteria']['operator'] = $formdata['operator'];
+            $this->search['criteria']['filetype'] = $formdata['filetype'];
 
-        foreach ($formdata as $key=>$val) {
-            if (is_array($val) && strlen($val[2])) {
-                $critArr[] = array('cat' => $this->_formElementDecode($val[0]),
-                                   'op'  => $val[1],
-                                   'val' => $val[2]
-                             );
-                $this->search['criteria'][$key] = $val;
+            foreach ($formdata as $key=>$val) {
+                if (is_array($val) && strlen($val[2])) {
+                    $critArr[] = array('cat' => $this->_formElementDecode($val[0]),
+                                       'op'  => $val[1],
+                                       'val' => $val[2]
+                                 );
+                    $this->search['criteria'][$key] = $val;
+                }
             }
-        }
-        $searchCriteria = array('filetype'  => $formdata['filetype'],
-                                'operator'  => $formdata['operator'],
-                                'conditions'=> $critArr
-                          );
+            $searchCriteria = array('filetype'  => $formdata['filetype'],
+                                    'operator'  => $formdata['operator'],
+                                    'conditions'=> $critArr
+                              );
 
-        $results = $this->gb->localSearch($searchCriteria, $this->sessid);
-        foreach ($results['results'] as $rec) {
+            $results = $this->gb->localSearch($searchCriteria, $this->sessid);
+            foreach ($results['results'] as $rec) {
                 $this->search['result'][] = $this->_getMetaInfo($this->gb->_idFromGunid($rec));
             }
-
-        $this->redirUrl = UI_BROWSER.'?act=search&id='.$formdata['id'];
+        }
     }
 }
 

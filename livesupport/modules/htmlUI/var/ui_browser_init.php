@@ -7,7 +7,7 @@ require_once dirname(__FILE__).'/ui_base.inc.php';
 require_once dirname(__FILE__).'/ui_browser.class.php';
 require_once dirname(__FILE__).'/ui_scratchPad.class.php';
 require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
-
+require_once dirname(__FILE__).'/formmask/general.inc.php';
 
 ## well known classes ###############################################
 require_once dirname(__FILE__).'/html/Smarty/libs/Smarty.class.php';
@@ -40,7 +40,12 @@ $Smarty->load_filter('output', 'localizer');
 ## some basic things ################################################
 $Smarty->assign('UI_BROWSER', UI_BROWSER);
 $Smarty->assign('UI_HANDLER', UI_HANDLER);
-$Smarty->assign('GLOBALS', array_merge($GLOBALS, array('id' => &$uiBrowser->id)));  ## ??? really all GLOBALS ??? ##
+$Smarty->assign('GLOBALS', array(
+                            'id'  => &$uiBrowser->id,
+                            'pid' => &$uiBrowser->pid,
+                            'fid' => &$uiBrowser->fid
+                           )
+               );
 $Smarty->assign('user', array('sessid' => &$uiBrowser->sessid,
                               'userid' => &$uiBrowser->userid,
                               'login'  => &$uiBrowser->login
@@ -55,8 +60,4 @@ if (is_array($_SESSION['retransferFormData'])){
     }
     unset($_SESSION['retransferFormData']);
 }
-
-
-## mask for forms, at the end because $uiBase is used ###############
-require_once dirname(__FILE__).'/ui_fmask.inc.php';
 ?>

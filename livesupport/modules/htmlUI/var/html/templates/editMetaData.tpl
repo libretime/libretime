@@ -8,11 +8,12 @@
 {/literal}
 
 <div id="metadataform">
+{include file="sub/x.tpl"}
 <center>
     {$editMetaData.tabs}
     {$editMetaData.langswitch}
     {foreach from=$editMetaData.pages key=key item=dynform}
-        {include file="form_parts/dynForm_plain.tpl"}
+        {include file="sub/dynForm_plain.tpl"}
     {/foreach}
 </center>
 </div>
@@ -31,7 +32,7 @@ function switchMDataLang()
 }
 
 function spread(element, name)
-{            
+{
     if (document.forms['editMetaData'].elements['Main___' + name])           document.forms['editMetaData'].elements['Main___' + name].value = element.value;
     if (document.forms['editMetaData'].elements['Music_Basic___' + name])    document.forms['editMetaData'].elements['Music_Basic___' + name].value = element.value;
     if (document.forms['editMetaData'].elements['Music_Advanced___' + name]) document.forms['editMetaData'].elements['Music_Advanced___' + name].value = element.value;

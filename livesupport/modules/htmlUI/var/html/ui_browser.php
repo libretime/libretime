@@ -37,74 +37,67 @@ if (is_array($_REQUEST['popup'])){
 };
 
 $uiBrowser->loadSystemPrefs($ui_fmask['systemPrefs']);
-$Smarty->assign('systemPrefs', $uiBrowser->systemPrefs); #print_r($uiBrowser->systemPrefs);
+$Smarty->assign('systemPrefs', $uiBrowser->systemPrefs);
 
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
   $Smarty->assign('ScratchPad', $uiBrowser->SP->get());
 
   switch ($_REQUEST['act']){
-    default:
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', TRUE);
+    case "fileBrowse":
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->fid));
 
-        if ($_REQUEST['tree']=='Y') {
+        $Smarty->assign('fileBrowse', TRUE);
+        if ($_REQUEST['tree']=='Y')
             $Smarty->assign('showTree', TRUE);
-        } else {
+        else
             $Smarty->assign('showObjects', TRUE);
-        }
         $Smarty->assign('delOverride', $_REQUEST['delOverride']);
-        #$Smarty->assign('obj_types', array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R'));
-        break;
+    break;
 
     case "permissions":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('perms', $uiBrowser->permissions($uiBrowser->id));
-        $Smarty->assign('permissions', TRUE);
+        $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
+        $Smarty->assign('fileBrowse', TRUE);
     break;
 
 
     case "uploadFileM":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('uploadform', $uiBrowser->uploadFileM($uiBrowser->id, $ui_fmask['uploadFileM']));
+        $Smarty->assign('uploadform', $uiBrowser->uploadFileM($ui_fmask['uploadFileM'], $uiBrowser->id));
     break;
 
 
     case "uploadFile":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('uploadform',  $uiBrowser->uploadFile($uiBrowser->id, $ui_fmask['uploadFile']));
+        $Smarty->assign('uploadform',  $uiBrowser->uploadFile($ui_fmask['uploadFile'], $uiBrowser->id, $_REQUEST['replace']));
     break;
 
 
     case "addWebstream":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', TRUE);
 
-        $Smarty->assign('uploadform',  $uiBrowser->addWebstream($uiBrowser->id, $ui_fmask['addWebstream']));
+        $Smarty->assign('uploadform',  $uiBrowser->addWebstream($ui_fmask['addWebstream'], $uiBrowser->id, $_REQUEST['replace']));
     break;
 
 
-    case "editFile":
+    case "editMetaData":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('showPath', FALSE);
 
-        $Smarty->assign('uploadform',  $uiBrowser->uploadFile($uiBrowser->id, $ui_fmask['uploadFile']));
+        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, TRUE));
     break;
 
 
     case "search":
-        if (is_array($uiBrowser->search['result']) ){
+        if (is_array($uiBrowser->search['criteria']) ){
             $Smarty->assign('searchres', $uiBrowser->search['result']);
             $Smarty->assign('showSearchRes', TRUE);
         };
 
-        $Smarty->assign('searchform', $uiBrowser->getSearchForm($_REQUEST['id'], $ui_fmask));
+        $Smarty->assign('searchform', $uiBrowser->getSearchForm($uiBrowser->id, $ui_fmask));
         $Smarty->assign('showSearchForm', TRUE);
 
         break;
@@ -121,7 +114,7 @@ if ($uiBrowser->userid) {
     break;
 
     case "chgPasswd":
-        $Smarty->assign('chgPasswd', $uiBrowser->chgPasswd($_REQUEST['uid'], $ui_fmask['chgPasswd']));
+        $Smarty->assign('chgPasswd', $uiBrowser->chgPasswd($uiBrowser->id, $ui_fmask['chgPasswd']));
         $Smarty->assign('showSubjects', TRUE);
     break;
 
@@ -141,9 +134,6 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showFile', TRUE);
     break;
 
-    case "editMetaData":
-        $Smarty->assign('editMetaData', $uiBrowser->editMetaData($uiBrowser->id, $ui_fmask['metaData'], TRUE));
-    break;
 
     case "_analyzeFile":
         $Smarty->assign('_analyzeFile', $uiBrowser->_analyzeFile($uiBrowser->id, 'text'));

@@ -3,9 +3,9 @@ class uiScratchPad
 {
     function uiScratchPad(&$uiBase)
     {
-        $this->Base = &$uiBase;
-        $this->items = &$_SESSION[UI_SCRATCHPAD_SESSNAME]['content'];
-        $this->order = &$_SESSION[UI_SCRATCHPAD_SESSNAME]['order'];
+        $this->Base  =& $uiBase;
+        $this->items =& $_SESSION[UI_SCRATCHPAD_SESSNAME]['content'];
+        $this->order =& $_SESSION[UI_SCRATCHPAD_SESSNAME]['order'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
     }
 
@@ -44,7 +44,8 @@ class uiScratchPad
             foreach($arr as $gunid) {
                 if (preg_match('/[0-9]{1,20}/', $gunid)) {
                     if ($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid)) != FALSE) {
-                        $this->items[] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid)));
+                        if ($i = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($this->Base->_toHex($gunid))))
+                            $this->items[] = $i;
                     }
                 }
             }
@@ -64,10 +65,15 @@ class uiScratchPad
 
     function addItem($id)
     {
+        if(!$this->Base->systemPrefs[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
+            $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
+            return false;
+        }
+
         $item = $this->Base->_getMetaInfo($id);
         $sp   = $this->get();
         foreach ($sp as $key=>$val) {
-            if ($val['gunid'] == $item['gunid']) {
+            if ($val['id'] == $item['id']) {
                 unset($sp[$key]);
                 $this->Base->_retMsg('Entry $1 was already on SP since $2.\nMoved to Top.', $item['title'], $val['added']);
             } else {
@@ -84,7 +90,7 @@ class uiScratchPad
     function removeItems($ids)
     {
         if (!$ids)
-            return;              ## empty parameter
+            return FALSE;              ## empty parameter
         if (!is_array($ids))
             $ids = array($ids);  ## just single id given
 
@@ -92,12 +98,14 @@ class uiScratchPad
             $info = $this->Base->_getMetaInfo($id);
             $sp =& $this->get();
             foreach ($sp as $key=>$val) {
-                if ($val['gunid'] == $info['gunid']) {
+                if ($val['id'] == $info['id']) {
                     unset ($sp[$key]);
                     #$this->Base->decAccessCounter($id);
                 }
             }
         }
+
+        return TRUE;
     }
 
 
@@ -118,6 +126,13 @@ class uiScratchPad
         }
 
         $this->items = $res;
+    }
+
+
+    function reLoadM()
+    {
+        foreach($this->items as $key=>$val)
+            $this->items[$key] = $this->Base->_getMetaInfo($val['id']);
     }
 }
 ?>

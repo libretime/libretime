@@ -11,9 +11,10 @@
     </style>
     {/literal}
     <div id="searchform">
+    {include file="sub/x.tpl"}
       <center>
         {foreach from=$searchform item=dynform}
-            {include file="form_parts/dynForm_plain.tpl"}
+            {include file="sub/dynForm_plain.tpl"}
         {/foreach}
       </center>
     </div>
@@ -29,8 +30,8 @@
                 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
                     <td>{$s.title}</td>
                     <td>{$s.duration}</td>
-                    <td><a href="{$UI_BROWSER}?act=getMdata&id={$s.id}">[XML]</a>
-                        <a href="{$UI_BROWSER}?act=editMetaDataValues&id={$s.id}">[Form]</a>
+                    <td>
+                        <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.addItem&id={$s.id}', '2PL')">[PL]</a>
                         <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.addItem&id={$s.id}', '2SP')">[SP]</a>
                     </td>
                   </tr>

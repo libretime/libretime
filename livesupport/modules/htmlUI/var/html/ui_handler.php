@@ -27,9 +27,27 @@ switch($_REQUEST['act']){
             $uiHandler->SP->addItem($ui_tmpid);
     break;
 
+    case "replaceFile":
+        $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
+        if ($uiHandler->delete($uiHandler->id)) {
+            $ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->pid, $ui_fmask["uploadFile"], $ui_tmpgunid);
+            $uiHandler->SP->removeItems($uiHandler->id);
+            $uiHandler->SP->addItem($ui_tmpid);
+        }
+    break;
+
     case "addWebstream":
         if ($ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->id, $ui_fmask['addWebstream']))
             $uiHandler->SP->addItem($ui_tmpid);
+    break;
+
+    case "replaceWebstream":
+        $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
+        if ($uiHandler->delete($uiHandler->id)) {
+            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $uiHandler->pid, $ui_fmask['addWebstream'], $ui_tmpgunid);
+            $uiHandler->SP->removeItems($uiHandler->id);
+            $uiHandler->SP->addItem($ui_tmpid);
+        }
     break;
 
     case "newFolder":
@@ -49,7 +67,8 @@ switch($_REQUEST['act']){
     break;
 
     case "delete":
-        $uiHandler->delete($uiHandler->id, $_REQUEST["delOverride"]);
+        if ($uiHandler->delete($uiHandler->id, $_REQUEST['delOverride']))
+            $uiHandler->SP->removeItems($uiHandler->id);
     break;
 
     case "addUser":
@@ -89,7 +108,8 @@ switch($_REQUEST['act']){
     break;
 
     case "editMetaData":
-        $uiHandler->editMetaData($uiHandler->id, $_REQUEST, $ui_fmask["metaData"]);
+        $uiHandler->editMetaData($uiHandler->id, $_REQUEST);
+        $uiHandler->SP->reLoadM();
     break;
 
     case "SP.addItem":
@@ -113,7 +133,7 @@ switch($_REQUEST['act']){
 
     default:
         $_SESSION["alertMsg"] = tra("Unknown method: $1", $_REQUEST["act"]);
-        header("Location: ".UI_BROWSER);
+        header("Location: ".UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close');
         die();
 }
 if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;

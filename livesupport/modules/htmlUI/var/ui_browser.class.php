@@ -17,7 +17,7 @@ class uiBrowser extends uiBase {
     }
 
       /**
-     *  login
+     *  performAction
      *
      *  Perform a frontend action
      *  map to a function called action_<actionName>.inc.php
@@ -117,28 +117,27 @@ class uiBrowser extends uiBase {
     {
         $data = array(
                     'pathdata'  => $this->gb->getPath($id, $this->sessid),
-                    'listdata'  => ($this->gb->getObjType($id)=='Folder'?
-                                    $this->gb->listFolder($id, $this->sessid) : array()),
-                    #'tree'      => ($_REQUEST['tree']=='Y'),
-                    'showPath'  => true,
-                    'showTree'  => true,
+                    'listdata'  => $this->gb->getObjType($id)=='Folder' ? $this->gb->listFolder($id, $this->sessid) : array(),
                 );
-            if($_REQUEST['tree']=='Y'){
-                $data['treedata'] = $this->gb->getSubTree($id, $this->sessid);
+        if($_REQUEST['tree']=='Y'){
+            $tmp = $this->gb->getSubTree($id, $this->sessid);
+            foreach ($tmp as $key=>$val) {
+                $val['type'] = $this->gb->getFileType($val['id']);
+                $data['treedata'][$key] = $val;
             }
-
+        }
         if(PEAR::isError($data['listdata'])){
             $data['msg'] = $data['listdata']->getMessage();
             $data['listdata'] = array();
-        } else {
-            foreach ($data['listdata'] as $key=>$val) {
-                if ($val['type'] != 'Folder')
-                    $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], 'title');
-                else
-                    $data['listdata'][$key]['title'] = $val['name'];
-            }
+            return FALSE;
         }
-
+        foreach ($data['listdata'] as $key=>$val) {
+            if ($val['type'] != 'Folder')
+                $data['listdata'][$key]['title'] = $this->_getMDataValue($val['id'], 'title');
+            else
+                $data['listdata'][$key]['title'] = $val['name'];
+        }
+        #print_r($data);
         return $data;
     }
 
@@ -152,16 +151,13 @@ class uiBrowser extends uiBase {
      *
      *  @eturn string  (html)
      */
-    function uploadFileM($id, $mask)
+    function uploadFileM(&$mask, $id)
     {
         $form = new HTML_QuickForm('uploadFileM', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
-                                                $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
-                                                : ini_get('upload_max_filesize'));
-        $form->setConstants(array('id' => $id));
-
+        $form->setMaxFileSize($this->systemPrefs['stationMaxfilesize']);
+        $form->setConstants(array('id'  => $id,
+                                  'act' => 'uploadFileM'));
         $this->_parseArr2Form($form, $mask);
-
         return $form->toHTML();
     }
 
@@ -175,16 +171,13 @@ class uiBrowser extends uiBase {
      *
      *  @eturn string  (html)
      */
-    function uploadFile($id, $mask)
+    function uploadFile(&$mask, $id, $replace=FALSE)
     {
         $form = new HTML_QuickForm('uploadFile', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
-                                                $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
-                                                : ini_get('upload_max_filesize'));
-        $form->setConstants(array('id' => $id));
-
+        $form->setMaxFileSize($this->systemPrefs['stationMaxfilesize']);
+        $form->setConstants(array('id'  => $id,
+                                  'act' => $replace ? 'replaceFile' : 'uploadFile'));
         $this->_parseArr2Form($form, $mask);
-
         return $form->toHTML();
     }
 
@@ -198,16 +191,12 @@ class uiBrowser extends uiBase {
      *
      *  @eturn string  (html)
      */
-    function addWebstream($id, $mask)
+    function addWebstream($mask, $id, $replace=FALSE)
     {
         $form = new HTML_QuickForm('addWebstream', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize(!PEAR::isError($this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')) ?
-                                                $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'maxfilesize')
-                                                : ini_get('upload_max_filesize'));
-        $form->setConstants(array('id' => $id));
-
+        $form->setConstants(array('id'  => $id,
+                                  'act' => $replace ? 'replaceWebstream' : 'addWebstream'));
         $this->_parseArr2Form($form, $mask);
-
         return $form->toHTML();
     }
 
@@ -222,8 +211,7 @@ class uiBrowser extends uiBase {
     function getSubjects()
     {
         return array('subj'       => $this->gb->getSubjectsWCnt(),
-                     'loggedAs'   => $this->login
-                    );
+                     'loggedAs'   => $this->login);
     }
 
 
@@ -291,7 +279,6 @@ class uiBrowser extends uiBase {
         foreach($g['subj'] as $s) {
             $this->logins[($s['login'])]=$s['login'];
         }
-
         $form = new HTML_QuickForm('addGroupMember', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setConstants(array('act'=>'addGroupMember',
                                   'reid'=>$g['id'],
@@ -303,7 +290,6 @@ class uiBrowser extends uiBase {
         $s->loadArray($this->logins, NULL);
         $form->addElement($s);
         $form->addElement('submit', NULL, tra('Do'));
-
         return $form->toHTML();
     }
 
@@ -323,8 +309,7 @@ class uiBrowser extends uiBase {
                      'actions'   => $this->gb->getAllowedActions($this->gb->getObjType($id)),
                      'subjects'  => $this->gb->getSubjects(),
                      'id'        => $id,
-                     'loggedAs'  => $this->login
-                     );
+                     'loggedAs'  => $this->login);
     }
 
 
@@ -337,26 +322,24 @@ class uiBrowser extends uiBase {
      *
      *  @return string (html)
      */
-    function getSearchForm($id, &$mask)
+    function getSearchForm($id, &$mask2)
     {
+        include dirname(__FILE__).'/formmask/metadata.inc.php';
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setConstants(array('id'=>$id, 'counter'=>UI_SEARCH_MIN_ROWS));
 
-        foreach ($mask['metaData']['tabs']['group']['group'] as $k=>$v) {
-            foreach ($mask['metaData']['pages'][$v] as $val){
+        foreach ($mask['tabs']['group']['group'] as $k=>$v) {
+            foreach ($mask['pages'][$v] as $val){
                 $col1[$this->_formElementEncode($val['element'])] = $val['label'];
                 if (isset($val['relation']))
-                    $col2[$this->_formElementEncode($val['element'])] = $mask['relations'][$val['relation']];
+                    $col2[$this->_formElementEncode($val['element'])] = $mask2['relations'][$val['relation']];
                 else
-                    $col2[$this->_formElementEncode($val['element'])] = $mask['relations']['standard'];
+                    $col2[$this->_formElementEncode($val['element'])] = $mask2['relations']['standard'];
             };
         };
-
         for($n=1; $n<=UI_SEARCH_MAX_ROWS; $n++) {
             unset ($group);
-
             $form->addElement('static', 's1', NULL, "<div id='searchRow_$n'>");
-
             if ($n > UI_SEARCH_MIN_ROWS) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {visibility : hidden; height : 0px;}</style>");
             $sel = &$form->createElement('hierselect', "row_$n", NULL);
             $sel->setOptions(array($col1, $col2));
@@ -366,15 +349,13 @@ class uiBrowser extends uiBase {
             $form->addGroup($group);
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }
-
-        $this->_parseArr2Form($form, $mask['searchform']);
+        $this->_parseArr2Form($form, $mask2['searchform']);
         $form->setConstants($this->search['criteria']);
         $form->validate();
-
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['dynform'] = $renderer->toArray();
-              #print_r($output);
+        #print_r($output);
         return $output;
     }
 
@@ -417,8 +398,10 @@ class uiBrowser extends uiBase {
      *  @param id int
      *  @return string (html)
      */
-    function editMetaData($id, $mask, $get=FALSE, $data=NULL)
+    function editMetaData($id, $get=FALSE, $data=NULL)
     {
+        include dirname(__FILE__).'/formmask/metadata.inc.php';
+
         $form = new HTML_QuickForm('tabs', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['tabs']);
         $output['tabs'] = $form->toHTML();

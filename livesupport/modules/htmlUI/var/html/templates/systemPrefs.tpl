@@ -1,5 +1,6 @@
 <div id="systemPrefs">
+{include file="sub/x.tpl"}
 <center>
-{include file="form_parts/dynForm_sections.tpl"}
+{include file="sub/dynForm_sections.tpl"}
 </center>
 </div>
