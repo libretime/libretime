@@ -71,16 +71,23 @@ class uiScheduler extends uiCalendar
 
     function getDayUsagePercentage($year, $month, $day)
         {
-        $duration = 0;
+        if (isset($this->_duration[$year.$month.$day]))
+            return $this->_duration[$year.$month.$day];
+
+        $this->_duration[$year.$month.$day] = 0;
         if (!$arr = $this->getDayUsage($year, $month, $day))
             return false;
         foreach ($arr as $val) {
-            $duration =+ $this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']);
+            $this->_duration[$year.$month.$day] =+ ($this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']))/86400*100;
 
         }
-        return $duration/86400*100;
+        return $this->_duration[$year.$month.$day];
     }
 
+    function getPeriodicUsage($start, $end)
+    {
+
+    }
 
     function copyPlFromSP()
     {

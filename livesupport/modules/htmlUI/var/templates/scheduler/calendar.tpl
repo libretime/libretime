@@ -52,7 +52,12 @@
         {else}
                     <div style="background-color: white">
         {/if}
+        {if $_Day.isScheduled}
+                        <b><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.day}</a></b>
+        {else}
                         <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.day}</a>
+        {/if}
+
                     </div>
                  </td>
         {if $_Day.isLast}

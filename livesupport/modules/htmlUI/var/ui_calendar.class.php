@@ -55,16 +55,19 @@ class uiCalendar
 
         $Month->build($selections);
         while ($Day = $Month->fetch()) {
+            $corrMonth = $Day->thisMonth()<=12 ? $this->Base->_twoDigits($Day->thisMonth()) : '01';   ## due to bug in
+            $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;               ## Calendar_Month_Weekdays
             $this->Month[] = array(
                                 'day'           => $this->Base->_twoDigits($Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
-                                'month'         => $Day->thisMonth()<=12 ? $this->Base->_twoDigits($Day->thisMonth()) : '01',     ## due to bug in
-                                'year'          => $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1,                 ## Calendar_Month_Weekdays
+                                'month'         => $corrMonth,
+                                'year'          => $corrYear,
                                 'label'         => $this->_getDayName($Day),
                                 'isEmpty'       => $Day->isEmpty(),
                                 'isFirst'       => $Day->isFirst(),
                                 'isLast'        => $Day->isLast(),
-                                'isSelected'    => $Day->isSelected()
+                                'isSelected'    => $Day->isSelected(),
+                                'isScheduled'   => $this->getDayUsagePercentage($corrYear, $corrMonth, $this->Base->_twoDigits($Day->thisDay()))
                              );
         }
     }
