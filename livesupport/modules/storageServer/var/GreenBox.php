@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.37 $
+ *  @version $Revision: 1.38 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -390,15 +390,12 @@ class GreenBox extends BasicStor{
      *
      *  @param parid int, parent id
      *  @param fname string, human readable menmonic file name
-     *  @param gunid string, playlist global unique ID
      *  @param sessid string, session ID
      *  @return int, local id of created playlist
      */
-    function createPlaylist($parid, $fname, $gunid=NULL, $sessid='')
+    function createPlaylist($parid, $fname, $sessid='')
     {
-        if(!$this->_checkGunid($gunid)){
-            $gunid  = StoredFile::_createGunid();
-        }
+        $gunid  = StoredFile::_createGunid();
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
         $gunid2 = $lc->createPlaylist($sessid, $gunid, $fname);
@@ -482,12 +479,13 @@ class GreenBox extends BasicStor{
      *  Add audioclip specified by gunid to the playlist
      *
      *  @param token string, playlist access token
-     *  @param acGunid string, global unique ID of added file
+     *  @param acId string, local ID of added file
      *  @param sessid string, session ID
      *  @return string, generated playlistElement gunid
      */
-    function addAudioClipToPlaylist($token, $acGunid, $sessid)
+    function addAudioClipToPlaylist($token, $acId, $sessid)
     {
+        $acGunid = $this->_gunidFromId($acId);
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
         if(is_null($plGunid)){
