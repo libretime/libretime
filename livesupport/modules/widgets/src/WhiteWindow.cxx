@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,8 @@ using namespace LiveSupport::Widgets;
  *----------------------------------------------------------------------------*/
 WhiteWindow :: WhiteWindow(Glib::ustring                title,
                            unsigned int                 backgroundColor,
-                           Ptr<CornerImages>::Ref       cornerImages)
+                           Ptr<CornerImages>::Ref       cornerImages,
+                           bool                         resizable)
                                                                     throw ()
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
 {
@@ -105,15 +106,17 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     layout->attach(*childContainer, 0, 2, 1, 2);
 
     // create the resize image
-    resizeImage = Gtk::manage(wf->createResizeImage());
-    resizeEventBox = Gtk::manage(new Gtk::EventBox());
-    resizeEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
-    resizeEventBox->add(*resizeImage);
-    resizeAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
-                                                     Gtk::ALIGN_CENTER,
-                                                     0, 0));
-    resizeAlignment->add(*resizeEventBox);
-    layout->attach(*resizeAlignment, 1, 2, 2, 3, Gtk::FILL, Gtk::SHRINK);
+    if (resizable) {
+        resizeImage = Gtk::manage(wf->createResizeImage());
+        resizeEventBox = Gtk::manage(new Gtk::EventBox());
+        resizeEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
+        resizeEventBox->add(*resizeImage);
+        resizeAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+                                                         Gtk::ALIGN_CENTER,
+                                                         0, 0));
+        resizeAlignment->add(*resizeEventBox);
+        layout->attach(*resizeAlignment, 1, 2, 2, 3, Gtk::FILL, Gtk::SHRINK);
+    }
 
     // add the corners
     blueBin = Gtk::manage(new BlueBin(backgroundColor, cornerImages));
@@ -131,9 +134,11 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                           &WhiteWindow::onCloseButtonClicked));
 
-    resizeEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
-    resizeEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
+    if (resizable) {
+        resizeEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
+        resizeEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
                                                 &WhiteWindow::onResizeClicked));
+    }
 }
 
 

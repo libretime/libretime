@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -271,10 +271,12 @@ class WhiteWindow : public Gtk::Window
          *  @param title the title of the window.
          *  @param backgroundColor the RGB value for the background color.
          *  @param cornerImages the corner images.
+         *  @param resizable true if the user can resize the window.
          */
         WhiteWindow(Glib::ustring               title,
                     unsigned int                backgroundColor,
-                    Ptr<CornerImages>::Ref      cornerImages)
+                    Ptr<CornerImages>::Ref      cornerImages,
+                    bool                        resizable = true)
                                                             throw ();
 
         /**
