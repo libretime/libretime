@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -825,8 +825,12 @@ class BasicStor extends Alib{
                 default: return $ac;
             }
         }
-        if(!is_null($ftype) && ($this->_getType($ac->gunid) != $ftype))
-            return FALSE;
+        $realFtype = $this->_getType($ac->gunid);
+        if(!is_null($ftype) && (
+            ($realFtype != $ftype)
+            // webstreams are subset of audioclips
+            && !($realFtype == 'webstream' && $ftype == 'audioclip')
+        )) return FALSE;
         return TRUE;
     }
 
@@ -1132,32 +1136,31 @@ class BasicStor extends Alib{
         }
         $rootHD = $this->getObjId('root', $this->storId);
         include"../tests/sampleData.php";
-        $res = array('audioclips'=>array(), 'playlists'=>array());
+        $res = array(
+            'audioclips'=>array(), 'playlists'=>array(), 'webstreams'=>array()
+        );
         foreach($sampleData as $k=>$it){
-            switch($it['type']){
+            $type = $it['type'];
+            $xml = $it['xml'];
+            if(isset($it['gunid'])) $gunid = $it['gunid'];
+            else $gunid = '';
+            switch($type){
                 case"audioclip":
                     $media = $it['media'];
-                    $xml = $it['xml'];
-                    if(isset($it['gunid'])) $gunid = $it['gunid'];
-                    else $gunid = '';
-                    $r = $this->bsPutFile(
-                        $rootHD, basename($media),
-                        $media, $xml, $gunid, 'audioclip'
-                    );
-                    if(PEAR::isError($r)){ return $r; }
-                    $res['audioclips'][] = $this->_gunidFromId($r);
+                    $fname = basename($media);
                     break;
                 case"playlist":
-                    $xml = $it['xml'];
-                    if(isset($it['gunid'])) $gunid = $it['gunid'];
-                    else $gunid = '';
-                    $r = $this->bsPutFile(
-                        $rootHD, basename($xml), '', $xml, $gunid, 'playlist'
-                    );
-                    if(PEAR::isError($r)){ return $r; }
-                    $res['playlists'][] = $this->_gunidFromId($r);
+                case"webstream":
+                    $media = '';
+                    $fname = basename($xml);
                     break;
             }
+            $r = $this->bsPutFile(
+                $rootHD, $fname,
+                $media, $xml, $gunid, $type
+            );
+            if(PEAR::isError($r)){ return $r; }
+            $res["{$type}s"][] = $this->_gunidFromId($r);
         }
         return $res;
     }

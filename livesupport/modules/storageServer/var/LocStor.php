@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -394,9 +394,10 @@ class LocStor extends BasicStor{
     function existsAudioClip($sessid, $gunid)
     {
         $ex = $this->existsFile($sessid, $gunid, 'audioclip');
-        if($ex === FALSE ){
-            $ex = $this->existsFile($sessid, $gunid, 'webstream');
-        }
+        // webstreams are subset of audioclips - moved to BasicStor
+        // if($ex === FALSE ){
+        //    $ex = $this->existsFile($sessid, $gunid, 'webstream');
+        // }
         if($ex === FALSE ) return FALSE;
         if(PEAR::isError($ex)){ return $ex; }
         $ac =& StoredFile::recallByGunid($this, $gunid);
@@ -416,10 +417,10 @@ class LocStor extends BasicStor{
     {
         $id = $this->_idFromGunid($gunid);
         if(is_null($id)) return FALSE;
-        $ex = $this->bsExistsFile($id, $ftype);
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return TRUE;
+        $ex = $this->bsExistsFile($id, $ftype);
+        return $ex;
     }
 
     /**
