@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -388,24 +388,25 @@ class BasicStor extends Alib{
     {
         if(!$this->bsCheckToken($token, 'put')){
             return PEAR::raiseError(
-             'BasicStor::bsClosePut: invalid token ($token)'
+             "BasicStor::bsClosePut: invalid token ($token)"
             );
         }
         $chsum = $this->dbc->getOne("
             SELECT chsum FROM {$this->accessTable}
             WHERE token=x'{$token}'::bigint
         ");
-        $fname = "{$this->accessDir}/$token";
-        $md5sum = md5_file($fname);
-        if($chsum != $md5sum){
-            return PEAR::raiseError(
-             'BasicStor::bsClosePut: md5sum does not match (token=$token)'
-            );
-        }
         $res = $this->dbc->query("
             DELETE FROM {$this->accessTable} WHERE token=x'$token'::bigint
         ");
         if(PEAR::isError($res)){ return $res; }
+        $fname = "{$this->accessDir}/$token";
+        $md5sum = md5_file($fname);
+        if($chsum != $md5sum){
+            if(file_exists($fname)) @unlink($fname);
+            return PEAR::raiseError(
+             "BasicStor::bsClosePut: md5sum does not match (token=$token)"
+            );
+        }
         return $fname;
     }
 
