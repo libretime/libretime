@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ require_once "../../../getid3/var/getid3.php";
  *  LiveSupport file storage support class.<br>
  *  Represents one virtual file in storage. Virtual file has up to two parts:
  *  <ul>
- *      <li>metada in database - represeted by MetaData class</li>
+ *      <li>metada in database - represented by MetaData class</li>
  *      <li>binary media data in real file
  *          - represented by RawMediaData class</li>
  *  </ul>
