@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -496,7 +496,11 @@ class StoredFile{
             WHERE gunid=x'{$this->gunid}'::bigint
         ");
         if(PEAR::isError($indb)) return $indb;
-        return (!is_null($indb) && $this->rmd->exists());
+        if(is_null($indb)) return FALSE;
+        if($this->gb->_getType($this->gunid) == 'audioclip'){
+            return $this->rmd->exists();
+        }
+        return TRUE;
     }    
     
     /* ==================================================== "private" methods */

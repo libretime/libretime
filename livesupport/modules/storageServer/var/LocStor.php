@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,32 +40,32 @@ class LocStor extends BasicStor{
     /**
      *  Store or replace existing audio clip
      *
-     *  @param sessid string
-     *  @param gunid string
+     *  @param sessid string, session id
+     *  @param gunid string, global unique id
      *  @param metadata string, metadata XML string
      *  @param fname string, human readable menmonic file name
      *                      with extension corresponding to filetype
      *  @param chsum string, md5 checksum of media file
-     *  @param ftype string audioclip | playlist
+     *  @param ftype string audioclip | playlist | webstream
      *  @return struct {url:writable URL for HTTP PUT, token:access token
      */
     function storeAudioClipOpen(
         $sessid, $gunid, $metadata, $fname, $chsum, $ftype='audioclip'
     )
     {
-        // test if specified gunid exists:
-        if(!preg_match("|^([0-9a-fA-F]{16})?$|", $gunid)){
+        // test of gunid format:
+        if(!$this->_checkGunid($gunid)){
             return PEAR::raiseError(
                 "LocStor.php: storeAudioClipOpen: Wrong gunid ($gunid)"
             );
         }
+        // test if specified gunid exists:
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if(!PEAR::isError($ac)){
             // gunid exists - do replace
             $oid = $ac->getId();
-            if(($res = $this->_authorize(
-                'write', $oid, $sessid
-            )) !== TRUE) return $res;
+            if(($res = $this->_authorize('write', $oid, $sessid)) !== TRUE)
+                { return $res; }
             if($ac->isAccessed()){
                 return PEAR::raiseError(
                     'LocStor.php: storeAudioClipOpen: is accessed'
@@ -76,12 +76,12 @@ class LocStor extends BasicStor{
             );
             if(PEAR::isError($res)) return $res;
         }else{
-            // gunid doesn't exists - do insert
+            // gunid doesn't exists - do insert:
             $tmpFname = uniqid('');
             $parid = $this->_getHomeDirId($sessid);
             if(PEAR::isError($parid)) return $parid;
             if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
-                return $res;
+                { return $res; }
             $oid = $this->addObj($tmpFname , 'File', $parid);
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
@@ -134,6 +134,33 @@ class LocStor extends BasicStor{
     function uploadCheck($token)
     {
         return $this->bsCheckPut($token);
+    }
+
+    /**
+     *  Store webstream
+     *
+     *  @param sessid string, session id
+     *  @param gunid string, global unique id
+     *  @param metadata string, metadata XML string
+     *  @param fname string, human readable menmonic file name
+     *                      with extension corresponding to filetype
+     *  @param url string, wewbstream url
+     *  @return
+     */
+    function storeWebstream($sessid, $gunid, $metadata, $fname, $url)
+    {
+        $a = $this->storeAudioClipOpen(
+            $sessid, $gunid, $metadata, $fname, md5(''), 'webstream');
+        if(PEAR::isError($a)) return $a;
+        $gunid = $this->storeAudioClipClose($sessid, $a['token']);
+        if(PEAR::isError($gunid)) return $gunid;
+        $ac =& StoredFile::recallByGunid($this, $gunid);
+        if(PEAR::isError($ac)) return $ac;
+        $oid = $ac->getId();
+        $r = $this-> bsSetMetadataValue(
+            $oid, 'ls:url', $url, NULL, NULL, 'audioClip');
+        if(PEAR::isError($r)) return $r;
+        return $gunid;
     }
 
     /* --------------------------------------------------------------- access */
@@ -368,7 +395,11 @@ class LocStor extends BasicStor{
     function existsAudioClip($sessid, $gunid)
     {
         $ex = $this->existsFile($sessid, $gunid, 'audioclip');
-        if(!$ex) return FALSE;
+        if($ex === FALSE ){
+            $ex = $this->existsFile($sessid, $gunid, 'webstream');
+        }
+        if($ex === FALSE ) return FALSE;
+        if(PEAR::isError($ex)){ return $ex; }
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)){ return $ac; }
         return $ac->exists();

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,9 +174,9 @@ class MetaData{
         // return $this->genXMLDoc();       // obsolete
         if(file_exists($this->fname)){
             $res = file_get_contents($this->fname);
-#            require_once "XML/Beautifier.php";
-#            $fmt = new XML_Beautifier();
-#            $res = $fmt->formatString($res);
+            //require_once "XML/Beautifier.php";
+            //$fmt = new XML_Beautifier();
+            //$res = $fmt->formatString($res);
             return $res;
         }else
             return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<metadata/>\n";
@@ -243,9 +243,11 @@ class MetaData{
      *  @param value string/NULL value to store, if NULL then delete record
      *  @param lang string, optional xml:lang value for select language version
      *  @param mid int, metadata record id (OPTIONAL on unique elements)
+     *  @param container string, container element name for insert
      *  @return boolean
      */
-    function setMetadataValue($category, $value, $lang=NULL, $mid=NULL)
+    function setMetadataValue($category, $value, $lang=NULL, $mid=NULL,
+        $container='metadata')
     {
         $rows   = $this->getMetadataValue($category, $lang);
         $aktual = NULL;
@@ -277,12 +279,12 @@ class MetaData{
             }
             if(PEAR::isError($res)) return $res;
         }else{
-            $container = $this->getMetadataValue('metadata', NULL, '_blank');
-            if(PEAR::isError($container)) return $container;
-            $id = $container[0]['mid'];
+            $contArr = $this->getMetadataValue($container, NULL, '_blank');
+            if(PEAR::isError($contArr)) return $contArr;
+            $id = $contArr[0]['mid'];
             if(is_null($id)){
                 return PEAR::raiseError(
-                    "MetaData::setMdataValue: metadata container  not found"
+                    "MetaData::setMdataValue: container ($container) not found"
                 );
             }
             $a     = XML_Util::splitQualifiedName(strtolower($category));
@@ -302,7 +304,7 @@ class MetaData{
     }
 
     /**
-     *  Regenerate XML metadata file after category value change
+     *  Regenerate XML metadata file after metadata value change
      *
      *  @return boolean
      */
@@ -490,6 +492,8 @@ class MetaData{
         $objns=NULL, $object=NULL)
     {
         //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object\n";
+        $predns = strtolower($predns);
+        $predicate = strtolower($predicate);
         $predns_sql = (is_null($predns) ? "NULL" : "'$predns'" );
         $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
         $object_sql = (is_null($object)? "NULL" : "'$object'");
@@ -514,6 +518,7 @@ class MetaData{
     /**
      *  Delete metadata record recursively
      *
+     *  @param mid int local metadata record id
      *  @return boolean
      */
     function deleteRecord($mid)

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -80,6 +80,33 @@ class GreenBox extends BasicStor{
         return $this->bsPutFile(
             $parid, $fileName, $mediaFileLP, $mdataFileLP, $gunid, $ftype
         );
+    }
+
+    /**
+     *  Store new webstream
+     *
+     *  @param parid int, parent id
+     *  @param fileName string, name for new file
+     *  @param mdataFileLP string, local path of metadata file
+     *  @param sessid string, session id
+     *  @param gunid string, global unique id OPTIONAL
+     *  @param url string, wewbstream url
+     *  @return int
+     *  @exception PEAR::error
+     */
+    function storeWebstream($parid, $fileName, $mdataFileLP, $sessid='',
+         $gunid=NULL, $url)
+    {
+        if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
+            return $res;
+        $oid = $this->bsPutFile(
+            $parid, $fileName, '', $mdataFileLP, $gunid, 'webstream'
+        );
+        if(PEAR::isError($oid)) return $oid;
+        $r = $this-> bsSetMetadataValue(
+            $oid, 'ls:url', $url, NULL, NULL, 'audioClip');
+        if(PEAR::isError($r)) return $r;
+        return $oid;
     }
 
     /**
@@ -259,7 +286,7 @@ class GreenBox extends BasicStor{
      *  @param mid int, metadata record id (OPTIONAL on unique elements)
      *  @return boolean
      */
-    function setMdataValue($id, $category, $sessid='', $value, $lang=NULL, $mid=NULL)
+    function setMdataValue($id, $category, $sessid, $value, $lang=NULL, $mid=NULL)
     {
         if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
             return $res;

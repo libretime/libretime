@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -147,6 +147,7 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
+            case"webstream":
                 $ac =& StoredFile::recall($this, $id);
                 if(PEAR::isError($ac)){
                     // catch nonerror exception:
@@ -187,6 +188,7 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
+            case"webstream":
             case"File":
                 return $this->_relocateSubtree($id, $did);
                 break;
@@ -224,6 +226,7 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
+            case"webstream":
             case"File":
                 return $this->_copySubtree($id, $did);
                 break;
@@ -620,12 +623,15 @@ class BasicStor extends Alib{
      *  @param value string/NULL value to store, if NULL then delete record
      *  @param lang string, optional xml:lang value for select language version
      *  @param mid int, metadata record id (OPTIONAL on unique elements)
+     *  @param container string, container element name for insert
      *  @return boolean
      */
-    function bsSetMetadataValue($id, $category, $value, $lang=NULL, $mid=NULL)
+    function bsSetMetadataValue(
+        $id, $category, $value, $lang=NULL, $mid=NULL, $container='metadata')
     {
         $ac =& StoredFile::recall($this, $id);
-        $res = $ac->md->setMetadataValue($category, $value, $lang, $mid);
+        $res = $ac->md->setMetadataValue(
+            $category, $value, $lang, $mid, $container);
         if(PEAR::isError($res)) return $res;
         $r = $ac->md->regenerateXmlFile();
         if(PEAR::isError($r)) return $r;
@@ -855,7 +861,7 @@ class BasicStor extends Alib{
         }
         if($perm) return TRUE;
         $adesc = "[".join(',',$acts)."]";
-        return PEAR::raiseError("GreenBox::$adesc: access denied", GBERR_DENY);
+        return PEAR::raiseError("BasicStor::$adesc: access denied", GBERR_DENY);
     }
 
     /**
@@ -922,6 +928,22 @@ class BasicStor extends Alib{
         return $ftype;
     }
 
+    /**
+     *  Check gunid format
+     *
+     *  @param gunid string, global unique ID
+     *  @return boolean
+     */
+    function _checkGunid($gunid)
+    {
+        if(!preg_match("|^([0-9a-fA-F]{16})?$|", $gunid)){
+            return PEAR::raiseError(
+                "BasicStor.php: Wrong gunid ($gunid)"
+            );
+        }
+        return TRUE;
+    }
+
     /* ------------------------------------------ redefined "private" methods */
     /**
      *  Copy virtual file.<br>
@@ -937,6 +959,7 @@ class BasicStor extends Alib{
         switch($this->getObjType($id)){
             case"audioclip":
             case"playlist":
+            case"webstream":
                 $ac =& StoredFile::recall($this, $id);
                 if(PEAR::isError($ac)){ return $ac; }
                 $ac2 =& StoredFile::copyOf($ac, $nid);
@@ -974,6 +997,7 @@ class BasicStor extends Alib{
         switch($ot = $this->getObjType($id)){
             case"audioclip":
             case"playlist":
+            case"webstream":
                 $ac =& StoredFile::recall($this, $id);
                 if(PEAR::isError($ac)) return $ac;
                 if($ac->isEdited() && !$forced){
@@ -994,7 +1018,7 @@ class BasicStor extends Alib{
                 break;
             default:
                 return PEAR::raiseError(
-                    "GreenBox::bsDeleteFile: unknown obj type ($ot)"
+                    "BasicStor::bsDeleteFile: unknown obj type ($ot)"
                 );
         }
         $res = parent::removeObj($id);
