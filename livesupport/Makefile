@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.13 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -83,6 +83,7 @@ ICU_VERSION       = icu-3.0
 
 MODULES_DIR           = ${BASE_DIR}/modules
 CORE_DIR              = ${MODULES_DIR}/core
+AUTHENTICATION_DIR    = ${MODULES_DIR}/authentication
 DB_DIR                = ${MODULES_DIR}/db
 STORAGE_DIR           = ${MODULES_DIR}/storage
 PLAYLIST_EXECUTOR_DIR = ${MODULES_DIR}/playlistExecutor
@@ -122,6 +123,7 @@ testresults:
 flawfinder:
 	${FLAWFINDER} -c --immediate --html \
                   ${CORE_DIR}/include ${CORE_DIR}/src \
+                  ${AUTHENTICATION_DIR}/include ${AUTHENTICATION_DIR}/src \
                   ${DB_DIR}/include ${DB_DIR}/src \
                   ${STORAGE_DIR}/include ${STORAGE_DIR}/src \
                   ${PLAYLIST_EXECUTOR_DIR}/include \
@@ -151,6 +153,7 @@ doxytag_setup:
 
 modules_setup:
 	${CORE_DIR}/bin/autogen.sh
+	${AUTHENTICATION_DIR}/bin/autogen.sh
 	${DB_DIR}/bin/autogen.sh
 	${STORAGE_DIR}/bin/autogen.sh
 	${PLAYLIST_EXECUTOR_DIR}/bin/autogen.sh
@@ -161,6 +164,7 @@ products_setup:
 
 distclean:
 	${MAKE} -c ${CORE_DIR} distclean
+	${MAKE} -c ${AUTHENTICATION_DIR} distclean
 	${MAKE} -c ${DB_DIR} distclean
 	${MAKE} -c ${STORAGE_DIR} distclean
 	${MAKE} -c ${PLAYLIST_EXECUTOR_DIR} distclean
@@ -169,6 +173,7 @@ distclean:
 
 depclean:
 	${MAKE} -c ${CORE_DIR} clean
+	${MAKE} -c ${AUTHENTICATION_DIR} clean
 	${MAKE} -c ${DB_DIR} clean
 	${MAKE} -c ${STORAGE_DIR} clean
 	${MAKE} -c ${PLAYLIST_EXECUTOR_DIR} clean
