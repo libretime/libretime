@@ -264,9 +264,9 @@ class uiHandler extends uiBase {
     function editMetaData(&$formdata)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-        $this->redirUrl = UI_BROWSER."?act=editItem&id=$id&curr_langid=".$formdata['target_langid'];
         $id             = $formdata['id'];
         $curr_langid    = $formdata['curr_langid'];
+        $this->redirUrl = UI_BROWSER."?act=editItem&id=$id&curr_langid=".$formdata['target_langid'];
 
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {

@@ -398,10 +398,10 @@ class uiPlaylist
     function editMetaData(&$formdata)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-        $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
         $id             = $this->activeId;
         $curr_langid    = $formdata['curr_langid'];
-
+        $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
+        
         foreach ($mask['playlist'] as $k=>$v) {
             $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;
         }
