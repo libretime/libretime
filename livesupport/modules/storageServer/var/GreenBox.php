@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-    Author   : $Author: sebastian $
-    Version  : $Revision: 1.35 $
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,8 @@ require_once "BasicStor.php";
  *
  *  LiveSupport file storage module
  *
- *  @author  $Author: sebastian $
- *  @version $Revision: 1.35 $
+ *  @author  $Author: tomas $
+ *  @version $Revision: 1.36 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -388,26 +388,37 @@ class GreenBox extends BasicStor{
     /**
      *  Create a new empty playlist.
      *
-     *  @param sessid string, session ID
-     *  @param gunid string, playlist global unique ID
+     *  @param parid int, parent id
      *  @param fname string, human readable menmonic file name
-     *  @return string, playlist global unique ID
+     *  @param gunid string, playlist global unique ID
+     *  @param sessid string, session ID
+     *  @return int, local id of created playlist
      */
-    function createPlaylist($sessid, $gunid, $fname)
+    function createPlaylist($parid, $fname, $gunid, $sessid)
     {
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->createPlaylist($sessid, $gunid, $fname);
+        $gunid2 = $lc->createPlaylist($sessid, $gunid, $fname);
+        if(PEAR::isError($gunid2)) return $gunid2;
+        $id = $this->_idFromGunid($gunid2);
+        if(PEAR::isError($id)) return $id;
+        $hdid = $this->_getHomeDirId($sessid);
+        if(PEAR::isError($hdid)) return $hdid;
+        if($parid != $hdid && !is_null($parid)){
+            $r = $this->bsMoveFile($id, $parid);
+        }
+        if(PEAR::isError($r)){ return $r; }
+        return $id;
     }
 
     /**
      *  Return playlist as XML string
      *
-     *  @param sessid string, session ID
      *  @param id int, local object id
+     *  @param sessid string, session ID
      *  @return string, XML
      */
-    function getPlaylistXml($sessid, $id)
+    function getPlaylistXml($id, $sessid)
     {
         return $this->getMdata($id, $sessid);
     }
@@ -415,11 +426,11 @@ class GreenBox extends BasicStor{
     /**
      *  Return playlist as hierarchical PHP hash-array
      *
-     *  @param sessid string, session ID
      *  @param id int, local object id
+     *  @param sessid string, session ID
      *  @return array
      */
-    function getPlaylistArray($sessid, $id)
+    function getPlaylistArray($id, $sessid)
     {
         $gunid = $this->_gunidFromId($id);
         $pl =& StoredFile::recall($this, $id);
@@ -431,11 +442,11 @@ class GreenBox extends BasicStor{
     /**
      *  Mark playlist as edited and return edit token
      *
-     *  @param sessid string, session ID
      *  @param id int, local object id
+     *  @param sessid string, session ID
      *  @return string, playlist access token
      */
-    function lockPlaylistForEdit($sessid, $id)
+    function lockPlaylistForEdit($id, $sessid)
     {
         $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
@@ -448,11 +459,11 @@ class GreenBox extends BasicStor{
     /**
      *  Release token, regenerate XML from DB and clear edit flag.
      *
-     *  @param sessid string, session ID
      *  @param token string, playlist access token
+     *  @param sessid string, session ID
      *  @return string gunid
      */
-    function releaseLockedPlaylist($sessid, $token)
+    function releaseLockedPlaylist($token, $sessid)
     {
         $gunid = $this->bsCloseDownload($token, 'metadata');
         if(PEAR::isError($gunid)) return $gunid;
@@ -467,12 +478,12 @@ class GreenBox extends BasicStor{
     /**
      *  Add audioclip specified by gunid to the playlist
      *
-     *  @param sessid string, session ID
      *  @param token string, playlist access token
      *  @param acGunid string, global unique ID of added file
+     *  @param sessid string, session ID
      *  @return string, generated playlistElement gunid
      */
-    function addAudioClipToPlaylist($sessid, $token, $acGunid)
+    function addAudioClipToPlaylist($token, $acGunid, $sessid)
     {
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
@@ -563,12 +574,12 @@ class GreenBox extends BasicStor{
     /**
      *  Remove audioclip from playlist
      *
-     *  @param sessid string, session ID
      *  @param token string, playlist access token
      *  @param plElGunid string, global unique ID of deleted playlistElement
+     *  @param sessid string, session ID
      *  @return boolean
      */
-    function delAudioClipFromPlaylist($sessid, $token, $plElGunid)
+    function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
     {
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
@@ -646,11 +657,11 @@ class GreenBox extends BasicStor{
     /**
      *  RollBack playlist changes to the locked state
      *
-     *  @param sessid string, session ID
      *  @param token string, playlist access token
+     *  @param sessid string, session ID
      *  @return string gunid of playlist
      */
-    function revertEditedPlaylist($sessid, $token)
+    function revertEditedPlaylist($token, $sessid)
     {
         $gunid = $this->bsCloseDownload($token, 'metadata');
         if(PEAR::isError($gunid)) return $gunid;
@@ -694,47 +705,16 @@ class GreenBox extends BasicStor{
         return sprintf("%02d:%02d:%09.6f", $h, $m, $r);
     }
 
-    /* ---------- */
-    /**
-     *  Open a Playlist metafile for editing.
-     *  Open readable URL and mark file as beeing edited.
-     *
-     *  @param sessid string, session ID
-     *  @param gunid string, playlist global unique ID
-     *  @return struct
-     *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
-     */
-    function editPlaylist($sessid, $gunid)
-    {
-        require_once"LocStor.php";
-        $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->editPlaylist($sessid, $gunid);
-    }
-
-    /**
-     *  Store a new Playlist metafile in place of the old one.
-     *
-     *  @param sessid string, session ID
-     *  @param playlistToken string, playlist access token
-     *  @param newPlaylist string, new playlist as XML string
-     *  @return string, gunid
-     */
-    function savePlaylist($sessid, $playlistToken, $newPlaylist)
-    {
-        require_once"LocStor.php";
-        $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->savePlaylist($sessid, $playlistToken, $newPlaylist);
-    }
-
     /**
      *  Delete a Playlist metafile.
      *
+     *  @param parid int, parent id
      *  @param sessid string, session ID
-     *  @param gunid string, playlist global unique ID
      *  @return boolean
      */
-    function deletePlaylist($sessid, $gunid)
+    function deletePlaylist($id, $sessid)
     {
+        $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
         return $lc->deletePlaylist($sessid, $gunid);
@@ -743,12 +723,13 @@ class GreenBox extends BasicStor{
     /**
      *  Check whether a Playlist metafile with the given playlist ID exists.
      *
+     *  @param parid int, parent id
      *  @param sessid string, session ID
-     *  @param gunid string, playlist global unique ID
      *  @return boolean
      */
-    function existsPlaylist($sessid, $gunid)
+    function existsPlaylist($gunid, $sessid)
     {
+        $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
         return $lc->existsPlaylist($sessid, $gunid);
@@ -759,12 +740,13 @@ class GreenBox extends BasicStor{
      *  is available for editing, i.e., exists and is not marked as
      *  beeing edited.
      *
+     *  @param parid int, parent id
      *  @param sessid string, session ID
-     *  @param gunid string, playlist global unique ID
      *  @return boolean
      */
-    function playlistIsAvailable($sessid, $gunid)
+    function playlistIsAvailable($gunid, $sessid)
     {
+        $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
         return $lc->playlistIsAvailable($sessid, $gunid);
