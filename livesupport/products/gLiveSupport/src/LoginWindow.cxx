@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -176,8 +176,8 @@ LoginWindow :: ~LoginWindow (void)                        throw ()
 void
 LoginWindow :: onOkButtonClicked (void)                  throw ()
 {
-    loginText.reset(new std::string(loginEntry->get_text()));
-    passwordText.reset(new std::string(passwordEntry->get_text()));
+    loginText.reset(new Glib::ustring(loginEntry->get_text()));
+    passwordText.reset(new Glib::ustring(passwordEntry->get_text()));
 
     hide();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/GtkLocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ using namespace LiveSupport::Core;
  *  Base class for localized objects, using GTK+ strings.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class GtkLocalizedObject : public LocalizedObject
 {
@@ -89,11 +89,21 @@ class GtkLocalizedObject : public LocalizedObject
         /**
          *  Convert an ICU unicode string to a Glib ustring.
          *
-         *  @param unicodeString the ICU unicode string to conver.
+         *  @param unicodeString the ICU unicode string to convert.
          *  @return the same string as supplied, in Glib ustring form.
          */
         static Ptr<Glib::ustring>::Ref
         unicodeStringToUstring(Ptr<const UnicodeString>::Ref   unicodeString)
+                                                                    throw ();
+
+        /**
+         *  Convert a Glib ustring to an ICU unicode string.
+         *
+         *  @param gString the Glib ustring to convert
+         *  @return the same string as supplied, in ICU unicode form.
+         */
+        static Ptr<UnicodeString>::Ref
+        ustringToUnicodeString(Ptr<const Glib::ustring>::Ref   gString)
                                                                     throw ();
 
         /**
@@ -110,6 +120,33 @@ class GtkLocalizedObject : public LocalizedObject
         {
             return unicodeStringToUstring(getResourceString(key));
         }
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param arguments the arguments to use in the formatting
+         *  @param nArguments the number of arguments supplied
+         *  @return the formatted string, in Glib ustring form
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        formatMessageUstring(const char      * patternKey,
+                             Formattable     * arguments,
+                             unsigned int      nArguments)
+                                                throw (std::invalid_argument)
+        {
+            return unicodeStringToUstring(formatMessage(patternKey,
+                                                        arguments,
+                                                        nArguments));
+        }
+
 };
 
 /* ================================================= external data structures */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/GtkLocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,5 +68,25 @@ GtkLocalizedObject :: unicodeStringToUstring(
     }
 
     return ustr;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create an ICU UnicodeString from a Glib ustring
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+GtkLocalizedObject :: ustringToUnicodeString(
+                                Ptr<const Glib::ustring>::Ref   gString)
+                                                                    throw ()
+{
+    Ptr<UnicodeString>::Ref     uString(new UnicodeString());
+
+    Glib::ustring::const_iterator     it = gString->begin();
+    Glib::ustring::const_iterator     end = gString->end();
+    while (it < end) {
+        uString->append((UChar32) *it++);
+    }
+
+    return uString;
 }
 

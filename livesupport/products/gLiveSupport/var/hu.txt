@@ -1,5 +1,8 @@
 hu:table
 {
+    welcomeMsg:string       { "Üdvözöljük" }
+    loggedInMsg:string      { "Bejelentkezve {0} felhasználóként" }
+
     loginWindow:table
     {
         loginLabel:string      { "azonositó:" }

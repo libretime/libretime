@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -72,6 +72,12 @@ CORE_LIB_DIR     = ${CORE_DIR}/lib
 CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
+AUTHENTICATION_DIR         = ${MODULES_DIR}/authentication
+AUTHENTICATION_INCLUDE_DIR = ${AUTHENTICATION_DIR}/include
+AUTHENTICATION_LIB_DIR     = ${AUTHENTICATION_DIR}/lib
+AUTHENTICATION_LIB         = livesupport_authentication
+AUTHENTICATION_LIB_FILE   = ${AUTHENTICATION_LIB_DIR}/lib${AUTHENTICATION_LIB}.a
+
 STORAGE_DIR         = ${MODULES_DIR}/storage
 STORAGE_INCLUDE_DIR = ${STORAGE_DIR}/include
 STORAGE_LIB_DIR     = ${STORAGE_DIR}/lib
@@ -89,6 +95,7 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
 G_LIVESUPPORT_EXE = ${TMP_DIR}/gLiveSupport
+G_LIVESUPPORT_CFG = ${ETC_DIR}/gLiveSupport.xml
 G_LIVESUPPORT_CFG = ${ETC_DIR}/gLiveSupport.xml
 TEST_RUNNER   = ${TMP_DIR}/testRunner
 
@@ -109,6 +116,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
+                             -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${STORAGE_INCLUDE_DIR} \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
@@ -116,13 +124,15 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${GTKMM_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
+                     -L${AUTHENTICATION_LIB_DIR} \
                      -L${STORAGE_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
-G_LIVESUPPORT_OBJS = ${TMP_DIR}/UiTestMainWindow.o \
+G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
+                     ${TMP_DIR}/UiTestMainWindow.o \
                      ${TMP_DIR}/GtkLocalizedObject.o \
                      ${TMP_DIR}/LoginWindow.o
 
@@ -135,6 +145,7 @@ G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 FSDF = ${G_LIVESUPPORT_OBJS} \
                          ${TMP_DIR}/main.o
 G_LIVESUPPORT_EXE_LIBS = -l${CORE_LIB} \
+                         -l${AUTHENTICATION_LIB} \
                          -lboost_date_time-gcc \
                          -lxmlrpc++ -lssl -lxml++-1.0
 
@@ -168,6 +179,7 @@ docclean:
 
 depclean: clean
 	${MAKE} -C ${STORAGE_DIR} clean
+	${MAKE} -C ${AUTHENTICATION_DIR} clean
 	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
@@ -179,13 +191,15 @@ run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 run: all
-	${G_LIVESUPPORT_EXE}
+	${G_LIVESUPPORT_EXE} -c ${G_LIVESUPPORT_CFG}
 
 
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
-${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} ${STORAGE_LIB_FILE} \
+${G_LIVESUPPORT_EXE}: ${CORE_LIB_FILE} \
+                      ${AUTHENTICATION_LIB_FILE} \
+                      ${STORAGE_LIB_FILE} \
                       ${G_LIVESUPPORT_OBJS} ${G_LIVESUPPORT_EXE_OBJS}
 	${CXX} ${LDFLAGS} -o $@ $^ ${G_LIVESUPPORT_EXE_LIBS}
 
@@ -195,12 +209,17 @@ ${TMP_DIR}:
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
-${TEST_RUNNER}: ${CORE_LIB_FILE} ${STORAGE_LIB_FILE} \
+${TEST_RUNNER}: ${CORE_LIB_FILE} \
+                ${AUTHENTICATION_LIB_FILE} \
+                ${STORAGE_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}
+
+${AUTHENTICATION_LIB_FILE}:
+	${MAKE} -C ${AUTHENTICATION_DIR}
 
 ${STORAGE_LIB_FILE}:
 	${MAKE} -C ${STORAGE_DIR}

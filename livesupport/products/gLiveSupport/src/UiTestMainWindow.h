@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "LiveSupport/Core/Ptr.h"
 
 #include "GtkLocalizedObject.h"
+#include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -65,7 +66,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -76,6 +77,11 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
         Ptr<Gtk::VButtonBox>::Ref   layout;
 
         /**
+         *  A label to display the status of the user.
+         */
+        Ptr<Gtk::Label>::Ref        statusLabel;
+
+        /**
          *  The to quit the applicaiton.
          */
         Ptr<Gtk::Button>::Ref       quitButton;
@@ -84,6 +90,16 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
          *  The button invoking the LoginWindow.
          */
         Ptr<Gtk::Button>::Ref       loginButton;
+
+        /**
+         *  The button to log out.
+         */
+        Ptr<Gtk::Button>::Ref       logoutButton;
+
+        /**
+         *  The gLiveSupport object, handling the logic of the application.
+         */
+        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  Signal handler for the quit button clicked.
@@ -97,14 +113,23 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
         virtual void
         onLoginButtonClicked(void)                          throw ();
 
+        /**
+         *  Signal handler for the logout button clicked.
+         */
+        virtual void
+        onLogoutButtonClicked(void)                          throw ();
+
 
     public:
         /**
          *  Constructor.
          *
+         *  @param gLiveSupport the gLiveSupport object, handling the
+         *         logic of the application
          *  @param bundle the resource bundle holding localized resources
          */
-        UiTestMainWindow(Ptr<ResourceBundle>::Ref   bundle)
+        UiTestMainWindow(Ptr<GLiveSupport>::Ref     gLiveSupport,
+                         Ptr<ResourceBundle>::Ref   bundle)
                                                                 throw ();
 
         /**

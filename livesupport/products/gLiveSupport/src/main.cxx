@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,15 +37,22 @@
 #include "configure.h"
 #endif
 
+#if HAVE_GETOPT_H
+#include <getopt.h>
+#else
+#error "Need getopt.h"
+#endif
+
 #include <iostream>
 
 #include <unicode/resbund.h>
+#include <libxml++/libxml++.h>
 #include <gtkmm/main.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 
-#include "UiTestMainWindow.h"
+#include "GLiveSupport.h"
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::GLiveSupport;
@@ -55,8 +62,48 @@ using namespace LiveSupport::GLiveSupport;
 
 /* ================================================  local constants & macros */
 
+/**
+ *  Our copyright notice, should be at most 80 columns
+ */
+static const char copyrightNotice[] =
+        "Copyright (c) 2004 Media Development Loan Fund under the GNU GPL";
+
+/**
+ *  String describing the short options.
+ */
+static const char   options[] = "c:hv";
+
+/**
+ *  Structure describing the long options
+ */
+static const struct option longOptions[] = {
+    { "config", required_argument, 0, 'c' },
+    { "help", no_argument, 0, 'h' },
+    { "version", no_argument, 0, 'v' },
+    { 0, 0, 0, 0 }
+};
+
 
 /* ===============================================  local function prototypes */
+
+/**
+ *  Print program version.
+ *
+ *  @param os the std::ostream to print to.
+ */
+static void
+printVersion (  std::ostream  & os );
+
+/**
+ *  Print program usage information.
+ *
+ *  @param invocation the command line command used to invoke this program.
+ *  @param os the std::ostream to print to.
+ */
+static void
+printUsage (    const char      invocation[],
+                std::ostream  & os );
+
 
 /* =============================================================  module code */
 
@@ -70,30 +117,92 @@ using namespace LiveSupport::GLiveSupport;
 int main (  int     argc,
             char  * argv[] )
 {
+    // initialize the Gtk library, with the Gtk options first
     Gtk::Main kit(argc, argv);
 
-    UErrorCode                status = U_ZERO_ERROR;
-    Ptr<ResourceBundle>::Ref  bundle(new ResourceBundle("./tmp/" PACKAGE_NAME,
-                                                        "en",
-                                                        status));
-    if (!U_SUCCESS(status)) {
-        std::cerr << "opening resource bundle a failure" << std::endl;
+    // take a look at our options
+    int         i;
+    std::string configFileName;
+
+    while ((i = getopt_long(argc, argv, options, longOptions, 0)) != -1) {
+        switch (i) {
+            case 'c':
+                configFileName = optarg;
+                break;
+
+            case 'h':
+                printUsage(argv[0], std::cout);
+                exit(EXIT_SUCCESS);
+
+            case 'v':
+                printVersion(std::cout);
+                exit(EXIT_SUCCESS);
+
+            default:
+                printUsage(argv[0], std::cout);
+                exit(EXIT_FAILURE);
+        }
+    }
+
+    if (optind != argc) {
+        printUsage(argv[0], std::cout);
         exit(EXIT_FAILURE);
     }
 
-    Ptr<UiTestMainWindow>::Ref  mainWindow(new UiTestMainWindow(bundle));
+    std::cerr << "using config file '" << configFileName << '\'' << std::endl;
 
-    Ptr<ResourceBundle>::Ref    loginBundle;
+    Ptr<GLiveSupport>::Ref  gLiveSupport(new GLiveSupport());
+
     try {
-        loginBundle = mainWindow->getBundle("loginWindow");
+        std::auto_ptr<xmlpp::DomParser> 
+                            parser(new xmlpp::DomParser(configFileName, true));
+        const xmlpp::Document * document = parser->get_document();
+        gLiveSupport->configure(*(document->get_root_node()));
     } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "semantic error in configuration file" << std::endl
+                  << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+    } catch (xmlpp::exception &e) {
+        std::cerr << "error parsing configuration file" << std::endl
+                  << e.what() << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    // Shows the window and returns when it is closed.
-    Gtk::Main::run(*mainWindow);
+    gLiveSupport->show();
 
     exit(EXIT_SUCCESS);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Print program version.
+ *----------------------------------------------------------------------------*/
+static void
+printVersion (  std::ostream  & os )
+{
+    os << PACKAGE_NAME << ' ' << PACKAGE_VERSION << std::endl
+       << copyrightNotice << std::endl;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Print program usage.
+ *----------------------------------------------------------------------------*/
+static void
+printUsage (    const char      invocation[],
+                std::ostream  & os )
+{
+    os << PACKAGE_NAME << ' ' << PACKAGE_VERSION << std::endl
+       << std::endl
+       << "Usage: " << invocation << " [OPTION]"
+       << std::endl
+       << "  mandatory options:" << std::endl
+       << "  -c, --config=file.name   scheduler configuration file" << std::endl
+       << "  optional options:" << std::endl
+       << "  -h, --help               display this help and exit" << std::endl
+       << "  -v, --version            display version information and exit"
+                                                                    << std::endl
+       << std::endl
+       << "Report bugs to " << PACKAGE_BUGREPORT << std::endl;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  A window, handling user login.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class LoginWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -109,12 +109,12 @@ class LoginWindow : public Gtk::Window, public GtkLocalizedObject
         /**
          *  The login text, that was entered by the user.
          */
-        Ptr<std::string>::Ref       loginText;
+        Ptr<Glib::ustring>::Ref     loginText;
 
         /**
          *  The password text, that was entered by the user.
          */
-        Ptr<std::string>::Ref       passwordText;
+        Ptr<Glib::ustring>::Ref     passwordText;
 
         /**
          *  Signal handler for the ok button clicked.
@@ -143,7 +143,7 @@ class LoginWindow : public Gtk::Window, public GtkLocalizedObject
          *
          *  @return the login entered by the user.
          */
-        Ptr<const std::string>::Ref
+        Ptr<const Glib::ustring>::Ref
         getLogin(void) const                                throw ()
         {
             return loginText;
@@ -154,7 +154,7 @@ class LoginWindow : public Gtk::Window, public GtkLocalizedObject
          *
          *  @return the password entered by the user.
          */
-        Ptr<const std::string>::Ref
+        Ptr<const Glib::ustring>::Ref
         getPassword(void) const                             throw ()
         {
             return passwordText;

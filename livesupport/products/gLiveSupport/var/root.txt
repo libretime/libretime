@@ -1,5 +1,8 @@
 root:table
 {
+    welcomeMsg:string       { "welcome" }
+    loggedInMsg:string      { "Logged in as {0}" }
+
     loginWindow:table
     {
         loginLabel:string      { "login:" }
