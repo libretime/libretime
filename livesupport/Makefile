@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.27 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.28 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -98,6 +98,7 @@ PLAYLIST_EXECUTOR_DIR = ${MODULES_DIR}/playlistExecutor
 EVENT_SCHEDULER_DIR   = ${MODULES_DIR}/eventScheduler
 SCHEDULER_CLIENT_DIR  = ${MODULES_DIR}/schedulerClient
 WIDGETS_DIR           = ${MODULES_DIR}/widgets
+STORAGE_SERVER_DIR    = ${MODULES_DIR}/storageServer
 
 PRODUCTS_DIR  = ${BASE_DIR}/products
 SCHEDULER_DIR = ${PRODUCTS_DIR}/scheduler
@@ -185,6 +186,8 @@ modules_setup:
 	${EVENT_SCHEDULER_DIR}/bin/autogen.sh
 	${SCHEDULER_CLIENT_DIR}/bin/autogen.sh
 	${WIDGETS_DIR}/bin/autogen.sh
+#	-${MAKE} -C ${STORAGE_SERVER_DIR} dir_setup
+	-${MAKE} -C ${STORAGE_SERVER_DIR} all
 
 products_setup:
 	${SCHEDULER_DIR}/bin/autogen.sh
@@ -213,6 +216,7 @@ depclean:
 	${MAKE} -C ${WIDGETS_DIR} depclean
 	${MAKE} -C ${SCHEDULER_DIR} depclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} depclean
+	-${MAKE} -C ${STORAGE_SERVER_DIR} depclean
 
 compile:
 	${MAKE} -C ${CORE_DIR} all
@@ -237,4 +241,5 @@ check:
 	-${MAKE} -C ${WIDGETS_DIR} check
 	-${MAKE} -C ${SCHEDULER_DIR} check
 #	-${MAKE} -C ${GLIVESUPPORT_DIR} check
+#	-${MAKE} -C ${STORAGE_SERVER_DIR} check
 
