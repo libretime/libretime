@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -215,20 +215,23 @@ TestStorageClientTest :: acquireAudioClipTest(void)
 {
     Ptr<const UniqueId>::Ref    id2(new UniqueId(10002));
     Ptr<const UniqueId>::Ref    id77(new UniqueId(10077));
-    Ptr<std::string>::Ref       audioClipPath;
+    Ptr<AudioClip>::Ref         audioClip;
     
     try {
-        audioClipPath = tsc->acquireAudioClip(id2);
+        audioClip = tsc->acquireAudioClip(id2);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not acquire audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
     }
-    CPPUNIT_ASSERT(*audioClipPath == "var/test10002.mp3");
+    string  audioClipUri("file://");
+    audioClipUri += get_current_dir_name();
+    audioClipUri += "/var/test2.mp3";
+    CPPUNIT_ASSERT(*(audioClip->getUri()) == audioClipUri);
     
     try {
-        tsc->releaseAudioClip(id2);
+        tsc->releaseAudioClip(audioClip);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not release audio clip:\n";
@@ -237,11 +240,11 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     }
 
     try {
-        audioClipPath = tsc->acquireAudioClip(id77);
+        audioClip = tsc->acquireAudioClip(id77);
         CPPUNIT_FAIL("allowed to acquire non-existent audio clip");
     }
     catch (std::logic_error &e) {
-    }    
+    }
 }
 
 
@@ -254,29 +257,31 @@ TestStorageClientTest :: acquirePlaylistTest(void)
 {
     Ptr<UniqueId>::Ref      id1(new UniqueId(1));
     Ptr<UniqueId>::Ref      id77(new UniqueId(77));
-    Ptr<std::string>::Ref   playlistPath;
+    Ptr<Playlist>::Ref      playlist;
     
     try {
-        playlistPath = tsc->acquirePlaylist(id1);
+        playlist = tsc->acquirePlaylist(id1);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not acquire playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
     }
-    CPPUNIT_ASSERT(*playlistPath == "var/tempPlaylist1.smil");
+    CPPUNIT_ASSERT(playlist->getUri());
+    CPPUNIT_ASSERT(playlist->getUri()->substr(0,7) == "file://");
     
     try {
-        std::FILE * f = fopen(playlistPath->c_str(), "r");
+        std::FILE * f = fopen(playlist->getUri()->substr(7).c_str(), "r");
         CPPUNIT_ASSERT(f);
         std::fclose(f);
     }
     catch (std::exception &e) {
         CPPUNIT_FAIL("temp file not created correctly");
     }
-    
+
+    string  savedTempFilePath = playlist->getUri()->substr(7);
     try {
-        tsc->releasePlaylist(id1);
+        tsc->releasePlaylist(playlist);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not release playlist:\n";
@@ -284,17 +289,17 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         CPPUNIT_FAIL(eMsg);
     }
     try {
-        std::FILE * f = fopen(playlistPath->c_str(), "r");
+        std::FILE * f = fopen(savedTempFilePath.c_str(), "r");
         CPPUNIT_ASSERT(!f);
     }
     catch (std::exception &e) {
-        CPPUNIT_FAIL("temp file not created correctly");
+        CPPUNIT_FAIL("temp file not destroyed correctly");
     }
 
     try {
-        playlistPath = tsc->acquirePlaylist(id77);
+        playlist = tsc->acquirePlaylist(id77);
         CPPUNIT_FAIL("allowed to acquire non-existent playlist");
     }
     catch (std::logic_error &e) {
-    }     
+    }  
 }

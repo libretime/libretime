@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -168,27 +168,30 @@ class TestStorageClient :
         /**
          *  Acquire the resources for the playlist.
          *
+         *  Produces absolute paths prefixed by "file://"; e.g.,
+         *  "file:///some/dir/test1.mp3" and "file:///tmp/tempfileXXXX.smil".
+         *
          *  @param id the id of the playlist to acquire.
-         *  @return a path (in the local storage) to the Playlist SMIL 
-         *          temp file.
+         *  @return a new Playlist instance containing a uri field which
+         *          points to an executable (playable) SMIL representation of
+         *          the playlist (in the local storage).
          *  @exception std::invalid_argument if no playlist with the specified
          *             specified id exists. 
          */
-        virtual Ptr<std::string>::Ref
+        virtual Ptr<Playlist>::Ref
         acquirePlaylist(Ptr<const UniqueId>::Ref id) const
                                             throw (std::logic_error);
 
         /**
          *  Release the resources (audio clips, other playlists) used 
          *  in a playlist.
-         *  At this point, this does not do anything.
          *
-         *  @param id the id of the playlist to release.
-         *  @exception std::invalid_argument if no playlist with the specified
-         *             specified id exists. 
+         *  @param playlist the playlist to release.
+         *  @exception std::logic_error if the playlist has no uri field,
+         *             or the file does not exist, etc.
          */
         virtual void
-        releasePlaylist(Ptr<const UniqueId>::Ref id) const
+        releasePlaylist(Ptr<const Playlist>::Ref playlist) const
                                             throw (std::logic_error);
 
         /**
@@ -244,25 +247,28 @@ class TestStorageClient :
         /**
          *  Acquire the resources for the audio clip with the specified id.
          *
+         *  Assumes URIs in the config file are relative paths prefixed by
+         *  "file:"; e.g., "file:var/test1.mp3".
+         *
          *  @param id the id of the audio clip to acquire.
-         *  @return a URI to the audio clip.
+         *  @return a new AudioClip instance, containing a uri field which
+         *          points to (a way of getting) the sound file.
          *  @exception std::invalid_argument if no audio clip with the 
          *             specified id exists. 
          */
-        virtual Ptr<std::string>::Ref
+        virtual Ptr<AudioClip>::Ref
         acquireAudioClip(Ptr<const UniqueId>::Ref id) const
                                             throw (std::logic_error);
-                                            
+
         /**
-         *  Release the lock on an audio clip with the specified id.
-         *  At this point, this does not do anything.
+         *  Release the resource (sound file) used by an audio clip.
          *
          *  @param id the id of the audio clip to release.
-         *  @exception std::invalid_argument if no audio clip with the 
-         *             specified id exists. 
+         *  @exception std::logic_error if the audio clip has no uri field, 
+         *             or the file does not exist, etc. 
          */
         virtual void
-        releaseAudioClip(Ptr<const UniqueId>::Ref id) const
+        releaseAudioClip(Ptr<const AudioClip>::Ref audioClip) const
                                             throw (std::logic_error);
 
         /**

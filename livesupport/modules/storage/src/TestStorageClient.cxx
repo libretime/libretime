@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -31,6 +31,12 @@
 
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
+#endif
+
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#else
+#error "Need unistd.h"
 #endif
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -55,7 +61,7 @@ const std::string TestStorageClient::configElementNameStr = "testStorage";
 /*------------------------------------------------------------------------------
  *  The path to the local temp storage
  *----------------------------------------------------------------------------*/
-const std::string TestStorageClient::localTempStoragePath = "tmp/";
+const std::string TestStorageClient::localTempStoragePath = "var/";
 
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
@@ -192,7 +198,7 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
 /*------------------------------------------------------------------------------
  *  Acquire resources for a playlist.
  *----------------------------------------------------------------------------*/
-Ptr<std::string>::Ref
+Ptr<Playlist>::Ref
 TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::logic_error)
 {
@@ -202,8 +208,11 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
         throw std::invalid_argument("no such playlist");
     }
 
-    Ptr<Playlist>::Ref  playlist = playlistMapIt->second;
-
+    Ptr<Playlist>::Ref      oldPlaylist = playlistMapIt->second;
+    Ptr<time_duration>::Ref playlength(new time_duration(
+                                       *(oldPlaylist->getPlaylength()) ));
+    Ptr<Playlist>::Ref      newPlaylist(new Playlist(UniqueId::generateId(),
+                                                     playlength));
     Ptr<xmlpp::Document>::Ref
                         smilDocument(new xmlpp::Document(xmlVersion));
     xmlpp::Element    * smilRootNode 
@@ -218,25 +227,39 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
     xmlpp::Element    * smilSeqNode
                         = smilBodyNode->add_child(smilSeqNodeName);
     
-    Playlist::const_iterator it = playlist->begin();
+    Playlist::const_iterator it = oldPlaylist->begin();
 
-    while (it != playlist->end()) {
+    while (it != oldPlaylist->end()) {
+        Ptr<AudioClip>::Ref audioClip = acquireAudioClip( it->second
+                                                            ->getAudioClip()
+                                                            ->getId() );
+        Ptr<time_duration>::Ref relativeOffset(new time_duration(
+                                    *(it->second->getRelativeOffset()) ));
+        Ptr<const FadeInfo>::Ref    oldFadeInfo = it->second->getFadeInfo();
+        Ptr<FadeInfo>::Ref          newFadeInfo;
+        if (oldFadeInfo) {                      // careful: fadeInfo may be 0
+            newFadeInfo.reset(new FadeInfo(*oldFadeInfo));
+        } 
+
+        newPlaylist->addAudioClip(audioClip,
+                                  relativeOffset,
+                                  newFadeInfo);
+
         xmlpp::Element    * smilAudioClipNode
                             = smilSeqNode->add_child(smilAudioClipNodeName);
         smilAudioClipNode->set_attribute(
                     smilAudioClipUriAttrName, 
-                  * acquireAudioClip(it->second->getAudioClip()->getId()));
-        ++it;                                       // may throw exception
+                    *(audioClip->getUri()) );
+        ++it;
     }
     
-    std::stringstream       fileNameBuffer;
-    fileNameBuffer << localTempStoragePath << "tempPlaylist" 
-                                           << id->getId() 
-                                           << ".smil";
-    Ptr<std::string>::Ref   fileName(new std::string(fileNameBuffer.str()));
+    std::string     smilFileName = "file://";
+    smilFileName += tempnam(0, "smil");
+    smilDocument->write_to_file(smilFileName, "UTF-8");
 
-    smilDocument->write_to_file(*fileName, "UTF-8");
-    return fileName;
+    Ptr<std::string>::Ref   playlistUri(new std::string(smilFileName));
+    newPlaylist->setUri(playlistUri);
+    return newPlaylist;
 }
 
 
@@ -244,38 +267,43 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releasePlaylist(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: releasePlaylist(Ptr<const Playlist>::Ref playlist) const
                                                 throw (std::logic_error)
 {
-    PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
-
-    if (playlistMapIt == playlistMap.end()) {
-        throw std::invalid_argument("no such playlist");
+    if (! playlist->getUri()) {
+        throw std::logic_error("playlist URI not found");
     }
-    
-    Ptr<Playlist>::Ref          playlist = playlistMapIt->second;
+
+    try {
+        std::FILE * f = fopen(playlist->getUri()->substr(7).c_str(), "r");
+        if (!f) {
+            throw std::logic_error("playlist temp file not found");
+        }
+        std::fclose(f);
+    }
+    catch (std::exception &e) {
+        throw std::logic_error("playlist temp file I/O error");
+    }
+
+    std::remove(playlist->getUri()->substr(7).c_str());
    
-    bool                        success = true;
+    int                         badAudioClips = 0;
     Playlist::const_iterator    it = playlist->begin();
     while (it != playlist->end()) {
         try {
-            releaseAudioClip(it->second->getAudioClip()->getId());
+            releaseAudioClip(it->second->getAudioClip());
         }
         catch (std::invalid_argument &e) {
-            success = false;
+            ++badAudioClips;
         }
         ++it;
     }
 
-    std::stringstream       fileNameBuffer;
-    fileNameBuffer << localTempStoragePath << "tempPlaylist" 
-                                           << id->getId() 
-                                           << ".smil";
-    std::remove(fileNameBuffer.str().c_str());
-
-    if (!success) {
-        throw std::logic_error("could not release some audio clips"
-                               " in playlist");
+    if (badAudioClips) {
+        std::stringstream eMsg;
+        eMsg << "could not release " << badAudioClips 
+             << " audio clips in playlist";
+        throw std::logic_error(eMsg.str());
     }
 }
 
@@ -368,7 +396,7 @@ TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
 /*------------------------------------------------------------------------------
  *  Acquire resources for an audio clip.
  *----------------------------------------------------------------------------*/
-Ptr<std::string>::Ref
+Ptr<AudioClip>::Ref
 TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
                                                 throw (std::logic_error)
 {
@@ -378,12 +406,36 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
         throw std::invalid_argument("no such audio clip");
     }
 
-    std::stringstream       fileNameBuffer;
-    fileNameBuffer << localTempStoragePath << "test" 
-                                           << id->getId() 
-                                           << ".mp3";
-    Ptr<std::string>::Ref   fileName(new std::string(fileNameBuffer.str()));
-    return fileName;
+    Ptr<AudioClip>::Ref storedAudioClip = it->second;
+    
+    if (! storedAudioClip->getUri()) {
+        throw std::logic_error("audio clip URI not found");
+    }
+                                                        // cut the "file:" off
+    std::string     audioClipFileName = storedAudioClip->getUri()->substr(5);
+    
+    try {
+        std::FILE * f = fopen(audioClipFileName.c_str(), "r");
+        if (f) {
+            std::fclose(f);
+        }
+        else {
+            throw std::logic_error("could not read audio clip");
+        }
+    }
+    catch (std::exception &e) {
+        throw std::logic_error("could not read audio clip");
+    }
+
+    Ptr<AudioClip>::Ref audioClip(new AudioClip(*storedAudioClip));
+
+    Ptr<std::string>::Ref  audioClipUri(new std::string("file://"));
+    *audioClipUri += get_current_dir_name();        // doesn't work if current
+    *audioClipUri += "/";                           // dir = /, but OK for now
+    *audioClipUri += audioClipFileName;
+
+    audioClip->setUri(audioClipUri);
+    return audioClip;
 }
 
 
@@ -391,13 +443,11 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releaseAudioClip(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: releaseAudioClip(Ptr<const AudioClip>::Ref audioClip) const
                                                 throw (std::logic_error)
 {
-    AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
-
-    if (it == audioClipMap.end()) {
-        throw std::invalid_argument("no such audio clip");
+    if (*(audioClip->getUri()) == "") {
+        throw std::logic_error("audio clip URI not found");
     }
 }
 
