@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TestRunner.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -172,6 +172,7 @@ main(   int     argc,
     // also generate an XML document as an output
     std::ofstream    xmlOutFile(xmlOutFileName->c_str());
     CPPUNIT_NS::XmlOutputter    xmlOutputter(&result, xmlOutFile, encoding);
+    xmlOutputter.setStandalone(false);
     if (xsltFileName) {
         xmlOutputter.setStyleSheet(*xsltFileName);
     }
