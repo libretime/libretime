@@ -164,12 +164,14 @@ $tpldata['showMenu']=true;
     ><a <?php if($o['type']=='Folder'){?>href="gbHtmlBrowse.php?id=<?php echo$o['id']?>"<?php }?>><?php echo$o['name']?></a
     ></span>
     </td><td valign="top">
-    <i>(<?php echo$o['gunid']?>)</i>
+    <i><?php echo($o['gunid'] ? "({$o['gunid']})" : '' )?></i>
     </td><td>
     <?php $a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R', 'audioclip'=>'A', 'playlist'=>'P'); echo$a[$o['type']]?>
     &nbsp;<a href="javascript:frename('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">rename</a>
+    <?php if($o['type']!='Folder'){?>
     &nbsp;<a href="javascript:fmove('<?php echo$o['id']?>', '')" class="button">move</a>
     &nbsp;<a href="javascript:fcopy('<?php echo$o['id']?>', '')" class="button">copy</a>
+    <?php }?>
 <?php /*?>
     &nbsp;<a href="javascript:freplicate('<?php echo$o['name']?>', '<?php echo$o['id']?>')" class="button">replicate</a>
 <?php */?>
