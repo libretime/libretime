@@ -100,22 +100,22 @@ $tpldata['showMenu']=true;
  function fmove(id, relPath){
     var newPath=prompt('Destination folder (relative path):', relPath);
     if(newPath==null) return;
-    location.href='gbHttp.php?id='+id+'&amp;act=move&amp;newPath='+newPath;
+    location.href='gbHttp.php?id='+id+'&act=move&newPath='+newPath;
  }
  function fcopy(id, relPath){
     var newPath=prompt('Destination folder (relative path):', relPath);
     if(newPath==null) return;
-    location.href='gbHttp.php?id='+id+'&amp;act=copy&amp;newPath='+newPath;
+    location.href='gbHttp.php?id='+id+'&act=copy&newPath='+newPath;
  }
  function freplicate(name, id){
     var np=prompt('Destination folder (relative path):', id);
     if(np==null) return;
-    location.href='gbHttp.php?id='+id+'&amp;act=repl&amp;newparid='+np;
+    location.href='gbHttp.php?id='+id+'&act=repl&newparid='+np;
  }
  function newFolder(){
     var nn=prompt('New folder name:');
     if(nn==null) return;
-    location.href='gbHttp.php?id=<?php echo$tpldata['id']?>&amp;act=newFolder&amp;newname='+nn;
+    location.href='gbHttp.php?id=<?php echo$tpldata['id']?>&act=newFolder&newname='+nn;
  }
 -->
 </script>
