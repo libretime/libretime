@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.39 $
+ *  @version $Revision: 1.40 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -729,15 +729,17 @@ class BasicStor extends Alib{
                 'BasicStor::bsListFolder: not a folder', GBERR_NOTF
             );
         $listArr = $this->getDir($id, 'id, name, type, param as target', 'name');
+        if($this->dbc->isError($listArr)) return $listArr;
         foreach($listArr as $i=>$v){
-            if($v['type'] != 'Folder'){
-                $gunid = $this->_gunidFromId($v['id']);
-                $listArr[$i]['type'] =
-                    $this->_getType($gunid);
-                $listArr[$i]['gunid'] = $gunid;
-                if(StoredFIle::_getState($gunid) == 'incomplete')
-                    unset($listArr[$i]);
-            }
+            if($v['type'] == 'Folder')  break;
+            $gunid = $this->_gunidFromId($v['id']);
+            if($this->dbc->isError($gunid)) return $gunid;
+            if(is_null($gunid)){ unset($listArr[$i]); break; }
+            $listArr[$i]['type'] = $r = $this->_getType($gunid);
+            if($this->dbc->isError($r)) return $r;
+            $listArr[$i]['gunid'] = $gunid;
+            if(StoredFIle::_getState($gunid) == 'incomplete')
+                unset($listArr[$i]);
         }
         return $listArr;
     }
@@ -841,10 +843,12 @@ class BasicStor extends Alib{
      */
     function getObjType($oid)
     {
-        $type = $this->getObjName($oid, 'type');
+        $type = parent::getObjType($oid);
         if($type == 'File'){
-            $ftype =
-                $this->_getType($this->_gunidFromId($oid));
+            $gunid = $this->_gunidFromId($oid);
+            if($this->dbc->isError($gunid)) return $gunid;
+            $ftype = $this->_getType($gunid);
+            if($this->dbc->isError($ftype)) return $ftype;
             if(!is_null($ftype)) $type=$ftype;
         }
         return $type;
@@ -1115,8 +1119,9 @@ class BasicStor extends Alib{
      */
     function addObj($name, $type, $parid=1, $aftid=NULL, $param='')
     {
-        if(!is_null($exid = $this->getObjId($name, $parid)))
-            { $this->removeObj($exid); }
+        $exid = $this->getObjId($name, $parid);
+        if($this->dbc->isError($exid)) return $exid;
+        if(!is_null($exid)){ $this->removeObj($exid); }
         return parent::addObj($name, $type, $parid, $aftid, $param);
     }
 
