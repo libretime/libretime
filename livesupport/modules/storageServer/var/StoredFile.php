@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -478,7 +478,7 @@ class StoredFile{
     function _getResDir()
     {
         $resDir="{$this->gb->storageDir}/".substr($this->gunid, 0, 3);
-        if(!file_exists($resDir)){ mkdir($resDir, 02775); }
+        if(!file_exists($resDir)){ mkdir($resDir, 02775); chmod($resDir, 02775); }
         return $resDir;
     }
     /**

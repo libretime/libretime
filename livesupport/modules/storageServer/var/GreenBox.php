@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@ require_once '../StoredFile.php';
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -923,7 +923,8 @@ class GreenBox extends Alib{
         $this->dbc->query("CREATE INDEX {$this->accessTable}_acc_idx
             ON {$this->accessTable} (tmpLink, sessid)");
         if(!file_exists("{$this->storageDir}/buffer")){
-            mkdir("{$this->storageDir}/buffer", 0775);
+            mkdir("{$this->storageDir}/buffer", 02775);
+            chmod("{$this->storageDir}/buffer", 02775);
         }
         $this->initData();
     }

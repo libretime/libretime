@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/RawMediaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ class RawMediaData{
     function insert($mediaFileLP)
     {
         if($this->exists) return FALSE;
-        @umask(0002);
+        umask(0002);
         if(@copy($mediaFileLP, $this->fname)){
 //            @chmod($this->fname, 0775);
             $this->exists = TRUE;

@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -62,7 +62,7 @@ USR_LIB_DIR     = ${USR_DIR}/lib
 
 DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
 
-HTTP_GROUP   = nobody
+HTTP_GROUP   = apache
 
 PHP_DIR 	= ${BASE_DIR}/var
 INSTALL_DIR = ${PHP_DIR}/install

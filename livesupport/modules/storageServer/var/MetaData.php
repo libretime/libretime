@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,9 +157,9 @@ class MetaData{
              $xml = domxml_open_mem($mdata);
         }
         $root = $xml->document_element();
-//        $res = $this->dbTransaction($root, NULL, $mode);
-                                  // $root, $parid=NULL, $mode='insert'
-//        if(PEAR::isError($res)) return $res;
+        if(!is_object($root)) return PEAR::raiseError(
+            "MetaData::storeXMLDoc: metadata parser failed (".gettype($root).")"
+        );
         $this->dbc->query("BEGIN");
         if($mode == 'update') $this->nameSpaces = $this->readNamespaces();
         $res = $this->storeXMLNode($root, NULL, $mode);

@@ -72,7 +72,6 @@ switch($_REQUEST['act']){
         if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$parid";
     break;
-/* NOT WORKING - sorry */
     case"move":
         $newPath = urlencode($_REQUEST['newPath']);
         $did = $gb->getObjIdFromRelPath($id, $newPath);
@@ -96,13 +95,14 @@ switch($_REQUEST['act']){
         }
         else $redirUrl = BROWSER."?id=$did";
     break;
+/* NOT WORKING - sorry
     case"repl":
         $unewpath = urlencode($_REQUEST['newpath']);
         $r = $gb->createReplica($id, $_REQUEST['newpath'], '', $sessid);
         if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         $redirUrl = BROWSER."?id=$newparid";
     break;
-/* */
+*/
     case"delete":
         $parid = $gb->getparent($id);
         $r = $gb->deleteFile($id, $sessid);

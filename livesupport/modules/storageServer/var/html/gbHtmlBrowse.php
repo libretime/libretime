@@ -98,17 +98,17 @@ $tpldata['showMenu']=true;
     '</form>';
  }
  function fmove(id, relPath){
-    var newPath=prompt('Destination folder:', relPath);
+    var newPath=prompt('Destination folder (relative path):', relPath);
     if(newPath==null) return;
     location.href='gbHttp.php?id='+id+'&act=move&newPath='+newPath;
  }
  function fcopy(id, relPath){
-    var newPath=prompt('Destination folder:', relPath);
+    var newPath=prompt('Destination folder (relative path):', relPath);
     if(newPath==null) return;
     location.href='gbHttp.php?id='+id+'&act=copy&newPath='+newPath;
  }
  function freplicate(name, id){
-    var np=prompt('Destination folder:', id);
+    var np=prompt('Destination folder (relative path):', id);
     if(np==null) return;
     location.href='gbHttp.php?id='+id+'&act=repl&newparid='+np;
  }
@@ -165,11 +165,11 @@ $tpldata['showMenu']=true;
     </td><td>
     <?$a=array('Folder'=>'D', 'File'=>'F', 'Replica'=>'R'); echo$a[$o['type']]?>
     &nbsp;<a href="javascript:frename('<?=$o['name']?>', '<?=$o['id']?>')" class="button">rename</a>
-<?/**/?>
     &nbsp;<a href="javascript:fmove('<?=$o['id']?>', '.')" class="button">move</a>
     &nbsp;<a href="javascript:fcopy('<?=$o['id']?>', '.')" class="button">copy</a>
+<?/*?>
     &nbsp;<a href="javascript:freplicate('<?=$o['name']?>', '<?=$o['id']?>')" class="button">replicate</a>
-<?/**/?>
+<?*/?>
     &nbsp;<a href="gbHtmlPerms.php?id=<?=$o['id']?>" class="button">permissions</a>
     &nbsp;<a href="gbHttp.php?act=delete&id=<?=$o['id']?>" class="button"
         onClick="return confirm('Delete object &quot;<?=$o['name']?>&quot;?')">DEL</a>
