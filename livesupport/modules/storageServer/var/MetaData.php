@@ -23,12 +23,14 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
 define('DEBUG', FALSE);
 #define('DEBUG', TRUE);
+define('VALIDATE', FALSE);
+#define('VALIDATE', TRUE);
 define('MODIFY_LAST_MATCH', TRUE);
 
 require_once "XML/Util.php";
@@ -448,6 +450,14 @@ class MetaData{
                 );
             }
             $tree = $parser->getTree();
+            //echo"<pre>";var_dump($tree);exit;
+            if(VALIDATE){
+                require_once"Validator.php";
+                require_once"audioClipFormat.php";
+                $val =& new Validator($audioClipFormat);
+                $res = $val->validate($tree);
+                if(PEAR::isError($res)) return $res;
+            }
             break;
         default:
             return PEAR::raiseError(
