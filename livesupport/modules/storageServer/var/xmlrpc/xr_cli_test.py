@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.10 $
+#    Version  : $Revision: 1.11 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ import sys
 
 if len(sys.argv)<3:
     print """
- Usage: xr_cli_pok.py [-v] [-s http://<server>/<path>/xmlrpc/xrGreenBox.php] <command> <args>
+ Usage: xr_cli_pok.py [-v] [-s http://<server>/<path>/xmlrpc/xrLocStor.php] <command> <args>
    commands and args:
      listMethods
      methodHelp <method>

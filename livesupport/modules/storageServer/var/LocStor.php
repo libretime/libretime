@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -242,13 +242,58 @@ class LocStor extends GreenBox{
      *  Search in metadata database
      *
      *  @param sessid string
-     *  @param criteria string
-     *  @return array or PEAR::error
+     *  @param criteria hash, with following structure:<br>
+     *   <ul>
+     *     <li>filetype - string, type of searched files,
+     *       meaningful values: 'audioclip', 'playlist', 'all'</li>
+     *     <li>operator - string, type of conditions join
+     *       (any condition matches / all conditions match), 
+     *       meaningful values: 'and', 'or', ''
+     *       (may be empty or ommited only with less then 2 items in
+     *       &quot;conditions&quot; field)
+     *     </li>
+     *     <li>conditions - array of hashes with structure:
+     *       <ul>
+     *           <li>cat - string, metadata category name</li>
+     *           <li>op - string, operator - meaningful values:
+     *               'full', 'partial', 'prefix', '=', '&lt;',
+     *               '&lt;=', '&gt;', '&gt;='</li>
+     *           <li>val - string, search value</li>
+     *       </ul>
+     *     </li>
+     *   </ul>
+     *  @return hash, with fields:
+     *   <ul>
+     *      <li>audioClipResults : array with gunid strings
+     *          of audioClips have been found</li>
+     *      <li>playlistResults : array with gunid strings
+     *          of playlists have been found</li>
+     *   </ul>
      *  @see GreenBox::localSearch
      */
     function searchMetadata($sessid, $criteria)
     {
-        $res = $this->localSearch($criteria, $sessid);
+        $filetype   = strtolower($criteria['filetype']);
+        if($filetype=='all'){
+            $criteriaAC = $criteria;    $criteriaAC['filetype'] = 'audioclip';
+            $criteriaPL = $criteria;    $criteriaPL['filetype'] = 'playlist';
+            $resAC = $this->localSearch($criteriaAC);
+            $resPL = $this->localSearch($criteriaPL);
+            return array(
+                'audioClipResults'  => $resAC['results'],
+                'playlistResults'   => $resPL['results']
+            );
+        }
+        $srchRes = $this->localSearch($criteria, $sessid);
+        $res = array('audioClipResults'=>NULL, 'playlistResults'=>NULL);
+        switch($filetype){
+        case"audioclip":
+            $res['audioClipResults'] = $srchRes['results'];
+            break;
+        case"playlist":
+            $res['playlistResults'] = $srchRes['results'];
+            break;
+        }
         return $res;
     }
 

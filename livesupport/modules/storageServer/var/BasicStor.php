@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@ define('GBERR_NOTIMPL', 50);
 
 require_once "../../../alib/var/alib.php";
 require_once "StoredFile.php";
-require_once "Transport.php";
+#require_once "Transport.php";
 
 /**
  *  BasicStor class
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -489,8 +489,27 @@ class BasicStor extends Alib{
     /**
      *  Search in local metadata database.
      *
-     *  @param criteria hash, search criteria - see 
-     *       <a href="../../search.html">format description</a>
+     *  @param criteria hash, with following structure:<br>
+     *   <ul>
+     *     <li>filetype - string, type of searched files,
+     *       meaningful values: 'audioclip', 'playlist'</li>
+     *     <li>operator - string, type of conditions join
+     *       (any condition matches / all conditions match), 
+     *       meaningful values: 'and', 'or', ''
+     *       (may be empty or ommited only with less then 2 items in
+     *       &quot;conditions&quot; field)
+     *     </li>
+     *     <li>conditions - array of hashes with structure:
+     *       <ul>
+     *           <li>cat - string, metadata category name</li>
+     *           <li>op - string, operator - meaningful values:
+     *               'full', 'partial', 'prefix', '=', '&lt;',
+     *               '&lt;=', '&gt;', '&gt;='</li>
+     *           <li>val - string, search value</li>
+     *       </ul>
+     *     </li>
+     *   </ul>
+     *
      *  @return hash, field 'results' is an array with gunid strings
      *  of files have been found
      */
@@ -500,6 +519,7 @@ class BasicStor extends Alib{
         $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
             '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
         );
+        $filetype   = strtolower($criteria['filetype']);
         $operator   = strtolower($criteria['operator']);
         $conds      = $criteria['conditions'];
         $whereArr   = array();
@@ -516,9 +536,12 @@ class BasicStor extends Alib{
             ";
             $whereArr[] = "$sqlCond";
         }
+        $selPart = "SELECT DISTINCT to_hex(f.gunid)as gunid, f.ftype as filetype";
+        $ftypeCond = " AND f.ftype='$filetype'";
         if($operator == 'and'){
             // operator: and
-            $from = array(); $joinArr = array();
+            $from = array("{$this->filesTable} f");
+            $joinArr = array("f.gunid = md0.gunid".$ftypeCond);
             foreach($whereArr as $i=>$v){
                 $from[] = "{$this->mdataTable} md$i";
                 $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i");
@@ -527,7 +550,7 @@ class BasicStor extends Alib{
             // there are n-1 join condtions for join n tables - remove last:
             array_pop($joinArr);
             // query construcion:
-            $sql = "SELECT to_hex(md0.gunid)as gunid \nFROM ".join(", ", $from).
+            $sql = "$selPart\nFROM ".join(", ", $from).
                 "\nWHERE ".join(' AND ', $whereArr);
             // add join conditions if there are any:
             if(count($joinArr)>0){ $sql .= " AND ".join(" AND ", $joinArr); }
@@ -537,8 +560,9 @@ class BasicStor extends Alib{
                 $whereArr[$i] = sprintf($v, "md", "md", "md");
             }
             // query construcion:
-            $sql = "\nSELECT to_hex(gunid)as gunid \n".
-                "FROM {$this->mdataTable} md \nWHERE ".join(' OR ', $whereArr);
+            $sql = "\n$selPart\nFROM {$this->mdataTable} md\n".
+                "INNER JOIN {$this->filesTable} f ON md.gunid=f.gunid $ftypeCond\n".
+                "WHERE ".join(' OR ', $whereArr);
         }
         $res = $this->dbc->getCol($sql);
         if(!is_array($res)) $res = array();

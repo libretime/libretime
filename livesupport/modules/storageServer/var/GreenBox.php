@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -260,11 +260,30 @@ class GreenBox extends BasicStor{
     /**
      *  Search in local metadata database.
      *
-     *  @param criteria hash, search criteria - see 
-     *       <a href="../../search.html">format description</a>
+     *  @param criteria hash, with following structure:<br>
+     *   <ul>
+     *     <li>filetype - string, type of searched files,
+     *       meaningful values: 'audioclip', 'playlist'</li>
+     *     <li>operator - string, type of conditions join
+     *       (any condition matches / all conditions match), 
+     *       meaningful values: 'and', 'or', ''
+     *       (may be empty or ommited only with less then 2 items in
+     *       &quot;conditions&quot; field)
+     *     </li>
+     *     <li>conditions - array of hashes with structure:
+     *       <ul>
+     *           <li>cat - string, metadata category name</li>
+     *           <li>op - string, operator - meaningful values:
+     *               'full', 'partial', 'prefix', '=', '&lt;',
+     *               '&lt;=', '&gt;', '&gt;='</li>
+     *           <li>val - string, search value</li>
+     *       </ul>
+     *     </li>
+     *   </ul>
      *  @param sessid string, session id
      *  @return hash, field 'results' is an array with gunid strings
      *  of files have been found
+     *  @see BasicStor::bsLocalSearch
      */
     function localSearch($criteria, $sessid='')
     {

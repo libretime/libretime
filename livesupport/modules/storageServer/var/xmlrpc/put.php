@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/put.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ require_once '../LocStor.php';
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox(&$dbc, $config);
+$gb = &new LocStor(&$dbc, $config);
 
 function http_error($code, $err){
     header("HTTP/1.1 $code");
