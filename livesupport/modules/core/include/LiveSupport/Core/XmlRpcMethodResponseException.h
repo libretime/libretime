@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/XmlRpcMethodResponseException.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,10 +55,11 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  Exception signaling an XML-RPC method response problem.
+ *  Exception signaling an XML-RPC problem: the XML-RPC method call completed
+ *  normally, but the response received has incorrect syntax.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class XmlRpcMethodResponseException : public XmlRpcException
 {

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/XmlRpcCommunicationException.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,10 +55,12 @@ namespace Core {
 /* =============================================================== data types */
 
 /**
- *  Exception signaling an XML-RPC communcation problem.
+ *  Exception signaling an XML-RPC problem: could not find the XML-RPC server,
+ *  the server responded 'no such method', or the method response could not be
+ *  parsed.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class XmlRpcCommunicationException : public XmlRpcException
 {
