@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -36,14 +36,11 @@ package="gLiveSupport"
 # assume we're in $basedir/bin
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd; cd -`
-echo ${basedir}
 test -z "$basedir" && basedir=.
 
 bindir=$basedir/bin
 etcdir=$basedir/etc
 tmpdir=$basedir/tmp
-echo ${etcdir}
-echo ${tmpdir}
 
 cd "$tmpdir"
 DIE=0
