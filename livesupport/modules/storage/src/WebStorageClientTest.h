@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,9 +42,13 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
 namespace LiveSupport {
 namespace Storage {
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -58,26 +62,26 @@ namespace Storage {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see WebStorageClient
  */
 class WebStorageClientTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(WebStorageClientTest);
     CPPUNIT_TEST(firstTest);
-//    CPPUNIT_TEST(getAllPlaylistsTest);
-//    CPPUNIT_TEST(deletePlaylistTest);
-//    CPPUNIT_TEST(createPlaylistTest);
-//    CPPUNIT_TEST(audioClipTest);
-//    CPPUNIT_TEST(acquireAudioClipTest);
-//    CPPUNIT_TEST(acquirePlaylistTest);
+    CPPUNIT_TEST(audioClipTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
         /**
+         *  An AuthenticationClient instance to login an logout.
+         */
+        Ptr<AuthenticationClientInterface>::Ref     authentication;
+
+        /**
          *  The WebStorageClient instance to test.
          */
-        Ptr<WebStorageClient>::Ref     wsc;
+        Ptr<WebStorageClient>::Ref                  wsc;
 
     protected:
 
@@ -90,52 +94,12 @@ class WebStorageClientTest : public CPPUNIT_NS::TestFixture
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Testing deletePlaylist().
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        deletePlaylistTest(void)
-                                                throw (CPPUNIT_NS::Exception);
-        /**
-         *  Testing getAllPlaylists().
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        getAllPlaylistsTest(void)
-                                                throw (CPPUNIT_NS::Exception);
-        /**
-         *  Testing createPlaylist().
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        createPlaylistTest(void)                throw (CPPUNIT_NS::Exception);
-
-        /**
          *  Testing the audio clip operations.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
         audioClipTest(void)                     throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the acquire / release operations on audio clips.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        acquireAudioClipTest(void)              throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Testing the acquire / release operations on playlists.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        acquirePlaylistTest(void)               throw (CPPUNIT_NS::Exception);
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class Playlist : public Configurable
 {
@@ -204,7 +204,7 @@ class Playlist : public Configurable
          *
          *  @return the unique id of the playlist.
          */
-        Ptr<const UniqueId>::Ref
+        Ptr<UniqueId>::Ref
         getId(void) const                        throw ()
         {
             return id;

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/StorageClientFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@
 
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "TestStorageClient.h"
+#include "WebStorageClient.h"
 
 
 using namespace LiveSupport::Core;
@@ -93,7 +94,7 @@ StorageClientFactory :: configure(const xmlpp::Element & element)
 
     storageClient.reset();
 
-    // try to look for an TestStorageClient configuration element
+    // try to look for a TestStorageClient configuration element
     xmlpp::Node::NodeList   nodes =
                element.get_children(TestStorageClient::getConfigElementName());
     if (nodes.size() >= 1) {
@@ -108,5 +109,4 @@ StorageClientFactory :: configure(const xmlpp::Element & element)
         throw std::invalid_argument("no storage client factories to configure");
     }
 }
-
 

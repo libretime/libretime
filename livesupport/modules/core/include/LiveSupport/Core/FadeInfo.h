@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/FadeInfo.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ using namespace boost::posix_time;
  *  contained in a Playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class FadeInfo : public Configurable
 {
@@ -173,7 +173,7 @@ class FadeInfo : public Configurable
          *
          *  @return the unique id of the fade info instance.
          */
-        Ptr<const UniqueId>::Ref
+        Ptr<UniqueId>::Ref
         getId(void) const                       throw ()
         {
             return id;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,21 +89,6 @@ static const std::string    locationPortAttrName = "port";
  *  The name of the config element attribute for the storage server php page
  *----------------------------------------------------------------------------*/
 static const std::string    locationPathAttrName = "path";
-
-/*------------------------------------------------------------------------------
- *  The name of the config child element for the storage server login
- *----------------------------------------------------------------------------*/
-static const std::string    identityConfigElementName = "identity";
-
-/*------------------------------------------------------------------------------
- *  The name of the config child element for the storage server login name
- *----------------------------------------------------------------------------*/
-static const std::string    identityLoginAttrName = "login";
-
-/*------------------------------------------------------------------------------
- *  The name of the config child element for the storage server login password
- *----------------------------------------------------------------------------*/
-static const std::string    identityPasswordAttrName = "pass";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  constants for the SMIL file */
@@ -174,37 +159,6 @@ static const std::string    errorCodeParamName = "faultCode";
 static const std::string    errorMessageParamName = "faultString";
 
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: login */
-
-/*------------------------------------------------------------------------------
- *  The name of the login method on the storage server
- *----------------------------------------------------------------------------*/
-static const std::string    loginMethodName = "locstor.login";
-
-/*------------------------------------------------------------------------------
- *  The name of the login parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    loginMethodLoginParamName = "login";
-
-/*------------------------------------------------------------------------------
- *  The name of the password parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    loginMethodPasswordParamName = "pass";
-
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: logout */
-
-/*------------------------------------------------------------------------------
- *  The name of the logout method on the storage server
- *----------------------------------------------------------------------------*/
-static const std::string    logoutMethodName = "locstor.logout";
-
-/*------------------------------------------------------------------------------
- *  The name of the session ID parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    logoutMethodSessionIdParamName = "sessid";
-
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsAudioClip */
 
 /*------------------------------------------------------------------------------
@@ -222,6 +176,25 @@ static const std::string    existsAudioClipMethodSessionIdParamName = "sessid";
  *  The name of the audio clip unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
 static const std::string    existsAudioClipMethodAudioClipIdParamName = "gunid";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: getAudioClip */
+
+/*------------------------------------------------------------------------------
+ *  The name of the get audio clip method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipMethodName 
+                            = "locstor.getAudioClip";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipMethodSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the audio clip unique ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    getAudioClipMethodAudioClipIdParamName = "gunid";
 
 
 /* ===============================================  local function prototypes */
@@ -299,96 +272,6 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
         eMsg += " XML element";
         throw std::invalid_argument(eMsg);
     }
-
-    // read the login and password to the storage server
-    childNodes  = element.get_children(identityConfigElementName);
-    it          = childNodes.begin();
-
-    if (it == childNodes.end()) {
-        std::string eMsg = "missing ";
-        eMsg += identityConfigElementName;
-        eMsg += " XML element";
-        throw std::invalid_argument(eMsg);
-    }
-
-    const xmlpp::Element      * identityConfigElement 
-                                = dynamic_cast<const xmlpp::Element*> (*it);
-    if (!(attribute = identityConfigElement
-                      ->get_attribute(identityLoginAttrName))) {
-        std::string eMsg = "Missing attribute ";
-        eMsg += identityLoginAttrName;
-        throw std::invalid_argument(eMsg);
-    }
-    storageServerLogin = attribute->get_value();
-
-    if (!(attribute = identityConfigElement
-                      ->get_attribute(identityPasswordAttrName))) {
-        std::string eMsg = "Missing attribute ";
-        eMsg += identityPasswordAttrName;
-        throw std::invalid_argument(eMsg);
-    }
-    storageServerPassword = attribute->get_value();
-    
-    ++it;
-    if (it != childNodes.end()) {
-        std::string eMsg = "more than one ";
-        eMsg += identityConfigElementName;
-        eMsg += " XML element";
-        throw std::invalid_argument(eMsg);
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Login to the storage server.
- *----------------------------------------------------------------------------*/
-std::string
-WebStorageClient :: loginToStorageServer(void) const
-                                                throw ()
-{
-    XmlRpcValue     parameters;
-    XmlRpcValue     result;
-
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
-    parameters[loginMethodLoginParamName] = storageServerLogin.c_str();
-    parameters[loginMethodPasswordParamName] = storageServerPassword.c_str();
-    
-    if (!xmlRpcClient.execute(loginMethodName.c_str(), parameters, result)) {
-        // throw exception;
-    }
-
-    if (result.getType() != XmlRpcValue::TypeString) {
-        return std::string("");             // change to throw exception
-    }
-    
-    return std::string(result);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Logout from the storage server.
- *----------------------------------------------------------------------------*/
-void
-WebStorageClient :: logoutFromStorageServer(std::string sessionId) const
-                                                throw ()
-{
-    XmlRpcValue     parameters;
-    XmlRpcValue     result;
-
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
-    parameters[logoutMethodSessionIdParamName] = sessionId.c_str();
-    
-    if (!xmlRpcClient.execute(logoutMethodName.c_str(), parameters, result)) {
-        //throw exception;
-    }
-
-    if (xmlRpcClient.isFault()) {
-        // throw exception
-    }
 }
 
 
@@ -396,8 +279,9 @@ WebStorageClient :: logoutFromStorageServer(std::string sessionId) const
  *  Tell if a playlist exists.
  *----------------------------------------------------------------------------*/
 const bool
-WebStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
-                                                throw ()
+WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
+                                   Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
 {
     return false;
 }
@@ -407,8 +291,9 @@ WebStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
  *  Return a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-WebStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
-                                                throw (std::invalid_argument)
+WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
+                                Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
@@ -419,7 +304,8 @@ WebStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
  *  Acquire resources for a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
+                                    Ptr<UniqueId>::Ref  id) const
                                                 throw (std::logic_error)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
@@ -431,7 +317,8 @@ WebStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
+WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
+                                    Ptr<Playlist>::Ref  playlist) const
                                                 throw (std::logic_error)
 {
 
@@ -442,8 +329,9 @@ WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
  *  Delete a playlist.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
-                                                throw (std::invalid_argument)
+WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
+                                   Ptr<UniqueId>::Ref  id)
+                                                throw (std::logic_error)
 {
 
 }
@@ -453,8 +341,8 @@ WebStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
  *  Return a listing of all the playlists in the playlist store.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-WebStorageClient :: getAllPlaylists(void) const
-                                                throw ()
+WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
+                                                throw (std::logic_error)
 {
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector(
                                         new std::vector<Ptr<Playlist>::Ref>);
@@ -466,7 +354,8 @@ WebStorageClient :: getAllPlaylists(void) const
  *  Create a new playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-WebStorageClient :: createPlaylist()                                throw ()
+WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw (std::logic_error)
 {
     Ptr<Playlist>::Ref  playlist(new Playlist);
     return playlist;
@@ -477,29 +366,37 @@ WebStorageClient :: createPlaylist()                                throw ()
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
-WebStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
-                                                                throw ()
+WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
+                                    Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
 {
-    std::string     sessionId = loginToStorageServer();
-    
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
     XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
                               storageServerPath.c_str(), false);
 
-    parameters[existsAudioClipMethodSessionIdParamName] = sessionId.c_str();
-    parameters[existsAudioClipMethodAudioClipIdParamName] = int(id->getId());
+    parameters[existsAudioClipMethodSessionIdParamName] 
+            = sessionId->getId().c_str();
+    parameters[existsAudioClipMethodAudioClipIdParamName] 
+            = int(id->getId());
     
     if (!xmlRpcClient.execute(existsAudioClipMethodName.c_str(),
                               parameters, result)) {
-        // throw exception
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += existsAudioClipMethodName;
+        eMsg += "'";
+        throw std::logic_error(eMsg);
     }
-
-    logoutFromStorageServer(sessionId);
     
-    if (result.getType() != XmlRpcValue::TypeBoolean) {
-        return false;                       // change to throw exception
+    if (xmlRpcClient.isFault() 
+                || result.getType() != XmlRpcValue::TypeBoolean) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << existsAudioClipMethodName
+             << "' returned error message:\n"
+             << result;
+        throw std::logic_error(eMsg.str());
     }
     
     return bool(result);
@@ -510,11 +407,57 @@ WebStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Return an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-WebStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
-                                                throw (std::invalid_argument)
+WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
+                                 Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error)
 {
-    Ptr<AudioClip>::Ref  playlist(new AudioClip);
-    return playlist;
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters[getAudioClipMethodSessionIdParamName] 
+            = sessionId->getId().c_str();
+    parameters[getAudioClipMethodAudioClipIdParamName] 
+            = int(id->getId());
+    
+    if (!xmlRpcClient.execute(getAudioClipMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getAudioClipMethodName;
+        eMsg += "'";
+        throw std::logic_error(eMsg);
+    }
+
+    if (xmlRpcClient.isFault() 
+                || result.getType() != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getAudioClipMethodName
+             << "' returned error message:\n"
+             << result;
+        throw std::logic_error(eMsg.str());
+    }
+    
+    Ptr<std::string>::Ref   xmlAudioClip = decodeString(result);
+    Ptr<AudioClip>::Ref     audioClip;
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser());
+        parser->parse_memory(*xmlAudioClip);
+        const xmlpp::Document     * document = parser->get_document();
+        const xmlpp::Element      * root     = document->get_root_node();
+
+        audioClip.reset(new AudioClip);
+        audioClip->configure(*root);
+    } catch (std::invalid_argument &e) {
+        throw std::logic_error("semantic error in audio clip metafile");
+    } catch (xmlpp::exception &e) {
+        throw std::logic_error("error parsing audio clip metafile");
+    }
+
+    return audioClip;
 }
 
 
@@ -522,7 +465,8 @@ WebStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Acquire resources for an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-WebStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
+                                     Ptr<UniqueId>::Ref  id) const
                                                 throw (std::logic_error)
 {
     Ptr<AudioClip>::Ref  playlist(new AudioClip);
@@ -535,7 +479,8 @@ WebStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
+WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
+                                     Ptr<AudioClip>::Ref audioClip) const
                                                 throw (std::logic_error)
 {
 
@@ -546,8 +491,9 @@ WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
  *  Delete an audio clip.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
-                                                throw (std::invalid_argument)
+WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
+                                    Ptr<UniqueId>::Ref  id)
+                                                throw (std::logic_error)
 {
 
 }
@@ -557,11 +503,69 @@ WebStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
  *  Return a listing of all the audio clips in the audio clip store.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-WebStorageClient :: getAllAudioClips(void) const
-                                                throw ()
+WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
+                                                                        const
+                                                throw (std::logic_error)
 {
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector(
                                         new std::vector<Ptr<AudioClip>::Ref>);
     return audioClipVector;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a hex digit to an int.  This is used by decodeString().
+ *----------------------------------------------------------------------------*/
+int
+WebStorageClient :: hexDigitToChar(const char &hexDigit) const
+                                                throw ()
+{
+    if (hexDigit >= '0' && hexDigit <= '9') {
+        return hexDigit - '0';
+    }
+    else if (hexDigit >= 'a' && hexDigit <= 'f') {
+        return hexDigit - 'a' + 10;
+    }
+    else if (hexDigit >= 'A' && hexDigit <= 'F') {
+        return hexDigit - 'A' + 10;
+    }
+    else {
+        return 0;
+    }
+}
+    
+
+/*------------------------------------------------------------------------------
+ *  Decode an escaped string.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+WebStorageClient :: decodeString(const std::string &inputString) const
+                                                throw ()
+{
+    Ptr<std::string>::Ref   outputString(new std::string);
+    char                    nextChar;
+    
+    std::string::const_iterator it = inputString.begin();
+    while (it != inputString.end()) {
+        nextChar = *(it++);
+        if (nextChar == '%') {
+            if (it == inputString.end()) {
+                    nextChar = '?';
+               }
+            else {
+                nextChar = hexDigitToChar(*(it++));
+                if (it == inputString.end()) {
+                    nextChar = '?';
+                }
+                else {
+                    nextChar *= 16;
+                    nextChar += hexDigitToChar(*(it++));
+                }
+            }
+        }
+        outputString->push_back(nextChar);
+    }
+    
+    return outputString;
 }
 

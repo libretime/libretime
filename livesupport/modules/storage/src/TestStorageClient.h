@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
 
 
 namespace LiveSupport {
@@ -67,7 +68,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -141,28 +142,32 @@ class TestStorageClient :
         configure(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error);
-
+        
         /**
          *  Tell if a playlist with a given id exists.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to check for.
          *  @return true if a playlist with the specified id exists,
          *          false otherwise.
          */
         virtual const bool
-        existsPlaylist(Ptr<const UniqueId>::Ref id) const
+        existsPlaylist(Ptr<SessionId>::Ref sessionId,
+                       Ptr<UniqueId>::Ref  id) const
                                                                 throw ();
 
         /**
          *  Return a playlist with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
          *  @exception std::invalid_argument if no playlist with the specified
          *             id exists.
          */
         virtual Ptr<Playlist>::Ref
-        getPlaylist(Ptr<const UniqueId>::Ref id) const
+        getPlaylist(Ptr<SessionId>::Ref sessionId,
+                    Ptr<UniqueId>::Ref  id) const
                                             throw (std::invalid_argument);
 
         /**
@@ -173,6 +178,7 @@ class TestStorageClient :
          *  appended to the temp storage path read from the configuration file,
          *  plus a ".smil" extension.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to acquire.
          *  @return a new Playlist instance containing a uri field which
          *          points to an executable (playable) SMIL representation of
@@ -181,69 +187,82 @@ class TestStorageClient :
          *             specified id exists. 
          */
         virtual Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+        acquirePlaylist(Ptr<SessionId>::Ref sessionId,
+                        Ptr<UniqueId>::Ref  id) const
                                             throw (std::logic_error);
 
         /**
          *  Release the resources (audio clips, other playlists) used 
          *  in a playlist.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
          *  @exception std::logic_error if the playlist has no uri field,
          *             or the file does not exist, etc.
          */
         virtual void
-        releasePlaylist(Ptr<Playlist>::Ref playlist) const
+        releasePlaylist(Ptr<SessionId>::Ref sessionId,
+                        Ptr<Playlist>::Ref  playlist) const
                                             throw (std::logic_error);
 
         /**
          *  Delete the playlist with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
          *  @exception std::invalid_argument if no playlist with the specified
          *             id exists.
          */
         virtual void
-        deletePlaylist(Ptr<const UniqueId>::Ref id)
+        deletePlaylist(Ptr<SessionId>::Ref sessionId,
+                       Ptr<UniqueId>::Ref  id)
                                             throw (std::invalid_argument);
 
         /**
          *  Return a list of all playlists in the playlist store.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-        getAllPlaylists(void) const         throw ();
+        getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
+                                            throw ();
 
         /**
          *  Create a new playlist.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @return the newly created playlist.
          */
         virtual Ptr<Playlist>::Ref
-        createPlaylist()                    throw ();
+        createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                            throw ();
 
         /**
          *  Tell if an audio clip with a given id exists.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to check for.
          *  @return true if an audio clip with the specified id exists,
          *          false otherwise.
          */
         virtual const bool
-        existsAudioClip(Ptr<const UniqueId>::Ref id) const
+        existsAudioClip(Ptr<SessionId>::Ref sessionId,
+                        Ptr<UniqueId>::Ref  id) const
                                             throw ();
 
         /**
          *  Return an audio clip with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
          *  @return the requested audio clip.
          *  @exception std::invalid_argument if no audio clip with the 
          *             specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
-        getAudioClip(Ptr<const UniqueId>::Ref id) const
+        getAudioClip(Ptr<SessionId>::Ref sessionId,
+                     Ptr<UniqueId>::Ref  id) const
                                             throw (std::invalid_argument);
 
         /**
@@ -254,6 +273,7 @@ class TestStorageClient :
          *  Assumes URIs in the config file are relative paths prefixed by
          *  "file:"; e.g., "file:var/test1.mp3".
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to acquire.
          *  @return a new AudioClip instance, containing a uri field which
          *          points to (a way of getting) the sound file.
@@ -261,38 +281,45 @@ class TestStorageClient :
          *             specified id exists. 
          */
         virtual Ptr<AudioClip>::Ref
-        acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+        acquireAudioClip(Ptr<SessionId>::Ref sessionId,
+                         Ptr<UniqueId>::Ref  id) const
                                             throw (std::logic_error);
 
         /**
          *  Release the resource (sound file) used by an audio clip.
          *
-         *  @param id the id of the audio clip to release.
+         *  @param sessionId the session ID from the authentication client
+         *  @param audioClip the audio clip to release.
          *  @exception std::logic_error if the audio clip has no uri field, 
          *             or the file does not exist, etc. 
          */
         virtual void
-        releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
+        releaseAudioClip(Ptr<SessionId>::Ref sessionId,
+                         Ptr<AudioClip>::Ref audioClip) const
                                             throw (std::logic_error);
 
         /**
          *  Delete the audio clip with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to be deleted.
          *  @exception std::invalid_argument if no audio clip with the 
          *             specified id exists.
          */
         virtual void
-        deleteAudioClip(Ptr<const UniqueId>::Ref id)
+        deleteAudioClip(Ptr<SessionId>::Ref sessionId,
+                        Ptr<UniqueId>::Ref  id)
                                             throw (std::invalid_argument);
 
         /**
          *  Return a list of all audio clips in the playlist store.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the audio clips.
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(void) const         throw ();
+        getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
+                                            throw ();
 
 };
 

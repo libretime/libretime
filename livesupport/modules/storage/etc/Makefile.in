@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -63,6 +63,12 @@ CORE_LIB_DIR     = ${CORE_DIR}/lib
 CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
+AUTHENTICATION_DIR         = ${MODULES_DIR}/authentication
+AUTHENTICATION_INCLUDE_DIR = ${AUTHENTICATION_DIR}/include
+AUTHENTICATION_LIB_DIR     = ${AUTHENTICATION_DIR}/lib
+AUTHENTICATION_LIB         = livesupport_authentication
+AUTHENTICATION_LIB_FILE = ${AUTHENTICATION_LIB_DIR}/lib${AUTHENTICATION_LIB}.a
+
 VPATH    = ${SRC_DIR}
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
@@ -86,8 +92,10 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${LIBXMLPP_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \
+                             -I${AUTHENTICATION_INCLUDE_DIR} \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
-LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
+LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${CORE_LIB_DIR} \
+                     -L${AUTHENTICATION_LIB_DIR} -L${LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -98,12 +106,11 @@ STORAGE_LIB_OBJS = ${TMP_DIR}/StorageClientFactory.o \
                    ${TMP_DIR}/WebStorageClient.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestStorageClientTest.o \
-                   ${TMP_DIR}/StorageServerLoginTest.o \
                    ${TMP_DIR}/WebStorageClientTest.o \
                    ${TMP_DIR}/TestRunner.o
 
-TEST_RUNNER_LIBS = -l${STORAGE_LIB} -l${CORE_LIB} -lxml++-1.0 -lcppunit -ldl \
-                   -lxmlrpc++ -lssl
+TEST_RUNNER_LIBS = -l${STORAGE_LIB} -l${CORE_LIB} -l${AUTHENTICATION_LIB} \
+                   -lxml++-1.0 -lcppunit -ldl -lxmlrpc++ -lssl
 
 
 #-------------------------------------------------------------------------------

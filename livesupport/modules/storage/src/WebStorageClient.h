@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/StorageClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
 
 
 namespace LiveSupport {
@@ -67,7 +68,7 @@ using namespace LiveSupport::Core;
  *  An interface to the (possibly remote) php storage server.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -100,41 +101,31 @@ class WebStorageClient :
         std::string                 storageServerPath;
 
         /**
-         *  The login name to the storage server.
+         *  Decode an escaped %73%74%72%69%6E%67 to a normal string.
+         *  This is really bad and low-level; to be replaced later.
+         *  
+         *  @return a pointer to a newly allocated string which contains
+         *          the decoded value.
          */
-        std::string                 storageServerLogin;
-
+        Ptr<std::string>::Ref
+        decodeString(const std::string &inputString) const
+                                                throw ();
         /**
-         *  The password to the storage server.
+         *  Convert a hex digit 0..9 | a..f | A..F to an int.
+         *  This is used in decodeString().
+         *  
+         *  @return an int with the converted value.
          */
-        std::string                 storageServerPassword;
-
-        /**
-         *  Login to the storage server, using the data read from the
-         *  configuration file.  If successful, a new session ID is returned.
-         *
-         *  @return the new session ID
-         */
-        std::string
-        loginToStorageServer(void) const               throw ();
-
-        /**
-         *  Logout from the storage server.  The parameter is the ID of
-         *  the session to end (returned previously by storageServerLogin()).
-         *
-         *  @param sessionId the ID of the session to end
-         */
-        void
-        logoutFromStorageServer(std::string sessionId) const
-                                                       throw ();
-
+        int
+        hexDigitToChar(const char &hexDigit) const
+                                                throw ();
 
     public:
         /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~WebStorageClient(void)                        throw ()
+        ~WebStorageClient(void)                 throw ()
         {
         }
 
@@ -145,7 +136,7 @@ class WebStorageClient :
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                      throw ()
+        getConfigElementName(void)              throw ()
         {
             return configElementNameStr;
         }
@@ -167,25 +158,31 @@ class WebStorageClient :
         /**
          *  Tell if a playlist with a given id exists.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to check for.
          *  @return true if a playlist with the specified id exists,
          *          false otherwise.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual const bool
-        existsPlaylist(Ptr<const UniqueId>::Ref id) const
-                                                                throw ();
+        existsPlaylist(Ptr<SessionId>::Ref sessionId,
+                       Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error);
 
         /**
          *  Return a playlist with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
-         *  @exception std::invalid_argument if no playlist with the specified
+         *  @exception std::logic_error if no playlist with the specified
          *             id exists.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<Playlist>::Ref
-        getPlaylist(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument);
+        getPlaylist(Ptr<SessionId>::Ref sessionId,
+                    Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error);
 
         /**
          *  Acquire the resources for the playlist.
@@ -195,79 +192,100 @@ class WebStorageClient :
          *  appended to the temp storage path read from the configuration file,
          *  plus a ".smil" extension.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to acquire.
          *  @return a new Playlist instance containing a uri field which
          *          points to an executable (playable) SMIL representation of
          *          the playlist (in the local storage).
-         *  @exception std::invalid_argument if no playlist with the specified
+         *  @exception std::logic_error if no playlist with the specified
          *             specified id exists. 
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<Playlist>::Ref
-        acquirePlaylist(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::logic_error);
+        acquirePlaylist(Ptr<SessionId>::Ref sessionId,
+                        Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error);
 
         /**
          *  Release the resources (audio clips, other playlists) used 
          *  in a playlist.  The uri of the playlist is no longer valid, and 
          *  the uri field is deleted.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
          *  @exception std::logic_error if the playlist has no uri field,
          *             or the file does not exist, etc.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual void
-        releasePlaylist(Ptr<Playlist>::Ref playlist) const
-                                            throw (std::logic_error);
+        releasePlaylist(Ptr<SessionId>::Ref sessionId,
+                        Ptr<Playlist>::Ref  playlist) const
+                                                throw (std::logic_error);
 
         /**
          *  Delete the playlist with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
-         *  @exception std::invalid_argument if no playlist with the specified
+         *  @exception std::logic_error if no playlist with the specified
          *             id exists.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual void
-        deletePlaylist(Ptr<const UniqueId>::Ref id)
-                                            throw (std::invalid_argument);
+        deletePlaylist(Ptr<SessionId>::Ref sessionId,
+                       Ptr<UniqueId>::Ref  id)
+                                                throw (std::logic_error);
 
         /**
          *  Return a list of all playlists in the playlist store.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-        getAllPlaylists(void) const         throw ();
+        getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
+                                                throw (std::logic_error);
 
         /**
          *  Create a new playlist.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @return the newly created playlist.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<Playlist>::Ref
-        createPlaylist()                    throw ();
+        createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw (std::logic_error);
 
         /**
          *  Tell if an audio clip with a given id exists.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to check for.
          *  @return true if an audio clip with the specified id exists,
          *          false otherwise.
+         *  @exception std::logic_error if we have not logged in yet
          */
         virtual const bool
-        existsAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw ();
+        existsAudioClip(Ptr<SessionId>::Ref sessionId,
+                        Ptr<UniqueId>::Ref  id) const
+                                                 throw (std::logic_error);
 
         /**
          *  Return an audio clip with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
          *  @return the requested audio clip.
-         *  @exception std::invalid_argument if no audio clip with the 
+         *  @exception std::logic_error if no audio clip with the 
          *             specified id exists.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<AudioClip>::Ref
-        getAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::invalid_argument);
+        getAudioClip(Ptr<SessionId>::Ref sessionId,
+                     Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error);
 
         /**
          *  Acquire the resources for the audio clip with the specified id.
@@ -275,47 +293,59 @@ class WebStorageClient :
          *  Returns an AudioClip instance with a valid uri field, which points
          *  to the binary sound file.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to acquire.
          *  @return a new AudioClip instance, containing a uri field which
          *          points to (a way of getting) the sound file.
-         *  @exception std::invalid_argument if no audio clip with the 
-         *             specified id exists. 
+         *  @exception std::logic_error if no audio clip with the 
+         *             specified id exists.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<AudioClip>::Ref
-        acquireAudioClip(Ptr<const UniqueId>::Ref id) const
-                                            throw (std::logic_error);
+        acquireAudioClip(Ptr<SessionId>::Ref sessionId,
+                         Ptr<UniqueId>::Ref  id) const
+                                                throw (std::logic_error);
 
         /**
          *  Release the resource (sound file) used by an audio clip.  The
          *  uri of the audio clip is no longer valid, and the uri field is
          *  deleted.
          *
-         *  @param id the id of the audio clip to release.
+         *  @param sessionId the session ID from the authentication client
+         *  @param audioClip the audio clip to release.
          *  @exception std::logic_error if the audio clip has no uri field, 
-         *             or the file does not exist, etc. 
+         *             or the file does not exist, etc.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual void
-        releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
-                                            throw (std::logic_error);
+        releaseAudioClip(Ptr<SessionId>::Ref sessionId,
+                         Ptr<AudioClip>::Ref audioClip) const
+                                                throw (std::logic_error);
 
         /**
          *  Delete the audio clip with the specified id.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to be deleted.
-         *  @exception std::invalid_argument if no audio clip with the 
+         *  @exception std::logic_error if no audio clip with the 
          *             specified id exists.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual void
-        deleteAudioClip(Ptr<const UniqueId>::Ref id)
-                                            throw (std::invalid_argument);
+        deleteAudioClip(Ptr<SessionId>::Ref sessionId,
+                        Ptr<UniqueId>::Ref  id)
+                                                throw (std::logic_error);
 
         /**
          *  Return a list of all audio clips in the playlist store.
          *
+         *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the audio clips.
+         *  @exception std::logic_error if we have not logged in yet.
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-        getAllAudioClips(void) const         throw ();
+        getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
+                                                throw (std::logic_error);
 
 };
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE webStorage [
 
-<!ELEMENT webStorage (location, identity) >
+<!ELEMENT webStorage (location) >
 <!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
 
 <!ELEMENT location EMPTY >
@@ -9,12 +9,8 @@
 <!ATTLIST location port     NMTOKEN     #REQUIRED >
 <!ATTLIST location path     CDATA       #REQUIRED >
 
-<!ELEMENT identity EMPTY >
-<!ATTLIST identity login    CDATA       #REQUIRED >
-<!ATTLIST identity pass     CDATA       #REQUIRED >
 ]>
 <webStorage tempFiles="file:///tmp/tempPlaylist" >
     <location server="localhost" port="80" 
               path="/storage/var/xmlrpc/xrLocStor.php" />
-    <identity login="root" pass="q" />
 </webStorage>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE storageClientFactory [
 
-<!ELEMENT storageClientFactory (testStorage) >
+<!ELEMENT storageClientFactory (testStorage, webStorage) >
 
 <!ELEMENT testStorage (playlist*) >
 <!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
@@ -18,6 +18,15 @@
 <!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip uri             CDATA       #REQUIRED >
+
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+
 ]>
 <storageClientFactory>
     <testStorage tempFiles="file:///tmp/tempPlaylist">
@@ -32,4 +41,8 @@
             </playlistElement>
         </playlist>
     </testStorage>
+    <webStorage tempFiles="file:///tmp/tempPlaylist" >
+    <location server="localhost" port="80" 
+              path="/storage/var/xmlrpc/xrLocStor.php" />
+    </webStorage>
 </storageClientFactory>

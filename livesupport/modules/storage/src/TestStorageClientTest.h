@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Storage {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see TestStorageClient
  */
 class TestStorageClientTest : public CPPUNIT_NS::TestFixture
@@ -78,6 +78,11 @@ class TestStorageClientTest : public CPPUNIT_NS::TestFixture
          *  The TestStorageClient instance to test.
          */
         Ptr<TestStorageClient>::Ref     tsc;
+
+        /**
+         *  A dummy session ID to pass to the storage client.
+         */
+        Ptr<SessionId>::Ref             dummySessionId;
 
     protected:
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,6 +89,8 @@ TestStorageClientTest :: setUp(void)                         throw ()
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     }
+    
+    dummySessionId.reset(new SessionId("dummy"));
 }
 
 
@@ -109,13 +111,13 @@ void
 TestStorageClientTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<UniqueId>::Ref      id1(new UniqueId(1));
-        Ptr<UniqueId>::Ref      id2(new UniqueId(77));
+        Ptr<UniqueId>::Ref  id1(new UniqueId(1));
+        Ptr<UniqueId>::Ref  id2(new UniqueId(77));
 
-        CPPUNIT_ASSERT(tsc->existsPlaylist(id1));
-        CPPUNIT_ASSERT(!tsc->existsPlaylist(id2));
+        CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, id1));
+        CPPUNIT_ASSERT(!tsc->existsPlaylist(dummySessionId, id2));
 
-        Ptr<Playlist>::Ref      playlist = tsc->getPlaylist(id1);
+        Ptr<Playlist>::Ref  playlist = tsc->getPlaylist(dummySessionId, id1);
         CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
 }
 
@@ -131,17 +133,17 @@ TestStorageClientTest :: deletePlaylistTest(void)
         Ptr<UniqueId>::Ref      id2(new UniqueId(77));
 
         try {
-            tsc->deletePlaylist(id2);
+            tsc->deletePlaylist(dummySessionId, id2);
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
         } catch (std::invalid_argument &e) {
         }
         try {
-            tsc->deletePlaylist(id1);
+            tsc->deletePlaylist(dummySessionId, id1);
         } catch (std::invalid_argument &e) {
             CPPUNIT_FAIL("cannot delete existing playlist");
         }
         try {
-            tsc->deletePlaylist(id1);
+            tsc->deletePlaylist(dummySessionId, id1);
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
         } catch (std::invalid_argument &e) {
         }
@@ -155,11 +157,11 @@ void
 TestStorageClientTest :: getAllPlaylistsTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector =
-                                                tsc->getAllPlaylists();
+    Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
+                        playlistVector = tsc->getAllPlaylists(dummySessionId);
     CPPUNIT_ASSERT(playlistVector->size() == 1);
 
-    Ptr<Playlist>::Ref playlist = (*playlistVector)[0];
+    Ptr<Playlist>::Ref  playlist = (*playlistVector)[0];
     CPPUNIT_ASSERT((int) (playlist->getId()->getId()) == 1);
 }
 
@@ -171,9 +173,9 @@ void
 TestStorageClientTest :: createPlaylistTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<Playlist>::Ref playlist = tsc->createPlaylist();
+    Ptr<Playlist>::Ref playlist = tsc->createPlaylist(dummySessionId);
 
-    CPPUNIT_ASSERT(tsc->existsPlaylist(playlist->getId()));
+    CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, playlist->getId()));
 }
 
 
@@ -184,26 +186,27 @@ void
 TestStorageClientTest :: audioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<const UniqueId>::Ref  id2(new UniqueId(10002));
-    Ptr<const UniqueId>::Ref  id77(new UniqueId(10077));
+    Ptr<UniqueId>::Ref    id2(new UniqueId(10002));
+    Ptr<UniqueId>::Ref    id77(new UniqueId(10077));
 
-    CPPUNIT_ASSERT(tsc->existsAudioClip(id2));
-    CPPUNIT_ASSERT(!tsc->existsAudioClip(id77));
+    CPPUNIT_ASSERT(tsc->existsAudioClip(dummySessionId, id2));
+    CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id77));
 
-    Ptr<AudioClip>::Ref       audioClip = tsc->getAudioClip(id2);
+    Ptr<AudioClip>::Ref     audioClip = tsc->getAudioClip(dummySessionId, id2);
     CPPUNIT_ASSERT(audioClip->getId()->getId() == id2->getId());
     CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds()
                                                    == 30*60);
 
-    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector =
-                                                 tsc->getAllAudioClips();
+    Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
+                            audioClipVector 
+                            = tsc->getAllAudioClips(dummySessionId);
     CPPUNIT_ASSERT(audioClipVector->size() == 2);
 
     audioClip = (*audioClipVector)[0];
     CPPUNIT_ASSERT((int) (audioClip->getId()->getId()) == 10001);
 
-    tsc->deleteAudioClip(id2);
-    CPPUNIT_ASSERT(!tsc->existsAudioClip(id2));
+    tsc->deleteAudioClip(dummySessionId, id2);
+    CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id2));
 }
 
 
@@ -214,12 +217,12 @@ void
 TestStorageClientTest :: acquireAudioClipTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<const UniqueId>::Ref    id2(new UniqueId(10002));
-    Ptr<const UniqueId>::Ref    id77(new UniqueId(10077));
-    Ptr<AudioClip>::Ref         audioClip;
+    Ptr<UniqueId>::Ref    id2(new UniqueId(10002));
+    Ptr<UniqueId>::Ref    id77(new UniqueId(10077));
+    Ptr<AudioClip>::Ref   audioClip;
     
     try {
-        audioClip = tsc->acquireAudioClip(id2);
+        audioClip = tsc->acquireAudioClip(dummySessionId, id2);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not acquire audio clip:\n";
@@ -232,7 +235,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     CPPUNIT_ASSERT(*(audioClip->getUri()) == audioClipUri);
     
     try {
-        tsc->releaseAudioClip(audioClip);
+        tsc->releaseAudioClip(dummySessionId, audioClip);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not release audio clip:\n";
@@ -241,7 +244,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     }
 
     try {
-        audioClip = tsc->acquireAudioClip(id77);
+        audioClip = tsc->acquireAudioClip(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent audio clip");
     }
     catch (std::logic_error &e) {
@@ -261,7 +264,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     Ptr<Playlist>::Ref      playlist;
     
     try {
-        playlist = tsc->acquirePlaylist(id1);
+        playlist = tsc->acquirePlaylist(dummySessionId, id1);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not acquire playlist:\n";
@@ -280,7 +283,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
 
     string  savedTempFilePath = playlist->getUri()->substr(7);
     try {
-        tsc->releasePlaylist(playlist);
+        tsc->releasePlaylist(dummySessionId, playlist);
     }
     catch (std::logic_error &e) {
         std::string     eMsg = "could not release playlist:\n";
@@ -296,7 +299,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     ifs2.close();
 
     try {
-        playlist = tsc->acquirePlaylist(id77);
+        playlist = tsc->acquirePlaylist(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent playlist");
     }
     catch (std::logic_error &e) {

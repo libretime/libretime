@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace boost::posix_time;
  *  in a Playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class AudioClip : public Configurable
 {
@@ -161,7 +161,7 @@ class AudioClip : public Configurable
          *
          *  @return the unique id of the audio clip.
          */
-        Ptr<const UniqueId>::Ref
+        Ptr<UniqueId>::Ref
         getId(void) const                       throw ()
         {
             return id;

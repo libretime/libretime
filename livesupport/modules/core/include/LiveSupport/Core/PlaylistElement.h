@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Core;
  *  An item in a playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -196,7 +196,7 @@ class PlaylistElement : public Configurable
          *
          *  @return the id of the playlist element.
          */
-        Ptr<const UniqueId>::Ref
+        Ptr<UniqueId>::Ref
         getId(void) const                                  throw ()
         {
             return id;

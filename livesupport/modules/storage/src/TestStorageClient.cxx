@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -182,7 +182,8 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
  *  Tell if a playlist exists.
  *----------------------------------------------------------------------------*/
 const bool
-TestStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
+                                    Ptr<UniqueId>::Ref  id) const
                                                                 throw ()
 {
     return playlistMap.count(id->getId()) == 1 ? true : false;
@@ -193,7 +194,8 @@ TestStorageClient :: existsPlaylist(Ptr<const UniqueId>::Ref id) const
  *  Return a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
+                                 Ptr<UniqueId>::Ref  id) const
                                                 throw (std::invalid_argument)
 {
     PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
@@ -210,7 +212,8 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
  *  Acquire resources for a playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
+                                     Ptr<UniqueId>::Ref  id) const
                                                 throw (std::logic_error)
 {
     PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
@@ -241,9 +244,10 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
     Playlist::const_iterator it = oldPlaylist->begin();
 
     while (it != oldPlaylist->end()) {
-        Ptr<AudioClip>::Ref audioClip = acquireAudioClip( it->second
+        Ptr<AudioClip>::Ref audioClip 
+                            = acquireAudioClip(sessionId, it->second
                                                             ->getAudioClip()
-                                                            ->getId() );
+                                                            ->getId());
         Ptr<time_duration>::Ref relativeOffset(new time_duration(
                                     *(it->second->getRelativeOffset()) ));
         Ptr<const FadeInfo>::Ref    oldFadeInfo = it->second->getFadeInfo();
@@ -280,7 +284,8 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
+TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
+                                     Ptr<Playlist>::Ref  playlist) const
                                                 throw (std::logic_error)
 {
     if (! playlist->getUri()) {
@@ -300,7 +305,7 @@ TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
     Playlist::const_iterator    it = playlist->begin();
     while (it != playlist->end()) {
         try {
-            releaseAudioClip(it->second->getAudioClip());
+            releaseAudioClip(sessionId, it->second->getAudioClip());
         }
         catch (std::invalid_argument &e) {
             ++badAudioClips;
@@ -324,7 +329,8 @@ TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
  *  Delete a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
+TestStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
+                                    Ptr<UniqueId>::Ref  id)
                                                 throw (std::invalid_argument)
 {
     // erase() returns the number of entries found & erased
@@ -338,7 +344,8 @@ TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
  *  Return a listing of all the playlists in the playlist store.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
-TestStorageClient :: getAllPlaylists(void) const
+TestStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId)
+                                                                        const
                                                 throw ()
 {
     PlaylistMap::const_iterator         it = playlistMap.begin();
@@ -358,7 +365,8 @@ TestStorageClient :: getAllPlaylists(void) const
  *  Create a new playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
-TestStorageClient :: createPlaylist()                                throw ()
+TestStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
+                                                throw ()
 {
     // generate a new UniqueId -- TODO: fix UniqueId to make sure
     //     this is really unique; not checked here!
@@ -381,8 +389,9 @@ TestStorageClient :: createPlaylist()                                throw ()
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
-TestStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
-                                                                throw ()
+TestStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
+                                     Ptr<UniqueId>::Ref  id) const
+                                                throw ()
 {
     return audioClipMap.count(id->getId()) == 1 ? true : false;
 }
@@ -392,7 +401,8 @@ TestStorageClient :: existsAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Return an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
+                                  Ptr<UniqueId>::Ref  id) const
                                                 throw (std::invalid_argument)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
@@ -409,7 +419,8 @@ TestStorageClient :: getAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Acquire resources for an audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<AudioClip>::Ref
-TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
+TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
+                                      Ptr<UniqueId>::Ref  id) const
                                                 throw (std::logic_error)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
@@ -449,7 +460,8 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
+TestStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
+                                      Ptr<AudioClip>::Ref audioClip) const
                                                 throw (std::logic_error)
 {
     if (*(audioClip->getUri()) == "") {
@@ -465,7 +477,8 @@ TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
  *  Delete an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
+TestStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
+                                     Ptr<UniqueId>::Ref  id)
                                                 throw (std::invalid_argument)
 {
     // erase() returns the number of entries found & erased
@@ -479,7 +492,8 @@ TestStorageClient :: deleteAudioClip(Ptr<const UniqueId>::Ref id)
  *  Return a listing of all the audio clips in the audio clip store.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
-TestStorageClient :: getAllAudioClips(void) const
+TestStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
+                                                                        const
                                                 throw ()
 {
     AudioClipMap::const_iterator        it = audioClipMap.begin();
