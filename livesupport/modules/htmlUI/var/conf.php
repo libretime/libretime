@@ -23,13 +23,19 @@
 
 
     Author   : $Author: sebastian $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/var/Attic/conf.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /**
+ *  \file conf.php
+ *  storageServer configuration file
+ */
+
+/**
  *  configuration structure:
+ *
  *  <dl>
  *   <dt>dsn<dd> datasource setting
  *   <dt>tblNamePrefix <dd>prefix for table names in the database
@@ -38,6 +44,7 @@
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
+ *   <dt>isArchive <dd>local/central flag
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
  *   <dt>storageUrlHost, storageUrlPort<dd>host and port of storageServer
@@ -57,14 +64,13 @@ $config = array(
     ),
     'tblNamePrefix' => 'ls_',
     'authCookieName'=> 'lssid',
-    #'storageDir'    =>  dirname(getcwd()).'/stor',
-    #'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
-    #'transDir'      =>  dirname(getcwd()).'/trans',
-    #'accessDir'     =>  dirname(getcwd()).'/access',
+    'StationPrefsGr'=> 'StationPrefs',
+    'AllGr'         => 'All',
     'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
     'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
+    'isArchive'     =>  FALSE,
 
     /* ==================================================== URL configuration */
     'storageUrlPath'        => '/livesupportStorageServer',
@@ -80,6 +86,13 @@ $config = array(
     'archiveAccountLogin'   => 'root',
     'archiveAccountPass'    => 'q',
 
+    /* ============================================== scheduler configuration */
+    'schedulerUrlPath'        => '',
+    'schedulerXMLRPC'         => 'RC2',
+    'schedulerUrlHost'        => 'localhost',
+    'schedulerUrlPort'        => 3344,
+
+    /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
         'RootNode'      => array('Folder'),
         'Storage'       => array('Folder', 'File', 'Replica'),
@@ -106,8 +119,6 @@ $config = array(
     'RootNode'        => 'RootNode',
     'tmpRootPass'   => 'q',
 );
-
-
 
 
 define('UI_HANDLER', 'ui_handler.php');

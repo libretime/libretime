@@ -7,6 +7,7 @@ class uiSearch
         $this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->criteria['limit']  = 3;
     }
 
     function setReload()
@@ -54,8 +55,9 @@ class uiSearch
 
     function newsearch(&$formdata)
     {
-        $this->results    = NULL;
-        $this->criteria   = NULL;
+        $this->results                  = NULL;
+        $this->criteria['conditions']   = NULL;
+        $this->criteria['offset']      = NULL;
 
         $this->criteria['operator'] = $formdata['operator'];
         $this->criteria['filetype'] = $formdata['filetype'];
@@ -66,10 +68,10 @@ class uiSearch
             if (is_array($val) && strlen($val[2])) {
                 $this->criteria['conditions'][$key] = array('cat' => $this->Base->_formElementDecode($val[0]),
                                                             'op'  => $val[1],
-                                                            'val' => $val[2]);
+                                                            'val' => stripslashes($val[2]));
                 $this->criteria['form'][$key]       = array(0     => $this->Base->_formElementDecode($val[0]),
                                                             1     => $val[1],
-                                                            2     => $val[2]);
+                                                            2     => stripslashes($val[2]));
             }
         }
         $this->Base->redirUrl = UI_BROWSER.'?act=SEARCH';
@@ -78,20 +80,29 @@ class uiSearch
 
     function searchDB()
     {
+        $this->results = NULL;
         #print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
         foreach ($results['results'] as $rec) {
-            $this->results[] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
+            $this->results['items'][] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($rec));
+        }
+        $this->results['count'] = $results['cnt'];
+        $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
+        $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
+        for ($n = 0; $n < (ceil($results['cnt'] / $this->criteria['limit'])); $n++) {
+            $this->results['pages'][$n] = $n+1;
         }
     }
 
     function reOrder($by)
     {
-        $this->results    = NULL;
+        $this->criteria['offset'] = NULL;
+
         if ($this->criteria['orderby'] == $by && !$this->criteria['desc'])
             $this->criteria['desc'] = TRUE;
         else
             $this->criteria['desc'] = FALSE;
+
         $this->criteria['orderby'] = $by;
         $this->setReload();
         $this->searchDB();
@@ -101,8 +112,24 @@ class uiSearch
     function clear()
     {
         #$this->results    = NULL;
-        $this->criteria['form']   = NULL;
+        $this->criteria['form'] = NULL;
         $this->setReload();
+    }
+
+    function setOffset($page)
+    {
+        $o =& $this->criteria['offset'];
+        $l =& $this->criteria['limit'];
+
+        if ($page == 'next') {
+            $o += $l;
+        } elseif ($page == 'prev') {
+            $o -= $l;
+        } elseif (is_numeric($page)) {
+            $o = $l * $page;
+        }
+        $this->setReload();
+        $this->searchDB();
     }
 }
 ?>

@@ -6,7 +6,6 @@
 
     {include file="script/basics.js.tpl"}
     {include file="script/myKontextMenue.js.tpl"}
-
 </head>
 
 <body>

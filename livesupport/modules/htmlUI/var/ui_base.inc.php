@@ -230,19 +230,21 @@ class uiBase
     {
         $ia = $this->gb->analyzeFile($id, $this->sessid);
         $s  = $ia['playtime_seconds'];
+        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
 
         if ($format=='array') {
             return array(
-                    'Format.Extent'             => date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')),
+                    'Format.Extent'             => $extent,
                     'Format.Medium.Bitrate'     => $ia['audio']['bitrate'],
                     'Format.Medium.Channels'    => $ia['audio']['channelmode'],
                     'Format.Medium.Samplerate'  => $ia['audio']['sample_rate'],
                     'Format.Medium.Encoder'     => $ia['audio']['codec'] ? $ia['audio']['codec'] : $ia['audio']['encoder'],
                    );
         } elseif ($format=='text') {
+            #print_r($ia);
             return "fileformat: {$ia['fileformat']}<br>
                     seconds: {$ia['playtime_seconds']}<br>
-                    length: ".date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'))."<br>
+                    length: $extent<br>
                     channels: {$ia['audio']['channels']}<br>
                     sample_rate: {$ia['audio']['sample_rate']}<br>
                     bits_per_sample: {$ia['audio']['bits_per_sample']}<br>

@@ -12,6 +12,10 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/_close.tpl');
             break;
 
+            case "_clear_parent":
+                $Smarty->display('popup/_clear_parent.tpl');
+            break;
+
             case "login":
                 $Smarty->assign('login', $uiBrowser->login($Smarty, $ui_fmask));
                 $Smarty->display('popup/login.tpl');
@@ -91,7 +95,7 @@ if ($uiBrowser->userid) {
 
     case "SEARCH":
         if (is_array($uiBrowser->SEARCH->criteria) ){
-            $Smarty->assign('searchres', $uiBrowser->SEARCH->results);
+            $Smarty->assign('searchres', $uiBrowser->SEARCH->results); 
             $Smarty->assign('showSearchRes', TRUE);
         };
 

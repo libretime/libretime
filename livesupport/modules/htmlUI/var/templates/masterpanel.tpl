@@ -9,7 +9,7 @@
 {/if}
 
 {if $SCRATCHPAD}
-    {include file="ScratchPad.tpl"}
+    {include file="scratchPad.tpl"}
 {/if}
 
 {if $structure}

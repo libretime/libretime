@@ -1,4 +1,4 @@
-<?php
+<?php    
 require dirname(__FILE__).'/../ui_handler_init.php';
 
 switch($_REQUEST['act']){
@@ -137,7 +137,11 @@ switch($_REQUEST['act']){
     break;
 
     case "SEARCH.clear":
-        $uiHandler->SEARCH->clear($_REQUEST);
+        $uiHandler->SEARCH->clear();
+    break;
+
+    case "SEARCH.setOffset":
+        $uiHandler->SEARCH->setOffset($_REQUEST['page']);
     break;
 
     case "activatePL":

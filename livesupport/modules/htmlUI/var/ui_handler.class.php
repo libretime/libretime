@@ -38,12 +38,14 @@ class uiHandler extends uiBase {
      */
     function login(&$formdata, &$mask)
     {
+        session_destroy();
+        session_start();
         if ($this->_validateForm($formdata, $mask)) {
             $sessid = $this->gb->login($formdata['login'], $formdata['pass']);
             if($sessid && !PEAR::isError($sessid)){
                 setcookie($this->config['authCookieName'], $sessid);
                 $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
-                if(!PEAR::isError($id)) $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+                if(!PEAR::isError($id)) $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
             }else{
                 $this->_retMsg('Login failed.');
                 $_SESSION['retransferFormData']['login']=$formdata['login'];
@@ -67,8 +69,8 @@ class uiHandler extends uiBase {
         session_destroy();
 
         if ($trigger_login)
-             $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=login';
-        else $this->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+             $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=login';
+        else $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
     }
 
     // --- files ---
