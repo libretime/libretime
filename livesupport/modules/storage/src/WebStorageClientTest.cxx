@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -617,12 +617,15 @@ WebStorageClientTest :: searchTest(void)
                                             "dc:title", "prefix", "File "));
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 2);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip0);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip2);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
-    CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip0);
-    CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1) == *audioClip2);
     
     try {
         Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
@@ -631,11 +634,68 @@ WebStorageClientTest :: searchTest(void)
         criteria->setLimit(10);
         int numberFound = wsc->search(sessionId, criteria);
         CPPUNIT_ASSERT(numberFound == 1);
+        CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 1);
+        CPPUNIT_ASSERT(*wsc->getPlaylistIds()->at(0) == *playlist0);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-    CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 1);
-    CPPUNIT_ASSERT(*wsc->getPlaylistIds()->at(0) == *playlist0);
+
+    try {
+        Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria(
+                                    "audioClip", 
+                                    "dcterms:extent", "=", "00:00:00.100000"));
+        criteria->setLogicalOperator("and");
+        criteria->addCondition("dc:title", "partial",  "Title ");
+        int numberFound = wsc->search(sessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 1);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 1);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip1);
+        CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 0);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (Core::XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "or"));
+        criteria->addCondition("dcterms:extent", ">",  "00:00:11.000000");
+        criteria->addCondition("dc:title", "prefix", "File2");
+        int numberFound = wsc->search(sessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 2);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 1);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0) == *audioClip1);
+        CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 1);
+        CPPUNIT_ASSERT(*wsc->getPlaylistIds()->at(0)  == *playlist0);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (Core::XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria);
+        criteria->setType("all");
+        criteria->addCondition("dc:title", "partial",  "t");
+        criteria->setLimit(2);
+        criteria->setOffset(1);
+        int numberFound = wsc->search(sessionId, criteria);
+        CPPUNIT_ASSERT(numberFound == 4);
+        CPPUNIT_ASSERT(wsc->getAudioClipIds()->size() == 2);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(0)  == *audioClip1);
+        CPPUNIT_ASSERT(*wsc->getAudioClipIds()->at(1)  == *audioClip2);
+        CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() == 0);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (Core::XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 
     try{
         authentication->logout(sessionId);

@@ -18,7 +18,7 @@
 <dcterms:valid  >2004-05-25</dcterms:valid>
 <dc:type xsi:type="dcterms:DCMIType" >Sound</dc:type>
 <dc:format xsi:type="dcterms:IMT" >audio/mpeg</dc:format>
-<dcterms:extent  >0:0:3</dcterms:extent>
+<dcterms:extent  >00:00:03.000000</dcterms:extent>
 <dcterms:medium  >online</dcterms:medium>
 <dc:identifier  >streamonthefly:</dc:identifier>
 <dc:identifier  >http://some.url.mdlf.org/</dc:identifier>
