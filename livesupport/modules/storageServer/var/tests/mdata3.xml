@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metadata
-  xmlns="http://www.streamonthefly.org/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:dcterms="http://purl.org/dc/terms/"
-  xmlns:xbmf="http://www.streamonthefly.org/xbmf"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- >
-<dc:title  >File Title3 txt</dc:title>
-<dcterms:alternative  >Alternative File Title txt</dcterms:alternative>
-<xbmf:contributor>
- <xbmf:role>Author</xbmf:role>
- <xbmf:name>John Y</xbmf:name>
- <xbmf:phone>234</xbmf:phone>
-</xbmf:contributor>
-</metadata>
+<audioClip>
+    <metadata
+      xmlns="http://www.streamonthefly.org/"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dcterms="http://purl.org/dc/terms/"
+      xmlns:xbmf="http://www.streamonthefly.org/xbmf"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     >
+        <dc:title  >File Title3 txt</dc:title>
+        <dcterms:alternative  >Alternative File Title txt</dcterms:alternative>
+        <dcterms:extent  >00:00:00.100000</dcterms:extent>
+        <xbmf:contributor>
+            <xbmf:role>Author</xbmf:role>
+            <xbmf:name>John Y</xbmf:name>
+            <xbmf:phone>234</xbmf:phone>
+        </xbmf:contributor>
+    </metadata>
+</audioClip>
