@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/playlistFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,7 +54,7 @@ $playlistFormat = array(
             'optional'=>array('metadata'),
         ),
         'attrs'=>array(
-            'implied'=>array('id', 'title', 'playlength'),
+            'implied'=>array('id', 'title', 'playlength', 'uri'),
         ),
     ),
     'fadeinfo'=>array(
@@ -100,11 +100,11 @@ $playlistFormat = array(
     ),
     'fadein'=>array(
         'type'=>'Attribute',
-        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{2}.\d{6}$',
+        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{1,2}(.\d{6})?$',
     ),
     'fadeout'=>array(
         'type'=>'Attribute',
-        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{2}.\d{6}$',
+        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{1,2}(.\d{6})?$',
     ),
 /*
     ''=>array(
