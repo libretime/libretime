@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Prefs.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@ class Prefs{
     /**
      *  Constructor
      *
-     *  @param gb, GreenBox object reference
+     *  @param gb object, GreenBox object reference
      */
     function Prefs(&$gb)
     {

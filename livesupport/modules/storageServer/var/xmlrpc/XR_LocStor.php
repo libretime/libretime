@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1227,8 +1227,8 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> key : string - preference key:<br>
-     *   <ul>
+     *      <li> key : string - preference key </li>
+     *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
@@ -1276,9 +1276,9 @@ class XR_LocStor extends LocStor{
      *  fields:
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
-     *      <li> key : string - preference key:<br>
-     *      <li> value : string - preference value:<br>
-     *   <ul>
+     *      <li> key : string - preference key </li>
+     *      <li> value : string - preference value </li>
+     *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
