@@ -1,0 +1,2390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+	
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.1.3  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Douglas Arellanes">
+	<META NAME="CREATED" CONTENT="20050110;13014800">
+	<META NAME="CHANGEDBY" CONTENT="Douglas Arellanes">
+	<META NAME="CHANGED" CONTENT="20050218;19394609">
+	
+	<STYLE>
+		<!-- 
+		BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Arial"; font-size:x-small }
+		 -->
+	</STYLE>
+	
+</HEAD>
+
+<BODY TEXT="#000000">
+<HR>
+	<P><CENTER>
+		<H1>Overview</H1>
+		<A HREF="#table0">DC terms</A><BR>
+		<A HREF="#table1">Main</A><BR>
+		<A HREF="#table2">Music tabs</A><BR>
+		<A HREF="#table3">Talk tabs</A><BR>
+		<A HREF="#table4">Music _ Raw fields</A><BR>
+		<A HREF="#table5">News _ Raw fields</A><BR>
+		<A HREF="#table6">Music _ Element extensions</A><BR>
+		
+	</CENTER></P>
+<HR>
+<A NAME="table0"><H1>Sheet 1: <EM>DC terms</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=7 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=204><COL WIDTH=162><COL WIDTH=228><COL WIDTH=368><COL WIDTH=241><COL WIDTH=138><COL WIDTH=139></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=204 HEIGHT=17 ALIGN=LEFT><B>Element</B></TD>
+			<TD WIDTH=162 ALIGN=LEFT><B>Exists in DC Metadata?</B></TD>
+			<TD WIDTH=228 ALIGN=LEFT><B>Field name<br>(+DC Equivalent)</B></TD>
+			<TD WIDTH=368 ALIGN=LEFT><B>URI</B></TD>
+			<TD WIDTH=241 ALIGN=LEFT><B>Modifies</B></TD>
+			<TD WIDTH=138 ALIGN=LEFT><B>Exists in Tech3293?</B></TD>
+			<TD WIDTH=139 ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Creator</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:creator</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/creator">http://purl.org/dc/elements/1.1/creator</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Creator.Role</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>-<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#808000">Creator.Role.Conductor</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#808000">Maybe</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#808000">ls:conductor</FONT></B> (by TH instead of dcterms:contributor:conductor)</TD>
+			<TD ALIGN=LEFT><B><U><FONT COLOR="#808000"><A HREF="http://www.loc.gov/marc/sourcecode/relator/relatorlist.html">http://www.loc.gov/marc/sourcecode/relator/relatorlist.html</A></FONT></U></B></TD>
+			<TD ALIGN=LEFT><U><FONT COLOR="#808000"><A HREF="http://purl.org/dc/elements/1.1/contributor">http://purl.org/dc/elements/1.1/contributor</A></FONT></U></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#808000">New</FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#808000">Modifies Creator.Role</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#808000">Creator.Role.Lyricist</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#808000">Maybe</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#808000">ls:lyricist</FONT></B> (by TH instead of dcterms:contributor:lyricist)</TD>
+			<TD ALIGN=LEFT><A HREF="http://www.loc.gov/marc/sourcecode/relator/relatorlist.html">http://www.loc.gov/marc/sourcecode/relator/relatorlist.html</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Date.Created</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dcterms:created</FONT></B> (by TH instead of dcterms:date:created)</TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/terms/1.1/created">http://purl.org/dc/terms/1.1/created</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Date.Year</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">ls:year</FONT></B> (by TH instead of dcterms:coverage:temporal:year)</TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/terms/1.1/temporal">http://purl.org/dc/terms/1.1/temporal</A></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/coverage">http://purl.org/dc/elements/1.1/coverage</A></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Description</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:description</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/description">http://purl.org/dc/elements/1.1/description</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description.ArtistURL</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:artisturl</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description.AudioFileInfoURL</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:audiofileinfourl</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description.AudioSourceURL</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:audiosourceurl</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description.BuyCDURL</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:buycdurl</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description.Lyrics</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:lyrics</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B><FONT COLOR="#FF0000">Description.Mood</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">No</FONT></B></TD>
+			<TD ALIGN=LEFT>ls:mood</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description.RadioStationURL</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:radiostationurl</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B><FONT COLOR="#FF0000">Description.Rating</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">No</FONT></B></TD>
+			<TD ALIGN=LEFT>ls:rating</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B><FONT COLOR="#FF0000">Description.BPM</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">No</FONT></B></TD>
+			<TD ALIGN=LEFT>ls:bpm</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#339966">Format</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:format</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/format">http://purl.org/dc/elements/1.1/format</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format.CRC</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:crc</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format.Extent</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>dcterms:extent</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format.Medium.Bitrate</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:bitrate</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format.Medium.Channels</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:channels</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format.Medium.Encoder</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:encoder</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format.Medium.Samplerate</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:samplerate</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Identifier</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:identifier</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/format">http://purl.org/dc/elements/1.1/format</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Identifier.CatalogNumber</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:catalognumber</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Identifier</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Identifier.ISRCNumber</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>ls:isrcnumber</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Identifier</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Identifier.URL</TD>
+			<TD ALIGN=LEFT>No</TD>
+			<TD ALIGN=LEFT>?</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Identifier</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Publisher</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:publisher</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/identifier">http://purl.org/dc/elements/1.1/identifier</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Rights</TD>
+			<TD ALIGN=LEFT>Yes</TD>
+			<TD ALIGN=LEFT>ls:copyright  ???</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Source.Album</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:source</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/source">http://purl.org/dc/elements/1.1/source</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Source</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>Source.Album.DiscNumber</B></TD>
+			<TD ALIGN=LEFT><B>No</B></TD>
+			<TD ALIGN=LEFT>ls:disc_num</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Source</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>Source.Album.TrackNumber</B></TD>
+			<TD ALIGN=LEFT><B>No</B></TD>
+			<TD ALIGN=LEFT>ls:track_num</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Source</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Title</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:title</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/title">http://purl.org/dc/elements/1.1/title</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Type</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Type.Genre</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">ls:genre</FONT></B> (by TH instead of dcterms:type:sound)</TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/dcmitype/Sound">http://purl.org/dc/dcmitype/Sound</A></TD>
+			<TD ALIGN=LEFT BGCOLOR="#FFFF00"><A HREF="http://purl.org/dc/elements/1.1/type">http://purl.org/dc/elements/1.1/type</A></TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Type</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><B><FONT COLOR="#008000">Language</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">Yes</FONT></B></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:language</FONT></B></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/language">http://purl.org/dc/elements/1.1/language</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT BGCOLOR="#FFFF00"><B><FONT COLOR="#008000">maybe this is helpful for playlist?</FONT></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dcterms:ispartof</FONT></B> (by TH instead of dcterms:relation:ispartof)</TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/terms/isPartOf">http://purl.org/dc/terms/isPartOf</A></TD>
+			<TD ALIGN=LEFT><A HREF="http://purl.org/dc/elements/1.1/relation">http://purl.org/dc/elements/1.1/relation</A></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table1"><H1>Sheet 2: <EM>Main</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=6 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=155><COL WIDTH=257><COL WIDTH=257><COL WIDTH=60><COL WIDTH=283><COL WIDTH=66></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=155 HEIGHT=17 ALIGN=LEFT><B>ID3v2 name</B></TD>
+			<TD WIDTH=257 ALIGN=LEFT><B>LS field label</B></TD>
+			<TD WIDTH=257 ALIGN=LEFT><B>LS field name</B></TD>
+			<TD WIDTH=60 ALIGN=LEFT><B>Type</B></TD>
+			<TD WIDTH=283 ALIGN=LEFT><B>Comment</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF">Main Tab</FONT></B></TD>
+			<TD ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF"><BR></FONT></B></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Weight</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Title</FONT></TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:title</FONT></B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="250" SDNUM="1033;">250</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Artist</FONT></TD>
+			<TD ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#008000">dc:creator</FONT></B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="200" SDNUM="1033;">200</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Genre</FONT></TD>
+			<TD ALIGN=LEFT>Genre</TD>
+			<TD ALIGN=LEFT><B>ls:genre</B> (by TH instead of dcterms:type:sound)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="40" SDNUM="1033;">40</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT>File format</TD>
+			<TD ALIGN=LEFT><B>dc:format</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>File, live stream, networked file<BR>
+			    (TH: It looks like category for MIME type, isn't it?)</TD>
+			<TD ALIGN=RIGHT SDVAL="10" SDNUM="1033;">10</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Duration</FONT></TD>
+			<TD ALIGN=LEFT>Length</TD>
+			<TD ALIGN=LEFT><B>dcterms:extent</B> (by TH instead of dc:format:extent)</TD>
+			<TD ALIGN=LEFT>Time</TD>
+			<TD ALIGN=LEFT>Automatically generated</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="500" SDNUM="1033;">500</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Hidden/Unused fields</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><I>URL</I></TD>
+			<TD ALIGN=LEFT><I><BR></I></TD>
+			<TD ALIGN=LEFT><B><I>Identifier.URL</I></B></TD>
+			<TD ALIGN=LEFT><I>URL</I></TD>
+			<TD ALIGN=LEFT><I>Not used in LS 1.0</I></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>File</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>Identifier.File</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Generated automatically by system on input</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table2"><H1>Sheet 3: <EM>Music tabs</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=7 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=155><COL WIDTH=257><COL WIDTH=257><COL WIDTH=60><COL WIDTH=283><COL WIDTH=198><COL WIDTH=66></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=155 HEIGHT=17 ALIGN=LEFT><B>ID3v2 name</B></TD>
+			<TD WIDTH=257 ALIGN=LEFT><B>LS field label</B></TD>
+			<TD WIDTH=257 ALIGN=LEFT><B>LS field name</B></TD>
+			<TD WIDTH=60 ALIGN=LEFT><B>Type</B></TD>
+			<TD WIDTH=283 ALIGN=LEFT><B>Comment</B></TD>
+			<TD WIDTH=198 ALIGN=LEFT><B>Weight</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF">Music Basic Tab</FONT></B></TD>
+			<TD ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF"><BR></FONT></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Title</FONT></TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT><B>dc:title</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="250" SDNUM="1033;">250</TD>
+			<TD ALIGN=LEFT>see main</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Artist</FONT></TD>
+			<TD ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT><B>dc:creator</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="200" SDNUM="1033;">200</TD>
+			<TD ALIGN=LEFT>see main</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Album</FONT></TD>
+			<TD ALIGN=LEFT>Album</TD>
+			<TD ALIGN=LEFT><B>dc:source</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="50" SDNUM="1033;">50</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Year</FONT></TD>
+			<TD ALIGN=LEFT>Year</TD>
+			<TD ALIGN=LEFT><B>ls:year</B> (by TH instead of dcterms:coverage:temporal:year)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>TH: may be extracted from dcterms:temporal<BR></TD>
+			<TD ALIGN=RIGHT SDVAL="50" SDNUM="1033;">50</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Genre</FONT></TD>
+			<TD ALIGN=LEFT>Genre</TD>
+			<TD ALIGN=LEFT><B>dc:type</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="40" SDNUM="1033;">40</TD>
+			<TD ALIGN=LEFT>see main</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Comment</FONT></TD>
+			<TD ALIGN=LEFT>Description</TD>
+			<TD ALIGN=LEFT><B>dc:description</B></TD>
+			<TD ALIGN=LEFT>Longtext</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="200" SDNUM="1033;">200</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1><BR></FONT></TD>
+			<TD ALIGN=LEFT>Format</TD>
+			<TD ALIGN=LEFT><B>dc:format</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>File, live stream, networked file</TD>
+			<TD ALIGN=RIGHT SDVAL="10" SDNUM="1033;">10</TD>
+			<TD ALIGN=LEFT>see main</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>BPM</FONT></TD>
+			<TD ALIGN=LEFT>BPM</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:bpm</FONT></B></TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Type or Description?</TD>
+			<TD ALIGN=RIGHT SDVAL="10" SDNUM="1033;">10</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Rating</FONT></TD>
+			<TD ALIGN=LEFT>Rating</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:rating</FONT></B></TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Number of stars</TD>
+			<TD ALIGN=RIGHT SDVAL="50" SDNUM="1033;">50</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Duration</FONT></TD>
+			<TD ALIGN=LEFT>Length</TD>
+			<TD ALIGN=LEFT><B>dcterms:extent</B> (by TH instead of dcterms:format:extent)</TD>
+			<TD ALIGN=LEFT>Time</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT>see main</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF">Music Advanced Tab</FONT></B></TD>
+			<TD ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF"><BR></FONT></B></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Encoded by</FONT></TD>
+			<TD ALIGN=LEFT>Encoded by</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:encoded_by</FONT></B> (by TH instead of Creator.Role.Encoder)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Track #</FONT></TD>
+			<TD ALIGN=LEFT>Track number</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:track_num</FONT></B> (by TH instead of Source.Album.TrackNumber)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as source.album</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Disc #</FONT></TD>
+			<TD ALIGN=LEFT>Disc number</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:disc_num</FONT></B> (by TH instead of Source.Album.DiscNumber)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as source.album</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Mood</FONT></TD>
+			<TD ALIGN=LEFT>Mood</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:disc_num</FONT></B> (by TH instead of Description.Mood)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Label</FONT></TD>
+			<TD ALIGN=LEFT>Label</TD>
+			<TD ALIGN=LEFT><B>dc:publisher</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="100" SDNUM="1033;">100</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Composer</FONT></TD>
+			<TD ALIGN=LEFT>Composer</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:composer</FONT></B> (by TH instead of Creator.Role.Composer)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Bitrate</FONT></TD>
+			<TD ALIGN=LEFT>Bitrate</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:bitrate</FONT></B> (by TH instead of Format.Medium.Bitrate)</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Channels</FONT></TD>
+			<TD ALIGN=LEFT>Channels</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:channels</FONT></B> (by TH instead of Format.Medium.Channels)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Mono, Stereo, 5.1?</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Samplerate</FONT></TD>
+			<TD ALIGN=LEFT>Sample rate</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:samplerate</FONT></B> (by TH instead of Format.Medium.Samplerate)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Encoder</FONT></TD>
+			<TD ALIGN=LEFT>Encoder software used</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:encoder</FONT></B> (by TH instead of Format.Medium.Encoder)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Name of encoder software</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>CRC</FONT></TD>
+			<TD ALIGN=LEFT>Checksum</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:crc</FONT></B> (by TH instead of Format.CRC)</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Checksum</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Lyrics</FONT></TD>
+			<TD ALIGN=LEFT>Lyrics</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:lyrics</FONT></B> (by TH instead of Description.Lyrics)</TD>
+			<TD ALIGN=LEFT>Longtext</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Orchestra or band</FONT></TD>
+			<TD ALIGN=LEFT>Orchestra or band</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:orchestra</FONT></B> (by TH instead of Creator.Role.Orchestra)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Conductor</FONT></TD>
+			<TD ALIGN=LEFT>Conductor</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:conductor</FONT></B> (by TH instead of Creator.Role.Conductor)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Lyricist</FONT></TD>
+			<TD ALIGN=LEFT>Lyricist</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:lyricist</FONT></B> (by TH instead of Creator.Role.Lyricist)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Original lyricist</FONT></TD>
+			<TD ALIGN=LEFT>Original lyricist</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:originallyricist</FONT></B> (by TH instead of Creator.Role.OriginalLyricist)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Radio station name</FONT></TD>
+			<TD ALIGN=LEFT>Radio station name</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:radiostationname</FONT></B> (by TH instead of Creator.Role.RadioStationName)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Automatically generated from </TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Audio file information webpage</FONT></TD>
+			<TD ALIGN=LEFT>Audio file information web page</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:audiofileinfourl</FONT></B> (by TH instead of Description.AudioFileInfoURL)</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Artist webpage</FONT></TD>
+			<TD ALIGN=LEFT>Artist web page</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:artisturl</FONT></B> (by TH instead of Description.ArtistURL)</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Audio source webpage</FONT></TD>
+			<TD ALIGN=LEFT>Audio source web page</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:audiosourceurl</FONT></B> (by TH instead of Description.AudioSourceURL)</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT>Creator or Publisher?</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Radio station webpage</FONT></TD>
+			<TD ALIGN=LEFT>Radio station web page</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:radiostationurl</FONT></B> (by TH instead of Description.RadioStationURL)</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Buy CD webpage</FONT></TD>
+			<TD ALIGN=LEFT>Buy CD web page</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:buycdurl</FONT></B> (by TH instead of Description.BuyCDURL)</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>ISRC #</FONT></TD>
+			<TD ALIGN=LEFT>ISRC number</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:isrcnumber</FONT></B> (by TH instead of Identifier.ISRCNumber)</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="20" SDNUM="1033;">20</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Catalog #</FONT></TD>
+			<TD ALIGN=LEFT>Catalog number</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:catalognumber</FONT></B> (by TH instead of Identifier.CatalogNumber)</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="20" SDNUM="1033;">20</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Original Artist</FONT></TD>
+			<TD ALIGN=LEFT>Original artist</TD>
+			<TD ALIGN=LEFT><B><FONT COLOR="#FF0000">ls:originalartist</FONT></B> (by TH instead of Creator.Role.OriginalArtist)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>count as creator</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT SIZE=1>Copyright</FONT></TD>
+			<TD ALIGN=LEFT>Copyright</TD>
+			<TD ALIGN=LEFT><B>dc:rights or ls:license ?</B> (by TH instead of dc:rights:license)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="1000" SDNUM="1033;"><B>1000</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Hidden/Unused fields</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><I>URL</I></TD>
+			<TD ALIGN=LEFT><I><BR></I></TD>
+			<TD ALIGN=LEFT><I>?</I> (by TH instead of Identifier.URL)</TD>
+			<TD ALIGN=LEFT><I>URL</I></TD>
+			<TD ALIGN=LEFT><I>Not used in LS 1.0</I></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>File</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>ls:filename (by TH instead of Identifier.File)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Generated automatically by system on input<BR>TH: menmonic filename in storageServer ?</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT COLOR="#FF0000">Is part of (for playlists)</FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000"><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">dcterms:ispartof</FONT> (by TH instead of dcterms:resource:ispartof)</TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">Text</FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">Generated automatically by system on inclusion in playlist</FONT></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><FONT COLOR="#FF0000">Requires (for playlists)</FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000"><BR></FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">dcterms:requires</FONT> (by TH instead of dcterms:resource:requires)</TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">Text</FONT></TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">Generated automatically by system on inclusion in playlist</FONT></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table3"><H1>Sheet 4: <EM>Talk tabs</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=6 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=267><COL WIDTH=267><COL WIDTH=66><COL WIDTH=626><COL WIDTH=66><COL WIDTH=66></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=267 HEIGHT=17 ALIGN=LEFT><B>LS field label</B></TD>
+			<TD WIDTH=267 ALIGN=LEFT><B>LS Field name (based on Dublin Core)</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Type</B></TD>
+			<TD WIDTH=626 ALIGN=LEFT><B>Comment</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Weight</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF">Talk Basic Tab</FONT></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT><B>dc:title</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>File or playlist title name</TD>
+			<TD ALIGN=RIGHT SDVAL="250" SDNUM="1033;">250</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Report date/time</TD>
+			<TD ALIGN=LEFT><B>dcterms:temporal</B> (by TH instead of dcterms:coverage:temporal)</TD>
+			<TD ALIGN=LEFT>Time/Date</TD>
+			<TD ALIGN=LEFT>Keywords for what the report covers; time the report is about</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Report location</TD>
+			<TD ALIGN=LEFT><B>dcterms:spatial</B> (by TH instead of dcterms:coverage:spatial)</TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Keywords for what the report covers; place the report is about</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Report organizations</TD>
+			<TD ALIGN=LEFT><B>dcterms:entity</B> (by TH instead of dcterms:coverage:entity)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Keywords for what the report covers</TD>
+			<TD ALIGN=RIGHT SDVAL="150" SDNUM="1033;">150</TD>
+			<TD ALIGN=LEFT><FONT COLOR="#FF0000">All coverage tags share same weighting. Future version should support Yahoo-style ontology</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description</TD>
+			<TD ALIGN=LEFT><B>dc:description</B></TD>
+			<TD ALIGN=LEFT>Long text</TD>
+			<TD ALIGN=LEFT>Account of the content; could be an abstract, a script, etc.</TD>
+			<TD ALIGN=RIGHT SDVAL="200" SDNUM="1033;">200</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT><B>dc:creator</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Name of creator (could be reporter, editor, moderator): Automatically generate menu from user names?</TD>
+			<TD ALIGN=RIGHT SDVAL="100" SDNUM="1033;">100</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Subject</TD>
+			<TD ALIGN=LEFT><B>dc:subject</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Topic of the content as keywords; a person can be a subject too</TD>
+			<TD ALIGN=RIGHT SDVAL="200" SDNUM="1033;">200</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Genre</TD>
+			<TD ALIGN=LEFT><B>dc:type</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Genre of the content or resource</TD>
+			<TD ALIGN=RIGHT SDVAL="50" SDNUM="1033;">50</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format</TD>
+			<TD ALIGN=LEFT><B>dc:format</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Stream, file, networked file</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT BGCOLOR="#000000"><B><FONT COLOR="#FFFFFF">Talk Advanced Tab</FONT></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Contributor</TD>
+			<TD ALIGN=LEFT><B>dc:contributor</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Entity making contributions to the content of the resource (could be person, organization or service)</TD>
+			<TD ALIGN=RIGHT SDVAL="50" SDNUM="1033;">50</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Language</TD>
+			<TD ALIGN=LEFT><B>dc:language</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Language of the file, according to W3C RFC 1766</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Copyright</TD>
+			<TD ALIGN=LEFT><B>dc:rights</B></TD>
+			<TD ALIGN=LEFT>Menu</TD>
+			<TD ALIGN=LEFT>Can include URL pointing to copyright or CC license info</TD>
+			<TD ALIGN=RIGHT SDVAL="0" SDNUM="1033;">0</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B><I>Automatically-generated fields</I></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>dcterms:ispartof</B> (by TH instead of dcterms:relation:ispartof)</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Whether the report is related to other reports (part of a playlist, for example)</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>dc:date</B></TD>
+			<TD ALIGN=LEFT>Date</TD>
+			<TD ALIGN=LEFT>Date file was created (if report is about a time, that goes in coverage)</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>dcterms:extent</B> (by TH instead of dcterms:format:extent)</TD>
+			<TD ALIGN=LEFT>Time</TD>
+			<TD ALIGN=LEFT>Length of file in hours, minutes and seconds.</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>dc:identifier</B></TD>
+			<TD ALIGN=LEFT>Text?</TD>
+			<TD ALIGN=LEFT>Unique filesystem ID, probably file name GUNID</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>dc:publisher</B></TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Station name; take from Station Preferences/Station Name</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><I>?</I></B> (by TH instead of Source)</TD>
+			<TD ALIGN=LEFT><I>Text</I></TD>
+			<TD ALIGN=LEFT><I>Not used in LS1.0</I></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B><BR></B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=RIGHT SDVAL="1000" SDNUM="1033;">1000</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table4"><H1>Sheet 5: <EM>Music _ Raw fields</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=5 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=155><COL WIDTH=195><COL WIDTH=204><COL WIDTH=66><COL WIDTH=66></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=155 HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD WIDTH=195 ALIGN=LEFT><B>ID3v2 name</B></TD>
+			<TD WIDTH=204 ALIGN=LEFT><B>Tech 3293 name</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Type</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Comment</B></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>Main</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>File</TD>
+			<TD ALIGN=LEFT>Identifier.File</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Artist</TD>
+			<TD ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Album</TD>
+			<TD ALIGN=LEFT>Source.Album</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Year</TD>
+			<TD ALIGN=LEFT>Date.Year</TD>
+			<TD ALIGN=LEFT>Date</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Genre</TD>
+			<TD ALIGN=LEFT>Type.Genre</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Comment</TD>
+			<TD ALIGN=LEFT>Description</TD>
+			<TD ALIGN=LEFT>Longtext</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Composer</TD>
+			<TD ALIGN=LEFT>Creator.Role.Composer</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Original Artist</TD>
+			<TD ALIGN=LEFT>Creator.Role.OriginalArtist</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Copyright</TD>
+			<TD ALIGN=LEFT>Rights.Copyright</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT>Identifier.URL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Encoded by</TD>
+			<TD ALIGN=LEFT>Creator.Role.Encoder</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Track #</TD>
+			<TD ALIGN=LEFT>Source.Album.TrackNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Disc #</TD>
+			<TD ALIGN=LEFT>Source.Album.DiscNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Rating</TD>
+			<TD ALIGN=LEFT>Description.Rating</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Number of stars</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Mood</TD>
+			<TD ALIGN=LEFT>Description.Mood</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>BPM</TD>
+			<TD ALIGN=LEFT>Type.BPM</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Type or Description?</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>File Information</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Duration</TD>
+			<TD ALIGN=LEFT>Format.Extent</TD>
+			<TD ALIGN=LEFT>Time</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Bitrate</TD>
+			<TD ALIGN=LEFT>Format.Medium.Bitrate</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Channels</TD>
+			<TD ALIGN=LEFT>Format.Medium.Channels</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Mono, Stereo, 5.1?</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Samplerate</TD>
+			<TD ALIGN=LEFT>Format.Medium.Samplerate</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Encoder</TD>
+			<TD ALIGN=LEFT>Format.Medium.Encoder</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Name of encoder software</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>CRC</TD>
+			<TD ALIGN=LEFT>Format.CRC</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Checksum</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>File, live stream, networked file</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Lyrics</TD>
+			<TD ALIGN=LEFT>Description.Lyrics</TD>
+			<TD ALIGN=LEFT>Longtext</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>Additional</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Orchestra or band</TD>
+			<TD ALIGN=LEFT>Creator.Role.Orchestra</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Conductor</TD>
+			<TD ALIGN=LEFT>Creator.Role.Conductor</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Lyricist</TD>
+			<TD ALIGN=LEFT>Creator.Role.Lyricist</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Original lyricist</TD>
+			<TD ALIGN=LEFT>Creator.Role.OriginalLyricist</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Label</TD>
+			<TD ALIGN=LEFT>Publisher</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Radio station name</TD>
+			<TD ALIGN=LEFT>Creator.Role.RadioStationName</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Creator or Publisher?</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Audio file information webpage</TD>
+			<TD ALIGN=LEFT>Description.AudioFileInfoURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Artist webpage</TD>
+			<TD ALIGN=LEFT>Description.ArtistURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Audio source webpage</TD>
+			<TD ALIGN=LEFT>Description.AudioSourceURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Radio station webpage</TD>
+			<TD ALIGN=LEFT>Description.RadioStationURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Buy CD webpage</TD>
+			<TD ALIGN=LEFT>Description.BuyCDURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>ISRC #</TD>
+			<TD ALIGN=LEFT>Identifier.ISRCNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Catalog #</TD>
+			<TD ALIGN=LEFT>Identifier.CatalogNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table5"><H1>Sheet 6: <EM>News _ Raw fields</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=3 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=83><COL WIDTH=66><COL WIDTH=626></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=83 HEIGHT=17 ALIGN=LEFT><B>Field name</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Type</B></TD>
+			<TD WIDTH=626 ALIGN=LEFT><B>Comment</B></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>File or playlist title name</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Name of creator (could be reporter, editor, moderator)</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Subject</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Topic of the content as keywords; a persons who is the subject can go here too)</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Description</TD>
+			<TD ALIGN=LEFT>Long text</TD>
+			<TD ALIGN=LEFT>Account of the content; could be an abstract, a script, etc.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Publisher</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Station name; take from Station Preferences/Station Name</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Contributor</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Entity making contributions to the content of the resource (could be person, organization or service)</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Date</TD>
+			<TD ALIGN=LEFT>Date</TD>
+			<TD ALIGN=LEFT>Date file was created (if report is about a time, that goes in coverage)</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Type</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Genre of the content or resource</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Format</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Stream, file, networked file</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Identifier</TD>
+			<TD ALIGN=LEFT>Text?</TD>
+			<TD ALIGN=LEFT>Unique ID, probably file name GUNID</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><I>Source</I></TD>
+			<TD ALIGN=LEFT><I>Text</I></TD>
+			<TD ALIGN=LEFT><I>Not used in 1.0</I></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Language</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Language of the file, according to W3C RFC 1766</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Relation</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Whether the report is related to other reports (part of a playlist, for example)</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Coverage</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>What the report covers; could include time, place, organization (beat)</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT>Rights</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Can include URL pointing to copyright or CC license info</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+<HR>
+<A NAME="table6"><H1>Sheet 7: <EM>Music _ Element extensions</EM></H1></A>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=10 RULES=GROUPS BORDER=1>
+	<COLGROUP><COL WIDTH=155><COL WIDTH=195><COL WIDTH=204><COL WIDTH=66><COL WIDTH=66><COL WIDTH=66><COL WIDTH=66><COL WIDTH=204><COL WIDTH=66><COL WIDTH=66></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=155 HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD WIDTH=195 ALIGN=LEFT><B>ID3v2 name</B></TD>
+			<TD WIDTH=204 ALIGN=LEFT><B>Tech 3293 name</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Type</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><B>Comment</B></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+			<TD WIDTH=204 ALIGN=LEFT><BR></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+			<TD WIDTH=66 ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>Main</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>File</TD>
+			<TD ALIGN=LEFT>Identifier.File</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><B>Element</B></TD>
+			<TD ALIGN=LEFT><B>Exists in Tech3293?</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Artist</TD>
+			<TD ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Composer</TD>
+			<TD ALIGN=LEFT>Creator.Role.Composer</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Conductor</TD>
+			<TD ALIGN=LEFT>Creator.Role.Conductor</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.Conductor</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Encoded by</TD>
+			<TD ALIGN=LEFT>Creator.Role.Encoder</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.Encoder</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Lyricist</TD>
+			<TD ALIGN=LEFT>Creator.Role.Lyricist</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.Lyricist</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Orchestra or band</TD>
+			<TD ALIGN=LEFT>Creator.Role.Orchestra</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.Orchestra</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Original Artist</TD>
+			<TD ALIGN=LEFT>Creator.Role.OriginalArtist</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.OriginalArtist</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Original lyricist</TD>
+			<TD ALIGN=LEFT>Creator.Role.OriginalLyricist</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.OriginalLyricist</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Radio station name</TD>
+			<TD ALIGN=LEFT>Creator.Role.RadioStationName</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Creator or Publisher?</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Creator.Role.RadioStationName</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Creator.Role</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Year</TD>
+			<TD ALIGN=LEFT>Date.Year</TD>
+			<TD ALIGN=LEFT>Date</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Date.Year</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Comment</TD>
+			<TD ALIGN=LEFT>Description</TD>
+			<TD ALIGN=LEFT>Longtext</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Artist webpage</TD>
+			<TD ALIGN=LEFT>Description.ArtistURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.ArtistURL</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Audio file information webpage</TD>
+			<TD ALIGN=LEFT>Description.AudioFileInfoURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.AudioFileInfoURL</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Audio source webpage</TD>
+			<TD ALIGN=LEFT>Description.AudioSourceURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.AudioSourceURL</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Buy CD webpage</TD>
+			<TD ALIGN=LEFT>Description.BuyCDURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.BuyCDURL</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Lyrics</TD>
+			<TD ALIGN=LEFT>Description.Lyrics</TD>
+			<TD ALIGN=LEFT>Longtext</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.Lyrics</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Mood</TD>
+			<TD ALIGN=LEFT>Description.Mood</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.Mood</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Radio station webpage</TD>
+			<TD ALIGN=LEFT>Description.RadioStationURL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.RadioStationURL</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Rating</TD>
+			<TD ALIGN=LEFT>Description.Rating</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Number of stars</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Description.Rating</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Description</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>File, live stream, networked file</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>CRC</TD>
+			<TD ALIGN=LEFT>Format.CRC</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Checksum</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format.CRC</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Duration</TD>
+			<TD ALIGN=LEFT>Format.Extent</TD>
+			<TD ALIGN=LEFT>Time</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format.Extent</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Bitrate</TD>
+			<TD ALIGN=LEFT>Format.Medium.Bitrate</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format.Medium.Bitrate</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Channels</TD>
+			<TD ALIGN=LEFT>Format.Medium.Channels</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Mono, Stereo, 5.1?</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format.Medium.Channels</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Encoder</TD>
+			<TD ALIGN=LEFT>Format.Medium.Encoder</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT>Name of encoder software</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format.Medium.Encoder</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Samplerate</TD>
+			<TD ALIGN=LEFT>Format.Medium.Samplerate</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Format.Medium.Samplerate</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Modifies Format</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Catalog #</TD>
+			<TD ALIGN=LEFT>Identifier.CatalogNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Identifier.CatalogNumber</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Identifier</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>ISRC #</TD>
+			<TD ALIGN=LEFT>Identifier.ISRCNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Identifier.ISRCNumber</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Identifier</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT>Identifier.URL</TD>
+			<TD ALIGN=LEFT>URL</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Identifier.URL</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Identifier</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Label</TD>
+			<TD ALIGN=LEFT>Publisher</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Publisher</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Copyright</TD>
+			<TD ALIGN=LEFT>Rights.Copyright</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Rights.Copyright</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Album</TD>
+			<TD ALIGN=LEFT>Source.Album</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Source.Album</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Source</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Disc #</TD>
+			<TD ALIGN=LEFT>Source.Album.DiscNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Source.Album.DiscNumber</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Source</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Track #</TD>
+			<TD ALIGN=LEFT>Source.Album.TrackNumber</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Source.Album.TrackNumber</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Source</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Title</TD>
+			<TD ALIGN=LEFT>Exists</TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>BPM</TD>
+			<TD ALIGN=LEFT>Type.BPM</TD>
+			<TD ALIGN=LEFT>Number</TD>
+			<TD ALIGN=LEFT>Type or Description?</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Type.BPM</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Type</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Genre</TD>
+			<TD ALIGN=LEFT>Type.Genre</TD>
+			<TD ALIGN=LEFT>Text</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Type.Genre</TD>
+			<TD ALIGN=LEFT>New</TD>
+			<TD ALIGN=LEFT>Modifies Type</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>File Information</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=17 ALIGN=LEFT><B>Additional</B></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+</BODY>
+
+</HTML>
