@@ -23,16 +23,16 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/audioClipFormat.php,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/webstreamFormat.php,v $
 
 ------------------------------------------------------------------------------*/
 
-$audioClipFormat = array(
+$webstreamFormat = array(
     '_root'=>'audioclip',
     'audioclip'=>array(
         'childs'=>array(
-            'required'=>array('metadata'),
+            'required'=>array('metadata', 'ls:url'),
         ),
     ),
     'metadata'=>array(
@@ -69,6 +69,9 @@ $audioClipFormat = array(
             'xsi'=>"http://www.w3.org/2001/XMLSchema-instance",
             'xml'=>"http://www.w3.org/XML/1998/namespace",
         ),
+    ),
+    'ls:url'=>array(
+        'type'=>'URL',
     ),
     'dc:identifier'=>array(
         'type'=>'Text',

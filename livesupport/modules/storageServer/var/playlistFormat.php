@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/playlistFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,8 +32,8 @@ $playlistFormat = array(
     '_root'=>'playlist',
     'playlist'=>array(
         'childs'=>array(
-            'repeatable'=>array('playlistelement'),
-            'optional'=>array('metadata'),
+            // 'repeatable'=>array('playlistelement'),
+            'optional'=>array('metadata', 'playlistelement'),
         ),
         'attrs'=>array(
             'required'=>array('id', 'playlength'),
@@ -82,6 +82,7 @@ $playlistFormat = array(
     ),
     'dcterms:extent'=>array(
         'type'=>'Time',
+        'regexp'=>'^\d{2}:\d{2}:\d{2}.\d{6}$',
     ),
     'dc:creator'=>array(
         'type'=>'Text',
@@ -92,6 +93,18 @@ $playlistFormat = array(
         'type'=>'Longtext',
         'area'=>'Music',
         'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    'id'=>array(
+        'type'=>'Attribute',
+        'regexp'=>'^[0-9a-f]{16}$',
+    ),
+    'fadein'=>array(
+        'type'=>'Attribute',
+        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{2}.\d{6}$',
+    ),
+    'fadeout'=>array(
+        'type'=>'Attribute',
+        'regexp'=>'^((\d{2}:)?\d{2}:)?\d{2}.\d{6}$',
     ),
 /*
     ''=>array(
