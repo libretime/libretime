@@ -1,0 +1,4 @@
+AddBIFPath("common", "[helix]/common/build/BIF")
+AddBIFPath("client", "[helix]/client/build/BIF")
+SetSDKPath("oggvorbissdk", "/usr")
+

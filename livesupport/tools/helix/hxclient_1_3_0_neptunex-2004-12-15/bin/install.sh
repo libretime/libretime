@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/helix/hxclient_1_3_0_neptunex-2004-12-15/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -56,6 +56,7 @@ cd $product
 # to the Helix CVS server.
 # see https://bugs.helixcommunity.org/show_bug.cgi?id=3309
 export BUILD_ROOT=$tmpdir/$product/build
+export BUILDRC=$etcdir/buildrc
 build=$BUILD_ROOT/bin/build
 
 $build -m $branch -P $helixProfile -trelease -k splay
