@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,8 +80,12 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
     changeLanguage(bundle);
 
     // set up the main window, and show everything
-    attach(*logInOutButton,    0, 1, 0, 1);
-    attach(*userInfoLabel,     1, 2, 0, 1);
+    attach(*logInOutButton,    0, 1, 0, 1,
+           Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+           5, 0);
+    attach(*userInfoLabel,     1, 2, 0, 1,
+           Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+           5, 0);
     
     // show everything
     show_all();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // TODO: remove hard-coded station logo path reference
     radioLogoWidget = Gtk::manage(new Gtk::Image("var/stationLogo.png"));
+    radioLogoWidget->set_size_request(158, 104);
 
     // set up the layout, which is a button box
     layout = Gtk::manage(new Gtk::Table());
@@ -80,24 +81,29 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     timeWidget = Gtk::manage(new Gtk::Label("time"));
     timeBin = Gtk::manage(widgetFactory->createBlueBin());
     timeBin->add(*timeWidget);
+    timeBin->set_size_request(153, 104);
 
     // set up the now playing widget
     nowPlayingWidget = Gtk::manage(new Gtk::Label("now playing"));
     nowPlayingBin = Gtk::manage(widgetFactory->createDarkBlueBin());
     nowPlayingBin->add(*nowPlayingWidget);
+    timeBin->set_size_request(-1, 104);
 
     // set up the VU meter widget
     vuMeterWidget = Gtk::manage(new Gtk::Label("VU meter"));
     vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
+    vuMeterBin->set_size_request(400, 40);
 
     // set up the next playing widget
     nextPlayingWidget = Gtk::manage(new Gtk::Label("next playing"));
     nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
     nextPlayingBin->add(*nextPlayingWidget);
+    nextPlayingBin->set_size_request(400, 59);
 
     // create the bottom bar
     bottomBar = Gtk::manage(new Gtk::Table());
+    bottomBar->set_size_request(-1, 30);
     buttonBar = Gtk::manage(new Gtk::Table());
     buttonBarAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                                         Gtk::ALIGN_CENTER,
@@ -109,18 +115,34 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                                        Gtk::ALIGN_CENTER,
                                                        0, 0));
     userInfoAlignment->add(*userInfoWidget);
-    bottomBar->attach(*buttonBarAlignment, 0, 1, 0, 1);
-    bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1);
+    bottomBar->attach(*buttonBarAlignment, 0, 1, 0, 1,
+                      Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
+    bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
 
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
     set_border_width(10);
-    layout->attach(*timeBin,                    0, 1, 0, 2);
-    layout->attach(*nowPlayingBin,              1, 2, 0, 2);
-    layout->attach(*vuMeterBin,                 2, 3, 0, 1);
-    layout->attach(*nextPlayingBin,             2, 3, 1, 2);
-    layout->attach(*radioLogoWidget,            3, 4, 0, 2);
-    layout->attach(*bottomBar,                  0, 4, 2, 3);
+    layout->attach(*timeBin,         0, 1, 0, 2,
+                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    0, 0);
+    layout->attach(*nowPlayingBin,   1, 2, 0, 2,
+                   Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                   5, 0);
+    layout->attach(*vuMeterBin,      2, 3, 0, 1,
+                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    0, 0);
+    layout->attach(*nextPlayingBin,  2, 3, 1, 2,
+                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    0, 0);
+    layout->attach(*radioLogoWidget, 3, 4, 0, 2,
+                    Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    5, 0);
+    layout->attach(*bottomBar,       0, 4, 2, 3,
+                    Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                    0, 0);
 
     add(*layout);
 
@@ -130,6 +152,16 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
     colormap->alloc_color(bgColor);
     modify_bg(Gtk::STATE_NORMAL, bgColor);
+
+    // set the size and location of the window, according to the screen size
+    Glib::RefPtr<Gdk::Screen>   screen = get_screen();
+    int                         width;
+    int                         height;
+    get_size(width, height);
+    width = screen->get_width();
+    set_default_size(width, height);
+    move(0, 0);
+    set_decorated(false);
 
     // set the localized resources
     changeLanguage(bundle);
@@ -180,10 +212,18 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     userInfoWidget->changeLanguage(bundle);
 
     // re-attach the localized widgets to the layout
-    buttonBar->attach(*uploadFileButton,           0, 1, 0, 1);
-    buttonBar->attach(*djBagButton,                1, 2, 0, 1);
-    buttonBar->attach(*simplePlaylistMgmtButton,   2, 3, 0, 1);
-    buttonBar->attach(*schedulerButton,            3, 4, 0, 1);
+    buttonBar->attach(*uploadFileButton,           0, 1, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
+    buttonBar->attach(*djBagButton,                1, 2, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
+    buttonBar->attach(*simplePlaylistMgmtButton,   2, 3, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
+    buttonBar->attach(*schedulerButton,            3, 4, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
 
     // re-bind events to the buttons
     uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
