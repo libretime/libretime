@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SignalDispatcher.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -131,12 +131,17 @@ SignalDispatcher :: removeHandler(
     ::signal(signal, SIG_DFL);
 }
 
+
+#include <iostream>
+
 /*------------------------------------------------------------------------------
  *  Our signal dispatcher
  *----------------------------------------------------------------------------*/
 void
 SignalDispatcher :: dispatcher(int  signal)             throw ()
 {
+std::cerr << "dispatcher called with signal " << signal << std::endl;
+std::cerr << "handler for this signal: " << handlers[signal] << std::endl;
     handlers[signal]->handleSignal(signal);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -190,7 +190,7 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
                                                     sf->getSchedule(),
                                                     audioPlayer));
     // TODO: read granularity from config file
-    granularity.reset(new time_duration(seconds(30)));
+    granularity.reset(new time_duration(seconds(1)));
 
     eventScheduler.reset(
             new LiveSupport::EventScheduler::EventScheduler(eventContainer,
@@ -239,27 +239,27 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
 
 
 /*------------------------------------------------------------------------------
- *  Start the scheduler daemon.
+ *  Execute daemon startup functions.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemon :: start(void)                  throw (std::logic_error)
+SchedulerDaemon :: startup (void)                           throw ()
 {
-    XmlRpcDaemon::start();
     audioPlayer->initialize();
     eventScheduler->start();
+    XmlRpcDaemon::startup();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Stop the scheduler daemon.
+ *  Shut down the daemon
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemon :: stop(void)                   throw (std::logic_error)
+SchedulerDaemon :: shutdown(void)               throw (std::logic_error)
 {
     eventScheduler->stop();
     audioPlayer->deInitialize();
 
-    XmlRpcDaemon::stop();
+    XmlRpcDaemon::shutdown();
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -199,20 +199,26 @@ int main (  int     argc,
 
     daemon->setBackground(!debugMode);
 
-    if (installCommand == argv[optind]) {
-        daemon->install();
-    } else if (startCommand == argv[optind]) {
-        daemon->start();
-    } else if (statusCommand == argv[optind]) {
-        std::cout << "The Scheduler Daemon is "
-                  << (daemon->isRunning() ? "" : "not ")
-                  << "running" << std::endl;
-    } else if (stopCommand == argv[optind]) {
-        daemon->stop();
-    } else if (uninstallCommand == argv[optind]) {
-        daemon->uninstall();
-    } else {
-        printUsage(argv[0], std::cout);
+    try {
+        if (installCommand == argv[optind]) {
+            daemon->install();
+        } else if (startCommand == argv[optind]) {
+            daemon->start();
+        } else if (statusCommand == argv[optind]) {
+            std::cout << "The Scheduler Daemon is "
+                      << (daemon->isRunning() ? "" : "not ")
+                      << "running" << std::endl;
+        } else if (stopCommand == argv[optind]) {
+            daemon->stop();
+        } else if (uninstallCommand == argv[optind]) {
+            daemon->uninstall();
+        } else {
+            printUsage(argv[0], std::cout);
+            exit(EXIT_FAILURE);
+        }
+    } catch (std::exception &e) {
+        std::cerr << "error executing command " << argv[optind] << std::endl;
+        std::cerr << e.what() << std::endl;
         exit(EXIT_FAILURE);
     }
 

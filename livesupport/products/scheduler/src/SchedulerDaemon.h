@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
@@ -191,6 +191,16 @@ class SchedulerDaemon : public Installable,
         registerXmlRpcFunctions(Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
                                                     throw (std::logic_error);
 
+        /**
+         *  Execute any calls when the daemon is starting up.
+         *  All resources allocated here should be freed up in shutdown().
+         *
+         *  @see #shutdown
+         */
+        virtual void
+        startup (void)                                      throw ();
+
+
     public:
 
         /**
@@ -246,23 +256,16 @@ class SchedulerDaemon : public Installable,
         uninstall(void)                         throw (std::exception);
 
         /**
-         *  Start the daemon.
+         *  Shut down the daemon.
+         *  This function is public only because the signal handler
+         *  needs visibility to this function, which will call it.
+         *  A call to stop() will trigger a signal that will call shutdown().
          *
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
          */
         virtual void
-        start (void)                                throw (std::logic_error);
-
-        /**
-         *  Stop the daemon.
-         *
-         *  @exception std::logic_error if the daemon has not
-         *             yet been configured.
-         */
-        virtual void
-        stop (void)                                 throw (std::logic_error);
-
+        shutdown (void)                             throw (std::logic_error);
 };
 
 

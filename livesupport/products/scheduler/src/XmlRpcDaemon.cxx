@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -227,7 +227,7 @@ XmlRpcDaemon :: daemonize(void)                  throw (std::runtime_error)
     signalDispatcher->registerHandler(SIGHUP, handler);
     signalDispatcher->registerHandler(SIGTERM, handler);
     // FIXME: this signal handler will not be deleted by anyone,
-    //        poddible memory leak
+    //        possible memory leak
 
     return true;
 }
@@ -281,6 +281,16 @@ XmlRpcDaemon :: start (void)                         throw (std::logic_error)
         }
     }
 
+    startup();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Execute any daemon startup calls.
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcDaemon :: startup (void)                       throw ()
+{
     // and now our own XML-RPC methods
     registerXmlRpcFunctions(xmlRpcServer);
 
@@ -322,7 +332,9 @@ XmlRpcDaemon :: stop (void)                          throw (std::logic_error)
     checkForConfiguration();
 
     pid_t   pid = loadPid();
-    kill(pid, SIGTERM);
+    if (pid) {
+        kill(pid, SIGTERM);
+    }
 }
 
 

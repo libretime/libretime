@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ using namespace LiveSupport::Core;
  *
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class XmlRpcDaemon
 {
@@ -248,6 +248,18 @@ class XmlRpcDaemon
                                                     throw (std::logic_error)
                                                                           = 0;
 
+        /**
+         *  Execute any calls when the daemon is starting up.
+         *  All resources allocated here should be freed up in shutdown().
+         *  This function will only return when the daemon ha stopped
+         *  running.
+         *
+         *  @see #shutdown
+         */
+        virtual void
+        startup (void)                                      throw ();
+
+
     public:
         /**
          *  Return the name of the XML element this object expects
@@ -371,7 +383,7 @@ class XmlRpcDaemon
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
          */
-        virtual void
+        void
         start (void)                                throw (std::logic_error);
 
         /**
@@ -388,22 +400,27 @@ class XmlRpcDaemon
 
         /**
          *  Stop the daemon.
+         *  This function just sends a signal, which will result in
+         *  shutdown() to get called eventually.
          *
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
+         *  @see #shutdown
          */
-        virtual void
+        void
         stop (void)                                 throw (std::logic_error);
 
         /**
          *  Shut down the daemon.
          *  This function is public only because the signal handler
          *  needs visibility to this function, which will call it.
+         *  A call to stop() will trigger a signal that will call shutdown().
          *
          *  @exception std::logic_error if the daemon has not
          *             yet been configured.
+         *  @see #stop
          */
-        void
+        virtual void
         shutdown (void)                             throw (std::logic_error);
 };
 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.27 $
+#   Version  : $Revision: 1.28 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -265,6 +265,7 @@ start: ${SCHEDULER_EXE}
 
 stop: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
+	sleep 2
 
 status: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} status
