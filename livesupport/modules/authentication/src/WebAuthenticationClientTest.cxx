@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,8 +44,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "LiveSupport/Authentication/SessionId.h"
-#include "LiveSupport/Authentication/WebAuthenticationClient.h"
+#include "LiveSupport/Core/SessionId.h"
 #include "WebAuthenticationClientTest.h"
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/Attic/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,8 +44,8 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Authentication/SessionId.h"
-#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/SessionId.h"
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
 
 
 namespace LiveSupport {
@@ -53,7 +53,6 @@ namespace Authentication {
 
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Authentication;
 
 /* ================================================================ constants */
 
@@ -67,7 +66,7 @@ using namespace LiveSupport::Authentication;
  *  An interface to the (possibly remote) php storage server.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,

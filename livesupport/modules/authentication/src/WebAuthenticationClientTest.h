@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,9 +42,12 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Authentication/WebAuthenticationClient.h"
 
 namespace LiveSupport {
 namespace Authentication {
+
+using namespace LiveSupport::Core;
 
 /* ================================================================ constants */
 
@@ -58,7 +61,7 @@ namespace Authentication {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see WebAuthenticationClient
  */
 class WebAuthenticationClientTest : public CPPUNIT_NS::TestFixture

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/Configurable.h"
-#include "LiveSupport/Authentication/AuthenticationClientInterface.h"
+#include "LiveSupport/Core/AuthenticationClientInterface.h"
 
 
 namespace LiveSupport {
@@ -88,7 +88,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see TestAuthenticationClient
  */
 class AuthenticationClientFactory :
