@@ -161,6 +161,7 @@ if ($uiBrowser->userid) {
 
     case "PL.editMetaData":
         $Smarty->assign('PL_editMetaData', TRUE);
+        $Smarty->assign('PL_id', $_REQUEST['id']);
         $Smarty->assign('PL_simpleManagement', TRUE);
     break;
 

@@ -1,11 +1,11 @@
 body {
-    background-color : ThreedLightShadow;
+    background-color : #d4d0c8;
     font-family : monospace;
 }
 
 #masterpanel {
     text-align: center;
-    background-color : ThreedLightShadow;
+    background-color : #d4d0c8;
     height: 800px;
     font-family : monospace;
 }

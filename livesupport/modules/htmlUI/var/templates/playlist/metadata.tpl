@@ -1,4 +1,4 @@
-{assign var="_form" value=$PL->metaDataForm()}
+{assign var="_form" value=$PL->metaDataForm($PL_id)}
 {assign var="dynform" value=$_form.main}
 
 {$_form.langswitch}

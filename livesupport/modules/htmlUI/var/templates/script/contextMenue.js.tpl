@@ -60,6 +60,10 @@ function menu(param) {
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"popup('{/literal}{$UI_BROWSER}{literal}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></td></tr>";
             break;
 
+            case "PL.editMetaData":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;Edit MData&nbsp;</a></td></tr>";
+            break;
+
             case "SP.addItem":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></td></tr>";
             break;

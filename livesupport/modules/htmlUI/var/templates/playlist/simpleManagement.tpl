@@ -4,13 +4,11 @@
 <center>
 <h4>Simple Playlist Management</h4>
 
-{if is_array($PL->get())}           {* already activated Playlist *}
-    {if $PL_editMetaData}
+{if $PL_editMetaData}
         {include file="playlist/metadata.tpl"}
-    {else}
-        {include file="playlist/editor.tpl"}
-    {/if}
-{else}                              {* no active Playlist *}
+{elseif is_array($PL->get())}           {* already activated Playlist *}
+    {include file="playlist/editor.tpl"}
+{else}                                  {* no active Playlist *}
     {if $PL->reportLookedPL()}
         <input type="button" value="Unlook crashed Playlist" onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')">
     {else}

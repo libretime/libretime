@@ -228,6 +228,7 @@ switch($_REQUEST['act']){
 
     case "PL.editMetaData":
         $uiHandler->PLAYLIST->editMetaData($_REQUEST);
+        $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
     break;
 
     case "SCHEDULER.set":
@@ -237,6 +238,11 @@ switch($_REQUEST['act']){
 
     case "SCHEDULER.uploadPlaylistMethod":
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
+        $uiHandler->SCHEDULER->setReload();
+    break;
+
+    case "SCHEDULER.removeFromScheduleMethod":
+        $uiHandler->SCHEDULER->removeFromScheduleMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;
 

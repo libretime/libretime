@@ -353,15 +353,18 @@ class uiPlaylist
     }
 
 
-    function metaDataForm($get=TRUE)
+    function metaDataForm($id, $get=TRUE, $data=FALSE)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
+
+        #$id = $this->activeId;
+
         foreach ($mask['playlist'] as $k=>$v) {
             $mask['playlist'][$k]['element']    = $this->Base->_formElementEncode($v['element']);
 
             ## recive data from GreenBox
             if ($get) {
-                $mask['playlist'][$k]['default'] = $this->Base->_getMDataValue($this->activeId, $v['element']);
+                $mask['playlist'][$k]['default'] = $this->Base->_getMDataValue($id, $v['element']);
             }
 
             ## get data from parameter
@@ -374,7 +377,7 @@ class uiPlaylist
         $this->Base->_parseArr2Form($form, $mask['playlist']);
         $this->Base->_parseArr2Form($form, $mask['buttons']);
         $form->setConstants(array('act'  => 'PL.editMetaData',
-                                  'id'   => $this->activeId));
+                                  'id'   => $id));
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['main'] = $renderer->toArray();
@@ -392,6 +395,9 @@ class uiPlaylist
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
+        #$id = $this->activeId;
+        $id = $formdata['id'];
+
         ## first remove old entrys
         #$this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
@@ -402,13 +408,14 @@ class uiPlaylist
 
         $data = $this->Base->_dateArr2Str($mData);
         foreach ($data as $key=>$val) {
-            $r = $this->Base->gb->setMDataValue($this->activeId, $key, $this->Base->sessid, $val);
+            $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val);
             if (PEAR::isError($r)) {
                 $this->Base->_retMsg('Unable to set $1: $2', $key, $val);
             }
         }
         $this->Base->_retMsg('Metadata saved');
-        $this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=".$this->activeId;
+        #$this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=$id";
+        $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id";
     }
 
 

@@ -81,7 +81,8 @@ class uiScheduler extends uiCalendar
         foreach ($arr as $key=>$val) {
             $arr[$key]['title']     = $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE);
             $arr[$key]['creator']   = $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR);
-            $arr[$key]['timestamp'] = $this->_datetime2timestamp($val['start']);
+            $arr[$key]['pos']       = $this->_datetime2timestamp($val['start']);
+            $arr[$key]['span']      = date('H', $this->_datetime2timestamp($val['end'])) - date('H', $this->_datetime2timestamp($val['start'])) +1;
         }
         #print_r($arr);
         return $arr;
@@ -261,7 +262,19 @@ class uiScheduler extends uiCalendar
         if ($this->_isError($r))
             return FALSE;
         if (isset($r['scheduleEntryId']))
-            $this->Base->_retMsg('ScheduleId: $1', $r['scheduleEntryId']);
+            $this->Base->_retMsg('Entry added at $1 with ScheduleId: $2', $datetime, $r['scheduleEntryId']);
+    }
+
+
+    function removeFromScheduleMethod(&$formdata)
+    {
+        $gunid = $formdata['gunid'];
+        #echo "Unschedule Gunid: $gunid";
+        $r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $gunid);
+        #print_r($r);
+        if ($this->_isError($r))
+            return FALSE;
+        $this->Base->_retMsg('Entry with ScheduleId $1 removed', $gunid);
     }
 
 

@@ -22,7 +22,7 @@
         {foreach from=$_oneday item="i"}
             <tr height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}" style="font-family: monospace" valign="top">
             {if is_array($i.entry)}
-                <td bgcolor="#ffcacb" width="100" height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}" onMouseover="" onMouseout="">
+                <td bgcolor="#ffcacb" width="100" onMouseover="" onMouseout="">
                 {if $i.length/$_divisor > $_minwidth}
                 <small>
                 <b>{$i.entry.title}</b>
@@ -34,7 +34,7 @@
                 {/if}
                 </td>
             {else}
-                <td bgcolor="#97bacf" width="100" height="{$SCHEDULER->_oneOrMore($i.length/$_divisor)}">
+                <td bgcolor="#97bacf" width="100">
                 </td>
             {/if}
             </tr>
