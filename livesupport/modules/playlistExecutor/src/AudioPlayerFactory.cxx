@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,6 @@ AudioPlayerFactory :: configure(const xmlpp::Element & element)
                          dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
         Ptr<HelixPlayer>::Ref   hp(new HelixPlayer());
         hp->configure(*configElement);
-        hp->initialize();
         audioPlayer = hp;
     }
 

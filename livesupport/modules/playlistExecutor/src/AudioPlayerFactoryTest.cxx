@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,6 +85,11 @@ AudioPlayerFactoryTest :: setUp(void)                         throw ()
         audioPlayerFactory = AudioPlayerFactory::getInstance();
         audioPlayerFactory->configure(*root);
 
+        // initialize the audio player configured by the factory
+        Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+        audioPlayer = audioPlayerFactory->getAudioPlayer();
+        audioPlayer->initialize();
+
     } catch (std::invalid_argument &e) {
         std::cerr << "semantic error in configuration file" << std::endl;
     } catch (xmlpp::exception &e) {
@@ -99,6 +104,17 @@ AudioPlayerFactoryTest :: setUp(void)                         throw ()
 void
 AudioPlayerFactoryTest :: tearDown(void)                      throw ()
 {
+    try {
+        Ptr<AudioPlayerFactory>::Ref    audioPlayerFactory;
+        audioPlayerFactory = AudioPlayerFactory::getInstance();
+
+        // de-initialize the audio player configured by the factory
+        Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+        audioPlayer = audioPlayerFactory->getAudioPlayer();
+        audioPlayer->deInitialize();
+    } catch (xmlpp::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 

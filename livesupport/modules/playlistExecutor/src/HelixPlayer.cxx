@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@
 #include "HelixDefs.h"
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "HelixEventHandlerThread.h"
 #include "HelixPlayer.h"
 
 
@@ -76,25 +77,6 @@ static const std::string    clntcoreName = "/clntcore.so";
 
 
 /* ===============================================  local function prototypes */
-
-/*------------------------------------------------------------------------------
- *  The main thread function for handling Helix events.
- *----------------------------------------------------------------------------*/
-void *
-LiveSupport::PlaylistExecutor::eventHandlerThread(void   * helixPlayer)
-                                                                    throw ()
-{
-    HelixPlayer               * hPlayer = (HelixPlayer *) helixPlayer;
-    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
-
-    while (hPlayer->handleEvents) {
-        struct _HXxEvent  * event = 0;
-        hPlayer->clientEngine->EventOccurred(event);
-        TimeConversion::sleep(sleepT);
-    }
-
-    return 0;
-}
 
 
 /* =============================================================  module code */
@@ -202,15 +184,12 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
     }
 
     // start the event handling thread
-    handleEvents  = true;
-    int             ret;
-    if ((ret = pthread_create(&eventHandlingThread,
-                              NULL,
-                              eventHandlerThread,
-                              (void *) this))) {
-        // TODO: signal return code
-        throw std::exception();
-    }
+    Ptr<time_duration>::Ref   granurality(new time_duration(microseconds(10)));
+    Ptr<RunnableInterface>::Ref handler(new HelixEventHandlerThread(
+                                                            clientEngine,
+                                                            granurality));
+    eventHandlerThread.reset(new Thread(handler));
+    eventHandlerThread->start();
 
     // set up other variables
     playing     = false;
@@ -226,8 +205,8 @@ HelixPlayer :: deInitialize(void)                       throw ()
 {
     if (initialized) {
         // signal stop to and wait for the event handling thread to stop
-        handleEvents = false;
-        pthread_join(eventHandlingThread, 0);
+        eventHandlerThread->stop();
+        eventHandlerThread->join();
 
         // release Helix resources
         clientContext->Release();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,12 +41,11 @@
 #endif
 
 
-#include <pthread.h>
-
 #include <dllacces.h>
 #include <dllpath.h>
 
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/Thread.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 
 #include "AdviseSink.h"
@@ -90,13 +89,11 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface
 {
-    friend void * eventHandlerThread(void *)      throw();
-
     private:
         /**
          *  The name of the configuration XML elmenent used by HelixPlayer
@@ -144,22 +141,9 @@ class HelixPlayer : virtual public Configurable,
         std::string             url;
 
         /**
-         *  The event handling thread.
-         */
-        pthread_t               eventHandlingThread;
-
-        /**
          *  Flag to indicate if this object has been initialized.
          */
         bool                    initialized;
-
-        /**
-         *  Flag to mark if the event handling thread should be running
-         *  and handling events.
-         *  This is set by the HelixPlayer object, and read by the thread
-         *  to determine when to stop.
-         */
-        bool                    handleEvents;
 
         /**
          *  Flag to indicate if the player is currently playing.
@@ -168,6 +152,12 @@ class HelixPlayer : virtual public Configurable,
          *  call isPlaying() instead.
          */
         bool                    playing;
+
+        /**
+         *  A thread for handling helix events, on a regular basis.
+         *  Helix apperantly needs to be polled all the time to function.
+         */
+        Ptr<Thread>::Ref        eventHandlerThread;
 
 
     public:
@@ -283,17 +273,6 @@ class HelixPlayer : virtual public Configurable,
 
 
 /* ====================================================== function prototypes */
-
-/**
- *  The main function of the thread that calls for handling of events
- *  in the createEngine all the time.
- *
- *  @param helixPlayer a pointer to the HelixPlayer object that started
- *         this thread.
- *  @return always 0
- */
-void *
-eventHandlerThread(void   * helixPlayer)                throw ();
 
 
 } // namespace PlaylistExecutor
