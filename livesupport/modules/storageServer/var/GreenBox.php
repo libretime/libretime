@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -551,6 +551,7 @@ class GreenBox extends BasicStor{
             SELECT to_hex(gunid)as gunid FROM {$this->filesTable}
             WHERE id='$id'
         ");
+        if(PEAR::isError($gunid)) return $gunid;
         if(is_null($gunid)) return NULL;
         return StoredFile::_normalizeGunid($gunid);
     }
