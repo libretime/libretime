@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *
  *  @author  $Author: maroy, fgerlits
  $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see DeletePlaylistMethod
  */
 class DeletePlaylistMethodTest : public CPPUNIT_NS::TestFixture
@@ -74,6 +74,8 @@ class DeletePlaylistMethodTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
 
+    private:
+    
         /**
          *  The name of the configuration file for the storage client factory.
          */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the UploadPlaylistMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see UploadPlaylistMethod
  */
 class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture
@@ -72,6 +72,8 @@ class UploadPlaylistMethodTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(overlappingPlaylists);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
 
         /**
          *  The name of the configuration file for the storage client factory.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@
 
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "TestAuthenticationClient.h"
-#include "LiveSupport/Authentication/WebAuthenticationClient.h"
+#include "WebAuthenticationClient.h"
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;

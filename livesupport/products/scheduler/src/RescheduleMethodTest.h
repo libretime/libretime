@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the RescheduleMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see RescheduleMethod
  */
 class RescheduleMethodTest : public CPPUNIT_NS::TestFixture
@@ -71,6 +71,8 @@ class RescheduleMethodTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(RescheduleMethodTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
 
         /**
          *  The name of the configuration file for the schedule factory.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -113,6 +113,7 @@ WebAuthenticationClientTest :: firstTest(void)
 
     CPPUNIT_ASSERT(!(sessionId = wac->login("Piszkos Fred", "malnaszor")));
 
+    // TODO: this call writes some garbage to cerr; it should be told not to
     sessionId.reset(new SessionId("ceci n'est pas un session ID"));
     CPPUNIT_ASSERT(!wac->logout(sessionId));
     

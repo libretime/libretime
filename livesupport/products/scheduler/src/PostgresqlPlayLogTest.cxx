@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLogTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,10 +89,11 @@ PostgresqlPlayLogTest :: setUp(void)            throw ()
         
         playLog.reset(new PostgresqlPlayLog(cm));
         playLog->install();
-
-    } catch (std::invalid_argument &e) {
+    }
+    catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
-    } catch (xmlpp::exception &e) {
+    }
+    catch (xmlpp::exception &e) {
         CPPUNIT_FAIL("error parsing configuration file");
     }
 }
@@ -104,7 +105,14 @@ PostgresqlPlayLogTest :: setUp(void)            throw ()
 void
 PostgresqlPlayLogTest :: tearDown(void)         throw ()
 {
-    playLog->uninstall();
+    try {
+        playLog->uninstall();
+    }
+    catch (std::exception &e) {
+        std::string eMsg = "cannot uninstall playlog:\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
     playLog.reset();
     cm.reset();
 }
@@ -123,7 +131,8 @@ PostgresqlPlayLogTest :: firstTest(void)
 
     try {
         playLog->addPlayLogEntry(audioClipId, timestamp);
-    } catch (std::invalid_argument &e) {
+    }
+    catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
@@ -193,8 +202,8 @@ PostgresqlPlayLogTest :: getPlayLogEntriesTest(void)
         entries = playLog->getPlayLogEntries(fromTime, toTime);
 
         CPPUNIT_ASSERT(entries->size() == 0);
-
-    } catch (std::invalid_argument &e) {
+    }
+    catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
 }

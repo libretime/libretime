@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,7 +45,7 @@
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
-#include "LiveSupport/Authentication/WebAuthenticationClient.h"
+#include "WebAuthenticationClient.h"
 
 using namespace boost::posix_time;
 using namespace XmlRpc;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "LiveSupport/Authentication/WebAuthenticationClient.h"
+#include "WebAuthenticationClient.h"
 
 namespace LiveSupport {
 namespace Authentication {
@@ -61,7 +61,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the WebAuthenticationClient class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see WebAuthenticationClient
  */
 class WebAuthenticationClientTest : public CPPUNIT_NS::TestFixture

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the RemoveFromScheduleMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see RemoveFromScheduleMethod
  */
 class RemoveFromScheduleMethodTest : public CPPUNIT_NS::TestFixture
@@ -72,6 +72,8 @@ class RemoveFromScheduleMethodTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
 
         /**
          *  The name of the configuration file for the schedule factory.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the CreatePlaylistMethod class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see CreatePlaylistMethod
  */
 class CreatePlaylistMethodTest : public CPPUNIT_NS::TestFixture
@@ -71,6 +71,8 @@ class CreatePlaylistMethodTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(CreatePlaylistMethodTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
 
         /**
          *  The name of the configuration file for the storage client factory.
