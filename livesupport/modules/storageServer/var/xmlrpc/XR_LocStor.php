@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1186,10 +1186,13 @@ class XR_LocStor extends LocStor{
      *
      *  The input parameters are an empty XML-RPC struct.
      *
-     *  On success, returns a XML-RPC struct with single field:
+     *  On success, returns a XML-RPC struct with following
+     *  fields:
      *  <ul>
-     *      <li> gunids : array -
-     *              array with gunids/playlisIds of inserted files </li>
+     *      <li> audioclips : array -
+     *              array with gunids of inserted audioclips </li>
+     *      <li> playlists : array -
+     *              array with gunids of inserted playlists </li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -1216,7 +1219,7 @@ class XR_LocStor extends LocStor{
                 "xr_getAudioClip: ".$res->getMessage()." ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array('gunids'=>$res)));
+        return new XML_RPC_Response(XML_RPC_encode($res));
     }
 
     /**

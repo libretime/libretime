@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -388,7 +388,7 @@ class LocStor extends BasicStor{
         $this->deleteData();
         $rootHD = $this->getObjId('root', $this->storId);
         include"../tests/sampleData.php";
-        $res = array();
+        $res = array('audioclips'=>array(), 'playlists'=>array());
         foreach($sampleData as $k=>$it){
             switch($it['type']){
                 case"audioclip":
@@ -400,6 +400,8 @@ class LocStor extends BasicStor{
                         $rootHD, basename($media),
                         $media, $xml, $gunid, 'audioclip'
                     );
+                    if(PEAR::isError($r)){ return $r; }
+                    $res['audioclips'][] = $this->_gunidFromId($r);
                     break;
                 case"playlist":
                     $xml = $it['xml'];
@@ -408,10 +410,10 @@ class LocStor extends BasicStor{
                     $r = $this->bsPutFile(
                         $rootHD, basename($xml), '', $xml, $gunid, 'playlist'
                     );
+                    if(PEAR::isError($r)){ return $r; }
+                    $res['playlists'][] = $this->_gunidFromId($r);
                     break;
             }
-            if(PEAR::isError($r)){ return $r; }
-            $res[] = $this->_gunidFromId($r);
         }
         return $res;
     }

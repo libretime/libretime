@@ -19,7 +19,8 @@
             ),
             array(
                 'type'  => 'playlist',
-                'xml'   => '../tests/plist1.xml'
+                'xml'   => '../tests/plist1.xml',
+                'gunid' => '123456789abcdef3'
             )
         );
 ?>
