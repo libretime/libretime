@@ -105,6 +105,7 @@ class uiBase
         $this->STATIONPREFS =& $_SESSION[UI_STATIONINFO_SESSNAME];
         $this->SCRATCHPAD   =& new uiScratchPad($this);
         $this->SEARCH       =& new uiSearch($this);
+        $this->BROWSE       =& new uiBrowse($this);
         $this->PLAYLIST     =& new uiPlaylist($this);
     }
 
@@ -257,16 +258,14 @@ class uiBase
         if ($format=='text') {
             return "<div align='left'><pre>".var_export($ia, TRUE)."</pre></div>";
         } elseif ($format=='xml') {
-            return
-                  '<?xml version="1.0" encoding="utf-8"?>
-                   <audioClip>
-                   <metadata
-                    xmlns="http://www.streamonthefly.org/"
-                    xmlns:dc="http://purl.org/dc/elements/1.1/"
-                    xmlns:dcterms="http://purl.org/dc/terms/"
-                    xmlns:xbmf="http://www.streamonthefly.org/xbmf"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   >
+            return '<?xml version="1.0" encoding="utf-8"?>
+                    <audioClip>
+                    <metadata
+                      xmlns:dc="http://purl.org/dc/elements/1.1/"
+                      xmlns:dcterms="http://purl.org/dc/terms/"
+                      xmlns:xml="http://www.w3.org/XML/1998/namespace"
+                      xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+                     >
                    <dc:title>'.$this->_getFileTitle($id).'</dc:title>
                    <dcterms:extent>'.date('H:i:s', round($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.')).'</dcterms:extent>
                    </metadata>

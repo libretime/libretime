@@ -13,7 +13,7 @@
 <div id="searchform">
 {include file="sub/x.tpl"}
   <center>
-    {foreach from=$searchform item=dynform}
+    {foreach from=$searchForm item=dynform}
         {include file="sub/dynForm_plain.tpl"}
     {/foreach}
   </center>

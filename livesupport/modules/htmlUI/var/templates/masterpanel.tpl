@@ -20,8 +20,8 @@
     {include file="fileBrowse/fileBrowse.tpl"}
 {/if}
 
-{if ($showSearchForm || $showSearchRes)}
-    {include file="search/search.tpl"}
+{if $showLibrary}
+    {include file="library/main.tpl"}
 {/if}
 
 {if $showSubjects}
@@ -44,7 +44,7 @@
     {include file="changeStationPrefs.tpl"}
 {/if}
 
-{if $PL_simpleManagement}     
+{if $PL_simpleManagement}
     {include file="playlist/simpleManagement.tpl"}
 {/if}
 

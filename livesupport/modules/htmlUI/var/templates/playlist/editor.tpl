@@ -31,6 +31,6 @@
 </tr>
 
 <tr>
-    <td colspan="2"><input type="button" value="Save & Release" onClick="hpopup('{$UI_HANDLER}?act=PL.release')"></td>
+    <td colspan="2"><input type="button" value="Save Changes" onClick="hpopup('{$UI_HANDLER}?act=PL.save')"></td>
     <td colspan="2"><input type="button" value="Revert all Changes" onClick="hpopup('{$UI_HANDLER}?act=PL.revert')"></td>
 </tr>

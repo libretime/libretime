@@ -131,8 +131,8 @@ switch($_REQUEST['act']){
         $uiHandler->SCRATCHPAD->setReload();
     break;
 
-    case "SEARCH.newsearch":
-        $uiHandler->SEARCH->newsearch($_REQUEST);
+    case "SEARCH.newSearch":
+        $uiHandler->SEARCH->newSearch($_REQUEST);
     break;
 
     case "SEARCH.reOrder":
@@ -145,6 +145,14 @@ switch($_REQUEST['act']){
 
     case "SEARCH.setOffset":
         $uiHandler->SEARCH->setOffset($_REQUEST['page']);
+    break;
+
+    case "BROWSE.setCategory":
+        $uiHandler->BROWSE->setCategory($_REQUEST);
+    break;
+
+    case "BROWSE.setValue":
+        $uiHandler->BROWSE->setValue($_REQUEST);
     break;
 
     case "PL.activate":
@@ -174,6 +182,11 @@ switch($_REQUEST['act']){
 
     case "PL.release":
         $uiHandler->PLAYLIST->release();
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
+    case "PL.save":
+        $uiHandler->PLAYLIST->save();
         $uiHandler->PLAYLIST->setReload();
     break;
 

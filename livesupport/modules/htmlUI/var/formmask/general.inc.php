@@ -26,7 +26,7 @@ $ui_fmask = array(
         ),
         array(
             'rule'      => 'nopunctuation',
-            'element'   => 'maxfilesize',
+            'element'   => 'stationMaxfilesize',
         ),
         array(
             'element'   => 'stationFrequency',
@@ -327,7 +327,7 @@ $ui_fmask = array(
         array(
             'element'   => 'act',
             'type'      => 'hidden',
-            'constant'  => 'SEARCH.newsearch'
+            'constant'  => 'SEARCH.newSearch'
         ),
         array(
             'element'   => 'id',
@@ -429,8 +429,97 @@ $ui_fmask = array(
                               )
             )
     ),
+    'browse'    => array(
+        array(
+            'element'   => 'act',
+            'type'      => 'hidden',
+        ),
+        array(
+            'element'   => 'id',
+            'type'      => 'hidden'
+        ),
+        'form'      => array(
+            'element'   => 'col',
+            'type'      => 'hidden'
+        ),
+        'category'  => array(
+            'element'   => 'category',
+            'type'      => 'select',
+            'label'     => 'Category',
+            'attributes'=> array('onChange' => 'this.form.act.value="BROWSE.setCategory"; this.form.submit()')
+        ),
+        'value'      => array(
+            'element'   => 'value',
+            'type'      => 'select',
+            'multiple'  => TRUE,
+            'attributes'=> array(
+                            'size' => 10,
+                            'STYLE' => 'width: 220px',
+                            'onChange' => 'this.form.act.value="BROWSE.setValue"; this.form.submit()')
+        )
+        /*
+        array(
+            'element'   => 'operator',
+            'type'      => 'select',
+            'label'     => 'Operator',
+            'options'   => array(
+                            'or'    => 'Or',
+                            'and'   => 'And',
+                            )
+        ),
+        array(
+            'element'   => 'filetype',
+            'type'      => 'select',
+            'label'     => 'Filetype',
+            'options'   => array(
+                            'File'      => '*',
+                            'audioclip' => 'Audioclip',
+                            'webstream' => 'Webstream',
+                            'playlist'  => 'Playlist'
+                            )
+        ),
+        array(
+            'element'   => 'limit',
+            'type'      => 'select',
+            'label'     => 'Rows per Page',
+            'options'   => array(
+                                1   => 1,
+                                5   => 5,
+                                10  => 10,
+                                25  => 25,
+                                50  => 50,
+                                100 => 100
+                           )
+        ),
+        array(
+            'element'   => 'clear',
+            'type'      => 'button',
+            'label'     => 'Clear',
+            'attributes'  => array('onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
+            'groupit'   => TRUE,
+        ),
+        array(
+            'element'   => 'addrow',
+            'type'      => 'button',
+            'label'     => 'One more Row',
+            'attributes'  => array('onClick' => 'SearchForm_addRow()'),
+            'groupit'   => TRUE,
+        ),
+        array(
+            'element'   => 'submit',
+            'type'      => 'submit',
+            'label'     => 'Submit',
+            'groupit'   => TRUE,
+        ),
+        array('group'   => array('clear', 'addrow', 'submit')
+        ), */
+    ),
     'PL.changeTransition'  => array(
         'transition' => array(
+                array(
+                    'element'   => 'headline',
+                    'type'      => 'static'
+                ),
                 array(
                     'element'   => 'type',
                     'type'      => 'radio',
@@ -444,6 +533,10 @@ $ui_fmask = array(
         ),
         'fadeIn' => array(
                 array(
+                    'element'   => 'headline',
+                    'type'      => 'static'
+                ),
+                array(
                     'element'   => 'type',
                     'type'      => 'radio',
                     'label'     => 'Type',
@@ -452,13 +545,17 @@ $ui_fmask = array(
                 )
         ),
         'fadeOut' => array(
-               array(
+                array(
+                    'element'   => 'headline',
+                    'type'      => 'static'
+                ),
+                array(
                     'element'   => 'type',
                     'type'      => 'radio',
                     'label'     => 'Type',
                     'options'   => array('fadeOut' => 'Fade out'),
                     'default'   => 'fadeOut'
-               )
+                )
         ),
         'all'           => array(
                array(

@@ -20,13 +20,15 @@ class uiSearch
         $form = new HTML_QuickForm('search', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setConstants(array('id'=>$id, 'counter'=>$this->criteria['counter'] ? $this->criteria['counter'] : UI_SEARCH_MIN_ROWS));
 
-        foreach ($mask['pages'] as $k=>$v) {
-            foreach ($mask['pages'][$k] as $val){
-                $col1[$this->Base->_formElementEncode($val['element'])] = $val['label'];
-                if (isset($val['relation']))
-                    $col2[$this->Base->_formElementEncode($val['element'])] = $mask2['relations'][$val['relation']];
-                else
-                    $col2[$this->Base->_formElementEncode($val['element'])] = $mask2['relations']['standard'];
+        foreach ($mask['pages'] as $key=>$val) {
+            foreach ($mask['pages'][$key] as $v){
+                if (!$v['rule']) {
+                    $col1[$this->Base->_formElementEncode($v['element'])] = $v['label'];
+                    if (isset($val['relation']))
+                        $col2[$this->Base->_formElementEncode($v['element'])] = $mask2['relations'][$v['relation']];
+                    else
+                        $col2[$this->Base->_formElementEncode($v['element'])] = $mask2['relations']['standard'];
+                }
             };
         };
         for($n=1; $n<=UI_SEARCH_MAX_ROWS; $n++) {
@@ -52,7 +54,7 @@ class uiSearch
     }
 
 
-    function newsearch(&$formdata)
+    function newSearch(&$formdata)
     {
         $this->results                  = NULL;
         $this->criteria['conditions']   = NULL;

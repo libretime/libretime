@@ -23,7 +23,7 @@ class uiPlaylist
         return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
     }
 
-    function activate($plid)
+    function activate($plid, $msg=TRUE)
     {
         # test if PL available
         # look PL
@@ -40,11 +40,11 @@ class uiPlaylist
         $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid.':'.$this->token);
         $this->activeId = $plid;
-        $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+        if ($msg) $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
         return TRUE;
     }
 
-    function release()
+    function release($msg=TRUE)
     {
         # get token from ls_pref
         # release PL
@@ -59,10 +59,21 @@ class uiPlaylist
             $this->Base->_retMsg('Unable to release Playlist');
             return FALSE;
         }
-        $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        if($msg) $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
+        return TRUE;
+    }
+
+
+    function save()
+    {
+        $tmpid = $this->activeId;
+        $this->release(FALSE);
+        $this->activate($tmpid, FALSE);
+        $this->Base->_retMsg('Playlist "$1" saved', $this->Base->_getMDataValue($tmpid, UI_MDATA_KEY_TITLE));
+
         return TRUE;
     }
 
@@ -78,10 +89,12 @@ class uiPlaylist
             $this->Base->_retMsg('Unable to revert to looked state');
             return FALSE;
         }
-        $this->Base->_retMsg('Playlist "$1" reverted and released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
+        $this->Base->_retMsg('Playlist "$1" reverted', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
         $this->activeId = NULL;
         $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
+
+        $this->activate($this->Base->gb->_idFromGunid($plgunid), FALSE);
         return TRUE;
     }
 
@@ -101,8 +114,8 @@ class uiPlaylist
 
     function addItem($id)
     {
-        if ($this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid) === FALSE) {
-            $this->Base_retMsg('Cannot add Item to Playlist');
+        if (PEAR::isError($this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid))) {
+            $this->Base->_retMsg('Cannot add Item to Playlist');
             return FALSE;
         }
         return TRUE;
@@ -257,24 +270,30 @@ class uiPlaylist
 
     function changeTransitionForm($id, $type, &$mask)
     {
+        $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $s = $this->getCurrElement($id);
         switch ($type) {
             case "fadeIn":
                 $d = $this->getCurrElement($id);
                 $duration = $d['fadein_ms'];
+                $form->setConstants(array('headline' => '<b>'.$s['title'].'</b>'));
             break;
             case "transition":
                 $d = $this->getPrevElement($id);
-                $duration = $d['fadein_ms'];
+                $duration = $d['fadeout_ms'];
+                $form->setConstants(array('headline' => '<b>'.$d['title'].'</b> <-> <b>'.$s['title'].'</b>'));
             break;
             case "fadeOut":
                 $d = $this->getCurrElement($id);
                 $duration = $d['fadeout_ms'];
+                $form->setConstants(array('headline' => '<b>'.$s['title'].'</b>'));
             break;
         }
 
-        $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+
         $form->setConstants(array('id'       => $id,
-                                  'duration' => $duration));
+                                  'duration' => $duration)
+                            );
         $this->Base->_parseArr2Form($form, $mask[$type]);
         $this->Base->_parseArr2Form($form, $mask['all']);
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
