@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.23 $
+#   Version  : $Revision: 1.24 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -325,16 +325,18 @@ searchTest() {
     storeAudioClip
     GUNID=$RGUNID
     searchMetadata
-    if [ "$RES" == "AC(1): $GUNID | PL(0): " ]; then
+    OK="AC(1): $GUNID | PL(0): "
+    if [ "$RES" == "$OK" ]; then
         echo "match: OK"
     else
-        echo "results doesn't match ($RES)"; deleteAudioClip; exit 1;
+        echo "results doesn't match ($OK)"; deleteAudioClip; exit 1;
     fi
     browseCategory
-    if [ "$RES" == "RES(1): Media title testRunner" ]; then
+    OK="RES(1): Media title testRunner"
+    if [ "$RES" == "$OK" ]; then
         echo "match: OK"
     else
-        echo "results doesn't match ($RES)"; deleteAudioClip; exit 1;
+        echo "results doesn't match ($OK)"; deleteAudioClip; exit 1;
     fi
     deleteAudioClip
     logout
