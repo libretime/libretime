@@ -9,6 +9,6 @@
 <!ATTLIST location path     CDATA       #REQUIRED >
 ]>
 <webAuthentication>
-    <location server="localhost"
+    <location server="localhost" port="80"
               path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
 </webAuthentication>
