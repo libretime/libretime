@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,9 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <exception>
+#include <stdexcept>
 
 
 namespace LiveSupport {
@@ -58,7 +61,7 @@ using namespace LiveSupport;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class AudioPlayerInterface
 {

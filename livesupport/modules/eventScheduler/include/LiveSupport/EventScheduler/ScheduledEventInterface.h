@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/include/LiveSupport/EventScheduler/ScheduledEventInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,7 +76,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ScheduledEventInterface
 {
@@ -94,7 +94,7 @@ class ScheduledEventInterface
          *
          *  @return the time this event is scheduled for.
          */
-        virtual Ptr<ptime>::Ref
+        virtual Ptr<const ptime>::Ref
         getScheduledTime(void)                              throw () = 0;
 
         /**
@@ -119,7 +119,7 @@ class ScheduledEventInterface
          *  @return the maximum time for the initialize() function to complete.
          *  @see #initialize
          */
-        virtual Ptr<time_duration>::Ref
+        virtual Ptr<const time_duration>::Ref
         maxTimeToInitialize(void)                   throw ()              = 0;
 
         /**
@@ -143,7 +143,7 @@ class ScheduledEventInterface
          *
          *  @return the length of the event, in time.
          */
-        virtual Ptr<time_duration>::Ref
+        virtual Ptr<const time_duration>::Ref
         eventLength(void)                           throw ()              = 0;
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  The main, executing thread of the scheduler.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SchedulerThread : public virtual RunnableInterface
 {
@@ -85,7 +85,7 @@ class SchedulerThread : public virtual RunnableInterface
         /**
          *  The execution time of the next event.
          */
-        Ptr<ptime>::Ref                     nextEventTime;
+        Ptr<const ptime>::Ref               nextEventTime;
 
         /**
          *  The time to start the initialization of the next event.
@@ -135,8 +135,8 @@ class SchedulerThread : public virtual RunnableInterface
          *          now + granularity, false otherwise.
          */
         bool
-        imminent(Ptr<ptime>::Ref    now,
-                 Ptr<ptime>::Ref    when) const         throw ()
+        imminent(Ptr<const ptime>::Ref    now,
+                 Ptr<const ptime>::Ref    when) const         throw ()
         {
             return *when >= *now && (*now + *granularity) > *when;
         }
