@@ -22,12 +22,12 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/bin/resetStorage.sh,v $
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# This script does httpd writeable directories setup
+# This script call locstor.resetStorage XMLRPC method
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
