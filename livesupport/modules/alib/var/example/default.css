@@ -1,0 +1,15 @@
+<!--
+ /* $Id: default.css,v 1.1 2004/07/23 00:22:13 tomas Exp $ */
+ body { font-family:'Arial CE', 'Helvetica CE', Arial, helvetica, sans-serif; background-color:#fff; }
+ h1 { border:0px solid black; margin-bottom:2px; font-size:x-large; }
+ h2 { border:0px solid black; margin-bottom:2px; margin-top:2px; font-size:large; }
+ h3 { border:0px solid black; margin-bottom:2px; margin-top:2px; font-size:medium; font-weight:bold; }
+ table { border-collapse:collapse; margin:1ex 0px; }
+ tr.odd { background-color:#ccc; }
+ tr.ev { background-color:#bbb; }
+ td { border:0px solid black; padding:2px 1em; }
+ pre { border:solid black; border-width:1px 0px; padding:1em 1px;}
+ .b { font-weight:bold; }
+ .slash { padding:0px 2px; font-weigt:bolder; }
+ .lnkbutt { padding:0px 4px; font-weigt:bolder; }
+-->

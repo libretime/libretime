@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+  <title>Auth library</title>
+  <meta content="Tomas Hlava" name="author">
+  <style type="text/css"><!--
+  * { font-family: 'Arial CE', 'Helvetica CE', Arial, sans-serif; font-size: 10pt; }
+  body { padding: 1em; }
+  h1 { font-size: 14pt; padding:1px; background-color: #66aaff; }
+  h2 { font-size: 11pt; padding:1px; padding-left:1ex; background-color: #aaccff; }
+  h3 { font-size: 10pt; padding:1px; padding-left:2ex; background-color: #aaffcc; }
+  p { width: 90%; text-indent: 1em; }
+  p#ps { clear: both; }
+  .center { text-align:center; }
+  .aart { width: 90%; font-family:monospace; }
+  .aart span{ font-family:monospace; padding:0ex 1ex; background-color: #eee; }
+  .aart div{ font-family:monospace; padding:0ex 1ex; }
+  code { font-family:monospace; font-weight:bold; background-color: #e4e4e4; }
+  .b { font-weight:bold; }
+  .ulg p { margin-bottom: 0px; }
+  .ulg ul,ol { margin-top: 0px; }
+  .ex { padding:1em; background-color:#f0f0f0; width:80%; overflow:auto; }
+  .bg { padding:2px 4px; background-color:#eaeaea; }
+  table { border: 2px solid black; border-collapse: collapse; }
+  table th { border: solid black; border-width: 2px 1px; }
+  table td { border: 1px solid black; text-align:center; }
+  hr { border:0px; border-bottom: 1px solid #66aaff; }
+  hr.hr2 { border:0px; border-bottom: 2px solid #66aaff; }
+  /*#date { float: left; width:30%; padding:1ex; }*/
+  /*#signature { float: right; width:30%; padding:1ex; text-align: right; }*/
+  #signature { float: left; width:30%; padding:1ex; }
+ --></style>
+</head>
+<body>
+<h1>Auth library - request for comments</h1>
+22.7.2004
+<h2>Authentication &amp; authorization</h2>
+<p> <span class="b">Authentication</span> - as user's identity
+checking - login call create and return auth token, client sends this token
+with all subsequent calls, logout call make this token invalid<br>
+</p>
+<p> <span class="b">Authorization</span> - as checking user's
+permission for called action on some object - that's main solved problem.
+</p>
+<h2>Basic model</h2>
+<div class="aart center"><span>Subject --- Action ---&gt; Object</span></div>
+<div class="ulg">
+<p>Where:</p>
+<ul>
+  <li>Subject<br>
+is one user or user group (or role - in this aproach group and role are the same)<br>
+  </li>
+  <li>Action<br>
+is item from predefined action set
+  </li>
+  <li>Object<br>
+is a object from tree or class of objects
+  </li>
+</ul>
+</div>
+<h2>Subject implementation</h2>
+<p> Subjects are divided into two types - users and groups. There is membership relation
+(type N:M) from subjects table to itself with "linearization" feature - for
+questions about it send me a mail please  ;)<br>
+This approach allows inserting user to group or group to group with quick
+searching of direct and indirect membership.
+</p>
+<h2>Object implementation</h2>
+<p> For simple use with existing projects, there would be a object tree
+always separated from project's database tables. It would be implemented by
+table of objects and information about parent/child (or other) relation
+between objects.
+</p>
+<p>
+There is also class table and N:M membership relation between objects and
+classes.
+</p>
+<h3>Example:</h3>
+<div class="ex">
+<pre class="aart">
+RootNode
+        |
+        |-&gt; Publication_A(publication)
+        |              \-&gt; Issue_1(issue)              &lt;--\
+        |                       |-&gt; Sport(section)        |    &lt;--\
+        |                       \-&gt; Politics(section)     |       |
+        \-&gt; Publication_B(publication)                    |       |
+                       |-&gt; Issue_1(issue)              &lt;--|       |
+                       |        |-&gt; Politics(section)     |       |
+                       |        |-&gt; Sport(section)        |    &lt;--|
+                       |        \-&gt; Culture(section)      |       |
+                       \-&gt; Issue_2(issue)              &lt;--|       |
+                                |-&gt; Culture(section)      |       |
+                                \-&gt; Politics(section)     |       |
+                                                          |       |
+Class &quot;Issues&quot; -------------------------------------------/       |
+Class &quot;Sport sections&quot; -------------------------------------------/
+</pre>
+
+<!--
+Object table structure:<br>
+<code><span class="b">[</span> id, name, type, parid, lft, rgt, level <span class="b">]</span></code><br>
+class table structure:<br>
+<code><span class="b">[</span> id,  cname <span class="b">]</span></code><br>
+and class membership table structure:<br>
+<code><span class="b">[</span> objid, cid <span class="b">]</span></code><br>
+-->
+
+</div>
+<h2>Permissions for actions</h2>
+<p> There are several ways to handle permissions - I've used this:<br>
+<span class="b">allow/deny</span> - all without allow
+permission is denied, but more specified setting may overcome less
+specified<br>
+(e.g. group of users is allowed to do smth., but one specified group-member is
+denied)
+</p>
+<p> Permissions are stored as triple <code class="bg"><span
+ class="b">[</span>subject, action, object<span class="b">]</span></code>
+and <span class="b">allow/deny</span> flag.<br>
+</p>
+<div class="ulg">
+<p>Procedure of permission checking:</p>
+<ul>
+ <li>Select all permissions on corresponding object + all objects in tree path<br>
+    for actual user + all groups, where user have direct or indirect membership.
+ </li>
+ <li>Sort it by:<ol>
+    <li>diference in tree levels for object
+    <li>membership level for subject
+    <li>record with '_all' action have lower priority
+    <li>'deny' records have higher priority then 'allow'
+  </ol></li>
+  <li>If no record found then repeat similar query with class table instead of object tree table. (+ similar sorting)</li>
+  <li>If record on the top of sorted sequence have 'allow' type then return allow else deny</li>
+</ul> 
+</div>
+<p>Rem.: Some cache system for authorization decisions would be good ...
+</p>
+<h2>Auth system usage</h2>
+<div class="ulg">
+<p>There are 3 main types of usage:</p>
+<ol>
+  <li>authorization of called action</li>
+  <li>automatic modification of user interface in dependence on user
+permissions</li>
+  <li>automatic generation of admin interface for permissions settings</li>
+</ol>
+</div>
+<h2>Important part of API:</h2>
+<div class="ulg">
+<ul>
+  <li>function <code>Alib(&$dbc, $config)</code> returns object<br>
+    constructor
+  </li>
+  <li>function <code>login($login, $pass)</code> returns token<br>
+  </li>
+  <li>function <code>logout($sessid)</code> returns boolean<br>
+  </li>
+  <li>function <code>checkToken($sessid)</code> returns boolean<br>
+    check validity of the token
+  </li>
+  <li>function <code>addObj($name, $type, $parid, $aftid, $param)</code> returns int<br>
+    adds object to tree as child of object with id=$parid after object with id=$aftid
+  </li>
+  <li>function <code>removeObj($id)</code> returns boolean<br>
+  </li>
+  <li>function <code>addSubj($login, $pass)</code> returns int<br>
+    add user (or group - with $pass=null)
+  </li>
+  <li>function <code>removeSubj($login)</code> returns boolean<br>
+  </li>
+  <li>function <code>addPerm($sid, $action, $oid, $type)</code> returns int<br>
+    add permission record - type is A(allow) or D(deny)
+  </li>
+  <li>function <code>removePerm($permid, $subj, $obj)</code> returns null<br>
+    remove permission record
+  </li>
+  <li>function <code>checkPerm($sid, $action, $oid)</code> returns boolean<br>
+    check permission for action on object with id=$oid for subject with id=$sid
+  </li>
+
+  <li>function <code>copyObj($id, $newParid, $after)</code> returns int<br>
+  </li>
+  <li>function <code>renameObj($id, $newName)</code> returns boolean<br>
+  </li>
+  <li>function <code>getParent($oid)</code> returns string<br>
+  </li>
+  <li>function <code>getPath($id, $flds)</code> returns array<br>
+  </li>
+  <li>function <code>getDir($id, $flds, $order)</code> returns array<br>
+  </li>
+
+  <li>function <code>addClass($cname)</code> returns int<br>
+  </li>
+  <li>function <code>removeClass($cname)</code> returns boolean<br>
+  </li>
+  <li>function <code>addObj2Class($cid, $oid)</code> returns boolean<br>
+  </li>
+  <li>function <code>removeObjFromClass($oid, $cid)</code> returns boolean<br>
+  </li>
+
+  <li>function <code>addSubj2Gr($login, $gname)</code> returns int<br>
+  </li>
+  <li>function <code>removeSubjFromGr($login, $gname)</code> returns boolean<br>
+  </li>
+  <li>function <code>isGroup($gid)</code> returns boolean<br>
+  </li>
+  <li>function <code>listGroup($gid)</code> returns array<br>
+  </li>
+</ul>
+<p>All methods may return PEAR::error object if fails ...</p>
+</div>
+<h2>Connection to existing applications</h2>
+<p> PHP applications could include Alib class and call API methods
+directly.<br>
+Other programming platforms should call XMLRPC or HTTP layer above this API.
+</p>
+<hr class="hr2">
+<div id="footer">
+<div id="signature"> Tomas Hlava<br>
+<a href="mailto:th@red2head.com">th@red2head.com</a><br>
+</div>
+</div>
+<p id="ps">P.S.: sorry for my English ... ;)</p>
+</body>
+</html>
