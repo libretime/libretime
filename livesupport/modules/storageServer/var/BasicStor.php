@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.36 $
+ *  @version $Revision: 1.37 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -859,7 +859,7 @@ class BasicStor extends Alib{
     {
         $uid = parent::addSubj($login, $pass);
         if($this->dbc->isError($uid)) return $uid;
-        if($this->isGroup($uid) !== FALSE){
+        if($this->isGroup($uid) === FALSE){
             $fid = $this->bsCreateFolder($this->storId, $login);
             if($this->dbc->isError($fid)) return $fid;
             $res = $this->addPerm($uid, '_all', $fid, 'A');
@@ -934,9 +934,10 @@ class BasicStor extends Alib{
      */
     function _getHomeDirId($sessid)
     {
-        $parid = $this->getObjId(
-            $this->getSessLogin($sessid), $this->storId
-        );
+        $login = $this->getSessLogin($sessid);
+        if($this->dbc->isError($login)) return $login;
+        $parid = $this->getObjId($login, $this->storId);
+        if($this->dbc->isError($parid)) return $parid;
         if(is_null($parid)){
             return $this->dbc->raiseError("BasicStor::_getHomeDirId: ".
                 "homedir not found", GBERR_NOTF);
