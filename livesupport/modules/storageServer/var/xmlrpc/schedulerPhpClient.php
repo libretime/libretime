@@ -2,28 +2,28 @@
 /*------------------------------------------------------------------------------
 
     Copyright (c) 2004 Media Development Loan Fund
- 
+
     This file is part of the LiveSupport project.
     http://livesupport.campware.org/
     To report bugs, send an e-mail to bugs@campware.org
- 
+
     LiveSupport is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     LiveSupport is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
- 
+
     You should have received a copy of the GNU General Public License
     along with LiveSupport; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- 
- 
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+
+
+    Author   : $Author: sebastian $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/schedulerPhpClient.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ $mdefs = array(
         )
     ),
     "CreatePlaylistMethod" => array(
-        'm'=>'CreatePlaylistMethod', 
+        'm'=>'CreatePlaylistMethod',
         'p'=>array('sessionId'/*string*/),
         'r'=>array('playlist'/*string*/),
         'e'=>array(
@@ -73,7 +73,7 @@ $mdefs = array(
         )
     ),
     "DeletePlaylistMethod" => array(
-        'm'=>'DeletePlaylistMethod', 
+        'm'=>'DeletePlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
         'r'=>array(),
         'e'=>array(
@@ -86,7 +86,7 @@ $mdefs = array(
         )
     ),
     "DisplayAudioClipMethod" => array(
-        'm'=>'DisplayAudioClipMethod', 
+        'm'=>'DisplayAudioClipMethod',
         'p'=>array('sessionId'/*string*/, 'audioClipId'/*string*/),
         'r'=>array('audioClip'/*string*/),
         'e'=>array(
@@ -97,7 +97,7 @@ $mdefs = array(
         )
     ),
     "DisplayAudioClipsMethod" => array(
-        'm'=>'DisplayAudioClipsMethod', 
+        'm'=>'DisplayAudioClipsMethod',
         'p'=>array('sessionId'/*string*/),
         'r'=>array(array('audioClip'/*string*/)),
         'e'=>array(
@@ -107,7 +107,7 @@ $mdefs = array(
         )
     ),
     "DisplayPlaylistMethod" => array(
-        'm'=>'DisplayPlaylistMethod', 
+        'm'=>'DisplayPlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
         'r'=>array('playlist'/*string*/),
         'e'=>array(
@@ -118,7 +118,7 @@ $mdefs = array(
         )
     ),
     "DisplayPlaylistsMethod" => array(
-        'm'=>'DisplayPlaylistsMethod', 
+        'm'=>'DisplayPlaylistsMethod',
         'p'=>array('sessionId'/*string*/),
         'r'=>array(array('playlist'/*string*/)),
         'e'=>array(
@@ -128,7 +128,7 @@ $mdefs = array(
         )
     ),
     "DisplayScheduleMethod" => array(
-        'm'=>'DisplayScheduleMethod', 
+        'm'=>'DisplayScheduleMethod',
         'p'=>array('sessionId'/*string*/, 'from'/*datetime*/, 'to'/*datetime*/),
         'r'=>array(array('id'/*int*/, 'playlistId'/*string*/, 'start'/*datetime*/, 'end'/*datetime*/)),
         'e'=>array(
@@ -139,7 +139,7 @@ $mdefs = array(
         )
     ),
     "GeneratePlayReportMethod" => array(
-        'm'=>'GeneratePlayReportMethod', 
+        'm'=>'GeneratePlayReportMethod',
         'p'=>array('sessionId'/*string*/, 'from'/*datetime*/, 'to'/*datetime*/),
         'r'=>array(array('audioClipId'/*string*/, 'timestamp'/*datetime*/)),
         'e'=>array(
@@ -150,20 +150,20 @@ $mdefs = array(
         )
     ),
     "GetSchedulerTimeMethod" => array(
-        'm'=>'GetSchedulerTimeMethod', 
+        'm'=>'GetSchedulerTimeMethod',
         'p'=>array(),
         'r'=>array('schedulerTime'/*datetime*/),
         'e'=>array(
 )
     ),
     "GetVersionMethod" => array(
-        'm'=>'GetVersionMethod', 
+        'm'=>'GetVersionMethod',
         'p'=>array(),
         'r'=>array('version'/*string*/),
         'e'=>array()
     ),
     "LoginMethod" => array(
-        'm'=>'LoginMethod', 
+        'm'=>'LoginMethod',
         'p'=>array('login'/*string*/, 'password'/*string*/),
         'r'=>array('sessionId'/*string*/),
         'e'=>array(
@@ -174,7 +174,7 @@ $mdefs = array(
         )
     ),
     "LogoutMethod" => array(
-        'm'=>'LogoutMethod', 
+        'm'=>'LogoutMethod',
         'p'=>array('sessionId'/*string*/),
         'r'=>array(),
         'e'=>array(
@@ -184,7 +184,7 @@ $mdefs = array(
         )
     ),
     "OpenPlaylistForEditingMethod" => array(
-        'm'=>'OpenPlaylistForEditingMethod', 
+        'm'=>'OpenPlaylistForEditingMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
         'r'=>array('playlist'/*string*/),
         'e'=>array(
@@ -195,7 +195,7 @@ $mdefs = array(
         )
     ),
     "RemoveAudioClipFromPlaylistMethod" => array(
-        'm'=>'RemoveAudioClipFromPlaylistMethod', 
+        'm'=>'RemoveAudioClipFromPlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'playlistElementId'/*string*/),
         'r'=>array(),
         'e'=>array(
@@ -209,7 +209,7 @@ $mdefs = array(
         )
     ),
     "RemoveFromScheduleMethod" => array(
-        'm'=>'RemoveFromScheduleMethod', 
+        'm'=>'RemoveFromScheduleMethod',
         'p'=>array('sessionId'/*string*/, 'scheduleEntryId'/*string*/),
         'r'=>array(),
         'e'=>array(
@@ -220,7 +220,7 @@ $mdefs = array(
         )
     ),
     "RescheduleMethod" => array(
-        'm'=>'RescheduleMethod', 
+        'm'=>'RescheduleMethod',
         'p'=>array('sessionId'/*string*/, 'scheduleEntryId'/*string*/, 'playtime'/*datetime*/),
         'r'=>array(),
         'e'=>array(
@@ -233,13 +233,13 @@ $mdefs = array(
         )
     ),
     "ResetStorageMethod" => array(
-        'm'=>'ResetStorageMethod', 
+        'm'=>'ResetStorageMethod',
         'p'=>array(),
         'r'=>array(),
         'e'=>array('3001'=>'storage client reported an error'),
     ),
     "RevertEditedPlaylistMethod" => array(
-        'm'=>'RevertEditedPlaylistMethod', 
+        'm'=>'RevertEditedPlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
         'r'=>array(),
         'e'=>array(
@@ -251,7 +251,7 @@ $mdefs = array(
         )
     ),
     "SavePlaylistMethod" => array(
-        'm'=>'SavePlaylistMethod', 
+        'm'=>'SavePlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
         'r'=>array(),
         'e'=>array(
@@ -263,7 +263,7 @@ $mdefs = array(
         )
     ),
     "UpdateFadeInFadeOutMethod" => array(
-        'm'=>'UpdateFadeInFadeOutMethod', 
+        'm'=>'UpdateFadeInFadeOutMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'playlistElementId'/*string*/, 'fadeIn'/*int*/, 'fadeOut'/*int*/),
         'r'=>array(),
         'e'=>array(
@@ -279,7 +279,7 @@ $mdefs = array(
         )
     ),
     "UploadPlaylistMethod" => array(
-        'm'=>'UploadPlaylistMethod', 
+        'm'=>'UploadPlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/, 'playtime'/*datetime*/),
         'r'=>array('scheduleEntryId'/*string*/),
         'e'=>array(
@@ -293,7 +293,7 @@ $mdefs = array(
         )
     ),
     "ValidatePlaylistMethod" => array(
-        'm'=>'ValidatePlaylistMethod', 
+        'm'=>'ValidatePlaylistMethod',
         'p'=>array('sessionId'/*string*/, 'playlistId'/*string*/),
         'r'=>array('valid'/*bool*/),
         'e'=>array(
@@ -305,7 +305,7 @@ $mdefs = array(
         )
     ),
     "LoginGB" => array(
-        'm'=>'locstor.login', 
+        'm'=>'locstor.login',
         'p'=>array('login'/*string*/, 'pass'/*string*/),
         'r'=>array('sessid'/*string*/),
         'e'=>array(
@@ -316,7 +316,7 @@ $mdefs = array(
         )
     ),
     "LogoutGB" => array(
-        'm'=>'locstor.logout', 
+        'm'=>'locstor.logout',
         'p'=>array('sessid'/*string*/),
         'r'=>array('status'/*boolean*/),
         'e'=>array(
@@ -374,16 +374,16 @@ class SchedulerPhpClient{
         $this->debug = $debug;
         $this->verbose = $verbose;
         $confPrefix = "scheduler";
-        // $confPrefix = "storage";
+        # $confPrefix = "storage";
         $serverPath =
           "http://{$config["{$confPrefix}UrlHost"]}:{$config["{$confPrefix}UrlPort"]}".
           "{$config["{$confPrefix}UrlPath"]}/{$config["{$confPrefix}XMLRPC"]}";
         #$serverPath = "http://localhost:80/livesupportStorageServerCVS/xmlrpc/xrLocStor.php";
         if($this->verbose) echo "serverPath: $serverPath\n";
         $url = parse_url($serverPath);
-        $this->client = new XML_RPC_Client($url['path'], $url['host']);
+        $this->client = new XML_RPC_Client($url['path'], $url['host'], $url['port']);
     }
-    
+
     /**
      *  Factory, create object instance
      *
@@ -405,7 +405,7 @@ class SchedulerPhpClient{
     function &factory(&$dbc, $mdefs, $config, $debug=0, $verbose=FALSE){
         $f = '';
         foreach($mdefs as $fn=>$farr){
-            $f .= 
+            $f .=
                 '    function '.$fn.'(){'."\n".
                 '        $pars = func_get_args();'."\n".
                 '        $r = $this->callMethod("'.$fn.'", $pars);'."\n".
@@ -470,7 +470,7 @@ class SchedulerPhpClient{
  *
  */
 
-/*
+
 // db object handling:
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
@@ -482,8 +482,8 @@ $spc =& SchedulerPhpClient::factory($dbc, $mdefs, $config);
 // call of chosen function by name according to key values in $mdefs array:
 // (for testing on storageServer XMLRPC I've changes confPrefix in
 //  SchedulerPhpClient constructor from 'scheduler' to 'storage' value)
-$r = $spc->LoginGB('root', 'q'); var_dump($r);
+#$r = $spc->LoginGB('root', 'q'); var_dump($r);
 #$r = $spc->LogoutGB(''); var_dump($r);
-*/
+$r = $spc->DisplayScheduleMethod($this->Base->sessid, '2005-01-01 00:00:00.000000', '2005-02-01 00:00:00.000000'); var_dump($r);
 
 ?>
