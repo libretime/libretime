@@ -65,11 +65,18 @@ hu:table
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "File Feltőltés Ablak" }
+        windowTitle:string            { "File Feltőltés" }
 
-        chooseFileLabel:string        { "file: " }
-        chooseFileButtonLabel:string  { "tallóz..." }
-        nameLabel:string              { "hang file név: " }
+        chooseFileLabel:string        { "Filenév" }
+        chooseFileButtonLabel:string  { "Tallóz" }
+
+        mainSectionLabel:string       { "Fő" }
+        titleLabel:string             { "Cim" }
+        creatorLabel:string           { "Szerző" }
+        genreLabel:string             { "Stilus" }
+        fileFormatLabel:string        { "File tipus" }
+        lengthLabel:string            { "Hossz" }
+
         uploadButtonLabel:string      { "feltölt" }
         closeButtonLabel:string       { "bezár" }
         statusBar:string              { "állapotsor" }

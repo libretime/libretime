@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,10 +43,17 @@
 #include <gtkmm/button.h>
 #include <gtkmm/table.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/alignment.h>
+#include <gtkmm/box.h>
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/Button.h"
+#include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/Notebook.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
 
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
@@ -55,6 +62,7 @@ namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -79,55 +87,135 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
-class UploadFileWindow : public Gtk::Window, public LocalizedObject
+class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
     protected:
         /**
          *  The layout used in the window.
          */
-        Ptr<Gtk::Table>::Ref        layout;
+        Gtk::Table                * layout;
 
         /**
          *  The choose file label
          */
-        Ptr<Gtk::Label>::Ref        chooseFileLabel;
+        Gtk::Label                * chooseFileLabel;
+
+        /**
+         *  A container holding the file name entry field.
+         */
+        EntryBin                  * fileNameEntryBin;
 
         /**
          *  The text entry for selecting a file name
          */
-        Ptr<Gtk::Entry>::Ref        fileNameEntry;
+        Gtk::Entry                * fileNameEntry;
 
         /**
          *  The file browser button.
          */
-        Ptr<Gtk::Button>::Ref       chooseFileButton;
+        Button                    * chooseFileButton;
 
         /**
-         *  The name label
+         *  The notepad holding the different sections of metadata.
          */
-        Ptr<Gtk::Label>::Ref        nameLabel;
+        Notebook                  * metadataNotebook;
 
         /**
-         *  The text input for the name.
+         *  The main input section.
          */
-        Ptr<Gtk::Entry>::Ref        nameEntry;
+        Gtk::Alignment            * mainSection;
+
+        /**
+         *  The layout of the main section.
+         */
+        Gtk::Table                * mainLayout;
+
+        /**
+         *  The title label
+         */
+        Gtk::Label                * titleLabel;
+
+        /**
+         *  A container holding the title entry field.
+         */
+        EntryBin                  * titleEntryBin;
+
+        /**
+         *  The text input for the title.
+         */
+        Gtk::Entry                * titleEntry;
+
+        /**
+         *  The creator label
+         */
+        Gtk::Label                * creatorLabel;
+
+        /**
+         *  A container holding the creator entry field.
+         */
+        EntryBin                  * creatorEntryBin;
+
+        /**
+         *  The text input for the creator.
+         */
+        Gtk::Entry                * creatorEntry;
+
+        /**
+         *  The genre label
+         */
+        Gtk::Label                * genreLabel;
+
+        /**
+         *  A container holding the genre entry field.
+         */
+        EntryBin                  * genreEntryBin;
+
+        /**
+         *  The text input for the genre.
+         */
+        Gtk::Entry                * genreEntry;
+
+        /**
+         *  The file format label.
+         */
+        Gtk::Label                * fileFormatLabel;
+
+        /**
+         *  The file format combo box.
+         */
+        ComboBoxText              * fileFormatComboBox;
+
+        /**
+         *  The length label.
+         */
+        Gtk::Label                * lengthLabel;
+
+        /**
+         *  The length value label.
+         */
+        Gtk::Label                * lengthValueLabel;
+
+        /**
+         *  The button bar.
+         */
+        Gtk::HBox                 * buttonBar;
 
         /**
          *  The upload button.
          */
-        Ptr<Gtk::Button>::Ref       uploadButton;
+        Gtk::Button               * uploadButton;
 
         /**
          *  The close button.
          */
-        Ptr<Gtk::Button>::Ref       closeButton;
+        Gtk::Button               * closeButton;
 
         /**
          *  The status bar.
          */
-        Ptr<Gtk::Label>::Ref        statusBar;
+        Gtk::Label                * statusBar;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.
@@ -138,6 +226,22 @@ class UploadFileWindow : public Gtk::Window, public LocalizedObject
          *  The name of the file to upload.
          */
         Ptr<std::string>::Ref       fileName;
+
+        /**
+         *  Signals if the file under fileName is good.
+         */
+        bool                        isFileGood;
+
+        /**
+         *  The URI to the file to upload.
+         *  Basically same as fileName, with 'file://' prepended.
+         */
+        Ptr<std::string>::Ref       fileURI;
+
+        /**
+         *  The playling length of the file to upload.
+         */
+        Ptr<time_duration>::Ref     playlength;
 
         /**
          *  Function to catch the event of the choose file button being
@@ -154,10 +258,27 @@ class UploadFileWindow : public Gtk::Window, public LocalizedObject
         onUploadButtonClicked(void)                         throw ();
 
         /**
+         *  Signal handler for the user leaving the filename entry box,
+         *  where persumably he may have types in a new filename.
+         *
+         *  @param event the event recieved.
+         *  @return true if the event has been processed, false otherwise.
+         */
+        bool
+        onFileNameEntryLeave(GdkEventFocus    * event)      throw ();
+
+        /**
          *  Function to catch the event of the close button being pressed.
          */
         virtual void
         onCloseButtonClicked(void)                          throw ();
+
+        /**
+         *  Update the information for the file to upload, based on the
+         *  value of the fileNameEntry text entry field.
+         */
+        void
+        updateFileInfo(void)                                throw ();
 
 
     public:

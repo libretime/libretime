@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -356,16 +356,25 @@ class GLiveSupport : public LocalizedConfigurable,
         showLoggedInUI(void)                                    throw ();
 
         /**
+         *  Determine the length of an audio file, base on a URI to the file.
+         *
+         *  @param uri an URI to a binary audio file
+         *  @return the length of the file
+         *  @exception std::invalid_argument if there is no file at the
+         *             specified URI
+         */
+        Ptr<time_duration>::Ref
+        getPlaylength(Ptr<const std::string>::Ref   uri)
+                                                throw (std::invalid_argument);
+
+        /**
          *  Upload a file to the storage.
          *
-         *  @param title the title of the audio clip.
-         *  @param fileName the full filename of the audio clip.
-         *  @return the audio clip that was uploaded.
+         *  @param audioClip the file to upload
          *  @exception XmlRpcException on upload failures.
          */
-        Ptr<AudioClip>::Ref
-        uploadFile(Ptr<const Glib::ustring>::Ref    title,
-                   Ptr<const std::string>::Ref      fileName)
+        void
+        uploadFile(Ptr<AudioClip>::Ref      audioClip)
                                                     throw (XmlRpcException);
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,6 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
     vuMeterBin->set_size_request(400, 40);
-
     // set up the next playing widget
     nextPlayingWidget = Gtk::manage(new Gtk::Label("next playing"));
     nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
@@ -121,7 +120,6 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
-
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
     set_border_width(10);
@@ -143,7 +141,6 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*bottomBar,       0, 4, 2, 3,
                     Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                     0, 0);
-
     add(*layout);
 
     // set the background to white

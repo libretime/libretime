@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -390,39 +390,39 @@ GLiveSupport :: showLoggedInUI(void)                        throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Determine the length of an audio file
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getPlaylength(Ptr<const std::string>::Ref   uri)
+                                                throw (std::invalid_argument)
+{
+    Ptr<time_duration>::Ref     playlength;
+    audioPlayer->open(*uri);
+    playlength = audioPlayer->getPlaylength();
+    audioPlayer->close();
+
+    return playlength;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Upload a file to the server.
  *----------------------------------------------------------------------------*/
-Ptr<AudioClip>::Ref
+void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
-                           Ptr<const std::string>::Ref      fileName)
+GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref      audioClip)
                                                     throw (XmlRpcException)
 {
-    // create a URI from the file name
-    Ptr<std::string>::Ref   uri(new std::string("file://"));
-    *uri += *fileName;
-
-    // determine the playlength of the audio clip
-    Ptr<time_duration>::Ref     playlength;
-    try {
-        audioPlayer->open(*uri);
-        playlength = audioPlayer->getPlaylength();
-        audioPlayer->close();
-    } catch (std::invalid_argument &e) {
-        throw XmlRpcException(e.what());
-    }
-
-    // create and upload an AudioClip object
-    Ptr<AudioClip>::Ref     audioClip(new AudioClip(title,
-                                                    playlength,
-                                                    uri));
+std::cerr << "GLiveSupport :: uploadFile #1" << std::endl;
     storage->storeAudioClip(sessionId, audioClip);
+std::cerr << "GLiveSupport :: uploadFile #2" << std::endl;
 
     // add the uploaded file to the DJ Bag, and update it
     djBagContents->push_front(audioClip);
+std::cerr << "GLiveSupport :: uploadFile #3" << std::endl;
     masterPanel->updateDjBagWindow();   
-
-    return audioClip;
+std::cerr << "GLiveSupport :: uploadFile #4" << std::endl;
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,8 @@
 #endif
 
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <unicode/msgfmt.h>
 #include <gtkmm/label.h>
 #include <gtkmm/stock.h>
@@ -43,6 +45,7 @@
 #include "UploadFileWindow.h"
 
 
+using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -62,50 +65,114 @@ using namespace LiveSupport::GLiveSupport;
 UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                       Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-                        : LocalizedObject(bundle)
+          : WhiteWindow("",
+                        0xffffff,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+            LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
+    fileName.reset(new std::string());
+    isFileGood = false;
 
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
     try {
+        // generic resources
         set_title(*getResourceUstring("windowTitle"));
-        chooseFileLabel.reset(new Gtk::Label(
+        chooseFileLabel = Gtk::manage(new Gtk::Label(
                                 *getResourceUstring("chooseFileLabel")));
-        fileNameEntry.reset(new Gtk::Entry());
-        chooseFileButton.reset(new Gtk::Button(
+        fileNameEntryBin = Gtk::manage(wf->createEntryBin());
+        fileNameEntry    = fileNameEntryBin->getEntry();
+        chooseFileButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("chooseFileButtonLabel")));
-        nameLabel.reset(new Gtk::Label(
-                                *getResourceUstring("nameLabel")));
-        nameEntry.reset(new Gtk::Entry());
-        uploadButton.reset(new Gtk::Button(
+
+        // main section resources
+        titleLabel = Gtk::manage(new Gtk::Label(
+                                *getResourceUstring("titleLabel"),
+                                Gtk::ALIGN_RIGHT));
+        titleEntryBin = Gtk::manage(wf->createEntryBin());
+        titleEntry    = titleEntryBin->getEntry();
+
+        creatorLabel = Gtk::manage(new Gtk::Label(
+                                *getResourceUstring("creatorLabel"),
+                                Gtk::ALIGN_RIGHT));
+        creatorEntryBin = Gtk::manage(wf->createEntryBin());
+        creatorEntry    = creatorEntryBin->getEntry();
+
+        genreLabel = Gtk::manage(new Gtk::Label(
+                                *getResourceUstring("genreLabel"),
+                                Gtk::ALIGN_RIGHT));
+        genreEntryBin = Gtk::manage(wf->createEntryBin());
+        genreEntry    = genreEntryBin->getEntry();
+
+        fileFormatLabel = Gtk::manage(new Gtk::Label(
+                                *getResourceUstring("fileFormatLabel"),
+                                Gtk::ALIGN_RIGHT));
+        fileFormatComboBox = Gtk::manage(wf->createComboBoxText());
+
+        lengthLabel = Gtk::manage(new Gtk::Label(
+                                *getResourceUstring("lengthLabel"),
+                                Gtk::ALIGN_RIGHT));
+        lengthValueLabel = Gtk::manage(new Gtk::Label());
+
+        // build up the notepad for the different metadata sections
+        mainSection = Gtk::manage(new Gtk::Alignment());
+        metadataNotebook = Gtk::manage(new Notebook());
+        metadataNotebook->appendPage(*mainSection,
+                                *getResourceUstring("mainSectionLabel"));
+
+        // buttons, etc.
+        uploadButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("uploadButtonLabel")));
-        closeButton.reset(new Gtk::Button(
+        closeButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("closeButtonLabel")));
-        statusBar.reset(new Gtk::Label(
+        statusBar = Gtk::manage(new Gtk::Label(
                                 *getResourceUstring("statusBar")));
     } catch (std::invalid_argument &e) {
         // TODO: signal error
         std::cerr << e.what() << std::endl;
     }
 
+    // build up the main section
+    // TODO: don't hard-code supported file format types
+    fileFormatComboBox->append_text("mp3");
+    fileFormatComboBox->set_active_text("mp3");
+    mainLayout  = Gtk::manage(new Gtk::Table());
+    mainLayout->attach(*titleLabel,         0, 1, 0, 1);
+    mainLayout->attach(*titleEntryBin,      1, 2, 0, 1);
+    mainLayout->attach(*creatorLabel,       0, 1, 1, 2);
+    mainLayout->attach(*creatorEntryBin,    1, 2, 1, 2);
+    mainLayout->attach(*genreLabel,         0, 1, 2, 3);
+    mainLayout->attach(*genreEntryBin,      1, 2, 2, 3);
+    mainLayout->attach(*fileFormatLabel,    2, 3, 0, 1);
+    mainLayout->attach(*fileFormatComboBox, 3, 4, 0, 1);
+    mainLayout->attach(*lengthLabel,        2, 3, 1, 2);
+    mainLayout->attach(*lengthValueLabel,   3, 4, 1, 2);
+    mainSection->add(*mainLayout);
+
+    // build up the button bar
+    buttonBar   = Gtk::manage(new Gtk::HBox());
+    buttonBar->add(*closeButton);
+    buttonBar->add(*uploadButton);
+
     // set up the layout, which is a button box
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
 
     // set up the main window, and show everything
-    set_border_width(10);
     layout->attach(*chooseFileLabel,   0, 1, 0, 1);
-    layout->attach(*fileNameEntry,     1, 2, 0, 1);
-    layout->attach(*chooseFileButton,  2, 3, 0, 1);
-    layout->attach(*nameLabel,         0, 1, 1, 2);
-    layout->attach(*nameEntry,         1, 2, 1, 2);
-    layout->attach(*uploadButton,      1, 2, 2, 3);
-    layout->attach(*closeButton,       1, 2, 3, 4);
-    layout->attach(*statusBar,         0, 3, 4, 5);
+    layout->attach(*fileNameEntryBin,  0, 1, 1, 2);
+    layout->attach(*chooseFileButton,  1, 2, 1, 2);
+    layout->attach(*metadataNotebook,  0, 2, 2, 3);
+    layout->attach(*buttonBar,         0, 2, 3, 4);
+    layout->attach(*statusBar,         0, 2, 4, 5);
 
     add(*layout);
 
     // bind events
     chooseFileButton->signal_clicked().connect(sigc::mem_fun(*this,
                                 &UploadFileWindow::onChooseFileButtonClicked));
+    fileNameEntry->signal_focus_out_event().connect(sigc::mem_fun(*this,
+                                &UploadFileWindow::onFileNameEntryLeave));
     uploadButton->signal_clicked().connect(sigc::mem_fun(*this,
                                     &UploadFileWindow::onUploadButtonClicked));
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -137,9 +204,57 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
     int result = dialog->run();
 
     if (result == Gtk::RESPONSE_OK) {
-        fileName.reset(new std::string(dialog->get_filename()));
-        fileNameEntry->set_text(*fileName);
+        fileNameEntry->set_text(dialog->get_filename());
+        updateFileInfo();
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the file information to upload.
+ *----------------------------------------------------------------------------*/
+void
+UploadFileWindow :: updateFileInfo(void)                        throw ()
+{
+    std::string     newFileName = fileNameEntry->get_text().raw();
+
+    if (*fileName != newFileName) {
+        // see if the file exists, and is readable
+        std::ifstream   file(newFileName.c_str());
+        if (!file.good()) {
+            isFileGood = false;
+            file.close();
+            return;
+        }
+        file.close();
+        isFileGood = true;
+        fileName.reset(new std::string(newFileName));
+
+        fileURI.reset(new std::string("file://"));
+        *fileURI += *fileName;
+
+        playlength = gLiveSupport->getPlaylength(fileURI);
+
+        // display the new play length
+        std::ostringstream  lengthStr;
+        lengthStr << std::setfill('0')
+                  << std::setw(2) << playlength->hours() << ":"
+                  << std::setw(2) << playlength->minutes() << ":"
+                  << std::setw(2) << playlength->seconds();
+        lengthValueLabel->set_text(lengthStr.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The event when the user has left the file name entry box.
+ *----------------------------------------------------------------------------*/
+bool
+UploadFileWindow :: onFileNameEntryLeave(GdkEventFocus    * event)
+                                                                    throw ()
+{
+    updateFileInfo();
+    return false;
 }
 
 
@@ -150,14 +265,32 @@ void
 UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 {
     try {
-        Ptr<const Glib::ustring>::Ref   title;
-        Ptr<const std::string>::Ref     fileName;
-        Ptr<AudioClip>::Ref             audioClip;
-        
-        title.reset(new Glib::ustring(nameEntry->get_text()));
-        fileName.reset(new std::string(fileNameEntry->get_text().raw()));
-        
-        audioClip = gLiveSupport->uploadFile(title, fileName);
+        updateFileInfo();
+        if (!isFileGood) {
+            // TODO: localize error message
+            throw std::invalid_argument("file does not exist");
+        }
+
+        Ptr<const Glib::ustring>::Ref   ustrValue;
+
+        ustrValue.reset(new Glib::ustring(titleEntry->get_text()));
+
+        // create and upload an AudioClip object
+        Ptr<AudioClip>::Ref     audioClip(new AudioClip(ustrValue,
+                                                        playlength,
+                                                        fileURI));
+
+        // set the metadata available
+        ustrValue.reset(new Glib::ustring(creatorEntry->get_text()));
+        audioClip->setMetadata(ustrValue, "dc:creator");
+        ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
+        audioClip->setMetadata(ustrValue, "dc:type");
+        ustrValue.reset(new Glib::ustring(
+                                    fileFormatComboBox->get_active_text()));
+        audioClip->setMetadata(ustrValue, "dc:format");
+
+        // upload the audio clip
+        gLiveSupport->uploadFile(audioClip);
 
         // display success in the status bar
         Ptr<UnicodeString>::Ref uTitle = ustringToUnicodeString(
@@ -170,8 +303,10 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         statusBar->set_text(*statusText);
 
         // clean the entry fields
-        nameEntry->set_text("");
-        fileNameEntry->set_text("");
+        //titleEntry->set_text("");
+        //fileNameEntry->set_text("");
+    } catch (std::invalid_argument &e) {
+        statusBar->set_text(e.what());
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
     }

@@ -65,13 +65,20 @@ root:table
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "Upload File Window" }
+        windowTitle:string            { "Upload File" }
 
-        chooseFileLabel:string        { "file: " }
-        chooseFileButtonLabel:string  { "browse..." }
-        nameLabel:string              { "audio clip name: " }
-        uploadButtonLabel:string      { "upload" }
-        closeButtonLabel:string       { "close" }
+        chooseFileLabel:string        { "Filename" }
+        chooseFileButtonLabel:string  { "Browse" }
+
+        mainSectionLabel:string       { "Main" }
+        titleLabel:string             { "Title" }
+        creatorLabel:string           { "Creator" }
+        genreLabel:string             { "Genre" }
+        fileFormatLabel:string        { "File Type" }
+        lengthLabel:string            { "Duration" }
+
+        uploadButtonLabel:string      { "Upload" }
+        closeButtonLabel:string       { "Cancel" }
         statusBar:string              { "status bar" }
 
         fileChooserDialogTitle:string { "Choose a File" }

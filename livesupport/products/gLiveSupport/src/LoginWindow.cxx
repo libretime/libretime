@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 using namespace Glib;
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -70,6 +71,8 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     this->gLiveSupport = gLiveSupport;
 
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
+
+    set_default_size(350, 265);
 
     try {
         set_title(*getResourceUstring("windowTitle"));
