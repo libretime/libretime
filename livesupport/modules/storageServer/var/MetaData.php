@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -357,6 +357,18 @@ class MetaData{
         if(!is_null($aktual)){
             $res = $this->setMetadataEl($aktual['mid'], $value);
             if(PEAR::isError($res)) return $res;
+            if(!is_null($lang) && $aktual['attrs']['xml:lang']!=$lang){
+                $lg = $this->getMetadataEl('xml:lang', $aktual['mid']);
+                if(PEAR::isError($lg)) return $lg;
+                if(isset($lg['mid'])){
+                    $res = $this->setMetadataEl($lg['mid'], $lang);
+                    if(PEAR::isError($res)) return $res;
+                }else{
+                    $res = $this->insertMetadataEl(
+                        $aktual['mid'], 'xml:lang', $lang, 'A');
+                    if(PEAR::isError($res)) return $res;
+                }
+            }
         }else{
             // resolve container:
             $contArr = $this->getMetadataValue($container, NULL, '_blank');
