@@ -118,18 +118,18 @@ class uiBase
                 if ($val['isPref']) {
                     if (is_string($setting = $this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element']))) {
                         $this->STATIONPREFS[$val['element']] = $setting;
-                    } else {
+                    } elseif ($val['required']){
                         $miss = TRUE;
                     }
                 }
             }
             if (!$this->STATIONPREFS['stationMaxfilesize'])
                 $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
-            /*
+
             if ($miss && $this->login) {
                 $this->_retMsg('Note: Station Preferences not setup.');
             }
-            */
+
         }
     }
 
