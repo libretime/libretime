@@ -150,6 +150,6 @@ if ($uiBrowser->userid) {
     break;
   }
 }
-
+ 
 $Smarty->display('main.tpl');
 ?>

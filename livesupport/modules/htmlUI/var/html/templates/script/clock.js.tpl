@@ -4,6 +4,12 @@
 <!-- Original:  Tomleung (lok_2000_tom@hotmail.com) This tag should not be removed-->
 <!--Server time ticking clock v2.0 Updated by js-x.com-->
 <!-- server time ticking clock modified for livesupport.campware.org using above script-->
+function twoDigit(_v)
+{
+  _v = Math.round(_v);
+  if(_v<10) _v="0"+_v;
+  return _v;
+}
 function MakeArrayday(size)
 {
   this.length = size;
@@ -25,21 +31,14 @@ var seconds;
 var timer=null;
 function sClock()
 {
-  sinterval = 100;
+  sinterval = 100;      // milliseconds
   {/literal}
-  hours=  {$smarty.now|date_format:"%H"};
-  minutes={$smarty.now|date_format:"%M"};
-  seconds={$smarty.now|date_format:"%S"};
+  hours   = {$smarty.now|date_format:"%H"};
+  minutes = {$smarty.now|date_format:"%M"};
+  seconds = {$smarty.now|date_format:"%S"};
   {literal}
   if(timer){clearInterval(timer);timer=null;}
   timer=setInterval("work();", sinterval);
-}
-
-function twoDigit(_v)
-{
-  _v = Math.round(_v);
-  if(_v<10) _v="0"+_v;
-  return _v;
 }
 
 function work()
@@ -110,7 +109,7 @@ var lseconds;
 var ltimer=null;
 function lClock()
 {
-  linterval = 100;
+  linterval = 100;      // milliseconds
   var tDate = new Date();
   lhours   = tDate.getHours();
   lminutes = tDate.getMinutes();

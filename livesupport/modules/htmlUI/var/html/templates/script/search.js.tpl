@@ -24,8 +24,8 @@ function hideRow(row)
 {
     document.getElementById('searchRow_' + row).style.visibility = 'hidden';
     document.getElementById('searchRow_' + row).style.height     = '0px';
-    document.forms['search'].elements['row_' + Number(row) + '[0]'].value = '';
-    document.forms['search'].elements['row_' + Number(row) + '[1]'].value = '';
+    document.forms['search'].elements['row_' + Number(row) + '[0]'].options[0].selected=true;
+    document.forms['search'].elements['row_' + Number(row) + '[1]'].options[0].selected=true;
     document.forms['search'].elements['row_' + Number(row) + '[2]'].value = '';
 }
 

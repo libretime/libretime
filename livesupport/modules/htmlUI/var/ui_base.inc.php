@@ -102,6 +102,12 @@ class uiBase
                     $groupthose[] =& $elem[$val];
                 }
                 $form->addGroup($groupthose, $v['name'], $this->tra($v['label']), $v['seperator'], $v['appendName']);
+                if ($v['rule']) {
+                    $form->addRule($v['name'], isset($v['rulemsg']) ? $this->tra($v['rulemsg']) : $this->tra('$1 must be $2', $this->tra($v['name'])), $v['rule'], $v['format'], $side);
+                }
+                if ($v['grouprule']) {
+                    $form->addGroupRule($v['name'], $v['arg1'], $v['grouprule'], $v['format'], $v['howmany'], $side, $v['reset']);
+                }
                 unset($groupthose);
             }
             ## check error on type file ##########
@@ -181,6 +187,37 @@ class uiBase
                   </audioClip>';
 
         }
+    }
+
+
+    function _twoDigits($num)
+    {
+        if ($num < 10)
+            return ("0$num");
+        else
+            return $num;
+    }
+
+
+    function _getDArr($format)
+    {
+        #$arr['']  = '00';
+        switch($format) {
+        case 'h':
+            for($n=0; $n<=23; $n++) {
+                $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
+            }
+            break;
+
+        case 'm':
+        case 's':
+            for($n=0; $n<=59; $n++) {
+                $arr[$this->_twoDigits($n)] = $this->_twoDigits($n);
+            }
+            break;
+        }
+
+        return $arr;
     }
 }
 ?>

@@ -190,17 +190,50 @@ $ui_fmask = array(
                     'label'     => 'Format',
                     'required'  => TRUE,
                     'options'   => array(
+                        ''              => '',
                         'File'          => 'File',
                         'live stream'   => 'Live Stream',
                         'networked file'=> 'Networked File',
                         'audio/mpeg'    => 'audio/mpeg'
                      )
                 ),
+                /*
                 array(
                     'element'   => 'Format_Extent',
-                    'type'      => 'text',
+                    'type'      => 'date',
+                    'options'   => array(
+                                    'format'    => 'His'
+                                   ),
                     'label'     => 'Format_Extent',
-                    'required'  => TRUE,
+                    'required'  => TRUE
+                ), */
+                array(
+                    'element'   => 'Format_Extent_h',
+                    'type'      => 'select',
+                    'options'   => $uiBase->_getDArr('h'),
+                    'groupit'   => TRUE
+                ),
+                array(
+                    'element'   => 'Format_Extent_m',
+                    'type'      => 'select',
+                    'options'   => $uiBase->_getDArr('m'),
+                    'groupit'   => TRUE
+                ),
+                array(
+                    'element'   => 'Format_Extent_s',
+                    'type'      => 'select',
+                    'options'   => $uiBase->_getDArr('h'),
+                    'groupit'   => TRUE
+                ),
+                array(
+                    'group'     => array('Main__Format_Extent_h', 'Main__Format_Extent_m', 'Main__Format_Extent_s'),
+                    #'name'      => 'gr_Format_Extent',
+                    'label'     => 'Format_Extent',
+                    'rule'      => 'required',
+                    #'grouprule' => 'regex',
+                    #'format'    => '/([1-9]0)|([1-9]{2})|(0[1-9])/',
+                    #'arg1'      => 'Please enter Format_Extent',
+                    #'howmany'   => 1
                 ),
             ),
             'Music_Basic'  => array(
@@ -263,9 +296,36 @@ $ui_fmask = array(
                     'label'     => 'Description_Rating',
                     'rule'      => 'numeric',
                 ),
+                /*
                 array(
                     'element'   => 'Format_Extent',
-                    'type'      => 'text',
+                    'type'      => 'date',
+                    'options'   => array(
+                                    'format'    => 'His'
+                                   ),
+                    'label'     => 'Format_Extent'
+                ), */
+                array(
+                    'element'   => 'Format_Extent_h',
+                    'type'      => 'select',
+                    'options'   => $uiBase->_getDArr('h'),
+                    'groupit'   => TRUE
+                ),
+                array(
+                    'element'   => 'Format_Extent_m',
+                    'type'      => 'select',
+                    'options'   => $uiBase->_getDArr('m'),
+                    'groupit'   => TRUE
+                ),
+                array(
+                    'element'   => 'Format_Extent_s',
+                    'type'      => 'select',
+                    'options'   => $uiBase->_getDArr('h'),
+                    'groupit'   => TRUE
+                ),
+                array(
+                    'group'     => array('Music_Basic__Format_Extent_h', 'Music_Basic__Format_Extent_m', 'Music_Basic__Format_Extent_s'),
+                    #'name'      => 'gr_Format_Extent',
                     'label'     => 'Format_Extent',
                 ),
             ),
@@ -743,4 +803,4 @@ $ui_fmask = array(
                               )
             )
     )
-);
+); 

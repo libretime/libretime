@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once dirname(__FILE__).'/conf.php';
-require_once dirname(__FILE__).'/ui_fmask.inc.php';
 
 // LS classes/functions
 require_once dirname(__FILE__).'/ui_base.inc.php';
@@ -41,4 +40,6 @@ if(is_array($_SESSION['retransferFormData'])){
     }
     unset($_SESSION['retransferFormData']);
 }
+
+require_once dirname(__FILE__).'/ui_fmask.inc.php';
 ?>

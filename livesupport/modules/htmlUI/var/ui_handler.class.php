@@ -444,7 +444,7 @@ class uiHandler extends uiBase {
         $this->redirUrl = UI_BROWSER.'?act=editMetaDataValues&id='.$formdata['id'];
         foreach ($mask['tabs']['group']['group'] as $key) {
             foreach ($mask['pages'][$key] as $k=>$v) {
-                $formdata[$key.'-'.$v['element']] ? $mData[strtr($v['element'], '_', '.')] = $formdata[$key.'-'.$v['element']] : NULL;
+                $formdata[$key.'__'.$v['element']] ? $mData[strtr($v['element'], '_', '.')] = $formdata[$key.'__'.$v['element']] : NULL;
             }
         }
 

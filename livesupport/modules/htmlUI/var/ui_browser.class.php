@@ -446,30 +446,19 @@ class uiBrowser extends uiBase {
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['langswitch']);
         $output['langswitch'] = $form->toHTML();
-        /*
-        ## multiple forms
-        $parts = array ('Main', 'Music_Basic', 'Music_Advanced', 'Talk_Basic', 'Talk_Advanced');
-        foreach ($parts as $key) {
-            unset ($form);
-            $form = new HTML_QuickForm($key, UI_STANDARD_FORM_METHOD, UI_BROWSER);
-            $this->_parseArr2Form($form, $mask['pages'][$key]);
-            $this->_parseArr2Form($form, $mask['basics']);
-            $output['pages'][$key] = $form->toHTML();
-        }  */
 
-        ## single form
         $form = new HTML_QuickForm('metadata', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->_parseArr2Form($form, $mask['basics']);
         $form->setConstants( array('id'     => $id,
-                                  #!!!!!'langid' => array_pop($this->gb->getMDataValue($id, 'langid', $this->sessid))
-                                  'langid'  => 'en'
+                                   #!!!!!'langid' => array_pop($this->gb->getMDataValue($id, 'langid', $this->sessid))
+                                   'langid'  => 'en'
                              )
                            );
 
         ## convert element names to be unique over different forms-parts, add javascript to spread values over parts, add existing values from database
         foreach ($mask['tabs']['group']['group'] as $key) {
             foreach ($mask['pages'][$key] as $k=>$v) {
-                $mask['pages'][$key][$k]['element']    = $key.'-'.$v['element'];
+                $mask['pages'][$key][$k]['element']    = $key.'__'.$v['element'];
                 $mask['pages'][$key][$k]['attributes'] = array ('onChange' => "spread(this, '".$v['element']."')");
 
                 ## recive data from GreenBox
@@ -482,21 +471,11 @@ class uiBrowser extends uiBase {
                     $mask['pages'][$key][$k]['default'] = $data[strtr($v['element'], '_', '.')];
                 }
             }
-            #$form->addElement('html', "<div id='div_$key'>");
             $form->addElement('static', NULL, NULL, "<div id='div_$key'>");
             $this->_parseArr2Form($form, $mask['pages'][$key]);
             $this->_parseArr2Form($form, $mask['buttons']);
-            #$form->addElement('html', "</div id='div_$key'>");
             $form->addElement('static', NULL, NULL, "</div id='div_$key'>");
         }
-        /*
-        $renderer = new HTML_QuickForm_Renderer_Default;
-        $renderer->setFormTemplate("\n<form{attributes}>\n<div>\n{content}\n</div>\n</form>");
-        #$renderer->setElementTemplate("\n\t<div class='mdataelement'><div class='mdataelementtext'><!-- BEGIN required --><span style=\"color: #ff0000\">*</span><!-- END required --><b>{label}</b><!-- BEGIN error --><span style=\"color: #ff0000\">{error}</span><br /><!-- END error -->\t</div><div class='mdataelementelement'>{element}</div></div>\n\t");
-        $renderer->setElementTemplate("\n\t<div class='mdataelement'><!-- BEGIN required --><span style=\"color: #ff0000\">*</span><!-- END required --><b>{label}</b><!-- BEGIN error --><span style=\"color: #ff0000\">{error}</span><br /><!-- END error -->\t<br>{element}</div>\n\t");
-        $form->accept($renderer);
-        $output['pages'][] = $renderer->toHTML();
-        */
 
         ## using Dynamic Smarty Renderer
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);

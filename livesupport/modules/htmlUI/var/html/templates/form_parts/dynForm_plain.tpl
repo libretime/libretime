@@ -29,11 +29,7 @@
 
         {if $element.error}<font color="red">{$element.error}</font><br />{/if}
         {if $element.type eq "group"}
-            {foreach key=gkey item=gitem from=$element.elements}
-                {$gitem.label}
-                {$gitem.html}{if $gitem.required}<font color="red">*</font>{/if}
-                {if $element.separator}{cycle values=$element.separator}{/if}
-            {/foreach}
+            {foreach key=gkey item=gitem from=$element.elements}{$gitem.label}{$gitem.html}{if $gitem.required}<font color="red">*</font>{/if}{if $element.separator}{cycle values=$element.separator}{/if}{/foreach}
         {else}
             {$element.html}
         {/if}
