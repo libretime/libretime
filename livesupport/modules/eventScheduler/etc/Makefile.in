@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -93,10 +93,12 @@ LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${CORE_LIB_DIR} -L${LIB_DIR}
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
-EVENT_SCHEDULER_LIB_OBJS = ${TMP_DIR}/SchedulerThread.o
+EVENT_SCHEDULER_LIB_OBJS = ${TMP_DIR}/SchedulerThread.o \
+                           ${TMP_DIR}/EventScheduler.o
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestScheduledEvent.o \
                    ${TMP_DIR}/TestEventContainer.o \
                    ${TMP_DIR}/SchedulerThreadTest.o \
+                   ${TMP_DIR}/EventSchedulerTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = -l${EVENT_SCHEDULER_LIB} -l${CORE_LIB} \
                    -lxml++-1.0 -lcppunit -ldl

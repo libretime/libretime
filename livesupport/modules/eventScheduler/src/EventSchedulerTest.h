@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThreadTest.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/EventSchedulerTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef SchedulerThreadTest_h
-#define SchedulerThreadTest_h
+#ifndef EventSchedulerTest_h
+#define EventSchedulerTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -55,15 +55,15 @@ namespace EventScheduler {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the SchedulerThread class.
+ *  Unit test for the EventScheduler class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  *  @see EventScheduler
  */
-class SchedulerThreadTest : public CPPUNIT_NS::TestFixture
+class EventSchedulerTest : public CPPUNIT_NS::TestFixture
 {
-    CPPUNIT_TEST_SUITE(SchedulerThreadTest);
+    CPPUNIT_TEST_SUITE(EventSchedulerTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -105,5 +105,5 @@ class SchedulerThreadTest : public CPPUNIT_NS::TestFixture
 } // namespace EventScheduler
 } // namespace LiveSupport
 
-#endif // SchedulerThreadTest_h
+#endif // EventSchedulerTest_h
 

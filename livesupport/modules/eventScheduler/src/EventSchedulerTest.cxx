@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThreadTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/EventSchedulerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -44,12 +44,11 @@
 #include <iostream>
 
 #include "LiveSupport/Core/TimeConversion.h"
-#include "LiveSupport/Core/Thread.h"
 
-#include "SchedulerThread.h"
+#include "LiveSupport/EventScheduler/EventScheduler.h"
 #include "TestScheduledEvent.h"
 #include "TestEventContainer.h"
-#include "SchedulerThreadTest.h"
+#include "EventSchedulerTest.h"
 
 
 using namespace boost::posix_time;
@@ -62,7 +61,7 @@ using namespace LiveSupport::EventScheduler;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerThreadTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(EventSchedulerTest);
 
 
 /* ===============================================  local function prototypes */
@@ -74,7 +73,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerThreadTest);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerThreadTest :: setUp(void)                         throw ()
+EventSchedulerTest :: setUp(void)                           throw ()
 {
 }
 
@@ -83,7 +82,7 @@ SchedulerThreadTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-SchedulerThreadTest :: tearDown(void)                      throw ()
+EventSchedulerTest :: tearDown(void)                        throw ()
 {
 }
 
@@ -92,13 +91,12 @@ SchedulerThreadTest :: tearDown(void)                      throw ()
  *  A simple test for the event scheduler thread
  *----------------------------------------------------------------------------*/
 void
-SchedulerThreadTest :: firstTest(void)
+EventSchedulerTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<TestScheduledEvent>::Ref        event;
     Ptr<TestEventContainer>::Ref        container;
-    Ptr<Thread>::Ref                    thread;
-    Ptr<SchedulerThread>::Ref           schedulerThread;
+    Ptr<EventScheduler>::Ref            eventScheduler;
     Ptr<ptime>::Ref                     now;
     Ptr<ptime>::Ref                     when;
     Ptr<time_duration>::Ref             initTime;
@@ -121,10 +119,9 @@ SchedulerThreadTest :: firstTest(void)
     event.reset(new TestScheduledEvent(when, initTime, eventLength));
     container.reset(new TestEventContainer(event));
 
-    schedulerThread.reset(new SchedulerThread(container, granularity));
-    thread.reset(new Thread(schedulerThread));
+    eventScheduler.reset(new EventScheduler(container, granularity));
 
-    thread->start();
+    eventScheduler->start();
 
     CPPUNIT_ASSERT(event->getState() == TestScheduledEvent::created);
     state = event->getState();
@@ -181,7 +178,6 @@ SchedulerThreadTest :: firstTest(void)
         TimeConversion::sleep(granularity);
     }
 
-    thread->stop();
-    thread->join();
+    eventScheduler->stop();
 }
 
