@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.5 $
+#    Version  : $Revision: 1.6 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -117,8 +117,7 @@ try:
     elif method=="updateAudioClipMetadata":
         print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'mdataFileLP':pars[2]})
     elif method=="searchMetadata":
-#        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
-        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':{'type':'and', 'conds':['a', 'b']}})
+        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
     elif method=="getAudioClip":
         r = server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
         print r['metadata']
