@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -215,6 +215,7 @@ class MetaData{
      */
     function setMetadataEl($mid, $value=NULL)
     {
+        if(!is_null($value)){ $value = htmlentities($value); }
         $info = $this->dbc->getRow("
             SELECT parmd.predns as parns, parmd.predicate as parname,
                 md.predxml, md.predns as chns, md.predicate as chname
@@ -398,6 +399,7 @@ class MetaData{
     {
         $fn = $this->fname;
         $xml = $this->genXMLDoc();
+        if(PEAR::isError($xml)) return $xml;
         if (!$fh = fopen($fn, 'w')) {
             return PEAR::raiseError(
                 "MetaData::regenerateXmlFile: cannot open for write ($fn)"
