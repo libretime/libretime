@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -466,7 +466,8 @@ class Playlist extends StoredFile{
     
     /**
      *  Recalculate total length of playlist and  relativeOffset values
-     *  of all playlistElements according to legth and fadeIn values
+     *  of all playlistElements according to legth and fadeIn values.
+     *  FadeOut values adjusted to next fadeIn.
      *
      *  @return boolean
      */
@@ -481,7 +482,7 @@ class Playlist extends StoredFile{
         $plElArr = $this->md->getMetadataEl('playlistElement', $parid);
         if(PEAR::isError($plElArr)){ return $plElArr; }
         $peArr = array();
-        $len = 0; $nextOffset = $len;
+        $len = 0; $nextOffset = $len; $prevFiMid = NULL; $lastLenS = NULL;
         foreach($plElArr as $el){
             $elId = $el['mid'];
             // get playlistElement gunid:
@@ -513,14 +514,21 @@ class Playlist extends StoredFile{
                 if(PEAR::isError($fadeOutArr)){ return $fadeOutArr; }
                 $fadeOut = $fadeOutArr[0]['value'];
             }else{
+                $fiMid = NULL;
                 $fadeIn = '00:00:00.000000';
                 $fadeOut = '00:00:00.000000';
+            }
+            $fadeInS = $this->_plTimeToSecs($fadeIn);
+            if(!is_null($lastLenS)){
+                if($lastLenS < $fadeInS){
+                    return PEAR::raiseError(
+                        "Playlist::recalculateTimes: fadeIn too big");
+                }
             }
             // $peArr[] = array('id'=>$elId, 'gunid'=>$plElGunid, 'len'=>$acLen,
             //    'offset'=>$offset, 'offsetId'=>$offsetId,
             //    'fadeIn'=>$fadeIn, 'fadeOut'=>$fadeOut);
             // set relativeOffset:
-            $fadeInS = $this->_plTimeToSecs($fadeIn);
             if($len>0) $len = $len - $fadeInS;
             $newOffset = $this->_secsToPlTime($len);
             $r = $this->_setValueOrInsert(
@@ -529,6 +537,16 @@ class Playlist extends StoredFile{
             // $fadeInS = $this->_plTimeToSecs($fadeIn);
             $acLenS = $this->_plTimeToSecs($acLen);
             $len = $len + $acLenS;
+            if(!is_null($prevFiMid)){
+                $foMid = $this->_getMidOrInsert(
+                    'fadeOut', $prevFiMid, $fadeIn, 'A');
+                if(PEAR::isError($foMid)){ return $foMid; }
+                $r = $this->_setValueOrInsert(
+                    $foMid, $fadeIn, $prevFiMid, 'fadeOut', 'A');
+                if(PEAR::isError($r)){ return $r; }
+            }
+            $prevFiMid = $fiMid;
+            $lastLenS = $acLenS;
         }
         $newPlLen = $this->_secsToPlTime($len);
         $r = $this->setPlaylistLength($newPlLen, $parid, $metaParid);
