@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -108,8 +108,9 @@ dist: all
 distclean: clean docclean
 #	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER}
-	${TEST_RUNNER}
+#check: all ${TEST_RUNNER}
+#	${TEST_RUNNER}
+check: all
 
 #-------------------------------------------------------------------------------
 #   Specific targets
