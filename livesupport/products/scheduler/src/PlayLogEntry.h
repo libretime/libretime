@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/PlayLogEntry.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,16 +69,11 @@ using namespace LiveSupport::Core;
  *  PlayLogEntries contain information about the audio clips played.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class PlayLogEntry : public Configurable
+class PlayLogEntry
 {
     private:
-        /**
-         *  The name of the configuration XML elmenent used by PlayLogEntry.
-         */
-        static const std::string    configElementNameStr;
-
         /**
          *  The unique id of the play log entry.
          */
@@ -92,7 +87,7 @@ class PlayLogEntry : public Configurable
         /**
          *  The time this audio clip was played.
          */
-        Ptr<ptime>::Ref             timeStamp;
+        Ptr<ptime>::Ref             timestamp;
 
 
     public:
@@ -105,19 +100,18 @@ class PlayLogEntry : public Configurable
 
         /**
          *  Create a play log entry by specifying all details.
-         *  This is used for testing purposes.
          *
          *  @param id          the ID of the play log entry.
          *  @param audioClipId the ID of the audio clip logged
-         *  @param timeStamp   the time this audio clip was played.
+         *  @param timestamp   the time this audio clip was played.
          */
         PlayLogEntry(Ptr<UniqueId>::Ref    id,
                      Ptr<UniqueId>::Ref    audioClipId,
-                     Ptr<ptime>::Ref       timeStamp)         throw()
+                     Ptr<ptime>::Ref       timestamp)         throw()
         {
             this->id          = id;
             this->audioClipId = audioClipId;
-            this->timeStamp   = timeStamp;
+            this->timestamp   = timestamp;
         }
 
         /**
@@ -127,31 +121,6 @@ class PlayLogEntry : public Configurable
         ~PlayLogEntry(void)                                   throw ()
         {
         }
-
-        /**
-         *  Return the name of the XML element this object expects
-         *  to be sent to a call to configure().
-         *  
-         *  @return the name of the expected XML configuration element.
-         */
-        static const std::string
-        getConfigElementName(void)                            throw ()
-        {
-            return configElementNameStr;
-        }
-
-        /**
-         *  Configure the object based on the XML element supplied.
-         *  The supplied element is expected to be of the name
-         *  returned by configElementName().
-         *
-         *  @param element the XML element to configure the object from.
-         *  @exception std::invalid_argument if the supplied XML element
-         *             contains bad configuration information
-         */
-        virtual void
-        configure(const xmlpp::Element    & element)
-                                                throw (std::invalid_argument);
 
         /**
          *  Return the ID of the play log entry.
@@ -181,9 +150,9 @@ class PlayLogEntry : public Configurable
          *  @return the the time the audio clip was played.
          */
         Ptr<const ptime>::Ref
-        getTimeStamp(void) const                throw ()
+        getTimestamp(void) const                throw ()
         {
-            return timeStamp;
+            return timestamp;
         }
 
 };

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE playLogFactory [
+
+<!ELEMENT playLogFactory (postgresqlPlayLog) >
+
+<!ELEMENT postgresqlPlayLog EMPTY >
+]>
+<playLogFactory>
+    <postgresqlPlayLog/>
+</playLogFactory>
