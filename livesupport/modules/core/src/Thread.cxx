@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Thread.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,7 +75,7 @@ Thread :: posixThreadFunction(void * thread)                    throw ()
 
     pThread->runnable->run();
 
-    return 0;
+    pthread_exit(0);
 }
 
 
@@ -85,8 +85,17 @@ Thread :: posixThreadFunction(void * thread)                    throw ()
 void
 Thread :: start(void)                               throw (std::exception)
 {
-    int     ret;
-    if ((ret = pthread_create(&thread, 0, posixThreadFunction, this))) {
+    int             ret;
+    pthread_attr_t  attr;
+
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    ret = pthread_create(&thread, &attr, posixThreadFunction, this);
+    pthread_attr_destroy(&attr);
+
+    yield();
+
+    if (ret) {
         // TODO: signal return code
         throw std::exception();
     }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,6 +97,19 @@ void
 TimeConversion :: sleep(Ptr<time_duration>::Ref duration)
                                                                     throw ()
 {
-    usleep(duration->total_microseconds());
+    int                 ret;
+    struct timespec     tv;
+
+    tv.tv_sec  = duration->total_seconds();
+    tv.tv_nsec = duration->fractional_seconds();
+
+    // if fractional digits is in microseconds, convert it to nanoseconds
+    if (time_duration::num_fractional_digits() == 6) {
+        tv.tv_nsec *= 1000L;
+    }
+
+    if ((ret = nanosleep(&tv, 0))) {
+        // TODO: signal error
+    }
 }
 

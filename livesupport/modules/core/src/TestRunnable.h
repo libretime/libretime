@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TestRunnable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ namespace Core {
  *  A sample Runnable object, for testing purposes.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class TestRunnable : public virtual RunnableInterface
 {
@@ -71,6 +71,12 @@ class TestRunnable : public virtual RunnableInterface
 
     private:
         /**
+         *  The time interval the run() method will check if stop()
+         *  has been called meanwhile.
+         */
+        Ptr<time_duration>::Ref     loopTime;
+
+        /**
          *  Flag that marks if the main execution body should be
          *  running.
          */
@@ -81,11 +87,22 @@ class TestRunnable : public virtual RunnableInterface
          */
         State           state;
 
+        /**
+         *  Default constructor.
+         */
+        TestRunnable(void)                              throw ()
+        {
+        }
+
+
     public:
         /**
          *  Constructor.
+         *
+         *  @param loopTime the time at which the run() method checks
+         *         if it still should run.
          */
-        TestRunnable(void)                              throw ();
+        TestRunnable(Ptr<time_duration>::Ref    loopTime)      throw ();
 
         /**
          *  A virtual destructor, as this class has virtual functions.

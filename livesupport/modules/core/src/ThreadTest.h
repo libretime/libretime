@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/ThreadTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,14 @@ namespace Core {
  *  Unit test for the Thread class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see Thread
  */
 class ThreadTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(ThreadTest);
     CPPUNIT_TEST(simpleTest);
+    CPPUNIT_TEST(slowThreadTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -76,6 +77,15 @@ class ThreadTest : public CPPUNIT_NS::TestFixture
          */
         void
         simpleTest(void)                        throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to see if a thread respoding slowly for a stop()
+         *  call is joined correctly.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        slowThreadTest(void)                    throw (CPPUNIT_NS::Exception);
 
     public:
         

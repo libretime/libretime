@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/ThreadTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,14 +82,14 @@ void
 ThreadTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<TestRunnable>::Ref          runnable(new TestRunnable());
+    Ptr<time_duration>::Ref         cycle(new time_duration(seconds(1)));
+    Ptr<TestRunnable>::Ref          runnable(new TestRunnable(cycle));
     Ptr<Thread>::Ref                thread(new Thread(runnable));
     Ptr<time_duration>::Ref         sleepTime(new time_duration(seconds(1)));
 
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::created);
     thread->start();
-    // sleep to yield the thread some time to actually start
-    TimeConversion::sleep(sleepTime);
+    Thread::yield();
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
     TimeConversion::sleep(sleepTime);
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
@@ -97,5 +97,31 @@ ThreadTest :: simpleTest(void)
     TimeConversion::sleep(sleepTime);
     CPPUNIT_ASSERT(runnable->getState() == TestRunnable::stopped);
     thread->join();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A test to see if a thread respoding slowly for a stop()
+ *  call is joined correctly.
+ *----------------------------------------------------------------------------*/
+void
+ThreadTest :: slowThreadTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref         cycle(new time_duration(seconds(10)));
+    Ptr<TestRunnable>::Ref          runnable(new TestRunnable(cycle));
+    Ptr<Thread>::Ref                thread(new Thread(runnable));
+    Ptr<time_duration>::Ref         sleepTime(new time_duration(seconds(1)));
+
+    CPPUNIT_ASSERT(runnable->getState() == TestRunnable::created);
+    thread->start();
+    Thread::yield();
+    CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
+    TimeConversion::sleep(sleepTime);
+    CPPUNIT_ASSERT(runnable->getState() == TestRunnable::running);
+    thread->stop();
+    TimeConversion::sleep(sleepTime);
+    thread->join();
+    CPPUNIT_ASSERT(runnable->getState() == TestRunnable::stopped);
 }
 

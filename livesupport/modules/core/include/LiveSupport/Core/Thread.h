@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Thread.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ namespace Core {
  *  A generic thread executor class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see RunnableInterface
  */
 class Thread
@@ -134,6 +134,16 @@ class Thread
         stop(void)                                      throw ()
         {
             runnable->stop();
+        }
+
+        /**
+         *  Force the current thread to relinquish use of its processor.
+         *  So that other threads get a chance to run.
+         */
+        static void
+        yield(void)                                     throw ()
+        {
+            pthread_yield();
         }
 
         /**

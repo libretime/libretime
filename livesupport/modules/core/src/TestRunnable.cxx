@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TestRunnable.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,10 +54,12 @@ using namespace LiveSupport::Core;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-TestRunnable :: TestRunnable(void)                          throw ()
+TestRunnable :: TestRunnable(Ptr<time_duration>::Ref    loopTime)
+                                                                    throw ()
 {
-    shouldRun = true;
-    state     = created;
+    shouldRun       = true;
+    state           = created;
+    this->loopTime = loopTime;
 }
 
 
@@ -68,8 +70,6 @@ void
 TestRunnable :: run(void)                           throw ()
 {
     state = running;
-
-    Ptr<time_duration>::Ref     loopTime(new time_duration(seconds(1)));
 
     while (shouldRun) {
         // don't do anything in the main loop
