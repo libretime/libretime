@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,9 +114,8 @@ PlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(duration->total_seconds() == 34);
 
     CPPUNIT_ASSERT(playlist->valid());
-
     CPPUNIT_ASSERT(*playlist->getXmlString() ==
-"<playlist id=\"0000000000000001\" playlength=\"00:00:34\">\n"
+"<playlist id=\"0000000000000001\" playlength=\"00:00:34\" title=\"\">\n"
 "<playlistElement id=\"0000000000000101\" relativeOffset=\"00:00:00\">\n"
 "<audioClip id=\"0000000000010001\" playlength=\"00:00:11\" title=\"one\"/>\n"
 "</playlistElement>\n"
@@ -126,7 +125,7 @@ PlaylistTest :: firstTest(void)
                                   "fadeOut=\"00:00:01.500000\"/>\n"
 "</playlistElement>\n"
 "<playlistElement id=\"0000000000000103\" relativeOffset=\"00:00:23\">\n"
-"<playlist id=\"0000000000000002\" playlength=\"00:00:11\">\n"
+"<playlist id=\"0000000000000002\" playlength=\"00:00:11\" title=\"\">\n"
 "<playlistElement id=\"0000000000000111\" relativeOffset=\"00:00:00\">\n"
 "<audioClip id=\"0000000000010003\" playlength=\"00:00:11\" title=\"three\"/>\n"
 "</playlistElement>\n"

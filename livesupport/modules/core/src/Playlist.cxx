@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,6 +60,11 @@ static const std::string    idAttrName = "id";
  *  The name of the attribute to get the playlength of the playlist.
  */
 static const std::string    playlengthAttrName = "playlength";
+
+/**
+ *  The name of the attribute to get the title of the playlist.
+ */
+static const std::string    titleAttrName = "title";
 
 /**
  *  The name of playlist element child nodes.
@@ -101,6 +106,13 @@ Playlist :: configure(const xmlpp::Element    & element)
     }
     playlength.reset(new time_duration(
                             duration_from_string(attribute->get_value())));
+
+    if ((attribute = element.get_attribute(titleAttrName))) {
+        title.reset(new const Glib::ustring(attribute->get_value()));
+    }
+    else {
+        title.reset(new const Glib::ustring(""));
+    }
 
     xmlpp::Node::NodeList  childNodes 
                            = element.get_children(elementListAttrName);
@@ -365,7 +377,7 @@ Ptr<Glib::ustring>::Ref
 Playlist :: getMetadata(const string &key, const string &ns) const
                                                 throw ()
 {
-    std::string                   completeKey = key + ns;
+    std::string                   completeKey = ns + ":" + key;
     metadataType::const_iterator  it = metadata.find(completeKey);
 
     if (it != metadata.end()) {
@@ -387,9 +399,18 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                         const string &key, const string &ns)
                                                 throw ()
 {
-    std::string     completeKey = key + ns;
+    std::string     completeKey = ns + ":" + key;
     metadata[completeKey] = value;
+    
+    if (completeKey == "dcterms:extent") {
+        playlength.reset(new time_duration(duration_from_string(*value)));
+    }
+    
+    if (completeKey == "dc:title") {
+        title = value;
+    }        
 }
+
 
 /*------------------------------------------------------------------------------
  *  Return a string containing the essential fields of this object, in XML.
@@ -402,11 +423,14 @@ Playlist :: getXmlString(void)                                  throw ()
     xmlString->append("<");
     xmlString->append(configElementNameStr + " ");
     xmlString->append(idAttrName + "=\"" 
-                                 + std::string(*id) 
+                                 + std::string(*getId()) 
                                  + "\" ");
     xmlString->append(playlengthAttrName + "=\"" 
-                                             + to_simple_string(*playlength)
-                                             + "\">\n");
+                                         + to_simple_string(*getPlaylength())
+                                         + "\" ");
+    xmlString->append(Glib::ustring(titleAttrName) + "=\"" 
+                                                   + *getTitle()
+                                                   + "\">\n");
 
     PlaylistElementListType::const_iterator  it = elementList->begin();
     while (it != elementList->end()) {

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.21 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -650,7 +650,7 @@ WebStorageClient :: configure(const xmlpp::Element   &  element)
 const bool
 WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
                                    Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -703,7 +703,7 @@ WebStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                 Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -815,7 +815,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 WebStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     Ptr<Playlist>::Ref              playlist(new Playlist(id));
     Ptr<const std::string>::Ref     url, token;
@@ -849,7 +849,7 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
                                        Ptr<UniqueId>::Ref  id,
                                        Ptr<const std::string>::Ref& url,
                                        Ptr<const std::string>::Ref& token) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -906,7 +906,7 @@ WebStorageClient :: editPlaylistGetUrl(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<Playlist>::Ref  playlist) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     if (!playlist || !playlist->getToken()) {
         throw XmlRpcInvalidArgumentException("playlist has no token field");
@@ -974,7 +974,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     Ptr<Playlist>::Ref      oldPlaylist = getPlaylist(sessionId, id);
     
@@ -1058,7 +1058,7 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<Playlist>::Ref  playlist) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     if (! playlist->getUri()) {
         throw XmlRpcInvalidArgumentException("playlist URI not found");
@@ -1118,7 +1118,7 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
                                    Ptr<UniqueId>::Ref  id)
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -1176,7 +1176,7 @@ WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
 WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref  playlistVector(
                                         new std::vector<Ptr<Playlist>::Ref>);
@@ -1189,7 +1189,7 @@ WebStorageClient :: getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
  *----------------------------------------------------------------------------*/
 Ptr<Playlist>::Ref
 WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -1258,7 +1258,7 @@ WebStorageClient :: createPlaylist(Ptr<SessionId>::Ref sessionId)
 const bool
 WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -1311,7 +1311,7 @@ WebStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<AudioClip>::Ref
 WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -1425,7 +1425,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                    Ptr<AudioClip>::Ref audioClip)
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     if (!audioClip || !audioClip->getUri()) {
         throw XmlRpcInvalidArgumentException(
@@ -1586,7 +1586,7 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<AudioClip>::Ref
 WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     Ptr<AudioClip>::Ref  audioClip = getAudioClip(sessionId, id);
 
@@ -1652,7 +1652,7 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<AudioClip>::Ref audioClip) const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -1715,7 +1715,7 @@ WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id)
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;
@@ -1774,7 +1774,7 @@ WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
 WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
                                                                         const
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref  audioClipVector(
                                         new std::vector<Ptr<AudioClip>::Ref>);
@@ -1787,7 +1787,7 @@ WebStorageClient :: getAllAudioClips(Ptr<SessionId>::Ref sessionId)
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
 WebStorageClient :: reset(void)
-                                                throw (XmlRpcException)
+                                                throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
     XmlRpcValue     result;

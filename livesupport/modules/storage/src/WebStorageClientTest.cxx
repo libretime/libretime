@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.24 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,13 @@
 
 #include "WebStorageClient.h"
 #include "LiveSupport/Core/SessionId.h"
+
+#include "LiveSupport/Core/XmlRpcException.h"
+#include "LiveSupport/Core/XmlRpcCommunicationException.h"
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
+#include "LiveSupport/Core/XmlRpcMethodResponseException.h"
+#include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
+#include "LiveSupport/Core/XmlRpcIOException.h"
 
 #include "WebStorageClientTest.h"
 
@@ -243,7 +250,7 @@ WebStorageClientTest :: playlistTest(void)
         playlist = wsc->editPlaylist(sessionId, playlistIdxx);
         CPPUNIT_FAIL("allowed to open playlist for editing twice");
     }
-    catch (XmlRpcMethodFaultException &e) {
+    catch (Core::XmlRpcMethodFaultException &e) {
     }
     catch (XmlRpcException &e) {
         std::string eMsg = "editPlaylist() threw unexpected exception:\n";
@@ -582,13 +589,16 @@ WebStorageClientTest :: simplePlaylistTest(void)
     CPPUNIT_ASSERT(newPlaylist->getTitle().get());
     CPPUNIT_ASSERT(*newPlaylist->getTitle() == *title);
 
-
+/*
+//  this is not needed here
+//  releasePlaylist() is the closing pair of acquirePlaylist()
     try {
         wsc->releasePlaylist(sessionId, newPlaylist);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newPlaylist->getUri());
+*/
 }
 
 
