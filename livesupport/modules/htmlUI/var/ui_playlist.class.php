@@ -122,7 +122,8 @@ class uiPlaylist
 
     function addItem($id)
     {
-        if (PEAR::isError($this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid))) {
+        $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid);
+        if (PEAR::isError($r)) {
             $this->Base->_retMsg('Cannot add Item to Playlist');
             return FALSE;
         }
