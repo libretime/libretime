@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,16 +82,32 @@ if(preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['id'])){
     http_error(400, "Error on id parameter. ({$_REQUEST['id']})");
 }
 
-$ex = $locStor->existsAudioClip($sessid, $gunid);
-if(PEAR::isError($ex)){
-    if($ex->getCode() == GBERR_DENY){ http_error(403, $ex->getMessage()); }
-    else{ http_error(500, $ex->getMessage()); }
+$ex_ac = $locStor->existsAudioClip($sessid, $gunid);
+if(PEAR::isError($ex_ac)){
+    if($ex_ac->getCode() == GBERR_DENY){
+        http_error(403, $ex_ac->getMessage()); 
+    }else{ http_error(500, $ex_ac->getMessage()); }
 }
-if(!$ex){ http_error(404, "File not found"); }
+$ex_pl = $locStor->existsPlaylist($sessid, $gunid);
+if(PEAR::isError($ex_pl)){
+    if($ex_pl->getCode() == GBERR_DENY){
+        http_error(403, $ex_pl->getMessage());
+    }else{ http_error(500, $ex_pl->getMessage()); }
+}
+if(!$ex_ac && !$ex_pl){ http_error(404, "404 File not found"); }
 $ac =& StoredFile::recallByGunid(&$locStor, $gunid);
 if(PEAR::isError($ac)){ http_error(500, $ac->getMessage()); }
-$realFname  = $ac->_getRealRADFname();
-$mime = $ac->rmd->getMime();
-header("Content-type: $mime");
-readfile($realFname);
+if($ex_ac){
+    $realFname  = $ac->_getRealRADFname();
+    $mime = $ac->rmd->getMime();
+    header("Content-type: $mime");
+    readfile($realFname);
+    exit;
+}
+if($ex_pl){
+    $md = $locStor->getMdata($ac->getId(), $sessid);
+    header("Content-type: application/smil");
+    echo $md;
+    exit;
+}
 ?>

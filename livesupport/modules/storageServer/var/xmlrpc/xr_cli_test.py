@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.8 $
+#    Version  : $Revision: 1.9 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -115,10 +115,29 @@ try:
     elif method=="existsAudioClip":
         print server.locstor.existsAudioClip({'sessid':pars[0], 'gunid':pars[1]})
     elif method=="updateAudioClipMetadata":
-        print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'mdataFileLP':pars[2]})
+        print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'metadata':pars[2]})
     elif method=="searchMetadata":
 #        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
         print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':{'type':'and', 'conds':['a', 'b']}})
+    elif method=="existsPlaylist":
+        print server.locstor.existsPlaylist({'sessid':pars[0], 'plid':pars[1]})
+    elif method=="playlistIsAvailable":
+        print server.locstor.playlistIsAvailable({'sessid':pars[0], 'plid':pars[1]})
+    elif method=="createPlaylist":
+        print server.locstor.createPlaylist({'sessid':pars[0], 'plid':pars[1]})
+    elif method=="editPlaylist":
+        r = server.locstor.editPlaylist({'sessid':pars[0], 'plid':pars[1]})
+        print r['url']+'\n'+r['token']
+    elif method=="savePlaylist":
+        print server.locstor.savePlaylist({'sessid':pars[0], 'token':pars[1], 'newPlaylist':pars[2]})
+    elif method=="deletePlaylist":
+        print server.locstor.deletePlaylist({'sessid':pars[0], 'plid':pars[1]})
+    elif method=="accessPlaylist":
+        r = server.locstor.accessPlaylist({'sessid':pars[0], 'plid':pars[1]})
+        print r['url']+'\n'+r['token']
+    elif method=="releasePlaylist":
+        print server.locstor.releasePlaylist({'sessid':pars[0], 'token':pars[1]})
+
     elif method=="getAudioClip":
         r = server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
         print r['metadata']

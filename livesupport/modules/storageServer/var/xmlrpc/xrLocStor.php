@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -635,6 +635,376 @@ class XR_LocStor extends LocStor{
         return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
     }
 
+    /*====================================================== playlist methods */
+    /**
+     *  Create a new Playlist metafile.
+     *
+     *  The XML-RPC name of this method is "locstor.createPlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid : string  -  global unique id of Playlist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> plid : string</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_createPlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::createPlaylist
+     */
+    function xr_createPlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->createPlaylist($r['sessid'], $r['plid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_createPlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('plid'=>$res)));
+    }
+
+    /**
+     *  Open a Playlist metafile for editing.
+     *  Open readable URL and mark file as beeing edited.
+     *
+     *  The XML-RPC name of this method is "locstor.editPlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid : string  -  global unique id of Playlist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> url : string - readable url</li>
+     *      <li> token : string - playlist token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_editPlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::editPlaylist
+     */
+    function xr_editPlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->editPlaylist($r['sessid'], $r['plid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_editPlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+
+    /**
+     *  Store a new Playlist metafile in place of the old one.
+     *
+     *  The XML-RPC name of this method is "locstor.savePlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> token   :  string  -  playlist token
+     *              returned by locstor.editPlaylist</li>
+     *      <li> newPlaylist  :  string  -  new Playlist in XML string </li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> status : boolean - TRUE</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_savePlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::savePlaylist
+     */
+    function xr_savePlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->savePlaylist(
+            $r['sessid'], $r['token'], $r['newPlaylist']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_savePlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
+    }
+
+    /**
+     *  Delete a Playlist metafile.
+     *
+     *  The XML-RPC name of this method is "locstor.deletePlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid : string  -  global unique id of Playlist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> status : boolean - TRUE</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_deletePlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::deletePlaylist
+     */
+    function xr_deletePlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->deletePlaylist($r['sessid'], $r['plid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_deletePlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('status'=>$res)));
+    }
+
+    /**
+     *  Access (read) a Playlist metafile.
+     *
+     *  The XML-RPC name of this method is "locstor.accessPlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid : string  -  global unique id of Playlist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> url : string - readable url</li>
+     *      <li> token : string - playlist token</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_accessPlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::accessPlaylist
+     */
+    function xr_accessPlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->accessPlaylist($r['sessid'], $r['plid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_accessPlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode($res));
+    }
+
+    /**
+     *  Release the resources obtained earlier by accessPlaylist().
+     *
+     *  The XML-RPC name of this method is "locstor.releasePlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> token   :  string  -  playlist token
+     *              returned by locstor.accessPlaylist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> plid : string - playlist ID</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_releasePlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::releasePlaylist
+     */
+    function xr_releasePlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->releasePlaylist($r['sessid'], $r['token']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_releasePlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('plid'=>$res)));
+    }
+
+    /**
+     *  Check whether a Playlist metafile with the given playlist ID exists.
+     *
+     *  The XML-RPC name of this method is "locstor.existsPlaylist".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid : string  -  global unique id of Playlist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> exists : boolean</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_existsPlaylist:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::existsPlaylist
+     */
+    function xr_existsPlaylist($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->existsPlaylist($r['sessid'], $r['plid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_existsPlaylist: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('exists'=>$res)));
+    }
+
+    /**
+     *  Check whether a Playlist metafile with the given playlist ID
+     *  is available for editing, i.e., exists and is not marked as
+     *  beeing edited.
+     *
+     *  The XML-RPC name of this method is "locstor.playlistIsAvailable".
+     *
+     *  The input parameters are an XML-RPC struct with the following
+     *  fields:
+     *  <ul>
+     *      <li> sessid  :  string  -  session id </li>
+     *      <li> plid : string  -  global unique id of Playlist</li>
+     *  </ul>
+     *
+     *  On success, returns a XML-RPC struct with single field:
+     *  <ul>
+     *      <li> available : boolean</li>
+     *  </ul>
+     *
+     *  On errors, returns an XML-RPC error response.
+     *  The possible error codes and error message are:
+     *  <ul>
+     *      <li> 3    -  Incorrect parameters passed to method:
+     *                      Wanted ... , got ... at param </li>
+     *      <li> 801  -  wrong 1st parameter, struct expected.</li>
+     *      <li> 805  -  xr_playlistIsAvailable:
+     *                      &lt;message from lower layer&gt; </li>
+     *  </ul>
+     *
+     *  @param input XMLRPC struct
+     *  @return XMLRPC struct
+     *  @see LocStor::playlistIsAvailable
+     */
+    function xr_playlistIsAvailable($input)
+    {
+        list($ok, $r) = $this->_xr_getPars($input);
+        if(!$ok) return $r;
+        $res = $this->playlistIsAvailable($r['sessid'], $r['plid']);
+        if(PEAR::isError($res)){
+            return new XML_RPC_Response(0, 805,
+                "xr_playlistIsAvailable: ".$res->getMessage().
+                " ".$res->getUserInfo()
+            );
+        }
+        return new XML_RPC_Response(XML_RPC_encode(array('available'=>$res)));
+    }
+
     /* ----------------------------------------------------------------- etc. */
     /**
      *  Check if audio clip exists and return TRUE/FALSE
@@ -978,6 +1348,15 @@ $methods = array(
     'releaseRawAudioData'     => 'Release access to raw audio data.',
     'getAudioClip'            => 'Return the contents of an Audio clip.',
     'resetStorage'            => 'Reset storageServer for debugging.',
+    'createPlaylist'          => 'Create a new Playlist metafile.',
+    'editPlaylist'            => 'Open a Playlist metafile for editing.',
+    'savePlaylist'            => 'Save a Playlist metafile.',
+    'deletePlaylist'          => 'Delete a Playlist metafile.',
+    'accessPlaylist'          => 'Open readable URL to a Playlist metafile.',
+    'releasePlaylist'         => 'Release readable URL from accessPlaylist.',
+    'existsPlaylist'          => 'Check whether a Playlist exists.',
+    'playlistIsAvailable'     => 'Check whether a Playlist is available '.
+                                    'for editing.',
 );
 
 $defs = array();

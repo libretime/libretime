@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,14 +43,17 @@ class MetaData{
      *
      *  @param gb reference to GreenBox object
      *  @param gunid string, global unique id
+     *  @param resDir string, resource directory
      *  @return this
      */
-    function MetaData(&$gb, $gunid)
+    function MetaData(&$gb, $gunid, $resDir)
     {
         $this->dbc        =& $gb->dbc;
-        $this->mdataTable =  $gb->mdataTable;
-        $this->gunid      =  $gunid;
-        $this->exists     =  $this->dbCheck($gunid);
+        $this->mdataTable = $gb->mdataTable;
+        $this->gunid      = $gunid;
+        $this->resDir     = $resDir;
+        $this->fname      = $this->makeFname();
+        $this->exists     = $this->dbCheck($gunid) && file_exists($this->fname);
     }
     /**
      *  Parse and store metadata from XML file or XML string
@@ -64,6 +67,32 @@ class MetaData{
         if($this->exists) return FALSE;
         $res = $this->storeXMLDoc($mdata, $loc);
         if(PEAR::isError($res)) return $res;
+        switch($loc){
+        case"file":
+            if(! @copy($mdata, $this->fname)){
+                return PEAR::raiseError(
+                    "MetaData::insert: file save failed".
+                    " ($mdata, {$this->fname})",GBERR_FILEIO
+                );
+            }
+            break;
+        case"string":
+            $fname = $this->fname;
+            $e  = FALSE;
+            if(!$fh = fopen($fname, "w")){ $e = TRUE; }
+            elseif(fwrite($fh, $mdata) === FALSE){ $e = TRUE; }
+            if($e){
+                return PEAR::raiseError(
+                    "BasicStor::bsOpenDownload: can't write ($fname)",
+                    GBERR_FILEIO);
+            }
+            fclose($fh);
+            break;
+        default:
+            return PEAR::raiseError(
+                "MetaData::insert: unsupported metadata location ($loc)"
+            );
+        }
         $this->exists = TRUE;
         return TRUE;
     }
@@ -76,11 +105,14 @@ class MetaData{
      */
     function update($mdata, $loc='file')
     {
+        return $this->replace($mdata, $loc);
+        /*
         if(!$this->exists) return FALSE;
         $res = $this->storeXMLDoc($mdata, $loc, 'update');
         if(PEAR::isError($res)) return $res;
         $this->exists = TRUE;
         return TRUE;
+        */
     }
     /**
      *  Call delete and insert
@@ -111,6 +143,7 @@ class MetaData{
      */
     function delete()
     {
+        if(file_exists($fname)) @unlink($this->fname);
         $res = $this->dbc->query("
             DELETE FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint
@@ -126,9 +159,30 @@ class MetaData{
      */
     function getMetaData()
     {
-        return $this->genXMLDoc();
+        // return $this->genXMLDoc();       // obsolete
+        return file_get_contents($this->fname);
     }
 
+    /**
+     *  Contruct filepath of metadata file
+     *
+     *  @return string
+     */
+    function makeFname()
+    {
+        return "{$this->resDir}/{$this->gunid}.xml";
+    }
+    
+    /**
+     *  Return filename
+     *
+     *  @return string
+     */
+    function getFname()
+    {
+        return $this->fname;
+    }
+    
     /**
      *  Check if there are any file's metadata in database
      *
@@ -146,6 +200,7 @@ class MetaData{
         return (intval($cnt) > 0);
     }
 
+    /* ============================================= parse and store metadata */
     /**
      *  Parse and insert or update metadata XML to database
      *
@@ -156,10 +211,22 @@ class MetaData{
      */
     function storeXMLDoc($mdata='', $loc='file', $mode='insert')
     {
-        if($loc=='file' && file_exists($mdata)){
-             $xml = domxml_open_file($mdata);
-        }else{
-             $xml = domxml_open_mem($mdata);
+        switch($loc){
+        case"file":
+            if(!file_exists($mdata)){
+                return PEAR::raiseError(
+                    "MetaData::storeXMLDoc: metadata file not found ($mdata)"
+                );
+            }
+            $xml = domxml_open_file($mdata);
+            break;
+        case"string":
+            $xml = domxml_open_mem($mdata);
+            break;
+        default:
+            return PEAR::raiseError(
+                "MetaData::storeXMLDoc: unsupported metadata location ($loc)"
+            );
         }
         $root = $xml->document_element();
         if(!is_object($root)) return PEAR::raiseError(
@@ -375,6 +442,8 @@ class MetaData{
         if(PEAR::isError($res)) return $res;
         return $id;
     }
+
+    /* =========================================== XML reconstruction from db */
     /**
      *  Generate XML document from metadata database
      *
@@ -460,6 +529,7 @@ class MetaData{
         $qh->free();
     }
     
+    /* ========================================================= test methods */
     /**
      *  Test method
      *

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -224,7 +224,7 @@ class BasicStor extends Alib{
     }
     
     /**
-     *  Create and return access link to media file
+     *  Create and return access link to real file
      *
      *  @param realFname string, local filepath to accessed file
      *  @param ext string, useful filename extension for accessed file
@@ -261,7 +261,7 @@ class BasicStor extends Alib{
     }
 
     /**
-     *  Release access link to media file
+     *  Release access link to real file
      *
      *  @param token string, access token
      *  @param type string 'access'|'download'
@@ -312,17 +312,7 @@ class BasicStor extends Alib{
             $ext    = $ac->_getExt();
             break;
         case"metadata":
-            $md = $this->bsGetMdata($id);
-            $fname  =  "{$this->bufferDir}/$gunid";
-            $e  = FALSE;
-            if(!$fh = fopen($fname, "w")){ $e = TRUE; }
-            elseif(fwrite($fh, $md) === FALSE){ $e = TRUE; }
-            if($e){
-                return PEAR::raiseError(
-                    "BasicStor::bsOpenDownload: can't write ($fname)",
-                    GBERR_FILEIO);
-            }
-            fclose($fh);
+            $fname  = $ac->_getRealMDFname();
             $ext    = "xml";
             break;
         }
@@ -341,15 +331,10 @@ class BasicStor extends Alib{
      */
     function bsCloseDownload($token, $part='media')
     {
-        if($part == 'metadata'){
-            $gunid = $this->dbc->getOne("
-                SELECT to_hex(gunid)as gunid FROM {$this->accessTable}
-                WHERE token=x'{$token}'::bigint AND type='download'
-            ");
-            if(PEAR::isError($gunid)){ return $gunid; }
-            $gunid = StoredFile::_normalizeGunid($gunid);
-            $fname  =  "{$this->bufferDir}/$gunid";
-            @unlink($fname);
+        if(!$this->bsCheckToken($token, 'download')){
+            return PEAR::raiseError(
+             "BasicStor::bsCloseDownload: invalid token ($token)"
+            );
         }
         return $this->bsRelease($token, 'download');
     }
@@ -381,7 +366,8 @@ class BasicStor extends Alib{
     }
 
     /**
-     *  Get file from writable URL and insert it to the storage
+     *  Get file from writable URL and return local filename.
+     *  Caller should move or unlink this file.
      *
      *  @param token string, PUT token
      *  @return string, local path of the file having been put
@@ -473,62 +459,27 @@ class BasicStor extends Alib{
     /* ------------------------------------------------------------- metadata */
 
     /**
-     *  Update metadata tree
+     *  Replace metadata with new XML file or string
      *
      *  @param id int, virt.file's local id
-     *  @param mdataFile string, local path of metadata XML file
+     *  @param mdata string, local path of metadata XML file
+     *  @param mdataLoc string 'file'|'string'
      *  @return boolean or PEAR::error
      */
-    function bsUpdateMetadata($id, $mdataFile)
+    function bsReplaceMetadata($id, $mdata, $mdataLoc='file')
     {
         $ac =& StoredFile::recall(&$this, $id);
         if(PEAR::isError($ac)) return $ac;
-        return $ac->updateMetaData($mdataFile);
+        return $ac->replaceMetaData($mdata, $mdataLoc);
     }
     
     /**
-     *  Update object namespace and value of one metadata record
-     *
-     *  @param id int, virt.file's local id
-     *  @param mdid int, metadata record id
-     *  @param object string, object value, e.g. title string
-     *  @param objns string, object namespace prefix, have to be defined
-     *          in file's metadata (or reserved prefix)
-     *  @return boolean or PEAR::error
-     *  @see MetaData
-     */
-    function bsUpdateMetadataRecord($id, $mdid, $object, $objns='_L')
-    {
-        $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        return $ac->updateMetaDataRecord($mdid, $object, $objns);
-    }
-
-    /**
-     *  Add single metadata record.<br>
-     *  <b>TODO: NOT FINISHED</b><br>
-     *  Params could be changed!
-     *
-     *  @param id int, virt.file's local id
-     *  @param propertyName string
-     *  @param propertyValue string
-     *  @return boolean or PEAR::error
-     *  @see MetaData
-     */
-    function bsAddMetaDataRecord($id, $propertyName, $propertyValue)
-    {
-        return PEAR::raiseError(
-            'GreenBox::addMetaDataRecord: not implemented', GBERR_NOTIMPL
-        );
-    }
-
-    /**
-     *  Get metadata XML tree as string
+     *  Get metadata as XML string
      *
      *  @param id int, virt.file's local id
      *  @return string or PEAR::error
      */
-    function bsGetMdata($id)
+    function bsGetMetadata($id)
     {
         $ac =& StoredFile::recall(&$this, $id);
         if(PEAR::isError($ac)) return $ac;
@@ -647,202 +598,6 @@ class BasicStor extends Alib{
         return $nid;
     }
     
-
-
-
-    /* -------------------------------------------- remote repository methods */
-
-    /**
-     *  Upload file to remote repository
-     *
-     *  @param id int, virt.file's local id
-     *  @param gunid string, global id
-     *  @param sessid string, session id
-     *  @return string - transfer id or PEAR::error
-     */
-    function uploadFile($id, $gunid, $sessid='')
-    {
-        $res = $this->prepareForTransport($id, $gunid, $sessid);
-        if(PEAR::isError($res)) return $res;
-        list($mediaFile, $mdataFile, $gunid) = $res;
-        $tr =& new Transport(&$this->dbc, $this->config);
-        $res = $tr->uploadOpen($mediaFile, 'media', $sessid, $gunid);
-        if(PEAR::isError($res)) return $res;
-        $res2 = $tr->uploadOpen($mdataFile, 'metadata', $sessid, $gunid);
-        if(PEAR::isError($res2)) return $res2;
-        $res3 = $tr->getTransportStatus($res);
-        $res4 = $tr->getTransportStatus($res2);
-#        return $res;
-        return array($res, $res2, $res3, $res4);
-    }
-
-    /**
-     *  Download file from remote repository
-     *
-     *  @param gunid int, global unique id
-     *  @param sessid string, session id
-     *  @return string - transfer id or PEAR::error
-     */
-    function downloadFile($gunid, $sessid='')
-    {
-        $tr =& new Transport(&$this->dbc, $this->config);
-        // get home dir if needed
-        $res = $tr->downloadOpen($sessid, 'media', $gunid,
-            $this->getSessUserId($sessid)
-        );
-        if(PEAR::isError($res)) return $res;
-        $res2 = $tr->downloadOpen($sessid, 'metadata', $gunid,
-            $this->getSessUserId($sessid)
-        );
-        if(PEAR::isError($res)) return $res;
-        $res3 = $tr->getTransportStatus($res);
-        $res4 = $tr->getTransportStatus($res2);
-#        return $res;
-        return array($res, $res2, $res3, $res4);
-    }
-    
-
-
-    /**
-     *  Method for handling interupted transports via cron 
-     *
-     */
-     function cronJob()
-     {
-        $tr =& new Transport(&$this->dbc, $this->config);
-        $ru = $tr->uploadCron();
-        $rd = $tr->downloadCron(&$this);
-        return array($ru, $rd);
-     }
-
-    /**
-     *  Get status of asynchronous transfer
-     *
-     *  @param transferId int, id of asynchronous transfer
-     *      returned by uploadFile or downloadFile methods
-     *  @param sessid string, session id
-     *  @return string or PEAR::error
-     */
-    function getTransferStatus($transferId, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::getTransferStatus: not implemented', GBERR_NOTIMPL
-        );
-    }
-
-    /**
-     *  Prepare symlink to media file and create metadata file for transport
-     *
-     *  @param id
-     *  @param gunid
-     *  @param sessid
-     *  @return array
-     */
-    function prepareForTransport($id, $gunid, $sessid='')
-    {
-        if(!$gunid) $gunid = $this->_gunidFromId($id);
-        else $id = $this->_idFromGunid($gunid);
-        $ac =& StoredFile::recallByGunid(&$this, $gunid);
-        if(PEAR::isError($ac)) return $ac;
-        $mediaTarget = $ac->_getRealRADFname();
-        $mediaFile = "$gunid";
-        $mdataFile = "$gunid.xml";
-        @symlink($mediaTarget, $this->transDir."/$mediaFile");
-        $mdata = $this->getMdata($id, $sessid);
-        if(PEAR::isError($mdata)) return $mdata;
-        if(!($fh = fopen($this->transDir."/$mdataFile", 'w'))) $res=FALSE;
-        else{
-            $res = fwrite($fh, $mdata);
-            fclose($fh);
-        }
-        if($res === FALSE) return PEAR::raiseError(
-            "GreenBox::prepareForTransport:".
-            " can't write metadata tmp file ($mdataFile)"
-        );
-        return array($mediaFile, $mdataFile, $gunid);
-    }
-    
-    /**
-     *  Insert transported file and metadata into storage.<br>
-     *  TODO: cals methods from LocStor - it's not good
-     *
-     *  @param sessid string - session id
-     *  @param file string - local path to filr
-     *  @param type string - media|metadata|search
-     *  @param gunid string - global unique id
-     */
-    function processTransported($sessid, $file, $type, $gunid='X')
-    {
-        switch($type){
-            case 'media':
-                if(!file_exists($file)) break;
-                $res = $this->storeAudioClip($sessid, $gunid,
-                    $file, '');
-                if(PEAR::isError($res)) return $res;
-                @unlink($file);
-                break;
-            case 'metadata':
-            case 'mdata':
-                if(!file_exists($file)) break;
-                $res = $this->updateAudioClipMetadata($sessid, $gunid,
-                    $file);
-                if(PEAR::isError($res)){
-                    // catch valid exception
-                    if($res->getCode() == GBERR_FOBJNEX){
-                        $res2 = $this->storeAudioClip($sessid, $gunid,
-                            '', $file);
-                        if(PEAR::isError($res2)) return $res2;
-                    }else return $res;
-                }
-                @unlink($file);
-                break;
-            case 'search':
-                //$this->localSearch($criteria);
-                return PEAR::raiseError("processTranferred: search not implemented");
-                break;
-            default:
-                return PEAR::raiseError("processTranferred: unknown type ($type)");
-                break;
-        }
-    }
-
-    /**
-     *  Search in central metadata database
-     *
-     *  @param criteria string, search query - see localSearch method
-     *  @param sessid string, session id
-     *  @return string - job id or PEAR::error
-     */
-    function globalSearch($criteria, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::globalSearch: not implemented', GBERR_NOTIMPL
-        );
-        /*
-        $srchid = md5($sessid.mtime());
-        $fh = fopen($this->transDir."/$srchid", "w");
-        fwrite($fh, serialize($criteria));
-        fclose($fh); 
-        $res = $tr->uploadOpen($srchid, 'search', $sessid, $gunid);
-        if(PEAR::isError($res)) return $res;
-        return $res;
-        */
-    }
-
-    /**
-     *  Get results from asynchronous search
-     *
-     *  @param transferId int, transfer id returned by
-     *  @param sessid string, session id
-     *  @return array with results or PEAR::error
-     */
-    function getSearchResults($transferId, $sessid='')
-    {
-        return PEAR::raiseError(
-            'GreenBox::getSearchResults: not implemented', GBERR_NOTIMPL
-        );
-    }
-
     /* =============================================== test and debug methods */
     /**
      *  dump

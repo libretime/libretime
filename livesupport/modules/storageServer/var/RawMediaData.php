@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/RawMediaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,7 @@ class RawMediaData{
      *  Constructor
      *
      *  @param gunid string, global unique id
-     *  @param resDir string, directory
+     *  @param resDir string, resource directory
      *  @return this
      */
     function RawMediaData($gunid, $resDir)

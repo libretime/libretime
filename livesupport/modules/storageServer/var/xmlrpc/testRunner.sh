@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -33,8 +33,13 @@ COMM=$1
 shift
 GUNID=$1
 
-METADATA="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<metadata><title>ěščřžé</title></metadata>"
+#METADATA="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+#<metadata><title>ěščřžé</title></metadata>"
+METADATA="<?xml version=\"1.0\"?>
+<audioClip><metadata xmlns=\"http://www.streamonthefly.org/\"
+ xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
+ xmlns:dcterms=\"http://purl.org/dc/terms/\">
+<dcterms:extent>00:00:11</dcterms:extent></metadata></audioClip>"
 
 echo ""
 XMLRPC=`cd var/install; php -q getXrUrl.php` || exit $?
@@ -146,18 +151,79 @@ deleteAudioClip() {
 
 updateAudioClipMetadata() {
     echo -n "#updateAudioClipMetadata: "
-    $XR_CLI updateAudioClipMetadata $SESSID $GUNID '../tests/mdata3.xml' || exit $?
+    $XR_CLI updateAudioClipMetadata $SESSID $GUNID "$METADATA" || exit $?
 }
 
 getAudioClip() {
     echo -n "#getAudioClip: "
-    $XR_CLI getAudioClip $SESSID $GUNID | $TESTDIR/urldecode || exit $?
+    $XR_CLI getAudioClip $SESSID $GUNID || exit $?
 }
 
 searchMetadata() {
     echo -n "# searchMetadata: "
 #    $XR_CLI searchMetadata $SESSID '../tests/srch_cri1.xml' || exit $?
     $XR_CLI searchMetadata $SESSID 'John %' || exit $?
+}
+
+PLID="123456789abcdef2"
+
+createPlaylist() {
+    echo -n "# createPlaylist: "
+    $XR_CLI createPlaylist $SESSID $PLID || exit $?
+}
+
+accessPlaylist() {
+    echo "# accessPlaylist: "
+    RES=`$XR_CLI accessPlaylist $SESSID $PLID` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    unset URL
+    for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
+    echo $TOKEN
+    echo $URL
+    echo "# curl: "
+    curl -fs $URL  || { ERN=$?; echo $RES; exit $ERN; }
+    echo ""
+    echo "#  status: $?"
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    echo -n "# releasePlaylist: "
+    $XR_CLI releasePlaylist $SESSID $TOKEN || exit $?
+}
+
+editPlaylist() {
+    DATE=`date '+%H:%M:%S'`
+    PLAYLIST="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<smil><head><metadata>
+ <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:dc=\"http://purl.org/metadata/dublin_core#\">
+  <dc:title>XY $DATE</dc:title>
+ </rdf:RDF>
+</metadata></head><body><seq>
+   <audio src=\"123456789abcdefa\"/>
+   <audio src=\"123456789abcdefb\"/>
+</seq></body></smil>"
+    echo "# editPlaylist: "
+    RES=`$XR_CLI editPlaylist $SESSID $PLID` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    unset URL
+    for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done
+    echo $TOKEN
+    echo $URL
+    if [ $DEBUG ]; then echo -n "Press enter ..."; read KEY; fi
+    echo " Playlist:"
+    echo $PLAYLIST
+    echo -n "# savePlaylist: "
+    $XR_CLI savePlaylist $SESSID $TOKEN "$PLAYLIST" || exit $?
+}
+
+existsPlaylist() {
+    echo -n "# existsPlaylist (${PLID}): "
+    $XR_CLI existsPlaylist $SESSID $PLID || exit $?
+}
+
+deletePlaylist() {
+    echo -n "# deletePlaylist: "
+    $XR_CLI deletePlaylist $SESSID $PLID
+    # || exit $?
+    echo "#  status: $?"
 }
 
 logout() {
@@ -204,7 +270,23 @@ elif [ "$COMM" == "searchMetadata" ]; then
     login
     searchMetadata
     logout
+elif [ "$COMM" == "playlists" ]; then
+    echo "#XMLRPC playlists test"
+    login
+    existsPlaylist
+    deletePlaylist
+    createPlaylist
+    existsPlaylist
+    accessPlaylist
+    editPlaylist
+    accessPlaylist
+#    deletePlaylist
+    existsPlaylist
+    logout
+    echo "#XMLRPC: playlists: OK."
+    echo ""
 elif [ "x$COMM" == "x" ]; then
+    echo "#XMLRPC: storage test"
     login
     storeAudioClip
     GUNID=$RGUNID
@@ -215,7 +297,7 @@ elif [ "x$COMM" == "x" ]; then
     deleteAudioClip
     existsAudioClip
     logout
-    echo "#XMLRPC tests: OK."
+    echo "#XMLRPC: storage: OK."
     echo ""
 elif [ "$COMM" == "help" ]; then
     usage

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -228,58 +228,21 @@ class GreenBox extends BasicStor{
     /* ------------------------------------------------------------- metadata */
 
     /**
-     *  Update metadata tree
+     *  Replace metadata with new XML file or string
      *
      *  @param id int, virt.file's local id
-     *  @param mdataFile string, local path of metadata XML file
+     *  @param mdata string, local path of metadata XML file
+     *  @param mdataLoc string 'file'|'string'
      *  @param sessid string, session id
      *  @return boolean or PEAR::error
      */
-    function updateMetadata($id, $mdataFile, $sessid='')
+    function replaceMetadata($id, $mdata, $mdataLoc='file', $sessid='')
     {
         if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsUpdateMetadata($id, $mdataFile);
+        return $this->bsReplaceMetadata($id, $mdata, $mdataLoc);
     }
     
-    /**
-     *  Update object namespace and value of one metadata record
-     *
-     *  @param id int, virt.file's local id
-     *  @param mdid int, metadata record id
-     *  @param object string, object value, e.g. title string
-     *  @param objns string, object namespace prefix, have to be defined
-     *          in file's metadata (or reserved prefix)
-     *  @param sessid string, session id
-     *  @return boolean or PEAR::error
-     *  @see MetaData
-     */
-    function updateMetadataRecord($id, $mdid, $object, $objns='_L', $sessid='')
-    {
-        if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
-            return $res;
-        return $this->bsUpdateMetadataRecord($id, $mdid, $object, $objns);
-    }
-
-    /**
-     *  Add single metadata record.<br>
-     *  <b>TODO: NOT FINISHED</b><br>
-     *  Params could be changed!
-     *
-     *  @param id int, virt.file's local id
-     *  @param propertyName string
-     *  @param propertyValue string
-     *  @param sessid string, session id
-     *  @return boolean or PEAR::error
-     *  @see MetaData
-     */
-    function addMetaDataRecord($id, $propertyName, $propertyValue, $sessid='')
-    {
-        if(($res = $this->_authorize('write', $id, $sessid)) !== TRUE)
-            return $res;
-        return $this->bsAddMetaDataRecord($id, $propertyName, $propertyValue);
-    }
-
     /**
      *  Get metadata XML tree as string
      *
@@ -291,7 +254,7 @@ class GreenBox extends BasicStor{
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsGetMdata($id);
+        return $this->bsGetMetadata($id);
     }
 
     /**

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -119,7 +119,6 @@ switch($_REQUEST['act']){
         $r = $gb->putFile($id, $_REQUEST['filename'], $ntmp, $mdtmp, $sessid);
         if(PEAR::isError($r)) $_SESSION['alertMsg'] = $r->getMessage();
         else{
-#            $gb->updateMetadataDB($gb->_pathFromId($r), $mdata, $sessid);
             @unlink($ntmp);
             @unlink($mdtmp);
         }

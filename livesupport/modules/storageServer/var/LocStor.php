@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,7 +109,7 @@ class LocStor extends GreenBox{
         if(PEAR::isError($fname)){ return $fname; }
         $res = $ac->replaceRawMediaData($fname);
         if(PEAR::isError($res)){ return $res; }
-        @unlink($fname);
+        if(file_exists($fname)) @unlink($fname);
         $res = $ac->setState('ready');
         if(PEAR::isError($res)) return $res;
         return $ac->gunid;
@@ -257,7 +257,11 @@ class LocStor extends GreenBox{
      */
     function existsAudioClip($sessid, $gunid)
     {
-        return LocStor::existsFile($sessid, $gunid, 'audioclip');
+        $ex = $this->existsFile($sessid, $gunid, 'audioclip');
+        if(!$ex) return FALSE;
+        $ac =& StoredFile::recallByGunid(&$this, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        return $ac->exists();
     }
 
     /**
@@ -282,10 +286,10 @@ class LocStor extends GreenBox{
                 default: return $ac;
             }
         }
-        if(!is_null($ftype) && $ac->_getType() != $ftype) return FALSE;
+        if(!is_null($ftype) && ($ac->_getType() != $ftype)) return FALSE;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        return $ac->exists();
+        return TRUE;
     }
 
     /**
@@ -349,6 +353,225 @@ class LocStor extends GreenBox{
         }
         $this->logout($this->sessid);
         return $res;
+    }
+
+    /*====================================================== playlist methods */
+
+    /**
+     *  Create a new Playlist metafile.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return string, playlist global unique ID
+     */
+    function createPlaylist($sessid, $playlistId)
+    {
+        $ex = $this->existsPlaylist($sessid, $playlistId);
+        if(PEAR::isError($ex)){ return $ex; }
+        if($ex){
+            return PEAR::raiseError(
+                'LocStor.php: createPlaylist: already exists'
+            );
+        }
+        $tmpid = uniqid('');
+        $parid = $this->_getHomeDirId($sessid);
+        if(PEAR::isError($parid)) return $parid;
+        if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
+            return $res;
+        $oid = $this->addObj($tmpid , 'File', $parid);
+        if(PEAR::isError($oid)) return $oid;
+        $ac =&  StoredFile::insert(&$this, $oid, '', '',
+            '<?xml version="1.0" encoding="UTF-8"?><smil><body/></smil>',
+            'string', $playlistId, 'playlist'
+        );
+        if(PEAR::isError($ac)){
+            $res = $this->removeObj($oid);
+            return $ac;
+        }
+        $res = $this->renameFile($oid, $ac->gunid, $sessid);
+        if(PEAR::isError($res)) return $res;
+        $res = $ac->setState('ready');
+        if(PEAR::isError($res)) return $res;
+        $res = $ac->setMime('application/smil');
+        if(PEAR::isError($res)) return $res;
+        return $playlistId;
+    }
+
+    /**
+     *  Open a Playlist metafile for editing.
+     *  Open readable URL and mark file as beeing edited.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return struct {url:readable URL for HTTP GET, token:access token}
+     */
+    function editPlaylist($sessid, $playlistId)
+    {
+        $ex = $this->existsPlaylist($sessid, $playlistId);
+        if(PEAR::isError($ex)){ return $ex; }
+        if(!$ex){
+            return PEAR::raiseError(
+                'LocStor.php: editPlaylist: playlist not exists'
+            );
+        }
+        if($this->_isEdited($playlistId)){
+            return PEAR::raiseError(
+                'LocStor.php: editPlaylist: playlist already edited'
+            );
+        }
+        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        if(PEAR::isError($ac)){ return $ac; }
+        $id = $ac->getId();
+        $res = $this->bsOpenDownload($id, 'metadata');
+        if(PEAR::isError($res)){ return $res; }
+        $this->_setEditFlag($playlistId, TRUE);
+        return $res;
+    }
+
+    /**
+     *  Store a new Playlist metafile in place of the old one.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistToken string, playlist access token
+     *  @param newPlaylist string, new playlist as XML string
+     *  @return boolean
+     */
+    function savePlaylist($sessid, $playlistToken, $newPlaylist)
+    {
+        $playlistId = $this->bsCloseDownload($playlistToken, $part='metadata');
+        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        if(PEAR::isError($ac)){ return $ac; }
+        $res = $ac->replaceMetaData($newPlaylist, $mdataLoc='string');
+        if(PEAR::isError($res)){ return $res; }
+        $this->_setEditFlag($playlistId, FALSE);
+        return TRUE;
+    }
+
+    /**
+     *  Delete a Playlist metafile.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function deletePlaylist($sessid, $playlistId)
+    {
+        $ex = $this->existsPlaylist($sessid, $playlistId);
+        if(PEAR::isError($ex)){ return $ex; }
+        if(!$ex){
+            return PEAR::raiseError(
+                'LocStor.php: deletePlaylist: playlist not exists'
+            );
+        }
+        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        if(PEAR::isError($ac)) return $ac;
+        if(($res = $this->_authorize('write', $ac->getId(), $sessid)) !== TRUE)
+            return $res;
+        if($this->_isEdited($playlistId)){
+            return PEAR::raiseError(
+                'LocStor.php: deletePlaylist: playlist is edited'
+            );
+        }
+        $res = $this->deleteFile($ac->getId(), $sessid);
+        if(PEAR::isError($res)) return $res;
+        return TRUE;
+    }
+
+    /**
+     *  Access (read) a Playlist metafile.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return struct {url:readable URL for HTTP GET, token:access token
+     */
+    function accessPlaylist($sessid, $playlistId)
+    {
+        $ex = $this->existsPlaylist($sessid, $playlistId);
+        if(PEAR::isError($ex)){ return $ex; }
+        if(!$ex){
+            return PEAR::raiseError(
+                'LocStor.php: accessPlaylist: playlist not found'
+            );
+        }
+        $id = $this->_idFromGunid($playlistId);
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        return $this->bsOpenDownload($id, 'metadata');
+    }
+
+    /**
+     *  Release the resources obtained earlier by accessPlaylist().
+     *
+     *  @param sessid string, session ID
+     *  @param playlistToken string, playlist access token
+     *  @return string, playlist ID
+     */
+    function releasePlaylist($sessid, $playlistToken)
+    {
+        return $this->bsCloseDownload($playlistToken, 'metadata');
+    }
+
+    /**
+     *  Check whether a Playlist metafile with the given playlist ID exists.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function existsPlaylist($sessid, $playlistId)
+    {
+        return $this->existsFile($sessid, $playlistId, 'playlist');
+    }
+
+    /**
+     *  Check whether a Playlist metafile with the given playlist ID
+     *  is available for editing, i.e., exists and is not marked as
+     *  beeing edited.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function playlistIsAvailable($sessid, $playlistId)
+    {
+        $ex = $this->existsPlaylist($sessid, $playlistId);
+        if(PEAR::isError($ex)){ return $ex; }
+        if(!$ex){
+            return PEAR::raiseError(
+                'LocStor.php: playlistIsAvailable: playlist not exists'
+            );
+        }
+        return !$this->_isEdited($playlistId);
+    }
+
+    /* ---------------------------------------------------- "private" methods */
+    /**
+     *  Check if playlist is marked as edited
+     *
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function _isEdited($playlistId)
+    {
+        $state = StoredFile::_getState($playlistId);
+        if($state == 'edited'){ return TRUE; }
+        return FALSE;
+    }
+
+    /**
+     *  Set edit flag
+     *
+     *  @param playlistId string, playlist global unique ID
+     *  @param val boolean, set/clear of edit flag
+     *  @return boolean, previous state
+     */
+    function _setEditFlag($playlistId, $val=TRUE)
+    {
+        $ac =& StoredFile::recallByGunid(&$this, $playlistId);
+        $state = $ac->_getState();
+        if($val){ $ac->setState('edited'); }
+        else{ $ac->setState('ready'); }
+        return ($state == 'edited');
     }
 }
 ?>

@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -119,6 +119,7 @@ distclean: clean docclean
 
 testonly: ${TEST_RUNNER}
 	${TEST_RUNNER}
+	${TEST_RUNNER} playlists
 #	$(MAKE) transtest
 
 check: all testonly

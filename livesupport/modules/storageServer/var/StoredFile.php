@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ class StoredFile{
         $this->resDir     =  $this->_getResDir($this->gunid);
         $this->accessDir  =  $this->gb->accessDir;
         $this->rmd        =& new RawMediaData($this->gunid, $this->resDir);
-        $this->md         =& new MetaData(&$gb, $this->gunid);
+        $this->md         =& new MetaData(&$gb, $this->gunid, $this->resDir);
         return $this->gunid;
     }
 
@@ -80,11 +80,12 @@ class StoredFile{
      *  @param metadata string, local path to metadata XML file or XML string
      *  @param mdataLoc string 'file'|'string' (optional)
      *  @param gunid global unique id (optional) - for insert file with gunid
+     *  @param ftype string, internal file type
      *  @return instace of StoredFile object
      */
     function insert(&$gb, $oid, $name,
         $mediaFileLP='', $metadata='', $mdataLoc='file',
-        $gunid=NULL, $type=NULL)
+        $gunid=NULL, $ftype=NULL)
     {
         $ac =& new StoredFile(&$gb, ($gunid ? $gunid : NULL));
         $ac->name = $name;
@@ -98,7 +99,7 @@ class StoredFile{
                 (id, name, gunid, mime, state, ftype)
             VALUES
                 ('$oid', '{$ac->name}', x'{$ac->gunid}'::bigint,
-                    '{$ac->mime}', 'incomplete', '$type')
+                    '{$ac->mime}', 'incomplete', '$ftype')
         ");
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         // --- metadata insert:
@@ -128,7 +129,7 @@ class StoredFile{
             $mime = $ac->rmd->getMime();
             //$gb->debugLog("gunid={$ac->gunid}, mime=$mime");
             if($mime !== FALSE){
-                $res = $ac->setType($mime);
+                $res = $ac->setMime($mime);
                 if(PEAR::isError($res)){
                     $ac->dbc->query("ROLLBACK"); return $res;
                 }
@@ -226,7 +227,7 @@ class StoredFile{
             '', '', NULL, $src->_getType()
         );
         if(PEAR::isError($ac)) return $ac;
-        $ac->md->replace($src->md->getMetaData(), 'xml');
+        $ac->md->replace($src->md->getMetaData());
         return $ac;
     }
 
@@ -331,7 +332,7 @@ class StoredFile{
         if(PEAR::isError($res)){ return $res; }
         $mime = $this->rmd->getMime();
         if($mime !== FALSE){
-            $res = $this->setType($mime);
+            $res = $this->setMime($mime);
             if(PEAR::isError($res)){ return $res; }
         }
     }
@@ -351,38 +352,6 @@ class StoredFile{
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)) return $res;
         return TRUE;
-    }
-
-    /**
-     *  Update metadata with new XML file
-     *
-     *  @param metadata string, local path to metadata XML file or XML string
-     *  @param mdataLoc string 'file'|'string'
-     *  @return boolean or PEAR::error
-     */
-    function updateMetaData($metadata, $mdataLoc='file')
-    {
-        $this->dbc->query("BEGIN");
-        $res = $this->md->update($metadata, $mdataLoc);
-        if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
-        $res = $this->dbc->query("COMMIT");
-        if(PEAR::isError($res)) return $res;
-        return TRUE;
-    }
-
-    /**
-     *  Update object namespace and value of one metadata record
-     *
-     *  @param mdid int, metadata record id
-     *  @param object string, object value, e.g. title string
-     *  @param objns string, object namespace prefix, have to be defined
-     *          in file's metadata (or reserved prefix)
-     *  @see MetaData
-     *  @return boolean or PEAR::error
-     */
-    function updateMetaDataRecord($mdid, $object, $objns='_L')
-    {
-        return $this->md->updateRecord($mdid, $object, $objns='_L');
     }
 
     /**
@@ -448,7 +417,7 @@ class StoredFile{
      *  @param mime string, mime-type
      *  @return boolean or error
      */
-    function setType($mime)
+    function setMime($mime)
     {
         $res = $this->dbc->query("
             UPDATE {$this->filesTable} SET mime='$mime'
@@ -538,8 +507,9 @@ class StoredFile{
         $initString =
             microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport";
         $hash = md5($initString);
-        // int8
-        $res = substr($hash, 0, 16);
+        // non-negative int8
+        $hsd = substr($hash, 0, 1);
+        $res = dechex(hexdec($hsd)>>1).substr($hash, 1, 15);
         return StoredFile::_normalizeGunid($res);
     }
 
@@ -655,6 +625,16 @@ class StoredFile{
     function _getRealRADFname()
     {
         return $this->rmd->getFname();
+    }
+
+    /**
+     *  Get real filename of metadata file
+     *
+     *  @see MetaData
+     */
+    function _getRealMDFname()
+    {
+        return $this->md->getFname();
     }
 
     /**
