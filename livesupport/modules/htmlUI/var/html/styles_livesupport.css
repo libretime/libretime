@@ -284,7 +284,7 @@ input, select { font-size: 12px;
 
 /* #################################### contenttabnav ############################### */
 
-.contenttabnav { 
+.contenttabnav {
     height: 26px;
     clear: both;
     /*background: url("css_img/bg_navigation.gif") repeat-x top left;*/
@@ -292,7 +292,7 @@ input, select { font-size: 12px;
     margin-top: 12px;
 }
 
-.contenttabnav[class] { 
+.contenttabnav[class] {
     padding-left: 10px;
     margin-top: 12px;
     margin-bottom: 12px;
@@ -397,7 +397,7 @@ input, select { font-size: 12px;
 /* #################################### CONTENTAREA ############################### */
 
 
-.content { 
+.content {
     margin: 19px;
     margin-top: 0;
     float: left;
@@ -560,48 +560,48 @@ label { font-size: 12px;
 
 /* ############################################# scheduler ################################# */
 
-.container_calender_overview { 
+.container_calender_overview {
     width: 235px;
 }
 
-.container_calender_overview p { 
+.container_calender_overview p {
     font-size: 10px;
     margin-top: 0;
     float: right;
 }
 
-.month_year { 
+.month_year {
     border: 1px solid #cdcdcd;
     border-bottom: none;
     padding: 5px 20px;
     float: right;
 }
 
-.calender_overview { 
+.calender_overview {
     border: 1px solid #cdcdcd;
 }
 
-table.calender_overview_table { 
+table.calender_overview_table {
     width: 100%;
     margin-bottom: 5px;
 }
 
-table.calender_overview_table td { 
+table.calender_overview_table td {
     border: 0;
     text-align: center;
     padding: 2px;
     font-size: 10px;
 }
 
-table.calender_overview_table td.full { 
+table.calender_overview_table td.full {
     font-weight: bold
 }
 
-table.calender_overview_table td.week { 
+table.calender_overview_table td.week {
     border-right: 1px solid #cdcdcd;
 }
 
-table.calender_overview_table a.full { 
+table.calender_overview_table a.full {
     color: #FFF;
     font-weight: bold;
     background-color: #5286ba;
@@ -610,16 +610,16 @@ table.calender_overview_table a.full {
     display: block;
 }
 
-table.calender_overview_table td.today { 
+table.calender_overview_table td.today {
     border: 1px black solid;
 }
 
-table.calender_overview_table td.current { 
+table.calender_overview_table td.current {
     background: #d5e2ee;
     /*#d5e2ee;*/
 }
 
-table.calender_overview_table td.nothing { 
+table.calender_overview_table td.nothing {
     background: #eee;
     /*#d5e2ee;*/
 }
@@ -654,24 +654,24 @@ table.scheduler_day td { font-size: 12px;
 
 /*############# SCHEDULER WEEK #######*/
 
-table.scheduler_week_time { 
+table.scheduler_week_time {
     background: #ddd;
     padding: 0;
     border: 0;
     margin: 0;
 }
- 
-table.scheduler_week_time tr { 
+
+table.scheduler_week_time tr {
     width: 20px;
     border-bottom: 1px solid #7392A6;
-} 
- 
-table.scheduler_week_time td { 
+}
+
+table.scheduler_week_time td {
     height: 20px;
     text-align: center;
-} 
+}
 
-table.scheduler_week { 
+table.scheduler_week {
     width: 790px;
     border: 1px solid #7392A6;
     padding: 0;
@@ -791,11 +791,11 @@ table.scheduler_week td p { font-size: 12px;
     margin: 0;
 }
 
-table.scheduler_month{ 
+table.scheduler_month{
     width: 790px;
 }
 
-table.scheduler_month th { 
+table.scheduler_month th {
     background-color: #8baed1;
     color: #FFF;
     font-weight: bold;
@@ -803,29 +803,29 @@ table.scheduler_month th {
     border: 1px solid #7392A6;
 }
 
-table.scheduler_month td { 
+table.scheduler_month td {
     width: 113px;
     border: 1px solid #7392A6;
     padding: 2px;
     text-align: left;
 }
 
-table.scheduler_month p { 
+table.scheduler_month p {
     margin: 0 0 10px 0;
     font-weight: bold;
     font-size: 11px;
 }
 
 
-table.scheduler_month a { 
+table.scheduler_month a {
     color: #000;
 }
 
-table.scheduler_month td.today { 
+table.scheduler_month td.today {
     background: #d5e2ee;
 }
 
-table.scheduler_month .scala { 
+table.scheduler_month .scala {
     margin: 0 0 2px 4px;
     width: 100px;
     height: 12px;
@@ -833,7 +833,7 @@ table.scheduler_month .scala {
     border: 1px solid #7F95A7;
 }
 
-table.scheduler_month .scala .scala_in { 
+table.scheduler_month .scala .scala_in {
     background: #DADADA url("css_img/bg_scala_in_scheduler.gif") repeat-x top left;
     font-size:1px;
     height: 12px;

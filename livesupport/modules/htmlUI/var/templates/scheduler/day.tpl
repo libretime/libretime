@@ -1,5 +1,6 @@
 {$SCHEDULER->buildDay()}
-{assign var="_scale" value=$SCHEDULER->getDayTimingScale()}
+{assign var="_scale"  value=$SCHEDULER->getDayTimingScale()}
+{assign var="_entrys" value=$SCHEDULER->getDayEntrys()}
 
 <div class="content">
 <div class="container_elements">
@@ -10,7 +11,7 @@
     <form name="SCHEDULER">
     <table class="scheduler_day" style="width: 606px;">
 
-        {*    Tag vor/zurück, code um heutigen Tag abzufragen
+        {*    Tag vor/zurück + code um heutigen Tag abzufragen
         <tr>
             <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=--')"><<</a></th>
             <th colspan="3" {if $SCHEDULER->curr.isToday} bgcolor="grey"{/if}>{$SCHEDULER->curr.dayname}, {$SCHEDULER->curr.year}-{$SCHEDULER->curr.month}-{$SCHEDULER->curr.day}</th>
@@ -24,29 +25,35 @@
             <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SCHEDULER')"></td>
             *}
 
-            <td style="width: 95px">Time</td>
+            <td style="border-left: 1px solid #ccc; width: 95px">Time</td>
             <td style="width: 481px; border-right: 0;">Show Info</td>
         </tr>
 
-        {assign var="_entrys" value=$SCHEDULER->getDayEntrys()}
         {foreach from=$_scale item="_hour"}
             {assign var="_year"  value=$_Day.year}
             {assign var="_month" value=$_Day.month}
 
-            <tr class="blue2" onContextmenu="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={$_hour}', 'SCHEDULER.addItem')">
-                {*  <td style="border-left: 1px solid #ccc;"><input type="checkbox" class="checkbox" /></td> *}
-                <td>{$_hour|string_format:"%02d"}:00</td>
-                <td style="border-right: 1px solid #ccc;">
-                {if is_array($_entrys[$_hour])}
+            {if is_array($_entrys[$_hour])}
+                <tr class="blue1">
+                    <td style="border-left: 1px solid #ccc;" onContextmenu="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={$_hour}', 'SCHEDULER.addItem')">{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-right: 1px solid #ccc;">
+
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
-                        {$i.title}:
+                        <div onContextmenu="return contextmenu('scheduleId={$i.id}', 'SCHEDULER.removeItem')">
+                        <b>{$i.title}</b>
                         {$i.start}-{$i.end}
                         {$i.creator}
-                {/foreach}
-                {/if}
-                </td>
-            </tr>
+                        </div>
+                    {/foreach}
 
+                    </td>
+                </tr>
+            {else}
+                <tr class="blue2" onContextmenu="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={$_hour}', 'SCHEDULER.addItem')">
+                    <td style="border-left: 1px solid #ccc;">{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-right: 1px solid #ccc;"></td>
+                </tr>
+            {/if}
         {/foreach}
     </table>
     </form>

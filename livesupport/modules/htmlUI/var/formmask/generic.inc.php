@@ -690,6 +690,7 @@ $ui_fmask = array(
             'element'   => 'cancel',
             'type'      => 'button',
             'label'     => 'Cancel',
+            'attributes'=> array('onClick' => 'window.close()'),
             'groupit'   => TRUE
         ),
         array(

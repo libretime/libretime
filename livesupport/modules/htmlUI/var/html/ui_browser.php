@@ -60,7 +60,7 @@ if (is_array($_REQUEST['popup'])){
             break;
 
             case "SCHEDULER.removeItem":
-                $Smarty->assign('gunid', $_REQUEST['gunid']);
+                $Smarty->assign('scheduleId', $_REQUEST['scheduleId']);
                 $Smarty->display('popup/SCHEDULER.removeItem.tpl');
             break;
         }

@@ -78,23 +78,25 @@ class uiScheduler extends uiCalendar
     function getWeekEntrys()
     {
         ## build array within all entrys of current week ##
-
         $this->buildWeek();
-
         $weekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
         $weekEnd   = strftime("%Y%m%d", $this->Week[6]['timestamp']);
-
         $arr = $this->displayScheduleMethod($weekStart.'T00:00:00', $weekEnd.'T23:59:59.999999');
+        #print_r($arr);
+
         if (!count($arr))
             return FALSE;
+
         foreach ($arr as $key => $val) {
             $items[strftime('%d', $this->_datetime2timestamp($val['start']))][number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
+                'id'        => $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
             );
         }
+
         #print_r($items);
         return $items;
     }
@@ -103,22 +105,24 @@ class uiScheduler extends uiCalendar
     function getDayEntrys()
     {
         ## build array within all entrys of current day ##
-
         $this->buildDay();
-
         $day = strftime("%Y%m%d", $this->Day[0]['timestamp']);
-
         $arr = $this->displayScheduleMethod($day.'T00:00:00', $day.'T23:59:59.999999');
+        #print_r($arr);
+
         if (!count($arr))
             return FALSE;
+
         foreach ($arr as $key => $val) {
-            $items[strftime('%d', $this->_datetime2timestamp($val['start']))][]= array (
+            $items[number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
+                'id'        => $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
             );
         }
+
         #print_r($items);
         return $items;
     }
@@ -415,20 +419,19 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function removeFromScheduleMethod(&$formdata)
+    function removeFromScheduleMethod($id)
     {
-        $gunid = $formdata['gunid'];
         #echo "Unschedule Gunid: $gunid";
-        $r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $gunid);
+        $r = $this->spc->removeFromScheduleMethod($this->Base->sessid, $id);
         #print_r($r);
         if ($this->_isError($r))
             return FALSE;
-        $this->Base->_retMsg('Entry with ScheduleId $1 removed', $gunid);
+        if (UI_VERBOSE) $this->Base->_retMsg('Entry with ScheduleId $1 removed', $id);
     }
 
 
     function displayScheduleMethod($from, $to)
-    {   return;
+    {
         #echo $from.$to;
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
         if ($this->_isError($r))

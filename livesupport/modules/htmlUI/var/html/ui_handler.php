@@ -252,7 +252,7 @@ switch($_REQUEST['act']){
     break;
 
     case "SCHEDULER.removeItem":
-        $uiHandler->SCHEDULER->removeFromScheduleMethod($_REQUEST);
+        $uiHandler->SCHEDULER->removeFromScheduleMethod($_REQUEST['scheduleId']);
         $uiHandler->SCHEDULER->setReload();
     break;
 

@@ -391,7 +391,9 @@ class uiPlaylist
 
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->Base->_parseArr2Form($form, $mask['langswitch']);
-        $output['langswitch'] = $form->toHTML();
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        $output['langswitch'] = $renderer->toArray();
 
         #print_r($output);
         return $output;
