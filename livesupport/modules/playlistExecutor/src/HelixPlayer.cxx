@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ LiveSupport::PlaylistExecutor::eventHandlerThread(void   * helixPlayer)
         usleep(10000);
     }
 
-    pthread_exit(0);
+    return 0;
 }
 
 

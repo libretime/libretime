@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -92,14 +92,14 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/TimeConversion.o \
                 ${TMP_DIR}/Thread.o
 
-TEST_RUNNER_OBJS = ${TMP_DIR}/AudioClipTest.o \
+TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                   ${TMP_DIR}/AudioClipTest.o \
                    ${TMP_DIR}/FadeInfoTest.o \
                    ${TMP_DIR}/PlaylistElementTest.o \
                    ${TMP_DIR}/PlaylistTest.o \
                    ${TMP_DIR}/TimeConversionTest.o \
                    ${TMP_DIR}/TestRunnable.o \
-                   ${TMP_DIR}/ThreadTest.o \
-                   ${TMP_DIR}/TestRunner.o
+                   ${TMP_DIR}/ThreadTest.o
 
 TEST_RUNNER_LIBS = -l${CORE_LIB} -lxml++-1.0 -lboost_date_time-gcc \
                    -lcppunit -ldl
