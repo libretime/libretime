@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.41 $
+ *  @version $Revision: 1.42 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -410,8 +410,8 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($hdid)) return $hdid;
         if($parid != $hdid && !is_null($parid)){
             $r = $this->bsMoveFile($id, $parid);
+            if(PEAR::isError($r)){ return $r; }
         }
-        if(PEAR::isError($r)){ return $r; }
         return $id;
     }
 
@@ -475,7 +475,7 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($ac)){ return $ac; }
         $r = $ac->md->regenerateXmlFile();
         if(PEAR::isError($r)) return $r;
-        $this->_setEditFlag($gunid, FALSE);
+        $this->_setEditFlag($gunid, FALSE, $sessid);
         return $gunid;
     }
 
@@ -490,6 +490,7 @@ class GreenBox extends BasicStor{
     function addAudioClipToPlaylist($token, $acId, $sessid)
     {
         $acGunid = $this->_gunidFromId($acId);
+        if(PEAR::isError($acGunid)) return $acGunid;
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
         if(is_null($plGunid)){
@@ -503,9 +504,13 @@ class GreenBox extends BasicStor{
         // get playlist length and record id:
         $r = $pl->md->getMetadataEl('dcterms:extent');
         if(PEAR::isError($r)){ return $r; }
-        $plLen = $r[0]['value'];
-        $plLenMid = $r[0]['mid'];
-        if(is_null($plLen)) $plLen = '00:00:00.000000';
+        if(isset($r[0])){
+            $plLen = $r[0]['value'];
+            $plLenMid = $r[0]['mid'];
+        }else{
+            $plLen = '00:00:00.000000';
+            $plLenMid = NULL;
+        }
 
         // get audioClip legth and title
         $ac =& StoredFile::recallByGunid($this, $acGunid);
@@ -680,7 +685,7 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($mdata)){ return $mdata; }
         $res = $ac->replaceMetaData($mdata, 'string');
         if(PEAR::isError($res)){ return $res; }
-        $this->_setEditFlag($gunid, FALSE);
+        $this->_setEditFlag($gunid, FALSE, $sessid);
         return $gunid;
     }
 
@@ -750,14 +755,14 @@ class GreenBox extends BasicStor{
      *
      *  @param id int, local id
      *  @param sessid string, session ID
-     *  @return boolean
+     *  @return FALSE | int - id of user editing it
      */
     function playlistIsAvailable($id, $sessid)
     {
         $gunid = $this->_gunidFromId($id);
         require_once"LocStor.php";
         $lc =& new LocStor($this->dbc, $this->config);
-        return $lc->playlistIsAvailable($sessid, $gunid);
+        return $lc->playlistIsAvailable($sessid, $gunid, TRUE);
     }
 
     /* ============================================== methods for preferences */

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,7 +56,7 @@ class LocStor extends BasicStor{
         // test of gunid format:
         if(!$this->_checkGunid($gunid)){
             return PEAR::raiseError(
-                "LocStor.php: storeAudioClipOpen: Wrong gunid ($gunid)"
+                "LocStor::storeAudioClipOpen: Wrong gunid ($gunid)"
             );
         }
         // test if specified gunid exists:
@@ -68,7 +68,7 @@ class LocStor extends BasicStor{
                 { return $res; }
             if($ac->isAccessed()){
                 return PEAR::raiseError(
-                    'LocStor.php: storeAudioClipOpen: is accessed'
+                    'LocStor::storeAudioClipOpen: is accessed'
                 );
             }
             $res = $ac->replace(
@@ -82,7 +82,7 @@ class LocStor extends BasicStor{
             if(PEAR::isError($parid)) return $parid;
             if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
                 { return $res; }
-            $oid = $this->addObj($tmpFname , 'File', $parid);
+            $oid = $this->addObj($tmpFname , $ftype, $parid);
             if(PEAR::isError($oid)) return $oid;
             $ac =&  StoredFile::insert(
                 $this, $oid, '', '', $metadata, 'string',
@@ -475,7 +475,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ex)){ return $ex; }
         if($ex){
             return PEAR::raiseError(
-                'LocStor.php: createPlaylist: already exists'
+                'LocStor::createPlaylist: already exists'
             );
         }
         $tmpFname = uniqid('');
@@ -483,7 +483,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($parid)) return $parid;
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
-        $oid = $this->addObj($tmpFname , 'File', $parid);
+        $oid = $this->addObj($tmpFname , 'playlist', $parid);
         if(PEAR::isError($oid)) return $oid;
         $ac =&  StoredFile::insert($this, $oid, '', '',
             dirname(__FILE__).'/emptyPlaylist.xml',
@@ -520,12 +520,12 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
             return PEAR::raiseError(
-                'LocStor.php: editPlaylist: playlist not exists'
+                'LocStor::editPlaylist: playlist not exists'
             );
         }
-        if($this->_isEdited($playlistId)){
+        if($this->_isEdited($playlistId) !== FALSE){
             return PEAR::raiseError(
-                'LocStor.php: editPlaylist: playlist already edited'
+                'LocStor::editPlaylist: playlist already edited'
             );
         }
         $ac =& StoredFile::recallByGunid($this, $playlistId);
@@ -535,7 +535,8 @@ class LocStor extends BasicStor{
             return $res;
         $res = $this->bsOpenDownload($id, 'metadata');
         if(PEAR::isError($res)){ return $res; }
-        $this->_setEditFlag($playlistId, TRUE);
+        $r = $this->_setEditFlag($playlistId, TRUE, $sessid);
+        if(PEAR::isError($r)){ return $r; }
         unset($res['filename']);
         return $res;
     }
@@ -556,7 +557,8 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ac)){ return $ac; }
         $res = $ac->replaceMetaData($newPlaylist, 'string');
         if(PEAR::isError($res)){ return $res; }
-        $this->_setEditFlag($playlistId, FALSE);
+        $r = $this->_setEditFlag($playlistId, FALSE, $sessid);
+        if(PEAR::isError($r)){ return $r; }
         return $playlistId;
     }
 
@@ -573,7 +575,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
             return PEAR::raiseError(
-                'LocStor.php: deletePlaylist: playlist not exists'
+                'LocStor::deletePlaylist: playlist not exists'
             );
         }
         $ac =& StoredFile::recallByGunid($this, $playlistId);
@@ -599,7 +601,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
             return PEAR::raiseError(
-                "LocStor.php: accessPlaylist: playlist not found ($playlistId)",
+                "LocStor::accessPlaylist: playlist not found ($playlistId)",
                 GBERR_NOTF
             );
         }
@@ -642,18 +644,22 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
+     *  @param getUid boolean, optional flag for returning editedby uid
      *  @return boolean
      */
-    function playlistIsAvailable($sessid, $playlistId)
+    function playlistIsAvailable($sessid, $playlistId, $getUid=FALSE)
     {
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
             return PEAR::raiseError(
-                'LocStor.php: playlistIsAvailable: playlist not exists'
+                'LocStor::playlistIsAvailable: playlist not exists'
             );
         }
-        return !$this->_isEdited($playlistId);
+        $ie = $this->_isEdited($playlistId);
+        if($ie === FALSE) return TRUE;
+        if($getUid) return $ie;
+        return FALSE;
     }
 
 }

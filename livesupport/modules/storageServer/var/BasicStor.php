@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.40 $
+ *  @version $Revision: 1.41 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -301,7 +301,7 @@ class BasicStor extends Alib{
                     "BasicStor::bsAccess: symlink create failed ($linkFname)",
                     GBERR_FILEIO);
             }
-        }
+        }else $linkFname=NULL;
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("
             INSERT INTO {$this->accessTable}
@@ -1031,15 +1031,21 @@ class BasicStor extends Alib{
      *
      *  @param playlistId string, playlist global unique ID
      *  @param val boolean, set/clear of edit flag
+     *  @param sessid string, session id
      *  @return boolean, previous state
      */
-    function _setEditFlag($playlistId, $val=TRUE)
+    function _setEditFlag($playlistId, $val=TRUE, $sessid='')
     {
+        if($sessid !== ''){
+            $userid = $this->getSessUserId($sessid);
+            if($this->dbc->isError($userid)) return $userid;
+        }else $userid=NULL;
         $ac =& StoredFile::recallByGunid($this, $playlistId);
         if($this->dbc->isError($ac)) return $ac;
         $state = $ac->_getState();
-        if($val){ $ac->setState('edited'); }
-        else{ $ac->setState('ready'); }
+        if($val){ $r = $ac->setState('edited', $userid); }
+        else{ $r = $ac->setState('ready', 'NULL'); }
+        if($this->dbc->isError($r)) return $r;
         return ($state == 'edited');
     }
 
@@ -1047,13 +1053,14 @@ class BasicStor extends Alib{
      *  Check if playlist is marked as edited
      *
      *  @param playlistId string, playlist global unique ID
-     *  @return boolean
+     *  @return FALSE | int - id of user editing it
      */
     function _isEdited($playlistId)
     {
         $ac =& StoredFile::recallByGunid($this, $playlistId);
         if($this->dbc->isError($ac)) return $ac;
-        return $ac->isEdited($playlistId);
+        if(!$ac->isEdited($playlistId)) return FALSE;
+        return $ac->isEditedBy($playlistId);
     }
 
     /* ---------------------------------------- redefined "protected" methods */
@@ -1365,12 +1372,13 @@ class BasicStor extends Alib{
         #echo "{$this->filesTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->filesTable} (
             id int not null,
-            gunid bigint not null,             -- global unique ID
+            gunid bigint not null,                      -- global unique ID
             name varchar(255) not null default'',       -- human file id ;)
             mime varchar(255) not null default'',       -- mime type
-            ftype varchar(128) not null default'',       -- file type
+            ftype varchar(128) not null default'',      -- file type
             state varchar(128) not null default'empty', -- file state
-            currentlyAccessing int not null default 0   -- access counter
+            currentlyAccessing int not null default 0,  -- access counter
+            editedBy int REFERENCES {$this->subjTable}  -- who edits it
         )");
         if($this->dbc->isError($r)) return $r;
         $this->dbc->query("CREATE UNIQUE INDEX {$this->filesTable}_id_idx
