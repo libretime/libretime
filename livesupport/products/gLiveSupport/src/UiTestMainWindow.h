@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -134,7 +134,7 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
          *  Function that updates timeLabel with the current time.
          *  This is called by GTK at regular intervals.
          *
-         *  @param param a dummy, unused parameter
+         *  @param dummy a dummy, unused parameter
          *  @return true if the timer should call this function again,
          *          false if the timer should be canceled
          */

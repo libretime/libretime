@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,6 +82,14 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
 
     xmlpp::Node::NodeList   nodes;
 
+    // configure the resource bundle
+    nodes = element.get_children(LocalizedObject::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no resourceBundle element");
+    }
+    resourceBundle = LocalizedObject::getBundle(
+                                *((const xmlpp::Element*) *(nodes.begin())) );
+
     // configure the AuthenticationClientFactory
     nodes = element.get_children(
                         AuthenticationClientFactory::getConfigElementName());
@@ -93,16 +101,6 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     acf->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     authentication = acf->getAuthenticationClient();
-
-    // load the resource bundle
-    // TODO: get resource bundle path from config file
-    UErrorCode      status = U_ZERO_ERROR;
-    resourceBundle.reset(new ResourceBundle("./tmp/" PACKAGE_NAME,
-                                            "en",
-                                            status));
-    if (!U_SUCCESS(status)) {
-        throw std::invalid_argument("opening resource bundle a failure");
-    }
 }
 
 

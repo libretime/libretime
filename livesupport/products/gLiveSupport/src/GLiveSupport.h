@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,8 +64,23 @@ using namespace LiveSupport::Core;
 /**
  *  The main application object for the gLiveSupport GUI.
  *
+ *  The configuration file for this object is based on configuration
+ *  elements used by the object. The DTD for the root element of the
+ *  configuration file is:
+ *
+ *  <pre><code>
+ *  <!ELEMENT gLiveSupport                (resourceBundle,
+ *                                         authenticationClientFactory) >
+ *  </code></pre>
+ *
+ *  For a description of the <code>resourceBundle</code> and
+ *  <code>authenticationClientFactory</code> elements see their
+ *  respective documentation.
+ *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
+ *  @see LocalizedObject#getBundle(const xmlpp::Element &)
+ *  @see AuthenticationClientFactory
  */
 class GLiveSupport : public Configurable,
                      public boost::enable_shared_from_this<GLiveSupport>
