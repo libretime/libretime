@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class Playlist : public Configurable
 {
@@ -123,6 +123,11 @@ class Playlist : public Configurable
         void
         addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
                                                 throw (std::invalid_argument);
+
+        /**
+         *  A saved copy of this playlist.
+         */
+        Ptr<Playlist>::Ref          savedCopy;
 
 
     public:
@@ -307,6 +312,30 @@ class Playlist : public Configurable
          */
          bool
          valid(void)                            throw ();
+
+
+        /**
+         *  Create a saved copy of this playlist.  If a saved copy exists
+         *  already, it is replaced by the current state.
+         */
+         void
+         createSavedCopy(void)                  throw ();
+
+        /**
+         *  Delete the saved copy of the playlist, if exists (or do nothing).
+         */
+         void
+         deleteSavedCopy(void)                  throw ()
+         {
+             savedCopy.reset();
+         }
+
+        /**
+         *  Revert to the saved copy of this playlist.  If there is no
+         *  saved copy, do nothing and throw an exception.
+         */
+         void
+         revertToSavedCopy(void)                throw (std::logic_error);
 
 };
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -145,7 +145,8 @@ OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         return;
     }
 
-    XmlRpcTools::playlistToXmlRpcValue(playlist, returnValue);
+    playlist->createSavedCopy();
 
+    XmlRpcTools::playlistToXmlRpcValue(playlist, returnValue);
     return;
 }

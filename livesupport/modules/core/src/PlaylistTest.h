@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see Playlist
  */
 class PlaylistTest : public CPPUNIT_NS::TestFixture
@@ -67,6 +67,7 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(lockTest);
     CPPUNIT_TEST(audioClipTest);
+    CPPUNIT_TEST(savedCopyTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -101,6 +102,14 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         audioClipTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the "save/revert to current state" mechanism.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        savedCopyTest(void)                  throw (CPPUNIT_NS::Exception);
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -252,4 +252,45 @@ Playlist::valid(void)                    throw ()
     }
     playlength = runningTime;    // fix playlength, if everything else is OK
     return true;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a saved copy of the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::createSavedCopy(void)          throw ()
+{
+    savedCopy = Ptr<Playlist>::Ref(new Playlist);
+
+    savedCopy->id                 = this->id;
+    savedCopy->playlength         = this->playlength;
+    savedCopy->isLockedForPlaying = this->isLockedForPlaying;
+    savedCopy->isLockedForEditing = this->isLockedForEditing;
+
+    // note: we create a new copy of the playlist element map, but not of the
+    //   individual playlist elements, which (i think) are immutable
+    savedCopy->elementList.reset(new PlaylistElementListType(*elementList));
+
+    savedCopy->savedCopy.reset();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Revert to a saved copy of the playlist.
+ *----------------------------------------------------------------------------*/
+void
+Playlist::revertToSavedCopy(void)        throw (std::logic_error)
+{
+    if (savedCopy == 0) {
+        throw (std::logic_error("playlist has no saved copy"));
+    }
+
+    this->id                      = savedCopy->id;
+    this->playlength              = savedCopy->playlength;
+    this->isLockedForPlaying      = savedCopy->isLockedForPlaying;
+    this->isLockedForEditing      = savedCopy->isLockedForEditing;
+    this->elementList             = savedCopy->elementList;
+
+    savedCopy.reset();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -232,4 +232,50 @@ PlaylistTest :: audioClipTest(void)
     }
     CPPUNIT_FAIL("removeAudioClip allowed to remove "
                  "non-existent audio clip");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the "save/revert to current state" mechanism
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: savedCopyTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        playlist->revertToSavedCopy();
+        CPPUNIT_FAIL("allowed to revert to non-existent state");
+    }
+    catch (std::logic_error &e) {
+    }
+
+    playlist->createSavedCopy();
+    playlist->removeAudioClip(Ptr<time_duration>::Ref(
+                              new time_duration(0,0,0,0)));
+    playlist->removeAudioClip(Ptr<time_duration>::Ref(
+                              new time_duration(1,0,0,0)));
+    CPPUNIT_ASSERT(playlist->begin() == playlist->end());
+
+    try {
+        playlist->revertToSavedCopy();
+    }
+    catch (std::logic_error &e) {
+        CPPUNIT_FAIL("could not revert to saved state");
+    }
+    
+    Playlist::const_iterator  it = playlist->begin();
+    CPPUNIT_ASSERT(it != playlist->end());
+    ++it;
+    CPPUNIT_ASSERT(it != playlist->end());
+    CPPUNIT_ASSERT(it->second->getAudioClip()->getId()->getId() == 10002);
+    ++it;
+    CPPUNIT_ASSERT(it == playlist->end());
+
+    playlist->deleteSavedCopy();
+    try {
+        playlist->revertToSavedCopy();
+        CPPUNIT_FAIL("allowed to revert to deleted state");
+    }
+    catch (std::logic_error &e) {
+    }
 }
