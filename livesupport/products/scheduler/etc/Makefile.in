@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.39 $
+#   Version  : $Revision: 1.40 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -155,7 +155,6 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/XmlRpcDaemon.o \
                  ${TMP_DIR}/SchedulerDaemon.o \
-                 ${TMP_DIR}/XmlRpcTools.o \
                  ${TMP_DIR}/GetVersionMethod.o \
                  ${TMP_DIR}/UploadPlaylistMethod.o \
                  ${TMP_DIR}/DisplayScheduleMethod.o \
@@ -204,7 +203,6 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RpcAddAudioClipToPlaylistTest.o \
                    ${TMP_DIR}/GetSchedulerTimeMethodTest.o \
                    ${TMP_DIR}/RpcGetSchedulerTimeTest.o \
-                   ${TMP_DIR}/XmlRpcToolsTest.o \
                    ${TMP_DIR}/GetVersionMethodTest.o \
                    ${TMP_DIR}/RpcGetVersionTest.o \
                    ${TMP_DIR}/UploadPlaylistMethodTest.o \
