@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,7 +105,8 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  For details on the included elements, see the corresponding documentation
- *  for XmlRpcDaemon, ConnectionManagerFactory and ScheduleFactory.
+ *  for XmlRpcDaemon, StorageClientFactory, ConnectionManagerFactory
+ *  and ScheduleFactory.
  *
  *  The DTD for the above element is the following:
  *
@@ -115,10 +116,11 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
- *  @see XmlRpcDaemon
+ *  @version $Revision: 1.3 $
  *  @see ConnectionManagerFactory
+ *  @see StorageClientFactory
  *  @see ScheduleFactory
+ *  @see XmlRpcDaemon
  */
 class SchedulerDaemon : public Installable,
                         public Configurable,
