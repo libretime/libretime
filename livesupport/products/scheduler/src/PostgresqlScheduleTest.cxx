@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -142,7 +142,7 @@ PostgresqlScheduleTest :: simpleScheduleTest(void)
     try {
         schedule->schedulePlaylist(playlist, from);
     } catch (std::invalid_argument &e) {
-        CPPUNIT_ASSERT(e.what());
+        CPPUNIT_FAIL(e.what());
     }
 }
 
@@ -165,7 +165,7 @@ PostgresqlScheduleTest :: scheduleAndQueryTest(void)
     try {
         schedule->schedulePlaylist(playlist, from);
     } catch (std::invalid_argument &e) {
-        CPPUNIT_ASSERT(e.what());
+        CPPUNIT_FAIL(e.what());
     }
 
     // check for available timeframes around the inserted one
