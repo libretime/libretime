@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -378,13 +378,16 @@ switch($_REQUEST['act']){
  */
     case"addPerm";
         $parid = $gb->getparent($_REQUEST['oid']);
-        if($gb->checkPerm($userid, 'editPerms', $parid)){
-            $gb->addPerm($_REQUEST['subj'], $_REQUEST['permAction'],
-                $_REQUEST['id'], $_REQUEST['allowDeny']);
-        }else{
-            $_SESSION['alertMsg']='Access denied.';
-        }
         $redirUrl="gbHtmlPerms.php?id=$id";
+        if(!$gb->checkPerm($userid, 'editPerms', $parid)){
+            $_SESSION['alertMsg']='Access denied.';
+            break;
+        }
+        $res = $gb->addPerm($_REQUEST['subj'], $_REQUEST['permAction'],
+            $_REQUEST['id'], $_REQUEST['allowDeny']);
+        if(PEAR::isError($res)){
+            $_SESSION['alertMsg'] = $res->getMessage()." (".$res->getCode().")";
+        }
     break;
 /**
  *  removePerm
