@@ -1,6 +1,6 @@
-diff -Naur -x CVS xmlrpc++/Makefile x/Makefile
+diff -Naur xmlrpc++/Makefile xmlrpc++-automake/Makefile
 --- xmlrpc++/Makefile	2004-04-19 20:53:00.000000000 +0700
-+++ x/Makefile	1970-01-01 07:00:00.000000000 +0700
++++ xmlrpc++-automake/Makefile	1970-01-01 07:00:00.000000000 +0700
 @@ -1,71 +0,0 @@
 -# makefile written for gnu make
 -CXX		= g++
@@ -73,17 +73,30 @@ diff -Naur -x CVS xmlrpc++/Makefile x/Makefile
 -# from the distribution.
 -deb:
 -		dpkg-buildpackage -rfakeroot
-diff -Naur -x CVS xmlrpc++/Makefile.am x/Makefile.am
+diff -Naur xmlrpc++/Makefile.am xmlrpc++-automake/Makefile.am
 --- xmlrpc++/Makefile.am	1970-01-01 07:00:00.000000000 +0700
-+++ x/Makefile.am	2004-07-13 18:54:38.726871288 +0700
-@@ -0,0 +1,4 @@
++++ xmlrpc++-automake/Makefile.am	2004-07-26 11:54:16.610066768 +0700
+@@ -0,0 +1,17 @@
 +SUBDIRS = src
 +
 +EXTRA_DIST = README.html
 +
-diff -Naur -x CVS xmlrpc++/autogen.sh x/autogen.sh
++DOC_DIR=@datadir@/doc/xmlrpc++
++
++doc:
++	cd src && doxygen Doxyfile
++
++install-data-local: doc
++	$(mkinstalldirs) $(DOC_DIR); \
++	for i in doc/html/*; do \
++		if test -r "$$i"; then \
++			fn=`basename $$i` \
++			$(INSTALL_DATA) $$i $(DOC_DIR)/$$fn; \
++		fi; \
++	done
+diff -Naur xmlrpc++/autogen.sh xmlrpc++-automake/autogen.sh
 --- xmlrpc++/autogen.sh	1970-01-01 07:00:00.000000000 +0700
-+++ x/autogen.sh	2004-07-13 18:22:34.446406384 +0700
++++ xmlrpc++-automake/autogen.sh	2004-07-26 11:54:11.578831632 +0700
 @@ -0,0 +1,69 @@
 +#!/bin/sh
 +# Run this to set up the build system: configure, makefiles, etc.
@@ -154,9 +167,9 @@ diff -Naur -x CVS xmlrpc++/autogen.sh x/autogen.sh
 +autoconf
 +
 +$srcdir/configure "$@" && echo
-diff -Naur -x CVS xmlrpc++/configure.in x/configure.in
+diff -Naur xmlrpc++/configure.in xmlrpc++-automake/configure.in
 --- xmlrpc++/configure.in	1970-01-01 07:00:00.000000000 +0700
-+++ x/configure.in	2004-07-13 19:16:10.646469656 +0700
++++ xmlrpc++-automake/configure.in	2004-07-26 11:54:11.578831632 +0700
 @@ -0,0 +1,40 @@
 +dnl Process this file with autoconf to produce a configure script.
 +AC_INIT(src/XmlRpc.h)
@@ -198,9 +211,9 @@ diff -Naur -x CVS xmlrpc++/configure.in x/configure.in
 +
 +AC_OUTPUT(Makefile src/Makefile)
 +
-diff -Naur -x CVS xmlrpc++/src/Makefile.am x/src/Makefile.am
+diff -Naur xmlrpc++/src/Makefile.am xmlrpc++-automake/src/Makefile.am
 --- xmlrpc++/src/Makefile.am	1970-01-01 07:00:00.000000000 +0700
-+++ x/src/Makefile.am	2004-07-13 19:16:46.137074264 +0700
++++ xmlrpc++-automake/src/Makefile.am	2004-07-26 11:54:11.578831632 +0700
 @@ -0,0 +1,35 @@
 +lib_LTLIBRARIES = libxmlrpc++.la
 +
