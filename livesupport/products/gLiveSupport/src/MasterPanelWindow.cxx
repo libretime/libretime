@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,7 +38,6 @@
 #include <gtkmm/label.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
-#include "MasterPanelUserInfoWidget.h"
 #include "MasterPanelWindow.h"
 
 
@@ -61,15 +60,9 @@ using namespace LiveSupport::GLiveSupport;
 MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                         Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-                        : GtkLocalizedObject(bundle)
+                        : LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
-
-    try {
-        set_title(*getResourceUstring("windowTitle"));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-    }
 
     lsLogoWidget.reset(new Gtk::Label("lsLogo"));
     nowPlayingWidget.reset(new Gtk::Label("now playing"));
@@ -98,6 +91,9 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     
     add(*layout);
 
+    // set the localized resources
+    changeLanguage(bundle);
+
     // show everything
     show_all();
 
@@ -112,6 +108,25 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 MasterPanelWindow :: ~MasterPanelWindow (void)                        throw ()
 {
     resetTimer();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the language of the panel
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ()
+{
+    setBundle(bundle);
+
+    try {
+        set_title(*getResourceUstring("windowTitle"));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    userInfoWidget->changeLanguage(bundle);
 }
 
 

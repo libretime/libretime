@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@
 #include <gtkmm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "GtkLocalizedObject.h"
+#include "LiveSupport/Core/LocalizedObject.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -67,9 +67,9 @@ using namespace LiveSupport::Core;
  *  A window, showing and handling audio clips.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
-class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
+class AudioClipListWindow : public Gtk::Window, public LocalizedObject
 {
 
     protected:
@@ -79,7 +79,7 @@ class AudioClipListWindow : public Gtk::Window, public GtkLocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {

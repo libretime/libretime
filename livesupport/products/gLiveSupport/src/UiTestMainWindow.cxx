@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::GLiveSupport;
 UiTestMainWindow :: UiTestMainWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                       Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-                        : GtkLocalizedObject(bundle)
+                        : LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
 
@@ -200,7 +200,8 @@ UiTestMainWindow :: onLoginButtonClicked (void)                     throw ()
         return;
     }
 
-    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(loginBundle));
+    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(gLiveSupport,
+                                                            loginBundle));
 
     Gtk::Main::run(*loginWindow);
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,9 +45,10 @@
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/LocalizedObject.h"
 
-#include "GtkLocalizedObject.h"
 #include "GLiveSupport.h"
+#include "MasterPanelUserInfoWidget.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -78,9 +79,9 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class MasterPanelWindow : public Gtk::Window, public GtkLocalizedObject
+class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
     protected:
         /**
@@ -127,7 +128,7 @@ class MasterPanelWindow : public Gtk::Window, public GtkLocalizedObject
         /**
          *  The user info widget.
          */
-        Ptr<Gtk::Widget>::Ref       userInfoWidget;
+        Ptr<MasterPanelUserInfoWidget>::Ref     userInfoWidget;
 
         /**
          *  The radio logo.
@@ -184,6 +185,19 @@ class MasterPanelWindow : public Gtk::Window, public GtkLocalizedObject
          */
         virtual
         ~MasterPanelWindow(void)                             throw ();
+
+        /**
+         *  Change the user interface language of the application
+         *  by providing a new resource bundle.
+         *  This call assumes that only the MasterPanel is visilbe,
+         *  and will only change the language of the currently open
+         *  MasterPanel. No other open windows will be affected by
+         *  this call, but subsequently opened windows are.
+         *
+         *  @param bundle the new resource bundle.
+         */
+        void
+        changeLanguage(Ptr<ResourceBundle>::Ref     bundle)     throw ();
 
 };
 

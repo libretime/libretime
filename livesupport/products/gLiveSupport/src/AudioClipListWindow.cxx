@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ AudioClipListWindow :: AudioClipListWindow (
                                     Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-                    : GtkLocalizedObject(bundle)
+                    : LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,11 +36,11 @@
 #include <stdexcept>
 #include <gtkmm/main.h>
 
+#include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 
-#include "GtkLocalizedObject.h"
 #include "MasterPanelWindow.h"
 #include "GLiveSupport.h"
 
@@ -118,8 +118,8 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
     if (nodes.size() < 1) {
         throw std::invalid_argument("no resourceBundle element");
     }
-    resourceBundle = LocalizedObject::getBundle(
-                                *((const xmlpp::Element*) *(nodes.begin())) );
+    LocalizedConfigurable::configure(
+                                  *((const xmlpp::Element*) *(nodes.begin())));
 
     // configure the AuthenticationClientFactory
     nodes = element.get_children(
@@ -169,8 +169,7 @@ GLiveSupport :: configSupportedLanguages(const xmlpp::Element & element)
     xmlpp::Node::NodeList::iterator     begin;
     xmlpp::Node::NodeList::iterator     end;
 
-    supportedLanguages.reset(
-                         new std::map<std::string, Ptr<UnicodeString>::Ref>());
+    supportedLanguages.reset(new LanguageMap());
 
     // read the list of supported languages
     nodes = element.get_children(languageElementName);
@@ -185,7 +184,7 @@ GLiveSupport :: configSupportedLanguages(const xmlpp::Element & element)
         std::string             locale = localeAttr->get_value().raw();
         Ptr<Glib::ustring>::Ref uName(new Glib::ustring(nameAttr->get_value()));
         Ptr<UnicodeString>::Ref name   = 
-                            GtkLocalizedObject::ustringToUnicodeString(uName);
+                                LocalizedObject::ustringToUnicodeString(uName);
 
         supportedLanguages->insert(std::make_pair(locale, name));
 
@@ -201,13 +200,26 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: show(void)                              throw ()
 {
-    Ptr<MasterPanelWindow>::Ref  masterPanel;
-
-    masterPanel.reset(new MasterPanelWindow(shared_from_this(),
-                      resourceBundle));
+    masterPanel.reset(new MasterPanelWindow(shared_from_this(), getBundle()));
 
     // Shows the window and returns when it is closed.
     Gtk::Main::run(*masterPanel);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the language of the application
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: changeLanguage(Ptr<const std::string>::Ref  locale)
+                                                                    throw ()
+{
+    changeLocale(*locale);
+
+    if (masterPanel.get()) {
+        masterPanel->changeLanguage(getBundle());
+    }
 }
 
 

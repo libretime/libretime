@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,8 +45,8 @@
 #include <gtkmm/window.h>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/LocalizedObject.h"
 
-#include "GtkLocalizedObject.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -66,9 +66,9 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
-class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
+class UiTestMainWindow : public Gtk::Window, public LocalizedObject
 {
     protected:
         /**

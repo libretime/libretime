@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,7 +46,7 @@
 #include <unicode/resbund.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/LocalizedConfigurable.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
@@ -66,6 +66,10 @@ using namespace LiveSupport::Storage;
 
 
 /* =============================================================== data types */
+
+
+class MasterPanelWindow;
+
 
 /**
  *  The main application object for the gLiveSupport GUI.
@@ -88,25 +92,31 @@ using namespace LiveSupport::Storage;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
  *  @see SchedulerClientFactory
  */
-class GLiveSupport : public Configurable,
+class GLiveSupport : public LocalizedConfigurable,
                      public boost::enable_shared_from_this<GLiveSupport>
 {
+    public:
+        /**
+         *  A type for the map of supported languages.
+         *  This is an STL map, containing const std::string as keys, which
+         *  are the locale names of supported langauges. The values are
+         *  Ptr<const UnicodeString>::Ref, the names of the languages.
+         */
+        typedef std::map<const std::string,
+                         Ptr<const UnicodeString>::Ref>     LanguageMap;
+
+
     private:
         /**
          *  The name of the configuration XML elmenent used by Playlist.
          */
         static const std::string    configElementNameStr;
-
-        /**
-         *  The resource bundle used by the applicaton.
-         */
-        Ptr<ResourceBundle>::Ref    resourceBundle;
 
         /**
          *  The authentication client used by the application.
@@ -129,10 +139,14 @@ class GLiveSupport : public Configurable,
         Ptr<SessionId>::Ref         sessionId;
 
         /**
-         *  The map of supported language.
+         *  The map of supported languages.
          */
-        Ptr<std::map<std::string, Ptr<UnicodeString>::Ref> >::Ref
-                                                    supportedLanguages;
+        Ptr<LanguageMap>::Ref       supportedLanguages;
+
+        /**
+         *  The master panel window.
+         */
+        Ptr<MasterPanelWindow>::Ref  masterPanel;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -199,6 +213,14 @@ class GLiveSupport : public Configurable,
         show(void)                                          throw ();
 
         /**
+         *  Change the language of the application.
+         *
+         *  @param locale the new locale of the appliction.
+         */
+        void
+        changeLanguage(Ptr<const std::string>::Ref  locale)     throw ();
+
+        /**
          *  Perform authentication for the user of the application.
          *  As a result, the user will be authenticated for later
          *  actions, that need authentication.
@@ -259,6 +281,18 @@ class GLiveSupport : public Configurable,
         {
             return storage;
         }
+
+        /**
+         *  Get the map of supported languages.
+         *
+         *  @return the map of supported languages.
+         */
+        Ptr<const LanguageMap>::Ref
+        getSupportedLanguages(void) const               throw ()
+        {
+            return supportedLanguages;
+        }
+
 };
 
 /* ================================================= external data structures */

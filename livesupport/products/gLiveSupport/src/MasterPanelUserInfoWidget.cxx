@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,26 +63,19 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
                                         Ptr<GLiveSupport>::Ref    gLiveSupport,
                                         Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-                        : GtkLocalizedObject(bundle)
+                        : LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
+    loggedIn           = false;
 
-    Ptr<Glib::ustring>::Ref     loginButtonLabel;
-    Ptr<Glib::ustring>::Ref     notLoggedInMsg;
-
-    try {
-        loginButtonLabel = getResourceUstring("loginButtonLabel");
-        notLoggedInMsg   = getResourceUstring("notLoggedInMsg");
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-    }
-
-    logInOutButton.reset(new Gtk::Button(*loginButtonLabel));
+    logInOutButton.reset(new Gtk::Button());
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));
 
-    userInfoLabel.reset(new Gtk::Label(*notLoggedInMsg));
+    userInfoLabel.reset(new Gtk::Label());
+
+    changeLanguage(bundle);
 
     // set up the main window, and show everything
     attach(*logInOutButton,    0, 1, 0, 1);
@@ -108,6 +101,9 @@ void
 MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
 {
     gLiveSupport->logout();
+
+    loggedIn = false;
+    login.reset();
 
     Ptr<Glib::ustring>::Ref     notLoggedInMsg;
     Ptr<Glib::ustring>::Ref     loginButtonLabel;
@@ -138,38 +134,77 @@ void
 MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
 {
     Ptr<ResourceBundle>::Ref    loginBundle;
-    Ptr<Glib::ustring>::Ref     logoutButtonLabel;
     try {
         loginBundle       = getBundle("loginWindow");
-        logoutButtonLabel = getResourceUstring("logoutButtonLabel");
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         return;
     }
 
-    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(loginBundle));
+    Ptr<LoginWindow>::Ref       loginWindow(new LoginWindow(gLiveSupport,
+                                                            loginBundle));
 
     Gtk::Main::run(*loginWindow);
 
-    Ptr<const Glib::ustring>::Ref     login    = loginWindow->getLogin();
     Ptr<const Glib::ustring>::Ref     password = loginWindow->getPassword();
 
-    bool loggedIn = gLiveSupport->login(login->raw(), password->raw());
+    login    = loginWindow->getLogin();
+    loggedIn = gLiveSupport->login(login->raw(), password->raw());
 
     if (loggedIn) {
-        Ptr<UnicodeString>::Ref uLogin = ustringToUnicodeString(login);
-        Formattable             arguments[] = { *uLogin };
-        Ptr<Glib::ustring>::Ref msg = formatMessageUstring("loggedInMsg",
-                                                           arguments, 1);
-
-        userInfoLabel->set_label(*msg);
+        updateStrings();
 
         // change the login button to a logout button
-        logInOutButton->set_label(*logoutButtonLabel);
         logInOutSignalConnection.disconnect();
         logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLogoutButtonClicked));
+
+        Ptr<const std::string>::Ref   locale = loginWindow->getSelectedLocale();
+        if (locale->size() > 0) {
+            gLiveSupport->changeLanguage(locale);
+        } else {
+            // TODO: get and set default locale for user
+        }
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Change the language of the panel
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelUserInfoWidget :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ()
+{
+    setBundle(bundle);
+    updateStrings();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the strings in the widget.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelUserInfoWidget :: updateStrings(void)
+                                                  throw (std::invalid_argument)
+{
+    Ptr<Glib::ustring>::Ref     loggedInMsg;
+    Ptr<Glib::ustring>::Ref     loginButtonLabel;
+
+    if (!loggedIn) {
+        loginButtonLabel = getResourceUstring("loginButtonLabel");
+        loggedInMsg      = getResourceUstring("notLoggedInMsg");
+    } else {
+        Ptr<UnicodeString>::Ref uLogin = ustringToUnicodeString(login);
+        Formattable             arguments[] = { *uLogin };
+        loggedInMsg = formatMessageUstring("loggedInMsg", arguments, 1);
+
+        loginButtonLabel = getResourceUstring("logoutButtonLabel");
+    }
+
+    userInfoLabel->set_label(*loggedInMsg);
+    logInOutButton->set_label(*loginButtonLabel);
+}
+
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@
 #include <gtkmm.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "GtkLocalizedObject.h"
+#include "LiveSupport/Core/LocalizedObject.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -84,9 +84,9 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
-class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
+class PlaylistListWindow : public Gtk::Window, public LocalizedObject
 {
     private:
 
@@ -120,7 +120,7 @@ class PlaylistListWindow : public Gtk::Window, public GtkLocalizedObject
          *  Lists one playlist per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.3 $
+         *  @version $Revision: 1.4 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {

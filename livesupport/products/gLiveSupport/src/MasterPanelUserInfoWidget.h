@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,8 +44,8 @@
 #include <gtkmm/table.h>
 
 #include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/LocalizedObject.h"
 
-#include "GtkLocalizedObject.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -67,10 +67,10 @@ using namespace LiveSupport::Core;
  *  This widget handles login and login info display.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class MasterPanelUserInfoWidget : public Gtk::Table,
-                                  public GtkLocalizedObject
+                                  public LocalizedObject
 {
     protected:
         /**
@@ -96,6 +96,16 @@ class MasterPanelUserInfoWidget : public Gtk::Table,
         sigc::connection            logInOutSignalConnection;
 
         /**
+         *  Flag to indicate if the user is logged in or not.
+         */
+        bool                        loggedIn;
+
+        /**
+         *  The user id logged in as.
+         */
+        Ptr<const Glib::ustring>::Ref       login;
+
+        /**
          *  Signal handler for the login button clicked.
          */
         virtual void
@@ -106,6 +116,15 @@ class MasterPanelUserInfoWidget : public Gtk::Table,
          */
         virtual void
         onLogoutButtonClicked(void)                         throw ();
+
+        /**
+         *  Update the strings in the widget, including the localized strings.
+         *
+         *  @exception std::invalid_argument if some localized resources
+         *             could not be attained.
+         */
+        void
+        updateStrings(void)                     throw (std::invalid_argument);
 
 
     public:
@@ -125,6 +144,19 @@ class MasterPanelUserInfoWidget : public Gtk::Table,
          */
         virtual
         ~MasterPanelUserInfoWidget(void)                             throw ();
+
+        /**
+         *  Change the user interface language of the application
+         *  by providing a new resource bundle.
+         *  This call assumes that only the MasterPanel is visilbe,
+         *  and will only change the language of the currently open
+         *  MasterPanel. No other open windows will be affected by
+         *  this call, but subsequently opened windows are.
+         *
+         *  @param bundle the new resource bundle.
+         */
+        void
+        changeLanguage(Ptr<ResourceBundle>::Ref     bundle)     throw ();
 
 };
 

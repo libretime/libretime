@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,9 +49,11 @@
 #include <gtkmm/label.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/table.h>
+#include <gtkmm/combo.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "GtkLocalizedObject.h"
+#include "LiveSupport/Core/LocalizedObject.h"
+#include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -70,12 +72,17 @@ using namespace LiveSupport::Core;
  *  A window, handling user login.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
-class LoginWindow : public Gtk::Window, public GtkLocalizedObject
+class LoginWindow : public Gtk::Window, public LocalizedObject
 {
 
     protected:
+        /**
+         *  The GLiveSupport object, containing all the vital info.
+         */
+        Ptr<GLiveSupport>::Ref      gLiveSupport;
+
         /**
          *  The table, which provides the layout for the window.
          */
@@ -102,6 +109,11 @@ class LoginWindow : public Gtk::Window, public GtkLocalizedObject
         Ptr<Gtk::Entry>::Ref        passwordEntry;
 
         /**
+         *  The drop-down list to select the desired language.
+         */
+        Ptr<Gtk::Combo>::Ref        languageList;
+
+        /**
          *  The OK button.
          */
         Ptr<Gtk::Button>::Ref       okButton;
@@ -117,20 +129,47 @@ class LoginWindow : public Gtk::Window, public GtkLocalizedObject
         Ptr<Glib::ustring>::Ref     passwordText;
 
         /**
+         *  The locale / language selected by the user.
+         */
+        Ptr<std::string>::Ref       selectedLocale;
+
+        /**
          *  Signal handler for the ok button clicked.
          */
         virtual void
         onOkButtonClicked(void)                             throw ();
+
+        /**
+         *  Signal handler for a language being selected from the 
+         *  language drop-down menu.
+         *
+         *  @param widget the item that has just been selected.
+         */
+        void
+        onLanguageSelected(Gtk::Widget    & widget)         throw ();
+
+        /**
+         *  Insert an item into languageList
+         *
+         *  @param itemName the name of the item.
+         *  @param itemLabel the label of the item.
+         */
+        void
+        insertLanguageItem(std::string              & itemName,
+                           Ptr<Glib::ustring>::Ref    itemLabel)    throw ();
 
 
     public:
         /**
          *  Constructor.
          *
+         *  @param gLiveSupport the gLiveSupport object, containing
+         *         all the vital info.
          *  @param bundle the resource bundle holding the localized
          *         resources for this window
          */
-        LoginWindow(Ptr<ResourceBundle>::Ref    bundle)     throw ();
+        LoginWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
+                    Ptr<ResourceBundle>::Ref    bundle)     throw ();
 
         /**
          *  Virtual destructor.
@@ -158,6 +197,18 @@ class LoginWindow : public Gtk::Window, public GtkLocalizedObject
         getPassword(void) const                             throw ()
         {
             return passwordText;
+        }
+
+        /**
+         *  Get the locale selected by the user.
+         *
+         *  @return the locale selected by the user. if this is an empty
+         *          string, the user selected the default locale.
+         */
+        Ptr<const std::string>::Ref
+        getSelectedLocale(void) const                       throw ()
+        {
+            return selectedLocale;
         }
 };
 
