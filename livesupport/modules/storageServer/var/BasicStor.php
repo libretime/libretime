@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -123,7 +123,10 @@ class BasicStor extends Alib{
             &$this, $id, $name, $mediaFileLP, $mdataFileLP, 'file',
             $gunid, $ftype
         );
-        if(PEAR::isError($ac)) return $ac;
+        if(PEAR::isError($ac)){
+            $res = $this->removeObj($id);
+            return $ac;
+        }
         return $id;
     }
 
@@ -179,7 +182,7 @@ class BasicStor extends Alib{
     {
         if($this->getObjType($did) !== 'Folder')
             return PEAR::raiseError(
-                'BasicStor::moveFile: destination is not folder', GBERR_WRTYPE
+                "BasicStor::moveFile: destination is not folder ($did)", GBERR_WRTYPE
             );
         $this->_relocateSubtree($id, $did);
     }
@@ -607,20 +610,37 @@ class BasicStor extends Alib{
      */
     function getObjIdFromRelPath($id, $relPath='.')
     {
+        $relPath = trim($relPath);
+        #if($this->getObjType($id) !== 'Folder')
+        $nid = $this->getParent($id);
+        if(PEAR::isError($nid)) return $nid;
+        if(is_null($nid)){ return PEAR::raiseError("null parent for $nid"); }
+        #else $nid = $id;
+        if(substr($relPath, 0, 1)=='/'){ $nid=$this->storId; }
         $a = split('/', $relPath);
-        if($this->getObjType($id) !== 'Folder') $nid = $this->getparent($id);
-        else $nid = $id;
-        foreach($a as $i=>$item){
-            switch($item){
+        foreach($a as $i=>$pathItem){
+            switch($pathItem){
                 case".":
                     break;
                 case"..":
-                    $nid = $this->getparent($nid);
+                    if($nid != $this->storId){
+                        $nid = $this->getParent($nid);
+                        if(PEAR::isError($nid)) return $nid;
+                        if(is_null($nid)){
+                             return PEAR::raiseError(
+                                "null parent for $nid");
+                        }
+                    }
                     break;
                 case"":
                     break;
                 default:
-                    $nid = $this->getObjId($item, $nid);
+                    $nid = $this->getObjId($pathItem, $nid);
+                    if(PEAR::isError($nid)) return $nid;
+                    if(is_null($nid)){
+                         return PEAR::raiseError(
+                            "Object $pathItem not found (from id=$id)");
+                    }
             }
         }
         return $nid;
