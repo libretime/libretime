@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -68,6 +68,8 @@ XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
 XMLRPCXX_VERSION  = xmlrpc++-20040713
 LCOV_DIR          = ${TOOLS_DIR}/lcov
 LCOV_VERSION      = lcov-1.3
+HELIX_DIR         = ${TOOLS_DIR}/helix
+HELIX_VERSION     = all_clients_nodist-helix-20041010
 
 MODULES_DIR = ${BASE_DIR}/modules
 CORE_DIR    = ${MODULES_DIR}/core
@@ -125,6 +127,7 @@ tools_setup:
 	${LIBODBCXX_DIR}/${LIBODBCXX_VERSION}/bin/install.sh
 	${XMLRPCXX_DIR}/${XMLRPCXX_VERSION}/bin/install.sh
 	${LCOV_DIR}/${LCOV_VERSION}/bin/install.sh
+	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
 
 modules_setup:
 	${CORE_DIR}/bin/autogen.sh
