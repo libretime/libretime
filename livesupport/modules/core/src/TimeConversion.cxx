@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,6 +92,25 @@ TimeConversion :: tmToPtime(const struct tm *time)
                                                   time->tm_sec)));
 
     return pTime;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a boost::ptime to a struct tm
+ *----------------------------------------------------------------------------*/
+void
+TimeConversion :: ptimeToTm(Ptr<ptime>::Ref convertFrom, struct tm & convertTo)
+                                                                    throw ()
+{
+    date            date = convertFrom->date();
+    time_duration   time = convertFrom->time_of_day();
+
+    convertTo.tm_year = date.year()  - 1900;
+    convertTo.tm_mon  = date.month() - 1;
+    convertTo.tm_mday = date.day();
+    convertTo.tm_hour = time.hours();
+    convertTo.tm_min  = time.minutes();
+    convertTo.tm_sec  = time.seconds();
 }
 
 

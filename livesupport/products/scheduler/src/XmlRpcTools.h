@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class XmlRpcTools
 {
@@ -263,12 +263,16 @@ class XmlRpcTools
                                                                      throw ();
 
         /**
-         *  Convert an error code, message pair to an XmlRpcValue
+         *  Convert an error code, message pair to an XML-RPC fault response.
+         *  This is done by throwing an XmlRpc::XmlRpcException.  The client
+         *  receives a fault response, and the return value is set to a
+         *  { faultCode, faultString } structure holding the error code and 
+         *  message.
          *
          *  @param errorCode    the numerical code of the error.
          *  @param errorMessage a short English description of the error.
-         *  @param xmlRpcValue  the output parameter holding the result of
-         *         the conversion.
+         *  @param xmlRpcValue  remains here from an earlier version
+         *                      TODO: remove this later.
          */
         static void
         markError(int errorCode, const std::string errorMessage,
@@ -397,7 +401,6 @@ class XmlRpcTools
         static Ptr<SessionId>::Ref
         extractSessionId(XmlRpc::XmlRpcValue  & xmlRpcValue)
                                                 throw (std::invalid_argument);
-
 
 };
 

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/xmlrpc++/xmlrpc++-20040713/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -47,6 +47,7 @@ tar xfz $tar
 cd xmlrpc++
 patch -p1 < $etcdir/xmlrpc++-automake.patch
 patch -p1 < $etcdir/uninitialised_XmlRpcSource_ssl_ssl.patch
+patch -p1 < $etcdir/incorrect_XmlRpcValue_struct_tm_conversion.patch
 sh autogen.sh --prefix=$installdir
 make install
                         

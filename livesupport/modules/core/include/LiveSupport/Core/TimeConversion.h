@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,8 +70,8 @@ using namespace LiveSupport;
 /**
  *  A helper object holding static time conversion functions.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.5 $
  */
 class TimeConversion
 {
@@ -110,6 +110,17 @@ class TimeConversion
         static Ptr<ptime>::Ref
         tmToPtime(const struct tm *time)
                                                     throw (std::out_of_range);
+
+        /**
+         *  Convert a boost::posix_time::ptime to a struct tm,
+         *  with second precision.
+         *
+         *  @param time the boost::posix_time::ptime to convert.
+         *  @return a struct tm, holding the same time.
+         */
+        static void
+        ptimeToTm(Ptr<ptime>::Ref convertFrom, struct tm & convertTo)
+                                                                throw ();
 
         /**
          *  Return the current time, with microsecond precision.

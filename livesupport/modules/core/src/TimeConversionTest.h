@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace Core {
 /**
  *  Unit test for the TimeConversion class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  *  @see TimeConversion
  */
 class TimeConversionTest : public CPPUNIT_NS::TestFixture
@@ -66,6 +66,7 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(TimeConversionTest);
     CPPUNIT_TEST(timevalToPtimeTest);
     CPPUNIT_TEST(tmToPtimeTest);
+    CPPUNIT_TEST(ptimeToTmTest);
     CPPUNIT_TEST(nowTest);
     CPPUNIT_TEST(sleepTest);
     CPPUNIT_TEST_SUITE_END();
@@ -87,6 +88,14 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
          */
         void
         tmToPtimeTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test conversion from ptime to struct tm
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        ptimeToTmTest(void)                     throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test the now function.

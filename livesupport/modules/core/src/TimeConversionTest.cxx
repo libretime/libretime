@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,6 +140,26 @@ TimeConversionTest :: tmToPtimeTest(void)
     CPPUNIT_ASSERT(ptime->time_of_day().hours() == 12);
     CPPUNIT_ASSERT(ptime->time_of_day().minutes() == 58);
     CPPUNIT_ASSERT(ptime->time_of_day().seconds() == 30);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the ptimeToTm function
+ *----------------------------------------------------------------------------*/
+void
+TimeConversionTest :: ptimeToTmTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    struct tm       tm;
+    Ptr<ptime>::Ref ptime(new ptime(time_from_string("1770-12-17 10:20:30")));
+
+    TimeConversion::ptimeToTm(ptime, tm);
+    CPPUNIT_ASSERT(tm.tm_year + 1900    == 1770);
+    CPPUNIT_ASSERT(tm.tm_mon  + 1       == 12);
+    CPPUNIT_ASSERT(tm.tm_mday           == 17);
+    CPPUNIT_ASSERT(tm.tm_hour   == 10);
+    CPPUNIT_ASSERT(tm.tm_min    == 20);
+    CPPUNIT_ASSERT(tm.tm_sec    == 30);
 }
 
 

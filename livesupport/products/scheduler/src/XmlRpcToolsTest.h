@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,13 +61,14 @@ using namespace LiveSupport::Core;
  *  Unit test for the XmlRpcTools class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see XmlRpcTools
  */
 class XmlRpcToolsTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(XmlRpcToolsTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(errorTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:

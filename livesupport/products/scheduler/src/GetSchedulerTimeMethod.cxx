@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 
 #include "LiveSupport/Core/StorageClientInterface.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
+#include "LiveSupport/Core/TimeConversion.h"
 #include "XmlRpcTools.h"
 
 #include "GetSchedulerTimeMethod.h"
@@ -119,18 +120,8 @@ GetSchedulerTimeMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     
     // TODO: check whether the session ID is valid
 
-    ptime           schedulerPTime      = second_clock::local_time();
-    date            schedulerDate       = schedulerPTime.date();
-    time_duration   schedulerTimeOfDay  = schedulerPTime.time_of_day();
-    
+    Ptr<ptime>::Ref schedulerPTime      = TimeConversion::now();
     struct tm schedulerTime;
-    schedulerTime.tm_year = schedulerDate.year();
-    schedulerTime.tm_mon  = schedulerDate.month();
-    schedulerTime.tm_mday = schedulerDate.day();
-    schedulerTime.tm_hour = schedulerTimeOfDay.hours();
-    schedulerTime.tm_min  = schedulerTimeOfDay.minutes();
-    schedulerTime.tm_sec  = schedulerTimeOfDay.seconds();
-
-    returnValue.clear();
-    returnValue["schedulerTime"] = & schedulerTime;    
+    TimeConversion::ptimeToTm(schedulerPTime, schedulerTime);
+    returnValue["schedulerTime"] = & schedulerTime;
 }

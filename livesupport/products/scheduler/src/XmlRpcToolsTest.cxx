@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -182,10 +182,13 @@ XmlRpcToolsTest :: errorTest(void)
 {
     XmlRpcValue  xmlRpcValue;
 
-    XmlRpcTools :: markError(42, "this is an error", xmlRpcValue);
-    CPPUNIT_ASSERT((int) xmlRpcValue["errorCode"] == 42);
-    CPPUNIT_ASSERT((const std::string) xmlRpcValue["errorMessage"] == 
-                                       "this is an error");
+    try {
+        XmlRpcTools :: markError(42, "this is an error", xmlRpcValue);
+        CPPUNIT_FAIL("did not throw exception in markError()");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 42);
+        CPPUNIT_ASSERT(e.getMessage() == "this is an error");
+    }
 }
-
 

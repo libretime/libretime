@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #endif
 
 
+#include <iostream>
 #include <string>
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
