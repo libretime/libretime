@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.18 $
+#   Version  : $Revision: 1.19 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -168,7 +168,8 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/AudioClipListWindow.o \
                      ${TMP_DIR}/PlaylistListWindow.o \
                      ${TMP_DIR}/UploadFileWindow.o \
-                     ${TMP_DIR}/DjBagWindow.o
+                     ${TMP_DIR}/DjBagWindow.o \
+                     ${TMP_DIR}/SimplePlaylistManagementWindow.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \

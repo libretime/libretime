@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
 #include "DjBagWindow.h"
+#include "SimplePlaylistManagementWindow.h"
 
 
 namespace LiveSupport {
@@ -77,11 +78,12 @@ using namespace LiveSupport::Core;
  *  | |         | |      | |         | + next ----+ + user info ------------+ |
  *  | |         | |      | |         | | playing  | |                       | |
  *  | +---------+ +------+ +---------+ +----------+ +-----------------------+ |
+ *  | +-- button bar -------------------------------------------------------+ |
  *  +-------------------------------------------------------------------------+
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -148,6 +150,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Button>::Ref       djBagButton;
 
         /**
+         *  The button to invoke the Simple Playlist Management Window.
+         */
+        Ptr<Gtk::Button>::Ref       simplePlaylistMgmtButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -156,6 +163,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  The one and only DJ Bag window.
          */
         Ptr<DjBagWindow>::Ref       djBagWindow;
+
+        /**
+         *  The one and only simple playlist management window.
+         */
+        Ptr<SimplePlaylistManagementWindow>::Ref    simplePlaylistMgmtWindow;
 
         /**
          *  Function that updates timeLabel with the current time.
@@ -197,6 +209,13 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onDjBagButtonClicked(void)                          throw ();
+
+        /**
+         *  Function to catch the event of the Simple Playlist
+         *  Management button being pressed.
+         */
+        virtual void
+        onSimplePlaylistMgmtButtonClicked(void)       throw ();
 
 
     public:
@@ -248,7 +267,20 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         void
         updateDjBagWindow(void)                                 throw ()
         {
+            // this will create, open and display the window.
+            onDjBagButtonClicked();
             djBagWindow->showContents();
+        }
+
+        /**
+         *  Update the Simple Playlist Management Window
+         */
+        void
+        updateSimplePlaylistMgmtWindow(void)                    throw ()
+        {
+            // this will create, open and display the window.
+            onSimplePlaylistMgmtButtonClicked();
+            simplePlaylistMgmtWindow->showContents();
         }
 
 };

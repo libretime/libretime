@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -166,6 +166,11 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The contents of a DJ Bag, stored as a list.
          */
         Ptr<PlayableList>::Ref          djBagContents;
+
+        /**
+         *  The one and only playlist that may be edited at any one time.
+         */
+        Ptr<Playlist>::Ref              editedPlaylist;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -351,6 +356,40 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             return djBagContents;
         }
+
+        /**
+         *  Return the currently edited playlist.
+         *
+         *  @return the currenlty edited playlist, or a reference to 0
+         *          if no playlist is edited
+         */
+        Ptr<Playlist>::Ref
+        getEditedPlaylist(void)                                 throw ()
+        {
+            return editedPlaylist;
+        }
+
+        /**
+         *  Add a playable item to the currently open playlist.
+         *  If there is no currently open playlist, open the simple playlist
+         *  management window with a new playlist, holding only this one
+         *  entry.
+         *
+         *  @param id the id of the playable object to add to the playlist.
+         */
+        void
+        addToPlaylist(Ptr<const UniqueId>::Ref  id)             throw ();
+
+        /**
+         *  Save the currently edited playlist in storage.
+         *
+         *  @param title the title of the audio clip.
+         *  @return the audio clip that was uploaded.
+         *  @exception StorageException on upload failures.
+         */
+        Ptr<Playlist>::Ref
+        uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
+                                                    throw (StorageException);
 
 };
 

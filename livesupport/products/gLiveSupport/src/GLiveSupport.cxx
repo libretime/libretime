@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -312,12 +312,8 @@ GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
         throw StorageException(e.what());
     }
 
-    // get a unique id
-    Ptr<UniqueId>::Ref      uid = UniqueId::generateId();
-
     // create and upload an AudioClip object
-    Ptr<AudioClip>::Ref     audioClip(new AudioClip(uid,
-                                                    title,
+    Ptr<AudioClip>::Ref     audioClip(new AudioClip(title,
                                                     playlength,
                                                     uri));
     storage->storeAudioClip(sessionId, audioClip);
@@ -328,4 +324,53 @@ GLiveSupport :: uploadFile(Ptr<const Glib::ustring>::Ref    title,
 
     return audioClip;
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Upload a file to the server.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)         throw ()
+{
+    if (!editedPlaylist.get()) {
+        editedPlaylist = storage->createPlaylist(sessionId);
+    }
+
+    // for some wierd reason, the storage functions won't accept
+    // Ptr<const UniqueId>::Ref, just a non-const version
+    Ptr<UniqueId>::Ref  uid(new UniqueId(id->getId()));
+
+    // append the appropriate playable object to the end of the playlist
+    if (storage->existsPlaylist(sessionId, uid)) {
+        Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId, uid);
+        editedPlaylist->addPlaylist(playlist, editedPlaylist->getPlaylength());
+    } else if (storage->existsAudioClip(sessionId, uid)) {
+        Ptr<AudioClip>::Ref clip = storage->getAudioClip(sessionId, uid);
+        editedPlaylist->addAudioClip(clip, editedPlaylist->getPlaylength());
+    }
+
+    masterPanel->updateSimplePlaylistMgmtWindow();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Save the currently edited playlist in storage
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: uploadPlaylist(Ptr<const Glib::ustring>::Ref    title)
+                                                    throw (StorageException)
+{
+    editedPlaylist->setTitle(title);
+
+    storage->savePlaylist(sessionId, editedPlaylist);
+
+    // add the saved playlist to the DJ Bag, and update it
+    djBagContents->push_front(editedPlaylist);
+    masterPanel->updateDjBagWindow();   
+
+    return editedPlaylist;
+}
+
 

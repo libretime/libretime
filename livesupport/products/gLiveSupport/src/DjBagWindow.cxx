@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,12 +106,34 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // Add the TreeView's view columns:
     try {
+        treeView.append_column(*getResourceUstring("typeColumnLabel"),
+                               modelColumns.typeColumn);
         treeView.append_column(*getResourceUstring("titleColumnLabel"),
                                modelColumns.titleColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
 
+    // register the signal handler for treeview entries being clicked
+    treeView.signal_button_press_event().connect_notify(sigc::mem_fun(*this,
+                                            &DjBagWindow::onEntryClicked));
+
+
+    // create the right-click entry context menu
+    entryMenu.reset(new Gtk::Menu());
+    Gtk::Menu::MenuList& menuList = entryMenu->items();
+    // register the signal handlers for the popup menu
+    menuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onAddToPlaylist)));
+    menuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("removeMenuItem"),
+                                sigc::mem_fun(*this,
+                                               &DjBagWindow::onRemoveItem)));
+    entryMenu->accelerate(*this);
+
+    // show
     showContents();
 
     show_all_children();
@@ -138,6 +160,17 @@ DjBagWindow :: showContents(void)                       throw ()
         playable  = *it;
         row       = *(treeModel->append());
 
+        row[modelColumns.idColumn]    = playable->getId();
+        switch (playable->getType()) {
+            case Playable::AudioClipType:
+            default:
+                row[modelColumns.typeColumn]  = "audioclip";
+                break;
+
+            case Playable::PlaylistType:
+                row[modelColumns.typeColumn]  = "playlist";
+                break;
+        }
         row[modelColumns.titleColumn] = *playable->getTitle();
 
         it++;
@@ -162,4 +195,90 @@ DjBagWindow :: onCloseButtonClicked (void)                  throw ()
     hide();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Event handler for an entry being clicked in the list
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onEntryClicked (GdkEventButton     * event)      throw ()
+{
+    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        // only show the context menu, if something is already selected
+        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                      treeView.get_selection();
+        if (refSelection) {
+            if (refSelection->get_selected()) {
+                entryMenu->popup(event->button, event->time);
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onRemoveItem(void)                               throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView.get_selection();
+
+    if (refSelection) {
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        if (iter) {
+            Ptr<const UniqueId>::Ref id    = (*iter)[modelColumns.idColumn];
+
+            removeItem(id);
+            showContents();
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove an item from the dj bag
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: removeItem(Ptr<const UniqueId>::Ref    id)           throw ()
+{
+    Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+    GLiveSupport::PlayableList::iterator    it;
+    GLiveSupport::PlayableList::iterator    end;
+
+    djBagContents = gLiveSupport->getDjBagContents();
+    it  = djBagContents->begin();
+    end = djBagContents->end();
+    while (it != end) {
+        Ptr<Playable>::Ref      playable = *it;
+
+        if (*playable->getId() == *id) {
+            djBagContents->erase(it);
+            break;
+        }
+
+        it++;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Add To Playlist menu item selected from the
+ *  entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+DjBagWindow :: onAddToPlaylist(void)                            throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView.get_selection();
+
+    if (refSelection) {
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        if (iter) {
+            Ptr<const UniqueId>::Ref id    = (*iter)[modelColumns.idColumn];
+
+            gLiveSupport->addToPlaylist(id);
+        }
+    }
+}
 

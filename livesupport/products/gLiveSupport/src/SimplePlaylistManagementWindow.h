@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef DjBagWindow_h
-#define DjBagWindow_h
+#ifndef SimplePlaylistManagementWindow_h
+#define SimplePlaylistManagementWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -64,23 +64,39 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  The DJ Bag window, showing recent and relevant audio clips and
- *  playlists.
+ *  The Simple Playlist Management Window. Allow to edit playlists in
+ *  a top-down view fashion.
+ *
+ *  The layout of this window is roughly the following:
+ *  <pre><code>
+ *  +--- simple playlist management window --------+
+ *  | name:    +-- name input ----+                |
+ *  | +-- playlist entries -------+                |
+ *  | | +-- entry1 -------------+ |                |
+ *  | | +-- entry2 -------------+ |                |
+ *  | |  ...                      |                |
+ *  | +---------------------------+                |
+ *  | +-- save button ------------+                |
+ *  | +-- close button -----------+                |
+ *  | +-- status bar -------------+                |
+ *  +----------------------------------------------+
+ *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  */
-class DjBagWindow : public Gtk::Window, public LocalizedObject
+class SimplePlaylistManagementWindow : public Gtk::Window,
+                                       public LocalizedObject
 {
 
     protected:
 
         /**
          *  The columns model needed by Gtk::TreeView.
-         *  Lists one clip per row.
+         *  Lists one playlist entry per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.1 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -91,14 +107,9 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
                 Gtk::TreeModelColumn<Ptr<const UniqueId>::Ref>  idColumn;
 
                 /**
-                 *  The column for the type of the entry in the list
-                 */
-                Gtk::TreeModelColumn<Glib::ustring>         typeColumn;
-
-                /**
                  *  The column for the title of the audio clip or playlist.
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         titleColumn;
+                Gtk::TreeModelColumn<Glib::ustring>     titleColumn;
 
                 /**
                  *  Constructor.
@@ -106,7 +117,6 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
                 ModelColumns(void)                  throw ()
                 {
                     add(idColumn);
-                    add(typeColumn);
                     add(titleColumn);
                 }
         };
@@ -123,29 +133,39 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         ModelColumns                modelColumns;
 
         /**
-         *  The main container in the window.
+         *  The layout used in the window.
          */
-        Gtk::VBox                   vBox;
+        Ptr<Gtk::Table>::Ref        layout;
 
         /**
-         *  A scrolled window, so that the list can be scrolled.
+         *  The label for the name entry.
          */
-        Gtk::ScrolledWindow         scrolledWindow;
+        Ptr<Gtk::Label>::Ref        nameLabel;
 
         /**
-         *  The tree view, now only showing rows.
+         *  The test input entry for the name of the playlist.
          */
-        Gtk::TreeView               treeView;
+        Ptr<Gtk::Entry>::Ref        nameEntry;
 
         /**
-         *  The tree model, as a GTK reference.
+         *  A scrolled window, so that the entry list can be scrolled.
          */
-        Glib::RefPtr<Gtk::ListStore>    treeModel;
+        Ptr<Gtk::ScrolledWindow>::Ref       entriesScrolledWindow;
 
         /**
-         *  The box containing the close button.
+         *  The entry tree view, now only showing rows.
          */
-        Gtk::HButtonBox             buttonBox;
+        Ptr<Gtk::TreeView>::Ref             entriesView;
+
+        /**
+         *  The entry tree model, as a GTK reference.
+         */
+        Glib::RefPtr<Gtk::ListStore>        entriesModel;
+
+        /**
+         *  The save button.
+         */
+        Ptr<Gtk::Button>::Ref       saveButton;
 
         /**
          *  The close button.
@@ -153,38 +173,21 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
         Ptr<Gtk::Button>::Ref       closeButton;
 
         /**
-         *  The right-click context menu, that comes up when right-clicking
-         *  an entry in the entry list.
+         *  The status bar.
          */
-        Ptr<Gtk::Menu>::Ref         entryMenu;
+        Ptr<Gtk::Label>::Ref        statusBar;
+
+        /**
+         *  Signal handler for the save button clicked.
+         */
+        virtual void
+        onSaveButtonClicked(void)                               throw ();
 
         /**
          *  Signal handler for the close button clicked.
          */
         virtual void
         onCloseButtonClicked(void)                              throw ();
-
-        /**
-         *  Signal handler for the mouse clicked on one of the entries.
-         *
-         *  @param event the button event recieved
-         */
-        virtual void
-        onEntryClicked(GdkEventButton     * event)              throw ();
-
-        /**
-         *  Signal handler for the "remove" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onRemoveItem(void)                                      throw ();
-
-        /**
-         *  Signal handler for the "add to playlist" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onAddToPlaylist(void)                                   throw ();
 
 
     public:
@@ -195,28 +198,22 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
          *  @param bundle the resource bundle holding the localized
          *         resources for this window
          */
-        DjBagWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                    Ptr<ResourceBundle>::Ref    bundle)         throw ();
+        SimplePlaylistManagementWindow(Ptr<GLiveSupport>::Ref    gLiveSupport,
+                                       Ptr<ResourceBundle>::Ref  bundle)
+                                                                    throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~DjBagWindow(void)                                      throw ();
+        ~SimplePlaylistManagementWindow(void)                   throw ();
 
         /**
-         *  Update the window contents, with the contents of the dj bag.
+         *  Show / update the contents of the playlist management window.
          */
-        void
+        virtual void
         showContents(void)                                      throw ();
 
-        /**
-         *  Remove an item from the dj bag.
-         *
-         *  @param id the id of the item to remove.
-         */
-        void
-        removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
 };
 
 /* ================================================= external data structures */
@@ -228,5 +225,5 @@ class DjBagWindow : public Gtk::Window, public LocalizedObject
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // DjBagWindow_h
+#endif // SimplePlaylistManagementWindow_h
 

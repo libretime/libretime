@@ -31,8 +31,12 @@ root:table
     {
         windowTitle:string            { "LiveSupport Dj Bag" }
 
+        typeColumnLabel:string        { "type" }
         titleColumnLabel:string       { "title" }
         closeButtonLabel:string       { "close" }
+
+        removeMenuItem:string         { "_Remove" }
+        addToPlaylistMenuItem:string  { "_Add To Playlist" }
     }
 
     playlistListWindow:table
@@ -49,5 +53,16 @@ root:table
 
         closeButtonLabel:string       { "close" }
     }
+
+    simplePlaylistManagementWindow:table
+    {
+        windowTitle:string            { "LiveSupport Dj Bag" }
+
+        titleColumnLabel:string       { "title" }
+        nameLabel:string              { "name" }
+        saveButtonLabel:string        { "save" }
+        closeButtonLabel:string       { "close" }
+    }
+
 }
 
