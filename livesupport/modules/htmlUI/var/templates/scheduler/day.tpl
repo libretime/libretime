@@ -1,7 +1,5 @@
 {$SCHEDULER->buildDay()}
 
-Day View
-
 <table border=1>
 
 {foreach from=$SCHEDULER->Day item="_Hour"}

@@ -8,7 +8,7 @@
     <tr bgcolor="{cycle values='#eeeeee, #dadada"'}">
             <th>Title</th>
             <th>Type</th>
-            <td align="right" width='70%'>  &nbsp;
+            <td align="right" width='70%'>  &nbsp;   
                 {if $START.pid}<a href="{$UI_BROWSER}?act=fileList&id={$START.pid}">[go up]</a>{/if}
             </td>
         </tr>

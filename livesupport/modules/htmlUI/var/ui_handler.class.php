@@ -52,7 +52,9 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;
         }
-        setcookie($this->config['authCookieName'], $sessid);
+        #setcookie($this->config['authCookieName'], $sessid);
+        echo "<meta http-equiv='set-cookie' content='".$this->config['authCookieName']."=".$sessid.";'>";
+        ob_flush();
         $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
         if(PEAR::isError($id)) {
             $this->_retMsg('Login failed');
@@ -76,7 +78,9 @@ class uiHandler extends uiBase {
     function logout($trigger_login = FALSE)
     {
         $this->gb->logout($this->sessid);
-        setcookie($this->config['authCookieName'], '');
+        #setcookie($this->config['authCookieName'], '');
+        echo "<meta http-equiv='set-cookie' content='".$this->config['authCookieName']."=;'>";
+        ob_clean();
         session_destroy();
 
         if ($trigger_login)

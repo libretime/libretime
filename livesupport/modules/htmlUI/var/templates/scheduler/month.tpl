@@ -1,8 +1,6 @@
 {$SCHEDULER->buildMonth()}
 {$SCHEDULER->buildWeek()}
 
-Month View
-
 <table border=1>
 
 <tr>

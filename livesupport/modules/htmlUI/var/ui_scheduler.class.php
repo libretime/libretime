@@ -29,7 +29,23 @@ class uiScheduler extends uiCalendar
         extract($arr);
         if ($view)  $this->curr['view'] = $view;
         if ($year)  $this->curr['year'] = $year;
-        if ($month) $this->curr['month']= $month;
+        if (is_numeric($month)) $this->curr['month'] = $month;
+        if ($month=='++') {
+            if ($this->curr['month']==12) {
+                $this->curr['month'] = '01';
+                $this->curr['year']++;
+            } else {
+                $this->curr['month'] = $this->Base->_twoDigits(++$this->curr['month']);
+            }
+        }
+        if ($month=='--') {
+            if ($this->curr['month']=='01') {
+                $this->curr['month'] = 12;
+                $this->curr['year']--;
+            } else {
+                 $this->curr['month'] = $this->Base->_twoDigits(--$this->curr['month']);
+            }
+        }
         if ($day)   $this->curr['day']  = $day;
         if ($hour)  $this->curr['hour'] = $hour;
     }
@@ -43,19 +59,35 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function getDayUsagePercentage($year, $month, $day)
+    function getDayUsage($year, $month, $day)
     {
-        $duration = 0;
         $date = $year.$month.$day;
         $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
-        if (!count($arr)) {
+        if (!count($arr))
             return FALSE;
-        }
+        #print_r($arr);
+        return $arr;
+    }
+
+    function getDayUsagePercentage($year, $month, $day)
+        {
+        $duration = 0;
+        if (!$arr = $this->getDayUsage($year, $month, $day))
+            return false;
         foreach ($arr as $val) {
             $duration =+ $this->_datetime2timestamp($val['end'])-$this->_datetime2timestamp($val['start']);
 
         }
         return $duration/86400*100;
+    }
+
+
+    function copyPlFromSP()
+    {
+        foreach ($this->Base->SCRATCHPAD->get() as $val) {
+            if (strtolower($val['type'])=='playlist')
+                $this->playlists[] = $val;
+        }
     }
 
     ## XML-RPC methods ############################################################################################
@@ -69,10 +101,10 @@ class uiScheduler extends uiCalendar
     function uploadPlaylistMethod(&$formdata)
     {
         $gunid = $formdata['gunid'];
-        $datetime = $formdate['datetime'];
-
-        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, '20050308T04:44:00.000000'.UI_TIMEZONE);
-        var_dump($r);
+        $datetime = $this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$formdata['time'];
+        echo $datetime;
+        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime.UI_TIMEZONE);
+        #var_dump($r);
     }
 
 

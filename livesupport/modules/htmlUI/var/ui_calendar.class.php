@@ -7,6 +7,38 @@ class uiCalendar
         $this->firstDayOfWeek = 1;
     }
 
+    function buildDecade()
+    {
+        for ($Year=$this->curr['year']-3; $Year<=$this->curr['year']+5; $Year++) {
+            $this->Decade[] = array(
+                                'year'          => $Year,
+                                'isSelected'    => $Year==$this->curr['year'] ? TRUE : FALSE
+                              );
+        }
+
+    }
+
+
+    function buildYear()
+    {
+        require_once 'Calendar/Year.php';
+        require_once 'Calendar/Month.php';
+
+        $Year = new Calendar_Year($this->curr['year']);
+        # mark current month
+        $sel =   new Calendar_Month($this->curr['year'], $this->curr['month']);
+        $selections = array($sel);
+
+        $Year->build($selections, $this->firstDayOfWeek);
+        while ($Month = $Year->fetch()) {
+            $this->Year[] = array(
+                                'month'         => $this->Base->_twoDigits($Month->thisMonth()),
+                                'label'         => $this->_getMonthName($Month),
+                                'isSelected'    => $Month->isSelected()
+                            );
+        }
+    }
+
 
     function buildMonth()
     {
@@ -19,15 +51,16 @@ class uiCalendar
         $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
         # mark today #
         $sel =   new Calendar_Day($this->curr['year'], $this->curr['month'], $this->curr['day']);
-        $selection = array($sel);
+        $selections = array($sel);
 
-        $Month->build($selection);
+        $Month->build($selections);
         while ($Day = $Month->fetch()) {
             $this->Month[] = array(
                                 'day'           => $this->Base->_twoDigits($Day->thisDay()),
                                 'week'          => $this->_getWeekNr($Day),
-                                'month'         => $this->Base->_twoDigits($Day->thisMonth()),
-                                'year'          => $Day->thisYear(),
+                                'month'         => $Day->thisMonth()<=12 ? $this->Base->_twoDigits($Day->thisMonth()) : '01',     ## due to bug in
+                                'year'          => $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1,                 ## Calendar_Month_Weekdays
+                                'label'         => $this->_getDayName($Day),
                                 'isEmpty'       => $Day->isEmpty(),
                                 'isFirst'       => $Day->isFirst(),
                                 'isLast'        => $Day->isLast(),
@@ -48,6 +81,9 @@ class uiCalendar
         while ($Day = $Week->fetch()) {
             $this->Week[] = array(
                                 'day'           => $this->Base->_twoDigits($Day->thisDay()),
+                                'week'          => $this->_getWeekNr($Day),
+                                'month'         => $this->Base->_twoDigits($Day->thisMonth()),
+                                'year'          => $Day->thisYear(),
                                 'label'         => $this->_getDayName($Day),
                             );
         }
@@ -81,10 +117,20 @@ class uiCalendar
         }
     }
 
+
+    ## some data which PEAR::Calendar does not provide ##########################################################################################
+    function _getMonthName(&$date) {
+        $timestamp = mktime($date->thisHour(), $date->thisMinute(), $date->thisSecond(), $date->thisMonth(), $date->thisDay(), $date->thisYear());
+        #echo $date->thisHour().$date->thisMinute().$date->thisSecond().$date->thisYear().$date->thisMonth().$date->thisDay().$timestamp."<br>";
+        return array('short' => strftime("%b", $timestamp),
+                     'full'  => strftime("%B", $timestamp));
+    }
+
+
     function _getWeekNr(&$date) {
         $timestamp = mktime($date->thisHour(), $date->thisMinute(), $date->thisSecond(), $date->thisMonth(), $date->thisDay(), $date->thisYear());
         #echo $date->thisHour().$date->thisMinute().$date->thisSecond().$date->thisYear().$date->thisMonth().$date->thisDay().$timestamp."<br>";
-        return date("W", $timestamp);
+        return strftime("%V", $timestamp);
     }
 
 

@@ -222,7 +222,7 @@ switch($_REQUEST['act']){
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.uploadPlaylistMethod":
+    case "SCHEDULER.uploadPlaylistMethod":   
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;
@@ -241,3 +241,5 @@ if (ob_get_contents()) {
 ob_end_clean
 ?>
 <meta http-equiv="refresh" content="<?php echo $ui_wait ? $ui_wait : 0; ?>; URL=<?php echo $uiHandler->redirUrl; ?>">
+</body>
+</html>
