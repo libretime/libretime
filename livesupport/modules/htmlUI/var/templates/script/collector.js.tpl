@@ -1,7 +1,6 @@
-{*Smarty template*}
-
 {literal}
 <script type="text/javascript">
+
 function collector_submit(formname, action)
 {
     var href = '{/literal}{$UI_HANDLER}{literal}?act='+action;

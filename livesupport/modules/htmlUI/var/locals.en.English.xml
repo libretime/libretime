@@ -1,9 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-	<status />
 	<Id>en.English</Id>
 	<item>
+		<key>$1 must be $2</key>
+		<value />
+	</item>
+	<item>
+		<key>Access denied.</key>
+		<value />
+	</item>
+	<item>
+		<key>Already active Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Audioclip Data saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Cannot create Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Cannot delete this Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Cannot move item</key>
+		<value />
+	</item>
+	<item>
+		<key>Cannot remove Item from Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>ChangeFadeInfo failed</key>
+		<value />
+	</item>
+	<item>
+		<key>Do</key>
+		<value />
+	</item>
+	<item>
+		<key>Entry $1 was already on SP since $2.nMoved to Top.</key>
+		<value />
+	</item>
+	<item>
+		<key>Entry added at $1 with ScheduleId: $2</key>
+		<value />
+	</item>
+	<item>
+		<key>Entry with ScheduleId $1 removed</key>
+		<value />
+	</item>
+	<item>
+		<key>Error on add item to Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Error saving Settings</key>
+		<value />
+	</item>
+	<item>
+		<key>Error uploading Logo</key>
+		<value />
+	</item>
+	<item>
+		<key>Error: $1</key>
+		<value />
+	</item>
+	<item>
+		<key>File $1 was not uploadet.</key>
+		<value />
+	</item>
+	<item>
+		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
+		<value />
+	</item>
+	<item>
+		<key>Found looked Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Invalid Form Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Login failed</key>
+		<value />
+	</item>
+	<item>
+		<key>Metadata saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Missing value for $1</key>
+		<value />
+	</item>
+	<item>
+		<key>No Item(s) selected</key>
+		<value />
+	</item>
+	<item>
+		<key>No Playlist is looked by You</key>
+		<value />
+	</item>
+	<item>
+		<key>Note: Station Preferences not setup proberly.</key>
+		<value />
+	</item>
+	<item>
+		<key>Password changed</key>
+		<value />
+	</item>
+	<item>
+		<key>Passwords do not match.</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; activated</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; released</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; reverted</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist &quot;$1&quot; saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist is looked by $1</key>
+		<value />
+	</item>
+	<item>
+		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
+		<value />
+	</item>
+	<item>
+		<key>Select a Value</key>
+		<value />
+	</item>
+	<item>
+		<key>Settings saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Stream Data changed</key>
+		<value />
+	</item>
+	<item>
+		<key>Stream Data saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Subject $1 added.</key>
+		<value />
+	</item>
+	<item>
+		<key>Target is not Folder</key>
+		<value />
+	</item>
+	<item>
+		<key>Unable to release Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Unable to revert to looked state</key>
+		<value />
+	</item>
+	<item>
+		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
+		<value />
+	</item>
+	<item>
+		<key>Unable to set $1: $2</key>
+		<value />
+	</item>
+	<item>
+		<key>Upload of file $1 was incomplete.</key>
+		<value />
+	</item>
+	<item>
+		<key>Uploaded file $1 is greater than LiveSupport system setting.</key>
+		<value />
+	</item>
+	<item>
+		<key>Uploaded file $1 is greater than setting in php.ini.</key>
+		<value />
+	</item>
+	<item>
+		<key>Wrong old pasword.</key>
+		<value />
+	</item>
+	<item>
+		<key>You have an Playlist already activated,n first close it</key>
+		<value />
+	</item>
+	<item>
+		<key>Access</key>
+		<value />
+	</item>
+	<item>
 		<key>Activate this Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Add Audio</key>
+		<value />
+	</item>
+	<item>
+		<key>Add Criteria</key>
+		<value />
+	</item>
+	<item>
+		<key>Add to Playlist</key>
 		<value />
 	</item>
 	<item>
@@ -12,6 +227,58 @@
 	</item>
 	<item>
 		<key>Add to active Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Album</key>
+		<value />
+	</item>
+	<item>
+		<key>Artist</key>
+		<value />
+	</item>
+	<item>
+		<key>Artist web page</key>
+		<value />
+	</item>
+	<item>
+		<key>Audio file information web page</key>
+		<value />
+	</item>
+	<item>
+		<key>Audio source web page</key>
+		<value />
+	</item>
+	<item>
+		<key>BPM</key>
+		<value />
+	</item>
+	<item>
+		<key>Bitrate</key>
+		<value />
+	</item>
+	<item>
+		<key>Browse</key>
+		<value />
+	</item>
+	<item>
+		<key>Buy CD web page</key>
+		<value />
+	</item>
+	<item>
+		<key>CW</key>
+		<value />
+	</item>
+	<item>
+		<key>Cancel</key>
+		<value />
+	</item>
+	<item>
+		<key>Catalog number</key>
+		<value />
+	</item>
+	<item>
+		<key>Category</key>
 		<value />
 	</item>
 	<item>
@@ -27,79 +294,11 @@
 		<value />
 	</item>
 	<item>
-		<key>Delete File</key>
+		<key>Channels</key>
 		<value />
 	</item>
 	<item>
-		<key>Display this Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Edit File</key>
-		<value />
-	</item>
-	<item>
-		<key>Edit Metadata</key>
-		<value />
-	</item>
-	<item>
-		<key>Insert Playlist here</key>
-		<value />
-	</item>
-	<item>
-		<key>List Folder</key>
-		<value />
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value />
-	</item>
-	<item>
-		<key>New Playlist using File</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove File from Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove from Scratchpad</key>
-		<value />
-	</item>
-	<item>
-		<key>Save and Close Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Help</key>
-		<value />
-	</item>
-	<item>
-		<key>Access</key>
-		<value />
-	</item>
-	<item>
-		<key>Add Audio</key>
-		<value />
-	</item>
-	<item>
-		<key>Add to Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Artist</key>
-		<value />
-	</item>
-	<item>
-		<key>Browse</key>
-		<value />
-	</item>
-	<item>
-		<key>CW</key>
+		<key>Checksum</key>
 		<value />
 	</item>
 	<item>
@@ -108,6 +307,22 @@
 	</item>
 	<item>
 		<key>Clear Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Composer</key>
+		<value />
+	</item>
+	<item>
+		<key>Conductor</key>
+		<value />
+	</item>
+	<item>
+		<key>Contributor</key>
+		<value />
+	</item>
+	<item>
+		<key>Copyright</key>
 		<value />
 	</item>
 	<item>
@@ -127,11 +342,31 @@
 		<value />
 	</item>
 	<item>
+		<key>Date</key>
+		<value />
+	</item>
+	<item>
 		<key>Day</key>
 		<value />
 	</item>
 	<item>
+		<key>Delete File</key>
+		<value />
+	</item>
+	<item>
 		<key>Delete Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Description</key>
+		<value />
+	</item>
+	<item>
+		<key>Disc number</key>
+		<value />
+	</item>
+	<item>
+		<key>Display this Playlist</key>
 		<value />
 	</item>
 	<item>
@@ -140,6 +375,22 @@
 	</item>
 	<item>
 		<key>Edit</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit File</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit Metadata</key>
+		<value />
+	</item>
+	<item>
+		<key>Encoded by</key>
+		<value />
+	</item>
+	<item>
+		<key>Encoder software used</key>
 		<value />
 	</item>
 	<item>
@@ -159,7 +410,31 @@
 		<value />
 	</item>
 	<item>
+		<key>File Type</key>
+		<value />
+	</item>
+	<item>
+		<key>File format</key>
+		<value />
+	</item>
+	<item>
+		<key>File type</key>
+		<value />
+	</item>
+	<item>
 		<key>Folder Structure</key>
+		<value />
+	</item>
+	<item>
+		<key>Format</key>
+		<value />
+	</item>
+	<item>
+		<key>Frequency</key>
+		<value />
+	</item>
+	<item>
+		<key>Genre</key>
 		<value />
 	</item>
 	<item>
@@ -167,11 +442,39 @@
 		<value />
 	</item>
 	<item>
+		<key>Group Name</key>
+		<value />
+	</item>
+	<item>
+		<key>Help</key>
+		<value />
+	</item>
+	<item>
+		<key>ISRC number</key>
+		<value />
+	</item>
+	<item>
+		<key>Insert Playlist here</key>
+		<value />
+	</item>
+	<item>
 		<key>Item</key>
 		<value />
 	</item>
 	<item>
-		<key>KW</key>
+		<key>Label</key>
+		<value />
+	</item>
+	<item>
+		<key>Language</key>
+		<value />
+	</item>
+	<item>
+		<key>Length</key>
+		<value />
+	</item>
+	<item>
+		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
 		<value />
 	</item>
 	<item>
@@ -179,7 +482,23 @@
 		<value />
 	</item>
 	<item>
+		<key>List Folder</key>
+		<value />
+	</item>
+	<item>
+		<key>Listen to File</key>
+		<value />
+	</item>
+	<item>
 		<key>Local Time</key>
+		<value />
+	</item>
+	<item>
+		<key>Lyricist</key>
+		<value />
+	</item>
+	<item>
+		<key>Lyrics</key>
 		<value />
 	</item>
 	<item>
@@ -188,6 +507,14 @@
 	</item>
 	<item>
 		<key>Main</key>
+		<value />
+	</item>
+	<item>
+		<key>Maximum length of ScratchPad</key>
+		<value />
+	</item>
+	<item>
+		<key>Media File</key>
 		<value />
 	</item>
 	<item>
@@ -204,6 +531,10 @@
 	</item>
 	<item>
 		<key>Monthly View</key>
+		<value />
+	</item>
+	<item>
+		<key>Mood</key>
 		<value />
 	</item>
 	<item>
@@ -227,7 +558,15 @@
 		<value />
 	</item>
 	<item>
+		<key>New Password</key>
+		<value />
+	</item>
+	<item>
 		<key>New Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>New Playlist using File</key>
 		<value />
 	</item>
 	<item>
@@ -251,11 +590,43 @@
 		<value />
 	</item>
 	<item>
+		<key>Old Password</key>
+		<value />
+	</item>
+	<item>
 		<key>Open last Playlist</key>
 		<value />
 	</item>
 	<item>
+		<key>Operator</key>
+		<value />
+	</item>
+	<item>
+		<key>Orchestra or band</key>
+		<value />
+	</item>
+	<item>
+		<key>Original artist</key>
+		<value />
+	</item>
+	<item>
+		<key>Original lyricist</key>
+		<value />
+	</item>
+	<item>
+		<key>PL Editor</key>
+		<value />
+	</item>
+	<item>
 		<key>Page</key>
+		<value />
+	</item>
+	<item>
+		<key>Password</key>
+		<value />
+	</item>
+	<item>
+		<key>Playlist</key>
 		<value />
 	</item>
 	<item>
@@ -267,7 +638,19 @@
 		<value />
 	</item>
 	<item>
+		<key>Radio station name</key>
+		<value />
+	</item>
+	<item>
+		<key>Radio station web page</key>
+		<value />
+	</item>
+	<item>
 		<key>Range</key>
+		<value />
+	</item>
+	<item>
+		<key>Rating</key>
 		<value />
 	</item>
 	<item>
@@ -279,11 +662,59 @@
 		<value />
 	</item>
 	<item>
+		<key>Remove File from Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove Playlist</key>
+		<value />
+	</item>
+	<item>
 		<key>Remove Selected</key>
 		<value />
 	</item>
 	<item>
+		<key>Remove from Scratchpad</key>
+		<value />
+	</item>
+	<item>
+		<key>Repeat Password</key>
+		<value />
+	</item>
+	<item>
+		<key>Report date/time</key>
+		<value />
+	</item>
+	<item>
+		<key>Report location</key>
+		<value />
+	</item>
+	<item>
+		<key>Report organizations</key>
+		<value />
+	</item>
+	<item>
+		<key>Reset</key>
+		<value />
+	</item>
+	<item>
+		<key>Retype Password</key>
+		<value />
+	</item>
+	<item>
 		<key>Revert to Saved</key>
+		<value />
+	</item>
+	<item>
+		<key>Rows Per Page</key>
+		<value />
+	</item>
+	<item>
+		<key>Rows per Page</key>
+		<value />
+	</item>
+	<item>
+		<key>Sample rate</key>
 		<value />
 	</item>
 	<item>
@@ -292,6 +723,10 @@
 	</item>
 	<item>
 		<key>Save and Close</key>
+		<value />
+	</item>
+	<item>
+		<key>Save and Close Playlist</key>
 		<value />
 	</item>
 	<item>
@@ -311,7 +746,23 @@
 		<value />
 	</item>
 	<item>
+		<key>Search Library</key>
+		<value />
+	</item>
+	<item>
 		<key>Signed in</key>
+		<value />
+	</item>
+	<item>
+		<key>Station Logo</key>
+		<value />
+	</item>
+	<item>
+		<key>Station Logo Path</key>
+		<value />
+	</item>
+	<item>
+		<key>Station Name</key>
 		<value />
 	</item>
 	<item>
@@ -323,11 +774,39 @@
 		<value />
 	</item>
 	<item>
+		<key>Station URL</key>
+		<value />
+	</item>
+	<item>
+		<key>StationPrefs</key>
+		<value />
+	</item>
+	<item>
 		<key>Stream</key>
 		<value />
 	</item>
 	<item>
+		<key>Stream URL</key>
+		<value />
+	</item>
+	<item>
+		<key>Subject</key>
+		<value />
+	</item>
+	<item>
+		<key>Submit</key>
+		<value />
+	</item>
+	<item>
+		<key>System Settings</key>
+		<value />
+	</item>
+	<item>
 		<key>Talk</key>
+		<value />
+	</item>
+	<item>
+		<key>Time</key>
 		<value />
 	</item>
 	<item>
@@ -343,6 +822,10 @@
 		<value />
 	</item>
 	<item>
+		<key>Track number</key>
+		<value />
+	</item>
+	<item>
 		<key>Tree view</key>
 		<value />
 	</item>
@@ -351,11 +834,23 @@
 		<value />
 	</item>
 	<item>
+		<key>Upload</key>
+		<value />
+	</item>
+	<item>
 		<key>UploadM</key>
 		<value />
 	</item>
 	<item>
+		<key>User Password</key>
+		<value />
+	</item>
+	<item>
 		<key>User/Groups</key>
+		<value />
+	</item>
+	<item>
+		<key>Username</key>
 		<value />
 	</item>
 	<item>
@@ -364,6 +859,14 @@
 	</item>
 	<item>
 		<key>Weekly View</key>
+		<value />
+	</item>
+	<item>
+		<key>Year</key>
+		<value />
+	</item>
+	<item>
+		<key>calendar week</key>
 		<value />
 	</item>
 	<item>
@@ -400,30 +903,6 @@
 	</item>
 	<item>
 		<key>previous</key>
-		<value />
-	</item>
-	<item>
-		<key>{$o.name}</key>
-		<value />
-	</item>
-	<item>
-		<key>{$sec.header}</key>
-		<value />
-	</item>
-	<item>
-		<key>$1 must be $2</key>
-		<value />
-	</item>
-	<item>
-		<key>Do</key>
-		<value />
-	</item>
-	<item>
-		<key>Missing value for $1</key>
-		<value />
-	</item>
-	<item>
-		<key>Select a Value</key>
 		<value />
 	</item>
 </language>

@@ -1,3 +1,5 @@
+{assign var="_PL_activeId" value=$PL->getActiveId()}
+
 {if $_results.cnt > 0}
     <form name="SEARCHRESULTS">
     <div class="head" style="width:535px; height: 21px;">&nbsp;</div>
@@ -46,14 +48,27 @@
             ##Page##:&nbsp;&nbsp;{$_results.page+1}&nbsp;&nbsp;
             ##Range##:&nbsp;{$_criteria.offset+1}-{if ($_criteria.offset+$_criteria.limit)>$_results.cnt}{$_results.cnt}{else}{$_criteria.offset+$_criteria.limit}{/if}
          </div>
-        {if $_PL_activeId}
-            <input type="button" class="button" value="##To Playlist##" onClick="collector_submit('SEARCHRESULTS', 'PL.addItem')">
-        {else}
-            <input type="button" class="button" value="##New Playlist##" onClick="collector_submit('SEARCHRESULTS', 'PL.create')">
-        {/if}
+
+         <select name="SEARCHRESULTS_multiaction">
+                <option>##Multiple Action:##</option>
+                <option onClick="collector_submit('SEARCHRESULTS', 'SP.addItem')">##Add file(s) to ScratchPad##</option>
+                {if $_PL_activeId}
+                    <option onClick="collector_submit('SEARCHRESULTS', 'PL.addItem')">##Add file(s) to active Playlist##</option>
+                {else}
+                    <option onClick="collector_submit('SEARCHRESULTS', 'PL.create')">##New Playlist using this file(s)##</option>
+                {/if}
+         </select>
+        <script type="text/javascript">
+            document.forms['SEARCHRESULTS'].elements['SEARCHRESULTS_multiaction'].options[0].selected=true;
+            //document.forms['SEARCHRESULTS'].elements['all'].checked = false;
+            //collector_switchAll('SEARCHRESULTS')
+        </script>
+
     </div>
    </form>
 
 {else}
     ##No match found.##
 {/if}
+
+{assign var="_PL_activeId" value=NULL}

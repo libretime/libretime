@@ -149,8 +149,8 @@ switch ($_REQUEST[action]) {
                       'base'        => $_REQUEST['base'],
                       'Id'          => _DEFAULT_LANG_);
 
-        #$newKeys = Data::collectExprPHP($file);
-        $newKeys = Data::collectExprTPL($file);
+        $newKeys = Data::collectExprPHP($file);
+        $newKeys = array_merge($newKeys, Data::collectExprTPL($file));
 
         $msg = Data::checkKeys($file, $newKeys);
 

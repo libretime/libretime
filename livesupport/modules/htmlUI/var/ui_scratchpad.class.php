@@ -64,24 +64,34 @@ class uiScratchPad
     }
 
 
-    function addItem($id)
+    function addItem($ids)
     {
         if(!$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]) {
             if (UI_WARNING) $this->Base->_retMsg('ScratchPad length is not set in System Preferences, so it cannot be used.');
             return false;
         }
-
-        $item = $this->Base->_getMetaInfo($id);
-        $sp   = $this->get();
-        foreach ($sp as $key=>$val) {
-            if ($val['id'] == $item['id']) {
-                unset($sp[$key]);
-                if (UI_VERBOSE) $this->Base->_retMsg('Entry $1 was already on SP since $2.\nMoved to Top.', $item['title'], $val['added']);
-            } else {
-                #$this->Base->incAccessCounter($id);
-            }
+        if (!$ids) {
+            if (UI_WARNING) $this->Base->_retMsg('No Item(s) selected');
+            return FALSE;
         }
-        $sp = array_merge(array($item), is_array($sp) ? $sp : NULL);
+        if (!is_array($ids))
+            $ids = array($ids);
+            
+        $sp   = $this->get();
+        foreach ($ids as $id) {
+            $item = $this->Base->_getMetaInfo($id);
+
+            foreach ($sp as $key=>$val) {
+                if ($val['id'] == $item['id']) {
+                    unset($sp[$key]);
+                    if (UI_VERBOSE) $this->Base->_retMsg('Entry $1 was already on the ScratchPad. It has been moved to the top of the list.', $item['title'], $val['added']);
+                } else {
+                    #$this->Base->incAccessCounter($id);
+                }
+            }
+            $sp = array_merge(array($item), is_array($sp) ? $sp : NULL);
+        }
+
         for ($n=0; $n<$this->Base->STATIONPREFS[UI_SCRATCHPAD_MAXLENGTH_KEY]; $n++) {
             if (is_array($sp[$n])) $this->items[$n] = $sp[$n];
         }

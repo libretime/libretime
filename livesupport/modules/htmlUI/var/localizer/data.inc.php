@@ -47,7 +47,7 @@ class Data {
     }
 
     function readTransXML2Arr($file, $Id)                       // read language-xml-file, return array
-    {                      
+    {
         $realpath = Data::_realTransPath($file, $Id, 'xml');
 
         if ($arr = Data::readXML2Arr($realpath)) {       // read file & convert it
@@ -536,9 +536,11 @@ class Data {
     {
         $n = 0;
 
-        $filePattern      = '/(.*).php/';                                               // all .php files
-        $functPattern1      = '/tra( )*\(( )*\'([^\']*)\'/iU';                          // like tra('edit "$1"', ...);  '
-        $functPattern2      = '/tra( )*\(( )*"([^"]*)"/iU';                             // like tra("edit '$1'", ...);  "
+        $filePattern         = '/(.*).php/';                                             // all .php files
+        $functPattern[]      = '/tra( )*\(( )*\'([^\']*)\'/iU';                          // like tra('edit "$1"', ...);  '
+        $functPattern[]      = '/tra( )*\(( )*"([^"]*)"/iU';                             // like tra("edit '$1'", ...);  "
+        $functPattern[]      = '/_retMsg( )*\(( )*\'([^\']*)\'/iU';                      // '
+        $functPattern[]      = '/_retMsg( )*\(( )*"([^"]*)"/iU';                         // "
 
         $files = File_Find::mapTreeMultiple($file['dir'], 1);
 
@@ -559,20 +561,14 @@ class Data {
             return FALSE;
 
         foreach ($data as $line) {
-            if (preg_match_all($functPattern1, $line, $m)) {                           // collact all matches
-                foreach ($m[3] as $match) {
-                    $n++;
-                    $matches[$match] = $n;
+            foreach ($functPattern as $pattern) {
+                if (preg_match_all($pattern, $line, $m)) {                           // collact all matches
+                    foreach ($m[3] as $match) {
+                        $n++;
+                        $matches[$match] = $n;
+                    }
                 }
-            }
-
-            if (preg_match_all($functPattern2, $line, $m)) {                            // collact all matches
-                foreach ($m[3] as $match) {
-                    $n++;
-                    $matches[$match] = $n;
-
-                }
-            }
+             }
         }
 
         if (is_array($matches)==FALSE)

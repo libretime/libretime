@@ -48,7 +48,7 @@ class uiPlaylist
             return FALSE;
         }
         if(($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
-             if (UI_WARNING) $this->Base->_retMsg('Playlist is looked by $1', $this->Base->gb->getSubjName($userid));
+             if (UI_WARNING) $this->Base->_retMsg('Playlist has been locked by $1', $this->Base->gb->getSubjName($userid));
             return FALSE;
         }
         $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
@@ -66,13 +66,13 @@ class uiPlaylist
         # delete PL from session
         # remove token from ls_pref
         if(!$this->token) {
-             if (UI_WARNING) $this->Base->_retMsg('No Playlist is looked by You');
+             if (UI_WARNING) $this->Base->_retMsg('There is no playlist available to unlock.');
             return FALSE;
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
             #print_r($plgunid);
-            if (UI_WARNING) $this->Base->_retMsg('Unable to release Playlist');
+            if (UI_WARNING) $this->Base->_retMsg('Unable to release Playlist.');
             return FALSE;
         }
         if ($msg && UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
@@ -97,13 +97,13 @@ class uiPlaylist
     function revert()
     {
         if(!$this->token) {
-            if (UI_WARNING) $this->Base->_retMsg('No Playlist is looked by You');
+            if (UI_WARNING) $this->Base->_retMsg('No Playlist is locked by You.');
             return FALSE;
         }
         $plgunid = $this->Base->gb->revertEditedPlaylist($this->token, $this->Base->sessid);
         if (PEAR::isError($plgunid)) {
             # print_r($plgunid);
-            if (UI_WARNING) $this->Base->_retMsg('Unable to revert to looked state');
+            if (UI_WARNING) $this->Base->_retMsg('Unable to revert to locked state.');
             return FALSE;
         }
         if (UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" reverted', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), UI_MDATA_KEY_TITLE));
@@ -120,7 +120,7 @@ class uiPlaylist
     function reportLookedPL($setMsg=FALSE)
     {
         if(is_string($saved = $this->Base->gb->loadPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY))) {
-            if ($setMsg == TRUE) $this->Base->_retMsg('Found looked Playlist');
+            if ($setMsg == TRUE) $this->Base->_retMsg('Found locked Playlist.');
             return TRUE;
         }
         return FALSE;
@@ -271,7 +271,7 @@ class uiPlaylist
             #print_r($r);
             if (PEAR::isError($r)) {
                     if (UI_VERBOSE) print_r($r);
-                    $this->Base->_retMsg('ChangeFadeInfo failed');
+                    $this->Base->_retMsg('Change fade information failed.');
                     return FALSE;
                 }
         }

@@ -12,7 +12,7 @@ require_once('helpfunctions.php');
 
 define('_DEFAULT_LANG_', 'en.English');
 define('_PREFIX_',       'locals');
-define('_PREFIX_GLOBAL_','globals');
+#define('_PREFIX_GLOBAL_','globals');
 define('_LANG_BASE_',    'xml');
 define('_DENY_HTML_',    FALSE);
 define('_ENCODING_',     'UTF-8');

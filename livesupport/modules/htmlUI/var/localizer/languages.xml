@@ -30,4 +30,9 @@
         <Name>Serbian(SR)</Name>
         <NativeName>Serbian</NativeName>
     </language>
+    <language>
+        <Id>es.Spanish</Id>
+        <Name>Spanish(SR)</Name>
+        <NativeName>Spanish</NativeName>
+    </language>
 </languages>

@@ -37,7 +37,7 @@ class uiHandler extends uiBase {
      *  @param pass  string, password
      */
     function login(&$formdata, &$mask)
-    { 
+    {
         #$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
@@ -490,16 +490,16 @@ class uiHandler extends uiBase {
             return;
         }
         if(FALSE === $this->gb->authenticate($ulogin, $oldpass)){
-            $this->_retMsg('Wrong old pasword.');
+            $this->_retMsg('Old password was incorrect.');
             return;
         }
         if($pass !== $pass2){
-            $this->_retMsg("Passwords do not match.").
+            $this->_retMsg("Passwords did not match.").
                 "($pass/$pass2)";
             $this->redirUrl = UI_BROWSER.'?act=subjects';
             return;
         }
-        $this->_retMsg('Password changed');
+        $this->_retMsg('Password changed.');
         $this->redirUrl = UI_BROWSER.'?act=subjects';
         $this->gb->passwd($ulogin, $oldpass, $pass);
     }
@@ -602,10 +602,10 @@ class uiHandler extends uiBase {
                 if ($val['error']) {
 
                     switch ($val['error']) {
-                        case 1: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is greater than setting in php.ini.', $mask[$key]['label']); break;
-                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is greater than LiveSupport system setting.', $mask[$key]['label']); break;
+                        case 1: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is bigger than setting in php.ini.', $mask[$key]['label']); break;
+                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is bigger than LiveSupport´s system setting.', $mask[$key]['label']); break;
                         case 3: $was_error = TRUE; $this->_retMsg('Upload of file $1 was incomplete.', $mask[$key]['label']); break;
-                        case 4: if ($mask[$key]['required']) {$was_error = TRUE; $this->_retMsg('File $1 was not uploadet.', $mask[$key]['label']);} break;
+                        case 4: if ($mask[$key]['required']) {$was_error = TRUE; $this->_retMsg('File $1 was not uploaded.', $mask[$key]['label']);} break;
                     }
                 }
             }

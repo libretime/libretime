@@ -359,7 +359,7 @@ class Display {
               <input type="hidden" name="pos" value="'.$pos.'">';
 
         for($n=1; $n<=$amount; $n++) {
-            $html .= "<tr><td><input name='newKey[$n]' size='50'></td></tr>";
+            $html .= "<tr><td><input name='newKey[$n]' type='text' size='100'></td></tr>";
         }
 
         $html .=
