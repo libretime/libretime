@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.12 $
+#    Version  : $Revision: 1.13 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -188,6 +188,8 @@ try:
         print server.locstor.loadPref({'sessid':pars[0], 'key':pars[1]})['value']
     elif method=="savePref":
         print server.locstor.savePref({'sessid':pars[0], 'key':pars[1], 'value':pars[2]})
+    elif method=="delPref":
+        print server.locstor.delPref({'sessid':pars[0], 'key':pars[1]})
     elif method=="resetStorage":
         print server.locstor.resetStorage({})
     elif method=="openPut":

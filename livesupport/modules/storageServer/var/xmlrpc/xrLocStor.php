@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,6 +116,7 @@ $methods = array(
 
     'loadPref'                => 'Load user preference value.',
     'savePref'                => 'Save user preference value.',
+    'delPref'                 => 'Delete user preference record.',
 );
 
 $defs = array();

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Prefs.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,6 +69,10 @@ class Prefs{
         }
         $val = $this->readVal($subjid, $key);
         if(PEAR::isError($val)) return $val;
+        if($val === FALSE){
+            return PEAR::raiseError("Prefs::loadPref: invalid preference key",
+                GBERR_PREF);
+        }
         return $val;
     }
 
@@ -88,11 +92,35 @@ class Prefs{
             return PEAR::raiseError("Prefs::loadPref: invalid session id",
                 GBERR_SESS);
         }
-        $r = $this->delete($subjid, $key);
+        $r = $this->update($subjid, $key, $value);
         if(PEAR::isError($r)) return $r;
-        if($value != ''){
+        if($r === FALSE){
             $r = $this->insert($subjid, $key, $value);
             if(PEAR::isError($r)) return $r;
+        }
+        return TRUE;
+    }
+
+    /**
+     *  Delete preference record by session id
+     *
+     *  @param sessid string, session id
+     *  @param key string, preference key
+     *  @return boolean
+     */
+    function delPref($sessid, $key)
+    {
+        $subjid = $this->gb->getSessUserId($sessid);
+        if(PEAR::isError($subjid)) return $subjid;
+        if(is_null($subjid)){
+            return PEAR::raiseError("Prefs::loadPref: invalid session id",
+                GBERR_SESS);
+        }
+        $r = $this->delete($subjid, $key);
+        if(PEAR::isError($r)) return $r;
+        if($r === FALSE){
+            return PEAR::raiseError("Prefs::delPref: invalid preference key",
+                GBERR_PREF);
         }
         return TRUE;
     }
@@ -134,7 +162,7 @@ class Prefs{
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if(PEAR::isError($val)) return $val;
-        if(is_null($val)) return '';
+        if(is_null($val)) return FALSE;
         return $val;
     }
 
@@ -154,6 +182,7 @@ class Prefs{
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if(PEAR::isError($r)) return $r;
+        if($this->dbc->affectedRows()<1) return FALSE;
         return TRUE;
     }
 
@@ -171,6 +200,7 @@ class Prefs{
             WHERE subjid=$subjid AND keystr='$keystr'
         ");
         if(PEAR::isError($r)) return $r;
+        if($this->dbc->affectedRows()<1) return FALSE;
         return TRUE;
     }
 

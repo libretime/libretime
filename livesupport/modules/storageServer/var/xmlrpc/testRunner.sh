@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.13 $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -231,7 +231,7 @@ prefTest() {
     $XR_CLI savePref $SESSID "$PREFKEY" "$PREFVAL"|| exit $?
     echo -n "# loadPref: "
     VAL=`$XR_CLI loadPref $SESSID "$PREFKEY"` || \
-    	{ ERN=$?; echo $RES; exit $ERN; }
+    	{ ERN=$?; echo $VAL; exit $ERN; }
     echo "$VAL  "
     if [ "x$VAL" != "x$PREFVAL" ] ; then
         echo " NOT MATCH"
@@ -241,12 +241,14 @@ prefTest() {
     else
         echo "# pref value check: OK"
     fi
-    echo -n "# savePref: "
-    $XR_CLI savePref $SESSID "$PREFKEY" ""|| exit $?
-    echo -n "# loadPref: "
-    VAL=`$XR_CLI loadPref $SESSID "$PREFKEY"` || \
-    	{ ERN=$?; echo $RES; exit $ERN; }
-    echo $VAL
+    echo -n "# delPref: "
+    $XR_CLI delPref $SESSID "$PREFKEY"|| exit $?
+    if [ $DEBUG ]; then
+        echo -n "# loadPref: "
+        VAL=`$XR_CLI loadPref $SESSID "$PREFKEY"` || echo $?
+    else
+        echo $VAL
+    fi
 }
 
 logout() {

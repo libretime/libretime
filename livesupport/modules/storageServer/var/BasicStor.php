@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@ define('GBERR_NONE', 45);
 define('GBERR_AOBJNEX', 46);
 define('GBERR_NOTF', 47);
 define('GBERR_SESS', 48);
+define('GBERR_PREF', 49);
 
 define('GBERR_NOTIMPL', 50);
 
@@ -49,7 +50,7 @@ require_once "StoredFile.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *  @see Alib
  */
 class BasicStor extends Alib{
