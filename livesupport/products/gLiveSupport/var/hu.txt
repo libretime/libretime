@@ -12,11 +12,12 @@ hu:table
 
     loginWindow:table
     {
-        windowTitle:string     { "LiveSupport Belépés Ablak" }
+        windowTitle:string          { "Belépés" }
 
-        loginLabel:string      { "azonositó:" }
-        passwordLabel:string   { "jelszó:" }
-        okButtonLabel:string   { "belépés" }
+        loginLabel:string           { "Azonositó" }
+        passwordLabel:string        { "Jelszó" }
+        okButtonLabel:string        { "Belépés" }
+        cancelButtonLabel:string    { "Mégsem" }
     }
 
     audioClipListWindow:table

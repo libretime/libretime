@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LoginWindow.h"
 
 
@@ -61,19 +62,30 @@ using namespace LiveSupport::GLiveSupport;
 LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                             Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-                    : LocalizedObject(bundle)
+          : WhiteWindow("",
+                        0xffffff,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+            LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
 
+    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
+
     try {
         set_title(*getResourceUstring("windowTitle"));
-        loginLabel.reset(new Gtk::Label(*getResourceUstring("loginLabel")));
-        passwordLabel.reset(new Gtk::Label(
-                                        *getResourceUstring("passwordLabel")));
-        loginEntry.reset(new Gtk::Entry());
-        passwordEntry.reset(new Gtk::Entry());
-        languageList.reset(new Gtk::Combo());
-        okButton.reset(new Gtk::Button(*getResourceUstring("okButtonLabel")));
+        loginLabel = Gtk::manage(
+                            new Gtk::Label(*getResourceUstring("loginLabel")));
+        passwordLabel = Gtk::manage(
+                        new Gtk::Label( *getResourceUstring("passwordLabel")));
+        loginEntryBin    = Gtk::manage(widgetFactory->createEntryBin());
+        loginEntry       = loginEntryBin->getEntry();
+        passwordEntryBin = Gtk::manage(widgetFactory->createEntryBin());
+        passwordEntry    = passwordEntryBin->getEntry();
+        languageList     = Gtk::manage(widgetFactory->createComboBoxText());
+        okButton = Gtk::manage(widgetFactory->createButton(
+                                        *getResourceUstring("okButtonLabel")));
+        cancelButton = Gtk::manage(widgetFactory->createButton(
+                                    *getResourceUstring("cancelButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -97,56 +109,33 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     passwordLabel->set_selectable(false);
 
     // set up the login text entry area
-    loginEntry->set_name("loginEntry");
-    loginEntry->set_flags(Gtk::CAN_FOCUS|Gtk::HAS_FOCUS);
     loginEntry->set_visibility(true);
-    loginEntry->set_editable(true);
-    loginEntry->set_max_length(0);
-    loginEntry->set_text("");
-    loginEntry->set_has_frame(true);
     loginEntry->set_activates_default(true);
 
     // set up the password text entry area
-    passwordEntry->set_name("passwordEntry");
-    passwordEntry->set_flags(Gtk::CAN_FOCUS);
     passwordEntry->set_visibility(false);
-    passwordEntry->set_editable(true);
-    passwordEntry->set_max_length(0);
-    passwordEntry->set_text("");
-    passwordEntry->set_has_frame(true);
     passwordEntry->set_activates_default(true);
 
     // set up the drop down list for available languages
     languageList->set_name("languageList");
     languageList->set_flags(Gtk::CAN_FOCUS);
-    languageList->get_entry()->set_editable(false);
 
     // fill up the language list with the list of available languages
     Ptr<const GLiveSupport::LanguageMap>::Ref   languages;
     languages = gLiveSupport->getSupportedLanguages();
     GLiveSupport::LanguageMap::const_iterator  lang = languages->begin();
     GLiveSupport::LanguageMap::const_iterator  end  = languages->end();
-    Ptr<Glib::ustring>::Ref                    uLanguage;
-    std::string                                 locale;
 
     // insert the inital, 'default' language
-    locale = "";
-    uLanguage.reset(new Glib::ustring(""));
-    insertLanguageItem(locale, uLanguage);
+    languageList->set_active_text("");
     selectedLocale.reset(new std::string(""));
 
     while (lang != end) {
-        Ptr<const UnicodeString>::Ref   language = (*lang).second;
-
-        locale    = (*lang).first;
-        uLanguage = unicodeStringToUstring(language);
-        insertLanguageItem(locale, uLanguage);
+        const Glib::ustring   & language = (*lang).first;
+        languageList->append_text(language);
 
         lang++;
     }
-
-    languageList->get_list()->signal_select_child().connect(
-                       sigc::mem_fun(*this, &LoginWindow::onLanguageSelected));
 
     // set up the OK button
     okButton->set_name("okButton");
@@ -156,29 +145,44 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     okButton->signal_clicked().connect(sigc::mem_fun(*this,
                                             &LoginWindow::onOkButtonClicked));
 
+    // set up the Cancel button
+    cancelButton->set_name("cancelButton");
+    cancelButton->set_flags(Gtk::CAN_FOCUS);
+    cancelButton->set_relief(Gtk::RELIEF_NORMAL);
+    // Register the signal handler for the button getting clicked.
+    cancelButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                         &LoginWindow::onCancelButtonClicked));
+
+    // set up the box for the buttons
+    buttonBox = Gtk::manage(new Gtk::HButtonBox());
+    buttonBox->set_layout(Gtk::BUTTONBOX_END);
+    buttonBox->set_spacing(5);
+    buttonBox->add(*cancelButton);
+    buttonBox->add(*okButton);
+    
     // set up the table, which provides the layout, and place the widgets
     // inside the table
-    table.reset(new Gtk::Table(2, 2, false));
+    table = Gtk::manage(new Gtk::Table(2, 2, false));
     table->set_name("table");
     table->set_row_spacings(0);
     table->set_col_spacings(0);
     table->attach(*loginLabel,
                   0, 1, 0, 1,
                   Gtk::FILL, Gtk::AttachOptions(), 0, 0);
-    table->attach(*passwordLabel,
+    table->attach(*loginEntryBin,
                   0, 1, 1, 2,
-                  Gtk::FILL, Gtk::AttachOptions(), 0, 0);
-    table->attach(*loginEntry,
-                  1, 2, 0, 1,
                   Gtk::EXPAND|Gtk::FILL, Gtk::AttachOptions(), 0, 0);
-    table->attach(*passwordEntry,
-                  1, 2, 1, 2,
+    table->attach(*passwordLabel,
+                  0, 1, 2, 3,
+                  Gtk::FILL, Gtk::AttachOptions(), 0, 0);
+    table->attach(*passwordEntryBin,
+                  0, 1, 3, 4,
                   Gtk::EXPAND|Gtk::FILL, Gtk::AttachOptions(), 0, 0);
     table->attach(*languageList,
-                  1, 2, 2, 3,
+                  0, 1, 4, 5,
                   Gtk::EXPAND|Gtk::FILL, Gtk::AttachOptions(), 0, 0);
-    table->attach(*okButton,
-                  1, 2, 3, 4,
+    table->attach(*buttonBox,
+                  0, 1, 5, 6,
                   Gtk::FILL, Gtk::AttachOptions(), 0, 0);
 
     // set up the window itself
@@ -211,36 +215,29 @@ LoginWindow :: onOkButtonClicked (void)                  throw ()
 {
     loginText.reset(new Glib::ustring(loginEntry->get_text()));
     passwordText.reset(new Glib::ustring(passwordEntry->get_text()));
+    
+    Ptr<const GLiveSupport::LanguageMap>::Ref   languages;
+    languages = gLiveSupport->getSupportedLanguages();
+
+    GLiveSupport::LanguageMap::const_iterator  end     = languages->end();
+    GLiveSupport::LanguageMap::const_iterator  langSel =
+                            languages->find(languageList->get_active_text());
+    if (langSel != end) {
+        selectedLocale.reset(new std::string((*langSel).second));
+    } else {
+        selectedLocale.reset(new std::string(""));
+    }
 
     hide();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for a language selected
+ *  Event handler for the cancel button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-LoginWindow :: onLanguageSelected (Gtk::Widget  & widget)       throw ()
+LoginWindow :: onCancelButtonClicked (void)                  throw ()
 {
-    Gtk::ComboDropDownItem  * item  = (Gtk::ComboDropDownItem*) &widget;
-    Gtk::Widget             * label = *(item->get_children().begin());
-    selectedLocale.reset(new std::string(label->get_name().raw()));
-}
-
-
-/*------------------------------------------------------------------------------
- *  Insert an item into the language list
- *----------------------------------------------------------------------------*/
-void
-LoginWindow :: insertLanguageItem(std::string             & itemName,
-                                  Ptr<Glib::ustring>::Ref   itemLabel)
-                                                                    throw ()
-{
-    Gtk::ComboDropDownItem* item = Gtk::manage(new Gtk::ComboDropDownItem);
-    Gtk::Label            * label = Gtk::manage(new Gtk::Label(*itemLabel));
-    label->set_name(itemName);
-    item->add(*label);
-    item->show_all();
-    languageList->get_list()->children().push_back(*item);
+    hide();
 }
 

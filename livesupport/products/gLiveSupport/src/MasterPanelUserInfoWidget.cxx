@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,12 +69,13 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
     this->gLiveSupport = gLiveSupport;
     loggedIn           = false;
 
-    logInOutButton = WidgetFactory::getInstance()->createButton("");
+    logInOutButton = Gtk::manage(
+                            WidgetFactory::getInstance()->createButton(""));
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));
 
-    userInfoLabel.reset(new Gtk::Label());
+    userInfoLabel = Gtk::manage(new Gtk::Label());
 
     changeLanguage(bundle);
 
@@ -153,7 +154,9 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
     Ptr<const Glib::ustring>::Ref     password = loginWindow->getPassword();
 
     login    = loginWindow->getLogin();
-    loggedIn = gLiveSupport->login(login->raw(), password->raw());
+    if (login.get() && password.get()) {
+        loggedIn = gLiveSupport->login(login->raw(), password->raw());
+    }
 
     if (loggedIn) {
         updateStrings();

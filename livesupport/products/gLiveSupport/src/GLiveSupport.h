@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -112,12 +112,12 @@ class GLiveSupport : public LocalizedConfigurable,
     public:
         /**
          *  A type for the map of supported languages.
-         *  This is an STL map, containing const std::string as keys, which
-         *  are the locale names of supported langauges. The values are
-         *  Ptr<const UnicodeString>::Ref, the names of the languages.
+         *  This is an STL map, containing const Glib::ustring as keys, which
+         *  are the language name of supported langauges. The values are
+         *  const std::string, the names of the locales for the languages.
          */
-        typedef std::map<const std::string,
-                         Ptr<const UnicodeString>::Ref>     LanguageMap;
+        typedef std::map<const Glib::ustring,
+                         const std::string>                 LanguageMap;
 
         /**
          *  The type of the list for storing the DjBag contents.

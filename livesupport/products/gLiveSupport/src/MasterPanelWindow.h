@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -96,7 +96,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The layout used in the window.
          */
-        Ptr<Gtk::Table>::Ref        layout;
+        Gtk::Table                * layout;
 
         /**
          *  The background color.
@@ -106,12 +106,12 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The container for the time widget
          */
-        Ptr<BlueBin>::Ref           timeBin;
+        BlueBin                   * timeBin;
 
         /**
          *  The time display
          */
-        Ptr<Gtk::Label>::Ref        timeWidget;
+        Gtk::Label                * timeWidget;
 
         /**
          *  The signal connection, that is notified by the GTK timer each
@@ -122,82 +122,82 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The container for the now playing widget
          */
-        Ptr<BlueBin>::Ref           nowPlayingBin;
+        BlueBin                   * nowPlayingBin;
 
         /**
          *  The 'now playing' display.
          */
-        Ptr<Gtk::Widget>::Ref       nowPlayingWidget;
+        Gtk::Widget               * nowPlayingWidget;
 
         /**
          *  The container for the VU meter widget
          */
-        Ptr<BlueBin>::Ref           vuMeterBin;
+        BlueBin                   * vuMeterBin;
 
         /**
          *  The VU meter display.
          */
-        Ptr<Gtk::Widget>::Ref       vuMeterWidget;
+        Gtk::Widget               * vuMeterWidget;
 
         /**
          *  The container for the next playing widget.
          */
-        Ptr<BlueBin>::Ref           nextPlayingBin;
+        BlueBin                   * nextPlayingBin;
 
         /**
          *  The 'next playing' display.
          */
-        Ptr<Gtk::Widget>::Ref       nextPlayingWidget;
+        Gtk::Widget               * nextPlayingWidget;
 
         /**
          *  The user info alignment helper.
          */
-        Ptr<Gtk::Alignment>::Ref    userInfoAlignment;
+        Gtk::Alignment            * userInfoAlignment;
 
         /**
          *  The user info widget.
          */
-        Ptr<MasterPanelUserInfoWidget>::Ref     userInfoWidget;
+        MasterPanelUserInfoWidget     * userInfoWidget;
 
         /**
          *  The radio logo.
          */
-        Ptr<Gtk::Image>::Ref        radioLogoWidget;
+        Gtk::Image                * radioLogoWidget;
 
         /**
          *  The bottom bar.
          */
-        Ptr<Gtk::Table>::Ref        bottomBar;
+        Gtk::Table                * bottomBar;
 
         /**
          *  The button bar alignment helper
          */
-        Ptr<Gtk::Alignment>::Ref    buttonBarAlignment;
+        Gtk::Alignment            * buttonBarAlignment;
 
         /**
          *  The button bar.
          */
-        Ptr<Gtk::Table>::Ref        buttonBar;
+        Gtk::Table                * buttonBar;
 
         /**
          *  The button to invoke the upload file window.
          */
-        Ptr<Button>::Ref            uploadFileButton;
+        Button                    * uploadFileButton;
 
         /**
          *  The button to invoke the DJ Bag window.
          */
-        Ptr<Button>::Ref            djBagButton;
+        Button                    * djBagButton;
 
         /**
          *  The button to invoke the Simple Playlist Management Window.
          */
-        Ptr<Button>::Ref            simplePlaylistMgmtButton;
+        Button                    * simplePlaylistMgmtButton;
 
         /**
          *  The button to invoke the Scheduler Window.
          */
-        Ptr<Button>::Ref            schedulerButton;
+        Button                    * schedulerButton;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.

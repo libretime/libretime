@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 
 #include <gtkmm/window.h>
 #include <gtkmm/button.h>
+#include <gtkmm/buttonbox.h>
 #include <gtkmm/label.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/table.h>
@@ -53,12 +54,16 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
+#include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -72,9 +77,9 @@ using namespace LiveSupport::Core;
  *  A window, handling user login.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
-class LoginWindow : public Gtk::Window, public LocalizedObject
+class LoginWindow : public WhiteWindow, public LocalizedObject
 {
 
     protected:
@@ -86,37 +91,57 @@ class LoginWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The table, which provides the layout for the window.
          */
-        Ptr<Gtk::Table>::Ref        table;
+        Gtk::Table                * table;
 
         /**
          *  The login label in the window.
          */
-        Ptr<Gtk::Label>::Ref        loginLabel;
+        Gtk::Label            * loginLabel;
 
         /**
          *  The password label in the window.
          */
-        Ptr<Gtk::Label>::Ref        passwordLabel;
+        Gtk::Label            * passwordLabel;
+
+        /**
+         *  The container for the login text entry area.
+         */
+        EntryBin              * loginEntryBin;
 
         /**
          *  The login text entry area.
          */
-        Ptr<Gtk::Entry>::Ref        loginEntry;
+        Gtk::Entry            * loginEntry;
+
+        /**
+         *  The container for the password text entry area.
+         */
+        EntryBin              * passwordEntryBin;
 
         /**
          *  The password text entry area.
          */
-        Ptr<Gtk::Entry>::Ref        passwordEntry;
+        Gtk::Entry            * passwordEntry;
 
         /**
          *  The drop-down list to select the desired language.
          */
-        Ptr<Gtk::Combo>::Ref        languageList;
+        ComboBoxText          * languageList;
+
+        /**
+         *  The horizontal box for the buttons.
+         */
+        Gtk::HButtonBox       * buttonBox;
 
         /**
          *  The OK button.
          */
-        Ptr<Gtk::Button>::Ref       okButton;
+        Button                * okButton;
+
+        /**
+         *  The Cancel button.
+         */
+        Button                * cancelButton;
 
         /**
          *  The login text, that was entered by the user.
@@ -140,23 +165,10 @@ class LoginWindow : public Gtk::Window, public LocalizedObject
         onOkButtonClicked(void)                             throw ();
 
         /**
-         *  Signal handler for a language being selected from the 
-         *  language drop-down menu.
-         *
-         *  @param widget the item that has just been selected.
+         *  Signal handler for the cancel button clicked.
          */
-        void
-        onLanguageSelected(Gtk::Widget    & widget)         throw ();
-
-        /**
-         *  Insert an item into languageList
-         *
-         *  @param itemName the name of the item.
-         *  @param itemLabel the label of the item.
-         */
-        void
-        insertLanguageItem(std::string              & itemName,
-                           Ptr<Glib::ustring>::Ref    itemLabel)    throw ();
+        virtual void
+        onCancelButtonClicked(void)                         throw ();
 
 
     public:

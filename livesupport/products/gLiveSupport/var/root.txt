@@ -12,11 +12,12 @@ root:table
 
     loginWindow:table
     {
-        windowTitle:string     { "LiveSupport Login Window" }
+        windowTitle:string          { "LOGIN" }
 
-        loginLabel:string      { "login:" }
-        passwordLabel:string   { "password:" }
-        okButtonLabel:string   { "OK" }
+        loginLabel:string           { "Login" }
+        passwordLabel:string        { "Password" }
+        okButtonLabel:string        { "OK" }
+        cancelButtonLabel:string    { "Cancel" }
     }
 
     audioClipListWindow:table

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,42 +71,43 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Ptr<WidgetFactory>::Ref widgetFactory = WidgetFactory::getInstance();
 
     // TODO: remove hard-coded station logo path reference
-    radioLogoWidget.reset(new Gtk::Image("var/stationLogo.png"));
+    radioLogoWidget = Gtk::manage(new Gtk::Image("var/stationLogo.png"));
 
     // set up the layout, which is a button box
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
 
     // set up the time label
-    timeWidget.reset(new Gtk::Label("time"));
-    timeBin = widgetFactory->createBlueBin();
+    timeWidget = Gtk::manage(new Gtk::Label("time"));
+    timeBin = Gtk::manage(widgetFactory->createBlueBin());
     timeBin->add(*timeWidget);
 
     // set up the now playing widget
-    nowPlayingWidget.reset(new Gtk::Label("now playing"));
-    nowPlayingBin = widgetFactory->createDarkBlueBin();
+    nowPlayingWidget = Gtk::manage(new Gtk::Label("now playing"));
+    nowPlayingBin = Gtk::manage(widgetFactory->createDarkBlueBin());
     nowPlayingBin->add(*nowPlayingWidget);
 
     // set up the VU meter widget
-    vuMeterWidget.reset(new Gtk::Label("VU meter"));
-    vuMeterBin = widgetFactory->createBlueBin();
+    vuMeterWidget = Gtk::manage(new Gtk::Label("VU meter"));
+    vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
 
     // set up the next playing widget
-    nextPlayingWidget.reset(new Gtk::Label("next playing"));
-    nextPlayingBin = widgetFactory->createBlueBin();
+    nextPlayingWidget = Gtk::manage(new Gtk::Label("next playing"));
+    nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
     nextPlayingBin->add(*nextPlayingWidget);
 
     // create the bottom bar
-    bottomBar.reset(new Gtk::Table());
-    buttonBar.reset(new Gtk::Table());
-    buttonBarAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_LEFT,
-                                                Gtk::ALIGN_CENTER,
-                                                0, 0));
+    bottomBar = Gtk::manage(new Gtk::Table());
+    buttonBar = Gtk::manage(new Gtk::Table());
+    buttonBarAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
+                                                        Gtk::ALIGN_CENTER,
+                                                        0, 0));
     buttonBarAlignment->add(*buttonBar);
-    userInfoWidget.reset(new MasterPanelUserInfoWidget(gLiveSupport, bundle));
-    userInfoAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
-                                               Gtk::ALIGN_CENTER,
-                                               0, 0));
+    userInfoWidget = Gtk::manage(new MasterPanelUserInfoWidget(gLiveSupport,
+                                                               bundle));
+    userInfoAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+                                                       Gtk::ALIGN_CENTER,
+                                                       0, 0));
     userInfoAlignment->add(*userInfoWidget);
     bottomBar->attach(*buttonBarAlignment, 0, 1, 0, 1);
     bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -209,12 +209,10 @@ GLiveSupport :: configSupportedLanguages(const xmlpp::Element & element)
         xmlpp::Attribute  * localeAttr = elem->get_attribute(localeAttrName);
         xmlpp::Attribute  * nameAttr   = elem->get_attribute(nameAttrName);
 
-        std::string             locale = localeAttr->get_value().raw();
-        Ptr<Glib::ustring>::Ref uName(new Glib::ustring(nameAttr->get_value()));
-        Ptr<UnicodeString>::Ref name   = 
-                                LocalizedObject::ustringToUnicodeString(uName);
+        std::string     locale = localeAttr->get_value().raw();
+        Glib::ustring   name   = nameAttr->get_value();
 
-        supportedLanguages->insert(std::make_pair(locale, name));
+        supportedLanguages->insert(std::make_pair(name, locale));
 
         begin++;
     }
