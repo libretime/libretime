@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -255,7 +255,7 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     authentication = acf->getAuthenticationClient();
     try {
         sessionId      = authentication->login(login, password);
-    } catch (AuthenticationException &e) {
+    } catch (XmlRpcException &e) {
         // TODO: mark error
         std::cerr << "authentication problem: " << e.what() << std::endl;
     }

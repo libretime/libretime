@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -138,7 +138,7 @@ RpcDisplayScheduleTest :: setUp(void)                        throw ()
     try {
         sessionId = authentication->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "could not log in:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
