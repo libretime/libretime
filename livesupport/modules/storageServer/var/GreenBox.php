@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.38 $
+ *  @version $Revision: 1.39 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -576,12 +576,14 @@ class GreenBox extends BasicStor{
      *  Remove audioclip from playlist
      *
      *  @param token string, playlist access token
-     *  @param plElGunid string, global unique ID of deleted playlistElement
+     *  @param acId int, local id  of deleted audioClip
      *  @param sessid string, session ID
      *  @return boolean
      */
-    function delAudioClipFromPlaylist($token, $plElGunid, $sessid)
+    function delAudioClipFromPlaylist($token, $acId, $sessid)
     {
+        $acGunid = $this->_gunidFromId($acId);
+        if(PEAR::isError($acGunid)) return $acGunid;
         $plGunid = $this->_gunidFromToken($token, 'download');
         if(PEAR::isError($plGunid)) return $plGunid;
         if(is_null($plGunid)){
@@ -612,16 +614,17 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($plElArr)){ return $plElArr; }
         $found = FALSE;
         foreach($plElArr as $el){
-            $plElGunidArr = $pl->md->getMetadataEl('id', $el['mid']);
-            if(PEAR::isError($plElGunidArr)){ return $plElGunidArr; }
+            $acArr = $pl->md->getMetadataEl('audioClip', $el['mid']);
+            if(PEAR::isError($acArr)){ return $acArr; }
+            $storedAcMid = $acArr[0]['mid'];
+            $acGunidArr = $pl->md->getMetadataEl('id', $storedAcMid);
+            if(PEAR::isError($acGunidArr)){ return $acGunidArr; }
             // select playlist element to remove
-            if($plElGunidArr[0]['value'] == $plElGunid){
-                $acArr = $pl->md->getMetadataEl('audioClip', $el['mid']);
-                if(PEAR::isError($acArr)){ return $acArr; }
-                $acLenArr = $pl->md->getMetadataEl('playlength', $acArr[0]['mid']);
+            if($acGunidArr[0]['value'] == $acGunid){
+                $acLenArr = $pl->md->getMetadataEl('playlength', $storedAcMid);
                 if(PEAR::isError($acLenArr)){ return $acLenArr; }
                 $acLen = $acLenArr[0]['value'];
-                $acTokArr = $pl->md->getMetadataEl('accessToken', $acArr[0]['mid']);
+                $acTokArr = $pl->md->getMetadataEl('accessToken', $storedAcMid);
                 if(PEAR::isError($acTokArr)){ return $acTokArr; }
                 $acToken = $acTokArr[0]['value'];
                 // remove playlist element:
@@ -880,11 +883,12 @@ class GreenBox extends BasicStor{
     }
 
     /**
-     *  Check if file exists in the storage and
+     *  Check if file gunid exists in the storage and
      *  user have permission to read it
      *
+     *  @param sessid string, session id
      *  @param gunid string
-     *  @param ftype string, internal file type
+     *  @param ftype string, internal file type, optional
      *  @return string/err
      */
     function existsFile($sessid, $gunid, $ftype=NULL)
