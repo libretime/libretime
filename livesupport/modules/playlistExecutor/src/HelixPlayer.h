@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@
 #include "ErrorSink.h"
 #include "AuthenticationManager.h"
 #include "ClientContext.h"
-
+#include "LiveSupport/Core/Playlist.h"
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
@@ -90,8 +90,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
  *  </pre></code>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.9 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -236,7 +236,7 @@ class HelixPlayer : virtual public Configurable,
          *  will be accessed automatically.
          *  Note: this call will <b>not</b> start playing! You will
          *  have to call the start() function to begin playing.
-         *  Always close any opened resources with a call to close().
+         *  Always close any opened resource with a call to close().
          *
          *  @param fileUrl a URL to a file
          *  @exception std::invalid_argument if the supplied fileUrl
@@ -258,12 +258,12 @@ class HelixPlayer : virtual public Configurable,
         /**
          *  Start playing.
          *  This call will start playing the active playlist, which was
-         *  set by a previous call to playThis().
+         *  set by a previous call to open().
          *  Playing can be stopped by calling stop().
          *
          *  @exception std::logic_error if there was no previous call to
-         *             playThis().
-         *  @see #playThis
+         *             open().
+         *  @see #open
          *  @see #stop
          */
         virtual void
@@ -326,6 +326,23 @@ class HelixPlayer : virtual public Configurable,
          */
         virtual void
         setVolume(unsigned int  volume)                     throw ();
+
+        /**
+         *  Play a playlist, with simulated fading.
+         *
+         *  @param playlist the Playlist object to be played.
+         *  @exception std::invalid_argument playlist is invalid (e.g.,
+         *              does not have a URI field, or there is no valid
+         *              SMIL file at the given URI).
+         *  @exception std::logic_error thrown by start() if open() was
+         *              unsuccessful, but returned normally (never happens)
+         *  @exception std::runtime_error on errors thrown by the helix player
+         */
+        void
+        openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
+                                                throw (std::invalid_argument,
+                                                       std::logic_error,
+                                                       std::runtime_error);
 };
 
 

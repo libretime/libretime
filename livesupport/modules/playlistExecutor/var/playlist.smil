@@ -1,0 +1,10 @@
+<smil xmlns    = "http://www.w3.org/2001/SMIL20/Language"
+      xmlns:rn = "http://features.real.com/2001/SMIL20/Extensions">
+    <body>
+        <par>
+            <audio src="file:var/test10001.mp3" begin="0s"/> 
+            <audio src="file:var/test10002.mp3" begin="6s"/> 
+            <audio src="file:var/test10003.mp3" begin="13s"/> 
+        </par>
+    </body>
+</smil>

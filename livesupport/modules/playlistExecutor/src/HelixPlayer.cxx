@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -278,7 +278,7 @@ void
 HelixPlayer :: start(void)                      throw (std::logic_error)
 {
     if (player->GetSourceCount() == 0) {
-        throw std::logic_error("HelixPlayer::playThis() not called yet");
+        throw std::logic_error("HelixPlayer::open() not called yet");
     }
     player->Begin();
     playing = true;
@@ -375,4 +375,98 @@ DLLAccessPath* GetDLLAccessPath(void)
     return &accessPath;
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Play a playlist, with simulated fading.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: openAndStartPlaylist(Ptr<Playlist>::Ref  playlist)       
+                                                throw (std::invalid_argument,
+                                                       std::logic_error,
+                                                       std::runtime_error)
+{
+    if (!playlist || !playlist->getUri()) {
+        throw std::invalid_argument("no playlist SMIL file found");
+    }
+    open(*playlist->getUri());      // may throw invalid_argument
+
+    bool    hasFadeInfo = false;
+    int     numberOfPlaylistElements = 0;
+    Playlist::const_iterator    it = playlist->begin();
+    while (it != playlist->end()) {
+        ++numberOfPlaylistElements;
+        if (it->second->getFadeInfo()) {
+            hasFadeInfo = true;
+        }
+        ++it;
+    }
+
+    start();                        // may throw logic_error
+    if (!numberOfPlaylistElements || !hasFadeInfo) {
+        return;
+    }
+
+    IHXAudioPlayer* audioPlayer = 0;
+    if (player->QueryInterface(IID_IHXAudioPlayer, (void**)&audioPlayer)
+                                                        != HXR_OK
+            || !audioPlayer) {
+        throw std::runtime_error("can't get IHXAudioPlayer interface");
+    }
+
+    IHXAudioCrossFade* crossFade = 0;
+    if (audioPlayer->QueryInterface(IID_IHXAudioCrossFade, (void**)&crossFade)
+                                                            != HXR_OK
+            || !crossFade) {
+        throw std::runtime_error("can't get IHXAudioCrossFade interface");
+    }
+
+    Ptr<time_duration>::Ref sleepT(new time_duration(microseconds(10)));
+
+    IHXAudioStream*     audioStream[numberOfPlaylistElements];
+    for (int i = 0; i < numberOfPlaylistElements; i++) {
+        do {
+            TimeConversion::sleep(sleepT);
+            audioStream[i] = audioPlayer->GetAudioStream(i);
+        } while (!audioStream[i]);
+    }
+
+    it = playlist->begin();
+    
+    sleepT.reset(new time_duration(seconds(2)));
+    TimeConversion::sleep(sleepT);
+
+    for (int i = 1; i < numberOfPlaylistElements; i++) {
+
+        Ptr<PlaylistElement>::Ref   playlistElement = it->second;
+        if (!playlistElement->getFadeInfo()) {
+            ++it;
+            continue;
+        }
+        
+        // we assume i-th fade out is the same as (i+1)-st fade in
+        unsigned long   crossFadeLength = playlistElement
+                                                ->getFadeInfo()
+                                                ->getFadeOut()
+                                                ->total_milliseconds();
+        unsigned long   fadeOutAt   = playlistElement->getRelativeOffset()
+                                                     ->total_milliseconds()
+                                    + playlistElement->getPlayable()
+                                                     ->getPlaylength()
+                                                     ->total_milliseconds()
+                                    - crossFadeLength;
+
+//std::cerr << "fadeOutAt: " << fadeOutAt << "\n"
+//          << "crossFadeLength: " << crossFadeLength << "\n";
+        crossFade->CrossFade(audioStream[i-1], audioStream[i], 
+                                fadeOutAt, fadeOutAt, crossFadeLength);
+    
+        ++it;
+    }
+
+    for (int i = 0; i < numberOfPlaylistElements; i++) {
+        HX_RELEASE(audioStream[i]);
+    }
+    HX_RELEASE(crossFade);
+    HX_RELEASE(audioPlayer);
+}
 

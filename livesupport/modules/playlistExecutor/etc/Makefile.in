@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -77,6 +77,8 @@ VPATH    = ${SRC_DIR}
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
+TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
+
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
@@ -105,6 +107,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+                     ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${HELIX_LIB_DIR} \
@@ -126,8 +129,8 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/HelixPlayerTest.o \
                    ${TMP_DIR}/AudioPlayerFactoryTest.o 
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
-                   ${HELIX_LIBS} \
-                   -lcppunit -ldl -lm 
+                   ${HELIX_LIBS} ${TAGLIB_LIBS} \
+                   -lcppunit -ldl -lm -lxmlrpc++
 
 
 #-------------------------------------------------------------------------------

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,6 +62,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION(HelixPlayerTest);
  *  The name of the configuration file for the Helix player.
  */
 static const std::string configFileName = "etc/helixPlayer.xml";
+
+/**
+ *  The name of the configuration file for the test playlist in the
+ *  openAndStartPlaylist() method.
+ */
+static const std::string playlistConfigFileName = "etc/playlist.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -382,3 +388,46 @@ HelixPlayerTest :: smilSoundAnimationTest(void)
 }
 
 
+/*------------------------------------------------------------------------------
+ *  Test different SMIL file features
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: animationWorkaroundTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Playlist>::Ref  playlist;
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                        new xmlpp::DomParser(playlistConfigFileName, true));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        playlist.reset(new Playlist());
+        playlist->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        std::cerr << "semantic error in configuration file" << std::endl;
+    } catch (xmlpp::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    CPPUNIT_ASSERT(playlist);
+    CPPUNIT_ASSERT(playlist->getId());
+    
+    Ptr<std::string>::Ref   uri(new std::string("file:var/playlist.smil"));
+    playlist->setUri(uri);
+    
+    CPPUNIT_ASSERT_NO_THROW(helixPlayer->initialize());
+    CPPUNIT_ASSERT_NO_THROW(helixPlayer->openAndStartPlaylist(playlist));
+    CPPUNIT_ASSERT(helixPlayer->isPlaying());
+
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+    while (helixPlayer->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->close();
+
+    helixPlayer->deInitialize();
+}

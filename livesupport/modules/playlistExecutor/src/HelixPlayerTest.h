@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace PlaylistExecutor {
  *  Unit test for the HelixPlayer class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see HelixPlayer
  */
 class HelixPlayerTest : public CPPUNIT_NS::TestFixture
@@ -75,6 +75,7 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
 //    CPPUNIT_TEST(smilParallelTest3);
 //    CPPUNIT_TEST(smilParallelTest4);
 //    CPPUNIT_TEST(smilSoundAnimationTest);
+    CPPUNIT_TEST(animationWorkaroundTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -184,6 +185,14 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         smilSoundAnimationTest(void)            throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the openAndStartPlaylist() method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        animationWorkaroundTest(void)           throw (CPPUNIT_NS::Exception);
 
     public:
         
