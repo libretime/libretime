@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -544,18 +544,6 @@ class BasicStor extends Alib{
      */
     function bsLocalSearch($criteria)
     {
-        $ops = array('full'=>"like '%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
-            '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
-        );
-#        var_dump($criteria);
-        $type  = $criteria['type'];
-        $conds = $criteria['conds'];
-        foreach($conds as $cond){
-            $cat = $cond['cat'];
-            $opVal = sprintf($ops[$cond['op']], $cond['val']);
-            $sqlCond = "$cat $opVal";
-            echo "$sqlCond\n";
-        }
         $ftsrch = $criteria;
         $res = $this->dbc->getCol("SELECT md.gunid as gunid
             FROM {$this->filesTable} f, {$this->mdataTable} md
