@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,14 +102,27 @@ static const std::string xmlRpcDaemonConfElement = "xmlRpcDaemon";
 SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
                         : XmlRpcDaemon()
 {
-    getVersionMethod.reset(new GetVersionMethod());
-    uploadPlaylistMethod.reset(new UploadPlaylistMethod());
-    displayScheduleMethod.reset(new DisplayScheduleMethod());
+    addAudioClipToPlaylistMethod.reset(new AddAudioClipToPlaylistMethod());
+    createPlaylistMethod.reset(new CreatePlaylistMethod());
+    deletePlaylistMethod.reset(new DeletePlaylistMethod());
+    displayAudioClipMethod.reset(new DisplayAudioClipMethod());
+    displayAudioClipsMethod.reset(new DisplayAudioClipsMethod());
     displayPlaylistMethod.reset(new DisplayPlaylistMethod());
+    displayPlaylistsMethod.reset(new DisplayPlaylistsMethod());
+    displayScheduleMethod.reset(new DisplayScheduleMethod());
+    generatePlayReportMethod.reset(new GeneratePlayReportMethod());
+    getSchedulerTimeMethod.reset(new GetSchedulerTimeMethod());
+    getVersionMethod.reset(new GetVersionMethod());
+    openPlaylistForEditingMethod.reset(new OpenPlaylistForEditingMethod());
+    removeAudioClipFromPlaylistMethod.reset(new 
+                                        RemoveAudioClipFromPlaylistMethod());
     removeFromScheduleMethod.reset(new RemoveFromScheduleMethod());
     rescheduleMethod.reset(new RescheduleMethod());
-    addAudioClipToPlaylistMethod.reset(new AddAudioClipToPlaylistMethod());
-    openPlaylistForEditingMethod.reset(new OpenPlaylistForEditingMethod());
+    revertEditedPlaylistMethod.reset(new RevertEditedPlaylistMethod());
+    savePlaylistMethod.reset(new SavePlaylistMethod());
+    updateFadeInFadeOutMethod.reset(new UpdateFadeInFadeOutMethod());
+    uploadPlaylistMethod.reset(new UploadPlaylistMethod());
+    validatePlaylistMethod.reset(new ValidatePlaylistMethod());
 }
 
 
@@ -218,14 +231,26 @@ SchedulerDaemon :: registerXmlRpcFunctions(
                             Ptr<XmlRpc::XmlRpcServer>::Ref  xmlRpcServer)
                                                     throw (std::logic_error)
 {
-    xmlRpcServer->addMethod(getVersionMethod.get());
-    xmlRpcServer->addMethod(uploadPlaylistMethod.get());
-    xmlRpcServer->addMethod(displayScheduleMethod.get());
+    xmlRpcServer->addMethod(addAudioClipToPlaylistMethod.get());
+    xmlRpcServer->addMethod(createPlaylistMethod.get());
+    xmlRpcServer->addMethod(deletePlaylistMethod.get());
+    xmlRpcServer->addMethod(displayAudioClipMethod.get());
+    xmlRpcServer->addMethod(displayAudioClipsMethod.get());
     xmlRpcServer->addMethod(displayPlaylistMethod.get());
+    xmlRpcServer->addMethod(displayPlaylistsMethod.get());
+    xmlRpcServer->addMethod(displayScheduleMethod.get());
+    xmlRpcServer->addMethod(generatePlayReportMethod.get());
+    xmlRpcServer->addMethod(getSchedulerTimeMethod.get());
+    xmlRpcServer->addMethod(getVersionMethod.get());
+    xmlRpcServer->addMethod(openPlaylistForEditingMethod.get());
+    xmlRpcServer->addMethod(removeAudioClipFromPlaylistMethod.get());
     xmlRpcServer->addMethod(removeFromScheduleMethod.get());
     xmlRpcServer->addMethod(rescheduleMethod.get());
-    xmlRpcServer->addMethod(addAudioClipToPlaylistMethod.get());
-    xmlRpcServer->addMethod(openPlaylistForEditingMethod.get());
+    xmlRpcServer->addMethod(revertEditedPlaylistMethod.get());
+    xmlRpcServer->addMethod(savePlaylistMethod.get());
+    xmlRpcServer->addMethod(updateFadeInFadeOutMethod.get());
+    xmlRpcServer->addMethod(uploadPlaylistMethod.get());
+    xmlRpcServer->addMethod(validatePlaylistMethod.get());
 }
 
 

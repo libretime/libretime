@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -39,18 +39,20 @@
 #error "Need unistd.h"
 #endif
 
+
 #include <string>
-#include <XmlRpcClient.h>
+#include <iostream>
 #include <XmlRpcValue.h>
 
-#include "SchedulerDaemon.h"
-#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
+#include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
-#include "RpcDisplayPlaylistTest.h"
+#include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
-using namespace std;
-using namespace XmlRpc;
-using namespace LiveSupport::Core;
+#include "DisplayAudioClipMethod.h"
+#include "DisplayAudioClipMethodTest.h"
+
+
+using namespace LiveSupport::Db;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::Authentication;
@@ -61,24 +63,25 @@ using namespace LiveSupport::Authentication;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
-
-/**
- *  The name of the configuration file for the scheduler daemon.
- */
-static const std::string configFileName = "etc/scheduler.xml";
+CPPUNIT_TEST_SUITE_REGISTRATION(DisplayAudioClipMethodTest);
 
 /**
  *  The name of the configuration file for the storage client factory.
  */
-static const std::string storageClientConfig =
-                                        "etc/storageClient.xml";
+const std::string DisplayAudioClipMethodTest::storageClientConfig =
+                                                    "etc/storageClient.xml";
+
+/**
+ *  The name of the configuration file for the connection manager factory.
+ */
+const std::string DisplayAudioClipMethodTest::connectionManagerConfig =
+                                          "etc/connectionManagerFactory.xml";
 
 /**
  *  The name of the configuration file for the authentication client factory.
  */
-static const std::string authenticationClientConfigFileName =
-                                        "etc/authenticationClient.xml";
+const std::string DisplayAudioClipMethodTest::authenticationClientConfig =
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -90,9 +93,9 @@ static const std::string authenticationClientConfigFileName =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: configure(
+DisplayAudioClipMethodTest :: configure(
             Ptr<Configurable>::Ref      configurable,
-            const std::string         & fileName)
+            const std::string           fileName)
                                                 throw (std::invalid_argument,
                                                        xmlpp::exception)
 {
@@ -103,48 +106,35 @@ RpcDisplayPlaylistTest :: configure(
     configurable->configure(*root);
 }
 
-
+                                                        
 /*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: setUp(void)                        throw ()
+DisplayAudioClipMethodTest :: setUp(void)                         throw ()
 {
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-    if (!daemon->isConfigured()) {
-        try {
-            configure(daemon, configFileName);
-        } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("semantic error in scheduler configuration file");
-        } catch (xmlpp::exception &e) {
-            std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("error parsing scheduler configuration file");
-        }
-    }
-
-    daemon->install();
-//    daemon->start();
-//    sleep(5);
-
+    Ptr<AuthenticationClientFactory>::Ref acf;
     try {
         Ptr<StorageClientFactory>::Ref scf
                                         = StorageClientFactory::getInstance();
         configure(scf, storageClientConfig);
 
-        Ptr<AuthenticationClientFactory>::Ref acf;
+        Ptr<ConnectionManagerFactory>::Ref cmf
+                                    = ConnectionManagerFactory::getInstance();
+        configure(cmf, connectionManagerConfig);
+
         acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfigFileName);
-        authentication = acf->getAuthenticationClient();
+        configure(acf, authenticationClientConfig);
+
     } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("semantic error in authentication configuration file");
+        CPPUNIT_FAIL("semantic error in configuration file");
     } catch (xmlpp::exception &e) {
-        std::cerr << e.what() << std::endl;
-        CPPUNIT_FAIL("error parsing authentication configuration file");
+        CPPUNIT_FAIL("error parsing configuration file");
+    } catch (std::exception &e) {
+        CPPUNIT_FAIL(e.what());
     }
     
+    authentication = acf->getAuthenticationClient();
     if (!(sessionId = authentication->login("root", "q"))) {
         CPPUNIT_FAIL("could not log in to authentication server");
     }
@@ -155,13 +145,8 @@ RpcDisplayPlaylistTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
+DisplayAudioClipMethodTest :: tearDown(void)                      throw ()
 {
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-//    daemon->stop();
-    daemon->uninstall();
-    
     authentication->logout(sessionId);
     sessionId.reset();
     authentication.reset();
@@ -169,44 +154,62 @@ RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
 
 
 /*------------------------------------------------------------------------------
- *  A simple smoke test.
+ *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: simpleTest(void)
+DisplayAudioClipMethodTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
+    Ptr<DisplayAudioClipMethod>::Ref method(new DisplayAudioClipMethod());
+    XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
+    XmlRpc::XmlRpcValue             result;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
+    // set up a structure for the parameter
+    parameter["sessionId"]   = sessionId->getId();
+    parameter["audioClipId"] = 10001;
+    rootParameter[0] = parameter;
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(((int) result["id"]) == 1);
-    CPPUNIT_ASSERT(((int) result["playlength"]) == (90 * 60));
+    try {
+        method->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+    CPPUNIT_ASSERT(int(result["id"]) == 10001);
+    CPPUNIT_ASSERT(int(result["playlength"]) == (60 * 60));
 }
 
 
 /*------------------------------------------------------------------------------
- *  A simple negative test.
+ *  A very simple negative test
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: negativeTest(void)
+DisplayAudioClipMethodTest :: negativeTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
+    Ptr<DisplayAudioClipMethod>::Ref method(new DisplayAudioClipMethod());
+    XmlRpc::XmlRpcValue             parameter;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
+    XmlRpc::XmlRpcValue             result;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 9999;
+    // set up a structure for the parameter
+    parameter["sessionId"]   = sessionId->getId();
+    parameter["audioClipId"] = 9999;
+    rootParameter[0] = parameter;
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed to display non-existent audio clip");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 603);    // audio clip not found
+    }
 }

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.32 $
+#   Version  : $Revision: 1.33 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -168,6 +168,7 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/DisplayAudioClipsMethod.o \
                  ${TMP_DIR}/RevertEditedPlaylistMethod.o \
                  ${TMP_DIR}/SavePlaylistMethod.o \
+                 ${TMP_DIR}/GetSchedulerTimeMethod.o \
                  ${TMP_DIR}/PlayLogFactory.o \
                  ${TMP_DIR}/PostgresqlPlayLog.o \
                  ${TMP_DIR}/GeneratePlayReportMethod.o \
@@ -194,6 +195,8 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RpcRemoveFromScheduleTest.o \
                    ${TMP_DIR}/RpcRescheduleTest.o \
                    ${TMP_DIR}/RpcAddAudioClipToPlaylistTest.o \
+                   ${TMP_DIR}/GetSchedulerTimeMethodTest.o \
+                   ${TMP_DIR}/RpcGetSchedulerTimeTest.o \
                    ${TMP_DIR}/XmlRpcToolsTest.o \
                    ${TMP_DIR}/GetVersionMethodTest.o \
                    ${TMP_DIR}/RpcGetVersionTest.o \

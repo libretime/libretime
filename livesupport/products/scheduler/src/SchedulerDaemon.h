@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,14 +62,26 @@
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventScheduler.h"
-#include "GetVersionMethod.h"
-#include "UploadPlaylistMethod.h"
-#include "DisplayScheduleMethod.h"
+#include "AddAudioClipToPlaylistMethod.h"
+#include "CreatePlaylistMethod.h"
+#include "DeletePlaylistMethod.h"
+#include "DisplayAudioClipMethod.h"
+#include "DisplayAudioClipsMethod.h"
 #include "DisplayPlaylistMethod.h"
+#include "DisplayPlaylistsMethod.h"
+#include "DisplayScheduleMethod.h"
+#include "GeneratePlayReportMethod.h"
+#include "GetSchedulerTimeMethod.h"
+#include "GetVersionMethod.h"
+#include "OpenPlaylistForEditingMethod.h"
+#include "RemoveAudioClipFromPlaylistMethod.h"
 #include "RemoveFromScheduleMethod.h"
 #include "RescheduleMethod.h"
-#include "AddAudioClipToPlaylistMethod.h"
-#include "OpenPlaylistForEditingMethod.h"
+#include "RevertEditedPlaylistMethod.h"
+#include "SavePlaylistMethod.h"
+#include "UpdateFadeInFadeOutMethod.h"
+#include "UploadPlaylistMethod.h"
+#include "ValidatePlaylistMethod.h"
 #include "XmlRpcDaemon.h"
 
 
@@ -130,7 +142,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see ConnectionManagerFactory
  *  @see StorageClientFactory
  *  @see ScheduleFactory
@@ -158,14 +170,39 @@ class SchedulerDaemon : public Installable,
         Ptr<AudioPlayerInterface>::Ref      audioPlayer;
 
         /**
-         *  The getVersion the daemon is providing.
+         *  The addAudioClipToPlaylistMethod the daemon is providing.
          */
-        Ptr<GetVersionMethod>::Ref          getVersionMethod;
+        Ptr<AddAudioClipToPlaylistMethod>::Ref  addAudioClipToPlaylistMethod;
 
         /**
-         *  The uploadPlaylistMethod the daemon is providing.
+         *  The createPlaylistMethod the daemon is providing.
          */
-        Ptr<UploadPlaylistMethod>::Ref      uploadPlaylistMethod;
+        Ptr<CreatePlaylistMethod>::Ref  createPlaylistMethod;
+
+        /**
+         *  The deletePlaylistMethod the daemon is providing.
+         */
+        Ptr<DeletePlaylistMethod>::Ref  deletePlaylistMethod;
+
+        /**
+         *  The displayAudioClipMethod the daemon is providing.
+         */
+        Ptr<DisplayAudioClipMethod>::Ref     displayAudioClipMethod;
+
+        /**
+         *  The displayAudioClipsMethod the daemon is providing.
+         */
+        Ptr<DisplayAudioClipsMethod>::Ref     displayAudioClipsMethod;
+
+        /**
+         *  The displayPlaylistMethod the daemon is providing.
+         */
+        Ptr<DisplayPlaylistMethod>::Ref     displayPlaylistMethod;
+
+        /**
+         *  The displayPlaylistsMethod the daemon is providing.
+         */
+        Ptr<DisplayPlaylistsMethod>::Ref     displayPlaylistsMethod;
 
         /**
          *  The displayScheduleMethod the daemon is providing.
@@ -173,9 +210,30 @@ class SchedulerDaemon : public Installable,
         Ptr<DisplayScheduleMethod>::Ref     displayScheduleMethod;
 
         /**
-         *  The displayPlaylistMethod the daemon is providing.
+         *  The generatePlayReportMethod the daemon is providing.
          */
-        Ptr<DisplayPlaylistMethod>::Ref     displayPlaylistMethod;
+        Ptr<GeneratePlayReportMethod>::Ref     generatePlayReportMethod;
+
+        /**
+         *  The getSchedulerTimeMethod the daemon is providing.
+         */
+        Ptr<GetSchedulerTimeMethod>::Ref          getSchedulerTimeMethod;
+
+        /**
+         *  The getVersion the daemon is providing.
+         */
+        Ptr<GetVersionMethod>::Ref          getVersionMethod;
+
+        /**
+         *  The openPlaylistForEditingMethod the daemon is providing.
+         */
+        Ptr<OpenPlaylistForEditingMethod>::Ref  openPlaylistForEditingMethod;
+
+        /**
+         *  The removeAudioClipFromPlaylistMethod the daemon is providing.
+         */
+        Ptr<RemoveAudioClipFromPlaylistMethod>::Ref 
+                                        removeAudioClipFromPlaylistMethod;
 
         /**
          *  The removeFromScheduleMethod the daemon is providing.
@@ -188,14 +246,29 @@ class SchedulerDaemon : public Installable,
         Ptr<RescheduleMethod>::Ref  rescheduleMethod;
 
         /**
-         *  The addAudioClipToPlaylistMethod the daemon is providing.
+         *  The revertEditedPlaylistMethod the daemon is providing.
          */
-        Ptr<AddAudioClipToPlaylistMethod>::Ref  addAudioClipToPlaylistMethod;
+        Ptr<RevertEditedPlaylistMethod>::Ref  revertEditedPlaylistMethod;
 
         /**
-         *  The openPlaylistForEditingMethod the daemon is providing.
+         *  The savePlaylistMethod the daemon is providing.
          */
-        Ptr<OpenPlaylistForEditingMethod>::Ref  openPlaylistForEditingMethod;
+        Ptr<SavePlaylistMethod>::Ref  savePlaylistMethod;
+
+        /**
+         *  The updateFadeInFadeOutMethod the daemon is providing.
+         */
+        Ptr<UpdateFadeInFadeOutMethod>::Ref  updateFadeInFadeOutMethod;
+
+        /**
+         *  The uploadPlaylistMethod the daemon is providing.
+         */
+        Ptr<UploadPlaylistMethod>::Ref      uploadPlaylistMethod;
+
+        /**
+         *  The validatePlaylistMethod the daemon is providing.
+         */
+        Ptr<ValidatePlaylistMethod>::Ref      validatePlaylistMethod;
 
         /**
          *  Default constructor.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -184,11 +184,6 @@ void
 RpcAddAudioClipToPlaylistTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<OpenPlaylistForEditingMethod>::Ref 
-                   openPlaylistMethod(new OpenPlaylistForEditingMethod());
-    Ptr<AddAudioClipToPlaylistMethod>::Ref 
-                   addAudioClipMethod(new AddAudioClipToPlaylistMethod());
-
     XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;

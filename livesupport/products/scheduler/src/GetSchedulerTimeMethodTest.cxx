@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GetSchedulerTimeMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -39,19 +39,18 @@
 #error "Need unistd.h"
 #endif
 
+
 #include <string>
 #include <XmlRpcClient.h>
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
-#include "LiveSupport/Storage/StorageClientFactory.h"
-#include "RpcDisplayPlaylistTest.h"
+#include "GetSchedulerTimeMethodTest.h"
 
 using namespace std;
 using namespace XmlRpc;
 using namespace LiveSupport::Core;
-using namespace LiveSupport::Storage;
 using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::Authentication;
 
@@ -61,24 +60,13 @@ using namespace LiveSupport::Authentication;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(RpcDisplayPlaylistTest);
-
-/**
- *  The name of the configuration file for the scheduler daemon.
- */
-static const std::string configFileName = "etc/scheduler.xml";
-
-/**
- *  The name of the configuration file for the storage client factory.
- */
-static const std::string storageClientConfig =
-                                        "etc/storageClient.xml";
+CPPUNIT_TEST_SUITE_REGISTRATION(GetSchedulerTimeMethodTest);
 
 /**
  *  The name of the configuration file for the authentication client factory.
  */
 static const std::string authenticationClientConfigFileName =
-                                        "etc/authenticationClient.xml";
+                                          "etc/authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -90,7 +78,7 @@ static const std::string authenticationClientConfigFileName =
  *  Configure a Configurable with an XML file.
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: configure(
+GetSchedulerTimeMethodTest :: configure(
             Ptr<Configurable>::Ref      configurable,
             const std::string         & fileName)
                                                 throw (std::invalid_argument,
@@ -108,31 +96,9 @@ RpcDisplayPlaylistTest :: configure(
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: setUp(void)                        throw ()
+GetSchedulerTimeMethodTest :: setUp(void)                        throw ()
 {
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-    if (!daemon->isConfigured()) {
-        try {
-            configure(daemon, configFileName);
-        } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("semantic error in scheduler configuration file");
-        } catch (xmlpp::exception &e) {
-            std::cerr << e.what() << std::endl;
-            CPPUNIT_FAIL("error parsing scheduler configuration file");
-        }
-    }
-
-    daemon->install();
-//    daemon->start();
-//    sleep(5);
-
     try {
-        Ptr<StorageClientFactory>::Ref scf
-                                        = StorageClientFactory::getInstance();
-        configure(scf, storageClientConfig);
-
         Ptr<AuthenticationClientFactory>::Ref acf;
         acf = AuthenticationClientFactory::getInstance();
         configure(acf, authenticationClientConfigFileName);
@@ -155,13 +121,8 @@ RpcDisplayPlaylistTest :: setUp(void)                        throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
+GetSchedulerTimeMethodTest :: tearDown(void)                     throw ()
 {
-    Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-//    daemon->stop();
-    daemon->uninstall();
-    
     authentication->logout(sessionId);
     sessionId.reset();
     authentication.reset();
@@ -169,44 +130,76 @@ RpcDisplayPlaylistTest :: tearDown(void)                     throw ()
 
 
 /*------------------------------------------------------------------------------
- *  A simple smoke test.
+ *  Test a simple query, resulting in an empty result set.
  *----------------------------------------------------------------------------*/
 void
-RpcDisplayPlaylistTest :: simpleTest(void)
+GetSchedulerTimeMethodTest :: simpleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
+    Ptr<GetSchedulerTimeMethod>::Ref 
+                        getSchedulerTimeMethod(new GetSchedulerTimeMethod());
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 1;
-
-    result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(((int) result["id"]) == 1);
-    CPPUNIT_ASSERT(((int) result["playlength"]) == (90 * 60));
-}
-
-
-/*------------------------------------------------------------------------------
- *  A simple negative test.
- *----------------------------------------------------------------------------*/
-void
-RpcDisplayPlaylistTest :: negativeTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    XmlRpcValue                 parameters;
-    XmlRpcValue                 result;
-
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = 9999;
+    XmlRpcValue         parameters;
+    XmlRpc::XmlRpcValue rootParameter;
+    XmlRpcValue         result;
+    struct tm           time1,
+                        time2;
 
     result.clear();
-    xmlRpcClient.execute("displayPlaylist", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    try {
+        getSchedulerTimeMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("failed to detect invalid parameter format");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 1901);
+    }
+
+    rootParameter.setSize(1);
+    parameters["dummyParameter"] = "dummyValue";
+    rootParameter[0] = parameters;
+    result.clear();
+    try {
+        getSchedulerTimeMethod->execute(rootParameter, result);
+        CPPUNIT_FAIL("failed to detect missing session ID");
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 1920);
+    }
+
+    parameters.clear();
+    parameters["sessionId"] = sessionId->getId();
+    rootParameter[0] = parameters;
+    result.clear();
+    try {
+        getSchedulerTimeMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+    CPPUNIT_ASSERT(result.hasMember("schedulerTime"));
+    time1 = result["schedulerTime"];
+
+    result.clear();
+    try {
+        getSchedulerTimeMethod->execute(rootParameter, result);
+    }
+    catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+    CPPUNIT_ASSERT(result.hasMember("schedulerTime"));
+    time2 = result["schedulerTime"];
+
+    CPPUNIT_ASSERT(time1.tm_year == time2.tm_year);
+    // could fail on New Year's Eve, but we don't work on New Year's Eve
+    
+    CPPUNIT_ASSERT(time1.tm_hour <= time2.tm_hour);
+    CPPUNIT_ASSERT(time1.tm_min <= time2.tm_min);
+    CPPUNIT_ASSERT(time1.tm_min + 1 >= time2.tm_min);
 }
+
