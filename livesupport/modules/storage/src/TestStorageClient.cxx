@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -112,6 +112,23 @@ TestStorageClient :: getPlaylist(Ptr<const UniqueId>::Ref id) const
     }
 
     return it->second;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Delete a playlist.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: deletePlaylist(Ptr<const UniqueId>::Ref id)
+                                                throw (std::invalid_argument)
+{
+    PlaylistMap::iterator   it = playlistMap.find(id->getId());
+
+    if (it == playlistMap.end()) {
+        throw std::invalid_argument("no such playlist");
+    }
+
+    playlistMap.erase(it);
 }
 
 

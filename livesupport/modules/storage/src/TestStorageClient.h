@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,8 +66,8 @@ using namespace LiveSupport::Core;
 /**
  *  A dummy storage client, only used for test purposes.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -147,6 +147,17 @@ class TestStorageClient :
          */
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<const UniqueId>::Ref id) const
+                                            throw (std::invalid_argument);
+
+        /**
+         *  Delete the playlist with the specified id.
+         *
+         *  @param id the id of the playlist to be deleted.
+         *  @exception std::invalid_argument if no playlist with the specified
+         *             id exists.
+         */
+        virtual void
+        deletePlaylist(Ptr<const UniqueId>::Ref id)
                                             throw (std::invalid_argument);
 };
 
