@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -93,7 +93,7 @@ TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
   db_init db_clean testonly transtest
 
 all: dir_setup db_init
-#	$(MAKE) -C ../archiveServer all
+	$(MAKE) -C ../archiveServer all
 
 dir_setup: ${DOXYGEN_DIR}
 	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
@@ -110,7 +110,7 @@ docclean:
 	${RMDIR} ${DOXYGEN_DIR}/html
 
 depclean: clean
-#	$(MAKE) -C ../archiveServer clean
+	$(MAKE) -C ../archiveServer clean
 
 dist:
 	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
@@ -129,7 +129,8 @@ recheck: clean check
 #   Specific targets
 #-------------------------------------------------------------------------------
 transtest:
-	cd var/tests; php -q transTest.php
+	cdvar/tests/transTest.sh
+#	cd var/tests; php -q transTest.php
 
 db_init:
 	cd var/install; php -q install.php

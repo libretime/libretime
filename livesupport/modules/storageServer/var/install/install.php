@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ if(PEAR::isError($dbc)){
 
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb =& new GreenBox(&$dbc, $config);
-$tr =& new Transport(&$dbc, $config);
+$tr =& new Transport(&$dbc, &$gb, $config);
 $pr =& new Prefs(&$gb);
 
 echo "#StorageServer step 2:\n# trying uninstall ...\n";

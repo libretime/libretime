@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.16 $
+#   Version  : $Revision: 1.17 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ downloadRAD() {
     if [ $DEBUG_I ]; then echo $URL; fi
     if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# curl: "
-    curl -Ifs $URL > /dev/null || { ERN=$?; echo $RES; exit $ERN; }
+    curl -Ifs $URL > /dev/null || { ERN=$?; echo $URL; exit $ERN; }
     echo "status: $?"
     echo -n "# downloadRawAudioDataClose: "
     $XR_CLI downloadRawAudioDataClose $SESSID $TOKEN || exit $?
