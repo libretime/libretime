@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<playlist>
+<playlist id="0000000000000000" playlength="00:00:00.000000">
  <metadata
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:dcterms="http://purl.org/dc/terms/"
-  xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+   xmlns="http://mdlf.org/livesupport/elements/1.0/"
+   xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
  />
 </playlist>
