@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,23 +116,22 @@ RpcDisplayAudioClipsTest :: firstTest(void)
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.size() >= 2);
 
-    XmlRpc::XmlRpcValue     audioClip = result[0];
-    CPPUNIT_ASSERT(audioClip.hasMember("id"));
-    CPPUNIT_ASSERT(audioClip["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(audioClip["id"]) == "0000000000010001");
+    XmlRpc::XmlRpcValue     result0 = result[0];
+    CPPUNIT_ASSERT(result0.hasMember("audioClip"));
+    CPPUNIT_ASSERT(result0["audioClip"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    Ptr<AudioClip>::Ref     audioClip;
+    CPPUNIT_ASSERT_NO_THROW(audioClip.reset(new AudioClip(result0)));
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10001);
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 60 * 60);
 
-    CPPUNIT_ASSERT(audioClip.hasMember("playlength"));
-    CPPUNIT_ASSERT(audioClip["playlength"].getType() == XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(audioClip["playlength"]) == 60 * 60);
-
-    audioClip = result[1];
-    CPPUNIT_ASSERT(audioClip.hasMember("id"));
-    CPPUNIT_ASSERT(audioClip["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(audioClip["id"]) == "0000000000010002");
-
-    CPPUNIT_ASSERT(audioClip.hasMember("playlength"));
-    CPPUNIT_ASSERT(audioClip["playlength"].getType() == XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(audioClip["playlength"]) == 30 * 60);
+    XmlRpc::XmlRpcValue     result1 = result[1];
+    CPPUNIT_ASSERT(result1.hasMember("audioClip"));
+    CPPUNIT_ASSERT(result1["audioClip"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT_NO_THROW(audioClip.reset(new AudioClip(result1)));
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10002);
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 30 * 60);
 
     xmlRpcClient.close();
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUpdateFadeInFadeOutTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,10 +109,10 @@ RpcUpdateFadeInFadeOutTest :: firstTest(void)
 
     XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = "0000000000000001";
-    parameters["relativeOffset"] = 90*60;
-    parameters["fadeIn"]         = 0;
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["playlistElementId"] = "0000000000009999";
+    parameters["fadeIn"]            = 0;
 
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("updateFadeInFadeOut", 
@@ -146,9 +146,9 @@ RpcUpdateFadeInFadeOutTest :: firstTest(void)
                 xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("faultCode"));
     CPPUNIT_ASSERT(int(result["faultCode"]) == 1608);
-                                            // no audio clip at this rel offset
+                                            // no such playlist element
 
-    parameters["relativeOffset"] = 0;
+    parameters["playlistElementId"] = "0000000000000101";
 
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("updateFadeInFadeOut", 

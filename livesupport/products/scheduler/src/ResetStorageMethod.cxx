@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ResetStorageMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ ResetStorageMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     try {
         storage->reset();
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "storage reset() returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+1, eMsg, returnValue);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,11 +183,12 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
     rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = "0000000000000001";
-    parameters["audioClipId"]    = "0000000000010001";
-    parameters["relativeOffset"] = 90*60;
-    rootParameter[0]             = parameters;
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["audioClipId"]       = "0000000000010001";
+    parameters["relativeOffset"]    = 60*60;
+    parameters["playlistElementId"] = "0000000000009999";
+    rootParameter[0]                = parameters;
 
     result.clear();
     try {
@@ -212,7 +213,7 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
         removeAudioClipMethod->execute(rootParameter, result);
         CPPUNIT_FAIL("allowed to remove non-existent audio clip from playlist");
     } catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 406);  // no audio clip at this rel offset
+        CPPUNIT_ASSERT(e.getCode() == 406);  // no such playlist element
     }
 
     result.clear();
@@ -224,6 +225,16 @@ RemoveAudioClipFromPlaylistMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
+    CPPUNIT_ASSERT(result.hasMember("playlistElementId"));
+    CPPUNIT_ASSERT(result["playlistElementId"].getType()
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    std::string  playlistElementId(result["playlistElementId"]);
+
+    parameters.clear();
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["playlistElementId"] = playlistElementId;
+    rootParameter[0]                = parameters;
 
     result.clear();
     try {

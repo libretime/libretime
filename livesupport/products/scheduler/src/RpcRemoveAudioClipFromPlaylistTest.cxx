@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveAudioClipFromPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,10 +111,11 @@ RpcRemoveAudioClipFromPlaylistTest :: firstTest(void)
 
     XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
 
-    parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = "0000000000000001";
-    parameters["audioClipId"]    = "0000000000010001";
-    parameters["relativeOffset"] = 90*60;
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["audioClipId"]       = "0000000000010001";
+    parameters["relativeOffset"]    = 60*60;
+    parameters["playlistElementId"] = "0000000000009999";
 
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("removeAudioClipFromPlaylist", 
@@ -143,6 +144,15 @@ RpcRemoveAudioClipFromPlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcClient.execute("addAudioClipToPlaylist", 
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("playlistElementId"));
+    CPPUNIT_ASSERT(result["playlistElementId"].getType()
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    std::string  playlistElementId = std::string(result["playlistElementId"]);
+
+    parameters.clear();
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["playlistElementId"] = playlistElementId;
 
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("removeAudioClipFromPlaylist", 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -189,6 +189,43 @@ Playlist :: Playlist(Ptr<UniqueId>::Ref               id,
 
 
 /*------------------------------------------------------------------------------
+ *  Convert to an XmlRpcValue.
+ *----------------------------------------------------------------------------*/
+Playlist :: operator XmlRpc::XmlRpcValue() const
+                                                throw()
+{
+    XmlRpc::XmlRpcValue     xmlRpcValue;
+    xmlRpcValue[configElementNameStr] = std::string(*getXmlDocumentString());
+    
+    return xmlRpcValue;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct from an XmlRpcValue.
+ *----------------------------------------------------------------------------*/
+Playlist :: Playlist(XmlRpc::XmlRpcValue &  xmlRpcValue)
+                                                throw (std::invalid_argument)
+                        : Playable(PlaylistType)
+{
+    elementList.reset(new PlaylistElementListType);
+
+    if (!xmlRpcValue.hasMember(configElementNameStr)) {
+        throw std::invalid_argument("no playlist data found in XmlRpcValue");
+    }
+    
+    xmlpp::DomParser    parser;
+    try {
+        parser.parse_memory(std::string(xmlRpcValue[configElementNameStr]));
+    } catch (xmlpp::exception &e) {
+        throw std::invalid_argument("error parsing XML document");
+    }
+    
+    configure(*parser.get_document()->get_root_node());     // may throw
+}
+
+
+/*------------------------------------------------------------------------------
  *  Set the value of the title field.
  *----------------------------------------------------------------------------*/
 void
@@ -217,7 +254,7 @@ Playlist :: setPlaylength(Ptr<time_duration>::Ref playlength)
  *----------------------------------------------------------------------------*/
 void
 Playlist :: configure(const xmlpp::Element    & element)
-                                            throw (std::invalid_argument)
+                                                throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "bad configuration element ";
@@ -347,37 +384,26 @@ Playlist :: configure(const xmlpp::Element    & element)
  *----------------------------------------------------------------------------*/
 void
 Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
-                                            throw (std::invalid_argument)
+                                                throw (std::invalid_argument)
 {
     Ptr<const time_duration>::Ref  relativeOffset
                                    = playlistElement->getRelativeOffset();
-
-    if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "two playlist elements at the same relative offset";
-        throw std::invalid_argument(eMsg);
-    }
-
-    (*elementList)[*relativeOffset] = playlistElement;
+    elementList->insert(std::make_pair(*relativeOffset, playlistElement));
 }
 
 
 /*------------------------------------------------------------------------------
  *  Add a new audio clip to the playlist.
  *----------------------------------------------------------------------------*/
-void
+Ptr<UniqueId>::Ref
 Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                        Ptr<time_duration>::Ref  relativeOffset,
                        Ptr<FadeInfo>::Ref       fadeInfo)
-                                            throw (std::invalid_argument)
+                                                throw (std::invalid_argument)
 {
-    if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "two playlist elements at the same relative offset";
-        throw std::invalid_argument(eMsg);
-    }
-
     Ptr<PlaylistElement>::Ref   playlistElement(new PlaylistElement(
                                     relativeOffset, audioClip, fadeInfo));
-    (*elementList)[*relativeOffset] = playlistElement;
+    elementList->insert(std::make_pair(*relativeOffset, playlistElement));
     
     Ptr<time_duration>::Ref     endOffset(new time_duration(
                                                 *relativeOffset 
@@ -385,26 +411,23 @@ Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
     if (*endOffset > *playlength) {
         setPlaylength(endOffset);
     }
+    
+    return playlistElement->getId();
 }
 
 
 /*------------------------------------------------------------------------------
  *  Add a new sub-playlist to the playlist.
  *----------------------------------------------------------------------------*/
-void
+Ptr<UniqueId>::Ref
 Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
                       Ptr<time_duration>::Ref  relativeOffset,
                       Ptr<FadeInfo>::Ref       fadeInfo)
-                                            throw (std::invalid_argument)
+                                                throw (std::invalid_argument)
 {
-    if (elementList->find(*relativeOffset) != elementList->end()) {
-        std::string eMsg = "two playlist elements at the same relative offset";
-        throw std::invalid_argument(eMsg);
-    }
-
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
                                    relativeOffset, playlist, fadeInfo));
-    (*elementList)[*relativeOffset] = playlistElement;
+    elementList->insert(std::make_pair(*relativeOffset, playlistElement));
     
     Ptr<time_duration>::Ref     endOffset(new time_duration(
                                                 *relativeOffset 
@@ -412,6 +435,24 @@ Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
     if (*endOffset > *playlength) {
         setPlaylength(endOffset);
     }
+    
+    return playlistElement->getId();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get an iterator pointing to a playlist element with a given ID.
+ *----------------------------------------------------------------------------*/
+Playlist::iterator
+Playlist::find(Ptr<UniqueId>::Ref playlistElementId)
+                                                throw ()
+{
+    Playlist::iterator  it = elementList->begin();
+    while (it != elementList->end() 
+            && *(it->second->getId()) != *playlistElementId) {
+        ++it;
+    }
+    return it;
 }
 
 
@@ -419,15 +460,14 @@ Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
  *  Change the fade in / fade out info of a playlist element.
  *----------------------------------------------------------------------------*/
 void
-Playlist::setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
-                      Ptr<FadeInfo>::Ref       fadeInfo)
-                                            throw (std::invalid_argument)
+Playlist::setFadeInfo(Ptr<UniqueId>::Ref    playlistElementId,
+                      Ptr<FadeInfo>::Ref    fadeInfo)
+                                                throw (std::invalid_argument)
 {
-    PlaylistElementListType::iterator it = elementList->find(*relativeOffset);
+    Playlist::iterator it = this->find(playlistElementId);
 
-    if (it == elementList->end()) {
-        std::string eMsg = "no playlist element at this relative offset";
-        throw std::invalid_argument(eMsg);
+    if (it == this->end()) {
+        throw std::invalid_argument("no playlist element with this ID");
     }
 
     it->second->setFadeInfo(fadeInfo);
@@ -438,15 +478,16 @@ Playlist::setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
  *  Remove a playlist element from the playlist.
  *----------------------------------------------------------------------------*/
 void
-Playlist::removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
-                                            throw (std::invalid_argument)
+Playlist::removePlaylistElement(Ptr<UniqueId>::Ref  playlistElementId)
+                                                throw (std::invalid_argument)
 {
-    // this returns the number of elements found and erased
-    if (!elementList->erase(*relativeOffset)) {
-        std::string eMsg = "no playlist element found "
-                           "at the specified relative offset";
-        throw std::invalid_argument(eMsg);
+    Playlist::iterator it = this->find(playlistElementId);
+    
+    if (it == this->end()) {
+        throw std::invalid_argument("no playlist element with this ID");
     }
+
+    elementList->erase(it);
 }
 
 
@@ -454,7 +495,7 @@ Playlist::removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
  *  Validate the playlist.
  *----------------------------------------------------------------------------*/
 bool
-Playlist::valid(void)                    throw ()
+Playlist::valid(void)                           throw ()
 {
     Ptr<time_duration>::Ref     runningTime(new time_duration(0,0,0,0));
     Ptr<PlaylistElement>::Ref   playlistElement;
@@ -491,7 +532,7 @@ Playlist::valid(void)                    throw ()
  *  Create a saved copy of the playlist.
  *----------------------------------------------------------------------------*/
 void
-Playlist::createSavedCopy(void)          throw ()
+Playlist::createSavedCopy(void)                 throw ()
 {
     savedCopy = Ptr<Playlist>::Ref(new Playlist(*this));
 }
@@ -501,7 +542,7 @@ Playlist::createSavedCopy(void)          throw ()
  *  Revert to a saved copy of the playlist.
  *----------------------------------------------------------------------------*/
 void
-Playlist::revertToSavedCopy(void)        throw (std::invalid_argument)
+Playlist::revertToSavedCopy(void)               throw (std::invalid_argument)
 {
     if (savedCopy == 0) {
         throw (std::invalid_argument("playlist has no saved copy"));
@@ -652,7 +693,7 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
  *  Return a string containing the essential fields of this object, in XML.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-Playlist :: getXmlElementString(void)           throw ()
+Playlist :: getXmlElementString(void) const     throw ()
 {
     Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
     
@@ -685,7 +726,7 @@ Playlist :: getXmlElementString(void)           throw ()
  *  Return a string containing an XML representation of this playlist.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-Playlist :: getXmlDocumentString()              throw ()
+Playlist :: getXmlDocumentString() const        throw ()
 {
     Ptr<xmlpp::Document>::Ref   localDocument;
 

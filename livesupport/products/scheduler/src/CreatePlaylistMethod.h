@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,9 +79,8 @@ using namespace LiveSupport::Core;
  *  The XML-RPC function returns an XML-RPC structure, containing the following
  *  fields:
  *  <ul>
- *      <li>id - int - the unique id of the new playlist</li>
- *      <li>playlength - int - the playlist length of the playlist, in seconds
- *      </li>
+ *      <li>playlist - string - an XML representation of the playlist; this
+ *          XML element can be used as argument to Playlist::configure()</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -94,7 +93,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class CreatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

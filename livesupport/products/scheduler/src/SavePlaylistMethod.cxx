@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SavePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,7 +130,7 @@ SavePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, id);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);
@@ -141,7 +141,7 @@ SavePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     try {
         storage->savePlaylist(sessionId, playlist);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "could not save playlist:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+5, eMsg, returnValue);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -135,7 +135,7 @@ ValidatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "playlist does not exist:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);

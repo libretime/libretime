@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -189,7 +189,8 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref               id,
 }
 
 
-/*------------------------------------------------------------------------------ *  Constructor without ID.
+/*------------------------------------------------------------------------------
+ *  Constructor without ID.
  *----------------------------------------------------------------------------*/AudioClip :: AudioClip(Ptr<const Glib::ustring>::Ref    title,
                        Ptr<time_duration>::Ref          playlength,
                        Ptr<const std::string>::Ref      uri)
@@ -208,6 +209,41 @@ AudioClip :: AudioClip(Ptr<UniqueId>::Ref               id,
 }
  
  
+/*------------------------------------------------------------------------------
+ *  Convert to an XmlRpcValue.
+ *----------------------------------------------------------------------------*/
+AudioClip :: operator XmlRpc::XmlRpcValue() const
+                                                throw()
+{
+    XmlRpc::XmlRpcValue     xmlRpcValue;
+    xmlRpcValue[configElementNameStr] = std::string(*getXmlDocumentString());
+    
+    return xmlRpcValue;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct from an XmlRpcValue.
+ *----------------------------------------------------------------------------*/
+AudioClip :: AudioClip(XmlRpc::XmlRpcValue &  xmlRpcValue)
+                                                throw (std::invalid_argument)
+                        : Playable(AudioClipType)
+{
+    if (!xmlRpcValue.hasMember(configElementNameStr)) {
+        throw std::invalid_argument("no audio clip data found in XmlRpcValue");
+    }
+    
+    xmlpp::DomParser    parser;
+    try {
+        parser.parse_memory(std::string(xmlRpcValue[configElementNameStr]));
+    } catch (xmlpp::exception &e) {
+        throw std::invalid_argument("error parsing XML document");
+    }
+    
+    configure(*parser.get_document()->get_root_node());     // may throw
+}
+
+
 /*------------------------------------------------------------------------------
  *  Set the value of the title field.
  *----------------------------------------------------------------------------*/
@@ -338,11 +374,7 @@ AudioClip :: configure(const xmlpp::Element  & element)
     }
     
     if (!title) {
-        std::string eMsg = "missing attribute ";
-        eMsg += titleAttrName;
-        eMsg += " or metadata element ";
-        eMsg += titleElementPrefix + ":" + titleElementName;
-        throw std::invalid_argument(eMsg);
+        title.reset(new const Glib::ustring(""));
     }
 }
 
@@ -480,7 +512,7 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
  *  Return a string containing the essential fields of this object, in XML.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-AudioClip :: getXmlElementString(void)          throw ()
+AudioClip :: getXmlElementString(void) const    throw ()
 {
     Ptr<Glib::ustring>::Ref     xmlString(new Glib::ustring);
     
@@ -503,7 +535,7 @@ AudioClip :: getXmlElementString(void)          throw ()
  *  Return a string containing an XML representation of this audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<Glib::ustring>::Ref
-AudioClip :: getXmlDocumentString()             throw ()
+AudioClip :: getXmlDocumentString() const       throw ()
 {
     Ptr<xmlpp::Document>::Ref   localDocument;
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -194,14 +194,6 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
         CPPUNIT_FAIL(eMsg.str());
     }
 
-    result.clear();
-    try {
-        addAudioClipMethod->execute(rootParameter, result);
-        CPPUNIT_FAIL("allowed to add overlapping audio clip");
-    } catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 308);
-    }
-    
     parameters.clear();
     parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = "0000000000000001";
@@ -218,4 +210,7 @@ AddAudioClipToPlaylistMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
+    CPPUNIT_ASSERT(result.hasMember("playlistElementId"));
+    CPPUNIT_ASSERT(result["playlistElementId"].getType() 
+                                            == XmlRpc::XmlRpcValue::TypeString);
 }

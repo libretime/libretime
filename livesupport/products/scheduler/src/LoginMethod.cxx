@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/LoginMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ LoginMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<std::string>::Ref   loginName;
     try{
         loginName = XmlRpcTools::extractLoginName(parameters);
-    } catch (XmlRpcException &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+2, "missing login argument",
                                returnValue);
         return;
@@ -98,7 +98,7 @@ LoginMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<std::string>::Ref   password;
     try{
         password = XmlRpcTools::extractPassword(parameters);
-    } catch (XmlRpcException &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, "missing password argument",
                                returnValue);
         return;
@@ -112,7 +112,7 @@ LoginMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref sessionId;
     try {
         sessionId = authentication->login(*loginName, *password);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "authentication login() returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);

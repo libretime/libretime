@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -217,5 +217,41 @@ AudioClipTest :: tagTest(void)
     Ptr<const Glib::ustring>::Ref   artist 
                                     = audioClip->getMetadata("dc:creator");
     CPPUNIT_ASSERT(*artist == "The Muppets");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Marshalling test
+ *----------------------------------------------------------------------------*/
+void
+AudioClipTest :: marshallingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<AudioClip>::Ref     audioClip(new AudioClip());
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                                new xmlpp::DomParser(configFileName, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        audioClip->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    XmlRpc::XmlRpcValue     xmlRpcValue = *audioClip;
+    CPPUNIT_ASSERT(xmlRpcValue.hasMember("audioClip"));
+
+    Ptr<AudioClip>::Ref     otherAudioClip;
+    CPPUNIT_ASSERT_NO_THROW(otherAudioClip.reset(new AudioClip(xmlRpcValue)));
+
+    CPPUNIT_ASSERT(*audioClip->getId() == *otherAudioClip->getId());
+    CPPUNIT_ASSERT(*audioClip->getTitle() 
+                                       == *otherAudioClip->getTitle());
+    CPPUNIT_ASSERT(*audioClip->getPlaylength() 
+                                       == *otherAudioClip->getPlaylength());
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcCreatePlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,12 +115,13 @@ RpcCreatePlaylistTest :: firstTest(void)
     result.clear();
     xmlRpcClient.execute("createPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpc::XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(result.hasMember("playlength"));
-    CPPUNIT_ASSERT(result["playlength"].getType() 
-                                          == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(result["playlength"]) == 0);
+    CPPUNIT_ASSERT(result.hasMember("playlist"));
+    CPPUNIT_ASSERT(result["playlist"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    Ptr<Playlist>::Ref  playlist;
+    CPPUNIT_ASSERT_NO_THROW(playlist.reset(new Playlist(result)));
+    CPPUNIT_ASSERT(playlist->getId()->getId() >= 0);
+    CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 0);
 
     parameters.clear();
     parameters["sessionId"]  = sessionId->getId();

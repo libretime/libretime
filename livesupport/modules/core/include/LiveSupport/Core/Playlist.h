@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <map>
 #include <stdexcept>
 #include <libxml++/libxml++.h>
+#include <XmlRpcValue.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -75,25 +76,59 @@ using namespace boost::posix_time;
  *  called playlist. This may look like the following:
  *
  *  <pre><code>
- *  &lt;playlist id="1" playlength="00:18:30.000000" &gt;
+ *  &lt;playlist id="1" title="My Playlist" playlength="00:18:30.000000" &gt;
  *      &lt;playlistElement&gt; ... &lt;/playlistElement&gt;
  *      ...
+ *      &lt;playlistElement&gt; ... &lt;/playlistElement&gt;
+ *      &lt;metadata
+ *                xmlns="http://www.streamonthefly.org/"
+ *                xmlns:dc="http://purl.org/dc/elements/1.1/"
+ *                xmlns:dcterms="http://purl.org/dc/terms/"
+ *                xmlns:xbmf="http://www.streamonthefly.org/xbmf"
+ *                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
+ *             &lt;dc:title  &gt;File Title txt&lt;/dc:title&gt;
+ *             &lt;dcterms:extent  &gt;00:02:30.000000&lt;/dcterms:extent&gt;
+ *             ...
+ *         &lt;/metadata&gt;
  *  &lt;/playlist&gt;
  *  </code></pre>
  *
  *  For detais of the playlistElement element, see the documentation 
  *  for the PlaylistElement class.
  *
+ *  The metadata element is optional.  The <code>configure()</code> method
+ *  sets only those fields which had not been set previously: e.g., if we set
+ *  some or all fields of the Playlist in the constructor, then these fields
+ *  in the XML element will be ignored by <code>configure()</code>.
+ *  The <code>title</code> attribute and the <code>&lt;dc:title&gt;</code> 
+ *  element set the same field; if both are present, the title is set from
+ *  the attribute and the element is ignored..
+ *  The same is true for the <code>playlength</code> attribute and the 
+ *  <code>&lt;dcterms:extent&gt;</code> element.
+ *  It is required that by the end of the configure() method, the playlength
+ *  is set somehow (from a constructor, the attribute or the element).
+ *  If the title is not set by the end of the configure() method, it is then
+ *  set to the empty string.
+ *  Embedded XML elements are currently ignored: e.g., 
+ *  <pre><code>  &lt;group&gt;
+ *      &lt;member1&gt;value1&lt;/member1&gt;
+ *      &lt;member2&gt;value2&lt;/member2&gt;
+ *  &lt;/group&gt;</code></pre>
+ *  produces a single metadata field <code>group</code> with an empty value,
+ *  and ignores <code>member1</code> and <code>member2</code>.
+ *  TODO: fix this?
+ *
  *  The DTD for the above element is:
  *
  *  <pre><code>
- *  &lt;!ELEMENT playlist (playlistElement*) &gt;
- *  &lt;!ATTLIST playlist  id           NMTOKEN    #REQUIRED  &gt;
- *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #REQUIRED  &gt;
+ *  &lt;!ELEMENT playlist (playlistElement*, metadata?) &gt;
+ *  &lt;!ATTLIST playlist  id           NMTOKEN    #REQUIRED &gt;
+ *  &lt;!ATTLIST playlist  title        CDATA      ""  &gt;
+ *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #IMPLIED  &gt;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -133,7 +168,7 @@ class Playlist : public Configurable,
          *  A map type for storing the playlist elements associated with 
          *  this playlist, indexed by their relative offsets.
          */
-        typedef std::map<time_duration, Ptr<PlaylistElement>::Ref>
+        typedef std::multimap<time_duration, Ptr<PlaylistElement>::Ref>
                                                      PlaylistElementListType;
 
         /**
@@ -182,6 +217,24 @@ class Playlist : public Configurable,
          */
         void
         setPlaylength(Ptr<time_duration>::Ref playlength) 
+                                                throw ();
+
+        /**
+         *  A private iterator type for internal use.  It is non-constant;
+         *  otherwise it is the same as Playlist::const_iterator.
+         */
+        typedef PlaylistElementListType::iterator  iterator;
+
+        /**
+         *  Get an iterator pointing to a playlist element with a given ID.
+         *
+         *  @param playlistElementId (a pointer to) the ID of the
+         *                  playlist element.
+         *  @return an iterator to the playlist element if it exists,
+         *                  or <code>this->end()</code> if it does not.
+         */
+        iterator
+        find(Ptr<UniqueId>::Ref playlistElementId)
                                                 throw ();
 
 
@@ -275,12 +328,36 @@ class Playlist : public Configurable,
                                                 throw ();
 
         /**
+         *  Convert the playlist to an XmlRpcValue (marshalling).
+         *
+         *  @return an XmlRpcValue struct, containing a
+         *         field named <i>playlist</i>, with value of type string,
+         *         which contains an XML document representing the playlist.
+         */
+        operator XmlRpc::XmlRpcValue() const
+                                                throw ();
+
+        /**
+         *  Construct a playlist from an XmlRpcValue (demarshalling).
+         *
+         *  @param xmlRpcValue an XmlRpcValue struct, containing a
+         *         field named <i>playlist</i>, with value of type string,
+         *         which contains an XML document, the root node of which 
+         *         can be passed to the configure() method.
+         *  @exception std::invalid_argument if the argument is invalid
+         */
+        Playlist(XmlRpc::XmlRpcValue &  xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+
+        /**
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
         ~Playlist(void)                         throw ()
         {
         }
+
 
         /**
          *  Return the name of the XML element this object expects
@@ -445,8 +522,9 @@ class Playlist : public Configurable,
         }
 
         /**
-         *  Get an iterator pointing to a playlist element at a given
+         *  Get an iterator pointing to the first playlist element at a given
          *  relative offset.
+         *  
          *  @param relativeOffset (a pointer to) the relative offset where
          *                        the playlist element is.
          *  @return a constant iterator to the playlist element if it exists,
@@ -470,10 +548,11 @@ class Playlist : public Configurable,
          *  @param relativeOffset the start of the audio clip, relative
          *             to the start of the playlist
          *  @param fadeInfo the fade in / fade out info (optional)
+         *  @return the ID of the new PlaylistElement
          *  @exception std::invalid_argument if the playlist already contains
          *             a playlist element with the same relative offset
          */
-        void
+        Ptr<UniqueId>::Ref
         addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                      Ptr<time_duration>::Ref  relativeOffset,
                      Ptr<FadeInfo>::Ref       fadeInfo
@@ -491,10 +570,11 @@ class Playlist : public Configurable,
          *  @param relativeOffset the start of the sub-playlist, relative
          *             to the start of the containing playlist
          *  @param fadeInfo the fade in / fade out info (optional)
+         *  @return the ID of the new PlaylistElement
          *  @exception std::invalid_argument if the playlist already contains
          *             a playlist element with the same relative offset
          */
-        void
+        Ptr<UniqueId>::Ref
         addPlaylist(Ptr<Playlist>::Ref       playlist,
                     Ptr<time_duration>::Ref  relativeOffset,
                     Ptr<FadeInfo>::Ref       fadeInfo
@@ -504,27 +584,25 @@ class Playlist : public Configurable,
         /**
          *  Set the fade in / fade out info for a playlist element.
          *
-         *  @param relativeOffset the start of the playlist element, relative
-         *             to the start of the playlist
+         *  @param playlistElementId the ID of the playlist element
          *  @param fadeInfo the new fade in / fade out info
          *  @exception std::invalid_argument if there is no playlist element
          *             at the given relative offset
          */
         void
-        setFadeInfo(Ptr<time_duration>::Ref  relativeOffset,
-                    Ptr<FadeInfo>::Ref       fadeInfo)
+        setFadeInfo(Ptr<UniqueId>::Ref      playlistElementId,
+                    Ptr<FadeInfo>::Ref      fadeInfo)
                                                 throw (std::invalid_argument);
 
         /**
          *  Remove a playlist element from the playlist.
          *
-         *  @param relativeOffset the start of the playlist element, relative
-         *             to the start of the playlist
-         *  @exception std::invalid_argument if the playlist does not contain
-         *             a playlist element at the specified relative offset
+         *  @param playlistElementId the ID of the playlist element
+         *  @exception std::invalid_argument if the playlist element does not
+         *                                   exist
          */
         void
-        removePlaylistElement(Ptr<const time_duration>::Ref  relativeOffset)
+        removePlaylistElement(Ptr<UniqueId>::Ref  playlistElementId)
                                                 throw (std::invalid_argument);
 
         /**
@@ -596,7 +674,7 @@ class Playlist : public Configurable,
          *  @return a string representation of the playlist as an XML element
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlElementString(void)               throw ();
+        getXmlElementString(void) const         throw ();
 
 
         /**
@@ -632,7 +710,7 @@ class Playlist : public Configurable,
          *  @return a string representation of the playlist as an XML document
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlDocumentString(void)              throw ();
+        getXmlDocumentString(void) const         throw ();
 };
 
 

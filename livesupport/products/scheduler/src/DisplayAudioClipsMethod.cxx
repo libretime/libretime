@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,7 +115,7 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds;
     try {
         audioClipIds = storage->getAudioClipIds();
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "getAudioClipIds returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+2, eMsg, returnValue);
@@ -128,7 +128,7 @@ DisplayAudioClipsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     while (it != audioClipIds->end()) {
         try {
             audioClips->push_back(storage->getAudioClip(sessionId, *it));
-        } catch (XmlRpcException &e) {
+        } catch (Core::XmlRpcException &e) {
             std::string eMsg = "audio clip not found:\n";
             eMsg += e.what();
             XmlRpcTools::markError(errorId+3, eMsg, returnValue);

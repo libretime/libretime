@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,7 +118,7 @@ DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         playlistIds = storage->getPlaylistIds();
 //std::cerr << "\nplaylistIds: " << playlistIds << "\n"
 //          << "size: " << playlistIds->size() << "n";
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "getPlaylistsIds() returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+2, eMsg, returnValue);
@@ -131,7 +131,7 @@ DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     while (it != playlistIds->end()) {
         try {
             playlists->push_back(storage->getPlaylist(sessionId, *it));
-        } catch (XmlRpcException &e) {
+        } catch (Core::XmlRpcException &e) {
             std::string eMsg = "audio clip not found:\n";
             eMsg += e.what();
             XmlRpcTools::markError(errorId+3, eMsg, returnValue);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -219,8 +219,8 @@ ValidatePlaylistMethodTest :: firstTest(void)
     CPPUNIT_ASSERT(bool(result["valid"]));
 
     result.clear();
-    parameter["relativeOffset"] = 0;
-    rootParameter[0]            = parameter;    
+    parameter["playlistElementId"]  = "0000000000000101";
+    rootParameter[0]                = parameter;    
     try {
         removeAudioClipMethod->execute(rootParameter, result);
     } catch (XmlRpc::XmlRpcException &e) {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcToolsTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,7 +122,7 @@ XmlRpcToolsTest :: firstTest(void)
 {
     XmlRpcValue                xmlRpcPlaylist;
     XmlRpcValue                xmlRpcAudioClip;
-    Ptr<Playlist>::Ref         playlist = Ptr<Playlist>::Ref(new Playlist);
+    Ptr<Playlist>::Ref         playlist = Ptr<Playlist>::Ref(new Playlist());
     Ptr<const AudioClip>::Ref  audioClip;
 
     // set up a playlist instance
@@ -133,23 +133,39 @@ XmlRpcToolsTest :: firstTest(void)
     XmlRpcTools :: playlistToXmlRpcValue(playlist, xmlRpcPlaylist);
     XmlRpcTools :: audioClipToXmlRpcValue(audioClip, xmlRpcAudioClip);
 
-    CPPUNIT_ASSERT(xmlRpcPlaylist.hasMember("id"));
-    CPPUNIT_ASSERT(xmlRpcPlaylist["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(xmlRpcPlaylist["id"]) == "0000000000000001");
+    CPPUNIT_ASSERT(xmlRpcPlaylist.hasMember("playlist"));
+    CPPUNIT_ASSERT(xmlRpcPlaylist["playlist"].getType() 
+                                                == XmlRpcValue::TypeString);
 
-    CPPUNIT_ASSERT(xmlRpcPlaylist.hasMember("playlength"));
-    CPPUNIT_ASSERT(xmlRpcPlaylist["playlength"].getType() 
-                                                     == XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcPlaylist["playlength"]) == 34);
+    Ptr<Playlist>::Ref  copyOfPlaylist(new Playlist());
+    xmlpp::DomParser    parser;
+    CPPUNIT_ASSERT_NO_THROW(parser.parse_memory(std::string(
+                                        xmlRpcPlaylist["playlist"] )));
+    xmlpp::Element*     configElement;
+    CPPUNIT_ASSERT_NO_THROW(configElement = parser.get_document()
+                                                 ->get_root_node());
+    CPPUNIT_ASSERT_NO_THROW(copyOfPlaylist->configure(*configElement));
 
-    CPPUNIT_ASSERT(xmlRpcAudioClip.hasMember("id"));
-    CPPUNIT_ASSERT(xmlRpcAudioClip["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(xmlRpcAudioClip["id"]) == "0000000000010001");
+    CPPUNIT_ASSERT(*copyOfPlaylist->getId()     == *playlist->getId());
+    CPPUNIT_ASSERT(*copyOfPlaylist->getTitle()  == *playlist->getTitle());
+    CPPUNIT_ASSERT(*copyOfPlaylist->getPlaylength() 
+                                           == *playlist->getPlaylength());
 
-    CPPUNIT_ASSERT(xmlRpcAudioClip.hasMember("playlength"));
-    CPPUNIT_ASSERT(xmlRpcAudioClip["playlength"].getType() 
-                                                      == XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(xmlRpcAudioClip["playlength"]) == 11);
+    CPPUNIT_ASSERT(xmlRpcAudioClip.hasMember("audioClip"));
+    CPPUNIT_ASSERT(xmlRpcAudioClip["audioClip"].getType() 
+                                                == XmlRpcValue::TypeString);
+
+    Ptr<AudioClip>::Ref copyOfAudioClip(new AudioClip());
+    CPPUNIT_ASSERT_NO_THROW(parser.parse_memory(std::string(
+                                        xmlRpcAudioClip["audioClip"] )));
+    CPPUNIT_ASSERT_NO_THROW(configElement = parser.get_document()
+                                                 ->get_root_node());
+    CPPUNIT_ASSERT_NO_THROW(copyOfAudioClip->configure(*configElement));
+
+    CPPUNIT_ASSERT(*copyOfAudioClip->getId()     == *audioClip->getId());
+    CPPUNIT_ASSERT(*copyOfAudioClip->getTitle()  == *audioClip->getTitle());
+    CPPUNIT_ASSERT(*copyOfAudioClip->getPlaylength() 
+                                           == *audioClip->getPlaylength());
 
     XmlRpcValue              xmlRpcPlaylistId;
     Ptr<UniqueId>::Ref       playlistId(new UniqueId(rand()));

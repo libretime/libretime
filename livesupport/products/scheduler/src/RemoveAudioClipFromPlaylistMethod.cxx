@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,9 +106,9 @@ RemoveAudioClipFromPlaylistMethod :: execute(
                                returnValue);
         return;
     }
-    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+    XmlRpc::XmlRpcValue     parameters = rootParameter[0];
 
-    Ptr<SessionId>::Ref      sessionId;
+    Ptr<SessionId>::Ref     sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
     } catch (std::invalid_argument &e) {
@@ -118,7 +118,7 @@ RemoveAudioClipFromPlaylistMethod :: execute(
         return;
     }
 
-    Ptr<UniqueId>::Ref       playlistId;
+    Ptr<UniqueId>::Ref      playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
     } catch (std::invalid_argument &e) {
@@ -128,12 +128,12 @@ RemoveAudioClipFromPlaylistMethod :: execute(
         return;
     }
 
-    Ptr<time_duration>::Ref  relativeOffset;
+    Ptr<UniqueId>::Ref      playlistElementId;
     try{
-        relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
+        playlistElementId = XmlRpcTools::extractPlaylistElementId(parameters);
     } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+3, 
-                               "missing relative offset argument",
+                               "missing playlist element ID argument",
                                returnValue);
         return;
     }
@@ -146,7 +146,7 @@ RemoveAudioClipFromPlaylistMethod :: execute(
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "playlist does not exist:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);
@@ -161,7 +161,7 @@ RemoveAudioClipFromPlaylistMethod :: execute(
     }
 
     try {                                        // and finally, the beef
-        playlist->removePlaylistElement(relativeOffset);
+        playlist->removePlaylistElement(playlistElementId);
     } catch(std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+6,
                                "no audio clip at the specified "

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {
@@ -225,7 +225,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  @return a string representation of the audio clip as an XML element
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlElementString(void)               throw () = 0;
+        getXmlElementString(void) const         throw () = 0;
 
 
         /**
@@ -256,7 +256,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  @return a string representation of the audio clip as an XML document
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlDocumentString(void)              throw () = 0;
+        getXmlDocumentString(void) const        throw () = 0;
 
 
         /**
@@ -265,7 +265,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  @return either AudioClipType or PlaylistType.
          */
         Type
-        getType(void) const                                throw ()
+        getType(void) const                     throw ()
         {
             return type;
         }
@@ -278,7 +278,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  @return an audio clip pointer to this object.
          */
         Ptr<AudioClip>::Ref
-        getAudioClip(void)                                 throw ();
+        getAudioClip(void)                      throw ();
  
         /**
          *  Return a playlist pointer to this object.  If the object's
@@ -288,7 +288,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *  @return a playlist pointer to this object.
          */
         Ptr<Playlist>::Ref
-        getPlaylist(void)                                  throw ();
+        getPlaylist(void)                       throw ();
 };
 
 

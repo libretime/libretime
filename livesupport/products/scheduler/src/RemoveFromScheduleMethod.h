@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,7 +75,8 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>scheduleEntryId - int - the id of the scheduled entry to remove</li>
+ *      <li>scheduleEntryId - string - the id of the scheduled entry 
+ *                                     to remove</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -89,7 +90,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

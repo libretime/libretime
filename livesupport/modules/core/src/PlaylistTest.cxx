@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -212,7 +212,7 @@ PlaylistTest :: audioClipTest(void)
     CPPUNIT_ASSERT(it == playlist->end());
 
     try {
-        playlist->removePlaylistElement(relativeOffset);
+        playlist->removePlaylistElement(playlistElement->getId());
     } catch (std::invalid_argument &e) {
         string eMsg = "removePlaylistElement returned with error: ";
         eMsg += e.what(); 
@@ -228,10 +228,9 @@ PlaylistTest :: audioClipTest(void)
     ++it;
     CPPUNIT_ASSERT(it == playlist->end());
 
-    Ptr<const time_duration>::Ref  phonyRelativeOffset(
-                                   new time_duration(0,0,1,0));
+    Ptr<UniqueId>::Ref  phonyPlaylistElementId(new UniqueId(9999));
     try {
-        playlist->removePlaylistElement(phonyRelativeOffset);
+        playlist->removePlaylistElement(phonyPlaylistElementId);
         CPPUNIT_FAIL("removePlaylistElement allowed to remove "
                      "non-existent audio clip");
     } catch (std::invalid_argument &e) {
@@ -253,12 +252,9 @@ PlaylistTest :: savedCopyTest(void)
     }
 
     playlist->createSavedCopy();
-    playlist->removePlaylistElement(Ptr<time_duration>::Ref(
-                              new time_duration(0,0,0,0)));
-    playlist->removePlaylistElement(Ptr<time_duration>::Ref(
-                              new time_duration(0,0,11,0)));
-    playlist->removePlaylistElement(Ptr<time_duration>::Ref(
-                              new time_duration(0,0,23,0)));
+    playlist->removePlaylistElement(playlist->begin()->second->getId());
+    playlist->removePlaylistElement(playlist->begin()->second->getId());
+    playlist->removePlaylistElement(playlist->begin()->second->getId());
     CPPUNIT_ASSERT(playlist->begin() == playlist->end());
 
     try {
@@ -297,18 +293,21 @@ void
 PlaylistTest :: fadeInfoTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Playlist::const_iterator       it = playlist->begin();
+    Ptr<PlaylistElement>::Ref   playlistElementOne,
+                                playlistElementTwo; 
+
+    Playlist::const_iterator    it = playlist->begin();
     CPPUNIT_ASSERT(it != playlist->end());
-    Ptr<PlaylistElement>::Ref      playlistElement = it->second;
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo().get() == 0);
+    playlistElementOne = it->second;
+    CPPUNIT_ASSERT(playlistElementOne->getFadeInfo().get() == 0);
 
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
-    playlistElement  = it->second;
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
-                                  ->total_milliseconds() == 2000);
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
-                                  ->total_milliseconds() == 1500);
+    playlistElementTwo  = it->second;
+    CPPUNIT_ASSERT(playlistElementTwo->getFadeInfo()->getFadeIn()
+                                     ->total_milliseconds() == 2000);
+    CPPUNIT_ASSERT(playlistElementTwo->getFadeInfo()->getFadeOut()
+                                     ->total_milliseconds() == 1500);
     
     ++it;
     CPPUNIT_ASSERT(it != playlist->end());
@@ -319,37 +318,34 @@ PlaylistTest :: fadeInfoTest(void)
     Ptr<time_duration>::Ref fadeOut(new time_duration(0,0,4,0));
     Ptr<FadeInfo>::Ref      fadeInfo(new FadeInfo(fadeIn, fadeOut));
 
-    Ptr<time_duration>::Ref relativeOffset (new time_duration(0,0,0,0));
     try {
-        playlist->setFadeInfo(relativeOffset, fadeInfo);
+        playlist->setFadeInfo(playlistElementOne->getId(), fadeInfo);
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("could not add new fade info");
     }
 
-    relativeOffset.reset(new time_duration(0,0,11,0));
     try {
-        playlist->setFadeInfo(relativeOffset, fadeInfo);
+        playlist->setFadeInfo(playlistElementTwo->getId(), fadeInfo);
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("could not update fade info");
     }
 
     it = playlist->begin();
-    playlistElement  = it->second;
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
-                                  ->total_milliseconds() == 3200);
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
-                                  ->total_milliseconds() == 4000);
+    playlistElementOne  = it->second;
+    CPPUNIT_ASSERT(playlistElementOne->getFadeInfo()->getFadeIn()
+                                     ->total_milliseconds() == 3200);
+    CPPUNIT_ASSERT(playlistElementOne->getFadeInfo()->getFadeOut()
+                                     ->total_milliseconds() == 4000);
     ++it;
-    playlistElement  = it->second;
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeIn()
-                                  ->total_milliseconds() == 3200);
-    CPPUNIT_ASSERT(playlistElement->getFadeInfo()->getFadeOut()
-                                  ->total_milliseconds() == 4000);
+    playlistElementTwo  = it->second;
+    CPPUNIT_ASSERT(playlistElementTwo->getFadeInfo()->getFadeIn()
+                                     ->total_milliseconds() == 3200);
+    CPPUNIT_ASSERT(playlistElementTwo->getFadeInfo()->getFadeOut()
+                                     ->total_milliseconds() == 4000);
 
-    relativeOffset.reset(new time_duration(0,0,7,0));
-
+    Ptr<UniqueId>::Ref  phonyPlaylistElementId(new UniqueId(9999));
     try {
-        playlist->setFadeInfo(relativeOffset, fadeInfo);
+        playlist->setFadeInfo(phonyPlaylistElementId, fadeInfo);
         CPPUNIT_FAIL("allowed to set fade info for non-existent element");
     } catch (std::invalid_argument &e) {
     }
@@ -375,5 +371,41 @@ PlaylistTest :: conversionTest(void)
 
     Ptr<AudioClip>::Ref     audioClip = playable->getAudioClip();
     CPPUNIT_ASSERT(!audioClip);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Marshalling test
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: marshallingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Playlist>::Ref     playlist(new Playlist());
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                                new xmlpp::DomParser(configFileName, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        playlist->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    XmlRpc::XmlRpcValue     xmlRpcValue = *playlist;
+    CPPUNIT_ASSERT(xmlRpcValue.hasMember("playlist"));
+
+    Ptr<Playlist>::Ref     otherPlaylist;
+    CPPUNIT_ASSERT_NO_THROW(otherPlaylist.reset(new Playlist(xmlRpcValue)));
+
+    CPPUNIT_ASSERT(*playlist->getId() == *otherPlaylist->getId());
+    CPPUNIT_ASSERT(*playlist->getTitle() 
+                                       == *otherPlaylist->getTitle());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() 
+                                       == *otherPlaylist->getPlaylength());
 }
 

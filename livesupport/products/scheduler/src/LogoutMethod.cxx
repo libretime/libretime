@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/LogoutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ LogoutMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<SessionId>::Ref     sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
-    } catch (XmlRpcException &e) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+20, "missing logout argument",
                                returnValue);
         return;
@@ -102,7 +102,7 @@ LogoutMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     try {
         authentication->logout(sessionId);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "authentication logout() returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);

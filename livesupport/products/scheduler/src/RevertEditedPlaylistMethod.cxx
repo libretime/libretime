@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RevertEditedPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,7 +130,7 @@ RevertEditedPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, id);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);
@@ -139,7 +139,7 @@ RevertEditedPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     try {
         playlist->revertToSavedCopy();
-    } catch (std::logic_error) {
+    } catch (std::invalid_argument &e) {
         XmlRpcTools::markError(errorId+4, "could not revert playlist", 
                                returnValue);
         return;

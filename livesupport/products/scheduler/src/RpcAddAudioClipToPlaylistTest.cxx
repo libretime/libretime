@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,14 +119,7 @@ RpcAddAudioClipToPlaylistTest :: firstTest(void)
     result.clear();
     xmlRpcClient.execute("openPlaylistForEditing", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
 
-    result.clear();
-    xmlRpcClient.execute("addAudioClipToPlaylist", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
-    
     parameters.clear();
     parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = "0000000000000001";

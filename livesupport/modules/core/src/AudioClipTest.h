@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the AudioClip class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see AudioClip
  */
 class AudioClipTest : public CPPUNIT_NS::TestFixture
@@ -67,6 +67,7 @@ class AudioClipTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(conversionTest);
     CPPUNIT_TEST(tagTest);
+    CPPUNIT_TEST(marshallingTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -94,6 +95,14 @@ class AudioClipTest : public CPPUNIT_NS::TestFixture
          */
         void
         tagTest(void)                           throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing conversion to and from XmlRpcValue.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        marshallingTest(void)                   throw (CPPUNIT_NS::Exception);
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,8 +89,8 @@ using namespace LiveSupport::Core;
  *  for each play log item in the interval.  An array of size 0 means there
  *  are no play log entries. Each structure is as follows:
  *  <ul>
- *      <li>audioClipId - int -      the id of the audio clip played </li>
- *      <li>timestamp   - datetime - the time the clip was played (started) </li>
+ *      <li>audioClipId - string -      the id of the audio clip played </li>
+ *      <li>timestamp   - datetime - the time the clip was played (started)</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -104,7 +104,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class GeneratePlayReportMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,35 +108,29 @@ UpdateFadeInFadeOutMethod :: execute(
                                returnValue);
         return;
     }
-    XmlRpc::XmlRpcValue      parameters = rootParameter[0];
+    XmlRpc::XmlRpcValue     parameters = rootParameter[0];
 
-    Ptr<SessionId>::Ref      sessionId;
+    Ptr<SessionId>::Ref     sessionId;
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
     } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+20, 
-                               "missing session ID argument",
-                                returnValue);
+        XmlRpcTools::markError(errorId+20, e.what(), returnValue);
         return;
     }
 
-    Ptr<UniqueId>::Ref       playlistId;
+    Ptr<UniqueId>::Ref      playlistId;
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
     } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+2, 
-                               "missing playlist ID argument",
-                                returnValue);
+        XmlRpcTools::markError(errorId+2, e.what(), returnValue);
         return;
     }
 
-    Ptr<time_duration>::Ref  relativeOffset;
+    Ptr<UniqueId>::Ref      playlistElementId;
     try{
-        relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
+        playlistElementId = XmlRpcTools::extractPlaylistElementId(parameters);
     } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+3, 
-                               "missing relative offset argument",
-                               returnValue);
+        XmlRpcTools::markError(errorId+3, e.what(), returnValue);
         return;
     }
 
@@ -144,9 +138,7 @@ UpdateFadeInFadeOutMethod :: execute(
     try{
         fadeIn = XmlRpcTools::extractFadeIn(parameters);
     } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+4, 
-                               "missing fade in argument",
-                               returnValue);
+        XmlRpcTools::markError(errorId+4, e.what(), returnValue);
         return;
     }
 
@@ -154,9 +146,7 @@ UpdateFadeInFadeOutMethod :: execute(
     try{
         fadeOut = XmlRpcTools::extractFadeOut(parameters);
     } catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+5, 
-                               "missing fade out argument",
-                               returnValue);
+        XmlRpcTools::markError(errorId+5, e.what(), returnValue);
         return;
     }
 
@@ -168,28 +158,23 @@ UpdateFadeInFadeOutMethod :: execute(
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
-    } catch (XmlRpcException &e) {
-        std::string eMsg = "playlist does not exist:\n";
-        eMsg += e.what();
-        XmlRpcTools::markError(errorId+6, eMsg, returnValue);
+    } catch (Core::XmlRpcException &e) {
+        XmlRpcTools::markError(errorId+6,  e.what(), returnValue);
         return;
     }
 
     if (!playlist->isLocked()) {
         XmlRpcTools::markError(errorId+7, 
-                               "playlist has not been opened for editing", 
+                               "playlist has not been opened for editing",
                                returnValue);
         return;
     }
 
     Ptr<FadeInfo>::Ref  fadeInfo(new FadeInfo(fadeIn, fadeOut));
     try {                                        // and finally, the beef
-        playlist->setFadeInfo(relativeOffset, fadeInfo);
+        playlist->setFadeInfo(playlistElementId, fadeInfo);
     } catch(std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+8,
-                               "no audio clip at the specified "
-                               "relative offset",
-                               returnValue);
+        XmlRpcTools::markError(errorId+8, e.what(), returnValue);
         return;
     }
 }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <stdexcept>
 #include <string>
 #include <libxml++/libxml++.h>
+#include <XmlRpcValue.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Core/Ptr.h"
@@ -96,17 +97,22 @@ using namespace boost::posix_time;
  *  The metadata element is optional.  The <code>configure()</code> method
  *  sets only those fields which had not been set previously: e.g., if we set
  *  some or all fields of the AudioClip in the constructor, then these fields
- *  in the XML element will be ignored by <code>configure()</code>. If both the
- *  <code>playlength</code> attribute and the 
- *  <code>&lt;dcterms:extent&gt;</code>
- *  element are present, then the playlength is set from the attribute and 
- *  <code>&lt;dcterms:extent&gt;</code> is ignored. Embedded XML elements are 
- *  currently ignored: e.g., <pre><code>  &lt;group&gt;
+ *  in the XML element will be ignored by <code>configure()</code>.
+ *  The <code>title</code> attribute and the <code>&lt;dc:title&gt;</code> 
+ *  element set the same field; if both are present, the title is set from
+ *  the attribute and the element is ignored..
+ *  The same is true for the <code>playlength</code> attribute and the 
+ *  <code>&lt;dcterms:extent&gt;</code> element.
+ *  It is required that by the end of the configure() method, the playlength
+ *  is set somehow (from a constructor, the attribute or the element).
+ *  If the title is not set by the end of the configure() method, it is then
+ *  set to the empty string.
+ *  Embedded XML elements are currently ignored: e.g., 
+ *  <pre><code>  &lt;group&gt;
  *      &lt;member1&gt;value1&lt;/member1&gt;
  *      &lt;member2&gt;value2&lt;/member2&gt;
- *  &lt;/group&gt;</code></pre> produces a single metadata field 
- *  <code>group</code> 
- *  with an empty value,
+ *  &lt;/group&gt;</code></pre>
+ *  produces a single metadata field <code>group</code> with an empty value,
  *  and ignores <code>member1</code> and <code>member2</code>.
  *  TODO: fix this?
  *
@@ -124,7 +130,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -291,6 +297,30 @@ class AudioClip : public Configurable,
                   Ptr<const std::string>::Ref   uri)
                                                            throw ();
                                                                                 
+
+        /**
+         *  Convert the audio clip to an XmlRpcValue (marshalling).
+         *
+         *  @return an XmlRpcValue struct, containing a
+         *         field named <i>audioClip</i>, with value of type string,
+         *         which contains an XML document representing the audio clip.
+         */
+        operator XmlRpc::XmlRpcValue() const
+                                                throw ();
+
+        /**
+         *  Construct an audio clip from an XmlRpcValue (demarshalling).
+         *
+         *  @param xmlRpcValue an XmlRpcValue struct, containing a
+         *         field named <i>audioClip</i>, with value of type string,
+         *         which contains an XML document, the root node of which 
+         *         can be passed to the configure() method.
+         *  @exception std::invalid_argument if the argument is invalid
+         */
+        AudioClip(XmlRpc::XmlRpcValue &  xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+
         /**
          *  A virtual destructor, as this class has virtual functions.
          */
@@ -298,6 +328,7 @@ class AudioClip : public Configurable,
         ~AudioClip(void)                                   throw ()
         {
         }
+
 
         /**
          *  Return the name of the XML element this object expects
@@ -469,7 +500,7 @@ class AudioClip : public Configurable,
          *  @return a string representation of the audio clip as an XML element
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlElementString(void)                throw ();
+        getXmlElementString(void) const          throw ();
 
 
         /**
@@ -512,7 +543,7 @@ class AudioClip : public Configurable,
          *  @return a string representation of the audio clip as an XML document
          */
         virtual Ptr<Glib::ustring>::Ref
-        getXmlDocumentString(void)               throw ();
+        getXmlDocumentString(void) const          throw ();
 
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Core;
  *  in the Scheduler.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class XmlRpcTools
 {
@@ -130,7 +130,7 @@ class XmlRpcTools
                                                 throw (std::invalid_argument);
 
         /**
-         *  Extract the playlist id from the XML-RPC parameters.
+         *  Extract the playlist ID from the XML-RPC parameters.
          *
          *  @param xmlRpcValue the XML-RPC parameter to extract from.
          *  @return a UniqueId that was found in the XML-RPC parameter.
@@ -139,6 +139,18 @@ class XmlRpcTools
          */
         static Ptr<UniqueId>::Ref
         extractPlaylistId(XmlRpc::XmlRpcValue  & xmlRpcValue)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Extract the playlist element ID from the XML-RPC parameters.
+         *
+         *  @param xmlRpcValue the XML-RPC parameter to extract from.
+         *  @return a UniqueId that was found in the XML-RPC parameter.
+         *  @exception std::invalid_argument if there was no playlistElementId
+         *             member in xmlRpcValue
+         */
+        static Ptr<UniqueId>::Ref
+        extractPlaylistElementId(XmlRpc::XmlRpcValue  & xmlRpcValue)
                                                 throw (std::invalid_argument);
 
         /**
@@ -407,13 +419,26 @@ class XmlRpcTools
         /**
          *  Add a playlist id to an XmlRpcValue
          *
-         *  @param playlist the playlist idt o add to the XmlRpcValue
+         *  @param playlistId the playlist ID to add to the XmlRpcValue
          *  @param returnValue an output parameter, which has the 
-         *         playlist id added after the function returns.
+         *         playlist ID added after the function returns.
          */
         static void
         playlistIdToXmlRpcValue(
                 Ptr<const UniqueId>::Ref  playlistId,
+                XmlRpc::XmlRpcValue     & returnValue)              throw ();
+
+        /**
+         *  Add a playlist element id to an XmlRpcValue
+         *
+         *  @param playlistElementId the playlist element ID 
+         *                           to add to the XmlRpcValue
+         *  @param returnValue an output parameter, which has the 
+         *         playlist element ID added after the function returns.
+         */
+        static void
+        playlistElementIdToXmlRpcValue(
+                Ptr<const UniqueId>::Ref  playlistElementId,
                 XmlRpc::XmlRpcValue     & returnValue)              throw ();
 
         /**

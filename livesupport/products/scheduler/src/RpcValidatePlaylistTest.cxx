@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcValidatePlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -136,7 +136,7 @@ RpcValidatePlaylistTest :: firstTest(void)
     CPPUNIT_ASSERT(bool(result["valid"]));
 
     result.clear();
-    parameters["relativeOffset"] = 0;
+    parameters["playlistElementId"]  = "0000000000000101";
     CPPUNIT_ASSERT(xmlRpcClient.execute("removeAudioClipFromPlaylist", 
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ using namespace LiveSupport::Core;
  *  are not scheduled entries. Each structure is as follows:
  *  <ul>
  *      <li>id - int - the id of the scheduled entry</li>
- *      <li>playlistId - int - the id of the playlist associated with the entry
+ *      <li>playlistId - string - the id of the playlist associated with the entry
  *      </li>
  *      <li>start - datetime - the start of the scheduled item</li>
  *      <li>end - datetime - the end of the scheduled item</li>
@@ -106,8 +106,8 @@ using namespace LiveSupport::Core;
  *     <li>1120 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.8 $
  */
 class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

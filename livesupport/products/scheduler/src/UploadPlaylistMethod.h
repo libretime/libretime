@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ using namespace LiveSupport::Core;
  *  If the upload is successful, the method returns an XML-RPC structure with
  *  the following members:
  *  <ul>
- *      <li>scheduleEntryId - int - the id of the schedule entry created
+ *      <li>scheduleEntryId - string - the id of the schedule entry created
  *                                  by the upload </li>
  *  </ul>
  *
@@ -102,7 +102,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,8 +75,8 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>scheduleEntryId - int - the id of the schedule entry to reschedule
- *      </li>
+ *      <li>scheduleEntryId - string - the id of the schedule entry 
+ *                                     to reschedule </li>
  *      <li>playtime - datetime - the new playing time for the entry</li>
  *  </ul>
  *
@@ -93,7 +93,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

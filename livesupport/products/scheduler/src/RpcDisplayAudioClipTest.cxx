@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayAudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,13 +117,13 @@ RpcDisplayAudioClipTest :: firstTest(void)
     xmlRpcClient.execute("displayAudioClip", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
 
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000010001");
-
-    CPPUNIT_ASSERT(result.hasMember("playlength"));
-    CPPUNIT_ASSERT(result["playlength"].getType() == XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(result["playlength"]) == 60 * 60);
+    CPPUNIT_ASSERT(result.hasMember("audioClip"));
+    CPPUNIT_ASSERT(result["audioClip"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    Ptr<AudioClip>::Ref  audioClip;
+    CPPUNIT_ASSERT_NO_THROW(audioClip.reset(new AudioClip(result)));
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x10001);
+    CPPUNIT_ASSERT(audioClip->getPlaylength()->total_seconds() == 60 * 60);
 
     xmlRpcClient.close();
 }

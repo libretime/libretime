@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,6 +63,11 @@ static const std::string idName = "id";
  *  The name of the playlist ID member in the XML-RPC parameter structure
  *----------------------------------------------------------------------------*/
 static const std::string playlistIdName = "playlistId";
+
+/*------------------------------------------------------------------------------
+ *  The name of the playlist element ID member in the XML-RPC param structure
+ *----------------------------------------------------------------------------*/
+static const std::string playlistElementIdName = "playlistElementId";
 
 /*------------------------------------------------------------------------------
  *  The name of the audio clip ID member in the XML-RPC parameter structure
@@ -197,6 +202,26 @@ XmlRpcTools :: extractPlaylistId(XmlRpc::XmlRpcValue & xmlRpcValue)
 
 
 /*------------------------------------------------------------------------------
+ *  Extract the playlist element ID from an XML-RPC function call parameter
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+XmlRpcTools :: extractPlaylistElementId(XmlRpc::XmlRpcValue & xmlRpcValue)
+                                                throw (std::invalid_argument)
+{
+    if (!xmlRpcValue.hasMember(playlistElementIdName)
+        || xmlRpcValue[playlistElementIdName].getType() 
+                                        != XmlRpc::XmlRpcValue::TypeString) {
+        throw std::invalid_argument("missing or bad playlist element ID "
+                                    "argument");
+    }
+
+    Ptr<UniqueId>::Ref id(new UniqueId(std::string(
+                                        xmlRpcValue[playlistElementIdName] )));
+    return id;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Extract the audio clip ID from an XML-RPC function call parameter
  *----------------------------------------------------------------------------*/
 Ptr<UniqueId>::Ref
@@ -243,8 +268,7 @@ XmlRpcTools :: playlistToXmlRpcValue(
                             XmlRpc::XmlRpcValue       & xmlRpcValue)
                                                 throw ()
 {
-    xmlRpcValue["id"]         = std::string(*playlist->getId());
-    xmlRpcValue["playlength"] = int(playlist->getPlaylength()->total_seconds());
+    xmlRpcValue["playlist"] = std::string(*playlist->getXmlDocumentString());
 }
 
 
@@ -284,9 +308,7 @@ XmlRpcTools :: audioClipToXmlRpcValue(
                             XmlRpc::XmlRpcValue        & xmlRpcValue)
                                                 throw ()
 {
-    xmlRpcValue["id"]         = std::string(*audioClip->getId());
-    xmlRpcValue["playlength"] = int(audioClip->getPlaylength()
-                                             ->total_seconds());
+    xmlRpcValue["audioClip"] = std::string(*audioClip->getXmlDocumentString());
 }
 
 
@@ -602,6 +624,19 @@ XmlRpcTools :: playlistIdToXmlRpcValue(
                                                 throw ()
 {
     returnValue[playlistIdName] = std::string(*playlistId);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a playlist element ID to an XmlRpcValue
+ *----------------------------------------------------------------------------*/
+void
+XmlRpcTools :: playlistElementIdToXmlRpcValue(
+                            Ptr<const UniqueId>::Ref    playlistElementId,
+                            XmlRpc::XmlRpcValue       & returnValue)
+                                                throw ()
+{
+    returnValue[playlistElementIdName] = std::string(*playlistElementId);
 }
 
 

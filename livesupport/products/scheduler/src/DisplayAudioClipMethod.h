@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,15 +75,14 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>audioClipId - int - the unique id of the audio clip requested.</li>
+ *      <li>audioClipId - string - the unique id of the audio clip requested.</li>
  *  </ul>
  *
  *  The XML-RPC function returns an XML-RPC structure, containing the following
  *  fields:
  *  <ul>
- *      <li>id - int - the unique id of the audio clip</li>
- *      <li>playlength - int - the length of the audio clip, in seconds
- *      </li>
+ *      <li>audioClip - string - an XML representation of the audio clip; this
+ *          XML element can be used as argument to AudioClip::configure()</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -97,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class DisplayAudioClipMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ResetStorageMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,6 @@ ResetStorageMethodTest :: tearDown(void)                      throw ()
 {
 }
 
-#include <iostream>
 /*------------------------------------------------------------------------------
  *  Just a very simple smoke test
  *----------------------------------------------------------------------------*/
@@ -99,7 +98,7 @@ ResetStorageMethodTest :: firstTest(void)
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("displayPlaylist", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
+    CPPUNIT_ASSERT(result.hasMember("playlist"));
     
     parameters.clear();
     parameters["sessionId"]     = sessionId;
@@ -135,7 +134,7 @@ ResetStorageMethodTest :: firstTest(void)
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("displayPlaylist", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
+    CPPUNIT_ASSERT(result.hasMember("playlist"));
 
     parameters.clear();
     parameters["sessionId"]     = sessionId;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,7 +75,7 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>playlistId - int - the unique id of the playlist.</li>
+ *      <li>playlistId - string - the unique id of the playlist.</li>
  *  </ul>
  *
  *  The XML-RPC function returns an XML-RPC structure, containing the following
@@ -95,7 +95,7 @@ using namespace LiveSupport::Core;
  *     <li>520 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

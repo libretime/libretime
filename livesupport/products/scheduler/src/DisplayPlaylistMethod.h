@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,15 +75,14 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>playlistId - int - the unique id of the playlist requested.</li>
+ *      <li>playlistId - string - the unique id of the playlist requested.</li>
  *  </ul>
  *
  *  The XML-RPC function returns an XML-RPC structure, containing the following
  *  fields:
  *  <ul>
- *      <li>id - int - the unique id of the playlist</li>
- *      <li>playlength - int - the playlist length of the playlist, in seconds
- *      </li>
+ *      <li>playlist - string - an XML representation of the playlist; this
+ *          XML element can be used as argument to Playlist::configure()</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -97,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class DisplayPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

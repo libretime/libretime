@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -179,11 +179,11 @@ UpdateFadeInFadeOutMethodTest :: firstTest(void)
     rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"]     = "0000000000000001";
-    parameters["relativeOffset"] = 90*60;
-    parameters["fadeIn"]         = 0;
-    rootParameter[0]             = parameters;
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["playlistElementId"] = "0000000000009999";
+    parameters["fadeIn"]            = 0;
+    rootParameter[0]                = parameters;
 
     result.clear();
     try {
@@ -220,11 +220,11 @@ UpdateFadeInFadeOutMethodTest :: firstTest(void)
         CPPUNIT_FAIL("allowed update fade info for non-existent "
                      "playlist element");
     } catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 1608);// no audio clip at this rel offset
+        CPPUNIT_ASSERT(e.getCode() == 1608);// no such playlist element
     }
 
-    parameters["relativeOffset"] = 0;
-    rootParameter[0]             = parameters;
+    parameters["playlistElementId"] = "0000000000000101";
+    rootParameter[0]                = parameters;
 
     result.clear();
     try {

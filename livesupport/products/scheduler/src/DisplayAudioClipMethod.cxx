@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -134,7 +134,7 @@ DisplayAudioClipMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     Ptr<AudioClip>::Ref audioClip;
     try {
         audioClip = storage->getAudioClip(sessionId, id);
-    } catch (XmlRpcException &e) {
+    } catch (Core::XmlRpcException &e) {
         std::string eMsg = "audio clip not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+3, eMsg, returnValue);

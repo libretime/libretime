@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,9 +84,8 @@ using namespace LiveSupport::Core;
  *  for each playlist in the playlist store.  An array of size 0 means the
  *  playlist store is empty.  Each structure is as follows:
  *  <ul>
- *      <li>id - int - the unique id of the playlist</li>
- *      <li>playlength - int - the playlist length of the playlist, in seconds
- *      </li>
+ *      <li>playlist - string - an XML representation of the playlist; this
+ *          XML element can be used as argument to Playlist::configure()</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -99,7 +98,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
 {

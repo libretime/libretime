@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,9 +84,8 @@ using namespace LiveSupport::Core;
  *  for each audio clip in the audio clip store.  An array of size 0 means the
  *  audio clip store is empty.  Each structure is as follows:
  *  <ul>
- *      <li>id - int - the unique id of the audio clip</li>
- *      <li>playlength - int - the length of the audio clip, in seconds
- *      </li>
+ *      <li>audioClip - string - an XML representation of the audio clip; this
+ *          XML element can be used as argument to AudioClip::configure()</li>
  *  </ul>
  *
  *  In case of an error, a standard XML-RPC fault response is generated, 
@@ -99,7 +98,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class DisplayAudioClipsMethod : public XmlRpc::XmlRpcServerMethod
 {

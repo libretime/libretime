@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,10 +76,9 @@ using namespace LiveSupport::Core;
  *  <ul>
  *      <li>sessionId  - string - the session ID obtained via the login()
  *                                method of the authentication client </li>
- *      <li>playlistId - int - the unique id of the playlist.</li>
- *      <li>relativeOffset - int - the number of seconds between the
- *                start of the playlist and the start of the audio clip
- *                to be removed.</li>
+ *      <li>playlistId - string - the unique ID of the playlist.</li>
+ *      <li>playlistElementId - string - the unique ID of the playlist element
+ *                                       to be removed.</li>
  *      <li>fadeIn  - int - the length (in milliseconds) of the fade in. </li>
  *      <li>fadeOut - int - the length (in milliseconds) of the fade out. </li>
  *  </ul>
@@ -90,16 +89,16 @@ using namespace LiveSupport::Core;
  *  <ul>
  *     <li>1601 - invalid argument format </li>
  *     <li>1602 - missing playlist ID argument </li>
- *     <li>1603 - missing relative offset argument </li>
+ *     <li>1603 - missing playlist element ID argument </li>
  *     <li>1604 - missing fade in argument </li>
  *     <li>1605 - missing fade out argument </li>
  *     <li>1606 - playlist does not exist </li>
  *     <li>1607 - playlist has not been opened for editing </li>
- *     <li>1608 - no audio clip at the specified relative offset </li>
+ *     <li>1608 - error executing setFadeInfo() method </li>
  *     <li>1620 - missing session ID argument </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class UpdateFadeInFadeOutMethod : public XmlRpc::XmlRpcServerMethod
 {

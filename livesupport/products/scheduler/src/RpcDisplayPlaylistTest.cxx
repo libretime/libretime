@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,13 +117,14 @@ RpcDisplayPlaylistTest :: simpleTest(void)
     result.clear();
     xmlRpcClient.execute("displayPlaylist", parameters, result);
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(result.hasMember("playlength"));
-    CPPUNIT_ASSERT(result["playlength"].getType() == XmlRpcValue::TypeInt);
-    
-    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
-    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
+
+    CPPUNIT_ASSERT(result.hasMember("playlist"));
+    CPPUNIT_ASSERT(result["playlist"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    Ptr<Playlist>::Ref  playlist;
+    CPPUNIT_ASSERT_NO_THROW(playlist.reset(new Playlist(result)));
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 90 * 60);
 
     xmlRpcClient.close();
 }

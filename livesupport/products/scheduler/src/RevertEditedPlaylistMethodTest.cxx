@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RevertEditedPlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,10 +183,10 @@ RevertEditedPlaylistMethodTest :: firstTest(void)
     rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    parameters["sessionId"]      = sessionId->getId();
-    parameters["playlistId"]     = "0000000000000001";
-    parameters["relativeOffset"] = 0;
-    rootParameter[0]        = parameters;
+    parameters["sessionId"]         = sessionId->getId();
+    parameters["playlistId"]        = "0000000000000001";
+    parameters["playlistElementId"] = "0000000000000101";
+    rootParameter[0]                = parameters;
 
     result.clear();
     try {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcOpenPlaylistForEditingTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,14 +118,13 @@ RpcOpenPlaylistForEditingTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcClient.execute("openPlaylistForEditing", 
                                         parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("id"));
-    CPPUNIT_ASSERT(result["id"].getType() == XmlRpc::XmlRpcValue::TypeString);
-    CPPUNIT_ASSERT(std::string(result["id"]) == "0000000000000001");
-
-    CPPUNIT_ASSERT(result.hasMember("playlength"));
-    CPPUNIT_ASSERT(result["playlength"].getType() 
-                                          == XmlRpc::XmlRpcValue::TypeInt);
-    CPPUNIT_ASSERT(int(result["playlength"]) == 90 * 60);
+    CPPUNIT_ASSERT(result.hasMember("playlist"));
+    CPPUNIT_ASSERT(result["playlist"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    Ptr<Playlist>::Ref  playlist;
+    CPPUNIT_ASSERT_NO_THROW(playlist.reset(new Playlist(result)));
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
+    CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 90 * 60);
 
     parameters.clear();
     parameters["sessionId"]  = sessionId->getId();
