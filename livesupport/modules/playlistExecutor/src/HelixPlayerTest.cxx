@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -209,10 +209,24 @@ HelixPlayerTest :: smilTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test different SMIL file features
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilParallelTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    helixPlayer->initialize();
 
     /* TODO: there is a bug with playing parallel, as it doesn't end
              for some reason.
              see https://bugs.helixcommunity.org/show_bug.cgi?id=3311
+    */
     helixPlayer->playThis("file:var/parallel.smil");
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
@@ -221,10 +235,23 @@ HelixPlayerTest :: smilTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
-    */
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test different SMIL file features
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilSoundAnimationTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    helixPlayer->initialize();
 
     /* TODO: there is a bug with sound level animation, it causes a segfault
              see https://bugs.helixcommunity.org/show_bug.cgi?id=3310
+    */
     helixPlayer->playThis("file:var/animateSound.smil");
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
@@ -235,7 +262,6 @@ HelixPlayerTest :: smilTest(void)
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
 
     helixPlayer->deInitialize();
-    */
 }
 
 
