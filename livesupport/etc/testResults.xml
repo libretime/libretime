@@ -16,5 +16,5 @@
 &storageResults;
 &playlistExecutorResults;
 &eventSchedulerResults;
-&schedulerResults;
+<!-- &schedulerResults; -->
 </TestResults>
