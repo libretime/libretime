@@ -51,15 +51,15 @@ function contextmenu(param) {
             break;
 
             case "PL.changeFadeIn":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></li>";
             break;
 
             case "PL.changeTransition":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></li>";
             break;
 
             case "PL.changeFadeOut":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '350', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></li>";
             break;
 
             case "PL.editMetaData":
@@ -85,7 +85,7 @@ function contextmenu(param) {
 
             case "delete":
                 //contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=delete&id="+param+"')\" "+oF+">&nbsp;Delete Item&nbsp;</a></li>";
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 300, 150)\"')"+oF+">&nbsp;Delete Item&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 200)\"')"+oF+">&nbsp;Delete Item&nbsp;</a></li>";
             break;
 
             case "fileList":
@@ -93,11 +93,11 @@ function contextmenu(param) {
             break;
 
             case "SCHEDULER.addItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 600, 400)\"')"+oF+">&nbsp;Insert Playlist here&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 400, 200)\"')"+oF+">&nbsp;Insert Playlist here&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.removeItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 600, 400)\"')"+oF+">&nbsp;Remove Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 200)\"')"+oF+">&nbsp;Remove Playlist&nbsp;</a></li>";
             break;
             {literal}
         }

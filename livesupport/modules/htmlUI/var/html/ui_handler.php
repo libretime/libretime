@@ -185,7 +185,7 @@ switch($_REQUEST['act']){
     case "PL.create":
         if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE)
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
-        $uiHandler->PLAYLIST->setReload();
+        $uiHandler->PLAYLIST->setRedirect();
     break;
 
     case "PL.addItem":
@@ -267,7 +267,7 @@ if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 if (ob_get_contents()) {
     $ui_wait = 5;
 }
-ob_end_clean; 
+ob_end_clean;
 ?>
 <meta http-equiv="refresh" content="<?php echo $ui_wait ? $ui_wait : 0; ?>; URL=<?php echo $uiHandler->redirUrl; ?>">
 </body>

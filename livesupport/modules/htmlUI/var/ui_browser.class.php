@@ -74,7 +74,7 @@ class uiBrowser extends uiBase {
     {
         $form = new HTML_QuickForm('login', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
-        $this->_parseArr2Form($form, $mask['languages']); 
+        $this->_parseArr2Form($form, $mask['languages']);
         $this->_parseArr2Form($form, $mask['login']);
 
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
@@ -370,12 +370,16 @@ class uiBrowser extends uiBase {
 
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
+        /*
         $form = new HTML_QuickForm('tabs', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['tabs']);
         $output['tabs'] = $form->toHTML();
+        */
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['langswitch']);
-        $output['langswitch'] = $form->toHTML();
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        $output['langswitch'] = $renderer->toArray();
 
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->_parseArr2Form($form, $mask['basics']);

@@ -6,7 +6,7 @@ class uiPlaylist
         $this->Base      =& $uiBase;
         $this->activeId  =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
         $this->token     =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
-        $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->reloadUrl   = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         $this->redirectUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
     }
 
@@ -431,7 +431,7 @@ class uiPlaylist
         $id = $this->activeId;
         $this->release(FALSE);
         if ($this->Base->delete($id))
-            return TRUE;
+            return $id;
         $this->Base->_retMsg('Cannot delete this Playlist');
         return FALSE;
     }

@@ -16,7 +16,7 @@
     *}
 
 
-    {if $element.type eq 'static'}     
+    {if $element.type eq 'static'}
         {$element.html}
 
     {else}
@@ -42,11 +42,13 @@
     {/if}
 {/foreach}
 
+    {*
     {if $dynform.requirednote and not $dynform.frozen}
         <div class='dynformelement'>
             {$dynform.requirednote}
         </div>
     {/if}
+    *}
 </form>
 
 <!--

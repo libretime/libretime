@@ -275,7 +275,7 @@ class uiHandler extends uiBase {
         }
         $data = $this->_dateArr2Str($mData);
         foreach ($data as $key=>$val) {
-            $r = $this->gb->setMDataValue($id, $key, $this->sessid, $val);
+            $r = $this->gb->setMDataValue($id, $key, $this->sessid, $val, 'de');
             if (PEAR::isError($r)) {
                 $this->_retMsg('Unable to set $1: $2', $key, $val);
             }
@@ -439,7 +439,7 @@ class uiHandler extends uiBase {
         if ($this->_validateForm($formdata, $mask)) {
             if($this->gb->checkPerm($this->userid, 'subjects')){
                 $res = $this->gb->addSubj($formdata['login'], ($formdata['pass']=='' ? NULL : $formdata['pass']));
-                $this->_retMsg('Subject $1 added.', $formdata['login']);
+                if (UI_VERBOSE) $this->_retMsg('Subject $1 added.', $formdata['login']);
             } else {
                 $this->_retMsg('Access denied.');
                 return;
@@ -601,9 +601,9 @@ class uiHandler extends uiBase {
                 if ($val['error']) {
 
                     switch ($val['error']) {
-                        case 1: $was_error = TRUE; $this->_retMsg('Uploaded File $1 is greater than System setting.', $mask[$key]['label']); break;
-                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded File $1 is greater than LS setting.', $mask[$key]['label']); break;
-                        case 3: $was_error = TRUE; $this->_retMsg('File $1 was uploadet partly.', $mask[$key]['label']); break;
+                        case 1: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is greater than setting in php.ini.', $mask[$key]['label']); break;
+                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is greater than LiveSupport system setting.', $mask[$key]['label']); break;
+                        case 3: $was_error = TRUE; $this->_retMsg('Upload of file $1 was incomplete.', $mask[$key]['label']); break;
                         case 4: if ($mask[$key]['required']) {$was_error = TRUE; $this->_retMsg('File $1 was not uploadet.', $mask[$key]['label']);} break;
                     }
                 }
@@ -640,7 +640,7 @@ class uiHandler extends uiBase {
                 if (strlen($formdata[$val['element']]))
                     $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                 else
-                    $this->gb->delGroupPref($this->sessid, 'StationPrefs', $val['element']);
+                    $this->gb->delGroupPref($this->sessid, 'StationPrefs',  $val['element']);
                 #$this->STATIONPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
             }
             if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
@@ -650,7 +650,7 @@ class uiHandler extends uiBase {
             }
         }
         $this->loadStationPrefs($mask, TRUE);
-        $this->_retMsg('Settings saved');
+        if (UI_VERBOSE) $this->_retMsg('Settings saved');
         return TRUE;
     }
 }

@@ -393,7 +393,7 @@ class uiScheduler extends uiCalendar
     function initXmlRpc()
     {
         include_once dirname(__FILE__).'/SchedulerPhpClient.class.php';
-        $this->spc =& SchedulerPhpClient::factory($this->Base->dbc, $mdefs, $this->Base->config);
+        $this->spc =& SchedulerPhpClient::factory($this->Base->dbc, $mdefs, $this->Base->config, FALSE, FALSE);
     }
 
 
@@ -406,7 +406,7 @@ class uiScheduler extends uiCalendar
         $datetime = $formdata['date']['Y'].sprintf('%02d', $formdata['date']['m']).sprintf('%02d', $formdata['date']['d']).'T'.sprintf('%02d', $formdata['time']['H']).':'.sprintf('%02d', $formdata['time']['i']).':'.sprintf('%02d', $formdata['time']['s']);
 
         #echo "Schedule Gunid: $gunid  At: ".$datetime;
-        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime.UI_TIMEZONE);
+        $r = $this->spc->UploadPlaylistMethod($this->Base->sessid, $gunid, $datetime);
         #print_r($r);
         if ($this->_isError($r))
             return FALSE;
@@ -428,22 +428,11 @@ class uiScheduler extends uiCalendar
 
 
     function displayScheduleMethod($from, $to)
-    {
+    {   return;
         #echo $from.$to;
         $r = $this->spc->displayScheduleMethod($this->Base->sessid, $from, $to);
         if ($this->_isError($r))
             return FALSE;
-        return $r;
-    }
-
-
-    function GeneratePlayReportMethod($from, $to)
-    {
-        #echo $from.$to;
-        $r = $this->spc->GeneratePlayReportMethod($this->Base->sessid, $from, $to);
-        if ($this->_isError($r))
-            return FALSE;
-        #print_r($r);
         return $r;
     }
 }

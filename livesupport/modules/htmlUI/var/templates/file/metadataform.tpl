@@ -9,8 +9,8 @@
 </ul>
 </div>
 
-    {*$_metadataform.tabs*}   
-    {*$_metadataform.langswitch*}
+    {assign var="dynform" value=$_metadataform.langswitch}
+    {include file="sub/dynForm_plain.tpl"}
 
     {foreach from=$_metadataform.pages key="key" item="dynform"}
         {include file="sub/dynForm_plain.tpl"}

@@ -101,7 +101,7 @@ class uiScratchPad
         foreach ($ids as $id) {
             $sp =& $this->get();
             foreach ($sp as $key=>$val) {
-                if ($val['id'] == $id) {
+                if ($val['id'] === $id) {
                     unset ($sp[$key]);
                     #$this->Base->decAccessCounter($id);
                 }
