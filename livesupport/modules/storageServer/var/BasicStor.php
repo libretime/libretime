@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -261,7 +261,7 @@ class BasicStor extends Alib{
      *
      *  @param token string, access token
      *  @param type string 'access'|'download'
-     *  @return boolean
+     *  @return string, global unique ID
      */
     function bsRelease($token, $type='access')
     {
@@ -270,11 +270,13 @@ class BasicStor extends Alib{
              "BasicStor::bsRelease: invalid token ($token)"
             );
         }
-        $ext = $this->dbc->getOne("
-            SELECT ext FROM {$this->accessTable}
+        $acc = $this->dbc->getRow("
+            SELECT gunid, ext FROM {$this->accessTable}
             WHERE token='{$token}' AND type='$type'
         ");
-        if(PEAR::isError($ext)){ return $ext; }
+        $ext = $acc['ext'];
+        $gunid = $acc['gunid'];
+        if(PEAR::isError($acc)){ return $acc; }
         $linkFname = "{$this->accessDir}/$token.$ext";
         $res = $this->dbc->query("
             DELETE FROM {$this->accessTable} WHERE token='$token'
@@ -285,7 +287,7 @@ class BasicStor extends Alib{
                 "BasicStor::bsRelease: unlink failed ($linkFname)",
                 GBERR_FILEIO);
         }
-        return TRUE;
+        return $gunid;
     }
 
     /**
@@ -331,7 +333,7 @@ class BasicStor extends Alib{
      *
      *  @param token string, download token
      *  @param part string, 'media'|'metadata'
-     *  @return boolean
+     *  @return string, gunid
      */
     function bsCloseDownload($token, $part='media')
     {
@@ -534,15 +536,27 @@ class BasicStor extends Alib{
      *  Mode is &quot;match all&quot; or &quot;match any&quot;.
      *  Query parts is array of [fieldname, operator, value] entities.
      *
-     *  @param searchData string, search query -
+     *  @param criteria string, search query -
      *      only one SQL LIKE term supported now.
      *      It will be searched in all literal object values
      *      in metadata database
      *  @return array of gunid strings
      */
-    function bsLocalSearch($searchData)
+    function bsLocalSearch($criteria)
     {
-        $ftsrch = $searchData;
+        $ops = array('full'=>"like '%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
+            '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
+        );
+#        var_dump($criteria);
+        $type  = $criteria['type'];
+        $conds = $criteria['conds'];
+        foreach($conds as $cond){
+            $cat = $cond['cat'];
+            $opVal = sprintf($ops[$cond['op']], $cond['val']);
+            $sqlCond = "$cat $opVal";
+            echo "$sqlCond\n";
+        }
+        $ftsrch = $criteria;
         $res = $this->dbc->getCol("SELECT md.gunid as gunid
             FROM {$this->filesTable} f, {$this->mdataTable} md
             WHERE f.gunid=md.gunid AND md.objns='_L' AND
@@ -761,11 +775,11 @@ class BasicStor extends Alib{
     /**
      *  Search in central metadata database
      *
-     *  @param searchData string, search query - see localSearch method
+     *  @param criteria string, search query - see localSearch method
      *  @param sessid string, session id
      *  @return string - job id or PEAR::error
      */
-    function globalSearch($searchData, $sessid='')
+    function globalSearch($criteria, $sessid='')
     {
         return PEAR::raiseError(
             'GreenBox::globalSearch: not implemented', GBERR_NOTIMPL
@@ -773,7 +787,7 @@ class BasicStor extends Alib{
         /*
         $srchid = md5($sessid.mtime());
         $fh = fopen($this->transDir."/$srchid", "w");
-        fwrite($fh, serialize($searchData));
+        fwrite($fh, serialize($criteria));
         fclose($fh); 
         $res = $tr->uploadOpen($srchid, 'search', $sessid, $gunid);
         if(PEAR::isError($res)) return $res;

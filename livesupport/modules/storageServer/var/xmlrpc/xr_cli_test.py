@@ -24,7 +24,7 @@
 # 
 # 
 #    Author   : $Author: tomas $
-#    Version  : $Revision: 1.4 $
+#    Version  : $Revision: 1.5 $
 #    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/Attic/xr_cli_test.py,v $
 #
 #------------------------------------------------------------------------------
@@ -43,15 +43,16 @@ if len(sys.argv)<3:
      login <username> <password>
      authenticate <username> <password>
      logout <session_id>
-     existsAudioClip <session_id> <global_unique_id>
-     storeAudioClip <session_id> <global_unique_id> <media_file_path> <metadata_file_path>
-     deleteAudioClip <session_id> <global_unique_id>
-     updateAudioClipMetadata <session_id> <global_unique_id> <metadata_file_path>
-     searchMetadata <session_id> <criteria>
-     accessRawAudioData <session_id> <global_unique_id>
-     releaseRawAudioData <session_id> <tmp_link_path>
-     getAudioClip <session_id> <global_unique_id>
+     ...
 """
+#     existsAudioClip <session_id> <global_unique_id>
+#     storeAudioClip <session_id> <global_unique_id> <media_file_path> <metadata_file_path>
+#     deleteAudioClip <session_id> <global_unique_id>
+#     updateAudioClipMetadata <session_id> <global_unique_id> <metadata_file_path>
+#     searchMetadata <session_id> <criteria>
+#     accessRawAudioData <session_id> <global_unique_id>
+#     releaseRawAudioData <session_id> <tmp_link_path>
+#     getAudioClip <session_id> <global_unique_id>
     sys.exit(1)
 
 pars = sys.argv
@@ -63,7 +64,7 @@ if pars[1]=="-s":
     pars.pop(1)
     serverPath = pars.pop(1)
 else:
-    serverPath = 'http://localhost:80/storage/xmlrpc/xrLocStor.php'
+    serverPath = 'http://localhost:80/livesupportStorageServer/xmlrpc/xrLocStor.php'
 server = Server(serverPath)
 method = pars.pop(1)
 pars.pop(0)
@@ -116,9 +117,11 @@ try:
     elif method=="updateAudioClipMetadata":
         print server.locstor.updateAudioClipMetadata({'sessid':pars[0], 'gunid':pars[1], 'mdataFileLP':pars[2]})
     elif method=="searchMetadata":
-        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
+#        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':pars[1]})
+        print server.locstor.searchMetadata({'sessid':pars[0], 'criteria':{'type':'and', 'conds':['a', 'b']}})
     elif method=="getAudioClip":
-        print server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
+        r = server.locstor.getAudioClip({'sessid':pars[0], 'gunid':pars[1]})
+        print r['metadata']
     elif method=="resetStorage":
         print server.locstor.resetStorage({})
     elif method=="openPut":

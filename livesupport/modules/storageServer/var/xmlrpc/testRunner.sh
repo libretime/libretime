@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -60,12 +60,13 @@ storeAudioClip() {
 #    echo -n "# storeAudioClip: "
 #    MEDIA=../tests/ex1.mp3
     MEDIA=var/tests/ex1.mp3
-    METADATA=../tests/testStorage.xml
+#    METADATA=var/tests/mdata4.xml
 #    RGUNID=`$XR_CLI storeAudioClip "$SESSID" '' "$MEDIA" "$METADATA"` || \
 #    	{ ERN=$?; echo $RGUNID; exit $ERN; }
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
+    echo "md5=$MD5"
     echo -n "# storeAudioClipOpen: "
-    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' '<metadata><title>Title XY</title></metadata>' "$MD5"` || \
+    RES=`$XR_CLI storeAudioClipOpen "$SESSID" '' '<metadata><title>ěščřžé</title></metadata>' "$MD5"` || \
     	{ ERN=$?; echo $RES; exit $ERN; }
     unset URL
     for i in $RES; do if [ -z $URL ] ;  then URL=$i; else TOKEN=$i; fi; done

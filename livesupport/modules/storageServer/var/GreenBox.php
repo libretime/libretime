@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -300,16 +300,16 @@ class GreenBox extends BasicStor{
      *  Query parts is array of [fieldname, operator, value] entities.
      *
      *
-     *  @param searchData string, search query -
+     *  @param criteria string, search query -
      *      only one SQL LIKE term supported now.
      *      It will be searched in all literal object values
      *      in metadata database
      *  @param sessid string, session id
      *  @return array of gunid strings
      */
-    function localSearch($searchData, $sessid='')
+    function localSearch($criteria, $sessid='')
     {
-        return $this->bsLocalSearch($searchData);
+        return $this->bsLocalSearch($criteria);
     }
 
     /* --------------------------------------------------------- info methods */
@@ -454,6 +454,20 @@ class GreenBox extends BasicStor{
             default:
         }
         return TRUE;
+    }
+    
+    /**
+     *  Return users's home folder local ID
+     *
+     *  @param sessid string, session ID
+     *  @return local folder id
+     */
+    function _getHomeDirId($sessid)
+    {
+        $parid = $this->getObjId(
+            $this->getSessLogin($sessid), $this->storId
+        );
+        return $parid;
     }
     
     /**

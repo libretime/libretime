@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,9 +67,7 @@ class LocStor extends GreenBox{
         }else{
             // gunid doesn't exists - do insert
             $tmpid = uniqid('');
-            $parid = $this->getObjId(
-                $this->getSessLogin($sessid), $this->storId
-            );
+            $parid = $this->_getHomeDirId($sessid);
             if(PEAR::isError($parid)) return $parid;
             if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
                 return $res;
@@ -168,7 +166,7 @@ class LocStor extends GreenBox{
      *  Discard downloadable URL for audio file
      *
      *  @param token string, download token
-     *  @return boolean
+     *  @return string, gunid
      */
     function downloadRawAudioDataClose($token)
     {
@@ -201,7 +199,7 @@ class LocStor extends GreenBox{
      *  Discard downloadable URL for metadata
      *
      *  @param token string, download token
-     *  @return boolean
+     *  @return string, gunid
      */
     function downloadMetadataClose($token)
     {

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -329,6 +329,7 @@ class StoredFile{
      *
      *  @param metadata string, local path to metadata XML file or XML string
      *  @param mdataLoc string 'file'|'string'
+     *  @return boolean
      */
     function replaceMetaData($metadata, $mdataLoc='file')
     {
@@ -457,11 +458,11 @@ class StoredFile{
         if(PEAR::isError($res)) return $res;
         $res = $this->md->delete();
         if(PEAR::isError($res)) return $res;
-        $tokens = $this->dbc->getAll("SELECT token FROM {$this->accessTable}
+        $tokens = $this->dbc->getAll("SELECT token, ext FROM {$this->accessTable}
             WHERE gunid='{$this->gunid}'");
         if(is_array($tokens)) foreach($tokens as $i=>$item){
-            $file = _getAccessFname($item['token'], $item['ext']);
-            @unlink($file);
+            $file = $this->_getAccessFname($item['token'], $item['ext']);
+            if(file_exists($file)){ @unlink($file); }
         }
         $res = $this->dbc->query("DELETE FROM {$this->accessTable}
             WHERE gunid='{$this->gunid}'");
