@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 
 
 #include <string>
+#include <fstream>
 #include <iostream>
 
 #include "TestStorageClient.h"
@@ -270,12 +271,11 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     CPPUNIT_ASSERT(playlist->getUri());
     CPPUNIT_ASSERT(playlist->getUri()->substr(0,7) == "file://");
     
-    try {
-        std::FILE * f = fopen(playlist->getUri()->substr(7).c_str(), "r");
-        CPPUNIT_ASSERT(f);
-        std::fclose(f);
+    std::ifstream ifs1(playlist->getUri()->substr(7).c_str());
+    if (ifs1) {
+        ifs1.close();
     }
-    catch (std::exception &e) {
+    else {
         CPPUNIT_FAIL("temp file not created correctly");
     }
 
@@ -288,11 +288,10 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
     }
-    try {
-        std::FILE * f = fopen(savedTempFilePath.c_str(), "r");
-        CPPUNIT_ASSERT(!f);
-    }
-    catch (std::exception &e) {
+
+    std::ifstream ifs2(playlist->getUri()->substr(7).c_str());
+    if (ifs2) {
+        ifs2.close();
         CPPUNIT_FAIL("temp file not destroyed correctly");
     }
 

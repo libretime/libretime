@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,7 @@
 #error "Need unistd.h"
 #endif
 
+#include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "TestStorageClient.h"
@@ -253,11 +254,24 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
         ++it;
     }
 
-    std::string     smilFileName = "file://";
-    smilFileName += tempnam(0, "smil");
+    char fileName[] = "/tmp/tempPlaylistXXXXXX";
+    if (!mkstemp(fileName)) {
+        throw std::logic_error("could not create temp file");
+    }
+    std::string     sysCommand = "mv ";
+    sysCommand += fileName;
+    sysCommand += " ";
+    sysCommand += fileName;
+    sysCommand += ".smil > /dev/null 2>&1";
+    if (system(sysCommand.c_str()) != 0) {
+        throw std::logic_error("could not rename temp file");
+    }
+
+    std::string     smilFileName("file://");
+    smilFileName += fileName;
     smilFileName += ".smil";
     smilDocument->write_to_file(smilFileName, "UTF-8");
-
+   
     Ptr<std::string>::Ref   playlistUri(new std::string(smilFileName));
     newPlaylist->setUri(playlistUri);
     return newPlaylist;
@@ -275,15 +289,12 @@ TestStorageClient :: releasePlaylist(Ptr<const Playlist>::Ref playlist) const
         throw std::logic_error("playlist URI not found");
     }
 
-    try {
-        std::FILE * f = fopen(playlist->getUri()->substr(7).c_str(), "r");
-        if (!f) {
-            throw std::logic_error("playlist temp file not found");
-        }
-        std::fclose(f);
+    std::ifstream ifs(playlist->getUri()->substr(7).c_str());
+    if (ifs) {
+        ifs.close();
     }
-    catch (std::exception &e) {
-        throw std::logic_error("playlist temp file I/O error");
+    else {
+        throw std::logic_error("playlist temp file not found");
     }
 
     std::remove(playlist->getUri()->substr(7).c_str());
@@ -415,16 +426,11 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
                                                         // cut the "file:" off
     std::string     audioClipFileName = storedAudioClip->getUri()->substr(5);
     
-    try {
-        std::FILE * f = fopen(audioClipFileName.c_str(), "r");
-        if (f) {
-            std::fclose(f);
-        }
-        else {
-            throw std::logic_error("could not read audio clip");
-        }
+    std::ifstream ifs(audioClipFileName.c_str());
+    if (ifs) {
+        ifs.close();
     }
-    catch (std::exception &e) {
+    else {
         throw std::logic_error("could not read audio clip");
     }
 
