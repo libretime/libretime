@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ require_once "Transport.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see Alib
  */
 class GreenBox extends Alib{
@@ -226,12 +226,14 @@ class GreenBox extends Alib{
         if(($res = $this->_authorize('write', $parid, $sessid)) !== TRUE)
             return $res;
         $ac =& StoredFile::recall(&$this, $id);
-        if(PEAR::isError($ac)) return $ac;
-        else{
+        if(PEAR::isError($ac)){
+            // catch nonerror exception:
+            if($ac->getCode() != GBERR_FOBJNEX) return $ac;
+        }else{
             $res = $ac->rename($newName);
             if(PEAR::isError($res)) return $res;
-            return $this->renameObj($id, $newName);
         }
+        return $this->renameObj($id, $newName);
     }
 
     /**
