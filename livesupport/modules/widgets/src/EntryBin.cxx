@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/EntryBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -33,12 +33,11 @@
 #include "configure.h"
 #endif
 
-#include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
-#include "TestWindow.h"
+#include "LiveSupport/Widgets/EntryBin.h"
 
 
+using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
 
 /* ===================================================  local data structures */
@@ -55,52 +54,25 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-TestWindow :: TestWindow (void)
+EntryBin :: EntryBin(unsigned int                 backgroundColor,
+                     Ptr<CornerImages>::Ref       cornerImages)
                                                                     throw ()
-          : WhiteWindow("test window",
-                        0xffffff,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners())
+            : BlueBin(backgroundColor, cornerImages)
 {
-    Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
+    entry.reset(new Gtk::Entry());
+    entry->set_has_frame(false);
+ 
+    // TODO: this doesn't change the background color, for some reason :(
+    entry->modify_bg(Gtk::STATE_NORMAL, getBgColor());
 
-    // init the imageButton
-    imageButton = widgetFactory->createButton(WidgetFactory::deleteButton);
-
-    // create a button
-    button = widgetFactory->createButton("Hello, World!");
-
-    // create a combo box
-    comboBoxText = widgetFactory->createComboBoxText();
-    comboBoxText->append_text("item1");
-    comboBoxText->append_text("long item2");
-    comboBoxText->append_text("very very very long item3");
-    comboBoxText->set_active_text("item2");
-
-    // create a text entry, ant put it inside a blue bin
-    entryBin = widgetFactory->createEntryBin();
-    entry    = entryBin->getEntry();
-
-    // create a blue container
-    blueBin = widgetFactory->createDarkBlueBin();
-
-    // create and set up the layout
-    layout.reset(new Gtk::Table());
-    layout->attach(*imageButton,    0, 1, 0, 1);
-    layout->attach(*button,         0, 1, 1, 2);
-    layout->attach(*comboBoxText,   0, 1, 2, 3);
-    layout->attach(*entryBin,       0, 1, 3, 4);
-
-    blueBin->add(*layout);
-    add(*blueBin);
-    show_all();
+    add(*entry);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-TestWindow :: ~TestWindow (void)                                    throw ()
+EntryBin :: ~EntryBin(void)                            throw ()
 {
 }
-
 

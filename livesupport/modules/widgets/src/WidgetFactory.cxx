@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <gtkmm/entry.h>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 
@@ -98,6 +100,11 @@ static const std::string    blueBinPath = "blueBin/";
  *  The relative path for the dark blue bin images.
  */
 static const std::string    darkBlueBinPath = "darkBlueBin/";
+
+/**
+ *  The relative path for the entry bin images.
+ */
+static const std::string    entryBinPath = "entryBin/";
 
 /**
  *  The relative path for the white window images.
@@ -186,6 +193,7 @@ WidgetFactory :: configure(const xmlpp::Element & element)
     // load the images for the bins
     blueBinImages.reset(new CornerImages(path + blueBinPath));
     darkBlueBinImages.reset(new CornerImages(path + darkBlueBinPath));
+    entryBinImages.reset(new CornerImages(path + entryBinPath));
 
     // load the white window corner images
     whiteWindowImages.reset(new CornerImages(path + whiteWindowPath));
@@ -262,6 +270,18 @@ WidgetFactory :: createDarkBlueBin(void)                        throw ()
     Ptr<BlueBin>::Ref   blueBin(new BlueBin(0x99cdff, darkBlueBinImages));
 
     return blueBin;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create an entry bin
+ *----------------------------------------------------------------------------*/
+Ptr<EntryBin>::Ref
+WidgetFactory :: createEntryBin(void)                           throw ()
+{
+    Ptr<EntryBin>::Ref   entryBin(new EntryBin(0x99cdff, entryBinImages));
+
+    return entryBin;
 }
 
 

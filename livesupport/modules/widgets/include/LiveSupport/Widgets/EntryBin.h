@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/EntryBin.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef TestWindow_h
-#define TestWindow_h
+#ifndef LiveSupport_Widgets_EntryBin_h
+#define LiveSupport_Widgets_EntryBin_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -41,24 +41,17 @@
 #endif
 
 #include <gtkmm/entry.h>
-#include <gtkmm/window.h>
-#include <gtkmm/table.h>
 
 #include "LiveSupport/Core/Ptr.h"
-
-#include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ImageButton.h"
-#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/BlueBin.h"
-#include "LiveSupport/Widgets/EntryBin.h"
-#include "LiveSupport/Widgets/WhiteWindow.h"
 
 
 namespace LiveSupport {
 namespace Widgets {
 
 using namespace LiveSupport::Core;
-
+    
 /* ================================================================ constants */
 
 
@@ -68,63 +61,49 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A window, enabling interactive testing of UI components.
+ *  A container, holding a Gtk::Entry as its only child.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.1 $
  */
-class TestWindow : public WhiteWindow
+class EntryBin : public BlueBin
 {
-    protected:
+    private:
         /**
-         *  The layout used in the window.
+         *  The text entry for this container.
          */
-        Ptr<Gtk::Table>::Ref        layout;
-
-        /**
-         *  An image button.
-         */
-        Ptr<ImageButton>::Ref       imageButton;
-
-        /**
-         *  A button.
-         */
-        Ptr<Button>::Ref            button;
-
-        /**
-         *  A combo box.
-         */
-        Ptr<ComboBoxText>::Ref      comboBoxText;
-
-        /**
-         *  A text entry.
-         */
-        Ptr<Gtk::Entry>::Ref        entry;
-
-        /**
-         *  A container holding a text entry.
-         */
-        Ptr<EntryBin>::Ref          entryBin;
-
-        /**
-         *  A blue container.
-         */
-        Ptr<BlueBin>::Ref           blueBin;
+        Ptr<Gtk::Entry>::Ref            entry;
 
 
     public:
         /**
-         *  Constructor.
+         *  Constructor, with only one state.
+         *
+         *  @param backgroundColor the RGB value for the background color.
+         *  @param cornerImages the corner images.
          */
-        TestWindow(void)                                    throw ();
+        EntryBin(unsigned int                backgroundColor,
+                 Ptr<CornerImages>::Ref      cornerImages)
+                                                            throw ();
 
         /**
-         *  Virtual destructor.
+         *  A virtual destructor.
          */
         virtual
-        ~TestWindow(void)                                   throw ();
+        ~EntryBin(void)                                     throw ();
 
+        /**
+         *  Return the entry held in this container.
+         *
+         *  @return the entry held in this container.
+         */
+        Ptr<Gtk::Entry>::Ref
+        getEntry(void)                                      throw ()
+        {
+            return entry;
+        }
 };
+
 
 /* ================================================= external data structures */
 
@@ -135,5 +114,5 @@ class TestWindow : public WhiteWindow
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // TestWindow_h
+#endif // LiveSupport_Widgets_EntryBin_h
 

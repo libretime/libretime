@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,6 @@
 #include "configure.h"
 #endif
 
-#include <iostream>
 
 #include "LiveSupport/Widgets/BlueBin.h"
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
+#include "LiveSupport/Widgets/EntryBin.h"
 
 
 namespace LiveSupport {
@@ -83,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -150,6 +151,11 @@ class WidgetFactory :
          *  The corner images for the dark blue bin.
          */
         Ptr<CornerImages>::Ref          darkBlueBinImages;
+
+        /**
+         *  The corner images for the entry bin.
+         */
+        Ptr<CornerImages>::Ref          entryBinImages;
 
         /**
          *  The corner images for the white window.
@@ -272,6 +278,14 @@ class WidgetFactory :
          */
         Ptr<BlueBin>::Ref
         createDarkBlueBin(void)                             throw ();
+
+        /**
+         *  Create and return a singular container holding a text entry.
+         *
+         *  @return a singular container holding a text entry.
+         */
+        Ptr<EntryBin>::Ref
+        createEntryBin(void)                                throw ();
 
         /**
          *  Return the images for the white window.
