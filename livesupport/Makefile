@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.20 $
+#   Version  : $Revision: 1.21 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ XMLRPCXX_VERSION  = xmlrpc++-20040713
 LCOV_DIR          = ${TOOLS_DIR}/lcov
 LCOV_VERSION      = lcov-1.3
 HELIX_DIR         = ${TOOLS_DIR}/helix
-HELIX_VERSION     = all_clients_nodist-helix-20041010
+HELIX_VERSION     = hxclient_1_3_0_neptunex-2004-12-15
 GTK_DIR           = ${TOOLS_DIR}/gtk+
 GTK_VERSION       = gtk+-2.4.13
 GTKMM_DIR         = ${TOOLS_DIR}/gtkmm
