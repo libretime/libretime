@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,6 +38,7 @@
 #include "LiveSupport/Core/TimeConversion.h"
 #include "HelixEventHandlerThread.h"
 #include "HelixPlayer.h"
+#include <hxausvc.h>
 
 
 using namespace LiveSupport::Core;
@@ -326,6 +327,42 @@ HelixPlayer :: close(void)                       throw ()
         // else, call IHXPlayer->Stop(), to clean up things...
         player->Stop();
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the volume of the player.
+ *----------------------------------------------------------------------------*/
+unsigned int
+HelixPlayer :: getVolume(void)                                  throw ()
+{
+    IHXAudioPlayer    * audioPlayer = 0;
+    player->QueryInterface(IID_IHXAudioPlayer, (void**) &audioPlayer);
+    if (!audioPlayer) {
+        std::cerr << "can't get IHXAudioPlayer interface" << std::endl;
+        return 0;
+    }
+
+    IHXVolume * ihxVolume = audioPlayer->GetAudioVolume();
+    return ihxVolume->GetVolume();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the volume of the player.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: setVolume(unsigned int   volume)                 throw ()
+{
+    IHXAudioPlayer    * audioPlayer = 0;
+    player->QueryInterface(IID_IHXAudioPlayer, (void**) &audioPlayer);
+    if (!audioPlayer) {
+        std::cerr << "can't get IHXAudioPlayer interface" << std::endl;
+        return;
+    }
+
+    IHXVolume * ihxVolume = audioPlayer->GetAudioVolume();
+    ihxVolume->SetVolume(volume);
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -310,6 +310,22 @@ class HelixPlayer : virtual public Configurable,
          */
         virtual Ptr<posix_time::time_duration>::Ref
         getPlaylength(void)                                 throw ();
+
+        /**
+         *  Get the volume of the player.
+         *
+         *  @return the volume, from 1 to 100.
+         */
+        virtual unsigned int
+        getVolume(void)                                     throw ();
+
+        /**
+         *  Set the volume of the player.
+         *
+         *  @param volume the new volume, from 1 to 100.
+         */
+        virtual void
+        setVolume(unsigned int  volume)                     throw ();
 };
 
 
