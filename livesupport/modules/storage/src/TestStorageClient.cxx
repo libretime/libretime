@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -249,25 +249,13 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
         ++it;
     }
 
-    char fileName[] = "/tmp/tempPlaylistXXXXXX";
-    if (!mkstemp(fileName)) {
-        throw std::logic_error("could not create temp file");
-    }
-    std::string     sysCommand = "mv ";
-    sysCommand += fileName;
-    sysCommand += " ";
-    sysCommand += fileName;
-    sysCommand += ".smil > /dev/null 2>&1";
-    if (system(sysCommand.c_str()) != 0) {
-        throw std::logic_error("could not rename temp file");
-    }
+    std::stringstream fileName;
+    fileName << "file:///tmp/tempPlaylist" << newPlaylist->getId()->getId()
+             << "#" << std::rand() << ".smil";
 
-    std::string     smilFileName("file://");
-    smilFileName += fileName;
-    smilFileName += ".smil";
-    smilDocument->write_to_file(smilFileName, "UTF-8");
+    smilDocument->write_to_file(fileName.str(), "UTF-8");
    
-    Ptr<std::string>::Ref   playlistUri(new std::string(smilFileName));
+    Ptr<std::string>::Ref   playlistUri(new std::string(fileName.str()));
     newPlaylist->setUri(playlistUri);
     return newPlaylist;
 }
@@ -285,12 +273,11 @@ TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref playlist) const
     }
 
     std::ifstream ifs(playlist->getUri()->substr(7).c_str());
-    if (ifs) {
+    if (!ifs) {
         ifs.close();
-    }
-    else {
         throw std::logic_error("playlist temp file not found");
     }
+    ifs.close();
 
     std::remove(playlist->getUri()->substr(7).c_str());
    
@@ -425,12 +412,11 @@ TestStorageClient :: acquireAudioClip(Ptr<const UniqueId>::Ref id) const
     std::string     audioClipFileName = storedAudioClip->getUri()->substr(5);
     
     std::ifstream ifs(audioClipFileName.c_str());
-    if (ifs) {
+    if (!ifs) {
         ifs.close();
-    }
-    else {
         throw std::logic_error("could not read audio clip");
     }
+    ifs.close();
 
     Ptr<AudioClip>::Ref audioClip(new AudioClip(*storedAudioClip));
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -272,12 +272,11 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     CPPUNIT_ASSERT(playlist->getUri()->substr(0,7) == "file://");
     
     std::ifstream ifs1(playlist->getUri()->substr(7).c_str());
-    if (ifs1) {
+    if (!ifs1) {
         ifs1.close();
-    }
-    else {
         CPPUNIT_FAIL("temp file not created correctly");
     }
+    ifs1.close();
 
     string  savedTempFilePath = playlist->getUri()->substr(7);
     try {
@@ -294,6 +293,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         ifs2.close();
         CPPUNIT_FAIL("temp file not destroyed correctly");
     }
+    ifs2.close();
 
     try {
         playlist = tsc->acquirePlaylist(id77);

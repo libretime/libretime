@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/xmlrpc++/xmlrpc++-20040713/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -37,7 +37,12 @@ installdir=`cd $basedir/../../../usr; pwd; cd -`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
 tar=$basedir/src/$product.tar.gz
+
 docdir=$installdir/share/doc/xmlrpc++
+tagfile="xmlrpc++.tag"
+external_doc_pages="XmlRpcServerMethod_8h-source.html \
+                    classXmlRpc_1_1XmlRpcServerMethod.html \
+                    classXmlRpc_1_1XmlRpcServerMethod-members.html"
 
 echo "installing $product from $basedir to $installdir"
 
@@ -52,9 +57,7 @@ sh autogen.sh --prefix=$installdir
 make install
 
 cd $docdir
-doxytag -t xmlrpc++.tag XmlRpcServerMethod_8h-source.html \
-                        classXmlRpc_1_1XmlRpcServerMethod.html \
-                        classXmlRpc_1_1XmlRpcServerMethod-members.html
+doxytag -t $tagfile $external_doc_pages
                         
 cd $basedir
 rm -rf tmp
