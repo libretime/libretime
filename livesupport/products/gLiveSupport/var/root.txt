@@ -94,6 +94,7 @@ root:table
         startColumnLabel:string       { "start" }
         titleColumnLabel:string       { "title" }
         endColumnLabel:string         { "end" }
+        deleteMenuItem:string         { "_Delete" }
 
         closeButtonLabel:string       { "close" }
 

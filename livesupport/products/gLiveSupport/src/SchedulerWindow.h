@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SchedulerWindow : public Gtk::Window, public LocalizedObject
 {
@@ -100,7 +100,7 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
          *  Lists one scheduled item per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -180,6 +180,11 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
         Glib::RefPtr<Gtk::ListStore>    entriesModel;
 
         /**
+         *  The right-click context menu for schedule entries.
+         */
+        Ptr<Gtk::Menu>::Ref             entryMenu;
+
+        /**
          *  The close button.
          */
         Ptr<Gtk::Button>::Ref           closeButton;
@@ -189,6 +194,21 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onDateSelected(void)                                    throw ();
+
+        /**
+         *  Signal handler for the mouse clicked on one of the entries.
+         *
+         *  @param event the button event recieved
+         */
+        virtual void
+        onEntryClicked(GdkEventButton     * event)              throw ();
+
+        /**
+         *  Signal handler for the "delete" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onDeleteItem(void)                                      throw ();
 
         /**
          *  Signal handler for the close button clicked.

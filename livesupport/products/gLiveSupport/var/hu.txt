@@ -94,6 +94,7 @@ hu:table
         startColumnLabel:string      { "kezdet" }
         titleColumnLabel:string      { "cím" }
         endColumnLabel:string        { "vég" }
+        deleteMenuItem:string        { "_Töröl" }
 
         closeButtonLabel:string      { "bezár" }
     }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,6 +96,19 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         std::cerr << e.what() << std::endl;
     }
 
+    // register the signal handler for entries view entries being clicked
+    entriesView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
+                                            &SchedulerWindow::onEntryClicked));
+
+    // create the right-click entry context menu for audio clips
+    entryMenu.reset(new Gtk::Menu());
+    Gtk::Menu::MenuList& menuList = entryMenu->items();
+    // register the signal handlers for the popup menu
+    menuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("deleteMenuItem"),
+                                sigc::mem_fun(*this,
+                                            &SchedulerWindow::onDeleteItem)));
+    entryMenu->accelerate(*this);
 
     layout.reset(new Gtk::Table());
 
@@ -222,6 +235,52 @@ SchedulerWindow :: showContents(void)                           throw ()
         row[entryColumns->endColumn]   = to_simple_string(*entry->getEndTime());
 
         ++it;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for an entry being clicked in the list
+ *----------------------------------------------------------------------------*/
+void
+SchedulerWindow :: onEntryClicked (GdkEventButton * event)      throw ()
+{
+    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        // only show the context menu, if something is already selected
+        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                entriesView->get_selection();
+        if (refSelection) {
+            Gtk::TreeModel::iterator iter = refSelection->get_selected();
+            if (iter) {
+                entryMenu->popup(event->button, event->time);
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Delete menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+SchedulerWindow :: onDeleteItem(void)                       throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                 entriesView->get_selection();
+
+    if (refSelection) {
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        if (iter) {
+            Ptr<const UniqueId>::Ref uid = (*iter)[entryColumns->idColumn];
+            Ptr<UniqueId>::Ref       entryId(new UniqueId(uid->getId()));
+
+            try {
+                gLiveSupport->removeFromSchedule(entryId);
+            } catch (XmlRpcException &e) {
+                // TODO: signal error here
+            }
+            showContents();
+        }
     }
 }
 

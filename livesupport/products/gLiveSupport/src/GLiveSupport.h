@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,7 +95,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -454,6 +454,17 @@ class GLiveSupport : public LocalizedConfigurable,
                          Ptr<boost::posix_time::ptime>::Ref playtime)
                                                     throw (XmlRpcException);
         
+
+        /**
+         *  Remove a scheduled item.
+         *
+         *  @param sessionId a valid, authenticated session id.
+         *  @param scheduledEntryId the id of the scheduled entry to remove.
+         *  @exception XmlRpcException in case of XML-RPC errors.
+         */
+        virtual void
+        removeFromSchedule(Ptr<UniqueId>::Ref   scheduleEntryId)
+                                                    throw (XmlRpcException);
 
         /**
          *  Delete a playable object from storage.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -428,6 +428,18 @@ GLiveSupport :: schedulePlaylist(Ptr<Playlist>::Ref             playlist,
 {
     scheduler->uploadPlaylist(sessionId, playlist->getId(), playtime);
     masterPanel->updateSchedulerWindow(playtime);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove a scheduled entry.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: removeFromSchedule(Ptr<UniqueId>::Ref   scheduleEntryId)
+                                                    throw (XmlRpcException)
+{
+    scheduler->removeFromSchedule(sessionId, scheduleEntryId);
 }
 
 
