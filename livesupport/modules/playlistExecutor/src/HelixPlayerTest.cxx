@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -213,21 +213,16 @@ HelixPlayerTest :: smilTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test different SMIL file features
+ *  Play a specific file.
+ *  Assumes that the player was already initialized.
  *----------------------------------------------------------------------------*/
 void
-HelixPlayerTest :: smilParallelTest(void)
+HelixPlayerTest :: playFile(const std::string   & fileName)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    helixPlayer->initialize();
-
-    /* TODO: there is a bug with playing parallel, as it doesn't end
-             for some reason.
-             see https://bugs.helixcommunity.org/show_bug.cgi?id=3311
-    */
-    helixPlayer->playThis("file:var/parallel.smil");
+    helixPlayer->playThis(fileName.c_str());
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -235,6 +230,66 @@ HelixPlayerTest :: smilParallelTest(void)
         TimeConversion::sleep(sleepT);
     }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test parallel play
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilParallelTest0(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    helixPlayer->initialize();
+    playFile("file:var/parallel-0.smil");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test parallel play
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilParallelTest1(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    helixPlayer->initialize();
+    playFile("file:var/parallel-1.smil");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test parallel play
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilParallelTest2(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    helixPlayer->initialize();
+    playFile("file:var/parallel-2.smil");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test parallel play
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilParallelTest3(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    helixPlayer->initialize();
+    playFile("file:var/parallel-3.smil");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test parallel play
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilParallelTest4(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    helixPlayer->initialize();
+    playFile("file:var/parallel-4.smil");
 }
 
 

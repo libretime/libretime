@@ -1,0 +1,10 @@
+<smil xmlns    = "http://www.w3.org/2001/SMIL20/Language"
+      xmlns:rn = "http://features.real.com/2001/SMIL20/Extensions">
+    <body>
+        <par>
+            <!-- play a long file, and a shorter one inside it -->
+            <audio src="test.mp3"/>
+            <audio src="test-short.mp3" begin="3s"/>
+        </par>
+    </body>
+</smil>

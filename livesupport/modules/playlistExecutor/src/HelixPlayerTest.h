@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace PlaylistExecutor {
  *  Unit test for the HelixPlayer class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see HelixPlayer
  */
 class HelixPlayerTest : public CPPUNIT_NS::TestFixture
@@ -68,7 +68,11 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST(checkErrorConditions);
     CPPUNIT_TEST(smilTest);
-//    CPPUNIT_TEST(smilParallelTest);
+    CPPUNIT_TEST(smilParallelTest0);
+    CPPUNIT_TEST(smilParallelTest1);
+    CPPUNIT_TEST(smilParallelTest2);
+    CPPUNIT_TEST(smilParallelTest3);
+    CPPUNIT_TEST(smilParallelTest4);
 //    CPPUNIT_TEST(smilSoundAnimationTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -78,6 +82,16 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
          *  The helix player to use for the tests.
          */
         Ptr<HelixPlayer>::Ref       helixPlayer;
+
+        /**
+         *  Play a specific file.
+         *
+         *  @param fileName the name of the file to play.
+         *  @exception CPPUNIT_NS::Exception on playing failures
+         */
+        void
+        playFile(const std::string  & fileName)     
+                                                throw (CPPUNIT_NS::Exception);
 
 
     protected:
@@ -120,7 +134,39 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        smilParallelTest(void)                  throw (CPPUNIT_NS::Exception);
+        smilParallelTest0(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test SMIL files, when playing audio clips in parallel.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilParallelTest1(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test SMIL files, when playing audio clips in parallel.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilParallelTest2(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test SMIL files, when playing audio clips in parallel.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilParallelTest3(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test SMIL files, when playing audio clips in parallel.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilParallelTest4(void)                 throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test SMIL files, when animating the sound of a played clip.
