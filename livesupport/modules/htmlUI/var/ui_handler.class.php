@@ -641,7 +641,6 @@ class uiHandler extends uiBase {
                     $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
                 else
                     $this->gb->delGroupPref($this->sessid, 'StationPrefs',  $val['element']);
-                #$this->STATIONPREFS[$val['element']] = is_string($this->gb->loadGroupPref(NULL, 'StationPrefs', $val['element'])) ? $this->gb->loadGroupPref($this->sessid, 'StationPrefs', $val['element']) : NULL;
             }
             if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                 if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))

@@ -35,7 +35,7 @@ $ui_fmask = array(
             'isPref'    => TRUE,
             'type'      => 'text',
             'label'     => 'Station Logo path',
-            'default'   => 'img/logo.jpg',
+            'default'   => 'img/stationlogo.gif',
             'required'  => TRUE
         ),
         array(

@@ -3,7 +3,7 @@ define('UI_VERBOSE', FALSE);
 define('UI_WARNING', TRUE);
 define('UI_ERROR',   TRUE);
 #define('UI_TIMEZONE', ' +100');
-define('UI_TIMEZONEOFFSET', date('Z')); 
+define('UI_TIMEZONEOFFSET', date('Z'));
 
 define('UI_HANDLER', 'ui_handler.php');
 define('UI_BROWSER', 'ui_browser.php');
@@ -61,7 +61,7 @@ require_once dirname(__FILE__).'/ui_playlist.class.php';
 require_once dirname(__FILE__).'/ui_search.class.php';
 require_once dirname(__FILE__).'/ui_browse.class.php';
 require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
-require_once dirname(__FILE__).'/formmask/general.inc.php';
+require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';
 
