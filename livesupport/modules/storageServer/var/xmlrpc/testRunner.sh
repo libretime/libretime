@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.22 $
+#   Version  : $Revision: 1.23 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -252,14 +252,17 @@ editPlaylist() {
 
 existsPlaylist() {
     echo -n "# existsPlaylist (${PLID}): "
-    $XR_CLI existsPlaylist $SESSID $PLID || exit $?
+    EXISTS=`$XR_CLI existsPlaylist $SESSID $PLID` || \
+    	{ ERN=$?; echo $EXISTS; exit $ERN; }
+    echo $EXISTS
 }
 
 deletePlaylist() {
-    echo -n "# deletePlaylist (${PLID}): "
-    $XR_CLI deletePlaylist $SESSID $PLID
-    # || exit $?
-    echo "#  status: $?"
+    if [ "$EXISTS" != "FALSE" ]; then
+        echo -n "# deletePlaylist (${PLID}): "
+        $XR_CLI deletePlaylist $SESSID $PLID || exit $?
+        echo "#  status: $?"
+    fi
 }
 
 prefTest() {
