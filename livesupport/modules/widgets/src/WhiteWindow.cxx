@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,6 +79,7 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
 
     // set the window title
     this->title.reset(new Gtk::Label(title));
+    this->title->modify_font(Pango::FontDescription("Bitstream Vera 10"));
     titleAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                             Gtk::ALIGN_CENTER,
                                             0, 0));
