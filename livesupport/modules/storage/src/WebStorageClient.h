@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -371,12 +371,11 @@ class WebStorageClient :
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.
-         *  @return true if the operation was successful.
          *
          *  @exception StorageException if there is a problem with the XML-RPC
          *                              call or we have not logged in yet.
          */
-        virtual bool
+        virtual void
         storeAudioClip(Ptr<SessionId>::Ref sessionId,
                        Ptr<AudioClip>::Ref audioClip)
                                                 throw (StorageException);

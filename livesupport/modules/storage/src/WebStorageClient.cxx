@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -463,6 +463,11 @@ static const std::string    storeAudioClipAudioClipIdParamName = "gunid";
  *  The name of the metadata file name parameter in the input structure
  *----------------------------------------------------------------------------*/
 static const std::string    storeAudioClipMetadataParamName = "metadata";
+
+/*------------------------------------------------------------------------------
+ *  The name of the binary file name parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    storeAudioClipFileNameParamName = "fname";
 
 /*------------------------------------------------------------------------------
  *  The name of the checksum of the binary file name in the input structure
@@ -1412,7 +1417,7 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
 /*------------------------------------------------------------------------------
  *  Upload an audio clip to the local storage.
  *----------------------------------------------------------------------------*/
-bool
+void
 WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                    Ptr<AudioClip>::Ref audioClip)
                                                 throw (StorageException)
@@ -1447,6 +1452,8 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
     }
     parameters[storeAudioClipMetadataParamName] 
             = std::string(*audioClip->getMetadataString());
+    parameters[storeAudioClipFileNameParamName] 
+            = std::string(*audioClip->getUri());
     parameters[storeAudioClipChecksumParamName] 
             = md5string;
 
@@ -1564,8 +1571,6 @@ WebStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                 result[storeAudioClipAudioClipIdParamName] )));
         audioClip->setId(newId);
     }
-
-    return true;
 }
 
 

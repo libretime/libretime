@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -310,21 +310,22 @@ WebStorageClientTest :: playlistTest(void)
     }
     CPPUNIT_ASSERT(newPlaylist);
     CPPUNIT_ASSERT(newPlaylist->getUri());
-//std::cerr << "url:\n" << *newPlaylist->getUri() << "\n";
+//  std::cerr << "url:\n" << *newPlaylist->getUri() << "\n";
+//  sleep(30);
 
     std::ifstream ifs(newPlaylist->getUri()->substr(7).c_str());
     if (!ifs) {                                            // cut off "file://"
         ifs.close();
         CPPUNIT_FAIL("playlist temp file not found");
     }
-//    std::stringstream   playlistSmilFile;
-//    std::string         tempString;
-//    while (ifs) {
-//        std::getline(ifs, tempString);
-//        playlistSmilFile << tempString << "\n";
-//    }
-//std::cerr << "smil:\n" << playlistSmilFile.str() << "\n";
-//sleep(60);
+//  std::stringstream   playlistSmilFile;
+//  std::string         tempString;
+//  while (ifs) {
+//      std::getline(ifs, tempString);
+//      playlistSmilFile << tempString << "\n";
+//  }
+//  std::cerr << "smil:\n" << playlistSmilFile.str() << "\n";
+//  sleep(60);
     ifs.close();
 
     try {

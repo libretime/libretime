@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -323,11 +323,10 @@ class TestStorageClient :
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.
-         *  @return true if the operation was successful.
          *
          *  @exception StorageException if we have not logged in yet.
          */
-        virtual bool
+        virtual void
         storeAudioClip(Ptr<SessionId>::Ref sessionId,
                        Ptr<AudioClip>::Ref audioClip)
                                                 throw (StorageException);
