@@ -23,12 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/html/Attic/index.php,v $
 
 ------------------------------------------------------------------------------*/
 
 header ("location: gbHtmlLogin.php");
-die;
-
+exit;
 ?>

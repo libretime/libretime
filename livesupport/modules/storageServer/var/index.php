@@ -23,11 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/index.php,v $
 
 ------------------------------------------------------------------------------*/
-header ("location: html/gbHtmlLogin.php");
+header ("location: html/");
 exit;
 /*
 ?>
@@ -36,7 +36,7 @@ exit;
 </head><body>
 <h3>StorageServer module</h3>
 <br>
-<a href="../html/gbHtmlLogin.php" accesskey="H"><b>H</b>TML client</a><br>
+<a href="../html/" accesskey="H"><b>H</b>TML client</a><br>
 <a href="../xmlrpc/" accesskey="X"><b>X</b>mlRpc test</a><br>
 <a href="../tests/" accesskey="T"><b>T</b>est</a><br>
 </body></html>

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/getGname.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,5 +35,5 @@
  header("Content-type: text/plain");
  $egid = posix_getegid();
  $info = posix_getgrgid($egid);
- echo $info['name'];
+ if($_SERVER["REMOTE_ADDR"] == "127.0.0.1") echo $info['name'];
 ?>

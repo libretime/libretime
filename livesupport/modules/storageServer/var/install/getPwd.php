@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/getPwd.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,5 +33,5 @@
  *----------------------------------------------------------------------------*/
 
  header("Content-type: text/plain");
- echo `pwd`;
+ if($_SERVER["REMOTE_ADDR"] == "127.0.0.1") echo `pwd`;
 ?>

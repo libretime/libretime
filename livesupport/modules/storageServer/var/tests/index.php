@@ -23,12 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/tests/index.php,v $
 
 ------------------------------------------------------------------------------*/
 
-header ("location: ../index.php");
-die;
-
+header ("location: ../");
+exit;
 ?>
