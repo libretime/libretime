@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,7 +117,7 @@ LocalizedObject :: getBundle(const char  * key)
 {
     UErrorCode                  status = U_ZERO_ERROR;
     Ptr<ResourceBundle>::Ref    resourceBundle(new ResourceBundle(
-                                                    bundle->get(key, status)));
+                                        bundle->getWithFallback(key, status)));
     if (!U_SUCCESS(status)) {
         throw std::invalid_argument("can't get resource bundle");
     }
@@ -133,15 +133,18 @@ Ptr<UnicodeString>::Ref
 LocalizedObject :: getResourceString(const char * key)
                                                 throw (std::invalid_argument)
 {
-    UErrorCode                status = U_ZERO_ERROR;
-    Ptr<UnicodeString>::Ref   unicodeStr;
+    Ptr<ResourceBundle>::Ref    rb = getBundle(key);
+    if (rb->getType() == URES_STRING) {
+        UErrorCode                status = U_ZERO_ERROR;
+        Ptr<UnicodeString>::Ref   str(new UnicodeString(rb->getString(status)));
+        if (!U_SUCCESS(status)) {
+            throw std::invalid_argument("requested resource not a string");
+        }
 
-    unicodeStr.reset(new UnicodeString(bundle->getStringEx(key, status)));
-    if (!U_SUCCESS(status)) {
-        throw std::invalid_argument("can't get string from bundle");
+        return str;
+    } else {
+        throw std::invalid_argument("requested resource not a string");
     }
-
-    return unicodeStr;
 }
 
 
