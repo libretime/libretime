@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.40 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.41 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -111,9 +111,10 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
-SCHEDULER_EXE = ${TMP_DIR}/scheduler
-SCHEDULER_CFG = ${ETC_DIR}/scheduler.xml
-TEST_RUNNER   = ${TMP_DIR}/testRunner
+SCHEDULER_EXE     = ${TMP_DIR}/scheduler
+SCHEDULER_CFG     = ${ETC_DIR}/scheduler.xml
+SCHEDULER_WEB_CFG = ${ETC_DIR}/scheduler-web.xml
+TEST_RUNNER       = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -234,7 +235,8 @@ TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean
-.PHONY: install start run_tests stop uninstall
+.PHONY: install start status run_tests stop uninstall
+.PHONY: install_web start_web status_web stop_web uninstall_web
 
 all: dir_setup ${SCHEDULER_EXE}
 
@@ -289,6 +291,23 @@ uninstall: ${SCHEDULER_EXE}
 run: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} --debug start
 	sleep 2
+
+install_web: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} install
+
+start_web: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} start
+	sleep 2
+
+stop_web: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} stop
+	sleep 2
+
+status_web: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} status
+
+uninstall_web: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} uninstall
 
 storage_server_init:
 #	${MAKE} -C ${STORAGE_SERVER_DIR}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE scheduler [
+
+<!ELEMENT scheduler (connectionManagerFactory,storageClientFactory,
+                     scheduleFactory,playLogFactory,audioPlayer,xmlRpcDaemon) >
+
+<!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
+
+<!ELEMENT simpleConnectionManager   EMPTY >
+<!ATTLIST simpleConnectionManager   dsn         CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   userName    CDATA   #REQUIRED >
+<!ATTLIST simpleConnectionManager   password    CDATA   #REQUIRED >
+
+<!ELEMENT storageClientFactory (testStorage|webStorage) >
+
+<!ELEMENT testStorage (playlist*, audioClip*) >
+<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+
+<!ELEMENT playlist (playlistElement*) >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+
+<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
+<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
+<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
+
+<!ELEMENT audioClip EMPTY >
+<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip title           CDATA       #REQUIRED >
+<!ATTLIST audioClip uri             CDATA       #REQUIRED >
+
+<!ELEMENT fadeInfo EMPTY >
+<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
+
+<!ELEMENT scheduleFactory (postgresqlSchedule) >
+<!ELEMENT postgresqlSchedule EMPTY >
+
+<!ELEMENT playLogFactory (postgresqlPlayLog) >
+<!ELEMENT postgresqlPlayLog EMPTY >
+
+<!ELEMENT audioPlayer   (helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+
+<!ELEMENT xmlRpcDaemon EMPTY >
+<!ATTLIST xmlRpcDaemon xmlRpcHost   CDATA          #REQUIRED >
+<!ATTLIST xmlRpcDaemon xmlRpcPort   NMTOKEN        #REQUIRED >
+<!ATTLIST xmlRpcDaemon pidFileName  CDATA          #REQUIRED >
+<!ATTLIST xmlRpcDaemon background   (true|false)   "true"    >
+
+]>
+<scheduler>
+    <connectionManagerFactory>
+        <simpleConnectionManager    dsn      = "LiveSupport-test"
+                                    userName = "test"
+                                    password = "test"
+        />
+    </connectionManagerFactory>
+
+    <storageClientFactory>
+        <webStorage tempFiles="file:///tmp/webStorageClient" >
+            <location server="localhost" port="80" 
+                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
+        </webStorage>
+    </storageClientFactory>
+
+    <scheduleFactory>
+        <postgresqlSchedule/>
+    </scheduleFactory>
+
+    <playLogFactory>
+        <postgresqlPlayLog/>
+    </playLogFactory>
+
+    <audioPlayer>
+        <helixPlayer dllPath = "../../usr/lib/helix"/>
+    </audioPlayer>
+
+    <xmlRpcDaemon xmlRpcHost  = "localhost"
+                  xmlRpcPort  = "3344"
+                  pidFileName = "tmp/scheduler.pid"
+    />
+</scheduler>
+
