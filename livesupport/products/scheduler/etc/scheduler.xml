@@ -8,7 +8,8 @@
                      scheduleFactory,
                      playLogFactory,
                      audioPlayer,
-                     xmlRpcDaemon) >
+                     xmlRpcDaemon,
+                     tagConversionTable) >
 
 <!ELEMENT connectionManagerFactory  (simpleConnectionManager) >
 
@@ -74,6 +75,11 @@
 <!ATTLIST xmlRpcDaemon pidFileName  CDATA          #REQUIRED >
 <!ATTLIST xmlRpcDaemon background   (true|false)   "true"    >
 
+<!ELEMENT tagConversionTable (tag*) >
+<!ELEMENT tag (id3+, dc) >
+<!ELEMENT id3 (#PCDATA) >
+<!ELEMENT dc  (#PCDATA) >
+
 ]>
 <scheduler>
     <user login="root" password="q" />
@@ -133,5 +139,28 @@
                   xmlRpcPort  = "3344"
                   pidFileName = "tmp/scheduler.pid"
     />
+    
+    <tagConversionTable>
+        <tag>
+            <id3>Title</id3>
+            <id3>TIT2</id3>
+            <dc>dc:title</dc>
+        </tag>
+        <tag>
+            <id3>TPE1</id3>
+            <id3>Artist</id3>
+            <dc>dc:creator</dc>
+        </tag>
+        <tag>
+            <id3>Length</id3>
+            <id3>TLEN</id3>
+            <dc>dcterms:extent</dc>
+        </tag>
+        <tag>
+            <!-- beats per minute -->
+            <id3>TBPM</id3>
+            <dc>ourdcextension:bpm</dc>
+        </tag>
+    </tagConversionTable>
 </scheduler>
 

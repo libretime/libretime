@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.19 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,9 +59,10 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "ScheduleFactory.h"
 #include "PlayLogFactory.h"
-#include "SchedulerDaemon.h"
 #include "PlaylistEventContainer.h"
+#include "LiveSupport/Core/TagConversion.h"
 
+#include "SchedulerDaemon.h"
 
 using namespace boost::posix_time;
 
@@ -250,6 +251,12 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     }
     configureXmlRpcDaemon( *((const xmlpp::Element*) *(nodes.begin())) );
 
+    // configure the TagConversion (load tag conversion table)
+    nodes = element.get_children(TagConversion::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no tagConversionTable element");
+    }
+    TagConversion::configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     // do some initialization, using the configured objects
     authentication = acf->getAuthenticationClient();

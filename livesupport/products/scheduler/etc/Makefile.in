@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.44 $
+#   Version  : $Revision: 1.45 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -67,6 +67,7 @@ LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 
+TAGLIB_CFLAGS   =`${USR_DIR}/bin/taglib-config --cflags`
 TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
 
 MODULES_DIR = ${BASE_DIR}/../../modules
@@ -130,6 +131,7 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${LIBXMLPP_CFLAGS} \
+                             ${TAGLIB_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
                              -I${CORE_INCLUDE_DIR} \

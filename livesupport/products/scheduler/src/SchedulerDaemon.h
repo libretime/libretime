@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.14 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,8 +157,8 @@ using namespace LiveSupport::PlaylistExecutor;
  *                       xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.14 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.15 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -189,7 +189,8 @@ class SchedulerDaemon : public Installable,
         /**
          *  The event scheduler.
          */
-        Ptr<EventScheduler::EventScheduler>::Ref        eventScheduler;
+        Ptr<LiveSupport::EventScheduler::EventScheduler>::Ref
+                                            eventScheduler;
 
         /**
          *  The audio player.
