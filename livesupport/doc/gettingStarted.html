@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>Getting started with the LiveSupport development environment</title>
-  <meta content="$Author: fgerlits $" name="author">
+  <meta content="$Author: tomas $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.4 $</li>
+  <li>Author: $Author: tomas $</li>
+  <li>Version: $Revision: 1.5 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -57,13 +57,37 @@ This data source should point to a PostgreSQL instance. Only one
 developer at the time should access this datasource, as the test suites
 regularly create and destroy database tables.<br>
 <br>
-Second, LiveSupport expects an http server (e.g., 
-<a href="http://httpd.apache.org/">apache</a>) running on the development
-computer, set up as described in the 
+Second, LiveSupport expects:
+<ul>
+  <li><a href="http://httpd.apache.org/">Apache</a> httpd server
+    running on the development computer</li>
+  <li><a href="http://www.php.net/">PHP</a> interpreter</li>
+  <li><a href="http://www.php.net/">PHP</a> apache module</li>
+  <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
+  <li><a href="http://pear.php.net/">PEAR</a> DB module
+    (may be checked: <code>pear list</code>
+    and installed by: <code>pear install DB</code>)</li>
+<!--  <li><a href="http:///"></a></li>-->
+</ul>
+Please, check settings in <code>var/conf.php</code> files in both
+storageServer and archiveServer modules and create two
+symlinks with name corresponding to &quot;URL configuration&quot; part of
+<code>var/conf.php</code> files - example for default values:
+<ul>
+ <li>
+  <code>http://localhost:80/livesupportStorageServer/</code> should point
+   to the
+  <code>&lt;livesupport-cvs&gt;/modules/storageServer/var</code> directory
+ </li>
+ <li>
+  <code>http://localhost:80/livesupportArchiveServer/</code> should point
+   to the
+  <code>&lt;livesupport-cvs&gt;/modules/archiveServer/var</code> directory
+ </li>
+</ul>
+And setup a file-uploading support as described in the 
 <code>modules/archiveServer/doc/INSTALL</code> file (included with the
-sources).  Moreover, a symlink needs to be created so that
-<code>http://localhost:80/storage/</code> points to the 
-<code>modules/storageServer/</code> directory.
+sources).
 
 <h2>Check out the sources</h2>
 The LiveSupport development directory tree can be accessed via
