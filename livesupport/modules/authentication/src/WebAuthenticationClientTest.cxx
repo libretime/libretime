@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,14 +183,12 @@ WebAuthenticationClientTest :: preferencesTest(void)
     // check "no such key" error
     try {
         prefValue = wac->loadPreferencesItem(sessionId, "eye_color");
-CPPUNIT_ASSERT(*prefValue == "");   // but I don't think it should be
-//        CPPUNIT_FAIL("Retrieved non-existent user preferences item.");
+        CPPUNIT_FAIL("Retrieved non-existent user preferences item.");
     } catch (XmlRpcException &e) {
-CPPUNIT_FAIL(e.what());             // but I don't think it should be
     }
 
     // check normal save and load
-    prefValue.reset(new const Glib::ustring("chyornye"));
+    prefValue.reset(new const Glib::ustring("chjornyje"));
     try {
         wac->savePreferencesItem(sessionId, "eye_color", prefValue);
     } catch (XmlRpcException &e) {
