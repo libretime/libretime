@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -252,9 +252,10 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
                     *(audioClip->getUri()) );
         ++it;
     }
-    
+
     std::string     smilFileName = "file://";
     smilFileName += tempnam(0, "smil");
+    smilFileName += ".smil";
     smilDocument->write_to_file(smilFileName, "UTF-8");
 
     Ptr<std::string>::Ref   playlistUri(new std::string(smilFileName));
