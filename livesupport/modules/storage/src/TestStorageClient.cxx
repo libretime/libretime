@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
+#include "LiveSupport/Core/XmlRpcIOException.h"
 #include "TestStorageClient.h"
 
 using namespace boost::posix_time;
@@ -205,12 +207,12 @@ TestStorageClient :: existsPlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
                                  Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
 
     if (it == playlistMap.end()) {
-        throw StorageException("no such playlist");
+        throw XmlRpcException("no such playlist");
     }
 
     return it->second;
@@ -223,12 +225,12 @@ TestStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 TestStorageClient :: editPlaylist(Ptr<SessionId>::Ref sessionId,
                                   Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     PlaylistMap::const_iterator   it = playlistMap.find(id->getId());
 
     if (it == playlistMap.end()) {
-        throw StorageException("no such playlist");
+        throw XmlRpcException("no such playlist");
     }
 
     return it->second;
@@ -252,12 +254,12 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
 Ptr<Playlist>::Ref
 TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     PlaylistMap::const_iterator   playlistMapIt = playlistMap.find(id->getId());
 
     if (playlistMapIt == playlistMap.end()) {
-        throw Storage::InvalidArgumentException("no such playlist");
+        throw XmlRpcInvalidArgumentException("no such playlist");
     }
 
     Ptr<Playlist>::Ref      oldPlaylist = playlistMapIt->second;
@@ -317,7 +319,7 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
             ++it;
         }
         else {          // this should never happen
-            throw Storage::InvalidArgumentException(
+            throw XmlRpcInvalidArgumentException(
                                            "unexpected playlist element type "
                                            "(neither audio clip nor playlist)");
         }
@@ -342,16 +344,16 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
 void
 TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
                                      Ptr<Playlist>::Ref  playlist) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     if (! playlist->getUri()) {
-        throw Storage::InvalidArgumentException("playlist URI not found");
+        throw XmlRpcInvalidArgumentException("playlist URI not found");
     }
     
     std::ifstream ifs(playlist->getUri()->substr(7).c_str());
     if (!ifs) {                                              // cut of "file://"
         ifs.close();
-        throw Storage::IOException("playlist temp file not found");
+        throw XmlRpcIOException("playlist temp file not found");
     }
     ifs.close();
 
@@ -365,7 +367,7 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
             try {
                 releaseAudioClip(sessionId, it->second->getAudioClip());
             }
-            catch (StorageException &e) {
+            catch (XmlRpcException &e) {
                 eMsg += e.what();
                 eMsg += "\n";
             }
@@ -375,7 +377,7 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
             try {
                 releasePlaylist(sessionId, it->second->getPlaylist());
             }
-            catch (StorageException &e) {
+            catch (XmlRpcException &e) {
                 eMsg += e.what();
                 eMsg += "\n";
             }
@@ -391,7 +393,7 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
 
     if (eMsg != "") {
         eMsg.insert(0, "some playlist elements could not be released:\n");
-        throw Storage::InvalidArgumentException(eMsg);
+        throw XmlRpcInvalidArgumentException(eMsg);
     }
 }
 
@@ -402,11 +404,11 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
 void
 TestStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
                                     Ptr<UniqueId>::Ref  id)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     // erase() returns the number of entries found & erased
     if (!playlistMap.erase(id->getId())) {
-        throw StorageException("no such playlist");
+        throw XmlRpcException("no such playlist");
     }
 }
 
@@ -474,12 +476,12 @@ TestStorageClient :: existsAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<AudioClip>::Ref
 TestStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
                                   Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
 
     if (it == audioClipMap.end()) {
-        throw StorageException("no such audio clip");
+        throw XmlRpcException("no such audio clip");
     }
 
     return it->second;
@@ -492,7 +494,7 @@ TestStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 TestStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
                                     Ptr<AudioClip>::Ref audioClip)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     if (!audioClip->getId()) {
         audioClip->setId(UniqueId::generateId());
@@ -508,18 +510,18 @@ TestStorageClient :: storeAudioClip(Ptr<SessionId>::Ref sessionId,
 Ptr<AudioClip>::Ref
 TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
                                       Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     AudioClipMap::const_iterator   it = audioClipMap.find(id->getId());
 
     if (it == audioClipMap.end()) {
-        throw StorageException("no such audio clip");
+        throw XmlRpcException("no such audio clip");
     }
 
     Ptr<AudioClip>::Ref storedAudioClip = it->second;
     
     if (! storedAudioClip->getUri()) {
-        throw StorageException("audio clip URI not found");
+        throw XmlRpcException("audio clip URI not found");
     }
                                                         // cut the "file:" off
     std::string     audioClipFileName = storedAudioClip->getUri()->substr(5);
@@ -527,7 +529,7 @@ TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
     std::ifstream ifs(audioClipFileName.c_str());
     if (!ifs) {
         ifs.close();
-        throw StorageException("could not read audio clip");
+        throw XmlRpcException("could not read audio clip");
     }
     ifs.close();
 
@@ -549,10 +551,10 @@ TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 TestStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                                       Ptr<AudioClip>::Ref audioClip) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     if (*(audioClip->getUri()) == "") {
-        throw StorageException("audio clip URI not found");
+        throw XmlRpcException("audio clip URI not found");
     }
     
     Ptr<std::string>::Ref   nullPointer;
@@ -566,11 +568,11 @@ TestStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
 void
 TestStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
                                      Ptr<UniqueId>::Ref  id)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
 {
     // erase() returns the number of entries found & erased
     if (!audioClipMap.erase(id->getId())) {
-        throw StorageException("no such audio clip");
+        throw XmlRpcException("no such audio clip");
     }
 }
 

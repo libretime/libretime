@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,7 +118,7 @@ DisplayPlaylistsMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         playlistVector = storage->getAllPlaylists(sessionId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "getAllPlaylists() returned error:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+2, eMsg, returnValue);

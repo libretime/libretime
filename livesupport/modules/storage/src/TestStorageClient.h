@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,8 +89,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST testStorage tempFiles CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.22 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -183,13 +183,13 @@ class TestStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
-         *  @exception StorageException if no playlist with the specified
-         *                              id exists.
+         *  @exception XmlRpcException if no playlist with the specified
+         *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<SessionId>::Ref sessionId,
                     Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
 
         /**
@@ -198,13 +198,13 @@ class TestStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
-         *  @exception StorageException if no playlist with the specified
-         *                              id exists.
+         *  @exception XmlRpcException if no playlist with the specified
+         *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
         editPlaylist(Ptr<SessionId>::Ref sessionId,
                      Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
 
         /**
@@ -232,13 +232,13 @@ class TestStorageClient :
          *  @return a new Playlist instance containing a uri field which
          *          points to an executable (playable) SMIL representation of
          *          the playlist (in the local storage).
-         *  @exception StorageException if no playlist with the specified
-         *                              specified id exists. 
+         *  @exception XmlRpcException if no playlist with the specified
+         *                             specified id exists. 
          */
         virtual Ptr<Playlist>::Ref
         acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                         Ptr<UniqueId>::Ref  id) const
-                                            throw (StorageException);
+                                            throw (XmlRpcException);
 
 
         /**
@@ -247,26 +247,26 @@ class TestStorageClient :
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
-         *  @exception StorageException if the playlist has no uri field,
-         *                              or the file does not exist, etc.
+         *  @exception XmlRpcException if the playlist has no uri field,
+         *                             or the file does not exist, etc.
          */
         virtual void
         releasePlaylist(Ptr<SessionId>::Ref  sessionId,
                         Ptr<Playlist>::Ref   playlist) const
-                                            throw (StorageException);
+                                            throw (XmlRpcException);
 
         /**
          *  Delete a playlist with the specified id.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
-         *  @exception StorageException if no playlist with the specified
-         *                              id exists.
+         *  @exception XmlRpcException if no playlist with the specified
+         *                             id exists.
          */
         virtual void
         deletePlaylist(Ptr<SessionId>::Ref  sessionId,
                        Ptr<UniqueId>::Ref   id)
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
 
         /**
@@ -310,13 +310,13 @@ class TestStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
          *  @return the requested audio clip.
-         *  @exception StorageException if no audio clip with the 
-         *                              specified id exists.
+         *  @exception XmlRpcException if no audio clip with the 
+         *                             specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<SessionId>::Ref    sessionId,
                      Ptr<UniqueId>::Ref     id) const
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
         /**
          *  Store an audio clip.
@@ -324,12 +324,12 @@ class TestStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.
          *
-         *  @exception StorageException if we have not logged in yet.
+         *  @exception XmlRpcException if we have not logged in yet.
          */
         virtual void
         storeAudioClip(Ptr<SessionId>::Ref sessionId,
                        Ptr<AudioClip>::Ref audioClip)
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
         /**
          *  Acquire the resources for the audio clip with the specified id.
@@ -343,13 +343,13 @@ class TestStorageClient :
          *  @param id the id of the audio clip to acquire.
          *  @return a new AudioClip instance, containing a uri field which
          *          points to (a way of getting) the sound file.
-         *  @exception StorageException if no audio clip with the 
-         *                              specified id exists. 
+         *  @exception XmlRpcException if no audio clip with the 
+         *                             specified id exists. 
          */
         virtual Ptr<AudioClip>::Ref
         acquireAudioClip(Ptr<SessionId>::Ref  sessionId,
                          Ptr<UniqueId>::Ref   id) const
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
 
         /**
@@ -357,13 +357,13 @@ class TestStorageClient :
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the id of the audio clip to release.
-         *  @exception StorageException if the audio clip has no uri field, 
+         *  @exception XmlRpcException if the audio clip has no uri field, 
          *                  or the file does not exist, etc. 
          */
         virtual void
         releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                          Ptr<AudioClip>::Ref audioClip) const
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
 
         /**
@@ -371,13 +371,13 @@ class TestStorageClient :
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to be deleted.
-         *  @exception StorageException if no audio clip with the
-         *                              specified id exists.
+         *  @exception XmlRpcException if no audio clip with the
+         *                             specified id exists.
          */
         virtual void
         deleteAudioClip(Ptr<SessionId>::Ref   sessionId,
                         Ptr<UniqueId>::Ref    id)
-                                                throw (StorageException);
+                                                throw (XmlRpcException);
 
 
         /**

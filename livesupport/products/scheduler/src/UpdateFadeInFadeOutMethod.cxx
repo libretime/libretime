@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,7 +174,7 @@ UpdateFadeInFadeOutMethod :: execute(
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "playlist does not exist:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+6, eMsg, returnValue);

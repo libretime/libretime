@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,7 +111,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try{
         sessionId = XmlRpcTools::extractSessionId(parameters);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+20, 
                                "missing session ID argument",
                                 returnValue);
@@ -122,7 +122,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try{
         playlistId = XmlRpcTools::extractPlaylistId(parameters);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+2, "missing playlist ID argument",
                                returnValue);
         return;
@@ -132,7 +132,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try{
         audioClipId = XmlRpcTools::extractAudioClipId(parameters);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+3, "missing audio clip ID argument",
                                returnValue);
         return;
@@ -142,7 +142,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try{
         relativeOffset = XmlRpcTools::extractRelativeOffset(parameters);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+4, "missing relative offset argument",
                                returnValue);
         return;
@@ -157,7 +157,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         playlist = storage->getPlaylist(sessionId, playlistId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+5, "playlist not found", 
                                returnValue);
         return;
@@ -174,7 +174,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         audioClip = storage->getAudioClip(sessionId, audioClipId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         XmlRpcTools::markError(errorId+7, "audio clip does not exist", 
                                returnValue);
         return;

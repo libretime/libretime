@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -182,7 +182,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         uniqueIdVector = wsc->reset();
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(uniqueIdVector->size() >= 3);
@@ -203,7 +203,7 @@ WebStorageClientTest :: playlistTest(void)
     try{
         playlist = wsc->createPlaylist(sessionId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(playlist);
@@ -215,7 +215,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         exists = wsc->existsPlaylist(sessionId, playlistIdxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(exists);
@@ -224,7 +224,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         exists = wsc->existsPlaylist(sessionId, playlistId77);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -234,7 +234,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         playlist = wsc->editPlaylist(sessionId, playlistIdxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(playlist);
@@ -245,7 +245,7 @@ WebStorageClientTest :: playlistTest(void)
     }
     catch (XmlRpcMethodFaultException &e) {
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "editPlaylist() threw unexpected exception:\n";
         CPPUNIT_FAIL(eMsg + e.what());
     }
@@ -255,7 +255,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         audioClip = wsc->getAudioClip(sessionId, audioClipId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -275,14 +275,14 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_ASSERT(throwAwayPlaylist->getPlaylength()
                                         ->total_seconds() == 0);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wsc->savePlaylist(sessionId, playlist);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -292,7 +292,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         newPlaylist = wsc->getPlaylist(sessionId, playlistIdxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newPlaylist);
@@ -305,7 +305,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         newPlaylist = wsc->acquirePlaylist(sessionId, playlistIdxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newPlaylist);
@@ -331,7 +331,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         wsc->releasePlaylist(sessionId, newPlaylist);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newPlaylist->getUri());
@@ -341,14 +341,14 @@ WebStorageClientTest :: playlistTest(void)
     try {
         wsc->deletePlaylist(sessionId, playlistIdxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         exists = wsc->existsPlaylist(sessionId, playlistIdxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -366,7 +366,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         uniqueIdVector = wsc->reset();
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(uniqueIdVector->size() >= 2);
@@ -392,7 +392,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         exists = wsc->existsAudioClip(sessionId, id01);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(exists);
@@ -401,21 +401,21 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         audioClip = wsc->getAudioClip(sessionId, id01);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wsc->deleteAudioClip(sessionId, id01);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         exists = wsc->existsAudioClip(sessionId, id01);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -424,7 +424,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         exists = wsc->existsAudioClip(sessionId, id77);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
@@ -441,7 +441,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {    
         wsc->storeAudioClip(sessionId, audioClip);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -451,7 +451,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         CPPUNIT_ASSERT( wsc->existsAudioClip(sessionId, idxx));
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     
@@ -459,7 +459,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         newAudioClip = wsc->getAudioClip(sessionId, idxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     
@@ -472,7 +472,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         newAudioClip = wsc->acquireAudioClip(sessionId, idxx);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(newAudioClip->getUri());
@@ -482,7 +482,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         wsc->releaseAudioClip(sessionId, newAudioClip);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newAudioClip->getUri());
@@ -493,7 +493,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         audioClipVector = wsc->getAllAudioClips(sessionId);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(audioClipVector->size() == 0);

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,7 +45,7 @@
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/SessionId.h"
-#include "LiveSupport/Storage/StorageException.h"
+#include "LiveSupport/Core/XmlRpcException.h"
 
 
 namespace LiveSupport {
@@ -64,8 +64,8 @@ using namespace Core;
 /**
  *  An interface for storage clients.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.4 $
  */
 class StorageClientInterface
 {
@@ -77,13 +77,13 @@ class StorageClientInterface
          *  @param id the id of the playlist to check for.
          *  @return true if a playlist with the specified id exists,
          *          false otherwise.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
         virtual const bool
         existsPlaylist(Ptr<SessionId>::Ref  sessionId,
                        Ptr<UniqueId>::Ref   id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -92,14 +92,14 @@ class StorageClientInterface
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or no playlist with the specified
-         *                              id exists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no playlist with the specified
+         *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<SessionId>::Ref sessionId,
                     Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -108,14 +108,14 @@ class StorageClientInterface
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or no playlist with the specified
-         *                              id exists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no playlist with the specified
+         *                             id exists.
          */
         virtual Ptr<Playlist>::Ref
         editPlaylist(Ptr<SessionId>::Ref sessionId,
                      Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -123,14 +123,14 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to save.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or the playlist has not been 
-         *                              previously opened by getPlaylist() 
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or the playlist has not been 
+         *                             previously opened by getPlaylist() 
          */
         virtual void
         savePlaylist(Ptr<SessionId>::Ref sessionId,
                      Ptr<Playlist>::Ref  playlist) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -141,14 +141,14 @@ class StorageClientInterface
          *  @return a new Playlist instance containing a uri field which
          *          points to an executable (playable) SMIL representation of
          *          the playlist (in the local storage).
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or no playlist with the specified
-         *                              specified id exists. 
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no playlist with the specified
+         *                             specified id exists. 
          */
         virtual Ptr<Playlist>::Ref
         acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                         Ptr<UniqueId>::Ref  id) const
-                                            throw (StorageException)
+                                            throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -157,28 +157,28 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or the playlist has no uri field,
-         *                              or the file does not exist, etc.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or the playlist has no uri field,
+         *                             or the file does not exist, etc.
          */
         virtual void
         releasePlaylist(Ptr<SessionId>::Ref  sessionId,
                         Ptr<Playlist>::Ref   playlist) const
-                                            throw (StorageException)
+                                            throw (XmlRpcException)
                                                                         = 0;
         /**
          *  Delete a playlist with the specified id.
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to be deleted.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or no playlist with the specified
-         *                              id exists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no playlist with the specified
+         *                             id exists.
          */
         virtual void
         deletePlaylist(Ptr<SessionId>::Ref  sessionId,
                        Ptr<UniqueId>::Ref   id)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -186,12 +186,12 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
         virtual Ptr<std::vector<Ptr<Playlist>::Ref> >::Ref
         getAllPlaylists(Ptr<SessionId>::Ref sessionId) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -199,12 +199,12 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @return the newly created playlist.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
         virtual Ptr<Playlist>::Ref
         createPlaylist(Ptr<SessionId>::Ref sessionId)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -214,13 +214,13 @@ class StorageClientInterface
          *  @param id the id of the audio clip to check for.
          *  @return true if an audio clip with the specified id exists,
          *          false otherwise.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
         virtual const bool
         existsAudioClip(Ptr<SessionId>::Ref sessionId,
                         Ptr<UniqueId>::Ref  id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -229,14 +229,14 @@ class StorageClientInterface
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
          *  @return the requested audio clip.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or no audio clip with the 
-         *                              specified id exists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no audio clip with the 
+         *                             specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<SessionId>::Ref    sessionId,
                      Ptr<UniqueId>::Ref     id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -245,13 +245,13 @@ class StorageClientInterface
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the audio clip to store.
          *
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or we have not logged in yet.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or we have not logged in yet.
          */
         virtual void
         storeAudioClip(Ptr<SessionId>::Ref sessionId,
                        Ptr<AudioClip>::Ref audioClip)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -261,14 +261,14 @@ class StorageClientInterface
          *  @param id the id of the audio clip to acquire.
          *  @return a new AudioClip instance, containing a uri field which
          *          points to (a way of getting) the sound file.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or if no audio clip with the 
-         *                              specified id exists. 
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or if no audio clip with the 
+         *                             specified id exists. 
          */
         virtual Ptr<AudioClip>::Ref
         acquireAudioClip(Ptr<SessionId>::Ref  sessionId,
                          Ptr<UniqueId>::Ref   id) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -276,14 +276,14 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @param audioClip the id of the audio clip to release.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                  call or  the audio clip has no uri field, 
-         *                  or the file does not exist, etc. 
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                 call or  the audio clip has no uri field, 
+         *                 or the file does not exist, etc. 
          */
         virtual void
         releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                          Ptr<AudioClip>::Ref audioClip) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -291,14 +291,14 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to be deleted.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call or no audio clip with the
-         *                              specified id exists.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no audio clip with the
+         *                             specified id exists.
          */
         virtual void
         deleteAudioClip(Ptr<SessionId>::Ref   sessionId,
                         Ptr<UniqueId>::Ref    id)
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -306,12 +306,12 @@ class StorageClientInterface
          *
          *  @param sessionId the session ID from the authentication client
          *  @return a vector containing the playlists.
-         *  @exception StorageException if there is a problem with the XML-RPC
-         *                              call.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
          */
         virtual Ptr<std::vector<Ptr<AudioClip>::Ref> >::Ref
         getAllAudioClips(Ptr<SessionId>::Ref sessionId) const
-                                                throw (StorageException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 };
 

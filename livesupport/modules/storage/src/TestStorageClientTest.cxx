@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -135,17 +135,17 @@ TestStorageClientTest :: deletePlaylistTest(void)
         try {
             tsc->deletePlaylist(dummySessionId, id2);
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (StorageException &e) {
+        } catch (XmlRpcException &e) {
         }
         try {
             tsc->deletePlaylist(dummySessionId, id1);
-        } catch (StorageException &e) {
+        } catch (XmlRpcException &e) {
             CPPUNIT_FAIL("cannot delete existing playlist");
         }
         try {
             tsc->deletePlaylist(dummySessionId, id1);
             CPPUNIT_FAIL("allowed to delete non-existent playlist");
-        } catch (StorageException &e) {
+        } catch (XmlRpcException &e) {
         }
 }
 
@@ -235,7 +235,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     try {
         audioClip = tsc->acquireAudioClip(dummySessionId, id2);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string     eMsg = "could not acquire audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -248,7 +248,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     try {
         tsc->releaseAudioClip(dummySessionId, audioClip);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string     eMsg = "could not release audio clip:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -258,7 +258,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
         audioClip = tsc->acquireAudioClip(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent audio clip");
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
     }
 }
 
@@ -277,7 +277,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     try {
         playlist = tsc->acquirePlaylist(dummySessionId, id1);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string     eMsg = "could not acquire playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -296,7 +296,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
     try {
         tsc->releasePlaylist(dummySessionId, playlist);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string     eMsg = "could not release playlist:\n";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -313,6 +313,6 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         playlist = tsc->acquirePlaylist(dummySessionId, id77);
         CPPUNIT_FAIL("allowed to acquire non-existent playlist");
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
     }  
 }

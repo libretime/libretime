@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -138,7 +138,7 @@ OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
     try {
         playlist = storage->getPlaylist(sessionId, id);
     }
-    catch (StorageException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "playlist not found:\n";
         eMsg += e.what();
         XmlRpcTools::markError(errorId+4, eMsg, returnValue);
