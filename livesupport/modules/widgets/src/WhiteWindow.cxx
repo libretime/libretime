@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,6 +63,8 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
 {
     set_decorated(false);
+    defaultWidth  = -1;
+    defaultHeight = -1;
 
     Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 
@@ -137,6 +139,13 @@ void
 WhiteWindow :: on_size_request(Gtk::Requisition* requisition)       throw ()
 {
     Gtk::Window::on_size_request(requisition);
+
+    if (defaultWidth >= 0 && requisition->width < defaultWidth) {
+        requisition->width = defaultWidth;
+    }
+    if (defaultHeight >= 0 && requisition->height < defaultHeight) {
+        requisition->height = defaultHeight;
+    }
 }
 
 
@@ -298,5 +307,17 @@ Glib::ustring
 WhiteWindow :: get_title(void) const                        throw ()
 {
     return title->get_label();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the default window size.
+ *----------------------------------------------------------------------------*/
+void
+WhiteWindow :: set_default_size(int     width,
+                                int     height)             throw ()
+{
+    defaultWidth  = width;
+    defaultHeight = height;
 }
 

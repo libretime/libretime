@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,11 +69,21 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class WhiteWindow : public Gtk::Window
 {
     private:
+        /**
+         *  The default width of the window, of -1, automatic.
+         */
+        int                             defaultWidth;
+
+        /**
+         *  The default height of the window, if -1, automatic
+         */
+        int                             defaultHeight;
+
         /**
          *  The rounded container for the window.
          */
@@ -263,6 +273,16 @@ class WhiteWindow : public Gtk::Window
          */
         Glib::ustring
         get_title(void) const                               throw ();
+
+        /**
+         *  Set the default size of the window.
+         *
+         *  @param width the default width of the window.
+         *  @param height the default height of the window.
+         */
+        void
+        set_default_size(int    width,
+                         int    height)                     throw ();
 };
 
 
