@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -65,6 +65,8 @@ LIBODBCXX_DIR     = ${TOOLS_DIR}/libodbc++
 LIBODBCXX_VERSION = libodbc++-0.2.3
 XMLRPCXX_DIR      = ${TOOLS_DIR}/xmlrpc++
 XMLRPCXX_VERSION  = xmlrpc++-20040713
+LCOV_DIR          = ${TOOLS_DIR}/lcov
+LCOV_VERSION      = lcov-1.3
 
 MODULES_DIR = ${BASE_DIR}/modules
 CORE_DIR    = ${MODULES_DIR}/core
@@ -120,6 +122,7 @@ tools_setup:
 	${CXXUNIT_DIR}/${CXXUNIT_VERSION}/bin/install.sh
 	${LIBODBCXX_DIR}/${LIBODBCXX_VERSION}/bin/install.sh
 	${XMLRPCXX_DIR}/${XMLRPCXX_VERSION}/bin/install.sh
+	${LCOV_DIR}/${LCOV_VERSION}/bin/install.sh
 
 modules_setup:
 	${CORE_DIR}/bin/autogen.sh
