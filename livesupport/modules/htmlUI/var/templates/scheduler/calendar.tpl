@@ -47,12 +47,12 @@
 
         {if $_Day.isEmpty}
                     <div>
-        {elseif $_Day.isSelected}
+        {elseif $_Day.isCurrent}
                     <div style="background-color: lightblue">
         {else}
                     <div style="background-color: white">
         {/if}
-        {if $_Day.isScheduled}
+        {if $_Day.isSelected}
                         <b><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.day}</a></b>
         {else}
                         <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.day}</a>

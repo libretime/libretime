@@ -7,11 +7,11 @@
         {/foreach}
     </select>
     <input type="hidden" name="sc_last">
-    <input value="00" type="text" size="2" name="hour" onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
+    <input value="{$SCHEDULER->curr.hour}" type="text" size="2" name="hour" onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
     <input value="00" type="text" size="2" name="min"  onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)"> :
     <input value="00" type="text" size="2" name="sec"  onClick="sc_act(this)" onChange="sc_checkrange(); sc_twodigits()" onBlur="sc_check_int(this)">
-    <a href="#" onMouseDown="sc_start('-')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">-</a>
-    <a href="#" onMouseDown="sc_start('+')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">+</a>
+    <a href="#" onClick="sc_change('-')" onMouseDown="sc_start('-')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">-</a>
+    <a href="#" onClick="sc_change('+')" onMouseDown="sc_start('+')" onMouseUp="sc_stop()" onMouseOut="sc_stop()">+</a>
 
     <br>
     <input type="button" value="schedule" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.uploadPlaylistMethod&gunid='+schedule_it.gunid.value+'&time='+schedule_it.hour.value+':'+schedule_it.min.value+':'+schedule_it.sec.value)">
@@ -25,7 +25,7 @@ var sc_loop;
 
 function sc_start(direction)
 {
-    sc_loop = setInterval("sc_change('" + direction + "')", 80);
+    sc_loop = setInterval("sc_change('" + direction + "')", 150);
 }
 
 function sc_stop()

@@ -43,7 +43,7 @@ if (is_array($_REQUEST['popup'])){
 
             case "PL.changeTransition";
                 $Smarty->assign('dynform', $uiBrowser->PLAYLIST->changeTransitionForm($_REQUEST['id'], $_REQUEST['type'], $ui_fmask['PL.changeTransition']));
-                $Smarty->display('popup/PL.changeTransition.tpl');
+                $Smarty->display('playlist/changeTransition.tpl');
             break;
         }
     }

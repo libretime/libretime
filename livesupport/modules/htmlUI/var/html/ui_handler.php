@@ -173,18 +173,15 @@ switch($_REQUEST['act']){
     break;
 
     case "PL.activate":
-        $uiHandler->PLAYLIST->setReload();
-        if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE) {
+        if ($uiHandler->PLAYLIST->activate($_REQUEST['id']) === TRUE)
             $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
-        }
+        $uiHandler->PLAYLIST->setReload();
     break;
 
     case "PL.create":
-        $uiHandler->PLAYLIST->setReload();
-        if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE) {
+        if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE)
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
-        }
-
+        $uiHandler->PLAYLIST->setReload();
     break;
 
     case "PL.addItem":
@@ -203,7 +200,8 @@ switch($_REQUEST['act']){
     break;
 
     case "PL.save":
-        $uiHandler->PLAYLIST->save();
+        if (($ui_tmpid = $uiHandler->PLAYLIST->save()) !== FALSE)
+            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         $uiHandler->PLAYLIST->setReload();
     break;
 
@@ -217,12 +215,17 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReload();
     break;
 
+    case "PL.moveItem":
+        $uiHandler->PLAYLIST->moveItem($_REQUEST['id'], $_REQUEST['pos']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
     case "SCHEDULER.set":
         $uiHandler->SCHEDULER->set($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.uploadPlaylistMethod":   
+    case "SCHEDULER.uploadPlaylistMethod":
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();
     break;

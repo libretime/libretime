@@ -1,6 +1,6 @@
 <script type="text/javascript">
 {literal}
-function switchUp()
+function pl_switchUp()
 {
     if (Number(document.forms['PL_changeTransition'].elements['duration'].value) < 5000) {
         document.forms['PL_changeTransition'].elements['duration'].value  = Number(document.forms['PL_changeTransition'].elements['duration'].value) + 100;
@@ -9,7 +9,7 @@ function switchUp()
     }
 }
 
-function switchDown()
+function pl_switchDown()
 {
     if (Number(document.forms['PL_changeTransition'].elements['duration'].value) > 99) {
         document.forms['PL_changeTransition'].elements['duration'].value = Number(document.forms['PL_changeTransition'].elements['duration'].value) - 100;
@@ -19,5 +19,18 @@ function switchDown()
         else document.forms['PL_changeTransition'].elements['type'][0].checked = true;
     }  */
 }
+
+var pl_loop;
+
+function pl_start(direction)
+{
+    pl_loop = setInterval("pl_switch"+ direction + "()", 100);
+}
+
+function pl_stop()
+{
+    clearInterval(pl_loop);
+}
+
 {/literal}
 </script>

@@ -44,16 +44,11 @@ class uiCalendar
     {
         if (is_array($this->Month)) return FALSE;
 
-        require_once 'Calendar/Calendar.php';
         require_once 'Calendar/Month/Weekdays.php';
         require_once 'Calendar/Day.php';
 
         $Month = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
-        # mark today #
-        $sel =   new Calendar_Day($this->curr['year'], $this->curr['month'], $this->curr['day']);
-        $selections = array($sel);
-
-        $Month->build($selections);
+        $Month->build($this->_scheduledDays('month'));                                                       ## scheduled days are selected
         while ($Day = $Month->fetch()) {
             $corrMonth = $Day->thisMonth()<=12 ? $this->Base->_twoDigits($Day->thisMonth()) : '01';   ## due to bug in
             $corrYear  = $Day->thisMonth()<=12 ? $Day->thisYear() : $Day->thisYear()+1;               ## Calendar_Month_Weekdays
@@ -67,7 +62,7 @@ class uiCalendar
                                 'isFirst'       => $Day->isFirst(),
                                 'isLast'        => $Day->isLast(),
                                 'isSelected'    => $Day->isSelected(),
-                                'isScheduled'   => $this->getDayUsagePercentage($corrYear, $corrMonth, $this->Base->_twoDigits($Day->thisDay()))
+                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE
                              );
         }
     }
@@ -80,7 +75,7 @@ class uiCalendar
         require_once 'Calendar/Week.php';
 
         $Week = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
-        $Week->build();
+        $Week->build($this->_scheduledDays('week'));
         while ($Day = $Week->fetch()) {
             $this->Week[] = array(
                                 'day'           => $this->Base->_twoDigits($Day->thisDay()),
@@ -88,9 +83,10 @@ class uiCalendar
                                 'month'         => $this->Base->_twoDigits($Day->thisMonth()),
                                 'year'          => $Day->thisYear(),
                                 'label'         => $this->_getDayName($Day),
+                                'isSelected'    => $Day->isSelected(),
+                                'isCurrent'     => $Day->thisDay()==$this->curr['day'] ? TRUE : FALSE
                             );
         }
-
     }
 
 

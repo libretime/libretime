@@ -31,8 +31,14 @@
             {/foreach}
             <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
                 <td><input type="checkbox" name="all" onClick="form_switchAll('SP')"></th>
-                <td align="center" colspan="2"><a href="#" onClick="form_submit('SP')">[Remove Selected]</a></th>
-                <td align="center" colspan="2"><a href="#" onClick="form_clearAll('SP')">[Clear]</a></th>
+                <td align="center" colspan="2">
+                    <select>
+                        <option>Multiple Action:</option>
+                        <option onClick="form_submit('SP', 'SP.removeItem')">Remove</option>
+                        <option onClick="form_submit('SP', 'PL.addItem')">Add to Playlist</option>
+                    </select>
+                </th>
+                <td align="center" colspan="2"><a href="#" onClick="form_clearAll('SP', 'SP.removeItem')">[Clear]</a></th>
             </tr>
         </table>
     </form>

@@ -2,7 +2,7 @@
 <tr align="center" style="background-color: {cycle values='#eeeeee, #dadada'}"><td></td><td>Title</td><td>Duration</td><td>Type</td></tr>
 
 {PL->getFlat assign='FLAT'}
-{foreach from=$FLAT item='i'}
+{foreach from=$FLAT key='pos' item='i'}
     <!-- {$n++} -->
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
@@ -12,7 +12,13 @@
     <tr onMouseOver="highlight()"
         onMouseOut="darklight()"
         onContextmenu="return menu('{$i.attrs.id}', 'PL.removeItem')" style="background-color: {cycle values='#eeeeee, #dadada'}">
-        <td><input type="checkbox" name="{$i.attrs.id}"></td>
+        <td>
+            <input type="checkbox" name="{$i.attrs.id}">
+            <font size="+1">
+            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')">&uarr;</a>
+            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos+1}')">&darr;</a>
+            </font>
+        </td>
         <td>{$i.title}</td>
         <td>{$i.duration}</td>
         <td>{$i.type}</td>
@@ -28,7 +34,7 @@
 
 <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
     <td><input type="checkbox" name="all" onClick="form_switchAll('PL')"></th>
-    <td align="center" colspan="2"><a href="#" onClick="form_submit('PL')">[Remove Selected]</a></th>
+    <td align="center" colspan="2"><a href="#" onClick="form_submit('PL', 'PL.removeItem')">[Remove Selected]</a></th>
     <td align="center" colspan="2"><a href="#" onClick="form_clearAll('PL')">[Clear]</a></th>
 </tr>
 

@@ -79,6 +79,10 @@ function menu(id) {
             case "fileList":
                 menuHtml = menuHtml + "<tr><td><a class='menu' href='{/literal}{$UI_BROWSER}{literal}?act=fileList&id="+id+"'"+oF+">&nbsp;List Folder&nbsp;</a></td></tr>";
             break;
+
+            case "SCHEDULER.schedule":
+                menuHtml = menuHtml + "<tr><td><a class='menu' href='#' onClick=\"hpopup('{/literal}{$UI_HANDLER}{literal}?act=SCHEDULER.set&view=schedule&hour="+id+"')\" "+oF+">&nbsp;Schedule Playlist&nbsp;</a></td></tr>"; 
+            break;
         }
     }
     document.getElementById('menucontainer').innerHTML = menuHeader + menuHtml + menuFooter;

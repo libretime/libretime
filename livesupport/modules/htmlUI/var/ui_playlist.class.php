@@ -82,7 +82,7 @@ class uiPlaylist
         $this->activate($tmpid, FALSE);
         $this->Base->_retMsg('Playlist "$1" saved', $this->Base->_getMDataValue($tmpid, UI_MDATA_KEY_TITLE));
 
-        return TRUE;
+        return $this->activeId;
     }
 
 
@@ -120,13 +120,22 @@ class uiPlaylist
         return FALSE;
     }
 
-    function addItem($id)
+    function addItem($elemIds)
     {
-        $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $id, $this->Base->sessid);
-        if (PEAR::isError($r)) {
-            print_r($r);
-            $this->Base->_retMsg('Cannot add Item to Playlist');
+        if (!$elemIds) {
+            $this->Base->_retMsg('No Item(s) given');
             return FALSE;
+        }
+        if (!is_array($elemIds))
+            $elemIds = array($elemIds);
+
+        foreach ($elemIds as $elemId) {
+            $r = $this->Base->gb->addAudioClipToPlaylist($this->token, $elemId, $this->Base->sessid);
+            if (PEAR::isError($r)) {
+                print_r($r);
+                $this->Base->_retMsg('Cannot add Item to Playlist');
+                return FALSE;
+            }
         }
         return TRUE;
     }
@@ -239,8 +248,17 @@ class uiPlaylist
             break;
         }
         #print_r($item);
-        foreach ($item as $i=>$val)
-            $this->Base->gb->changeFadeInfo($this->token, $i, $val['fadeIn'], $val['fadeOut'], $this->Base->sessid);
+        foreach ($item as $i=>$val) {
+            if ($this->Base->gb->changeFadeInfo($this->token, $i, $val['fadeIn'], $val['fadeOut'], $this->Base->sessid) === FALSE)
+                $this->Base->_retMsg('Feiled: changeFadeInfo');
+                return FALSE;
+        }
+    }
+
+
+    function moveItem($id, $pos)
+    {
+        $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
     }
 
 

@@ -18,6 +18,7 @@ class uiScratchPad
     {
         if (!is_array($this->items))
             $this->_load();
+        #print_r($this->items);
         return $this->items;
     }
 

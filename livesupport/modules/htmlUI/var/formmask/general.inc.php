@@ -564,14 +564,14 @@ $ui_fmask = array(
                    'element'   => 'switchdown',
                    'type'      => 'button',
                    'label'     => '-',
-                   'attributes'=> array('onClick' => 'switchDown()'),
+                   'attributes'=> array('onClick' => 'pl_switchDown()', 'onMousedown' => 'pl_start("Down")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
                    'groupit'   => TRUE
                ),
                array(
                    'element'   => 'switchup',
                    'type'      => 'button',
                    'label'     => '+',
-                   'attributes'=> array('onClick' => 'switchUp()'),
+                   'attributes'=> array('onClick' => 'pl_switchUp()', 'onMousedown' => 'pl_start("Up")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
                    'groupit'   => TRUE
                ),
                array(
