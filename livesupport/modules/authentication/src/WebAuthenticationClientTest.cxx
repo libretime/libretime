@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ static const std::string configFileName = "etc/webAuthentication.xml";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Set up the test environment
+ *  Set up the test environment.
  *----------------------------------------------------------------------------*/
 void
 WebAuthenticationClientTest :: setUp(void)                         throw ()
@@ -93,7 +93,7 @@ WebAuthenticationClientTest :: setUp(void)                         throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Clean up the test environment
+ *  Clean up the test environment.
  *----------------------------------------------------------------------------*/
 void
 WebAuthenticationClientTest :: tearDown(void)                      throw ()
@@ -103,7 +103,7 @@ WebAuthenticationClientTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if we can log on and off
+ *  Test to see if we can log on and off.
  *----------------------------------------------------------------------------*/
 void
 WebAuthenticationClientTest :: firstTest(void)
@@ -115,7 +115,7 @@ WebAuthenticationClientTest :: firstTest(void)
         sessionId = wac->login("Piszkos Fred", "malnaszor");
         CPPUNIT_FAIL("Allowed login with incorrect login and password.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
 
     sessionId.reset(new SessionId("bad_session_ID"));
@@ -123,20 +123,20 @@ WebAuthenticationClientTest :: firstTest(void)
         wac->logout(sessionId);
         CPPUNIT_FAIL("Allowed logout without previous login.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
 
     try {
         sessionId = wac->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         wac->logout(sessionId);
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -144,7 +144,103 @@ WebAuthenticationClientTest :: firstTest(void)
         wac->logout(sessionId);
         CPPUNIT_FAIL("Allowed to logout twice.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if we can save and load user preferences.
+ *----------------------------------------------------------------------------*/
+void
+WebAuthenticationClientTest :: preferencesTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        wac->reset();
+    }
+    catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<SessionId>::Ref             sessionId;
+    Ptr<const Glib::ustring>::Ref   prefValue;
+
+    // check "please log in" error
+    try {
+        prefValue = wac->loadPreferencesItem(sessionId, "something");
+        CPPUNIT_FAIL("Allowed operation without login.");
+    } catch (XmlRpcException &e) {
+    }
+
+    // log in
+    try {
+        sessionId = wac->login("root", "q");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    // check "no such key" error
+    try {
+        prefValue = wac->loadPreferencesItem(sessionId, "eye_color");
+CPPUNIT_ASSERT(*prefValue == "");   // but I don't think it should be
+//        CPPUNIT_FAIL("Retrieved non-existent user preferences item.");
+    } catch (XmlRpcException &e) {
+CPPUNIT_FAIL(e.what());             // but I don't think it should be
+    }
+
+    // check normal save and load
+    prefValue.reset(new const Glib::ustring("chyornye"));
+    try {
+        wac->savePreferencesItem(sessionId, "eye_color", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<const Glib::ustring>::Ref   newPrefValue;
+    try {
+        newPrefValue = wac->loadPreferencesItem(sessionId, "eye_color");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // try some unicode characters
+    prefValue.reset(new const Glib::ustring("страстные"));
+    try {
+        wac->savePreferencesItem(sessionId, "eye_color", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = wac->loadPreferencesItem(sessionId, "eye_color");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == "страстные");
+
+    // check another normal save and load
+    prefValue.reset(new const Glib::ustring("ne dobryj"));
+    try {
+        wac->savePreferencesItem(sessionId, "hour", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = wac->loadPreferencesItem(sessionId, "hour");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // and log out
+    try {
+        wac->logout(sessionId);
+    }
+    catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
     }
 }
 

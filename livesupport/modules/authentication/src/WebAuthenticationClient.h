@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,7 +46,6 @@
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
-#include "LiveSupport/Authentication/AuthenticationException.h"
 
 
 namespace LiveSupport {
@@ -94,7 +93,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,
@@ -177,7 +176,7 @@ class WebAuthenticationClient :
          */
         virtual Ptr<SessionId>::Ref
         login(const std::string &login, const std::string &password)
-                                                throw (AuthenticationException);
+                                                throw (XmlRpcException);
 
         /**
          *  Logout from the authentication server.
@@ -193,8 +192,58 @@ class WebAuthenticationClient :
          */
         virtual void
         logout(Ptr<SessionId>::Ref sessionId)
-                                                throw (AuthenticationException);
+                                                throw (XmlRpcException);
 
+        /**
+         *  Load a `user preferences' item from the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *
+         *  @exception XmlRpcInvalidArgumentException
+         *                    bad sessionId argument
+         *  @exception XmlRpcCommunicationException
+         *                    problem with performing XML-RPC call
+         *  @exception XmlRpcMethodFaultException 
+         *                    XML-RPC method returned fault response
+         *  @exception XmlRpcMethodResponseException
+         *                    response from XML-RPC method is incorrect
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        loadPreferencesItem(Ptr<SessionId>::Ref             sessionId,
+                            const Glib::ustring &           key)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Store a `user preferences' item on the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *  @param  value     the (new) value of the item
+         *
+         *  @exception XmlRpcInvalidArgumentException
+         *                    bad sessionId or value argument
+         *  @exception XmlRpcCommunicationException
+         *                    problem with performing XML-RPC call
+         *  @exception XmlRpcMethodFaultException 
+         *                    XML-RPC method returned fault response
+         *  @exception XmlRpcMethodResponseException
+         *                    response from XML-RPC method is incorrect
+         */
+        virtual void
+        savePreferencesItem(Ptr<SessionId>::Ref             sessionId,
+                            const Glib::ustring &           key,
+                            Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Reset the list of preferences to its initial (empty) state.
+         *
+         *  @exception XmlRpcException if the server returns an error.
+         */
+        void
+        reset(void)
+                                                throw (XmlRpcException);
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ AuthenticationClientFactoryTest :: firstTest(void)
     try {
         sessionId = authentication->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -128,7 +128,99 @@ AuthenticationClientFactoryTest :: firstTest(void)
     try {
         authentication->logout(sessionId);
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to see if we can save and load user preferences.
+ *----------------------------------------------------------------------------*/
+void
+AuthenticationClientFactoryTest :: preferencesTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<AuthenticationClientFactory>::Ref
+                            acf = AuthenticationClientFactory::getInstance();
+    Ptr<AuthenticationClientInterface>::Ref
+                            authentication = acf->getAuthenticationClient();
+
+    Ptr<SessionId>::Ref             sessionId;
+    Ptr<const Glib::ustring>::Ref   prefValue;
+
+    // check "please log in" error
+    try {
+        prefValue = authentication->loadPreferencesItem(sessionId, "something");
+        CPPUNIT_FAIL("Allowed operation without login.");
+    } catch (XmlRpcException &e) {
+    }
+
+    // log in
+    try {
+        sessionId = authentication->login("root", "q");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    // check "no such key" error
+    try {
+        prefValue = authentication->loadPreferencesItem(sessionId, "eye_color");
+        CPPUNIT_FAIL("Retrieved non-existent user preferences item.");
+    } catch (XmlRpcException &e) {
+    }
+
+    // check normal save and load
+    prefValue.reset(new const Glib::ustring("chyornye"));
+    try {
+        authentication->savePreferencesItem(sessionId, "eye_color", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<const Glib::ustring>::Ref   newPrefValue;
+    try {
+        newPrefValue = authentication->loadPreferencesItem(sessionId, "eye_color");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // try some unicode characters
+    prefValue.reset(new const Glib::ustring("страстные"));
+    try {
+        authentication->savePreferencesItem(sessionId, "eye_color", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = authentication->loadPreferencesItem(sessionId, "eye_color");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == "страстные");
+
+    // check another normal save and load
+    prefValue.reset(new const Glib::ustring("ne dobryj"));
+    try {
+        authentication->savePreferencesItem(sessionId, "hour", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = authentication->loadPreferencesItem(sessionId, "hour");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // and log out
+    try {
+        authentication->logout(sessionId);
+    }
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }

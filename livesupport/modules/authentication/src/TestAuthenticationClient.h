@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -130,6 +130,17 @@ class TestAuthenticationClient :
         *  The number of the sessionId's we have issued.
         */
         int                         sessionCounter;
+
+       /**
+        *  A type for the list of user preferences.
+        */
+        typedef std::map<const Glib::ustring, Ptr<const Glib::ustring>::Ref>
+                                    preferencesType;
+
+       /**
+        *  A list of the user preferences items stored.
+        */
+        preferencesType             preferences;
 
 
     public:
@@ -173,24 +184,50 @@ class TestAuthenticationClient :
          *  null pointer.
          *
          *  @return the new session ID
-         *  @exception AuthenticationException login or password is incorrect
+         *  @exception XmlRpcException login or password is incorrect
          *             (does not match those given in the configuration file)
          */
         virtual Ptr<SessionId>::Ref
         login(const std::string &login, const std::string &password)
-                                                throw (AuthenticationException);
+                                                throw (XmlRpcException);
 
         /**
          *  Logout from the authentication server.
          *
          *  @param  sessionId the ID of the session to end
-         *  @exception AuthenticationException the sessionId does not match
+         *  @exception XmlRpcException the sessionId does not match
          *                                     one issued by login()
          */
         virtual void
         logout(Ptr<SessionId>::Ref sessionId)
-                                                throw (AuthenticationException);
+                                                throw (XmlRpcException);
 
+        /**
+         *  Load a `user preferences' item from the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *  @exception XmlRpcException invalid session ID 
+         *                             or key does not match anything stored
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        loadPreferencesItem(Ptr<SessionId>::Ref             sessionId,
+                            const Glib::ustring &           key)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Store a `user preferences' item on the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *  @param  value     the (new) value of the item
+         *  @exception XmlRpcException invalid session ID
+         */
+        virtual void
+        savePreferencesItem(Ptr<SessionId>::Ref             sessionId,
+                            const Glib::ustring &           key,
+                            Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException);
 };
 
 

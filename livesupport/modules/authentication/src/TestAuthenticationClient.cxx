@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
                                                 throw (std::invalid_argument)
 {
     if (element.get_name() != configElementNameStr) {
-        std::string eMsg = "Bad configuration element ";
+        std::string eMsg = "bad configuration element ";
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
@@ -122,7 +122,7 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
                                 = dynamic_cast<const xmlpp::Element*> (*it);
     if (!(attribute = userConfigElement
                       ->get_attribute(userLoginAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += userLoginAttrName;
         throw std::invalid_argument(eMsg);
     }
@@ -130,7 +130,7 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
 
     if (!(attribute = userConfigElement
                       ->get_attribute(userPasswordAttrName))) {
-        std::string eMsg = "Missing attribute ";
+        std::string eMsg = "missing attribute ";
         eMsg += userPasswordAttrName;
         throw std::invalid_argument(eMsg);
     }
@@ -155,7 +155,7 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
 Ptr<SessionId>::Ref
 TestAuthenticationClient :: login(const std::string & login,
                                   const std::string & password)
-                                                throw (AuthenticationException)
+                                                throw (XmlRpcException)
 {
     Ptr<SessionId>::Ref     sessionId;
 
@@ -170,7 +170,7 @@ TestAuthenticationClient :: login(const std::string & login,
         return sessionId;
     }
     else {
-        throw AuthenticationException("Incorrect login or password.");
+        throw XmlRpcException("incorrect login or password");
     }
 }
 
@@ -180,14 +180,57 @@ TestAuthenticationClient :: login(const std::string & login,
  *----------------------------------------------------------------------------*/
 void
 TestAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
-                                                throw (AuthenticationException)
+                                                throw (XmlRpcException)
 {
     // this returns the number of entries found and erased
-    if (sessionIdList.erase(sessionId->getId())) {
+    if (!sessionId || sessionIdList.erase(sessionId->getId())) {
         return;
     }
     else {
-        throw AuthenticationException("Logout called without previous login.");
+        throw XmlRpcException("logout() called without previous login()");
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Load a `user preferences' item from the server.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+TestAuthenticationClient :: loadPreferencesItem(
+                                Ptr<SessionId>::Ref     sessionId,
+                                const Glib::ustring &   key)
+                                                throw (XmlRpcException)
+{
+    if (!sessionId 
+        || sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
+        throw XmlRpcException("loadPreferences() called before login()");
+    }
+    
+    preferencesType::iterator   it;
+
+    if ((it = preferences.find(key)) == preferences.end()) {
+        throw XmlRpcException("no such user preferences item");
+    }
+    Ptr<Glib::ustring>::Ref     value(new Glib::ustring(*it->second));
+
+    return value;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Store a `user preferences' item on the server.
+ *----------------------------------------------------------------------------*/
+void
+TestAuthenticationClient :: savePreferencesItem(
+                                Ptr<SessionId>::Ref             sessionId,
+                                const Glib::ustring &           key,
+                                Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException)
+{
+    if (sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
+        throw XmlRpcException("loadPreferences() called before login()");
+    }
+    
+    preferences[key] = value;
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,20 +148,20 @@ WebStorageClientTest :: firstTest(void)
         authentication->logout(sessionId);
         CPPUNIT_FAIL("allowed logout operation without login");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
 
     try {
         sessionId = authentication->login("noSuchUser", "incorrectPassword");
         CPPUNIT_FAIL("Allowed login with incorrect password.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
 
     try {
         sessionId = authentication->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "Login failed.";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -170,7 +170,7 @@ WebStorageClientTest :: firstTest(void)
     try {
         authentication->logout(sessionId);
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         std::string eMsg = "Login failed.";
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
@@ -199,7 +199,7 @@ WebStorageClientTest :: playlistTest(void)
     try {
         sessionId = authentication->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(sessionId);
@@ -388,7 +388,7 @@ WebStorageClientTest :: audioClipTest(void)
     try {
         sessionId = authentication->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(sessionId);
@@ -509,7 +509,7 @@ WebStorageClientTest :: audioClipTest(void)
     try{
         authentication->logout(sessionId);
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
@@ -534,7 +534,7 @@ WebStorageClientTest :: simplePlaylistTest(void)
     Ptr<SessionId>::Ref sessionId;
     try {
         sessionId = authentication->login("root", "q");
-    } catch (AuthenticationException &e) {
+    } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(sessionId);

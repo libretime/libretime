@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,7 +44,11 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
-#include "LiveSupport/Authentication/AuthenticationException.h"
+#include "LiveSupport/Core/XmlRpcException.h"
+#include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
+#include "LiveSupport/Core/XmlRpcCommunicationException.h"
+#include "LiveSupport/Core/XmlRpcMethodFaultException.h"
+#include "LiveSupport/Core/XmlRpcMethodResponseException.h"
 
 namespace LiveSupport {
 namespace Authentication {
@@ -64,7 +68,7 @@ using namespace LiveSupport::Core;
  *  An interface for authentication clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class AuthenticationClientInterface
 {
@@ -83,13 +87,13 @@ class AuthenticationClientInterface
          *                                        fault response
          *  @exception XmlRpcMethodResponseException response from XML-RPC
          *                                           method is incorrect
-         *  @exception AuthenticationException other error 
-         *                                     (TestStorageClient only)
+         *  @exception XmlRpcException other error 
+         *                                     (TestAuthenticationClient only)
          *  @return the new session ID
          */
         virtual Ptr<SessionId>::Ref
         login(const std::string &login, const std::string &password)
-                                                throw (AuthenticationException)
+                                                throw (XmlRpcException)
                                                                         = 0;
 
         /**
@@ -102,12 +106,60 @@ class AuthenticationClientInterface
          *                                        fault response
          *  @exception XmlRpcMethodResponseException response from XML-RPC
          *                                           method is incorrect
-         *  @exception AuthenticationException other error 
-         *                                     (TestStorageClient only)
+         *  @exception XmlRpcException other error 
+         *                                     (TestAuthenticationClient only)
          */
         virtual void
         logout(Ptr<SessionId>::Ref sessionId)
-                                                throw (AuthenticationException)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Load a `user preferences' item from the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *
+         *  @exception XmlRpcInvalidArgumentException
+         *                    bad sessionId argument
+         *  @exception XmlRpcCommunicationException
+         *                    problem with performing XML-RPC call
+         *  @exception XmlRpcMethodFaultException 
+         *                    XML-RPC method returned fault response
+         *  @exception XmlRpcMethodResponseException
+         *                    response from XML-RPC method is incorrect
+         *  @exception XmlRpcException other error 
+         *                                     (TestAuthenticationClient only)
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        loadPreferencesItem(Ptr<SessionId>::Ref             sessionId,
+                            const Glib::ustring &           key)
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Store a `user preferences' item on the server.
+         *
+         *  @param  sessionId the ID of the current session (from login())
+         *  @param  key       the name of the item
+         *  @param  value     the (new) value of the item
+         *
+         *  @exception XmlRpcInvalidArgumentException
+         *                    bad sessionId or value argument
+         *  @exception XmlRpcCommunicationException
+         *                    problem with performing XML-RPC call
+         *  @exception XmlRpcMethodFaultException 
+         *                    XML-RPC method returned fault response
+         *  @exception XmlRpcMethodResponseException
+         *                    response from XML-RPC method is incorrect
+         *  @exception XmlRpcException other error 
+         *                                     (TestAuthenticationClient only)
+         */
+        virtual void
+        savePreferencesItem(Ptr<SessionId>::Ref             sessionId,
+                            const Glib::ustring &           key,
+                            Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException)
                                                                         = 0;
 };
 

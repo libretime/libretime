@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,22 +66,22 @@ const std::string WebAuthenticationClient::configElementNameStr
                                            = "webAuthentication";
 
 /*------------------------------------------------------------------------------
- *  The name of the config child element for the storage server location
+ *  The name of the config child element for the authentication server location
  *----------------------------------------------------------------------------*/
 static const std::string    locationConfigElementName = "location";
 
 /*------------------------------------------------------------------------------
- *  The name of the config element attribute for the storage server name
+ *  The name of the config element attribute for the server name
  *----------------------------------------------------------------------------*/
 static const std::string    locationServerAttrName = "server";
 
 /*------------------------------------------------------------------------------
- *  The name of the config element attribute for the storage server port
+ *  The name of the config element attribute for the server port
  *----------------------------------------------------------------------------*/
 static const std::string    locationPortAttrName = "port";
 
 /*------------------------------------------------------------------------------
- *  The name of the config element attribute for the storage server php page
+ *  The name of the config element attribute for the server php page
  *----------------------------------------------------------------------------*/
 static const std::string    locationPathAttrName = "path";
 
@@ -89,7 +89,7 @@ static const std::string    locationPathAttrName = "path";
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: login */
 
 /*------------------------------------------------------------------------------
- *  The name of the login method on the storage server
+ *  The name of the login method on the server
  *----------------------------------------------------------------------------*/
 static const std::string    loginMethodName = "locstor.login";
 
@@ -112,7 +112,7 @@ static const std::string    outputSessionIdParamName = "sessid";
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: logout */
 
 /*------------------------------------------------------------------------------
- *  The name of the logout method on the storage server
+ *  The name of the logout method on the server
  *----------------------------------------------------------------------------*/
 static const std::string    logoutMethodName = "locstor.logout";
 
@@ -125,6 +125,52 @@ static const std::string    inputSessionIdParamName = "sessid";
  *  The name of the status parameter in the output structure
  *----------------------------------------------------------------------------*/
 static const std::string    statusParamName = "status";
+
+
+/* ~~~~~~~~~~~~~~~~~~  authentication server constants: load/save preferences */
+
+/*------------------------------------------------------------------------------
+ *  The name of the load preferences method on the server
+ *----------------------------------------------------------------------------*/
+static const std::string    loadPreferencesMethodName = "locstor.loadPref";
+
+/*------------------------------------------------------------------------------
+ *  The name of the save preferences method on the server
+ *----------------------------------------------------------------------------*/
+static const std::string    savePreferencesMethodName = "locstor.savePref";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    preferencesSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the key parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    preferencesKeyParamName = "key";
+
+/*------------------------------------------------------------------------------
+ *  The name of the value parameter for both save and load methods
+ *----------------------------------------------------------------------------*/
+static const std::string    preferencesValueParamName = "value";
+
+/*------------------------------------------------------------------------------
+ *  The name of the return parameter for the save method
+ *----------------------------------------------------------------------------*/
+static const std::string    preferencesStatusParamName = "status";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: resetStorage */
+
+/*------------------------------------------------------------------------------
+ *  The name of the reset storage method on the server
+ *----------------------------------------------------------------------------*/
+static const std::string    resetStorageMethodName = "locstor.resetStorage";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result parameter returned by the method (ignored here)
+ *----------------------------------------------------------------------------*/
+static const std::string    resetStorageResultParamName = "gunids";
 
 
 /* ===============================================  local function prototypes */
@@ -202,7 +248,7 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
 Ptr<SessionId>::Ref
 WebAuthenticationClient :: login(const std::string & login,
                                  const std::string & password)
-                                                throw (AuthenticationException)
+                                                throw (XmlRpcException)
 {
     XmlRpcValue             parameters;
     XmlRpcValue             result;
@@ -212,8 +258,8 @@ WebAuthenticationClient :: login(const std::string & login,
                               storageServerPath.c_str(), false);
 
     parameters.clear();
-    parameters[loginParamName] = login.c_str();
-    parameters[passwordParamName] = password.c_str();
+    parameters[loginParamName]      = login;
+    parameters[passwordParamName]   = password;
     
     result.clear();
     if (!xmlRpcClient.execute(loginMethodName.c_str(), parameters, result)) {
@@ -224,21 +270,21 @@ WebAuthenticationClient :: login(const std::string & login,
         std::stringstream eMsg;
         eMsg << "Login method returned fault response:\n"
              << result;
-        throw Authentication::XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
 
     if (! result.hasMember(outputSessionIdParamName)) {
         std::stringstream eMsg;
         eMsg << "Login method returned unexpected response:\n"
              << result;
-        throw Authentication::XmlRpcMethodResponseException(eMsg.str());
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
     }
 
     if (result[outputSessionIdParamName].getType() != XmlRpcValue::TypeString) {
         std::stringstream eMsg;
         eMsg << "Login method returned unexpected response:\n"
              << result;
-        throw Authentication::XmlRpcMethodResponseException(eMsg.str());
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
     }
 
     sessionId.reset(new SessionId(result[outputSessionIdParamName]));
@@ -251,8 +297,12 @@ WebAuthenticationClient :: login(const std::string & login,
  *----------------------------------------------------------------------------*/
 void
 WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
-                                                throw (AuthenticationException)
+                                                throw (XmlRpcException)
 {
+    if (!sessionId) {
+        throw Core::XmlRpcInvalidArgumentException("Missing session ID.");
+    }
+
     XmlRpcValue     parameters;
     XmlRpcValue     result;
 
@@ -260,18 +310,18 @@ WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
                               storageServerPath.c_str(), false);
 
     parameters.clear();
-    parameters[inputSessionIdParamName] = sessionId->getId().c_str();
+    parameters[inputSessionIdParamName] = sessionId->getId();
     
     result.clear();
     if (!xmlRpcClient.execute(logoutMethodName.c_str(), parameters, result)) {
-        throw Authentication::XmlRpcCommunicationException("Logout failed.");
+        throw Core::XmlRpcCommunicationException("Logout failed.");
     }
 
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
         eMsg << "Logout method returned fault response:\n"
              << result;
-        throw Authentication::XmlRpcMethodFaultException(eMsg.str());
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
 
     if (! result.hasMember(statusParamName)
@@ -280,7 +330,169 @@ WebAuthenticationClient :: logout(Ptr<SessionId>::Ref sessionId)
         std::stringstream eMsg;
         eMsg << "Logout method returned unexpected response:\n"
              << result;
-        throw Authentication::XmlRpcMethodResponseException(eMsg.str());
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Load a `user preferences' item from the server.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+WebAuthenticationClient :: loadPreferencesItem(
+                                Ptr<SessionId>::Ref             sessionId,
+                                const Glib::ustring &           key)
+                                                throw (XmlRpcException)
+{
+    if (!sessionId) {
+        throw Core::XmlRpcInvalidArgumentException("Missing session ID.");
+    }
+
+    XmlRpcValue             parameters;
+    XmlRpcValue             result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[preferencesSessionIdParamName]   = sessionId->getId();
+    parameters[preferencesKeyParamName]         = std::string(key);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(loadPreferencesMethodName.c_str(),
+                                                        parameters, result)) {
+        throw Core::XmlRpcCommunicationException(
+                                          "Could not execute XML-RPC method.");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method "
+             << loadPreferencesMethodName 
+             << " returned fault response:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (! result.hasMember(preferencesValueParamName)
+        || result[preferencesValueParamName].getType() 
+                                                != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method "
+             << loadPreferencesMethodName 
+             << " returned unexpected response:\n"
+             << result;
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    Ptr<Glib::ustring>::Ref     value(new Glib::ustring(std::string(
+                                        result[preferencesValueParamName] )));
+    return value;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Store a `user preferences' item on the server.
+ *----------------------------------------------------------------------------*/
+void
+WebAuthenticationClient :: savePreferencesItem(
+                                Ptr<SessionId>::Ref             sessionId,
+                                const Glib::ustring &           key,
+                                Ptr<const Glib::ustring>::Ref   value)
+                                                throw (XmlRpcException)
+{
+    if (!sessionId) {
+        throw Core::XmlRpcInvalidArgumentException("Missing session ID.");
+    }
+
+    if (!value) {
+        throw Core::XmlRpcInvalidArgumentException("Missing value argument.");
+    }
+
+    XmlRpcValue             parameters;
+    XmlRpcValue             result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[preferencesSessionIdParamName]   = sessionId->getId();
+    parameters[preferencesKeyParamName]         = std::string(key);
+    parameters[preferencesValueParamName]       = std::string(*value);
+    
+    result.clear();
+    if (!xmlRpcClient.execute(savePreferencesMethodName.c_str(),
+                                                        parameters, result)) {
+        throw Core::XmlRpcCommunicationException(
+                                          "Could not execute XML-RPC method.");
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method "
+             << savePreferencesMethodName 
+             << " returned fault response:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+
+    if (! result.hasMember(preferencesStatusParamName)
+        || result[preferencesStatusParamName].getType() 
+                                                != XmlRpcValue::TypeBoolean
+        || ! bool(result[preferencesStatusParamName])) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method "
+             << savePreferencesMethodName 
+             << " returned unexpected response:\n"
+             << result;
+        throw Core::XmlRpcMethodResponseException(eMsg.str());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Reset the list of preferences to its initial (empty) state.
+ *----------------------------------------------------------------------------*/
+void
+WebAuthenticationClient :: reset(void)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters["dummy_param"] = "dummy_value"; 
+    
+    result.clear();
+    if (!xmlRpcClient.execute(resetStorageMethodName.c_str(),
+                              parameters, result)) {
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += resetStorageMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << resetStorageMethodName
+             << "' returned error message:\n"
+             << result;
+        throw XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (! result.hasMember(resetStorageResultParamName)
+       || result[resetStorageResultParamName].getType() 
+                                                != XmlRpcValue::TypeArray) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << resetStorageMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
     }
 }
 

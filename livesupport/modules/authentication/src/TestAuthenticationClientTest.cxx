@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -115,7 +115,7 @@ TestAuthenticationClientTest :: firstTest(void)
         sessionId = tac->login("Piszkos Fred", "malnaszor");
         CPPUNIT_FAIL("Allowed login with incorrect login and password.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
 
     // TODO: this call writes some garbage to cerr; it should be told not to
@@ -124,20 +124,20 @@ TestAuthenticationClientTest :: firstTest(void)
         tac->logout(sessionId);
         CPPUNIT_FAIL("Allowed logout without previous login.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
     
     try {
         sessionId = tac->login("root", "q");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
     try {
         tac->logout(sessionId);
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
 
@@ -145,7 +145,93 @@ TestAuthenticationClientTest :: firstTest(void)
         tac->logout(sessionId);
         CPPUNIT_FAIL("Allowed to logout twice.");
     }
-    catch (AuthenticationException &e) {
+    catch (XmlRpcException &e) {
     }
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Test to see if we can save and load user preferences.
+ *----------------------------------------------------------------------------*/
+void
+TestAuthenticationClientTest :: preferencesTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<SessionId>::Ref             sessionId;
+    Ptr<const Glib::ustring>::Ref   prefValue;
+
+    // check "please log in" error
+    try {
+        prefValue = tac->loadPreferencesItem(sessionId, "something");
+        CPPUNIT_FAIL("Allowed operation without login.");
+    } catch (XmlRpcException &e) {
+    }
+
+    // log in
+    try {
+        sessionId = tac->login("root", "q");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    // check "no such key" error
+    try {
+        prefValue = tac->loadPreferencesItem(sessionId, "eye_color");
+        CPPUNIT_FAIL("Retrieved non-existent user preferences item.");
+    } catch (XmlRpcException &e) {
+    }
+
+    // check normal save and load
+    prefValue.reset(new const Glib::ustring("chyornye"));
+    try {
+        tac->savePreferencesItem(sessionId, "eye_color", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    Ptr<const Glib::ustring>::Ref   newPrefValue;
+    try {
+        newPrefValue = tac->loadPreferencesItem(sessionId, "eye_color");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // try some unicode characters
+    prefValue.reset(new const Glib::ustring("страстные"));
+    try {
+        tac->savePreferencesItem(sessionId, "eye_color", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = tac->loadPreferencesItem(sessionId, "eye_color");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == "страстные");
+
+    // check another normal save and load
+    prefValue.reset(new const Glib::ustring("ne dobryj"));
+    try {
+        tac->savePreferencesItem(sessionId, "hour", prefValue);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    try {
+        newPrefValue = tac->loadPreferencesItem(sessionId, "hour");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(*newPrefValue == *prefValue);
+    
+    // and log out
+    try {
+        tac->logout(sessionId);
+    }
+    catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
