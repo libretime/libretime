@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/class.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "mtree.php";
  *  class for 'object classes' handling - i.e. groups of object in tree
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see Mtree
  *  @see Subj
  */
@@ -293,7 +293,7 @@ class ObjClasses extends Mtree{
     {
         parent::install();
         $this->dbc->query("CREATE TABLE {$this->classTable} (
-            id int not null,
+            id int not null PRIMARY KEY,
             cname varchar(20)
         )");
         $this->dbc->query("CREATE UNIQUE INDEX {$this->classTable}_id_idx

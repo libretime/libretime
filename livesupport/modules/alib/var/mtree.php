@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/Attic/mtree.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see ObjClasses
  */
 class Mtree{
@@ -572,7 +572,7 @@ class Mtree{
     function install()
     {
         $this->dbc->query("CREATE TABLE {$this->treeTable} (
-            id int not null,
+            id int not null PRIMARY KEY,
             name varchar(255) not null default'',
             parid int,
             lft int,

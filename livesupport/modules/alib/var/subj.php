@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -503,7 +503,7 @@ class Subjects extends ObjClasses{
     {
         parent::install();
         $this->dbc->query("CREATE TABLE {$this->subjTable} (
-            id int not null,
+            id int not null PRIMARY KEY,
             login varchar(255) not null default'',
             pass varchar(255) not null default'',
             type char(1) not null default 'U'
@@ -515,7 +515,7 @@ class Subjects extends ObjClasses{
         $this->dbc->createSequence("{$this->subjTable}_id_seq");
 
         $this->dbc->query("CREATE TABLE {$this->smembTable} (
-            id int not null,
+            id int not null PRIMARY KEY,
             uid int not null default 0,
             gid int not null default 0,
             level int not null default 0,

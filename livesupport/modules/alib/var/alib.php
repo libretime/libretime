@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -487,8 +487,8 @@ class Alib extends Subjects{
     {
         parent::install();
         $this->dbc->query("CREATE TABLE {$this->permTable} (
-            permid int not null,
-            subj int,
+            permid int not null PRIMARY KEY,
+            subj int REFERENCES {$this->subjTable} ON DELETE CASCADE,
             action varchar(20),
             obj int,
             type char(1)
@@ -500,8 +500,8 @@ class Alib extends Subjects{
         $this->dbc->createSequence("{$this->permTable}_id_seq");
 
         $this->dbc->query("CREATE TABLE {$this->sessTable} (
-            sessid char(32) not null,
-            userid int,
+            sessid char(32) not null PRIMARY KEY,
+            userid int REFERENCES {$this->subjTable} ON DELETE CASCADE,
             login varchar(255),
             ts timestamp
         )");
