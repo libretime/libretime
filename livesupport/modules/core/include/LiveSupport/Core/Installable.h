@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Installable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,7 +83,7 @@ namespace Core {
  *  facilities.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class Installable
 {
@@ -98,6 +98,17 @@ class Installable
          */
         virtual void
         install(void)                           throw (std::exception)
+                                                                        = 0;
+
+        /**
+         *  Check to see if the component has already been installed.
+         *
+         *  @return true if the component is properly installed,
+         *          false otherwise
+         *  @exception std::exception on generic problems
+         */
+        virtual bool
+        isInstalled(void)                       throw (std::exception)
                                                                         = 0;
 
         /**

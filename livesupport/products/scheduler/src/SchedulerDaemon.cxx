@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -344,6 +344,20 @@ SchedulerDaemon :: install(void)                throw (std::exception)
 
 
 /*------------------------------------------------------------------------------
+ *  Check to see if the scheduler has been installed.
+ *----------------------------------------------------------------------------*/
+bool
+SchedulerDaemon :: isInstalled(void)            throw (std::exception)
+{
+    // TODO: check if we have already been configured
+    Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
+    Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+    
+    return sf->isInstalled() && plf->isInstalled();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Install the scheduler daemon.
  *----------------------------------------------------------------------------*/
 void
@@ -368,6 +382,10 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
 void
 SchedulerDaemon :: startup (void)                           throw ()
 {
+    if (!isInstalled()) {
+        install();
+    }
+
     try {
         sessionId      = authentication->login(login, password);
     } catch (XmlRpcException &e) {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  PostgresqlSchedule documentation.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see PostgresqlSchedule
  */
 class ScheduleFactory : virtual public Configurable,
@@ -170,6 +170,16 @@ class ScheduleFactory : virtual public Configurable,
          */
         virtual void
         install(void)                           throw (std::exception);
+
+        /**
+         *  Check to see if the component has already been installed.
+         *
+         *  @return true if the component is properly installed,
+         *          false otherwise
+         *  @exception std::exception on generic problems
+         */
+        virtual bool
+        isInstalled(void)                       throw (std::exception);
 
         /**
          *  Uninstall the component.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,6 +126,20 @@ ScheduleFactory :: install(void)                throw (std::exception)
     }
 
     schedule->install();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check to see if the schedule factory has already been installed.
+ *----------------------------------------------------------------------------*/
+bool
+ScheduleFactory :: isInstalled(void)            throw (std::exception)
+{
+    if (!schedule) {
+        throw std::logic_error("ScheduleFactory not yet configured");
+    }
+
+    return schedule->isInstalled();
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -178,11 +178,58 @@ PostgresqlSchedule :: configure(const xmlpp::Element & element)
 void
 PostgresqlSchedule :: install(void)                     throw (std::exception)
 {
+    if (!isInstalled()) {
+        Ptr<Connection>::Ref    conn;
+        try {
+            conn = cm->getConnection();
+            Ptr<Statement>::Ref     stmt(conn->createStatement());
+            stmt->execute(createStmt);
+            cm->returnConnection(conn);
+        } catch (std::exception &e) {
+            if (conn) {
+                cm->returnConnection(conn);
+            }
+            throw;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check to see if the PostgresqlSchedule has already been installed.
+ *----------------------------------------------------------------------------*/
+bool
+PostgresqlSchedule :: isInstalled(void)                 throw (std::exception)
+{
     Ptr<Connection>::Ref    conn;
     try {
+        Ptr<Statement>::Ref     stmt;
+        ResultSet             * res;
+
         conn = cm->getConnection();
-        Ptr<Statement>::Ref     stmt(conn->createStatement());
-        stmt->execute(createStmt);
+
+        // see if we can connect at all
+        stmt.reset(conn->createStatement());
+        stmt->execute("SELECT 1");
+        res = stmt->getResultSet();
+        if (!res->next() || (res->getInt(1) != 1)) {
+            throw std::runtime_error("Can't connect to database");
+        }
+
+        // see if the schedule table exists
+        try {
+            stmt.reset(conn->createStatement());
+            stmt->execute("SELECT COUNT(*) FROM schedule");
+            res = stmt->getResultSet();
+            if (!res->next() || (res->getInt(1) < 0)) {
+                return false;
+                cm->returnConnection(conn);
+            }
+        } catch (std::exception &e) {
+            cm->returnConnection(conn);
+            return false;
+        }
+
         cm->returnConnection(conn);
     } catch (std::exception &e) {
         if (conn) {
@@ -190,6 +237,8 @@ PostgresqlSchedule :: install(void)                     throw (std::exception)
         }
         throw;
     }
+
+    return true;
 }
 
 

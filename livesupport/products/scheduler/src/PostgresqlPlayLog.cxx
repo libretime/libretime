@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLog.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,18 +126,67 @@ PostgresqlPlayLog :: configure(const xmlpp::Element & element)
 void
 PostgresqlPlayLog :: install(void)                     throw (std::exception)
 {
+    if (!isInstalled()) {
+        Ptr<Connection>::Ref    conn;
+        try {
+            conn = cm->getConnection();
+            Ptr<Statement>::Ref     stmt(conn->createStatement());
+            stmt->execute(createStmt);
+            cm->returnConnection(conn);
+        } catch (std::exception &e) {
+            if (conn) {
+                cm->returnConnection(conn);
+            }
+            throw std::logic_error(e.what());
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check to see if the PostgresqlPlayLog has already been installed.
+ *----------------------------------------------------------------------------*/
+bool
+PostgresqlPlayLog :: isInstalled(void)                 throw (std::exception)
+{
     Ptr<Connection>::Ref    conn;
     try {
+        Ptr<Statement>::Ref     stmt;
+        ResultSet             * res;
+
         conn = cm->getConnection();
-        Ptr<Statement>::Ref     stmt(conn->createStatement());
-        stmt->execute(createStmt);
+
+        // see if we can connect at all
+        stmt.reset(conn->createStatement());
+        stmt->execute("SELECT 1");
+        res = stmt->getResultSet();
+        if (!res->next() || (res->getInt(1) != 1)) {
+            throw std::runtime_error("Can't connect to database");
+        }
+
+        // see if the schedule table exists
+        try {
+            stmt.reset(conn->createStatement());
+            stmt->execute("SELECT COUNT(*) FROM playLog");
+            res = stmt->getResultSet();
+            if (!res->next() || (res->getInt(1) < 0)) {
+                cm->returnConnection(conn);
+                return false;
+            }
+        } catch (std::exception &e) {
+            cm->returnConnection(conn);
+            return false;
+        }
+
         cm->returnConnection(conn);
     } catch (std::exception &e) {
         if (conn) {
             cm->returnConnection(conn);
         }
-        throw std::logic_error(e.what());
+        throw;
     }
+
+    return true;
 }
 
 

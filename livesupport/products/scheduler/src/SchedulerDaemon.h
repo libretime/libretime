@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -399,6 +399,16 @@ class SchedulerDaemon : public Installable,
          */
         virtual void
         install(void)                           throw (std::exception);
+
+        /**
+         *  Check to see if the component has already been installed.
+         *
+         *  @return true if the component is properly installed,
+         *          false otherwise
+         *  @exception std::exception on generic problems
+         */
+        virtual bool
+        isInstalled(void)                       throw (std::exception);
 
         /**
          *  Uninstall the component.

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,8 +80,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ELEMENT postgresqlSchedule EMPTY &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.8 $
  */
 class PostgresqlSchedule : public Configurable,
                            public ScheduleInterface
@@ -216,6 +216,16 @@ class PostgresqlSchedule : public Configurable,
          */
         virtual void
         install(void)                           throw (std::exception);
+
+        /**
+         *  Check to see if the component has already been installed.
+         *
+         *  @return true if the component is properly installed,
+         *          false otherwise
+         *  @exception std::exception on generic problems
+         */
+        virtual bool
+        isInstalled(void)                       throw (std::exception);
 
         /**
          *  Uninstall the component.

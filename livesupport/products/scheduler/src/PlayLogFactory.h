@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlayLogFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,8 +85,8 @@ using namespace LiveSupport::Core;
  *  For details on the &lt;postgreslPlayLog&gt; element, see the
  *  PostgresqlPlayLog documentation.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.2 $
  *  @see PostgresqlPlayLog
  */
 class PlayLogFactory : virtual public Configurable,
@@ -170,6 +170,16 @@ class PlayLogFactory : virtual public Configurable,
          */
         virtual void
         install(void)                           throw (std::exception);
+
+        /**
+         *  Check to see if the component has already been installed.
+         *
+         *  @return true if the component is properly installed,
+         *          false otherwise
+         *  @exception std::exception on generic problems
+         */
+        virtual bool
+        isInstalled(void)                       throw (std::exception);
 
         /**
          *  Uninstall the component.
