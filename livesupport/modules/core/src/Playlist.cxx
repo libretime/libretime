@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -497,33 +497,35 @@ Playlist::removePlaylistElement(Ptr<UniqueId>::Ref  playlistElementId)
 bool
 Playlist::valid(void)                           throw ()
 {
-    Ptr<time_duration>::Ref     runningTime(new time_duration(0,0,0,0));
-    Ptr<PlaylistElement>::Ref   playlistElement;
-    Ptr<AudioClip>::Ref         audioClip;
-    Ptr<Playlist>::Ref          playlist;
+    time_duration   runningTime(0,0,0,0);
 
     PlaylistElementListType::const_iterator  it = elementList->begin();
     while (it != elementList->end()) {
-        playlistElement = it->second;
-        if (*runningTime != *(playlistElement->getRelativeOffset())) {
+        Ptr<PlaylistElement>::Ref   playlistElement = it->second;
+
+        if (playlistElement->getType() == PlaylistElement::PlaylistType
+                && !playlistElement->getPlaylist()->valid()) {
             return false;
         }
-        if (playlistElement->getType() == PlaylistElement::AudioClipType) {
-            audioClip = playlistElement->getAudioClip();
-            *runningTime += *(audioClip->getPlaylength());
-        } else if (playlistElement->getType() 
-			                == PlaylistElement::PlaylistType) {
-            playlist = playlistElement->getPlaylist();
-            if (!playlist->valid()) {
-                return false;
-            }
-            *runningTime += *(playlist->getPlaylength());
-        } else {                    // this should never happen
-            return false;
+
+        time_duration   relativeOffset = *playlistElement->getRelativeOffset();
+        if (runningTime < relativeOffset) {
+            return false;           // found a gap in the playlist
         }
+
+        time_duration   endTime = 
+                            relativeOffset
+                            + *playlistElement->getPlayable()->getPlaylength();
+        if (endTime > runningTime) {
+            runningTime = endTime;
+        }
+        
         ++it;
     }
-    setPlaylength(runningTime);     // fix playlength, if everything else is OK
+    
+    Ptr<time_duration>::Ref     playlength(new time_duration());
+    *playlength = runningTime;
+    setPlaylength(playlength);      // fix playlength, if everything else is OK
     return true;
 }
 
