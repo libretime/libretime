@@ -2,328 +2,404 @@
 <language>
 	<Id>de.German</Id>
 	<item>
+		<key>Activate this Playlist</key>
+		<value>Aktive Liste</value>
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value>In den Notizblock eintragen</value>
+	</item>
+	<item>
+		<key>Add to active Playlist</key>
+		<value>Zur aktiven Liste hinzufügen</value>
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value>Einblenden ändern</value>
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value>Ausblenden ändern</value>
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value>Überblenden ändern</value>
+	</item>
+	<item>
+		<key>Delete File</key>
+		<value>Datei löschen</value>
+	</item>
+	<item>
+		<key>Display this Playlist</key>
+		<value>Diese Liste anzeigen</value>
+	</item>
+	<item>
+		<key>Edit File</key>
+		<value>Datei bearbeiten</value>
+	</item>
+	<item>
+		<key>Edit Metadata</key>
+		<value>Metadaten bearbeiten</value>
+	</item>
+	<item>
+		<key>Insert Playlist here</key>
+		<value>Programmliste hier einfügen</value>
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value>Ordner anzeigen</value>
+	</item>
+	<item>
+		<key>Listen to File</key>
+		<value>Anhören</value>
+	</item>
+	<item>
+		<key>New Playlist using File</key>
+		<value>Neue Liste mit dieser Datei</value>
+	</item>
+	<item>
+		<key>Remove File from Playlist</key>
+		<value>Datei von der Liste entfernen</value>
+	</item>
+	<item>
+		<key>Remove Playlist</key>
+		<value>Liste entfernen</value>
+	</item>
+	<item>
+		<key>Remove from Scratchpad</key>
+		<value>Vom Notizblock löschen</value>
+	</item>
+	<item>
+		<key>Save and Close Playlist</key>
+		<value>Liste speichern und schließen</value>
+	</item>
+	<item>
+		<key>Help</key>
+		<value>Hilfe</value>
+	</item>
+	<item>
 		<key>Access</key>
-		<value />
+		<value>Zugriff</value>
 	</item>
 	<item>
 		<key>Add Audio</key>
-		<value />
+		<value>Medien hinzufügen</value>
 	</item>
 	<item>
 		<key>Add to Playlist</key>
-		<value />
+		<value>Zur Liste hinzufügen</value>
 	</item>
 	<item>
 		<key>Artist</key>
-		<value />
+		<value>Künstler</value>
 	</item>
 	<item>
 		<key>Browse</key>
-		<value />
+		<value>Durchstöbern</value>
 	</item>
 	<item>
 		<key>CW</key>
-		<value />
+		<value>KW</value>
 	</item>
 	<item>
 		<key>Clear</key>
-		<value />
+		<value>Leeren</value>
 	</item>
 	<item>
 		<key>Clear Playlist</key>
-		<value />
+		<value>Wiedergabeliste leeren</value>
 	</item>
 	<item>
 		<key>Count</key>
-		<value />
+		<value>Anzahl</value>
 	</item>
 	<item>
 		<key>Creator</key>
-		<value />
+		<value>Erstellt von</value>
 	</item>
 	<item>
 		<key>Daily View</key>
-		<value />
+		<value>Tagesansicht</value>
 	</item>
 	<item>
 		<key>Data</key>
-		<value />
+		<value>Daten</value>
 	</item>
 	<item>
 		<key>Day</key>
-		<value />
+		<value>Tag</value>
 	</item>
 	<item>
 		<key>Delete Playlist</key>
-		<value />
+		<value>Liste löschen</value>
 	</item>
 	<item>
 		<key>Duration</key>
-		<value />
+		<value>Dauer</value>
 	</item>
 	<item>
 		<key>Edit</key>
-		<value />
+		<value>Bearbeiten</value>
 	</item>
 	<item>
 		<key>Fade</key>
-		<value />
+		<value>Überblenden</value>
 	</item>
 	<item>
 		<key>File</key>
-		<value />
+		<value>Datei</value>
 	</item>
 	<item>
 		<key>File List</key>
-		<value />
+		<value>Dateiliste</value>
 	</item>
 	<item>
 		<key>File Management</key>
-		<value />
+		<value>Dateimanagement</value>
 	</item>
 	<item>
 		<key>Folder Structure</key>
-		<value />
+		<value>Ordnerstruktur</value>
 	</item>
 	<item>
 		<key>Go</key>
-		<value />
+		<value>Los</value>
 	</item>
 	<item>
 		<key>Item</key>
-		<value />
+		<value>Element</value>
 	</item>
 	<item>
 		<key>KW</key>
-		<value />
+		<value>KW</value>
 	</item>
 	<item>
 		<key>Library Search</key>
-		<value />
+		<value>Medien suchen</value>
 	</item>
 	<item>
 		<key>Local Time</key>
-		<value />
+		<value>Lokale Zeit</value>
 	</item>
 	<item>
 		<key>MDataXML</key>
-		<value />
+		<value>MDataXML</value>
 	</item>
 	<item>
 		<key>Main</key>
-		<value />
+		<value>Haupt</value>
 	</item>
 	<item>
 		<key>Media Library</key>
-		<value />
+		<value>Medienbibliothek</value>
 	</item>
 	<item>
 		<key>Metadata</key>
-		<value />
+		<value>Metadaten</value>
 	</item>
 	<item>
 		<key>Month</key>
-		<value />
+		<value>Monat</value>
 	</item>
 	<item>
 		<key>Monthly View</key>
-		<value />
+		<value>Monatsansicht</value>
 	</item>
 	<item>
 		<key>Move</key>
-		<value />
+		<value>Verschieben</value>
 	</item>
 	<item>
 		<key>Multiple Action:</key>
-		<value />
+		<value>Aktionen</value>
 	</item>
 	<item>
 		<key>Music</key>
-		<value />
+		<value>Musik</value>
 	</item>
 	<item>
 		<key>Name</key>
-		<value />
+		<value>Name</value>
 	</item>
 	<item>
 		<key>New</key>
-		<value />
+		<value>Neu</value>
 	</item>
 	<item>
 		<key>New Playlist</key>
-		<value />
+		<value>Neue Liste</value>
 	</item>
 	<item>
 		<key>New Playlist using Item</key>
-		<value />
+		<value>Neue Liste mit Element</value>
 	</item>
 	<item>
 		<key>New empty Playlist</key>
-		<value />
+		<value>Neue leere Liste</value>
 	</item>
 	<item>
 		<key>No Entry</key>
-		<value />
+		<value>Kein Eintrag</value>
 	</item>
 	<item>
 		<key>No match found.</key>
-		<value />
+		<value>Kein Eintrag gefunden</value>
 	</item>
 	<item>
 		<key>No objects</key>
-		<value />
+		<value>Keine Objekte</value>
 	</item>
 	<item>
 		<key>Open last Playlist</key>
-		<value />
+		<value>Letzte Liste öffnen</value>
 	</item>
 	<item>
 		<key>Page</key>
-		<value />
+		<value>Seite</value>
 	</item>
 	<item>
 		<key>Playlist Editor</key>
-		<value />
+		<value>Programmlisten</value>
 	</item>
 	<item>
 		<key>Playlist Metadata</key>
-		<value />
+		<value>Listen-Metadaten</value>
 	</item>
 	<item>
 		<key>Range</key>
-		<value />
+		<value>Bereich</value>
 	</item>
 	<item>
 		<key>RawAnalyze</key>
-		<value />
+		<value>RohAnalyse</value>
 	</item>
 	<item>
 		<key>Remove</key>
-		<value />
+		<value>Entfernen</value>
 	</item>
 	<item>
 		<key>Remove Selected</key>
-		<value />
+		<value>Aufgewählte entfernen</value>
 	</item>
 	<item>
 		<key>Revert to Saved</key>
-		<value />
+		<value>Zurück zum letzten Speicherstand</value>
 	</item>
 	<item>
 		<key>Save Playlist</key>
-		<value />
+		<value>Programmliste speichern</value>
 	</item>
 	<item>
 		<key>Save and Close</key>
-		<value />
+		<value>Speichern und Schließen</value>
 	</item>
 	<item>
 		<key>Scheduler</key>
-		<value />
+		<value>Programmautomatik</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>
-		<value />
+		<value>Termine wählen</value>
 	</item>
 	<item>
 		<key>Scratch Pad</key>
-		<value />
+		<value>Notizblock</value>
 	</item>
 	<item>
 		<key>Search</key>
-		<value />
+		<value>Suche</value>
 	</item>
 	<item>
 		<key>Signed in</key>
-		<value />
+		<value>Eingetragen</value>
 	</item>
 	<item>
 		<key>Station Settings</key>
-		<value />
+		<value>Studio Einstellungen</value>
 	</item>
 	<item>
 		<key>Station Time</key>
-		<value />
+		<value>Zeit im Studio</value>
 	</item>
 	<item>
 		<key>Stream</key>
-		<value />
+		<value>Stream</value>
 	</item>
 	<item>
 		<key>Talk</key>
-		<value />
+		<value>Sprache</value>
 	</item>
 	<item>
 		<key>Title</key>
-		<value />
+		<value>Titel</value>
 	</item>
 	<item>
 		<key>To Playlist</key>
-		<value />
+		<value>Zur Liste</value>
 	</item>
 	<item>
 		<key>Today</key>
-		<value />
+		<value>Heute</value>
 	</item>
 	<item>
 		<key>Tree view</key>
-		<value />
+		<value>Baumansicht</value>
 	</item>
 	<item>
 		<key>Type</key>
-		<value />
+		<value>Typ</value>
 	</item>
 	<item>
 		<key>UploadM</key>
-		<value />
+		<value>MHochladen</value>
 	</item>
 	<item>
 		<key>User/Groups</key>
-		<value />
+		<value>User/Gruppen</value>
 	</item>
 	<item>
 		<key>Week</key>
-		<value />
+		<value>Woche</value>
 	</item>
 	<item>
 		<key>Weekly View</key>
-		<value />
+		<value>Wochenansicht</value>
 	</item>
 	<item>
 		<key>copy</key>
-		<value />
+		<value>Kopieren</value>
 	</item>
 	<item>
 		<key>go up</key>
-		<value />
+		<value>Nach oben</value>
 	</item>
 	<item>
 		<key>move</key>
-		<value />
+		<value>Verschieben</value>
 	</item>
 	<item>
 		<key>move down</key>
-		<value />
+		<value>hoch</value>
 	</item>
 	<item>
 		<key>move up</key>
-		<value />
+		<value>runter</value>
 	</item>
 	<item>
 		<key>new&amp;nbsp;folder</key>
-		<value />
+		<value>Neuer Ordner</value>
 	</item>
 	<item>
 		<key>next</key>
-		<value />
+		<value>weiter</value>
 	</item>
 	<item>
 		<key>permissions</key>
-		<value />
+		<value>Rechte</value>
 	</item>
 	<item>
 		<key>previous</key>
-		<value />
+		<value>zurück</value>
 	</item>
 	<item>
 		<key>{$o.name}</key>
@@ -335,18 +411,18 @@
 	</item>
 	<item>
 		<key>$1 must be $2</key>
-		<value />
+		<value>$1 muss $2 sein</value>
 	</item>
 	<item>
 		<key>Do</key>
-		<value />
+		<value>Ausführen</value>
 	</item>
 	<item>
 		<key>Missing value for $1</key>
-		<value />
+		<value>Fehlender Wert für $1</value>
 	</item>
 	<item>
 		<key>Select a Value</key>
-		<value />
+		<value>Wert auswählen</value>
 	</item>
 </language>

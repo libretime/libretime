@@ -25,4 +25,9 @@
         <Name>Hungarian(HU)</Name>
         <NativeName>Hungarian</NativeName>
     </language>
+    <language>
+        <Id>sr.Serbian</Id>
+        <Name>Serbian(SR)</Name>
+        <NativeName>Serbian</NativeName>
+    </language>
 </languages>

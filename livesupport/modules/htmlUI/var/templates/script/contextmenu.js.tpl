@@ -27,77 +27,76 @@ function contextmenu(param) {
         switch (contextmenu.arguments[i]) {
             {/literal}
             case "PL.display":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"{$UI_BROWSER}?act=PL.display&id="+param+"\" "+oF+">&nbsp;Display this Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"{$UI_BROWSER}?act=PL.display&id="+param+"\" "+oF+">&nbsp;##Display this Playlist##&nbsp;</a></li>";
             break;
 
             case "PL.release":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.release')\" "+oF+">&nbsp;Release Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.release')\" "+oF+">&nbsp;##Save and Close Playlist##&nbsp;</a></li>";
             break;
 
             case "PL.addItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;Add to active Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to active Playlist##&nbsp;</a></li>";
             break;
 
             case "PL.removeItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove Item from Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;##Remove File from Playlist##&nbsp;</a></li>";
             break;
 
             case "PL.activate":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;Activate this Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;##Activate this Playlist##&nbsp;</a></li>";
             break;
 
             case "PL.create":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;New Playlist using Item&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##New Playlist using File##&nbsp;</a></li>";
             break;
 
             case "PL.changeFadeIn":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;Change Fadein&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;##Change Fadein##&nbsp;</a></li>";
             break;
 
             case "PL.changeTransition":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;Change Transition&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;##Change Transition##&nbsp;</a></li>";
             break;
 
             case "PL.changeFadeOut":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;Change Fadeout&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;##Change Fadeout##&nbsp;</a></li>";
             break;
 
             case "PL.editMetaData":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;Edit Metadata&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=PL.editMetaData&id="+param+"'"+oF+">&nbsp;##Edit Metadata##&nbsp;</a></li>";
             break;
 
             case "SP.addItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;Add to ScratchPad&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SP.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to ScratchPad##&nbsp;</a></li>";
             break;
 
             case "SP.removeItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;Remove from Scratchpad&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SP.removeItem&id="+param+"')\" "+oF+">&nbsp;##Remove from Scratchpad##&nbsp;</a></li>";
             break;
 
             case "listen":
                 i++;
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[i]+"'"+oF+">&nbsp;Listen&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[i]+"'"+oF+">&nbsp;##Listen to File##&nbsp;</a></li>";
             break;
 
             case "edit":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"'"+oF+">&nbsp;Edit&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"'"+oF+">&nbsp;##Edit File##&nbsp;</a></li>";
             break;
 
             case "delete":
-                //contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=delete&id="+param+"')\" "+oF+">&nbsp;Delete Item&nbsp;</a></li>";
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 200)\"')"+oF+">&nbsp;Delete Item&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 200)\"')"+oF+">&nbsp;##Delete File##&nbsp;</a></li>";
             break;
 
             case "fileList":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=fileList&id="+param+"'"+oF+">&nbsp;List Folder&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=fileList&id="+param+"'"+oF+">&nbsp;##List Folder##&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.addItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 400, 200)\"')"+oF+">&nbsp;Insert Playlist here&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 400, 200)\"')"+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
             break;
 
             case "SCHEDULER.removeItem":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 200)\"')"+oF+">&nbsp;Remove Playlist&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 200)\"')"+oF+">&nbsp;##Remove Playlist##&nbsp;</a></li>";
             break;
             {literal}
         }

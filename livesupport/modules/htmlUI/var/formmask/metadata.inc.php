@@ -59,10 +59,12 @@ $mask = array(
             'type'     => 'select',
             'label'    => 'Language',
             'options'  => array(
-                            'en'    => 'English',
-                            'cz'    => 'Czech',
-                            'de'    => 'German',
-                            'hu'    => 'Hungarian',
+                            'en'        => 'English',
+                            'nl'        => 'Dutch',
+                            'cz'        => 'Czech',
+                            'de'        => 'German',
+                            'hu'        => 'Hungarian',
+                            'sr'        => 'Serbian'
                           ),
             'attributes'=> array('onChange' => 'MData_switchLang()')
         )

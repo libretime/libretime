@@ -47,9 +47,9 @@
                     {/foreach}
                         {if $n}
                         <!-- fade information -->
-                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #bbb">
+                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeFadeOut'{/if})}" style="background-color: #bbb">
                             <td></td>
-                            <td colspan="5" style="border: 0">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
+                            <td colspan="5" style="border: 0">##Fade## {$i.fadeout_ms|string_format:"%d"} ms</td>
                         </tr>
                         {else}
                             <tr class="{cycle values='blue1, blue2'}">

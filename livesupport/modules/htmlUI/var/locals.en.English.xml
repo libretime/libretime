@@ -3,6 +3,82 @@
 	<status />
 	<Id>en.English</Id>
 	<item>
+		<key>Activate this Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Add to ScratchPad</key>
+		<value />
+	</item>
+	<item>
+		<key>Add to active Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Change Fadein</key>
+		<value />
+	</item>
+	<item>
+		<key>Change Fadeout</key>
+		<value />
+	</item>
+	<item>
+		<key>Change Transition</key>
+		<value />
+	</item>
+	<item>
+		<key>Delete File</key>
+		<value />
+	</item>
+	<item>
+		<key>Display this Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit File</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit Metadata</key>
+		<value />
+	</item>
+	<item>
+		<key>Insert Playlist here</key>
+		<value />
+	</item>
+	<item>
+		<key>List Folder</key>
+		<value />
+	</item>
+	<item>
+		<key>Listen to File</key>
+		<value />
+	</item>
+	<item>
+		<key>New Playlist using File</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove File from Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove from Scratchpad</key>
+		<value />
+	</item>
+	<item>
+		<key>Save and Close Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Help</key>
+		<value />
+	</item>
+	<item>
 		<key>Access</key>
 		<value />
 	</item>

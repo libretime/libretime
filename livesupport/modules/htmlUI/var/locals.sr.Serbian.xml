@@ -1,405 +1,405 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-	<Id>cz.Czech</Id>
+	<Id>sr.Serbian</Id>
 	<item>
 		<key>Activate this Playlist</key>
-		<value>Aktivovat tento playlist</value>
+		<value>Aktiviraj plej listu</value>
 	</item>
 	<item>
 		<key>Add to ScratchPad</key>
-		<value>Přidat na pracovní plochu</value>
+		<value>Dodaj u svaštaru</value>
 	</item>
 	<item>
 		<key>Add to active Playlist</key>
-		<value>Přidat do aktivního playlistu</value>
+		<value>Dodaj na aktivnu plej listu</value>
 	</item>
 	<item>
 		<key>Change Fadein</key>
-		<value>Změnit zesilování nástupu</value>
+		<value>Promeni fejdin</value>
 	</item>
 	<item>
 		<key>Change Fadeout</key>
-		<value>Změnit zeslabovaní</value>
+		<value>Promeni fejdaut</value>
 	</item>
 	<item>
 		<key>Change Transition</key>
-		<value>Změnit přechod</value>
+		<value>Promeni prelaz</value>
 	</item>
 	<item>
 		<key>Delete File</key>
-		<value>Vymazat soubor</value>
+		<value>Izbriši fajl</value>
 	</item>
 	<item>
 		<key>Display this Playlist</key>
-		<value>Zobrazit tento playlist</value>
+		<value>Prikaži plejlistu</value>
 	</item>
 	<item>
 		<key>Edit File</key>
-		<value>Editovat soubor</value>
+		<value>Uredi fajl</value>
 	</item>
 	<item>
 		<key>Edit Metadata</key>
-		<value>Editovat metadata</value>
+		<value>Promeni metapodatke</value>
 	</item>
 	<item>
 		<key>Insert Playlist here</key>
-		<value>Zde vložit playlist</value>
+		<value>Ubaci plej listu ovde</value>
 	</item>
 	<item>
 		<key>List Folder</key>
-		<value>Zobrazit složku</value>
+		<value>Izlistaj direktorijum</value>
 	</item>
 	<item>
 		<key>Listen to File</key>
-		<value>Poslouchat soubor</value>
+		<value>Preslušaj fajl</value>
 	</item>
 	<item>
 		<key>New Playlist using File</key>
-		<value>Nový playlist s timto souborem</value>
+		<value>Nova plej lista sa ovim fajlom</value>
 	</item>
 	<item>
 		<key>Remove File from Playlist</key>
-		<value>Odstranit soubor z playlistu</value>
+		<value>Izbaci sa plej liste</value>
 	</item>
 	<item>
 		<key>Remove Playlist</key>
-		<value>Odstranit playlist</value>
+		<value>Odstrani plej listu</value>
 	</item>
 	<item>
 		<key>Remove from Scratchpad</key>
-		<value>Odstranit z pracovní plochy</value>
+		<value>Izbaci iz svaštare</value>
 	</item>
 	<item>
 		<key>Save and Close Playlist</key>
-		<value>Uložit a zavřit playlist</value>
+		<value>Snimi i zatvori plej listu</value>
 	</item>
 	<item>
 		<key>Help</key>
-		<value>Pomoc</value>
+		<value>Pomoć</value>
 	</item>
 	<item>
 		<key>Access</key>
-		<value>Přístup</value>
+		<value>Pristup</value>
 	</item>
 	<item>
 		<key>Add Audio</key>
-		<value>Přidat audio</value>
+		<value>Dodaj audio</value>
 	</item>
 	<item>
 		<key>Add to Playlist</key>
-		<value>Přidat do playlistu</value>
+		<value>Dodaj na plej listu</value>
 	</item>
 	<item>
 		<key>Artist</key>
-		<value>Umělec</value>
+		<value>Izvođač</value>
 	</item>
 	<item>
 		<key>Browse</key>
-		<value>Procházet</value>
+		<value>Prelistaj</value>
 	</item>
 	<item>
 		<key>CW</key>
-		<value>KT</value>
+		<value>KN</value>
 	</item>
 	<item>
 		<key>Clear</key>
-		<value>Vymazat (obsah)</value>
+		<value>Očisti</value>
 	</item>
 	<item>
 		<key>Clear Playlist</key>
-		<value>Vyprázdnit playlist</value>
+		<value>Očisti plej listu</value>
 	</item>
 	<item>
 		<key>Count</key>
-		<value>Počet</value>
+		<value>Količina</value>
 	</item>
 	<item>
 		<key>Creator</key>
-		<value>Tvůrce</value>
+		<value>Autor</value>
 	</item>
 	<item>
 		<key>Daily View</key>
-		<value>Denní program</value>
+		<value>Dnevni pregled</value>
 	</item>
 	<item>
 		<key>Data</key>
-		<value>Data</value>
+		<value>Podaci</value>
 	</item>
 	<item>
 		<key>Day</key>
-		<value>Den</value>
+		<value>Dan</value>
 	</item>
 	<item>
 		<key>Delete Playlist</key>
-		<value>Vymazat playlist</value>
+		<value>Obriši plej listu</value>
 	</item>
 	<item>
 		<key>Duration</key>
-		<value>Délka</value>
+		<value>Trajanje</value>
 	</item>
 	<item>
 		<key>Edit</key>
-		<value>Editovat</value>
+		<value>Promeni</value>
 	</item>
 	<item>
 		<key>Fade</key>
-		<value>Prolínat</value>
+		<value>Fejd</value>
 	</item>
 	<item>
 		<key>File</key>
-		<value>Soubor</value>
+		<value>Fajl</value>
 	</item>
 	<item>
 		<key>File List</key>
-		<value>Seznam souborů</value>
+		<value>Fajl lista</value>
 	</item>
 	<item>
 		<key>File Management</key>
-		<value>Správa souborů</value>
+		<value>Administracija fajlova</value>
 	</item>
 	<item>
 		<key>Folder Structure</key>
-		<value>Struktura složek</value>
+		<value>Struktura direktorijuma</value>
 	</item>
 	<item>
 		<key>Go</key>
-		<value>Jdi</value>
+		<value>Rokaj</value>
 	</item>
 	<item>
 		<key>Item</key>
-		<value>Položka</value>
+		<value>Stavka</value>
 	</item>
 	<item>
 		<key>KW</key>
-		<value>KT</value>
+		<value />
 	</item>
 	<item>
 		<key>Library Search</key>
-		<value>Hledat v knihovně</value>
+		<value>Pretraga audioteke</value>
 	</item>
 	<item>
 		<key>Local Time</key>
-		<value>Místní čas</value>
+		<value>Lokalno vreme</value>
 	</item>
 	<item>
 		<key>MDataXML</key>
-		<value>XML metadata</value>
+		<value>MDataXML</value>
 	</item>
 	<item>
 		<key>Main</key>
-		<value>Hlavní</value>
+		<value>Glavno</value>
 	</item>
 	<item>
 		<key>Media Library</key>
-		<value>Knihovna médií</value>
+		<value>Audioteka</value>
 	</item>
 	<item>
 		<key>Metadata</key>
-		<value>Metadata</value>
+		<value>Metapodaci</value>
 	</item>
 	<item>
 		<key>Month</key>
-		<value>Měsíc</value>
+		<value>Mesec</value>
 	</item>
 	<item>
 		<key>Monthly View</key>
-		<value>Program na měsíc</value>
+		<value>Mesečni pregled</value>
 	</item>
 	<item>
 		<key>Move</key>
-		<value>Přemístit</value>
+		<value>Premesti</value>
 	</item>
 	<item>
 		<key>Multiple Action:</key>
-		<value>Multiplicitní akce</value>
+		<value>Višestruka operacija</value>
 	</item>
 	<item>
 		<key>Music</key>
-		<value>Hudba</value>
+		<value>Muzika</value>
 	</item>
 	<item>
 		<key>Name</key>
-		<value>Jméno</value>
+		<value>Ime</value>
 	</item>
 	<item>
 		<key>New</key>
-		<value>Nový</value>
+		<value>Nov</value>
 	</item>
 	<item>
 		<key>New Playlist</key>
-		<value>Nový playlist</value>
+		<value>Nova plej lista</value>
 	</item>
 	<item>
 		<key>New Playlist using Item</key>
-		<value>Nový playlist s timto souborem</value>
+		<value>Nova plejlista sa stavkom</value>
 	</item>
 	<item>
 		<key>New empty Playlist</key>
-		<value>Nový prazdný playlist</value>
+		<value>Nova prazna plej lista</value>
 	</item>
 	<item>
 		<key>No Entry</key>
-		<value>Prazdné pole</value>
+		<value>Prazno polje</value>
 	</item>
 	<item>
 		<key>No match found.</key>
-		<value>Žadný soubor nenalezen</value>
+		<value>Nije nađeno</value>
 	</item>
 	<item>
 		<key>No objects</key>
-		<value>Žadné objekty</value>
+		<value>Nema tih objekata</value>
 	</item>
 	<item>
 		<key>Open last Playlist</key>
-		<value>Otevřit poslední playlist</value>
+		<value>Otvori poslednju plej listu</value>
 	</item>
 	<item>
 		<key>Page</key>
-		<value>Stránka</value>
+		<value>Stranica</value>
 	</item>
 	<item>
 		<key>Playlist Editor</key>
-		<value>Editor playlistu</value>
+		<value>Editor plej listi</value>
 	</item>
 	<item>
 		<key>Playlist Metadata</key>
-		<value>Metadata playlistu</value>
+		<value>Metadata plej liste</value>
 	</item>
 	<item>
 		<key>Range</key>
-		<value>Rozsah</value>
+		<value>Opseg</value>
 	</item>
 	<item>
 		<key>RawAnalyze</key>
-		<value>Analyzovat soubor</value>
+		<value>RawAnalyze</value>
 	</item>
 	<item>
 		<key>Remove</key>
-		<value>Odstranit</value>
+		<value>Odstrani</value>
 	</item>
 	<item>
 		<key>Remove Selected</key>
-		<value>Odstranit vybrané</value>
+		<value>Odstrani obeleženo</value>
 	</item>
 	<item>
 		<key>Revert to Saved</key>
-		<value>Vrátit do uloženého stavu</value>
+		<value>Vrati se na snimljenu verziju</value>
 	</item>
 	<item>
 		<key>Save Playlist</key>
-		<value>Uložit playlist</value>
+		<value>Snimi plej list</value>
 	</item>
 	<item>
 		<key>Save and Close</key>
-		<value>Uložit a zavřit</value>
+		<value>Snimi i zatvori</value>
 	</item>
 	<item>
 		<key>Scheduler</key>
-		<value>Plánovač</value>
+		<value>Programator</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>
-		<value>Navigace v plánovači</value>
+		<value>Navigacija programatorom</value>
 	</item>
 	<item>
 		<key>Scratch Pad</key>
-		<value>Pracovní plocha</value>
+		<value>Svaštara</value>
 	</item>
 	<item>
 		<key>Search</key>
-		<value>Vyhledat</value>
+		<value>Pretraga</value>
 	</item>
 	<item>
 		<key>Signed in</key>
-		<value>Zalogován</value>
+		<value>Ulogovan</value>
 	</item>
 	<item>
 		<key>Station Settings</key>
-		<value>Předvolby stanice</value>
+		<value>Podešavanje stanice</value>
 	</item>
 	<item>
 		<key>Station Time</key>
-		<value>Mistní čas stanice</value>
+		<value>Vreme u stanici</value>
 	</item>
 	<item>
 		<key>Stream</key>
-		<value>Stream</value>
+		<value>Strim</value>
 	</item>
 	<item>
 		<key>Talk</key>
-		<value>Mluvené slovo</value>
+		<value>Govor</value>
 	</item>
 	<item>
 		<key>Title</key>
-		<value>Titul</value>
+		<value>Naslov</value>
 	</item>
 	<item>
 		<key>To Playlist</key>
-		<value>Do playlistu</value>
+		<value>Na plej listu</value>
 	</item>
 	<item>
 		<key>Today</key>
-		<value>Dnes</value>
+		<value>Danas</value>
 	</item>
 	<item>
 		<key>Tree view</key>
-		<value>Zobrazit strom</value>
+		<value>Stablo </value>
 	</item>
 	<item>
 		<key>Type</key>
-		<value>Typ</value>
+		<value>Tip</value>
 	</item>
 	<item>
 		<key>UploadM</key>
-		<value>Upload metadata</value>
+		<value>AploadM</value>
 	</item>
 	<item>
 		<key>User/Groups</key>
-		<value>Uživatelé a skupiny</value>
+		<value>Korisnik/grup</value>
 	</item>
 	<item>
 		<key>Week</key>
-		<value>Týden</value>
+		<value>Nedelja</value>
 	</item>
 	<item>
 		<key>Weekly View</key>
-		<value>Týdenní program</value>
+		<value>Nedeljni pregled</value>
 	</item>
 	<item>
 		<key>copy</key>
-		<value>kopírovat</value>
+		<value>iskopiraj</value>
 	</item>
 	<item>
 		<key>go up</key>
-		<value>jdi nahoru</value>
+		<value>idi gore</value>
 	</item>
 	<item>
 		<key>move</key>
-		<value>přemístit</value>
+		<value>pomeri</value>
 	</item>
 	<item>
 		<key>move down</key>
-		<value>posunout dolů</value>
+		<value>pomeri dole</value>
 	</item>
 	<item>
 		<key>move up</key>
-		<value>posunout nahoru</value>
+		<value>pomeri gore</value>
 	</item>
 	<item>
 		<key>new&amp;nbsp;folder</key>
-		<value>nová složka</value>
+		<value>novi direktorijum</value>
 	</item>
 	<item>
 		<key>next</key>
-		<value>příští</value>
+		<value>sledeće</value>
 	</item>
 	<item>
 		<key>permissions</key>
-		<value>práva</value>
+		<value>prava</value>
 	</item>
 	<item>
 		<key>previous</key>
-		<value>předešlý</value>
+		<value>prethodno</value>
 	</item>
 	<item>
 		<key>{$o.name}</key>
@@ -411,18 +411,18 @@
 	</item>
 	<item>
 		<key>$1 must be $2</key>
-		<value>$1 musí být $2</value>
+		<value>$1 mora da bude $2</value>
 	</item>
 	<item>
 		<key>Do</key>
-		<value>Proveďte</value>
+		<value>Uradi</value>
 	</item>
 	<item>
 		<key>Missing value for $1</key>
-		<value>Chybná hodnota pro $1</value>
+		<value>Nedostaje vrednost za $1</value>
 	</item>
 	<item>
 		<key>Select a Value</key>
-		<value>Vyber hodnotu</value>
+		<value>Izaberi vrednost</value>
 	</item>
 </language>

@@ -28,7 +28,7 @@ function tra($input)
     if ($uiBase->langid && !is_array($GS)) {
         #echo "load translation";
         include_once dirname(__FILE__).'/localizer/require.inc.php';
-
+        #echo $uiBase->langid;
         $GS = loadTranslations($uiBase->langid);
     }
     ## end init ####################################

@@ -459,9 +459,11 @@ $ui_fmask = array(
                 'label'    => 'Language',
                 'options'  => array(
                                 'en.English'    => 'English',
+                                'nl.Dutch'      => 'Dutch',
                                 'cz.Czech'      => 'Czech',
                                 'de.German'     => 'German',
                                 'hu.Hungarian'  => 'Hungarian',
+                                'sr.Serbian'    => 'Serbian'
                               )
             )
     ),
@@ -566,6 +568,7 @@ $ui_fmask = array(
                 'element'   => 'headline',
                 'type'      => 'static'
             ),
+            /*
             array(
                 'element'   => 'type',
                 'type'      => 'radio',
@@ -575,33 +578,51 @@ $ui_fmask = array(
                                 'pause'      => 'Pause'
                                ),
                 'default'   => 'fadeX'
-            )
+            )  */
+            array(
+                'element'   => 'type',
+                'type'      => 'hidden',
+                'default'   => 'fadeX'
+            ),
         ),
         'fadeIn' => array(
             array(
                 'element'   => 'headline',
                 'type'      => 'static'
             ),
+            /*
             array(
                 'element'   => 'type',
                 'type'      => 'radio',
                 'label'     => 'Type',
                 'options'   => array('fadeIn' => 'Fade in'),
                 'default'   => 'fadeIn'
-            )
+            )  */
+            array(
+                'element'   => 'type',
+                'type'      => 'hidden',
+                'default'   => 'fadeIn'
+            ),
+
         ),
         'fadeOut' => array(
             array(
                 'element'   => 'headline',
                 'type'      => 'static'
             ),
+            /*
             array(
                 'element'   => 'type',
                 'type'      => 'radio',
                 'label'     => 'Type',
                 'options'   => array('fadeOut' => 'Fade out'),
                 'default'   => 'fadeOut'
-            )
+            )    */
+            array(
+                'element'   => 'type',
+                'type'      => 'hidden',
+                'default'   => 'fadeOut'
+            ),
         ),
         'all'   => array(
             array(
