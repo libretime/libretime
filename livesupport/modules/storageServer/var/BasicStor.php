@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.37 $
+ *  @version $Revision: 1.38 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -894,9 +894,11 @@ class BasicStor extends Alib{
         if($this->dbc->isError($res)) return $res;
         $id = $this->getObjId($login, $this->storId);
         if($this->dbc->isError($id)) return $id;
-        // remove home folder:
-        $res = $this->bsDeleteFile($id);
-        if($this->dbc->isError($res)) return $res;
+        if(!is_null($id)){
+            // remove home folder:
+            $res = $this->bsDeleteFile($id);
+            if($this->dbc->isError($res)) return $res;
+        }
         return TRUE;
     }  
     
