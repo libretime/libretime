@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,7 +85,7 @@ using namespace LiveSupport::SchedulerClient;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -216,6 +216,17 @@ class GLiveSupport : public Configurable,
          */
         void
         logout(void)                                    throw ();
+
+        /**
+         *  Accessor function to the storage client held by this object.
+         *
+         *  @return the storage client held by this object.
+         */
+        Ptr<StorageClientInterface>::Ref
+        getStorage(void)                                throw ()
+        {
+            return storage;
+        }
 };
 
 /* ================================================= external data structures */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/UiTestMainWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
 {
@@ -108,6 +108,11 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
         Ptr<Gtk::Button>::Ref       logoutButton;
 
         /**
+         *  The button to that brings up the audio clip window.
+         */
+        Ptr<Gtk::Button>::Ref       audioClipButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -129,6 +134,12 @@ class UiTestMainWindow : public Gtk::Window, public GtkLocalizedObject
          */
         virtual void
         onLogoutButtonClicked(void)                          throw ();
+
+        /**
+         *  Signal handler for the audio clip button clicked.
+         */
+        virtual void
+        onAudioClipButtonClicked(void)                        throw ();
 
         /**
          *  Function that updates timeLabel with the current time.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,13 +152,7 @@ LoginWindow :: LoginWindow (Ptr<ResourceBundle>::Ref    bundle)
 
     // add the table to the window, and show everything
     add(*table);
-    loginLabel->show();
-    passwordLabel->show();
-    loginEntry->show();
-    passwordEntry->show();
-    okButton->show();
-    table->show();
-    show();
+    show_all();
 }
 
 
@@ -171,7 +165,7 @@ LoginWindow :: ~LoginWindow (void)                        throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the button getting clicked.
+ *  Event handler for the OK button getting clicked.
  *----------------------------------------------------------------------------*/
 void
 LoginWindow :: onOkButtonClicked (void)                  throw ()

@@ -9,5 +9,15 @@ root:table
         passwordLabel:string   { "password:" }
         okButtonLabel:string   { "OK" }
     }
+
+    audioClipWindow:table
+    {
+        idColumnLabel:string          { "id" }
+        lengthColumnLabel:string      { "length" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "token" }
+
+        closeButtonLabel:string       { "close" }
+    }
 }
 

@@ -9,5 +9,15 @@ hu:table
         passwordLabel:string   { "jelszó:" }
         okButtonLabel:string   { "Belépés" }
     }
+
+    audioClipWindow:table
+    {
+        idColumnLabel:string          { "azonositó" }
+        lengthColumnLabel:string      { "hossz" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "token" }
+
+        closeButtonLabel:string       { "Bezár" }
+    }
 }
 
