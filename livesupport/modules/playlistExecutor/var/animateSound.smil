@@ -1,0 +1,15 @@
+<smil xmlns="http://www.w3.org/2001/SMIL20/Language">
+	<head>
+		<layout>
+			<root-layout height="1" width="1"/>
+			<region id="audio_region" soundLevel="100%"/>
+		</layout>
+	</head>
+	<body>
+		<audio src="file:var/test.mp3" region="audio_region">
+			<animate targetElement="audio_region" attributeName="soundLevel" from="100%" to="20%" calcMode="linear" begin="2s" dur="5s" fill="freeze"/>
+			<animate targetElement="audio_region" attributeName="soundLevel" from="20%" to="200%" calcMode="linear" begin="8s" dur="5s" fill="freeze"/>
+			<animate targetElement="audio_region" attributeName="soundLevel" from="200%" to="100%" calcMode="linear" begin="16s" dur="5s" fill="freeze"/>
+		</audio>
+	</body>
+</smil>

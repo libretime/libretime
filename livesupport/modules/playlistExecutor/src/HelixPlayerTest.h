@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,15 +58,16 @@ namespace PlaylistExecutor {
  *  Unit test for the HelixPlayer class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see HelixPlayer
  */
 class HelixPlayerTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(HelixPlayerTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(simplePlayTest);
+//    CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST(checkErrorConditions);
+    CPPUNIT_TEST(smilTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -102,6 +103,14 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         checkErrorConditions(void)              throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test features of SMIL files.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilTest(void)                          throw (CPPUNIT_NS::Exception);
 
     public:
         

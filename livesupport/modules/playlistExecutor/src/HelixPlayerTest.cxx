@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,6 +183,53 @@ HelixPlayerTest :: checkErrorConditions(void)
     CPPUNIT_ASSERT(gotException);
 
     helixPlayer->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test different SMIL file features
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayerTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    helixPlayer->initialize();
+
+    helixPlayer->playThis("file:var/simpleSmil.smil");
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->start();
+    CPPUNIT_ASSERT(helixPlayer->isPlaying());
+    while (helixPlayer->isPlaying()) {
+        usleep(10000);
+    }
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+
+    /* TODO: there is a bug with playing parallel, as it doesn't end
+             for some reason.
+             see https://bugs.helixcommunity.org/show_bug.cgi?id=3311
+    helixPlayer->playThis("file:var/parallel.smil");
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->start();
+    CPPUNIT_ASSERT(helixPlayer->isPlaying());
+    while (helixPlayer->isPlaying()) {
+        usleep(10000);
+    }
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    */
+
+    /* TODO: there is a bug with sound level animation, it causes a segfault
+             see https://bugs.helixcommunity.org/show_bug.cgi?id=3310
+    helixPlayer->playThis("file:var/animateSound.smil");
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+    helixPlayer->start();
+    CPPUNIT_ASSERT(helixPlayer->isPlaying());
+    while (helixPlayer->isPlaying()) {
+        usleep(10000);
+    }
+    CPPUNIT_ASSERT(!helixPlayer->isPlaying());
+
+    helixPlayer->deInitialize();
+    */
 }
 
 

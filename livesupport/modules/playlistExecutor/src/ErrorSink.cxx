@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/ErrorSink.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <iostream>
 
 #include "HelixDefs.h"
 
@@ -144,6 +146,11 @@ ErrorSink::ErrorOccurred(const UINT8    unSeverity,
                          const char   * pMoreInfoURL)           throw ()
 {
     lastHelixErrorCode = ulHXCode;
+
+    // TODO: do something useful with the error event
+    if (lastHelixErrorCode) {
+        std::cerr << "Helix error: " << ulHXCode << std::endl;
+    }
 
     return HXR_OK;
 }
