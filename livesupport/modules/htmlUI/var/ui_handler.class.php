@@ -253,35 +253,36 @@ class uiHandler extends uiBase {
             return FALSE;
         }
         $length = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
-        $this->gb->setMDataValue($id, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
-        $this->gb->setMDataValue($id, UI_MDATA_KEY_URL, $this->sessid, $formdata['url']);
-        $this->gb->setMDataValue($id, UI_MDATA_KEY_DURATION, $this->sessid,  $length);
+        $this->_setMDataValue($id, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
+        $this->_setMDataValue($id, UI_MDATA_KEY_URL, $this->sessid, $formdata['url']);
+        $this->_setMDataValue($id, UI_MDATA_KEY_DURATION, $this->sessid,  $length);
         if (UI_VERBOSE) $this->_retMsg('Stream Data changed');
         $this->redirUrl = UI_BROWSER.'?act=editWebstream&id='.$formdata['id'];
     }
 
 
-    function editMetaData($id, &$formdata)
+    function editMetaData(&$formdata)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-
-        ## first remove old entrys
-        #$this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
+        $this->redirUrl = UI_BROWSER."?act=editItem&id=$id&curr_langid=".$formdata['target_langid'];
+        $id             = $formdata['id'];
+        $curr_langid    = $formdata['curr_langid'];
 
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 $formdata[$key.'___'.$this->_formElementEncode($v['element'])] ? $mData[$this->_formElementDecode($v['element'])] = $formdata[$key.'___'.$this->_formElementEncode($v['element'])] : NULL;
             }
         }
-        $data = $this->_dateArr2Str($mData);
-        foreach ($data as $key=>$val) {
-            $r = $this->gb->setMDataValue($id, $key, $this->sessid, $val, 'de');
+
+        if (!count($mData)) return;
+
+        foreach ($mData as $key=>$val) {
+            $r = $this->_setMDataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
-                $this->_retMsg('Unable to set $1: $2', $key, $val);
+                $this->_retMsg('Unable to set "$1" to "$2" langue "$3"', $key, $val, $curr_langid);
             }
         }
         if (UI_VERBOSE) $this->_retMsg('Metadata saved');
-        $this->redirUrl = UI_BROWSER."?act=editItem&id=$id";
     }
 
 

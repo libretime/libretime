@@ -364,45 +364,35 @@ class uiBrowser extends uiBase {
      *  @param id int
      *  @return string (html)
      */
-    function metaDataForm($parms, $get=FALSE, $data=NULL)
+    function metaDataForm($parms)
     {
-        extract ($parms);
-
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
-        /*
-        $form = new HTML_QuickForm('tabs', UI_STANDARD_FORM_METHOD, UI_BROWSER);
-        $this->_parseArr2Form($form, $mask['tabs']);
-        $output['tabs'] = $form->toHTML();
-        */
+        extract ($parms);
+        $langid = $langid ? $langid : UI_DEFAULT_LANGID;
+
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['langswitch']);
+        $form->setConstants(array('target_langid' => $langid));
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['langswitch'] = $renderer->toArray();
 
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->_parseArr2Form($form, $mask['basics']);
-        $form->setConstants(array('act'     => 'editMetaData',
-                                  'id'      => $id,
-                                  #!!!!!'langid' => array_pop($this->gb->getMDataValue($id, 'langid', $this->sessid))
-                                  'langid'  => 'en'));
+        $form->setConstants(array('act'         => 'editMetaData',
+                                  'id'          => $id,
+                                  'curr_langid' => $langid,
+                            )
+        );
 
         ## convert element names to be unique over different forms-parts, add javascript to spread values over parts, add existing values from database
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 $mask['pages'][$key][$k]['element']    = $key.'___'.$this->_formElementEncode($v['element']);
                 $mask['pages'][$key][$k]['attributes'] = array_merge($mask['pages'][$key][$k]['attributes'], array('onChange' => "spread(this, '".$this->_formElementEncode($v['element'])."')"));
-
-                ## recive data from GreenBox
-                if ($get) {
-                    $mask['pages'][$key][$k]['default'] = $this->_getMDataValue($id, $v['element']);
-                }
-
-                ## get data from parameter
-                if (is_array($data)) {
-                    $mask['pages'][$key][$k]['default'] = $data[strtr($v['element'], '_', '.')];
-                }
+                ## load data from GreenBox
+                $mask['pages'][$key][$k]['default'] = $this->_getMDataValue($id, $v['element'], $langid);
             }
             $form->addElement('static', NULL, NULL, "<div id='div_$key'>");
             $this->_parseArr2Form($form, $mask['pages'][$key]);

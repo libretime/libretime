@@ -1,4 +1,4 @@
-{UIBROWSER->metaDataForm id=$editItem.id assign="_metadataform"}
+{UIBROWSER->metaDataForm id=$editItem.id langid=$editItem.curr_langid assign="_metadataform"}
 
 <div id="tabnav">
 <ul>
@@ -18,15 +18,34 @@
 
 <script language="javascript">
 {literal}
-function switchMDataLang()
+function MData_loadLang()
+{
+    {/literal}
+    location.href="{$UI_BROWSER}?act=editItem&id={$editItem.id}&MData_langId=" + document.forms['langswitch'].elements['MData_langid'].value;
+    {literal}
+}
+
+function MData_submit()
 {
     if (validate_editMetaData(document.forms['editMetaData'])) {
-        document.forms['editMetaData'].elements['langid'].value = document.forms['langswitch'].elements['langid'].value;
+        document.forms['editMetaData'].elements['target_langid'].value = document.forms['langswitch'].elements['target_langid'].value;
         document.forms['editMetaData'].submit();
     }
-    document.forms['langswitch'].elements['langid'].value = document.forms['editMetaData'].elements['langid'].value
     showMain();
     return false;
+}
+
+function MData_switchLang()
+{
+    document.forms['editMetaData'].elements['target_langid'].value = document.forms['langswitch'].elements['target_langid'].value;
+    document.forms['editMetaData'].submit();
+}
+
+function MData_cancel()
+{
+    {/literal}
+    location.href='{$UI_BROWSER}';
+    {literal}
 }
 
 function spread(element, name)

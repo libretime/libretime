@@ -360,37 +360,32 @@ class uiPlaylist
     }
 
 
-    function metaDataForm($id, $get=TRUE, $data=FALSE)
+    function metaDataForm($langid)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-
-        $id = $this->activeId;
+        $id     = $this->activeId;
+        $langid = $langid ? $langid : UI_DEFAULT_LANGID;
 
         foreach ($mask['playlist'] as $k=>$v) {
-            $mask['playlist'][$k]['element']    = $this->Base->_formElementEncode($v['element']);
-
-            ## recive data from GreenBox
-            if ($get) {
-                $mask['playlist'][$k]['default'] = $this->Base->_getMDataValue($id, $v['element']);
-            }
-
-            ## get data from parameter
-            if (is_array($data)) {
-                $mask['playlist'][$k]['default'] = $data[strtr($v['element'], '_', '.')];
-            }
+            $mask['playlist'][$k]['element'] = $this->Base->_formElementEncode($v['element']);
+            $mask['playlist'][$k]['default'] = $this->Base->_getMDataValue($id, $v['element'], $langid);
         }
         $form = new HTML_QuickForm('editMetaData', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask['basics']);
         $this->Base->_parseArr2Form($form, $mask['playlist']);
         $this->Base->_parseArr2Form($form, $mask['buttons']);
         $form->setConstants(array('act'  => 'PL.editMetaData',
-                                  'id'   => $id));
+                                  'id'   => $id,
+                                  'curr_langid' => $langid
+                            )
+        );
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['main'] = $renderer->toArray();
 
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->Base->_parseArr2Form($form, $mask['langswitch']);
+        $form->setConstants(array('target_langid'   => $langid));
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output['langswitch'] = $renderer->toArray();
@@ -403,28 +398,24 @@ class uiPlaylist
     function editMetaData(&$formdata)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-
-        #$id = $this->activeId;
-        $id = $formdata['id'];
-
-        ## first remove old entrys
-        #$this->gb->replaceMetaData($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
+        $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
+        $id             = $this->activeId;
+        $curr_langid    = $formdata['curr_langid'];
 
         foreach ($mask['playlist'] as $k=>$v) {
             $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;
         }
 
-        $data = $this->Base->_dateArr2Str($mData);
-        foreach ($data as $key=>$val) {
-            $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val);
+        if (!count($mData)) return;
+
+        foreach ($mData as $key=>$val) {
+            $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 #print_r($r);
                 $this->Base->_retMsg('Unable to set $1: $2', $key, $val);
             }
         }
         if (UI_VERBOSE) $this->Base->_retMsg('Metadata saved');
-        $this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement&id=$id";
-        #$this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id";
     }
 
 

@@ -339,9 +339,9 @@ class uiBase
     }
 
 
-    function _getMDataValue($id, $key)
+    function _getMDataValue($id, $key, $langid=UI_DEFAULT_LANGID)
     {
-        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid))) {
+        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid))) {
             $value = current($arr);
             return $value['value'];
         }
@@ -349,9 +349,9 @@ class uiBase
     }
 
 
-    function _setMDataValue($id, $key, $value)
-    {
-        if ($this->gb->setMDataValue($id, $key, $this->sessid, $value)) {
+    function _setMDataValue($id, $key, $value, $langid=UI_DEFAULT_LANGID)
+    {   
+        if ($this->gb->setMDataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;
         }
         return FALSE;

@@ -99,17 +99,17 @@ if ($uiBrowser->userid) {
 
     case "editItem":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
+        $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
     break;
 
     case "editFile":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => 'file', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
+        $Smarty->assign('editItem', array('type' => 'file', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
     break;
 
     case "editWebstream":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid));
+        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
     break;
 
     case "SEARCH":
@@ -171,7 +171,7 @@ if ($uiBrowser->userid) {
 
     case "PL.editMetaData":
         $Smarty->assign('PL_editMetaData', TRUE);
-        $Smarty->assign('PL_id', $_REQUEST['id']);
+        $Smarty->assign('_PL', array('curr_langid' => $_REQUEST['curr_langid']));
         $Smarty->assign('PL_simpleManagement', TRUE);
     break;
 

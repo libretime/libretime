@@ -109,7 +109,7 @@ switch($_REQUEST['act']){
     break;
 
     case "editMetaData":
-        $uiHandler->editMetaData($uiHandler->id, $_REQUEST);
+        $uiHandler->editMetaData($_REQUEST);
         $uiHandler->SCRATCHPAD->reLoadM();
     break;
 

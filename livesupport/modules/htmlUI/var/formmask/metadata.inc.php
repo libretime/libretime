@@ -10,7 +10,11 @@ $mask = array(
             'type'    => 'hidden'
         ),
         array(
-            'element' => 'langid',
+            'element' => 'curr_langid',
+            'type'    => 'hidden'
+        ),
+        array(
+            'element' => 'target_langid',
             'type'    => 'hidden'
         ),
     ),
@@ -30,7 +34,7 @@ $mask = array(
             'label'     => 'Cancel',
             'attributes'=> array(
                 'class'=> "button",
-                'onClick'  => "location.href='".UI_BROWSER."'"
+                'onClick'  => "MData_cancel()"
                 ),
             'groupit'   => TRUE,
         ),
@@ -41,43 +45,17 @@ $mask = array(
             'groupit' => TRUE,
             'attributes'=> array(
                 'class'=> "button",
-                'onClick' => 'return switchMDataLang();'
+                //'onClick' => 'return switchMDataLang();'
+                'onClick'   => 'MData_submit()'
                 ),
         ),
         array(
             'group'   => array('reset', 'cancel', 'button'),
         )
     ),
-    'tabs'  => array(/*
-        array(
-            'element' => 'Main',
-            'type'    => 'button',
-            'label'   => 'Main',
-            'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showMain()')
-        ),
-        array(
-            'element' => 'Music',
-            'type'    => 'button',
-            'label'   => 'Music',
-            'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showMusic()')
-        ),
-        array(
-            'element' => 'Talk',
-            'type'    => 'button',
-            'label'   => 'Talk',
-            'groupit' => TRUE,
-            'attributes' => array('onClick' => 'showTalk()')
-        ),
-        array(
-            'group'   => array('Main', 'Music', 'Talk'),
-        )
-*/
-    ),
     'langswitch'    => array(
         array(
-            'element'  => 'langid',
+            'element'  => 'target_langid',
             'type'     => 'select',
             'label'    => 'Language',
             'options'  => array(
@@ -86,7 +64,7 @@ $mask = array(
                             'de'    => 'German',
                             'hu'    => 'Hungarian',
                           ),
-            'attributes'=> array('onChange'   => 'return switchMDataLang()')
+            'attributes'=> array('onChange' => 'MData_switchLang()')
         )
     ),
     'pages' => array(
