@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -129,9 +129,14 @@ HelixPlayerTest :: playlengthTest(void)
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
     helixPlayer->initialize();
-    helixPlayer->open("file:var/test.mp3");
+    try {
+        helixPlayer->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     Ptr<time_duration>::Ref     playlength = helixPlayer->getPlaylength();
+    CPPUNIT_ASSERT(playlength.get());
     CPPUNIT_ASSERT(playlength->seconds() == 14);
     CPPUNIT_ASSERT(playlength->fractional_seconds() == 785000);
     helixPlayer->close();
@@ -149,7 +154,11 @@ HelixPlayerTest :: simplePlayTest(void)
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
     helixPlayer->initialize();
-    helixPlayer->open("file:var/test.mp3");
+    try {
+        helixPlayer->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -208,7 +217,11 @@ HelixPlayerTest :: checkErrorConditions(void)
     CPPUNIT_ASSERT(gotException);
 
     // check for opening a wrong URL after opening a proper one
-    helixPlayer->open("file:var/test.mp3");
+    try {
+        helixPlayer->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     helixPlayer->close();
     gotException = false;
     try {
@@ -233,7 +246,11 @@ HelixPlayerTest :: smilTest(void)
 
     helixPlayer->initialize();
 
-    helixPlayer->open("file:var/simpleSmil.smil");
+    try {
+        helixPlayer->open("file:var/simpleSmil.smil");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -257,7 +274,11 @@ HelixPlayerTest :: playFile(const std::string   & fileName)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
 
-    helixPlayer->open(fileName.c_str());
+    try {
+        helixPlayer->open(fileName.c_str());
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());
@@ -343,7 +364,11 @@ HelixPlayerTest :: smilSoundAnimationTest(void)
     /* TODO: there is a bug with sound level animation, it causes a segfault
              see https://bugs.helixcommunity.org/show_bug.cgi?id=3310
     */
-    helixPlayer->open("file:var/animateSound.smil");
+    try {
+        helixPlayer->open("file:var/animateSound.smil");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     helixPlayer->start();
     CPPUNIT_ASSERT(helixPlayer->isPlaying());

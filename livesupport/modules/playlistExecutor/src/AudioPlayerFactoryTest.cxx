@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,7 +152,11 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
     audioPlayerFactory = AudioPlayerFactory::getInstance();
     audioPlayer        = audioPlayerFactory->getAudioPlayer();
 
-    audioPlayer->open("file:var/test.mp3");
+    try {
+        audioPlayer->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
     audioPlayer->start();
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
