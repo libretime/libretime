@@ -1,0 +1,5 @@
+[PostgreSQL]
+Description     = PostgreSQL driver
+Driver          = /usr/lib/libodbcpsql.so
+Setup           = /usr/lib/libodbcpsqlS.so
+
