@@ -2,7 +2,6 @@
 
 <div id="searchres">
 <center>
-
 {if $searchres.count > 0}
     <table border="0" width="50%">
         <tr style="background-color: {cycle values='#eeeeee, #dadada'}">
@@ -12,23 +11,14 @@
             <td align="center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SEARCH.reOrder&by=type', 'order');">{tra 0=Type}</a></td>
         </tr>
         {foreach from=$searchres.items item=i}
-            <tr style="background-color: {cycle values='#eeeeee, #dadada'}"
-                onMouseOver="highlight()" onMouseOut="darklight()"
-                  onContextmenu="return menu('{$i.id}'
-                        {if ($i.type == 'audioclip' || $i.type == 'webstream')}
-                            ,'PL.addItem', 'PL.newUsingItem', 'SP.addItem', 'delete'
-                        {/if}
-                        {if ($i.type == 'playlist')}
-                            ,'PL.activate'
-                            {if $PLAYLIST.id == $i.id}
-                                ,'PL.release'
-                            {else}
-                                ,'PL.addItem', 'SP.addItem', 'delete'
-                            {/if}
-                        {/if}
-                        )"
-            >
-                <td align="center">{$i.title}</td>
+            <tr style="background-color: {cycle values='#eeeeee, #dadada'}" {assign var="moreContextBefore" value=", 'SP.addItem'"}{include file="sub/contextmenu.tpl"}>
+                <td align="center">
+                    {if $PLAYLIST.id == $i.id}
+                        <b>{$i.title|truncate:30}</b>
+                    {else}
+                        {$i.title|truncate:30}
+                    {/if}
+                </td>
                 <td align="center">{$i.creator}</td>
                 <td align="center">{$i.duration}</td>
                 <td align="center">{$i.type}</td>
@@ -60,7 +50,6 @@
 {else}
     No match found.
 {/if}
-
 </center>
 </div>
 

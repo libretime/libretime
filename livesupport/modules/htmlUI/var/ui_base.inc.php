@@ -358,8 +358,17 @@ class uiBase
     function _getMDataValue($id, $key)
     {
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid))) {
-            $value = array_pop($arr);
+            $value = current($arr);
             return $value['value'];
+        }
+        return FALSE;
+    }
+
+
+    function _setMDataValue($id, $key, $value)
+    {
+        if ($this->gb->setMDataValue($id, $key, $this->sessid, $value)) {
+            return TRUE;
         }
         return FALSE;
     }

@@ -11,28 +11,17 @@
         </tr>
     {if count($structure.listdata)}
         {foreach from=$structure.listdata item=i}
-            <tr bgcolor="{cycle values='#eeeeee, #dadada"'}"
-                    onMouseOver="highlight()" onMouseOut="darklight()"
-                    onContextmenu="return menu('{$i.id}'
-                        {if ($i.type == 'audioclip' || $i.type == 'webstream')}
-                            ,'PL.addItem', 'PL.newUsingItem', 'SP.addItem', 'delete'
-                        {/if}
-                        {if ($i.type == 'playlist')}
-                            ,'PL.activate'
-                            {if $PLAYLIST.id == $i.id}
-                                ,'PL.release'
-                            {else}
-                                ,'PL.addItem', 'SP.addItem', 'delete'
-                            {/if}
-                        {/if}
-                        )"
-            >
+            <tr bgcolor="{cycle values='#eeeeee, #dadada"'}" {assign var="moreContextBefore" value=", 'SP.addItem'"}{include file="sub/contextmenu.tpl"}>
               <td align="center">
                 <span id="ID{$i.id}">
                     {if $i.type eq 'Folder'}
                          <a href="{$UI_BROWSER}?act=fileBrowse&id={$i.id}" >[{$i.title|truncate:30}]</b>
                     {else}
-                         {$i.title|truncate:30}
+                        {if $PLid == $i.id}
+                            <b>{$i.title|truncate:30}</b>
+                        {else}
+                            {$i.title|truncate:30}
+                        {/if}
                     {/if}
                 </span>
               </td>

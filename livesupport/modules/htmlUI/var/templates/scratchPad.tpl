@@ -1,9 +1,9 @@
 {*Smarty template*}
 
 {include file="script/scratchPad.js.tpl"}
+
 <div id="scratchpad">
 <center><b>%%ScratchPad%%</b>
-
 {if is_array($SCRATCHPAD)}
     <form name="SP">
         <input type="hidden" name="act">
@@ -17,24 +17,15 @@
             </tr>
 
             {foreach from=$SCRATCHPAD item=i}
-                <tr style="background-color: {cycle values='#eeeeee, #dadada'}"
-                    onMouseOver="highlight()" onMouseOut="darklight()"
-                    onContextmenu="return menu('{$i.id}'
-                        {if ($i.type == 'audioclip' || $i.type == 'webstream')}
-                            ,'PL.addItem', 'PL.newUsingItem', 'SP.removeItem', 'delete'
-                        {/if}
-                        {if ($i.type == 'playlist')}
-                            ,'PL.activate'
-                            {if $PLAYLIST.id == $i.id}
-                                ,'PL.release'
-                            {else}
-                                ,'PL.addItem', 'SP.removeItem', 'delete'
-                            {/if}
-                        {/if}
-                        )"
-                >
+                <tr style="background-color: {cycle values='#eeeeee, #dadada'}" {assign var="moreContextBefore" value=", 'SP.removeItem'"} {include file="sub/contextmenu.tpl"}>
                     <td><input type="checkbox" name="{$i.id}"></td>
-                    <td>{$i.title|truncate:10}</a></td>
+                    <td>
+                        {if $PLid == $i.id}
+                            <b>{$i.title|truncate:30}</b>
+                        {else}
+                            {$i.title|truncate:30}
+                        {/if}
+                    </td>
                     <td>{$i.duration}</td>
                     <td>{$i.type} </td>
                     <th><a href="#" onclick="hpopup('{$UI_HANDLER}?act=SP.removeItem&id={$i.id}', 'SP')">X</th>

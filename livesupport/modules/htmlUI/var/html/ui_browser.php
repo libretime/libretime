@@ -42,8 +42,9 @@ if (is_array($_REQUEST['popup'])){
 
 if ($uiBrowser->userid) {
   $Smarty->assign('showMenuTop', TRUE);
-  $Smarty->assign('SCRATCHPAD', $uiBrowser->SCRATCHPAD->get());
-  $Smarty->assign('PLAYLIST',   $uiBrowser->PLAYLIST->get());
+  $Smarty->assign('SCRATCHPAD',  $uiBrowser->SCRATCHPAD->get());
+  $Smarty->assign('PLid',        $uiBrowser->PLAYLIST->activeId);
+  $Smarty->register_object('PL', $uiBrowser->PLAYLIST);
 
   switch ($_REQUEST['act']){
     case "fileBrowse":
@@ -147,8 +148,11 @@ if ($uiBrowser->userid) {
         $Smarty->assign('changeStationPrefs', TRUE);
     break;
 
-    case "PL.simpleManagement":
-        $uiBrowser->PLAYLIST->testNew();
+    case "PL.simpleManagement":           print_r($uiBrowser->PLAYLIST->get()); 
+        if ($_REQUEST['createNew']) {
+            $uiBrowser->PLAYLIST->testNew();
+            #$Smarty->assign('PLAYLIST',   $uiBrowser->PLAYLIST->get());
+        }
         $Smarty->assign('PL_simpleManagement', TRUE);
     break;
   }

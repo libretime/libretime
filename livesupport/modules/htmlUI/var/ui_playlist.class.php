@@ -3,9 +3,9 @@ class uiPlaylist
 {
     function uiPlaylist(&$uiBase)
     {
-        $this->Base   =& $uiBase;
-        $this->active =& $_SESSION[UI_PLAYLIST_SESSNAME]['active'];
-        $this->token  =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
+        $this->Base      =& $uiBase;
+        $this->activeId  =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
+        $this->token     =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
     }
 
@@ -16,7 +16,10 @@ class uiPlaylist
 
     function get()
     {
-        return is_array($this->active) ? $this->active : FALSE;
+        if (!$this->activeId) {
+            return FALSE;
+        }
+        return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
     }
 
     function activate($plid)
@@ -35,8 +38,8 @@ class uiPlaylist
         }
         $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $this->token);
-        $this->active = $this->Base->gb->getPlaylistArray($plid, $this->Base->sessid);
-        $this->active['id'] = $plid;
+        #$this->active = $this->Base->gb->getPlaylistArray($plid, $this->Base->sessid);
+        $this->activeId = $plid;
         $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, 'title'));
         return TRUE;
     }
@@ -53,8 +56,8 @@ class uiPlaylist
         }
         $plgunid = $this->Base->gb->releaseLockedPlaylist($this->token, $this->Base->sessid);
         $this->Base->_retMsg('Playlist "$1" released', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($plgunid), 'title'));
-        $this->active = NULL;
-        $this->token = NULL;
+        $this->activeId = NULL;
+        $this->token    = NULL;
         $this->Base->gb->delPref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY);
         return TRUE;
     }
@@ -104,17 +107,22 @@ class uiPlaylist
             $this->Base->_retMsg('Cannot create Playlist');
             return FALSE;
         }
+        $this->Base->_setMDataValue($plid, 'dc:title', 'empty');
         return $plid;
     }
 
     function testNew()
     {
-        # if not exists -> create new
-        if (is_array($this->active)) {
+        # if exists -> return false
+        # else
+            # create empty
+            # activate
+
+        if (is_array($this->activeId)) {
             return FALSE;
         }
         $plid = $this->createEmpty();
-        $this->activate($plid);     
+        $this->activate($plid);
         return TRUE;
     }
 }
