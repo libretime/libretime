@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveAudioClipFromPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -143,7 +143,7 @@ RemoveAudioClipFromPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         return;
     }
 
-    if (!playlist->getIsLockedForEditing()) {
+    if (!playlist->canBeEdited()) {
         XmlRpcTools::markError(errorId+5, 
                                "playlist has not been opened for editing", 
                                returnValue);

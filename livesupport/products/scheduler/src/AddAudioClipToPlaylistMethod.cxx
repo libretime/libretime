@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,7 +148,7 @@ AddAudioClipToPlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         return;
     }
 
-    if (!playlist->getIsLockedForEditing()) {
+    if (!playlist->canBeEdited()) {
         XmlRpcTools::markError(errorId+6, 
                                "playlist has not been opened for editing", 
                                returnValue);

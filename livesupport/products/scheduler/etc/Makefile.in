@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -127,7 +127,9 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/RemoveAudioClipFromPlaylistMethod.o \
                  ${TMP_DIR}/ValidatePlaylistMethod.o \
                  ${TMP_DIR}/DisplayAudioClipMethod.o \
-                 ${TMP_DIR}/DisplayAudioClipsMethod.o
+                 ${TMP_DIR}/DisplayAudioClipsMethod.o \
+                 ${TMP_DIR}/RevertEditedPlaylistMethod.o \
+                 ${TMP_DIR}/SavePlaylistMethod.o
 
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
                      ${TMP_DIR}/main.o
@@ -158,6 +160,8 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/ValidatePlaylistMethodTest.o \
                    ${TMP_DIR}/DisplayAudioClipMethodTest.o \
                    ${TMP_DIR}/DisplayAudioClipsMethodTest.o \
+                   ${TMP_DIR}/SavePlaylistMethodTest.o \
+                   ${TMP_DIR}/RevertEditedPlaylistMethodTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 

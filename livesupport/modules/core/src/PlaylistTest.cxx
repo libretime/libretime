@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,19 +148,25 @@ void
 PlaylistTest :: lockTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    CPPUNIT_ASSERT(!playlist->isLocked());
+    CPPUNIT_ASSERT(!playlist->canBeEdited());
+
     CPPUNIT_ASSERT(playlist->setLockedForEditing(true));
+    CPPUNIT_ASSERT(playlist->isLocked());
+    CPPUNIT_ASSERT(playlist->canBeEdited());
     CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
-    CPPUNIT_ASSERT(playlist->setLockedForEditing(false));
 
     CPPUNIT_ASSERT(playlist->setLockedForPlaying(true));
-    CPPUNIT_ASSERT(!playlist->setLockedForPlaying(true));
-    CPPUNIT_ASSERT(playlist->setLockedForPlaying(false));
-
-    CPPUNIT_ASSERT(playlist->setLockedForEditing(true));
-    CPPUNIT_ASSERT(playlist->setLockedForPlaying(true));
+    CPPUNIT_ASSERT(playlist->isLocked());
+    CPPUNIT_ASSERT(!playlist->canBeEdited());
+    CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
     CPPUNIT_ASSERT(!playlist->setLockedForEditing(false));
+    CPPUNIT_ASSERT(!playlist->setLockedForPlaying(true));
+
     CPPUNIT_ASSERT(playlist->setLockedForPlaying(false));
-    CPPUNIT_ASSERT(!playlist->setLockedForEditing(true));
+    CPPUNIT_ASSERT(playlist->isLocked());
+    CPPUNIT_ASSERT(playlist->canBeEdited());
+    CPPUNIT_ASSERT(playlist->setLockedForEditing(false));
 }
 
 

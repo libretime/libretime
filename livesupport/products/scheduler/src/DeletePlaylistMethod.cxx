@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,7 +106,17 @@ DeletePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         scf     = StorageClientFactory::getInstance();
         storage = scf->getStorageClient();
  
-        if (!storage->existsPlaylist(id)) {
+        Ptr<Playlist>::Ref                  playlist;
+        try {
+            playlist = storage->getPlaylist(id);
+        }
+        catch (std::invalid_argument &e) {
+            // TODO: mark error
+            returnValue = XmlRpc::XmlRpcValue(false);
+            return;
+        }
+
+        if (playlist->isLocked()) {
             // TODO: mark error
             returnValue = XmlRpc::XmlRpcValue(false);
             return;

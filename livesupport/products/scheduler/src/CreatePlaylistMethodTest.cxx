@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/CreatePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,6 +157,4 @@ CreatePlaylistMethodTest :: firstTest(void)
     // should not allow to open the same playlist for editing again
     method->execute(parameter, result);
     CPPUNIT_ASSERT((int) result["errorCode"] == 105);
-    CPPUNIT_ASSERT((const std::string) result["errorMessage"] ==
-                        "could not open playlist for editing (already open?)");
 }

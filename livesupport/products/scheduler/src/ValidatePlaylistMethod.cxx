@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -132,7 +132,7 @@ ValidatePlaylistMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
         return;
     }
 
-    if (!playlist->getIsLockedForEditing()) {
+    if (!playlist->canBeEdited()) {
         XmlRpcTools::markError(errorId+4, 
                                "playlist has not been opened for editing", 
                                returnValue);

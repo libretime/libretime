@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -122,26 +122,20 @@ OpenPlaylistForEditingMethod :: execute(XmlRpc::XmlRpcValue  & parameters,
     scf     = StorageClientFactory::getInstance();
     storage = scf->getStorageClient();
  
-    if (!storage->existsPlaylist(id)) {
-        XmlRpcTools::markError(errorId+3, "playlist does not exist", 
-                               returnValue);
-        return;
-    }
-
     Ptr<Playlist>::Ref playlist;
     try {
         playlist = storage->getPlaylist(id);
     }
     catch (std::invalid_argument &e) {
-        XmlRpcTools::markError(errorId+4, "could not load playlist", 
+        XmlRpcTools::markError(errorId+4, "playlist not found", 
                                returnValue);
         return;
     }
 
     if (!playlist->setLockedForEditing(true)) {
         XmlRpcTools::markError(errorId+5, 
-                "could not open playlist for editing (already open?)", 
-                returnValue);
+                               "could not open playlist", 
+                               returnValue);
         return;
     }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace boost::posix_time;
  *  the playlist.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class Playlist : public Configurable
 {
@@ -212,27 +212,26 @@ class Playlist : public Configurable
         }
 
         /**
-         *  Test whether the playlist is locked for editing.
+         *  Test whether the playlist is locked for editing or playing.
          *
-         *  @return true if playlist is currently being edited;
-         *      false if not, or if the editing has been suspended
-         *      because the playlist is being played
+         *  @return true if the playlist is currently being edited or
+         *      played; false otherwise
          */
         bool
-        getIsLockedForEditing() const            throw ()
+        isLocked() const                         throw ()
         {
-            return isLockedForEditing && !isLockedForPlaying;
+            return isLockedForEditing || isLockedForPlaying;
         }
 
         /**
-         *  Test whether the playlist is locked for playing.
+         *  Test whether the playlist is currently available for editing.
          *
-         *  @return true if playlist is locked, false if not
+         *  @return true if the playlist is available, false otherwise
          */
         bool
-        getIsLockedForPlaying() const            throw ()
+        canBeEdited() const                      throw ()
         {
-            return isLockedForPlaying;
+            return isLockedForEditing && !isLockedForPlaying;
         }
 
         /**
