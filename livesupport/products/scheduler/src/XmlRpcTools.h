@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/XmlRpcTools.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,8 +50,8 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/Playlist.h"
+#include "LiveSupport/Core/ScheduleEntry.h"
 #include "PlayLogEntry.h"
-#include "ScheduleEntry.h"
 
 
 namespace LiveSupport {
@@ -73,8 +73,8 @@ using namespace LiveSupport::Core;
  *  and XmlRpcValues.  Used by almost all XmlRpcServerMethod subclasses
  *  in the Scheduler.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.14 $
  */
 class XmlRpcTools
 {

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/ScheduleEntry.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/ScheduleEntry.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef ScheduleEntry_h
-#define ScheduleEntry_h
+#ifndef LiveSupport_Core_ScheduleEntry_h
+#define LiveSupport_Core_ScheduleEntry_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -48,12 +48,11 @@
 
 
 namespace LiveSupport {
-namespace Scheduler {
+namespace Core {
 
 using namespace boost::posix_time;
 
 using namespace LiveSupport;
-using namespace LiveSupport::Core;
 
 
 /* ================================================================ constants */
@@ -68,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A scheduled event.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  */
 class ScheduleEntry
 {
@@ -193,8 +192,8 @@ class ScheduleEntry
 /* ====================================================== function prototypes */
 
 
-} // namespace Scheduler
+} // namespace Core
 } // namespace LiveSupport
 
-#endif // ScheduleEntry_h
+#endif // LiveSupport_Core_ScheduleEntry_h
 

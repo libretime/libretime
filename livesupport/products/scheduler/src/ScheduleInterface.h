@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,7 +46,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Playlist.h"
-#include "ScheduleEntry.h"
+#include "LiveSupport/Core/ScheduleEntry.h"
 
 
 namespace LiveSupport {
@@ -70,7 +70,7 @@ using namespace LiveSupport::Core;
  *  The generic interface for the component scheduling events.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class ScheduleInterface : virtual public Installable
 {

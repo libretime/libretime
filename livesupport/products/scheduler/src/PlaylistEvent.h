@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,11 +40,10 @@
 #include "configure.h"
 #endif
 
+#include "LiveSupport/Core/ScheduleEntry.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/ScheduledEventInterface.h"
-
-#include "ScheduleEntry.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -69,8 +68,8 @@ using namespace LiveSupport::Storage;
 /**
  *  A scheduled event for playing a playlist.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.5 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {

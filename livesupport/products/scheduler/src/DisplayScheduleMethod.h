@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@
 #include <XmlRpcException.h>
 
 #include "LiveSupport/Core/Ptr.h"
-#include "ScheduleEntry.h"
+#include "LiveSupport/Core/ScheduleEntry.h"
 
 
 namespace LiveSupport {
@@ -106,8 +106,8 @@ using namespace LiveSupport::Core;
  *     <li>1120 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.7 $
  */
 class DisplayScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
