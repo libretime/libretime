@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/TestScheduledEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  A scheduled event for testing purposes.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class TestScheduledEvent : public virtual ScheduledEventInterface
 {
@@ -135,7 +135,7 @@ class TestScheduledEvent : public virtual ScheduledEventInterface
          *
          *  @return the time this event is scheduled for.
          */
-        virtual Ptr<ptime>::Ref
+        virtual Ptr<const ptime>::Ref
         getScheduledTime(void)                              throw ()
         {
             return when;
@@ -163,7 +163,7 @@ class TestScheduledEvent : public virtual ScheduledEventInterface
          *  @return the maximum time for the initialize() function to complete.
          *  @see #initialize
          */
-        virtual Ptr<time_duration>::Ref
+        virtual Ptr<const time_duration>::Ref
         maxTimeToInitialize(void)                   throw ()
         {
             return initTime;
@@ -190,7 +190,7 @@ class TestScheduledEvent : public virtual ScheduledEventInterface
          *
          *  @return the length of the event, in time.
          */
-        virtual Ptr<time_duration>::Ref
+        virtual Ptr<const time_duration>::Ref
         eventLength(void)                           throw ()
         {
             return length;
