@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,8 +80,8 @@ class DataEngine{
         $this->dbc        =& $gb->dbc;
         $this->mdataTable =  $gb->mdataTable;
         $this->filesTable =  $gb->filesTable;
-        $this->filetypes  =
-            array('audioclip'=>'audioclip', 'playlist'=>'playlist');
+        $this->filetypes  = array(
+            'all'=>NULL, 'audioclip'=>'audioclip', 'playlist'=>'playlist');
     }
 
     /**
@@ -93,8 +93,9 @@ class DataEngine{
      */
     function _makeWhereArr($conditions)
     {
-        $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'", 'prefix'=>"like '%s%%'",
-            '<'=>"< '%s'", '='=>"= '%s'", '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
+        $ops = array('full'=>"='%s'", 'partial'=>"like '%%%s%%'",
+            'prefix'=>"like '%s%%'", '<'=>"< '%s'", '='=>"= '%s'",
+            '>'=>"> '%s'", '<='=>"<= '%s'", '>='=>">= '%s'"
         );
         $whereArr   = array();
         if(is_array($conditions)){
@@ -275,9 +276,10 @@ class DataEngine{
     {
         $filetype   = $this->filetypes[strtolower($criteria['filetype'])];
         $operator   = strtolower($criteria['operator']);
-        $desc       = $criteria['desc'];
+        $desc       = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         $whereArr   = $this->_makeWhereArr($criteria['conditions']);
-        $orderbyQn  = strtolower($criteria['orderby']);
+        $orderbyQn  = (isset($criteria['orderby']) ?
+            strtolower($criteria['orderby']) : NULL);
         $obSplitQn  = XML_Util::splitQualifiedName($orderbyQn);
         $obNs       = $obSplitQn['namespace'];
         $orderby    = $obSplitQn['localPart'];
