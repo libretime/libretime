@@ -14,6 +14,7 @@
 <!ELEMENT storageClientFactory (testStorage) >
 
 <!ELEMENT testStorage (playlist*) >
+<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
 
 <!ELEMENT playlist EMPTY >
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
@@ -44,7 +45,7 @@
     </connectionManagerFactory>
 
     <storageClientFactory>
-        <testStorage>
+        <testStorage tempFiles="file:///tmp/tempPlaylist">
             <playlist id="1" playlength="01:00:00.00"/>
         </testStorage>
     </storageClientFactory>

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,6 +69,7 @@ using namespace LiveSupport::Core;
  *
  *  The name of the method when called through XML-RPC is 
  *  "openPlaylistForEditing".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  member:
  *  <ul>
@@ -96,7 +97,7 @@ using namespace LiveSupport::Core;
  *     <li>105 - could not open playlist </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class OpenPlaylistForEditingMethod : public XmlRpc::XmlRpcServerMethod
 {

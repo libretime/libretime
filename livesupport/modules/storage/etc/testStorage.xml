@@ -2,6 +2,7 @@
 <!DOCTYPE testStorage [
 
 <!ELEMENT testStorage (playlist*, audioClip*) >
+<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
 
 <!ELEMENT playlist (playlistElement*) >
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
@@ -16,7 +17,7 @@
 <!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
 <!ATTLIST audioClip uri             CDATA       #REQUIRED >
 ]>
-<testStorage>
+<testStorage tempFiles="file:///tmp/tempPlaylist">
     <playlist id="1" playlength="01:30:00.000">
         <playlistElement id="101" relativeOffset="0" >
                 <audioClip id="10001" playlength="01:00:00.000" 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UpdateFadeInFadeOutMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,6 +69,7 @@ using namespace LiveSupport::Core;
  *
  *  The name of the method when called through XML-RPC is 
  *  "updateFadeInFadeOut".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
@@ -98,7 +99,7 @@ using namespace LiveSupport::Core;
  *     <li>1608 - no audio clip at the specified relative offset </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class UpdateFadeInFadeOutMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/AddAudioClipToPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,6 +69,7 @@ using namespace LiveSupport::Core;
  *
  *  The name of the method when called through XML-RPC is 
  *  "addAudioClipToPlaylist".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
@@ -98,7 +99,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class AddAudioClipToPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

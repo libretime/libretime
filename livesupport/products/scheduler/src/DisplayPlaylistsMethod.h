@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,6 +71,7 @@ using namespace LiveSupport::Core;
  *  in the playlist store.
  *
  *  The name of the method when called through XML-RPC is "displayPlaylists".
+ *
  *  No input parameters are expected.
  *
  *  The XML-RPC function returns an XML-RPC array, containing a structure
@@ -83,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class DisplayPlaylistsMethod : public XmlRpc::XmlRpcServerMethod
 {

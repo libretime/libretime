@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -48,6 +48,7 @@ COVERAGE_DIR = ${DOC_DIR}/coverage
 ETC_DIR      = ${BASE_DIR}/etc
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
+XMLRPC-DOXYGEN_CONFIG = ${ETC_DIR}/xmlrpc-doxygen.config
 
 XMLRPCXX_DOC_DIR   = ${BASE_DIR}/usr/share/doc/xmlrpc++
 EXTERNAL_DOC_PAGES = ${XMLRPCXX_DOC_DIR}/XmlRpcServerMethod_8h-source.html \
@@ -111,6 +112,7 @@ doc: doxygen testresults
 
 doxygen:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
+	${DOXYGEN} ${XMLRPC-DOXYGEN_CONFIG}
 
 testresults:
 	${XSLTPROC} ${TESTRESULT_XSLT} ${TESTRESULTS_IN} > ${TESTRESULTS_FILE}

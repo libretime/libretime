@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A dummy storage client, only used for test purposes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -78,11 +78,6 @@ class TestStorageClient :
          *  The name of the configuration XML elmenent used by TestStorageClient
          */
         static const std::string    configElementNameStr;
-
-        /**
-         *  The path to the local temp storage
-         */
-        static const std::string    localTempStoragePath;
 
         /**
          *  The map type containing the playlists by their ids.
@@ -105,6 +100,11 @@ class TestStorageClient :
          *  The map holding all contained audio clips, by ids.
          */
         AudioClipMap                audioClipMap;
+
+        /**
+         *  The path where the temporary SMIL files are strored.
+         */
+        std::string                 localTempStorage;
 
 
     public:

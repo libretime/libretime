@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ValidatePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,6 +68,7 @@ using namespace LiveSupport::Core;
  *
  *  The name of the method when called through XML-RPC is 
  *  "validatePlaylist".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  member:
  *  <ul>
@@ -94,7 +95,7 @@ using namespace LiveSupport::Core;
  *     <li>504 - playlist has not been opened for editing </li>
  *  </ul>
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ValidatePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

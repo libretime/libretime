@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/UploadPlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,6 +69,7 @@ using namespace LiveSupport::Core;
  *  and schedule it in the scheduler.
  *
  *  The name of the method when called through XML-RPC is "uploadPlaylist".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
@@ -101,7 +102,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class UploadPlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

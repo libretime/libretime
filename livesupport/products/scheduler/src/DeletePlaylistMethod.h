@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,6 +67,7 @@ using namespace LiveSupport::Core;
  *  An XML-RPC method object to delete a playlist given by its playlist id.
  *
  *  The name of the method when called through XML-RPC is "deletePlaylist".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  member:
  *  <ul>
@@ -90,7 +91,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class DeletePlaylistMethod : public XmlRpc::XmlRpcServerMethod
 {

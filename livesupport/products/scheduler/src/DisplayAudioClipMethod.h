@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayAudioClipMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,6 +68,7 @@ using namespace LiveSupport::Core;
  *  audio clip id.
  *
  *  The name of the method when called through XML-RPC is "displayAudioClip".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  member:
  *  <ul>
@@ -96,7 +97,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class DisplayAudioClipMethod : public XmlRpc::XmlRpcServerMethod
 {

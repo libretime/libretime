@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,6 +68,7 @@ using namespace LiveSupport::Core;
  *  An XML-RPC method object to reschedule an already scheduled event.
  *
  *  The name of the method when called through XML-RPC is "reschedule".
+ *
  *  The expected parameter is an XML-RPC structure, with the following
  *  members:
  *  <ul>
@@ -92,7 +93,7 @@ using namespace LiveSupport::Core;
  *  </ul>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,6 +58,11 @@ using namespace LiveSupport::Storage;
  *  The name of the config element for this class
  *----------------------------------------------------------------------------*/
 const std::string TestStorageClient::configElementNameStr = "testStorage";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element for this class
+ *----------------------------------------------------------------------------*/
+static const std::string    localTempStorageAttrName = "tempFiles";
 
 /*------------------------------------------------------------------------------
  *  The XML version used to create the SMIL file.
@@ -130,6 +135,16 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
+
+    const xmlpp::Attribute    * attribute;
+
+    if (!(attribute = element.get_attribute(localTempStorageAttrName))) {
+        std::string eMsg = "Missing attribute ";
+        eMsg += localTempStorageAttrName;
+        throw std::invalid_argument(eMsg);
+    }
+
+    localTempStorage = attribute->get_value();
 
     // iterate through the playlist elements ...
     xmlpp::Node::NodeList            nodes 
@@ -250,7 +265,7 @@ TestStorageClient :: acquirePlaylist(Ptr<const UniqueId>::Ref id) const
     }
 
     std::stringstream fileName;
-    fileName << "file:///tmp/tempPlaylist" << newPlaylist->getId()->getId()
+    fileName << localTempStorage << newPlaylist->getId()->getId()
              << "#" << std::rand() << ".smil";
 
     smilDocument->write_to_file(fileName.str(), "UTF-8");
