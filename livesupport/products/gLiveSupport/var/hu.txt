@@ -3,8 +3,12 @@ hu:table
     windowTitle:string       { "LiveSupport Fő Panel" }
     notLoggedInMsg:string    { "Nincs bejelentkezve" }
     loggedInMsg:string       { "Bejelentkezve {0} felhasználóként" }
-    loginButtonLabel:string  { "Bejelentkezés" }
-    logoutButtonLabel:string { "Kijelentkezés" }
+    loginButtonLabel:string  { "bejelentkezés" }
+    logoutButtonLabel:string { "kijelentkezés" }
+    uploadFileButtonLabel:string            { "file feltöltés" }
+    djBagButtonLabel:string                 { "dj táska" }
+    simplePlaylistMgmtButtonLabel:string    { "egyszerű playlist kezelés" }
+    schedulerButtonLabel:string             { "időzítő" }
 
     loginWindow:table
     {
@@ -12,7 +16,7 @@ hu:table
 
         loginLabel:string      { "azonositó:" }
         passwordLabel:string   { "jelszó:" }
-        okButtonLabel:string   { "Belépés" }
+        okButtonLabel:string   { "belépés" }
     }
 
     audioClipListWindow:table
@@ -24,7 +28,21 @@ hu:table
         uriColumnLabel:string         { "URI" }
         tokenColumnLabel:string       { "token" }
 
-        closeButtonLabel:string       { "Bezár" }
+        closeButtonLabel:string       { "bezár" }
+    }
+
+    djBagWindow:table
+    {
+        windowTitle:string            { "LiveSupport Dj Táska" }
+
+        typeColumnLabel:string        { "típus" }
+        titleColumnLabel:string       { "cím" }
+        closeButtonLabel:string       { "bezár" }
+
+        removeMenuItem:string           { "_Eltávolít" }
+        addToPlaylistMenuItem:string    { "_Hozzáad Playlist-hez" }
+        schedulePlaylistMenuItem:string { "_Playlist időzítése" }
+        deleteMenuItem:string           { "_Töröl" }
     }
 
     playlistListWindow:table
@@ -40,6 +58,53 @@ hu:table
         tokenColumnLabel:string       { "token" }
 
         closeButtonLabel:string       { "Bezár" }
+    }
+
+    uploadFileWindow:table
+    {
+        windowTitle:string            { "File Feltőltés Ablak" }
+
+        chooseFileLabel:string        { "file: " }
+        chooseFileButtonLabel:string  { "tallóz..." }
+        nameLabel:string              { "hang file név: " }
+        uploadButtonLabel:string      { "feltölt" }
+        closeButtonLabel:string       { "bezár" }
+        statusBar:string              { "állapotsor" }
+
+        fileChooserDialogTitle:string { "File Választás" }
+        clipUploadedMessage:string    { "hang file {0} feltöltve" }
+    }
+
+    simplePlaylistManagementWindow:table
+    {
+        windowTitle:string            { "LiveSupport Egyszerű Playlist Szerkesztő Ablak" }
+
+        titleColumnLabel:string       { "cím" }
+        nameLabel:string              { "név" }
+        saveButtonLabel:string        { "elment" }
+        closeButtonLabel:string       { "bezár" }
+        statusBar:string              { "állapotsor" }
+    }
+
+    schedulerWindow:table
+    {
+        windowTitle:string           { "LiveSupport Időzítő Ablak" }
+
+        startColumnLabel:string      { "kezdet" }
+        titleColumnLabel:string      { "cím" }
+        endColumnLabel:string        { "vég" }
+
+        closeButtonLabel:string      { "bezár" }
+    }
+
+    schedulePlaylistWindow:table
+    {
+        windowTitle:string           { "LiveSupport Playlist Időzítő Ablak" }
+
+        hourLabel:string             { "óra: " }
+        minuteLabel:string           { "perc: " }
+        scheduleButtonLabel:string   { "időzít" }
+        closeButtonLabel:string      { "bezár" }
     }
 }
 

@@ -3,8 +3,12 @@ root:table
     windowTitle:string       { "LiveSupport Master Panel" }
     notLoggedInMsg:string    { "Not logged in" }
     loggedInMsg:string       { "Logged in as {0}" }
-    loginButtonLabel:string  { "Log in" }
+    loginButtonLabel:string  { "log in" }
     logoutButtonLabel:string { "log out" }
+    uploadFileButtonLabel:string            { "upload file" }
+    djBagButtonLabel:string                 { "dj bag" }
+    simplePlaylistMgmtButtonLabel:string    { "simple playlist management" }
+    schedulerButtonLabel:string             { "scheduler" }
 
     loginWindow:table
     {
@@ -56,14 +60,30 @@ root:table
         closeButtonLabel:string       { "close" }
     }
 
+    uploadFileWindow:table
+    {
+        windowTitle:string            { "Upload File Window" }
+
+        chooseFileLabel:string        { "file: " }
+        chooseFileButtonLabel:string  { "browse..." }
+        nameLabel:string              { "audio clip name: " }
+        uploadButtonLabel:string      { "upload" }
+        closeButtonLabel:string       { "close" }
+        statusBar:string              { "status bar" }
+
+        fileChooserDialogTitle:string { "Choose a File" }
+        clipUploadedMessage:string    { "uploaded clip {0}" }
+    }
+
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Dj Bag" }
+        windowTitle:string            { "LiveSupport Simple Playlist Management Window" }
 
         titleColumnLabel:string       { "title" }
         nameLabel:string              { "name" }
         saveButtonLabel:string        { "save" }
         closeButtonLabel:string       { "close" }
+        statusBar:string              { "status bar" }
     }
 
     schedulerWindow:table

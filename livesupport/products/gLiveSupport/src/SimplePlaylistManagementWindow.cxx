@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -98,7 +98,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
         std::cerr << e.what() << std::endl;
     }
 
-    statusBar.reset(new Gtk::Label("status bar"));
+    statusBar.reset(new Gtk::Label(*getResourceUstring("statusBar")));
 
     // set up the layout
     layout.reset(new Gtk::Table());

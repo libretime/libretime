@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,15 +66,26 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 {
     this->gLiveSupport = gLiveSupport;
 
-    set_title("Upload file window");
-    chooseFileLabel.reset(new Gtk::Label("choose file"));
-    fileNameEntry.reset(new Gtk::Entry());
-    chooseFileButton.reset(new Gtk::Button("choose file"));
-    nameLabel.reset(new Gtk::Label("clip name"));
-    nameEntry.reset(new Gtk::Entry());
-    uploadButton.reset(new Gtk::Button("upload"));
-    closeButton.reset(new Gtk::Button("close"));
-    statusBar.reset(new Gtk::Label("status bar"));
+    try {
+        set_title(*getResourceUstring("windowTitle"));
+        chooseFileLabel.reset(new Gtk::Label(
+                                *getResourceUstring("chooseFileLabel")));
+        fileNameEntry.reset(new Gtk::Entry());
+        chooseFileButton.reset(new Gtk::Button(
+                                *getResourceUstring("chooseFileButtonLabel")));
+        nameLabel.reset(new Gtk::Label(
+                                *getResourceUstring("nameLabel")));
+        nameEntry.reset(new Gtk::Entry());
+        uploadButton.reset(new Gtk::Button(
+                                *getResourceUstring("uploadButtonLabel")));
+        closeButton.reset(new Gtk::Button(
+                                *getResourceUstring("closeButtonLabel")));
+        statusBar.reset(new Gtk::Label(
+                                *getResourceUstring("statusBar")));
+    } catch (std::invalid_argument &e) {
+        // TODO: signal error
+        std::cerr << e.what() << std::endl;
+    }
 
     // set up the layout, which is a button box
     layout.reset(new Gtk::Table());
@@ -113,8 +124,9 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
 {
     Ptr<Gtk::FileChooserDialog>::Ref    dialog;
 
-    dialog.reset(new Gtk::FileChooserDialog("Please choose a file",
-                                            Gtk::FILE_CHOOSER_ACTION_OPEN));
+    dialog.reset(new Gtk::FileChooserDialog(
+                        *getResourceUstring("fileChooserDialogTitle"),
+                        Gtk::FILE_CHOOSER_ACTION_OPEN));
 
     dialog->set_transient_for(*this);
 
@@ -148,9 +160,14 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         audioClip = gLiveSupport->uploadFile(title, fileName);
 
         // display success in the status bar
-        Glib::ustring   statusText("uploaded clip ");
-        statusText += *audioClip->getTitle();
-        statusBar->set_text(statusText);
+        Ptr<UnicodeString>::Ref uTitle = ustringToUnicodeString(
+                                                        audioClip->getTitle());
+        Formattable             arguments[] = { *uTitle };
+        Ptr<Glib::ustring>::Ref statusText = formatMessageUstring(
+                                                    "clipUploadedMessage",
+                                                    arguments,
+                                                    1);
+        statusBar->set_text(*statusText);
 
         // clean the entry fields
         nameEntry->set_text("");

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,19 +74,18 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     onAirWidget.reset(new Gtk::Label("on air"));
     radioLogoWidget.reset(new Gtk::Label("radio logo"));
     userInfoWidget.reset(new MasterPanelUserInfoWidget(gLiveSupport, bundle));
-    uploadFileButton.reset(new Gtk::Button("upload file"));
-    djBagButton.reset(new Gtk::Button("dj bag"));
-    simplePlaylistMgmtButton.reset(
-                            new Gtk::Button("simple playlist management"));
-    schedulerButton.reset(new Gtk::Button("scheduler"));
-
-    // set up the time label
-    timeWidget.reset(new Gtk::Label("time"));
 
     // set up the layout, which is a button box
     layout.reset(new Gtk::Table());
 
+    // set the localized resources
+    changeLanguage(bundle);
+
+    // set up the time label
+    timeWidget.reset(new Gtk::Label("time"));
+
     // set up the main window, and show everything
+    // all the localized widgets were set up in changeLanguage()
     set_border_width(10);
     layout->attach(*lsLogoWidget,               0, 1, 0, 2);
     layout->attach(*timeWidget,                 1, 2, 0, 2);
@@ -96,28 +95,8 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout->attach(*onAirWidget,                4, 5, 0, 1);
     layout->attach(*radioLogoWidget,            5, 6, 0, 1);
     layout->attach(*userInfoWidget,             4, 6, 1, 2);
-    layout->attach(*uploadFileButton,           0, 1, 2, 3);
-    layout->attach(*djBagButton,                1, 2, 2, 3);
-    layout->attach(*simplePlaylistMgmtButton,   2, 3, 2, 3);
-    layout->attach(*schedulerButton,            3, 4, 2, 3);
 
     add(*layout);
-
-    // set the localized resources
-    changeLanguage(bundle);
-
-    // bind events
-    uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onUploadFileButtonClicked));
-    djBagButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onDjBagButtonClicked));
-    djBagButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onDjBagButtonClicked));
-    simplePlaylistMgmtButton->signal_clicked().connect(
-            sigc::mem_fun(*this,
-                 &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
-    schedulerButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onSchedulerButtonClicked));
 
     // show what's there to see
     showAnonymousUI();
@@ -147,11 +126,38 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
 
     try {
         set_title(*getResourceUstring("windowTitle"));
+
+        uploadFileButton.reset(new Gtk::Button(
+                                *getResourceUstring("uploadFileButtonLabel")));
+        djBagButton.reset(new Gtk::Button(
+                                *getResourceUstring("djBagButtonLabel")));
+        simplePlaylistMgmtButton.reset(new Gtk::Button(
+                        *getResourceUstring("simplePlaylistMgmtButtonLabel")));
+        schedulerButton.reset(new Gtk::Button(
+                                *getResourceUstring("schedulerButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
 
     userInfoWidget->changeLanguage(bundle);
+
+    // re-attach the localized widgets to the layout
+    layout->attach(*uploadFileButton,           0, 1, 2, 3);
+    layout->attach(*djBagButton,                1, 2, 2, 3);
+    layout->attach(*simplePlaylistMgmtButton,   2, 3, 2, 3);
+    layout->attach(*schedulerButton,            3, 4, 2, 3);
+
+    // re-bind events to the buttons
+    uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onUploadFileButtonClicked));
+    djBagButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onDjBagButtonClicked));
+    simplePlaylistMgmtButton->signal_clicked().connect(
+            sigc::mem_fun(*this,
+                 &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
+    schedulerButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onSchedulerButtonClicked));
+
 }
 
 
@@ -214,8 +220,7 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
 {
     Ptr<ResourceBundle>::Ref    bundle;
     try {
-        // TODO: add and get the proper resource bundle for the upload window
-        bundle       = getBundle("loginWindow");
+        bundle       = getBundle("uploadFileWindow");
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         return;
