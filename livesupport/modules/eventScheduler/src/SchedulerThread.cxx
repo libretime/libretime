@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/SchedulerThread.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,9 +62,7 @@ SchedulerThread :: SchedulerThread(
 {
     this->eventContainer = eventContainer;
     this->granularity    = granularity;
-    this->shouldRun      = true;
-
-    getNextEvent(TimeConversion::now());
+    this->shouldRun      = false;
 }
 
 
@@ -119,6 +117,9 @@ SchedulerThread :: nextStep(Ptr<ptime>::Ref     now)            throw ()
 void
 SchedulerThread :: run(void)                                    throw ()
 {
+    shouldRun = true;
+    getNextEvent(TimeConversion::now());
+
     while (shouldRun) {
         Ptr<ptime>::Ref     start = TimeConversion::now();
 
