@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/EntryBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,11 +59,19 @@ EntryBin :: EntryBin(unsigned int                 backgroundColor,
                                                                     throw ()
             : BlueBin(backgroundColor, cornerImages)
 {
-    entry.reset(new Gtk::Entry());
+    entry = Gtk::manage(new Gtk::Entry());
     entry->set_has_frame(false);
  
     // TODO: this doesn't change the background color, for some reason :(
     entry->modify_bg(Gtk::STATE_NORMAL, getBgColor());
+
+    Glib::RefPtr<Gtk::Style>     style = entry->get_style();
+    style->set_base(Gtk::STATE_NORMAL, getBgColor());
+    style->set_base(Gtk::STATE_ACTIVE, getBgColor());
+    style->set_base(Gtk::STATE_PRELIGHT, getBgColor());
+    style->set_base(Gtk::STATE_SELECTED, getBgColor());
+    style->set_base(Gtk::STATE_INSENSITIVE, getBgColor());
+    entry->set_style(style); 
 
     add(*entry);
 }

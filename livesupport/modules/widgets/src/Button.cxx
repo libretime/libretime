@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Button.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ Button :: Button(const Glib::ustring          & label,
     this->rollImageCenter.clear();
     this->rollImageRight.clear();
 
-    this->label.reset(new Gtk::Label(label));
+    this->label = Gtk::manage(new Gtk::Label(label));
     this->label->set_parent(*this);
 }
 
@@ -96,7 +96,7 @@ Button :: Button(const Glib::ustring          & label,
     this->rollImageCenter    = rollImageCenter;
     this->rollImageRight     = rollImageRight;
 
-    this->label.reset(new Gtk::Label(label));
+    this->label = Gtk::manage(new Gtk::Label(label));
     this->label->modify_font(Pango::FontDescription("Bitstream Vera 10"));
     this->label->set_parent(*this);
 }

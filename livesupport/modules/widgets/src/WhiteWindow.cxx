@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
 
     Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
 
     // create the background color, as it is needed by the event box
     Gdk::Color      bgColor = Gdk::Color();
@@ -78,12 +78,12 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     colormap->alloc_color(bgColor);
 
     // set the window title
-    this->title.reset(new Gtk::Label(title));
+    this->title = Gtk::manage(new Gtk::Label(title));
     this->title->modify_font(Pango::FontDescription("Bitstream Vera 10"));
-    titleAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_LEFT,
-                                            Gtk::ALIGN_CENTER,
-                                            0, 0));
-    titleEventBox.reset(new Gtk::EventBox());
+    titleAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
+                                                    Gtk::ALIGN_CENTER,
+                                                    0, 0));
+    titleEventBox = Gtk::manage(new Gtk::EventBox());
     titleEventBox->set_visible_window();
     titleEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
     titleAlignment->add(*this->title);
@@ -91,19 +91,19 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     layout->attach(*titleEventBox, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
     // create the close button
-    closeButton = wf->createButton(WidgetFactory::deleteButton);
-    closeButtonAlignment.reset(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
-                                                  Gtk::ALIGN_CENTER,
-                                                  0, 0));
+    closeButton = Gtk::manage(wf->createButton(WidgetFactory::deleteButton));
+    closeButtonAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+                                                          Gtk::ALIGN_CENTER,
+                                                          0, 0));
     closeButtonAlignment->add(*closeButton);
     layout->attach(*closeButtonAlignment, 1, 2, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
     // add the child container
-    childContainer.reset(new Gtk::Alignment(Gtk::ALIGN_CENTER));
+    childContainer = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_CENTER));
     layout->attach(*childContainer, 0, 2, 1, 2);
 
     // add the corners
-    blueBin.reset(new BlueBin(backgroundColor, cornerImages));
+    blueBin = Gtk::manage(new BlueBin(backgroundColor, cornerImages));
     blueBin->add(*layout);
     Gtk::Window::add(*blueBin);
 
@@ -126,6 +126,7 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
  *----------------------------------------------------------------------------*/
 WhiteWindow :: ~WhiteWindow(void)                            throw ()
 {
+    on_remove(blueBin);
 }
 
 
@@ -169,7 +170,7 @@ WhiteWindow :: forall_vfunc(gboolean    includeInternals,
 void
 WhiteWindow :: on_add(Gtk::Widget* child)                           throw ()
 {
-    if (child == blueBin.get()) {
+    if (child == blueBin) {
         Gtk::Window::on_add(child);
     } else {
         childContainer->add(*child);
@@ -183,10 +184,12 @@ WhiteWindow :: on_add(Gtk::Widget* child)                           throw ()
 void
 WhiteWindow :: on_remove(Gtk::Widget* child)                        throw ()
 {
-    if (child == blueBin.get()) {
-        Gtk::Window::on_remove(child);
-    } else {
-        childContainer->remove();
+    if (child) {
+        if (child == blueBin && child->get_parent() == this) {
+            Gtk::Window::on_remove(child);
+        } else if (child == childContainer->get_child()) {
+            childContainer->remove();
+        }
     }
 }
 
@@ -277,4 +280,23 @@ WhiteWindow :: onCloseButtonClicked (void)                  throw ()
     hide();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Set the title of the window.
+ *----------------------------------------------------------------------------*/
+void
+WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
+{
+    this->title->set_label(title);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the title of the window.
+ *----------------------------------------------------------------------------*/
+Glib::ustring
+WhiteWindow :: get_title(void) const                        throw ()
+{
+    return title->get_label();
+}
 

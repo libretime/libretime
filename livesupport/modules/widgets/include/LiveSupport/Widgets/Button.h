@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Button.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  A button holding a text.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class Button : public Gtk::Button
 {
@@ -86,7 +86,7 @@ class Button : public Gtk::Button
         /**
          *  The text displayed inside the button.
          */
-        Ptr<Gtk::Label>::Ref            label;
+        Gtk::Label                    * label;
 
         /**
          *  The state of the button.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -241,50 +241,64 @@ class WidgetFactory :
 
         /**
          *  Create and return a button.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
          *
          *  @param label the label shown inside the button.
+         *  @return a button with the specified label.
          */
-        Ptr<Button>::Ref
+        Button *
         createButton(const Glib::ustring      & label)      throw ();
 
         /**
          *  Create a stock button.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
          *
          *  @param type the type of the button.
+         *  @return a button of the requested type, or 0
          */
-        Ptr<ImageButton>::Ref
+        ImageButton *
         createButton(ButtonType         type)               throw ();
 
         /**
          *  Create a combo box, that holds text entries.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
          *
          *  @return a combo box, that holds text entries.
          */
-        Ptr<ComboBoxText>::Ref
+        ComboBoxText *
         createComboBoxText(void)                            throw ();
         
         /**
          *  Create and return a blue singular container.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
          *
          *  @return a blue singular container.
          */
-        Ptr<BlueBin>::Ref
+        BlueBin *
         createBlueBin(void)                                 throw ();
 
         /**
          *  Create and return a dark blue singular container.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
          *
          *  @return a dark blue singular container.
          */
-        Ptr<BlueBin>::Ref
+        BlueBin *
         createDarkBlueBin(void)                             throw ();
 
         /**
          *  Create and return a singular container holding a text entry.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
          *
          *  @return a singular container holding a text entry.
          */
-        Ptr<EntryBin>::Ref
+        EntryBin *
         createEntryBin(void)                                throw ();
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ ComboBoxText :: ComboBoxText(Glib::RefPtr<Gdk::Pixbuf>      leftImage,
     this->centerImage = centerImage;
     this->rightImage  = rightImage;
 
-    label.reset(new Gtk::Label(""));
+    label = Gtk::manage(new Gtk::Label(""));
     label->set_parent(*this);
 
     // specify a white background

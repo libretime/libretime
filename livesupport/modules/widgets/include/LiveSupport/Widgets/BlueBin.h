@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/BlueBin.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class BlueBin : public Gtk::Bin
 {
@@ -111,6 +111,7 @@ class BlueBin : public Gtk::Bin
         renderImage(Glib::RefPtr<Gdk::Pixbuf>   image,
                     int                         x,
                     int                         y)          throw ();
+
 
     protected:
         /**

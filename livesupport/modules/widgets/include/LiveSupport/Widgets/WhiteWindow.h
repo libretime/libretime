@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -77,42 +77,42 @@ class WhiteWindow : public Gtk::Window
         /**
          *  The rounded container for the window.
          */
-        Ptr<BlueBin>::Ref               blueBin;
+        BlueBin                       * blueBin;
 
         /**
          *  The layout of the window.
          */
-        Ptr<Gtk::Table>::Ref            layout;
+        Gtk::Table                    * layout;
 
         /**
          *  The event box for the title, enabling capturing mouse events.
          */
-        Ptr<Gtk::EventBox>::Ref         titleEventBox;
+        Gtk::EventBox                 * titleEventBox;
 
         /**
          *  The left alignment contaner for the title.
          */
-        Ptr<Gtk::Alignment>::Ref        titleAlignment;
+        Gtk::Alignment                * titleAlignment;
 
         /**
          *  The title of the window.
          */
-        Ptr<Gtk::Label>::Ref            title;
+        Gtk::Label                    * title;
 
         /**
          *  The right alignment contaner for the close button.
          */
-        Ptr<Gtk::Alignment>::Ref        closeButtonAlignment;
+        Gtk::Alignment                * closeButtonAlignment;
 
         /**
          *  The close button.
          */
-        Ptr<ImageButton>::Ref           closeButton;
+        ImageButton                   * closeButton;
 
         /**
          *  Just a container for the main content of the window.
          */
-        Ptr<Gtk::Alignment>::Ref        childContainer;
+        Gtk::Alignment                * childContainer;
 
         /**
          *  The event handler for the title being clicked on.
@@ -247,6 +247,22 @@ class WhiteWindow : public Gtk::Window
          */
         virtual
         ~WhiteWindow(void)                                  throw ();
+
+        /**
+         *  Set the title of the window.
+         *
+         *  @param title the title of the window.
+         */
+        void
+        set_title(const Glib::ustring & title)              throw ();
+
+        /**
+         *  Get the title of the window.
+         *
+         *  @return the title of the window.
+         */
+        Glib::ustring
+        get_title(void) const                               throw ();
 };
 
 

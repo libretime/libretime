@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ BlueBin :: BlueBin(unsigned int                 backgroundColor,
     this->cornerImages = cornerImages;
 
     child = 0;
-    
+
     bgColor = Gdk::Color();
     unsigned int    red   = (backgroundColor & 0xff0000) >> 8;
     unsigned int    green = (backgroundColor & 0x00ff00);
@@ -79,6 +79,7 @@ BlueBin :: BlueBin(unsigned int                 backgroundColor,
  *----------------------------------------------------------------------------*/
 BlueBin :: ~BlueBin(void)                            throw ()
 {
+    on_remove(child);
 }
 
 
@@ -177,7 +178,7 @@ BlueBin :: on_add(Gtk::Widget* child)                           throw ()
 void
 BlueBin :: on_remove(Gtk::Widget* child)                        throw ()
 {
-    if (this->child == child) {
+    if (child && this->child == child && child->get_parent() == this) {
         this->child = 0;
         bool visible = child->is_visible();
         child->unparent();

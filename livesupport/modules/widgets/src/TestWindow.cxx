@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,27 +64,28 @@ TestWindow :: TestWindow (void)
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
     // init the imageButton
-    imageButton = widgetFactory->createButton(WidgetFactory::deleteButton);
+    imageButton = Gtk::manage(
+                    widgetFactory->createButton(WidgetFactory::deleteButton));
 
     // create a button
-    button = widgetFactory->createButton("Hello, World!");
+    button = Gtk::manage(widgetFactory->createButton("Hello, World!"));
 
     // create a combo box
-    comboBoxText = widgetFactory->createComboBoxText();
+    comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());
     comboBoxText->append_text("item1");
     comboBoxText->append_text("long item2");
     comboBoxText->append_text("very very very long item3");
     comboBoxText->set_active_text("item2");
 
     // create a text entry, ant put it inside a blue bin
-    entryBin = widgetFactory->createEntryBin();
+    entryBin = Gtk::manage(widgetFactory->createEntryBin());
     entry    = entryBin->getEntry();
 
     // create a blue container
-    blueBin = widgetFactory->createDarkBlueBin();
+    blueBin = Gtk::manage(widgetFactory->createDarkBlueBin());
 
     // create and set up the layout
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
     layout->attach(*imageButton,    0, 1, 0, 1);
     layout->attach(*button,         0, 1, 1, 2);
     layout->attach(*comboBoxText,   0, 1, 2, 3);

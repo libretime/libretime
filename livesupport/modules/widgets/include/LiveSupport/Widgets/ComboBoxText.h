@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ComboBoxText.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  A combo box holding text entries.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ComboBoxText : public Gtk::ComboBoxText
 {
@@ -82,7 +82,7 @@ class ComboBoxText : public Gtk::ComboBoxText
         /**
          *  The text displayed inside the button.
          */
-        Ptr<Gtk::Label>::Ref            label;
+        Gtk::Label                    * label;
 
         /**
          *  The X coordinate of the label.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -166,8 +166,10 @@ int main (  int     argc,
         exit(EXIT_FAILURE);
     }
 
-    TestWindow      testWindow;
-    Gtk::Main::run(testWindow);
+    {
+        TestWindow      testWindow;
+        Gtk::Main::run(testWindow);
+    }
 
     exit(EXIT_SUCCESS);
 }

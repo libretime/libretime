@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/EntryBin.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  A container, holding a Gtk::Entry as its only child.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class EntryBin : public BlueBin
 {
@@ -72,7 +72,7 @@ class EntryBin : public BlueBin
         /**
          *  The text entry for this container.
          */
-        Ptr<Gtk::Entry>::Ref            entry;
+        Gtk::Entry                * entry;
 
 
     public:
@@ -97,7 +97,7 @@ class EntryBin : public BlueBin
          *
          *  @return the entry held in this container.
          */
-        Ptr<Gtk::Entry>::Ref
+        Gtk::Entry *
         getEntry(void)                                      throw ()
         {
             return entry;

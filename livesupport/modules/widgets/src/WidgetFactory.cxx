@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -220,75 +220,65 @@ WidgetFactory :: loadImage(const std::string    imageName)
 /*------------------------------------------------------------------------------
  *  Create a button
  *----------------------------------------------------------------------------*/
-Ptr<Button>::Ref
+Button *
 WidgetFactory :: createButton(const Glib::ustring & label)      throw ()
 {
-    Ptr<Button>::Ref    button(new Button(label,
-                                          buttonPassiveImageLeft,
-                                          buttonPassiveImageCenter,
-                                          buttonPassiveImageRight,
-                                          buttonRollImageLeft,
-                                          buttonRollImageCenter,
-                                          buttonRollImageRight));
-
-    return button;
+    return new Button(label,
+                      buttonPassiveImageLeft,
+                      buttonPassiveImageCenter,
+                      buttonPassiveImageRight,
+                      buttonRollImageLeft,
+                      buttonRollImageCenter,
+                      buttonRollImageRight);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Create a combo box
  *----------------------------------------------------------------------------*/
-Ptr<ComboBoxText>::Ref
+ComboBoxText *
 WidgetFactory :: createComboBoxText(void)                       throw ()
 {
-    Ptr<ComboBoxText>::Ref   comboBox(new ComboBoxText(comboBoxLeftImage,
-                                                       comboBoxCenterImage,
-                                                       comboBoxRightImage));
-
-    return comboBox;
+    return new ComboBoxText(comboBoxLeftImage,
+                            comboBoxCenterImage,
+                            comboBoxRightImage);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Create a blue bin
  *----------------------------------------------------------------------------*/
-Ptr<BlueBin>::Ref
+BlueBin *
 WidgetFactory :: createBlueBin(void)                            throw ()
 {
-    Ptr<BlueBin>::Ref   blueBin(new BlueBin(0xcfdee7, blueBinImages));
-
-    return blueBin;
+    return new BlueBin(0xcfdee7, blueBinImages);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Create a dark blue bin
  *----------------------------------------------------------------------------*/
-Ptr<BlueBin>::Ref
+BlueBin *
 WidgetFactory :: createDarkBlueBin(void)                        throw ()
 {
-    Ptr<BlueBin>::Ref   blueBin(new BlueBin(0x99cdff, darkBlueBinImages));
-
-    return blueBin;
+    return new BlueBin(0x99cdff, darkBlueBinImages);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Create an entry bin
  *----------------------------------------------------------------------------*/
-Ptr<EntryBin>::Ref
+EntryBin *
 WidgetFactory :: createEntryBin(void)                           throw ()
 {
-    Ptr<EntryBin>::Ref   entryBin(new EntryBin(0x99cdff, entryBinImages));
-
-    return entryBin;
+    return new EntryBin(0xcfdfe7, entryBinImages);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Create a stock button
  *----------------------------------------------------------------------------*/
-Ptr<ImageButton>::Ref
+ImageButton *
 WidgetFactory :: createButton(ButtonType    type)               throw ()
 {
     Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
@@ -296,13 +286,14 @@ WidgetFactory :: createButton(ButtonType    type)               throw ()
 
     switch (type) {
         case deleteButton:
-        default:
             passiveImage = loadImage(deleteButtonPassiveName);
             rollImage    = loadImage(deleteButtonRollName);
+            break;
+
+        default:
+            return 0;
     }
 
-    Ptr<ImageButton>::Ref   button(new ImageButton(passiveImage, rollImage));
-
-    return button;
+    return new ImageButton(passiveImage, rollImage);
 }
 
