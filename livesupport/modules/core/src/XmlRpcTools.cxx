@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/XmlRpcTools.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -728,9 +728,8 @@ XmlRpcTools :: extractLoginName(
         throw std::invalid_argument("missing or bad login name argument");
     }
 
-    Ptr<std::string>::Ref loginName(new std::string(
-                                        xmlRpcValue[loginName] ));
-    return loginName;
+    Ptr<std::string>::Ref login(new std::string(xmlRpcValue[loginName]));
+    return login;
 }
 
 
