@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -350,7 +350,98 @@ class GreenBox extends BasicStor{
         return $res;
     }
     
-    /* ---------------------------------------------- methods for preferences */
+    /*====================================================== playlist methods */
+    /**
+     *  Create a new empty playlist.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @param fname string, human readable menmonic file name
+     *  @return string, playlist global unique ID
+     */
+    function createPlaylist($sessid, $playlistId, $fname)
+    {
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->createPlaylist($sessid, $playlistId, $fname);
+    }
+
+    /**
+     *  Open a Playlist metafile for editing.
+     *  Open readable URL and mark file as beeing edited.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return struct
+     *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
+     */
+    function editPlaylist($sessid, $playlistId)
+    {
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->editPlaylist($sessid, $playlistId);
+    }
+    
+    /**
+     *  Store a new Playlist metafile in place of the old one.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistToken string, playlist access token
+     *  @param newPlaylist string, new playlist as XML string
+     *  @return string, playlistId
+     */
+    function savePlaylist($sessid, $playlistToken, $newPlaylist)
+    {
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->savePlaylist($sessid, $playlistToken, $newPlaylist);
+    }
+
+    /**
+     *  Delete a Playlist metafile.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function deletePlaylist($sessid, $playlistId)
+    {
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->deletePlaylist($sessid, $playlistId);
+    }
+    
+    /**
+     *  Check whether a Playlist metafile with the given playlist ID exists.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function existsPlaylist($sessid, $playlistId)
+    {
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->existsPlaylist($sessid, $playlistId);
+    }
+
+    /**
+     *  Check whether a Playlist metafile with the given playlist ID
+     *  is available for editing, i.e., exists and is not marked as
+     *  beeing edited.
+     *
+     *  @param sessid string, session ID
+     *  @param playlistId string, playlist global unique ID
+     *  @return boolean
+     */
+    function playlistIsAvailable($sessid, $playlistId)
+    {
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->playlistIsAvailable($sessid, $playlistId);
+    }
+    
+    /* ============================================== methods for preferences */
     
     /**
      *  Read preference record by session id
