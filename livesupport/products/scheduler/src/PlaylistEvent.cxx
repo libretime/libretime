@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,7 +108,7 @@ void
 PlaylistEvent :: start(void)                       throw ()
 {
     try {
-        audioPlayer->playThis(*playlist->getUri());
+        audioPlayer->open(*playlist->getUri());
         audioPlayer->start();
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -124,5 +124,6 @@ void
 PlaylistEvent :: stop(void)                        throw ()
 {
     audioPlayer->stop();
+    audioPlayer->close();
 }
 
