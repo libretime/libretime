@@ -30,12 +30,10 @@
         </tr>
 
         {foreach from=$_scale item="_hour"}
-            {assign var="_year"  value=$_Day.year}
-            {assign var="_month" value=$_Day.month}
 
             {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
-                    <td style="border-left: 1px solid #ccc;" onContextmenu="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={$_hour}', 'SCHEDULER.addItem')">{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-left: 1px solid #ccc;" onContextmenu="return contextmenu('hour={$_hour}', 'SCHEDULER.addItem')">{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;">
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}

@@ -4,7 +4,7 @@
 {if is_array($SCRATCHPAD)}
 <form name="SP">
     <div class="container_elements">
-        <h1>##Scratch Pad##</h1>
+        <h1>##ScratchPad##</h1>
         <div class="head" style="width:255px; height: 21px;">&nbsp;</div>
         <div class="container_table" style="width:275px;">
             <table style="width:255px;">

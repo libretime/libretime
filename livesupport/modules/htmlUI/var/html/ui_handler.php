@@ -182,10 +182,11 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setRedirect();
     break;
 
-    case "PL.create":
-        if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE)
+    case "PL.create":  
+        if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE) {
             $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
+        }
         $uiHandler->PLAYLIST->setRedirect();
     break;
 
@@ -268,7 +269,7 @@ if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 #header('Location: '.$uiHandler->redirUrl);
 if (ob_get_contents()) {
     $ui_wait = 5;
-}   
+}
 ob_end_clean;
 ?>
 <meta http-equiv="refresh" content="<?php echo $ui_wait ? $ui_wait : 0; ?>; URL=<?php echo $uiHandler->redirUrl; ?>">

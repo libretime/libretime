@@ -1,38 +1,38 @@
 <?xml version="1.0"?>
 <languages>
     <language>
-        <Id>en.English</Id>
+        <Id>en_GB</Id>
         <Name>English(GB)</Name>
         <NativeName>English</NativeName>
     </language>
     <language>
-        <Id>cz.Czech</Id>
+        <Id>cz_CZ</Id>
         <Name>Czech(CZ)</Name>
         <NativeName>Czech</NativeName>
     </language>
     <language>
-        <Id>nl.Dutch</Id>
+        <Id>nl_NL</Id>
         <Name>Dutch(NL)</Name>
         <NativeName>Dutch</NativeName>
     </language>
     <language>
-        <Id>de.German</Id>
+        <Id>de_DE</Id>
         <Name>Deutsch(DE)</Name>
         <NativeName>Deutsch</NativeName>
     </language>
     <language>
-        <Id>hu.Hungarian</Id>
+        <Id>hu_HU</Id>
         <Name>Hungarian(HU)</Name>
         <NativeName>Hungarian</NativeName>
     </language>
     <language>
-        <Id>sr.Serbian</Id>
-        <Name>Serbian(SR)</Name>
+        <Id>sr_CS</Id>
+        <Name>Serbian(CS)</Name>
         <NativeName>Serbian</NativeName>
     </language>
     <language>
-        <Id>es.Spanish</Id>
-        <Name>Spanish(SR)</Name>
+        <Id>es_CO</Id>
+        <Name>Spanish(CO)</Name>
         <NativeName>Spanish</NativeName>
     </language>
 </languages>

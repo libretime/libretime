@@ -32,7 +32,7 @@ class uiScheduler extends uiCalendar
     function set($arr)
     {
         extract($arr);
-
+        #print_r($arr);
         if (isset($view))  $this->curr['view'] = $view;
 
         if (is_numeric($year))  $this->curr['year']  = $year;
@@ -266,7 +266,7 @@ class uiScheduler extends uiCalendar
         $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
         if(!is_array($pl) || !count($pl))
             return FALSE;
-            
+
         $pl = current($pl);
         $offset = strftime('%H:%M:%S', $this->_strtotime($datetime) - $this->_datetime2timestamp($pl['start']) - UI_TIMEZONEOFFSET);
         $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);
@@ -296,7 +296,8 @@ class uiScheduler extends uiCalendar
 
     function _datetime2timestamp($i)
     {
-        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, 'T');
+        $i = str_replace('T', ' ', $i);
+        $formatted = $i[0].$i[1].$i[2].$i[3].'-'.$i[4].$i[5].'-'.$i[6].$i[7].strrchr($i, ' ');
         #echo "input: $i formatted:".$formatted;
         return $this->_strtotime($formatted);
     }
@@ -304,10 +305,8 @@ class uiScheduler extends uiCalendar
 
     function _strtotime($input)
     {
-        ## !! bug in strtotime. zeigt 8h später an als reines datum, wenn Txx:xx:xx verwendet wird !!
-        if (strpos($input, 'T'))
-            return strtotime($input)-8*3600;
-        return strtotime($input);
+        ## !! bug in strtotime, does not rightly support datetime-format using T chatracter
+        return strtotime(str_replace('T', ' ', $input));
     }
 
     function _oneOrMore($in)

@@ -10,9 +10,9 @@ require_once('display.inc.php');
 require_once('data.inc.php');
 require_once('helpfunctions.php');
 
-define('_DEFAULT_LANG_', 'en.English');
+define('_DEFAULT_LANG_', 'en_GB');
 define('_PREFIX_',       'locals');
-#define('_PREFIX_GLOBAL_','globals');
+define('_PREFIX_GLOBAL_', FALSE);
 define('_LANG_BASE_',    'xml');
 define('_DENY_HTML_',    FALSE);
 define('_ENCODING_',     'UTF-8');
@@ -27,7 +27,7 @@ define('_ICONS_DIR_',     '.icons');
 define('_PREFIX_HIDE_',  '.');
 
 define('_START_DIR_', '../');
-#define('_MAINTAINANCE_', TRUE);
+define('_MAINTAINANCE_', TRUE);
 define('_MENU_SCRIPT_',  'menu.php');
-define('_MENU_SCRIPT_',  'menu_static.php');
+#define('_MENU_SCRIPT_',  'menu_static.php');
 ?>

@@ -603,7 +603,7 @@ class uiHandler extends uiBase {
 
                     switch ($val['error']) {
                         case 1: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is bigger than setting in php.ini.', $mask[$key]['label']); break;
-                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is bigger than LiveSupport´s system setting.', $mask[$key]['label']); break;
+                        case 2: $was_error = TRUE; $this->_retMsg('Uploaded file $1 is bigger than LiveSupports system setting.', $mask[$key]['label']); break;
                         case 3: $was_error = TRUE; $this->_retMsg('Upload of file $1 was incomplete.', $mask[$key]['label']); break;
                         case 4: if ($mask[$key]['required']) {$was_error = TRUE; $this->_retMsg('File $1 was not uploaded.', $mask[$key]['label']);} break;
                     }

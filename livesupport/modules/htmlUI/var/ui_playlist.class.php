@@ -44,7 +44,7 @@ class uiPlaylist
         # store access token to ls_pref abd session
         # load PL into session
         if($this->token) {
-             if (UI_WARNING) $this->Base->_retMsg('You have an Playlist already activated,\n first close it');
+             if (UI_WARNING) $this->Base->_retMsg('You have an Playlist already activated, first close it');
             return FALSE;
         }
         if(($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {
@@ -415,7 +415,7 @@ class uiPlaylist
             $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 #print_r($r);
-                $this->Base->_retMsg('Unable to set $1: $2', $key, $val);
+                $this->Base->_retMsg('Unable to set "$1" to "$2" langue "$3"', $key, $val);
             }
         }
         if (UI_VERBOSE) $this->Base->_retMsg('Metadata saved');

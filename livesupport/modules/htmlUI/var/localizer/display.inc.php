@@ -294,7 +294,7 @@ class Display {
                         // skip default language if not maintainance mode
                     } else {
                     $Id = explode('.', $file);
-                    $html .= str_repeat(' ', ($depth+1) * $space).'<a href="'._PANEL_SCRIPT_.'?action=translate&Id='.$Id[1].'.'.$Id[2].'&base='.$Id[0].'&dir='.$dirname.'" target="'._PANEL_FRAME_.'">'.$file."</a>\n";
+                    $html .= str_repeat(' ', ($depth+1) * $space).'<a href="'._PANEL_SCRIPT_.'?action=translate&Id='.$Id[1].'&base='.$Id[0].'&dir='.$dirname.'" target="'._PANEL_FRAME_.'">'.$file."</a>\n";
                     }
                 }
             }

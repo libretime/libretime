@@ -494,8 +494,8 @@ class Data {
     {
         $n = 0;
 
-        $filePattern      = '/(.*).tpl/';                                               // all .php files
-        $functPattern1      = '/##([^#]+)##/iU';                  // like getGS('edit "$1"', ...);
+        $filePattern       = '/(.*).tpl$/';
+        $functPattern1     = '/##([^#]+)##/iU';
 
         $sep = '|';
         $filelist  =  explode($sep, Data::searchFilesRec($file[dir], $filePattern, $sep));

@@ -31,7 +31,7 @@ function contextmenu(param) {
             break;
 
             case "PL.release":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.release')\" "+oF+">&nbsp;##Save and Close Playlist##&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.release')\" "+oF+">&nbsp;##Save and Close this Playlist##&nbsp;</a></li>";
             break;
 
             case "PL.addItem":
@@ -47,7 +47,7 @@ function contextmenu(param) {
             break;
 
             case "PL.create":
-                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##New Playlist using File##&nbsp;</a></li>";
+                contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##New Playlist using this File##&nbsp;</a></li>";
             break;
 
             case "PL.changeFadeIn":

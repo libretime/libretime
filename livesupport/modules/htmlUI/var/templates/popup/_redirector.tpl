@@ -1,3 +1,4 @@
 <script type="text/javascript">
-    opener.location.href = "{$UI_BRWOSER}?act={$target}";
+    opener.location.href = "{$UI_BROWSER}?act={$target}";
+    opener.location.reload();
 </script>

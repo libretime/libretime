@@ -457,12 +457,13 @@ $ui_fmask = array(
                 'type'     => 'select',
                 'label'    => 'Language',
                 'options'  => array(
-                                'en.English'    => 'English',
-                                'nl.Dutch'      => 'Nederlaands',
-                                'cz.Czech'      => 'Cesky',
-                                'de.German'     => 'Deutsch',
-                                'hu.Hungarian'  => 'Magyar',
-                                'sr.Serbian'    => 'Srpski'
+                            'en_GB'        => 'English (GB)',
+                            'nl_NL'        => 'Nederlands (NL)',
+                            'cz_CZ'        => 'Česky (CZ)',
+                            'de_DE'        => 'Deutsch (DE)',
+                            'hu_HU'        => 'Magyar (HU)',
+                            'sr_CS'        => 'Srpski (CS)',
+                            'es_CO'        => "Español (CO)"
                               )
             )
     ),
@@ -522,7 +523,7 @@ $ui_fmask = array(
         array(
             'element'   => 'limit',
             'type'      => 'select',
-            'label'     => 'Rows Per Page',
+            'label'     => 'Rows per Page',
             'options'   => array(
                             10  => 10,
                             25  => 25,
