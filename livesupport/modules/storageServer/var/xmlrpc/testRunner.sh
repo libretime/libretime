@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.18 $
+#   Version  : $Revision: 1.19 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -40,7 +40,9 @@ METADATA="<?xml version=\"1.0\"?>
 <audioClip><metadata xmlns=\"http://www.streamonthefly.org/\"
  xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
  xmlns:dcterms=\"http://purl.org/dc/terms/\">
-<dcterms:extent>00:00:11</dcterms:extent></metadata></audioClip>"
+<dc:title>Media title testRunner</dc:title>
+<dcterms:extent>00:00:11</dcterms:extent>
+</metadata></audioClip>"
 
 echo ""
 XRDIR=`dirname $0`
@@ -162,8 +164,16 @@ getAudioClip() {
 
 searchMetadata() {
     echo -n "# searchMetadata: "
-#    $XR_CLI searchMetadata $SESSID '../tests/srch_cri1.xml' || exit $?
-    $XR_CLI searchMetadata $SESSID 'John %' || exit $?
+    RES=`$XR_CLI searchMetadata $SESSID 'title' 'testRunner'` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    echo $RES
+}
+
+browseCategory() {
+    echo -n "# browseCategory: "
+    RES=`$XR_CLI browseCategory $SESSID 'title' 'title' 'testRunner'` || \
+    	{ ERN=$?; echo $RES; exit $ERN; }
+    echo $RES
 }
 
 PLID="123456789abcdef8"
@@ -282,6 +292,26 @@ logout() {
     $XR_CLI logout $SESSID || exit $?
 }
 
+searchTest() {
+    login
+    storeAudioClip
+    GUNID=$RGUNID
+    searchMetadata
+    if [ "$RES" == "AC(1): $GUNID | PL(0): " ]; then
+        echo "match: OK"
+    else
+        echo "results doesn't match ($RES)"; deleteAudioClip; exit 1;
+    fi
+    browseCategory
+    if [ "$RES" == "RES(1): Media title testRunner" ]; then
+        echo "match: OK"
+    else
+        echo "results doesn't match ($RES)"; deleteAudioClip; exit 1;
+    fi
+    deleteAudioClip
+    logout
+}
+
 preferenceTest(){
     echo "#XMLRPC preference test"
     login
@@ -362,9 +392,7 @@ elif [ "$COMM" == "getAudioClip" ]; then
     getAudioClip
     logout
 elif [ "$COMM" == "searchMetadata" ]; then
-    login
-    searchMetadata
-    logout
+    searchTest
 elif [ "$COMM" == "preferences" ]; then
     preferenceTest
 elif [ "$COMM" == "playlists" ]; then
@@ -375,6 +403,7 @@ elif [ "x$COMM" == "x" ]; then
     storageTest
     playlistTest
     preferenceTest
+    searchTest
 elif [ "$COMM" == "help" ]; then
     usage
 else

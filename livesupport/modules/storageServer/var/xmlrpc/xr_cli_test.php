@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,6 +102,7 @@ $infos = array(
     "updateAudioClipMetadata"   => array('m'=>"locstor.updateAudioClipMetadata",
         'p'=>array('sessid', 'gunid', 'metadata'), 'r'=>'status'),
     "searchMetadata"    => array('m'=>"locstor.searchMetadata", 'p'=>NULL),
+    "browseCategory"    => array('m'=>"locstor.browseCategory", 'p'=>NULL),
     "resetStorage"  => array('m'=>"locstor.resetStorage", 'p'=>array()),
 
     "createPlaylist"    => array('m'=>"locstor.createPlaylist",
@@ -145,22 +146,8 @@ $infos = array(
 );
 
 
-$fullmethod = $infos[$method]['m'];
-$pinfo = $infos[$method]['p'];
-if(is_null($pinfo)){
-    $parr = NULL;
-}elseif(!is_array($pinfo)){
-    $parr = $pars[0];
-    #echo "pinfo not null and not array.\n"; exit;
-}elseif(count($pinfo) == 0){
-    $parr = array();
-}else{
-    $parr = array(); $i=0;
-    foreach($pinfo as $it){
-        $parr[$it] = $pars[$i++];
-    }
-}
-if($method == 'searchMetadata'){
+switch($method){
+case"searchMetadata":
     $parr = array(
         'sessid'=>$pars[0],
         'criteria'=>array(
@@ -173,7 +160,40 @@ if($method == 'searchMetadata'){
             )
         ),
     );
-}
+    break;
+case"browseCategory":
+    $parr = array(
+        'sessid'=>$pars[0],
+        'category'=>$pars[1],
+        'criteria'=>array(
+            'filetype'=>'audioclip',
+            'operator'=>'and',
+            'limit'=> 0,
+            'offset'=> 0,
+            'conditions'=>array(
+                array('cat'=>$pars[2], 'op'=>'partial', 'val'=>$pars[3])
+            )
+        ),
+    );
+    break;
+default:
+    $pinfo = $infos[$method]['p'];
+    if(is_null($pinfo)){
+        $parr = NULL;
+    }elseif(!is_array($pinfo)){
+        $parr = $pars[0];
+        #echo "pinfo not null and not array.\n"; exit;
+    }elseif(count($pinfo) == 0){
+        $parr = array();
+    }else{
+        $parr = array(); $i=0;
+        foreach($pinfo as $it){
+            $parr[$it] = $pars[$i++];
+        }
+    }
+} // switch
+
+$fullmethod = $infos[$method]['m'];
 $msg = new XML_RPC_Message($fullmethod, array(XML_RPC_encode($parr)));
 
 if($verbose){
@@ -183,6 +203,7 @@ if($verbose){
     echo $msg->serialize()."\n";
 }
 
+#$client->setDebug(1);
 $res = $client->send($msg);
 if($res->faultCode() > 0) {
     echo "xr_cli_test.php: ".$res->faultString()." ".$res->faultCode()."\n";
@@ -209,8 +230,24 @@ if(isset($infos[$method]['r'])){
             echo "{$resp[$pom]}\n";
     }
 }else{
-    print_r($resp);
-#    echo"\n";
+    switch($method){
+    case"searchMetadata":
+        echo
+            "AC({$resp['audioClipCnt']}): ".
+                join(", ", $resp['audioClipResults']).
+            " | PL({$resp['playlistCnt']}): ".
+                join(", ", $resp['playlistResults']).
+            "\n";
+        break;
+    case"browseCategory":
+        echo
+            "RES({$resp['cnt']}): ".
+                join(", ", $resp['results']).
+            "\n";
+        break;
+    default:
+        print_r($resp);
+    }
 }
 
 ?>
