@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/uninstall.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,12 +52,14 @@ if(PEAR::isError($dbc)){
     exit(1);
 }
 
+echo "#ArchiveServer uninstall:\n";
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
-$gb = &new GreenBox(&$dbc, $config);
+$gb = &new Archive(&$dbc, $config);
 
-#    $dbc->setErrorHandling(PEAR_ERROR_RETURN);
-echo "# Trying to uninstall archiveServer ...\n";
+
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $gb->uninstall();
+echo "#ArchiveServer uninstall: OK\n";
 
 $dbc->disconnect();
 ?>

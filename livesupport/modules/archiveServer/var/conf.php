@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,18 +62,19 @@ $config = array(
     'bufferDir'     =>  dirname(getcwd()).'/stor/buffer',
     'transDir'      =>  dirname(getcwd()).'/trans',
     'accessDir'     =>  dirname(getcwd()).'/access',
+    'isArchive'     =>  TRUE,
 
     /* ==================================================== URL configuration */
-    // on central archive side: storage=archive !
+    // on central archive side: archive is the storage !
     'storageUrlPath'        => '/livesupportArchiveServer',
     'storageXMLRPC'         => 'xmlrpc/xrArchive.php',
     'storageUrlHost'        => 'localhost',
     'storageUrlPort'        => 80,
-    // only for returning right URLs:
-    'archiveUrlPath'        => '/livesupportArchiveServer',
-    'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
-    'archiveUrlHost'        => 'localhost',
-    'archiveUrlPort'        => 80,
+    // have to be another remote archive:
+    #'archiveUrlPath'        => '/livesupportArchiveServer',
+    #'archiveXMLRPC'         => 'xmlrpc/xrArchive.php',
+    #'archiveUrlHost'        => 'localhost',
+    #'archiveUrlPort'        => 80,
 
     /* ==================================== aplication-specific configuration */
     'objtypes'      => array(
