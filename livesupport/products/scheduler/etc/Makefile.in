@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -117,7 +117,8 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/RemoveFromScheduleMethod.o \
                  ${TMP_DIR}/RescheduleMethod.o \
                  ${TMP_DIR}/ScheduleFactory.o \
-                 ${TMP_DIR}/PostgresqlSchedule.o
+                 ${TMP_DIR}/PostgresqlSchedule.o \
+                 ${TMP_DIR}/DeletePlaylistMethod.o
 
 SCHEDULER_EXE_OBJS = ${SCHEDULER_OBJS} \
                      ${TMP_DIR}/main.o
@@ -138,6 +139,7 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RemoveFromScheduleMethodTest.o \
                    ${TMP_DIR}/RescheduleMethodTest.o \
                    ${TMP_DIR}/PostgresqlScheduleTest.o \
+                   ${TMP_DIR}/DeletePlaylistMethodTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 
