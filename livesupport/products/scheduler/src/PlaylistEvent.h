@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Scheduler;
  *  A scheduled event for playing a playlist.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {
@@ -95,9 +95,9 @@ class PlaylistEvent : public virtual ScheduledEventInterface
         Ptr<time_duration>::Ref     initTime;
 
         /**
-         *  The URL for this playlist file.
+         *  The Playlist this event is playing.
          */
-        Ptr<std::string>::Ref       playlistUrl;
+        Ptr<Playlist>::Ref          playlist;
 
 
     public:

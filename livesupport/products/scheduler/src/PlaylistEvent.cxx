@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,7 +79,7 @@ PlaylistEvent :: PlaylistEvent(
 void
 PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
-    playlistUrl = storage->acquirePlaylist(scheduleEntry->getPlaylistId());
+    playlist = storage->acquirePlaylist(scheduleEntry->getPlaylistId());
 }
 
 
@@ -89,8 +89,8 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
 void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
-    storage->releasePlaylist(scheduleEntry->getPlaylistId());
-    playlistUrl.reset();
+    storage->releasePlaylist(playlist);
+    playlist.reset();
 }
 
 
@@ -100,8 +100,12 @@ PlaylistEvent :: deInitialize(void)                throw ()
 void
 PlaylistEvent :: start(void)                       throw ()
 {
-    audioPlayer->playThis(*playlistUrl);
-    audioPlayer->start();
+    try {
+        audioPlayer->playThis(*playlist->getUri());
+        audioPlayer->start();
+    } catch (std::invalid_argument &e) {
+        // TODO: handle error?
+    }
 }
 
 

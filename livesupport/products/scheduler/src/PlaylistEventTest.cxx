@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -180,8 +180,12 @@ PlaylistEventTest :: initializeTest(void)
 {
     Ptr<PlaylistEvent>::Ref     playlistEvent = createTestEvent();
 
-    playlistEvent->initialize();
-    playlistEvent->deInitialize();
+    try {
+        playlistEvent->initialize();
+        playlistEvent->deInitialize();
+    } catch (std::logic_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 }
 
 
@@ -194,10 +198,14 @@ PlaylistEventTest :: playTest(void)
 {
     Ptr<PlaylistEvent>::Ref     playlistEvent = createTestEvent();
 
-    playlistEvent->initialize();
-    playlistEvent->start();
-    TimeConversion::sleep(duration);
-    playlistEvent->stop();
-    playlistEvent->deInitialize();
+    try {
+        playlistEvent->initialize();
+        playlistEvent->start();
+        TimeConversion::sleep(duration);
+        playlistEvent->stop();
+        playlistEvent->deInitialize();
+    } catch (std::logic_error &e) {
+        CPPUNIT_FAIL(e.what());
+    }
 }
 
