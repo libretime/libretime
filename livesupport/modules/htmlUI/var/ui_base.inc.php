@@ -19,7 +19,23 @@ function errCallBack($err)
  */
 function tra($input)
 {
-    // just a dummy function yet
+    ## initialize at first call of this function ###
+
+    #$GS =& $_SESSION['GS'];
+    static $GS;
+    global $uiBase;
+
+    if ($uiBase->langid && !is_array($GS)) {
+        #echo "load translation";
+        include_once dirname(__FILE__).'/localizer/require.inc.php';
+
+        $GS = loadTranslations($uiBase->langid);
+    }
+    ## end init ####################################
+
+    if ($GS[$input])
+        $input = $GS[$input];
+
     $nr = func_num_args();
     if ($nr > 1)
     for ($i = 1; $i < $nr; $i++){
@@ -97,7 +113,7 @@ class uiBase
         $this->sessid   = $_REQUEST[$config['authCookieName']];
         $this->userid   = $this->gb->getSessUserId($this->sessid);
         $this->login    = $this->gb->getSessLogin($this->sessid);
-        $this->langid   =& $_SESSION['lanid'];
+        $this->langid   =& $_SESSION['langid'];
 
         $this->id       = $_REQUEST['id'] ? $_REQUEST['id'] : $this->gb->getObjId($this->login, $this->gb->storId);
         $this->pid      = $this->gb->getparent($this->id) != 1 ? $this->gb->getparent($this->id) : FALSE;
@@ -350,7 +366,7 @@ class uiBase
 
 
     function _setMDataValue($id, $key, $value, $langid=UI_DEFAULT_LANGID)
-    {   
+    {
         if ($this->gb->setMDataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;
         }

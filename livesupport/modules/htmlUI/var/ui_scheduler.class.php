@@ -264,8 +264,9 @@ class uiScheduler extends uiCalendar
         $datetime    = strftime('%Y-%m-%dT%H:%M:%S');
         $xmldatetime = str_replace('-', '', $datetime);
         $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
-        if(count($pl) == 0)
+        if(!is_array($pl) || !count($pl))
             return FALSE;
+            
         $pl = current($pl);
         $offset = strftime('%H:%M:%S', $this->_strtotime($datetime) - $this->_datetime2timestamp($pl['start']) - UI_TIMEZONEOFFSET);
         $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);

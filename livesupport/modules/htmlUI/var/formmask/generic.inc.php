@@ -458,10 +458,10 @@ $ui_fmask = array(
                 'type'     => 'select',
                 'label'    => 'Language',
                 'options'  => array(
-                                'en'    => 'English',
-                                'cz'    => 'Czech',
-                                'de'    => 'German',
-                                'hu'    => 'Hungarian',
+                                'en.English'    => 'English',
+                                'cz.Czech'      => 'Czech',
+                                'de.German'     => 'German',
+                                'hu.Hungarian'  => 'Hungarian',
                               )
             )
     ),

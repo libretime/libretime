@@ -37,7 +37,7 @@ class uiHandler extends uiBase {
      *  @param pass  string, password
      */
     function login(&$formdata, &$mask)
-    {
+    { 
         #$this->_cleanArray($_SESSION);
 
         if (!$this->_validateForm($formdata, $mask)) {
