@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,7 +57,7 @@ using namespace LiveSupport::Core;
  *----------------------------------------------------------------------------*/
 Ptr<ptime>::Ref
 TimeConversion :: timevalToPtime(const struct timeval *timeval)
-                                                                    throw ()
+                                                    throw (std::out_of_range)
 {
     // don't convert through the boost::posix_time::from_time_t() function
     // as probably because of timezone settings it ruins the actual value
@@ -80,7 +80,7 @@ TimeConversion :: timevalToPtime(const struct timeval *timeval)
  *----------------------------------------------------------------------------*/
 Ptr<ptime>::Ref
 TimeConversion :: tmToPtime(const struct tm *time)
-                                                                    throw ()
+                                                    throw (std::out_of_range)
 {
     // don't convert through the boost::posix_time::from_time_t() function
     // as probably because of timezone settings it ruins the actual value

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class TimeConversion
 {
@@ -91,9 +91,12 @@ class TimeConversion
          *
          *  @param timeval the struct timeval to convert.
          *  @return a boost::posix_time::ptime, holding the same time.
+         *  @exception std::out_of_range if timeval represents a time that
+         *             can not be handled by ptime
          */
         static Ptr<ptime>::Ref
-        timevalToPtime(const struct timeval *timeval)           throw ();
+        timevalToPtime(const struct timeval *timeval)
+                                                    throw (std::out_of_range);
 
         /**
          *  Convert a struct tm to a boost::posix_time::ptime,
@@ -101,9 +104,12 @@ class TimeConversion
          *
          *  @param time the struct tm to convert.
          *  @return a boost::posix_time::ptime, holding the same time.
+         *  @exception std::out_of_range if time represents a time that
+         *             can not be handled by ptime
          */
         static Ptr<ptime>::Ref
-        tmToPtime(const struct tm *time)                        throw ();
+        tmToPtime(const struct tm *time)
+                                                    throw (std::out_of_range);
 
         /**
          *  Return the current time, with microsecond precision.
