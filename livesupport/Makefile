@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
 #-------------------------------------------------------------------------------
 
@@ -32,6 +32,7 @@ MKDIR      = mkdir -p
 RM         = rm -f
 RMDIR      = rm -rf
 DOXYGEN    = doxygen
+DOXYTAG    = doxytag
 XSLTPROC   = xsltproc
 ECHO       = @echo
 FLAWFINDER = flawfinder
@@ -47,6 +48,12 @@ COVERAGE_DIR = ${DOC_DIR}/coverage
 ETC_DIR      = ${BASE_DIR}/etc
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
+
+XMLRPCXX_DOC_DIR   = ${BASE_DIR}/usr/share/doc/xmlrpc++
+EXTERNAL_DOC_PAGES = ${XMLRPCXX_DOC_DIR}/XmlRpcServerMethod_8h-source.html \
+    ${XMLRPCXX_DOC_DIR}/classXmlRpc_1_1XmlRpcServerMethod.html \
+    ${XMLRPCXX_DOC_DIR}/classXmlRpc_1_1XmlRpcServerMethod-members.html
+TAGFILE           = ${DOXYGEN_DIR}/xmlrpc++.tag
 
 TESTRESULTS_XSLT = ${ETC_DIR}/testResultsToHtml.xsl
 TESTRESULTS_IN   = ${ETC_DIR}/testResults.xml
@@ -86,7 +93,7 @@ SCHEDULER_DIR = ${PRODUCTS_DIR}/scheduler
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all doc clean docclean depclean distclean doxygen testresults
-.PHONY: setup tools_setup modules_setup products_setup
+.PHONY: setup tools_setup doxytag_setup modules_setup products_setup
 
 all: printusage
 
@@ -123,7 +130,7 @@ clean:
 	${RMDIR} ${DOXYGEN_DIR}/html
 	${RMDIR} ${COVERAGE_DIR}/*
 
-setup: tools_setup modules_setup products_setup
+setup: tools_setup doxytag_setup modules_setup products_setup
 
 tools_setup:
 	${BOOST_DIR}/${BOOST_VERSION}/bin/install.sh
@@ -133,6 +140,9 @@ tools_setup:
 	${XMLRPCXX_DIR}/${XMLRPCXX_VERSION}/bin/install.sh
 	${LCOV_DIR}/${LCOV_VERSION}/bin/install.sh
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
+
+doxytag_setup:
+	${DOXYTAG} -t ${TAGFILE} ${EXTERNAL_DOC_PAGES}
 
 modules_setup:
 	${CORE_DIR}/bin/autogen.sh

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Attic/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ namespace Core {
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class StorageClientInterface
 {
@@ -186,7 +186,7 @@ class StorageClientInterface
         /**
          *  Release the resource (sound file) used by an audio clip.
          *
-         *  @param id the id of the audio clip to release.
+         *  @param audioClip the id of the audio clip to release.
          *  @exception std::logic_error if the audio clip has no uri field, 
          *             or the file does not exist, etc. 
          */
