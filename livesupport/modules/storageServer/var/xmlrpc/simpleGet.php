@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,8 +58,8 @@ require_once 'DB.php';
 require_once '../conf.php';
 require_once '../LocStor.php';
 
-PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 
 $locStor = &new LocStor($dbc, $config);
@@ -71,6 +71,7 @@ function http_error($code, $err){
     exit;
 }
 
+// parameter checking:
 if(preg_match("|^[0-9a-fA-F]{32}$|", $_REQUEST['sessid'])){
     $sessid = $_REQUEST['sessid'];
 }else{
@@ -82,51 +83,50 @@ if(preg_match("|^[0-9a-fA-F]{16}$|", $_REQUEST['id'])){
     http_error(400, "Error on id parameter. ({$_REQUEST['id']})");
 }
 
-$ex_ac = $locStor->existsAudioClip($sessid, $gunid);
-if(PEAR::isError($ex_ac)){
-    if($ex_ac->getCode() == GBERR_DENY){
-        http_error(403, $ex_ac->getMessage()); 
-    }else{ http_error(500, $ex_ac->getMessage()); }
-}
-$ex_pl = $locStor->existsPlaylist($sessid, $gunid);
-if(PEAR::isError($ex_pl)){
-    if($ex_pl->getCode() == GBERR_DENY){
-        http_error(403, $ex_pl->getMessage());
-    }else{ http_error(500, $ex_pl->getMessage()); }
-}
-if(!$ex_ac && !$ex_pl){ http_error(404, "404 File not found"); }
+// stored file recall:
 $ac =& StoredFile::recallByGunid($locStor, $gunid);
-if(PEAR::isError($ac)){ http_error(500, $ac->getMessage()); }
-$ftype = $locStor->getObjType($id = $locStor->_idFromGunid($gunid));
-if(PEAR::isError($ftype)){ http_error(500, $ftype->getMessage()); }
-if($ex_ac){
-    switch($ftype){
-        case"audioclip":
-            $realFname  = $ac->_getRealRADFname();
-            $mime = $ac->rmd->getMime();
-            header("Content-type: $mime");
-            readfile($realFname);
-            break;
-        case"webstream":
-            $url = $locStor->bsGetMetadataValue($id, 'ls:url');
-            if(PEAR::isError($url)){ http_error(500, $url->getMessage()); }
-            $url = $url[0]['value'];
-            $txt = "Location: $url";
-            header($txt);
-            // echo "$txt\n";
-            break;
+if($dbc->isError($ac)){
+    switch($ac->getCode()){
+        case GBERR_DENY:
+            http_error(403, "403 ".$ac->getMessage());
+        case GBERR_FILENEX:
+        case GBERR_FOBJNEX:
+            http_error(404, "404 File not found");
         default:
-            var_dump($ftype);
-            http_error(500, "500 Unknown ftype ($ftype)");
+            http_error(500, "500 ".$ac->getMessage());
     }
-    exit;
 }
-if($ex_pl){
-    // $md = $locStor->bsGetMetadata($ac->getId(), $sessid);
-    $md = $locStor->getAudioClip($sessid, $gunid);
-    // header("Content-type: text/xml");
-    header("Content-type: application/smil");
-    echo $md;
-    exit;
+$lid = $locStor->_idFromGunid($gunid);
+if($dbc->isError($lid)){ http_error(500, $lid->getMessage()); }
+if(($res = $locStor->_authorize('read', $lid, $sessid)) !== TRUE){
+    http_error(403, "403 Access denied");
+}
+$ftype = $locStor->getObjType($lid);
+if($dbc->isError($ftype)){ http_error(500, $ftype->getMessage()); }
+switch($ftype){
+    case"audioclip":
+        $realFname  = $ac->_getRealRADFname();
+        $mime = $ac->rmd->getMime();
+        header("Content-type: $mime");
+        readfile($realFname);
+        break;
+    case"webstream":
+        $url = $locStor->bsGetMetadataValue($lid, 'ls:url');
+        if(PEAR::isError($url)){ http_error(500, $url->getMessage()); }
+        $url = $url[0]['value'];
+        $txt = "Location: $url";
+        header($txt);
+        // echo "$txt\n";
+        break;
+    case"playlist";
+        // $md = $locStor->bsGetMetadata($ac->getId(), $sessid);
+        $md = $locStor->getAudioClip($sessid, $gunid);
+        // header("Content-type: text/xml");
+        header("Content-type: application/smil");
+        echo $md;
+        break;
+    default:
+        // var_dump($ftype);
+        http_error(500, "500 Unknown ftype ($ftype)");
 }
 ?>
