@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -363,14 +363,14 @@ BlueBin :: renderImage(Glib::RefPtr<Gdk::Pixbuf>   image,
                        int                         x,
                        int                         y)          throw ()
 {
-    image->render_to_drawable(gdkWindow,
-                              get_style()->get_black_gc(),
-                              0, 0,
-                              x,
-                              y,
-                              image->get_width(),
-                              image->get_height(),
-                              Gdk::RGB_DITHER_NONE,
-                              0, 0);
+    gdkWindow->draw_pixbuf(get_style()->get_black_gc(),
+                           image,
+                           0, 0,
+                           x,
+                           y,
+                           image->get_width(),
+                           image->get_height(),
+                           Gdk::RGB_DITHER_NONE,
+                           0, 0);
 }
 
