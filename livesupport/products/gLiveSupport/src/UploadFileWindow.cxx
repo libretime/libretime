@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                       Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
           : WhiteWindow("",
-                        0xffffff,
+                        Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle)
 {

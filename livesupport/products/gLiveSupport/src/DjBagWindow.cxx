@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                             Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
           : WhiteWindow("",
-                        0xffffff,
+                        Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle)
 {
@@ -124,6 +124,9 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
+
+    // color the columns blue
+    treeView->colorBlue();
 
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,

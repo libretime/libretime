@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,7 +57,7 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 WhiteWindow :: WhiteWindow(Glib::ustring                title,
-                           unsigned int                 backgroundColor,
+                           Colors::ColorName            backgroundColor,
                            Ptr<CornerImages>::Ref       cornerImages,
                            bool                         resizable)
                                                                     throw ()
@@ -72,13 +72,7 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     layout = Gtk::manage(new Gtk::Table());
 
     // create the background color, as it is needed by the event box
-    Gdk::Color      bgColor = Gdk::Color();
-    unsigned int    red   = (backgroundColor & 0xff0000) >> 8;
-    unsigned int    green = (backgroundColor & 0x00ff00);
-    unsigned int    blue  = (backgroundColor & 0x0000ff) << 8;
-    bgColor.set_rgb(red, green, blue);
-    Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
-    colormap->alloc_color(bgColor);
+    Gdk::Color      bgColor = Colors::getColor(backgroundColor);
 
     // set the window title
     this->title = Gtk::manage(new Gtk::Label(title));

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/BlueBin.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/Colors.h"
 
 
 namespace LiveSupport {
@@ -62,8 +63,8 @@ using namespace LiveSupport::Core;
 /**
  *  A container holding exactly one child, habing a light blue border to it.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.6 $
  */
 class BlueBin : public Gtk::Bin
 {
@@ -221,7 +222,7 @@ class BlueBin : public Gtk::Bin
          *  @param backgroundColor the RGB value for the background color.
          *  @param cornerImages the corner images.
          */
-        BlueBin(unsigned int                backgroundColor,
+        BlueBin(Colors::ColorName           backgroundColor,
                 Ptr<CornerImages>::Ref      cornerImages)
                                                             throw ();
 

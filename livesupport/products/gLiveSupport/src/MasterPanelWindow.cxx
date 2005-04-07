@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,10 +144,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     add(*layout);
 
     // set the background to white
-    bgColor = Gdk::Color();
-    bgColor.set_rgb(0xffff, 0xffff, 0xffff);
-    Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
-    colormap->alloc_color(bgColor);
+    bgColor = Colors::getColor(Colors::White);
     modify_bg(Gtk::STATE_NORMAL, bgColor);
 
     // set the size and location of the window, according to the screen size

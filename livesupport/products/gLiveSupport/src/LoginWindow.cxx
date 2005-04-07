@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                             Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
           : WhiteWindow("",
-                        0xffffff,
+                        Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
                         false),
             LocalizedObject(bundle)

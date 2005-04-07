@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,7 +54,7 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BlueBin :: BlueBin(unsigned int                 backgroundColor,
+BlueBin :: BlueBin(Colors::ColorName            backgroundColor,
                    Ptr<CornerImages>::Ref       cornerImages)
                                                                     throw ()
 {
@@ -64,13 +64,7 @@ BlueBin :: BlueBin(unsigned int                 backgroundColor,
 
     child = 0;
 
-    bgColor = Gdk::Color();
-    unsigned int    red   = (backgroundColor & 0xff0000) >> 8;
-    unsigned int    green = (backgroundColor & 0x00ff00);
-    unsigned int    blue  = (backgroundColor & 0x0000ff) << 8;
-    bgColor.set_rgb(red, green, blue);
-    Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
-    colormap->alloc_color(bgColor);
+    bgColor = Colors::getColor(backgroundColor);
 }
 
 

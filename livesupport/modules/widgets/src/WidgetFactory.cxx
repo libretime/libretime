@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,8 +35,9 @@
 
 #include <gtkmm/entry.h>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/Colors.h"
 
+#include "LiveSupport/Widgets/WidgetFactory.h"
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
@@ -275,7 +276,7 @@ WidgetFactory :: createComboBoxText(void)                       throw ()
 BlueBin *
 WidgetFactory :: createBlueBin(void)                            throw ()
 {
-    return new BlueBin(0xcfdee7, blueBinImages);
+    return new BlueBin(Colors::LightBlue, blueBinImages);
 }
 
 
@@ -285,7 +286,7 @@ WidgetFactory :: createBlueBin(void)                            throw ()
 BlueBin *
 WidgetFactory :: createDarkBlueBin(void)                        throw ()
 {
-    return new BlueBin(0x99cdff, darkBlueBinImages);
+    return new BlueBin(Colors::MasterPanelCenterBlue, darkBlueBinImages);
 }
 
 
@@ -295,7 +296,7 @@ WidgetFactory :: createDarkBlueBin(void)                        throw ()
 EntryBin *
 WidgetFactory :: createEntryBin(void)                           throw ()
 {
-    return new EntryBin(0xcfdfe7, entryBinImages);
+    return new EntryBin(Colors::LightBlue, entryBinImages);
 }
 
 

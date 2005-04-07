@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/Colors.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 
@@ -70,7 +71,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -269,12 +270,12 @@ class WhiteWindow : public Gtk::Window
          *  Constructor.
          *
          *  @param title the title of the window.
-         *  @param backgroundColor the RGB value for the background color.
+         *  @param backgroundColor the background color.
          *  @param cornerImages the corner images.
          *  @param resizable true if the user can resize the window.
          */
         WhiteWindow(Glib::ustring               title,
-                    unsigned int                backgroundColor,
+                    Colors::ColorName           backgroundColor,
                     Ptr<CornerImages>::Ref      cornerImages,
                     bool                        resizable = true)
                                                             throw ();

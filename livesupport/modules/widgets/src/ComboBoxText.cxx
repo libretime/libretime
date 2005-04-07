@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,6 +33,7 @@
 #include "configure.h"
 #endif
 
+#include "LiveSupport/Widgets/Colors.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
 
 
@@ -68,10 +69,7 @@ ComboBoxText :: ComboBoxText(Glib::RefPtr<Gdk::Pixbuf>      leftImage,
     label->set_parent(*this);
 
     // specify a white background
-    Gdk::Color      bgColor = Gdk::Color();
-    bgColor.set_rgb(0xffff, 0xffff, 0xffff);
-    Glib::RefPtr<Gdk::Colormap> colormap = get_default_colormap();
-    colormap->alloc_color(bgColor);
+    Gdk::Color      bgColor = Colors::getColor(Colors::White);
 
     menu.reset(new Gtk::Menu());
     menu->modify_bg(Gtk::STATE_NORMAL, bgColor);

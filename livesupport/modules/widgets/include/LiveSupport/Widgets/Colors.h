@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/EntryBin.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Colors.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_EntryBin_h
-#define LiveSupport_Widgets_EntryBin_h
+#ifndef LiveSupport_Widgets_Colors_h
+#define LiveSupport_Widgets_Colors_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,19 +40,16 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/entry.h>
+#include <stdexcept>
+#include <map>
 
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Widgets/CornerImages.h"
-#include "LiveSupport/Widgets/Colors.h"
-#include "LiveSupport/Widgets/BlueBin.h"
+#include "gdkmm/color.h"
+#include "gdkmm/colormap.h"
 
 
 namespace LiveSupport {
 namespace Widgets {
 
-using namespace LiveSupport::Core;
-    
 /* ================================================================ constants */
 
 
@@ -62,47 +59,47 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A container, holding a Gtk::Entry as its only child.
+ *  A helper class to hold all the standard colors used by the LiveSupport GUI.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.1 $
  */
-class EntryBin : public BlueBin
+class Colors
 {
+    public:
+        /**
+         *  The names of the colors.
+         */
+        typedef enum  { White, Black, 
+                        LightBlue, BrightBlue, Blue, DarkBlue, 
+                        Gray, SlateGray, MediumBlueGray, DarkGray, 
+                        Orange, 
+                        MasterPanelCenterBlue, LiveModeRowBlue } ColorName;
+
     private:
         /**
-         *  The text entry for this container.
+         *  The vector holding the colors.
          */
-        Gtk::Entry                * entry;
+        static std::map<ColorName, Gdk::Color>  colors;
 
+        /**
+         *  This loads the colors.
+         */
+        static void
+        initialize(void)                                        throw ();
+
+        /**
+         *  Whether we have been initialized yet.
+         */
+        bool
+        static initialized;
 
     public:
         /**
-         *  Constructor, with only one state.
-         *
-         *  @param backgroundColor the RGB value for the background color.
-         *  @param cornerImages the corner images.
+         *  Get a color by its name.
          */
-        EntryBin(Colors::ColorName           backgroundColor,
-                 Ptr<CornerImages>::Ref      cornerImages)
-                                                            throw ();
-
-        /**
-         *  A virtual destructor.
-         */
-        virtual
-        ~EntryBin(void)                                     throw ();
-
-        /**
-         *  Return the entry held in this container.
-         *
-         *  @return the entry held in this container.
-         */
-        Gtk::Entry *
-        getEntry(void)                                      throw ()
-        {
-            return entry;
-        }
+        static const Gdk::Color&
+        getColor(const ColorName&)                              throw ();
 };
 
 
@@ -115,5 +112,5 @@ class EntryBin : public BlueBin
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_EntryBin_h
+#endif // LiveSupport_Widgets_Colors_h
 

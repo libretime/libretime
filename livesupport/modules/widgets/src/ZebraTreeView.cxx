@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,22 @@ ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-ZebraTreeView :: ~ZebraTreeView(void)                            throw ()
+ZebraTreeView :: ~ZebraTreeView(void)                               throw ()
 {
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Color the table blue.
+ *----------------------------------------------------------------------------*/
+void 
+ZebraTreeView :: colorBlue(void)                                    throw ()
+{
+    Gdk::Color      bgColor = Colors::getColor(Colors::LightBlue);
+
+    for (int i = 0; i < get_columns().size(); i++) {
+        Gtk::CellRenderer*  renderer = get_column_cell_renderer(i);
+        renderer->property_cell_background_gdk() = bgColor;
+//        renderer->property_cell_background_set() = false;
+    }
+}

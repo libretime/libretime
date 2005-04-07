@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@
 #include <iostream>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/Colors.h"
 #include "TestWindow.h"
 
 
@@ -58,7 +59,7 @@ using namespace LiveSupport::Widgets;
 TestWindow :: TestWindow (void)
                                                                     throw ()
           : WhiteWindow("test window",
-                        0xffffff,
+                        Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners())
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
@@ -88,7 +89,7 @@ TestWindow :: TestWindow (void)
     notebook->appendPage(*entryBin, "third page");
 
     // create a blue container
-    blueBin = Gtk::manage(widgetFactory->createDarkBlueBin());
+    blueBin = Gtk::manage(widgetFactory->createBlueBin());
 
     // create and set up the layout
     layout = Gtk::manage(new Gtk::Table());
