@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/ConnectionManagerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ConnectionManagerFactoryTest);
 /**
  *  The name of the configuration file for the connection manager factory.
  */
-static const std::string configFileName = "etc/connectionManagerFactory.xml";
+static const std::string configFileName = "connectionManagerFactory.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -95,9 +95,9 @@ ConnectionManagerFactoryTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser        parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                             configFileName);
         const xmlpp::Element  * root     = document->get_root_node();
         Ptr<ConnectionManagerFactory>::Ref   cmf =
                                         ConnectionManagerFactory::getInstance();
@@ -118,7 +118,9 @@ ConnectionManagerFactoryTest :: firstTest(void)
         CPPUNIT_ASSERT(rs->getInt(1) == 1);
 
     } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in configuration file");
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
     } catch (xmlpp::exception &e) {
         CPPUNIT_FAIL(e.what());
     }

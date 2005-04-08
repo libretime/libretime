@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/SimpleConnectionManager.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -120,7 +120,6 @@ SimpleConnectionManager :: getConnection(void)
                                                 throw (std::runtime_error)
 {
     odbc::Connection  * conn;
-
     try {
         conn = odbc::DriverManager::getConnection(dsn, userName, password);
     } catch (std::exception &e) {
@@ -128,7 +127,7 @@ SimpleConnectionManager :: getConnection(void)
     }
 
     if (!conn) {
-        std::string eMsg = "unable to option ODBC connection for DSN ";
+        std::string eMsg = "unable to open ODBC connection for DSN ";
         eMsg += dsn;
         throw std::runtime_error(eMsg);
     }

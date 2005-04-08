@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerClientFactoryTest);
 /**
  *  The name of the configuration file for the scheduler client.
  */
-static const std::string configFileName = "etc/schedulerClientFactory.xml";
+static const std::string configFileName = "schedulerClientFactory.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -78,9 +78,9 @@ SchedulerClientFactoryTest :: setUp(void)                         throw ()
 
     // TODO: only configure, if not configured earlier
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser        parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                             configFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         schedulerClientFactory->configure(*root);

@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.14 $</li>
+  <li>Version: $Revision: 1.15 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -36,6 +36,8 @@ development environment.<br>
   <li>set up additional system resources</li>
   <li>check out the sources</li>
   <li>set up tools used by LiveSupport</li>
+  <li>personalize your development environment<br>
+  </li>
 </ul>
 <h2>Install development tools</h2>
 Install all the tools needed for the development of LiveSupport. Please
@@ -55,16 +57,6 @@ First, LiveSupport expects a <a href="http://www.postgresql.org/">PostgreSQL</a>
 database, and an ODBC
 Data Source accessible to it through <a href="http://www.unixodbc.org/">unixODBC</a>.
 Please refer to the documentation of these tools to set them up.<br>
-<br>
-LiveSupport expects an ODBC Data Source with the following parameters:<br>
-<ul>
-  <li>DSN: <code>LiveSupport-test</code></li>
-  <li>username: <code>test</code></li>
-  <li>password: <code>test</code></li>
-</ul>
-This data source should point to a PostgreSQL instance. Only one
-developer at the time should access this datasource, as the test suites
-regularly create and destroy database tables.<br>
 <br>
 The test environment assumes that it can connect to the PostgreSQL
 database as localhost via a TCP/IP connection, as the user test. To
@@ -114,24 +106,6 @@ list</code> and installed by e.g.: <code>pear install DB</code>):</li>
   </ul>
 <!--  <li><a href="http:///"></a></li>-->
 </ul>
-Please, check settings in <code>var/conf.php</code> files in both
-storageServer and archiveServer modules and create two
-symlinks with name corresponding to 'URL configuration' part of
-<code>var/conf.php</code> files - example for default values:
-<ul>
-  <li> <code>http://localhost:80/livesupportStorageServer/</code>
-should point to the <code>&lt;livesupport-cvs&gt;/modules/storageServer/var</code>
-directory </li>
-  <li> <code>http://localhost:80/livesupportArchiveServer/</code>
-should point to the <code>&lt;livesupport-cvs&gt;/modules/archiveServer/var</code>
-directory </li>
-  <li> <code>http://localhost:80/YOUR-CHOICE/</code>
-should point to the <code>&lt;livesupport-cvs&gt;/modules/htmlUI/var</code>
-directory </li>
-</ul>
-Please make &lt;livesupport-cvs&gt;/modules/htmlUI/var/templates_c/ and
-&lt;livesupport-cvs&gt;/modules/htmlUI/var/html/img/ writable for
-apache.
 <h2>Check out the sources</h2>
 The LiveSupport development directory tree can be accessed via
 anonymous <a href="https://www.cvshome.org/">CVS</a>, using the
@@ -164,6 +138,82 @@ The execution of this command will take a while, as all the supporting
 libraries and tools are compiled and installed to the <code>livesupport/usr</code>
 directory. Please note that nothing is installed outside of the
 LiveSupport directory structure.<br>
+<h2>Personalize your LiveSupport development environment</h2>
+The LiveSupport development environment can be run in two ways: either
+only one developer actively doing LiveSupport development on the
+system, or multiple developers sharing a system for LiveSupport
+development. In the former case, only one database instance, scheduler
+daemon and apache (XML-RPC and HTTP/HTML) entry point is needed. In the
+latter case, each user will have their own database instance, scheduler
+daemon and apache entry points.<br>
+<h3>Only one developer doing development on the system<br>
+</h3>
+If only one developer is doing development on the system, there is no
+need to personalize the resources used by the development environment.
+The following resources are expected on the system.<br>
+<br>
+LiveSupport expects an ODBC Data Source with the following parameters:<br>
+<ul>
+  <li>DSN: <code>LiveSupport-test</code></li>
+  <li>username: <code>test</code></li>
+  <li>password: <code>test</code></li>
+</ul>
+This data source should point to a PostgreSQL instance of the same
+name. Only one
+developer at the time should access this datasource, as the test suites
+regularly create and destroy database tables.<br>
+<br>
+The scheduler daemon will use the port 3344.<br>
+<br>
+Please, check settings in <code>var/conf.php</code> files in both
+storageServer and archiveServer modules and create two
+symlinks with name corresponding to 'URL configuration' part of
+<code>var/conf.php</code> files - example for default values:
+<ul>
+  <li> <code>http://localhost:80/livesupportStorageServer/</code>
+should point to the <code>&lt;livesupport-cvs&gt;/modules/storageServer/var</code>
+directory </li>
+  <li> <code>http://localhost:80/livesupportArchiveServer/</code>
+should point to the <code>&lt;livesupport-cvs&gt;/modules/archiveServer/var</code>
+directory </li>
+  <li> <code>http://localhost:80/YOUR-CHOICE/</code>
+should point to the <code>&lt;livesupport-cvs&gt;/modules/htmlUI/var</code>
+directory </li>
+</ul>
+Please make <code>&lt;livesupport-cvs&gt;/modules/htmlUI/var/templates_c/</code>
+and
+<code>&lt;livesupport-cvs&gt;/modules/htmlUI/var/html/img/</code>
+writable for
+apache.
+<h3>Multiple developers doing development on the system</h3>
+In case multiple developers are sharing a system for LiveSupport
+development, each resource has to be personalized. Please run the <code>livesupport/bin/user_setup_db.sh</code>
+script as <code>root</code> to make the appropriate steps for
+personalization. The script expects the name of the user as a mandatory
+parameter, e.g. invoke as:<br>
+<br>
+<pre><code>cd livesupport<br>./bin/user_setup_db.sh --user ls_developer_user<br></code></pre>
+<br>
+The script will set up the following resources:<br>
+<ul>
+  <li>a PostgreSQL user named <code>test</code> with the password <code>test</code>
+(if it does not exist)</li>
+  <li>a PostgreSQL database named <code>LiveSupport-ls_developer_user</code></li>
+  <li>an ODBC data source of the same name</li>
+  <li>define a user-specific port for the scheduler daemon<br>
+  </li>
+  <li>make certain the directories in the development environment are
+writable by <code>apache</code></li>
+  <li>create personalized configuration files in <code>~/.livesupport/</code></li>
+  <li>create symlinks from <code>~/public_html/</code> to XML-RPC and
+HTML entry points</li>
+</ul>
+After running the above script, the livesupport development environment
+for the specified user will be unique on the system, and will not
+conflict with resources used by other developers. For example, the
+LiveSupport HTML user interface for the user will be reachable at:<br>
+<br>
+<pre><code>http://localhost/~ls_developer_user/livesupport/htmlUI/var<br><br></code></pre>
 <h1>Ready to roll</h1>
 With the above steps completed, the LiveSupport modules and products
 are ready to be compiled and developed further. Have fun!<br>

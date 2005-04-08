@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -260,15 +260,18 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     TagConversion::configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
     // do some initialization, using the configured objects
-    authentication = acf->getAuthenticationClient();
-    audioPlayer    = apf->getAudioPlayer();
-    playLog        = plf->getPlayLog();
+    authentication    = acf->getAuthenticationClient();
+    connectionManager = cmf->getConnectionManager();
+    storage           = scf->getStorageClient();
+    audioPlayer       = apf->getAudioPlayer();
+    playLog           = plf->getPlayLog();
+    schedule          = sf->getSchedule();
 
     Ptr<PlaylistEventContainer>::Ref    eventContainer;
     Ptr<time_duration>::Ref             granularity;
     eventContainer.reset(new PlaylistEventContainer(sessionId,
-                                                    scf->getStorageClient(),
-                                                    sf->getSchedule(),
+                                                    storage,
+                                                    schedule,
                                                     audioPlayer,
                                                     playLog));
     // TODO: read granularity from config file

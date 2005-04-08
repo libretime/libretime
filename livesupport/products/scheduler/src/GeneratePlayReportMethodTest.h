@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/GeneratePlayReportMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Core/SessionId.h"
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -63,8 +64,8 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the GeneratePlayReportMethod class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.5 $
  *  @see GeneratePlayReportMethod
  */
 class GeneratePlayReportMethodTest : public CPPUNIT_NS::TestFixture
@@ -77,31 +78,9 @@ class GeneratePlayReportMethodTest : public CPPUNIT_NS::TestFixture
     private:
 
         /**
-         *  The name of the configuration file for the storage client factory.
-         */
-        static const std::string    storageClientConfig;
-
-        /**
-         *  The name of the configuration file for the connection manager
-         *  factory.
-         */
-        static const std::string    connectionManagerConfig;
-
-        /**
-         *  The name of the configuration file for the play log factory.
-         */
-        static const std::string    playLogConfig;
-
-        /**
          *  The play log used during the test.
          */
         Ptr<PlayLogInterface>::Ref  playLog;
-
-        /**
-         *  The name of the configuration file for the authentication client
-         *  factory.
-         */
-        static const std::string                authenticationClientConfig;
 
         /**
          *  The authentication client produced by the factory.
@@ -112,21 +91,6 @@ class GeneratePlayReportMethodTest : public CPPUNIT_NS::TestFixture
          *  A session ID from the authentication client login() method.
          */
         Ptr<SessionId>::Ref                     sessionId;
-
-        /**
-         *  Configure a configurable with an XML file.
-         *
-         *  @param configurable configure this
-         *  @param fileName the name of the XML file to configure with.
-         *  @exception std::invalid_argument on configuration errors.
-         *  @exception xmlpp::exception on XML parsing errors.
-         */
-        void
-        configure(Ptr<Configurable>::Ref    configurable,
-                  std::string               fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception);
-
 
         /**
          *  Insert some entries into the play log to provide test data.

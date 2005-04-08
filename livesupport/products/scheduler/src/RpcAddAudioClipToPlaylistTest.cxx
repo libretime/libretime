@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcAddAudioClipToPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,7 +63,10 @@ RpcAddAudioClipToPlaylistTest :: setUp(void)                         throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
@@ -89,7 +92,10 @@ RpcAddAudioClipToPlaylistTest :: tearDown(void)                      throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     parameters["sessionId"] = sessionId->getId();
     CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
@@ -109,7 +115,10 @@ RpcAddAudioClipToPlaylistTest :: firstTest(void)
     XmlRpc::XmlRpcValue             parameters;
     XmlRpc::XmlRpcValue             result;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     parameters["sessionId"]      = sessionId->getId();
     parameters["playlistId"]     = "0000000000000001";

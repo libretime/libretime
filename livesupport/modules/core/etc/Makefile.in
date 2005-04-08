@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.25 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.26 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -125,7 +125,8 @@ CORE_LIB_OBJS = ${TMP_DIR}/UniqueId.o \
                 ${TMP_DIR}/Md5.o \
                 ${TMP_DIR}/XmlRpcTools.o \
                 ${TMP_DIR}/XmlRpcException.o \
-                ${TMP_DIR}/TagConversion.o
+                ${TMP_DIR}/TagConversion.o \
+				${TMP_DIR}/BaseTestMethod.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/UniqueIdTest.o \

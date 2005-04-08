@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.38 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,13 +71,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(WebStorageClientTest);
 /**
  *  The name of the configuration file for the web storage client.
  */
-static const std::string storageConfigFileName = "etc/webStorage.xml";
+static const std::string storageConfigFileName = "webStorage.xml";
 
 /**
  *  The name of the configuration file for the authentication factory.
  */
 static const std::string authenticationFactoryConfigFileName 
-                         = "etc/webAuthenticationClient.xml";
+                         = "webAuthenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -94,9 +94,9 @@ WebStorageClientTest :: setUp(void)                         throw ()
     Ptr<AuthenticationClientFactory>::Ref   acf;
     acf             = AuthenticationClientFactory::getInstance();
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-            new xmlpp::DomParser(authenticationFactoryConfigFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser    parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                         authenticationFactoryConfigFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         acf->configure(*root);
@@ -109,9 +109,9 @@ WebStorageClientTest :: setUp(void)                         throw ()
     authentication  = acf->getAuthenticationClient();
     
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-            new xmlpp::DomParser(storageConfigFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser    parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                        storageConfigFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         wsc.reset(new WebStorageClient());

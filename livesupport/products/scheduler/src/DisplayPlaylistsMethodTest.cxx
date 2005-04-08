@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/DisplayPlaylistsMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
+#include "SchedulerDaemon.h"
 #include "DisplayPlaylistsMethod.h"
 #include "DisplayPlaylistsMethodTest.h"
 
@@ -66,24 +67,6 @@ using namespace LiveSupport::Authentication;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DisplayPlaylistsMethodTest);
 
-/**
- *  The name of the configuration file for the storage client factory.
- */
-const std::string DisplayPlaylistsMethodTest::storageClientConfig =
-                                                    "etc/storageClient.xml";
-
-/**
- *  The name of the configuration file for the connection manager factory.
- */
-const std::string DisplayPlaylistsMethodTest::connectionManagerConfig =
-                                          "etc/connectionManagerFactory.xml";
-
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-const std::string DisplayPlaylistsMethodTest::authenticationClientConfig =
-                                          "etc/authenticationClient.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -91,43 +74,15 @@ const std::string DisplayPlaylistsMethodTest::authenticationClientConfig =
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-DisplayPlaylistsMethodTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string           fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
-                                                        
-/*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
 DisplayPlaylistsMethodTest :: setUp(void)                         throw ()
 {
-    Ptr<AuthenticationClientFactory>::Ref acf;
-    Ptr<StorageClientFactory>::Ref scf;
+    Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
-        scf = StorageClientFactory::getInstance();
-        configure(scf, storageClientConfig);
-        Ptr<StorageClientInterface>::Ref    storage = scf->getStorageClient();
+        Ptr<StorageClientInterface>::Ref    storage = scheduler->getStorage();
         storage->reset();
-
-        Ptr<ConnectionManagerFactory>::Ref  cmf
-                                    = ConnectionManagerFactory::getInstance();
-        configure(cmf, connectionManagerConfig);
-
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfig);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -137,7 +92,7 @@ DisplayPlaylistsMethodTest :: setUp(void)                         throw ()
         CPPUNIT_FAIL(e.what());
     }
     
-    authentication = acf->getAuthenticationClient();
+    authentication = scheduler->getAuthentication();
     try {
         sessionId = authentication->login("root", "q");
     } catch (XmlRpcException &e) {
@@ -184,14 +139,25 @@ DisplayPlaylistsMethodTest :: firstTest(void)
              << " - " << e.getMessage();
         CPPUNIT_FAIL(eMsg.str());
     }
-    CPPUNIT_ASSERT(result.size() == 1);
-    XmlRpc::XmlRpcValue     result0 = result[0];
+    CPPUNIT_ASSERT(result.size() == 2);
+    XmlRpc::XmlRpcValue     result0;
+    Ptr<Playlist>::Ref      playlist;
 
+    // check the first returned playlist
+    result0 = result[0];
     CPPUNIT_ASSERT(result0.hasMember("playlist"));
     CPPUNIT_ASSERT(result0["playlist"].getType() 
                                         == XmlRpc::XmlRpcValue::TypeString);
-    Ptr<Playlist>::Ref  playlist;
     CPPUNIT_ASSERT_NO_THROW(playlist.reset(new Playlist(result0)));
     CPPUNIT_ASSERT(playlist->getId()->getId() == 1);
     CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 90 * 60);
+
+    // check the second returned playlist
+    result0 = result[1];
+    CPPUNIT_ASSERT(result0.hasMember("playlist"));
+    CPPUNIT_ASSERT(result0["playlist"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    CPPUNIT_ASSERT_NO_THROW(playlist.reset(new Playlist(result0)));
+    CPPUNIT_ASSERT(playlist->getId()->getId() == 2);
+    CPPUNIT_ASSERT(playlist->getPlaylength()->total_seconds() == 29);
 }

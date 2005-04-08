@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/include/LiveSupport/SchedulerClient/SchedulerClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,12 +70,36 @@ using namespace LiveSupport::Core;
 /**
  *  An interface to access the scheduler daemon as a client.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.6 $
  */
 class SchedulerClientInterface
 {
     public:
+        /**
+         *  Return the XML-RPC host the client connects to.
+         *
+         *  @return the XML-RPC host the client connects to.
+         */
+        virtual Ptr<const std::string>::Ref
+        getXmlRpcHost(void) const                   throw ()        = 0;
+
+        /**
+         *  Return the XML-RPC port the client connects to.
+         *
+         *  @return the XML-RPC port the client connects to.
+         */
+        virtual unsigned int
+        getXmlRpcPort(void) const                   throw ()        = 0;
+
+        /**
+         *  Return the XML-RPC URI prefix used when connecting to the scheduler.
+         *
+         *  @return the XML-RPC URI prefix.
+         */
+        virtual Ptr<const std::string>::Ref
+        getXmlRpcUriPrefix(void) const              throw ()        = 0;
+
         /**
          *  Return the version string for the scheduler this client
          *  is connected to.

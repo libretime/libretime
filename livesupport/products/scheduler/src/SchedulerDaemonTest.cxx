@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemonTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,11 +55,6 @@ using namespace LiveSupport::Scheduler;
 
 // CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonTest);
 
-/**
- *  The name of the configuration file for the scheduler daemon.
- */
-static const std::string configFileName = "etc/scheduler.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -73,19 +68,6 @@ void
 SchedulerDaemonTest :: setUp(void)                              throw ()
 {
     Ptr<SchedulerDaemon>::Ref   daemon = SchedulerDaemon::getInstance();
-
-    if (!daemon->isConfigured()) {
-        try {
-            std::auto_ptr<xmlpp::DomParser> 
-                             parser(new xmlpp::DomParser(configFileName, true));
-            const xmlpp::Document * document = parser->get_document();
-            daemon->configure(*(document->get_root_node()));
-        } catch (std::invalid_argument &e) {
-            CPPUNIT_FAIL("semantic error in configuration file");
-        } catch (xmlpp::exception &e) {
-            CPPUNIT_FAIL("error parsing configuration file");
-        }
-    }
 }
 
 

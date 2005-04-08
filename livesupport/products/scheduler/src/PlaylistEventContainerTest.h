@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventContainerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 #include "ScheduleInterface.h"
 #include "PlayLogInterface.h"
 #include "ScheduleFactory.h"
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -76,7 +77,7 @@ using namespace LiveSupport::Storage;
  *  Unit test for the PlaylistEventContainer class
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see PlaylistEventContainer
  */
 class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
@@ -96,11 +97,6 @@ class PlaylistEventContainerTest : public CPPUNIT_NS::TestFixture
          *  The storage used by the container.
          */
         Ptr<StorageClientInterface>::Ref    storage;
-
-        /**
-         *  The schedule factory used in the test.
-         */
-        Ptr<ScheduleFactory>::Ref           scheduleFactory;
 
         /**
          *  The schedule used by the container.

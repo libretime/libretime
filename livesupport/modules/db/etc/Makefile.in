@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -43,6 +43,7 @@ BASE_DIR     = @builddir@
 DOC_DIR      = ${BASE_DIR}/doc
 DOXYGEN_DIR  = ${DOC_DIR}/doxygen
 COVERAGE_DIR = ${DOC_DIR}/coverage
+BIN_DIR      = ${BASE_DIR}/bin
 ETC_DIR      = ${BASE_DIR}/etc
 INCLUDE_DIR  = ${BASE_DIR}/include
 LIB_DIR      = ${BASE_DIR}/lib
@@ -73,9 +74,9 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
-DB_LIB      = livesupport_db
-DB_LIB_FILE = ${LIB_DIR}/lib${DB_LIB}.a
-TEST_RUNNER = ${TMP_DIR}/testRunner
+DB_LIB         = livesupport_db
+DB_LIB_FILE    = ${LIB_DIR}/lib${DB_LIB}.a
+TEST_RUNNER    = ${TMP_DIR}/testRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -108,9 +109,9 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 DB_LIB_OBJS = ${TMP_DIR}/SimpleConnectionManager.o \
               ${TMP_DIR}/ConnectionManagerFactory.o \
               ${TMP_DIR}/Conversion.o
-TEST_RUNNER_OBJS = ${TMP_DIR}/SimpleConnectionManagerTest.o \
-                   ${TMP_DIR}/ConnectionManagerFactoryTest.o \
-                   ${TMP_DIR}/TestRunner.o
+TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+				   ${TMP_DIR}/SimpleConnectionManagerTest.o \
+                   ${TMP_DIR}/ConnectionManagerFactoryTest.o
 TEST_RUNNER_LIBS = -l${DB_LIB} -l${CORE_LIB} -lcppunit -ldl
 
 

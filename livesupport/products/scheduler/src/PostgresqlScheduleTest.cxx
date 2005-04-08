@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <iostream>
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
+#include "SchedulerDaemon.h"
 #include "PostgresqlSchedule.h"
 #include "PostgresqlScheduleTest.h"
 
@@ -59,11 +60,6 @@ using namespace LiveSupport::Scheduler;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PostgresqlScheduleTest);
 
-/**
- *  The name of the configuration file for the connection manager factory.
- */
-static const std::string configFileName = "etc/connectionManagerFactory.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -76,16 +72,9 @@ static const std::string configFileName = "etc/connectionManagerFactory.xml";
 void
 PostgresqlScheduleTest :: setUp(void)                         throw ()
 {
+    Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        Ptr<ConnectionManagerFactory>::Ref   cmf =
-                                        ConnectionManagerFactory::getInstance();
-        cmf->configure(*root);
-        cm = cmf->getConnectionManager();
+        cm = scheduler->getConnectionManager();
         
         schedule.reset(new PostgresqlSchedule(cm));
         schedule->install();

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveFromScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -62,11 +63,11 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test to test the removeFromSchedule XML-RPC call.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.4 $
  *  @see SchedulerDaemon
  */
-class RpcRemoveFromScheduleTest : public CPPUNIT_NS::TestFixture
+class RpcRemoveFromScheduleTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcRemoveFromScheduleTest);
     CPPUNIT_TEST(simpleTest);

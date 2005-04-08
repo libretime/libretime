@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetSchedulerTimeTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -59,11 +60,11 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test to test the getSchedulerTime XML-RPC call.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.5 $
  *  @see SchedulerDaemon
  */
-class RpcGetSchedulerTimeTest : public CPPUNIT_NS::TestFixture
+class RpcGetSchedulerTimeTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcGetSchedulerTimeTest);
     CPPUNIT_TEST(simpleTest);

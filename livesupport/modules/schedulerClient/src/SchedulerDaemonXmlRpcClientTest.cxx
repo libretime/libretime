@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,35 +68,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION(SchedulerDaemonXmlRpcClientTest);
 /**
  *  The name of the configuration file for the scheduler client.
  */
-static const std::string configFileName = "etc/schedulerDaemonXmlRpcClient.xml";
-
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-static const std::string authenticationClientConfigFileName =
-                                          "etc/authenticationClient.xml";
+static const std::string configFileName = "schedulerDaemonXmlRpcClient.xml";
 
 
 /* ===============================================  local function prototypes */
 
 
 /* =============================================================  module code */
-
-/*------------------------------------------------------------------------------ *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/void
-SchedulerDaemonXmlRpcClientTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string         & fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
 
 /*------------------------------------------------------------------------------
  *  Set up the test environment
@@ -105,9 +83,9 @@ void
 SchedulerDaemonXmlRpcClientTest :: setUp(void)                         throw ()
 {
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser        parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                             configFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         schedulerClient.reset(new SchedulerDaemonXmlRpcClient());
@@ -121,7 +99,11 @@ SchedulerDaemonXmlRpcClientTest :: setUp(void)                         throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(
+                                 schedulerClient->getXmlRpcHost()->c_str(),
+                                 schedulerClient->getXmlRpcPort(),
+                                 schedulerClient->getXmlRpcUriPrefix()->c_str(),
+                                 false);
 
     CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
@@ -147,7 +129,11 @@ SchedulerDaemonXmlRpcClientTest :: tearDown(void)                      throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(
+                                schedulerClient->getXmlRpcHost()->c_str(),
+                                schedulerClient->getXmlRpcPort(),
+                                schedulerClient->getXmlRpcUriPrefix()->c_str(),
+                                false);
 
     parameters["sessionId"] = sessionId->getId();
     CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));

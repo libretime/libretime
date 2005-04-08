@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/OpenPlaylistForEditingMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Core/XmlRpcTools.h"
 
+#include "SchedulerDaemon.h"
 #include "OpenPlaylistForEditingMethod.h"
 #include "OpenPlaylistForEditingMethodTest.h"
 
@@ -66,24 +67,6 @@ using namespace LiveSupport::Authentication;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(OpenPlaylistForEditingMethodTest);
 
-/**
- *  The name of the configuration file for the storage client factory.
- */
-const std::string OpenPlaylistForEditingMethodTest::storageClientConfig =
-                                                    "etc/storageClient.xml";
-
-/**
- *  The name of the configuration file for the connection manager factory.
- */
-const std::string OpenPlaylistForEditingMethodTest::connectionManagerConfig =
-                                          "etc/connectionManagerFactory.xml";
-
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-const std::string OpenPlaylistForEditingMethodTest::authenticationClientConfig =
-                                          "etc/authenticationClient.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -91,43 +74,15 @@ const std::string OpenPlaylistForEditingMethodTest::authenticationClientConfig =
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-OpenPlaylistForEditingMethodTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string           fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
-                                                        
-/*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
 OpenPlaylistForEditingMethodTest :: setUp(void)                         throw ()
 {
-    Ptr<AuthenticationClientFactory>::Ref acf;
-    Ptr<StorageClientFactory>::Ref scf;
+    Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
-        scf = StorageClientFactory::getInstance();
-        configure(scf, storageClientConfig);
-        Ptr<StorageClientInterface>::Ref    storage = scf->getStorageClient();
+        Ptr<StorageClientInterface>::Ref    storage = scheduler->getStorage();
         storage->reset();
-
-        Ptr<ConnectionManagerFactory>::Ref  cmf
-                                    = ConnectionManagerFactory::getInstance();
-        configure(cmf, connectionManagerConfig);
-
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfig);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -137,7 +92,7 @@ OpenPlaylistForEditingMethodTest :: setUp(void)                         throw ()
         CPPUNIT_FAIL(e.what());
     }
     
-    authentication = acf->getAuthenticationClient();
+    authentication = scheduler->getAuthentication();
     try {
         sessionId = authentication->login("root", "q");
     } catch (XmlRpcException &e) {

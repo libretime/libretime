@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -57,11 +58,11 @@ namespace Scheduler {
 /**
  *  Unit test to test the getVersion XML-RPC call.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.3 $
  *  @see SchedulerDaemon
  */
-class RpcGetVersionTest : public CPPUNIT_NS::TestFixture
+class RpcGetVersionTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcGetVersionTest);
     CPPUNIT_TEST(simpleTest);

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRescheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,10 @@ RpcRescheduleTest :: setUp(void)                        throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
@@ -114,7 +117,10 @@ RpcRescheduleTest :: tearDown(void)                     throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     parameters["sessionId"] = sessionId->getId();
     CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
@@ -138,7 +144,10 @@ RpcRescheduleTest :: simpleTest(void)
     XmlRpc::XmlRpcValue     result;
     struct tm               time;
 
-    XmlRpc::XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     // first schedule a playlist, so that there is something to reschedule
     parameters["sessionId"]  = sessionId->getId();
@@ -204,7 +213,10 @@ RpcRescheduleTest :: negativeTest(void)
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     parameters["sessionId"]       = sessionId->getId();
     parameters["scheduleEntryId"] = "0000000000009999";

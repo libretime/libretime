@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerClientFactoryTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/BaseTestMethod.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 
 namespace LiveSupport {
@@ -61,10 +62,10 @@ using namespace LiveSupport::Core;
  *  Unit test for the SchedulerClientFactoryTest class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see SchedulerClientFactoryTest
  */
-class SchedulerClientFactoryTest : public CPPUNIT_NS::TestFixture
+class SchedulerClientFactoryTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(SchedulerClientFactoryTest);
     CPPUNIT_TEST(firstTest);

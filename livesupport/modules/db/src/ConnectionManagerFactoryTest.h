@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/ConnectionManagerFactoryTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,9 +42,14 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/BaseTestMethod.h"
+
 
 namespace LiveSupport {
 namespace Db {
+
+using namespace LiveSupport::Core;
+
 
 /* ================================================================ constants */
 
@@ -58,10 +63,10 @@ namespace Db {
  *  Unit test for the ConnectionManagerFactory class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see ConnectionManagerFactory
  */
-class ConnectionManagerFactoryTest : public CPPUNIT_NS::TestFixture
+class ConnectionManagerFactoryTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(ConnectionManagerFactoryTest);
     CPPUNIT_TEST(firstTest);

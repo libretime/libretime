@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Db/ConnectionManagerInterface.h"
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -64,7 +65,7 @@ using namespace LiveSupport::Core;
  *  Unit test for the PostgresqlSchedule class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see PostgresqlSchedule
  */
 class PostgresqlScheduleTest : public CPPUNIT_NS::TestFixture

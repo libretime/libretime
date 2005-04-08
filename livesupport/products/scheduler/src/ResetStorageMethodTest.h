@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ResetStorageMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "BaseTestMethod.h"
+
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -57,16 +59,16 @@ namespace Scheduler {
 /**
  *  Unit test for the ResetStorageMethod class.
  *
- *  @author  $Author: maroy, fgerlits
- $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.2 $
  *  @see ResetStorageMethod
  */
-class ResetStorageMethodTest : public CPPUNIT_NS::TestFixture
+class ResetStorageMethodTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(ResetStorageMethodTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST_SUITE_END();
+
 
     protected:
 

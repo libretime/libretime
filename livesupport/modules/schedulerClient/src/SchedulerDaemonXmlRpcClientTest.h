@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerDaemonXmlRpcClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/BaseTestMethod.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "SchedulerDaemonXmlRpcClient.h"
 
@@ -62,11 +63,11 @@ using namespace LiveSupport::Authentication;
 /**
  *  Unit test for the SchedulerDaemonXmlRpcClient class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.6 $
  *  @see SchedulerDaemonXmlRpcClient
  */
-class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
+class SchedulerDaemonXmlRpcClientTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(SchedulerDaemonXmlRpcClientTest);
     CPPUNIT_TEST(getVersionTest);
@@ -87,20 +88,6 @@ class SchedulerDaemonXmlRpcClientTest : public CPPUNIT_NS::TestFixture
          *  A session ID from the authentication client login() method.
          */
         Ptr<SessionId>::Ref                     sessionId;
-
-        /**
-         *  Configure a configurable with an XML file.
-         *
-         *  @param configurable configure this
-         *  @param fileName the name of the XML file to configure with.
-         *  @exception std::invalid_argument on configuration errors.
-         *  @exception xmlpp::exception on XML parsing errors.
-         */
-        void
-        configure(Ptr<Configurable>::Ref    configurable,
-                  const std::string       & fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception);
 
 
     protected:

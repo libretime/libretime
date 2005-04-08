@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.51 $
+#   Version  : $Revision: 1.52 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -43,6 +43,7 @@ BASE_DIR     = @builddir@
 DOC_DIR      = ${BASE_DIR}/doc
 DOXYGEN_DIR  = ${DOC_DIR}/doxygen
 COVERAGE_DIR = ${DOC_DIR}/coverage
+BIN_DIR      = ${BASE_DIR}/bin
 ETC_DIR      = ${BASE_DIR}/etc
 SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
@@ -117,6 +118,7 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
 SCHEDULER_EXE     = ${TMP_DIR}/scheduler
+SCHEDULER_SH      = ${BIN_DIR}/scheduler_devenv.sh
 SCHEDULER_CFG     = ${ETC_DIR}/scheduler.xml
 SCHEDULER_WEB_CFG = ${ETC_DIR}/scheduler-web.xml
 TEST_RUNNER       = ${TMP_DIR}/testRunner
@@ -207,8 +209,9 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
 
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/SchedulerDaemonTest.o \
+				   ${TMP_DIR}/BaseTestMethod.o \
                    ${TMP_DIR}/ResetStorageMethodTest.o \
+                   ${TMP_DIR}/SchedulerDaemonTest.o \
                    ${TMP_DIR}/GetSchedulerTimeMethodTest.o \
                    ${TMP_DIR}/RpcGetSchedulerTimeTest.o \
                    ${TMP_DIR}/GetVersionMethodTest.o \
@@ -261,8 +264,8 @@ TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean
 .PHONY: install start status run_tests stop uninstall
-.PHONY: install_web start_web status_web run_web stop_web uninstall_web
-.PHONY: check check_web
+.PHONY: install_local start_local status_local run_local stop_local
+.PHONY: uninstall_local check check_local
 
 all: dir_setup ${SCHEDULER_EXE}
 
@@ -292,54 +295,51 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER} start run_tests stop
+check: all ${TEST_RUNNER} storage_server_init start run_tests stop
 
-check_web: all ${TEST_RUNNER} storage_server_init start_web run_tests stop_web
+check_local: all ${TEST_RUNNER} start_local run_tests stop_local
 
 run_tests: ${TEST_RUNNER}
-	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
+	./bin/run_tests.sh -o ${TEST_RESULTS} -s ${TEST_XSLT}
+#	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 install: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} install
+	${SCHEDULER_SH} install
 
 start: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} start
+	${SCHEDULER_SH} start
 	sleep 2
 
 stop: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
+	${SCHEDULER_SH} stop
 	sleep 2
 
 status: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} status
+	${SCHEDULER_SH} status
 
 uninstall: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} uninstall
+	${SCHEDULER_SH} uninstall
 
-run: ${SCHEDULER_EXE}
+install_local: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} install
+
+start_local: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} start
+	sleep 2
+
+stop_local: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
+	sleep 2
+
+status_local: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} status
+
+run_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} --debug start
 	sleep 2
 
-install_web: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} install
-
-start_web: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} start
-	sleep 2
-
-stop_web: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} stop
-	sleep 2
-
-status_web: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} status
-
-run_web: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} --debug start
-	sleep 2
-
-uninstall_web: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_WEB_CFG} uninstall
+uninstall_local: ${SCHEDULER_EXE}
+	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} uninstall
 
 storage_server_init:
 	${MAKE} -C ${STORAGE_SERVER_DIR}

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGeneratePlayReportTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,10 @@ RpcGeneratePlayReportTest :: setUp(void)                         throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
@@ -117,7 +120,10 @@ RpcGeneratePlayReportTest :: tearDown(void)                      throw ()
     XmlRpc::XmlRpcValue     parameters;
     XmlRpc::XmlRpcValue     result;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     parameters["sessionId"] = sessionId->getId();
     CPPUNIT_ASSERT(xmlRpcClient.execute("logout", parameters, result));
@@ -166,7 +172,10 @@ RpcGeneratePlayReportTest :: firstTest(void)
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     // set up a structure for the parameters
     parameters["sessionId"]  = sessionId->getId();
@@ -205,7 +214,10 @@ RpcGeneratePlayReportTest :: intervalTest(void)
     XmlRpc::XmlRpcValue             result;
     struct tm                       time;
 
-    XmlRpc::XmlRpcClient    xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     // check for the interval 2004-10-26 between 13 and 15 o'clock
     parameters["sessionId"]  = sessionId->getId();

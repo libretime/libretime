@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "LiveSupport/Storage/StorageClientFactory.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
+#include "SchedulerDaemon.h"
 #include "ScheduleFactory.h"
 #include "UploadPlaylistMethod.h"
 #include "RescheduleMethod.h"
@@ -65,18 +66,6 @@ using namespace LiveSupport::Authentication;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RescheduleMethodTest);
 
-/**
- *  The name of the configuration file for the schedule factory.
- */
-const std::string RescheduleMethodTest::scheduleConfig =
-                                            "etc/scheduleFactory.xml";
-
-/**
- *  The name of the configuration file for the authentication client factory.
- */
-const std::string RescheduleMethodTest::authenticationClientConfig =
-                                          "etc/authenticationClient.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -84,39 +73,15 @@ const std::string RescheduleMethodTest::authenticationClientConfig =
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure a Configurable with an XML file.
- *----------------------------------------------------------------------------*/
-void
-RescheduleMethodTest :: configure(
-            Ptr<Configurable>::Ref      configurable,
-            const std::string           fileName)
-                                                throw (std::invalid_argument,
-                                                       xmlpp::exception)
-{
-    Ptr<xmlpp::DomParser>::Ref  parser(new xmlpp::DomParser(fileName, true));
-    const xmlpp::Document * document = parser->get_document();
-    const xmlpp::Element  * root     = document->get_root_node();
-
-    configurable->configure(*root);
-}
-
-                                                        
-/*------------------------------------------------------------------------------
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
 RescheduleMethodTest :: setUp(void)                         throw ()
 {
-    Ptr<AuthenticationClientFactory>::Ref acf;
+    Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
-        Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-        configure(sf, scheduleConfig);
-
-        schedule = sf->getSchedule();
+        schedule = scheduler->getSchedule();
         schedule->install();
-
-        acf = AuthenticationClientFactory::getInstance();
-        configure(acf, authenticationClientConfig);
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL("semantic error in configuration file");
@@ -126,7 +91,7 @@ RescheduleMethodTest :: setUp(void)                         throw ()
         CPPUNIT_FAIL(e.what());
     }
     
-    authentication = acf->getAuthenticationClient();
+    authentication = scheduler->getAuthentication();
     try {
         sessionId = authentication->login("root", "q");
     } catch (XmlRpcException &e) {

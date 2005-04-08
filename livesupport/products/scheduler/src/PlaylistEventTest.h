@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,7 @@
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "PlayLogInterface.h"
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -70,7 +71,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  Unit test for the PlaylistEvent class
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see PlaylistEvent
  */
 class PlaylistEventTest : public CPPUNIT_NS::TestFixture

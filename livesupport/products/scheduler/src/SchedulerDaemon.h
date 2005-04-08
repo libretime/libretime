@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,6 +61,8 @@
 #include "LiveSupport/Core/Installable.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/SessionId.h"
+#include "LiveSupport/Db/ConnectionManagerInterface.h"
+#include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
 #include "LiveSupport/EventScheduler/EventScheduler.h"
@@ -80,6 +82,7 @@
 #include "RemoveFromScheduleMethod.h"
 #include "RescheduleMethod.h"
 #include "RevertEditedPlaylistMethod.h"
+#include "ScheduleInterface.h"
 #include "SavePlaylistMethod.h"
 #include "UpdateFadeInFadeOutMethod.h"
 #include "UploadPlaylistMethod.h"
@@ -97,6 +100,9 @@ namespace Scheduler {
 using namespace LiveSupport;
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
+using namespace LiveSupport::Db;
+using namespace LiveSupport::Storage;
+using namespace LiveSupport::Scheduler;
 using namespace LiveSupport::PlaylistExecutor;
 
 /* ================================================================ constants */
@@ -162,7 +168,7 @@ using namespace LiveSupport::PlaylistExecutor;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -178,7 +184,7 @@ class SchedulerDaemon : public Installable,
         /**
          *  The singleton instance of the scheduler daemon.
          */
-        static Ptr<SchedulerDaemon>::Ref    schedulerDaemon;
+        static Ptr<SchedulerDaemon>::Ref            schedulerDaemon;
 
         /**
          *  The authentication client.
@@ -186,25 +192,40 @@ class SchedulerDaemon : public Installable,
         Ptr<AuthenticationClientInterface>::Ref     authentication;
 
         /**
+         *  The connection manager used by the scheduler.
+         */
+        Ptr<ConnectionManagerInterface>::Ref        connectionManager;
+
+        /**
+         *  The storage client.
+         */
+        Ptr<StorageClientInterface>::Ref            storage;
+
+        /**
+         *  The schedule used by the scheduler daemon.
+         */
+        Ptr<ScheduleInterface>::Ref                 schedule;
+
+        /**
          *  The session id for the scheduler user.
          */
-        Ptr<SessionId>::Ref                 sessionId;
+        Ptr<SessionId>::Ref                         sessionId;
 
         /**
          *  The event scheduler.
          */
         Ptr<LiveSupport::EventScheduler::EventScheduler>::Ref
-                                            eventScheduler;
+                                                    eventScheduler;
 
         /**
          *  The audio player.
          */
-        Ptr<AudioPlayerInterface>::Ref      audioPlayer;
+        Ptr<AudioPlayerInterface>::Ref              audioPlayer;
 
         /**
          *  The play logging facility.
          */
-        Ptr<PlayLogInterface>::Ref          playLog;
+        Ptr<PlayLogInterface>::Ref                  playLog;
 
         /**
          *  The addAudioClipToPlaylistMethod the daemon is providing.
@@ -214,52 +235,52 @@ class SchedulerDaemon : public Installable,
         /**
          *  The createPlaylistMethod the daemon is providing.
          */
-        Ptr<CreatePlaylistMethod>::Ref  createPlaylistMethod;
+        Ptr<CreatePlaylistMethod>::Ref          createPlaylistMethod;
 
         /**
          *  The deletePlaylistMethod the daemon is providing.
          */
-        Ptr<DeletePlaylistMethod>::Ref  deletePlaylistMethod;
+        Ptr<DeletePlaylistMethod>::Ref          deletePlaylistMethod;
 
         /**
          *  The displayAudioClipMethod the daemon is providing.
          */
-        Ptr<DisplayAudioClipMethod>::Ref     displayAudioClipMethod;
+        Ptr<DisplayAudioClipMethod>::Ref        displayAudioClipMethod;
 
         /**
          *  The displayAudioClipsMethod the daemon is providing.
          */
-        Ptr<DisplayAudioClipsMethod>::Ref     displayAudioClipsMethod;
+        Ptr<DisplayAudioClipsMethod>::Ref       displayAudioClipsMethod;
 
         /**
          *  The displayPlaylistMethod the daemon is providing.
          */
-        Ptr<DisplayPlaylistMethod>::Ref     displayPlaylistMethod;
+        Ptr<DisplayPlaylistMethod>::Ref         displayPlaylistMethod;
 
         /**
          *  The displayPlaylistsMethod the daemon is providing.
          */
-        Ptr<DisplayPlaylistsMethod>::Ref     displayPlaylistsMethod;
+        Ptr<DisplayPlaylistsMethod>::Ref        displayPlaylistsMethod;
 
         /**
          *  The displayScheduleMethod the daemon is providing.
          */
-        Ptr<DisplayScheduleMethod>::Ref     displayScheduleMethod;
+        Ptr<DisplayScheduleMethod>::Ref         displayScheduleMethod;
 
         /**
          *  The generatePlayReportMethod the daemon is providing.
          */
-        Ptr<GeneratePlayReportMethod>::Ref     generatePlayReportMethod;
+        Ptr<GeneratePlayReportMethod>::Ref      generatePlayReportMethod;
 
         /**
          *  The getSchedulerTimeMethod the daemon is providing.
          */
-        Ptr<GetSchedulerTimeMethod>::Ref          getSchedulerTimeMethod;
+        Ptr<GetSchedulerTimeMethod>::Ref        getSchedulerTimeMethod;
 
         /**
          *  The getVersion the daemon is providing.
          */
-        Ptr<GetVersionMethod>::Ref          getVersionMethod;
+        Ptr<GetVersionMethod>::Ref              getVersionMethod;
 
         /**
          *  The openPlaylistForEditingMethod the daemon is providing.
@@ -275,62 +296,62 @@ class SchedulerDaemon : public Installable,
         /**
          *  The removeFromScheduleMethod the daemon is providing.
          */
-        Ptr<RemoveFromScheduleMethod>::Ref  removeFromScheduleMethod;
+        Ptr<RemoveFromScheduleMethod>::Ref      removeFromScheduleMethod;
 
         /**
          *  The rescheduleMethod the daemon is providing.
          */
-        Ptr<RescheduleMethod>::Ref  rescheduleMethod;
+        Ptr<RescheduleMethod>::Ref              rescheduleMethod;
 
         /**
          *  The revertEditedPlaylistMethod the daemon is providing.
          */
-        Ptr<RevertEditedPlaylistMethod>::Ref  revertEditedPlaylistMethod;
+        Ptr<RevertEditedPlaylistMethod>::Ref    revertEditedPlaylistMethod;
 
         /**
          *  The savePlaylistMethod the daemon is providing.
          */
-        Ptr<SavePlaylistMethod>::Ref  savePlaylistMethod;
+        Ptr<SavePlaylistMethod>::Ref            savePlaylistMethod;
 
         /**
          *  The updateFadeInFadeOutMethod the daemon is providing.
          */
-        Ptr<UpdateFadeInFadeOutMethod>::Ref  updateFadeInFadeOutMethod;
+        Ptr<UpdateFadeInFadeOutMethod>::Ref     updateFadeInFadeOutMethod;
 
         /**
          *  The uploadPlaylistMethod the daemon is providing.
          */
-        Ptr<UploadPlaylistMethod>::Ref      uploadPlaylistMethod;
+        Ptr<UploadPlaylistMethod>::Ref          uploadPlaylistMethod;
 
         /**
          *  The validatePlaylistMethod the daemon is providing.
          */
-        Ptr<ValidatePlaylistMethod>::Ref      validatePlaylistMethod;
+        Ptr<ValidatePlaylistMethod>::Ref        validatePlaylistMethod;
 
         /**
          *  The loginMethod the daemon is providing.
          */
-        Ptr<LoginMethod>::Ref           loginMethod;
+        Ptr<LoginMethod>::Ref                   loginMethod;
 
         /**
          *  The logoutMethod the daemon is providing.
          */
-        Ptr<LogoutMethod>::Ref          logoutMethod;
+        Ptr<LogoutMethod>::Ref                  logoutMethod;
 
         /**
          *  The resetStorageMethod the daemon is providing.
          */
-        Ptr<ResetStorageMethod>::Ref    resetStorageMethod;
+        Ptr<ResetStorageMethod>::Ref            resetStorageMethod;
 
         /**
          *  The login to the authentication system.
          */
-        std::string                     login;
+        std::string                             login;
 
         /**
          *  The password to the authentication system.
          */
-        std::string                     password;
+        std::string                             password;
 
         /**
          *  Default constructor.
@@ -388,6 +409,72 @@ class SchedulerDaemon : public Installable,
         configure(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error);
+
+        /**
+         *  Return the connection manager used by the scheduler.
+         *
+         *  @return the connection manager used by the scheduler.
+         */
+        Ptr<ConnectionManagerInterface>::Ref
+        getConnectionManager(void)                      throw ()
+        {
+            return connectionManager;
+        }
+
+        /**
+         *  Return the storage client used by the scheduler.
+         *
+         *  @return the storage client used by the scheduler.
+         */
+        Ptr<StorageClientInterface>::Ref
+        getStorage(void)                                throw ()
+        {
+            return storage;
+        }
+
+        /**
+         *  Return the authentication client used by the scheduler.
+         *
+         *  @return the authentication client used by the scheduler.
+         */
+        Ptr<AuthenticationClientInterface>::Ref
+        getAuthentication(void)                         throw ()
+        {
+            return authentication;
+        }
+
+        /**
+         *  Return the schedule used by the scheduler.
+         *
+         *  @return the schedule used by the scheduler.
+         */
+        Ptr<ScheduleInterface>::Ref
+        getSchedule(void)                               throw ()
+        {
+            return schedule;
+        }
+
+        /**
+         *  Return the play log used by the scheduler.
+         *
+         *  @return the play log used by the scheduler.
+         */
+        Ptr<PlayLogInterface>::Ref
+        getPlayLog(void)                                throw ()
+        {
+            return playLog;
+        }
+
+        /**
+         *  Return the audio player used by the scheduler.
+         *
+         *  @return the audio player used by the scheduler.
+         */
+        Ptr<AudioPlayerInterface>::Ref
+        getAudioPlayer(void)                            throw ()
+        {
+            return audioPlayer;
+        }
 
         /**
          *  Install the component.

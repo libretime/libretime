@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,6 +54,9 @@
  *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
  *  </dl>
  */
+
+// these are the default values for the config
+
 $config = array(
     /* ================================================== basic configuration */
     'dsn'           => array(
@@ -113,4 +116,22 @@ $config = array(
     'RootNode'      => 'RootNode',
     'tmpRootPass'   => 'q',
 );
+
+// see if a ~/.livesupport/archiveServer.conf.php exists, and
+// overwrite the settings from there if any
+
+$this_file         = $_SERVER["SCRIPT_FILENAME"];
+$fileowner_id      = fileowner($this_file);
+$fileowner_array   = posix_getpwuid($fileowner_id);
+$fileowner_homedir = $fileowner_array['dir'];
+$home_conf        = $fileowner_homedir . '/.livesupport/archiveServer.conf.php';
+
+if (file_exists($home_conf)) {
+    $default_config = $config;
+    include $home_conf;
+    $user_config = $config;
+    $config = $user_config + $default_config;
+}
+
 ?>
+

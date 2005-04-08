@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLogTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 #include <iostream>
 
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
+#include "SchedulerDaemon.h"
 #include "PostgresqlPlayLog.h"
 #include "PostgresqlPlayLogTest.h"
 
@@ -59,11 +60,6 @@ using namespace LiveSupport::Scheduler;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PostgresqlPlayLogTest);
 
-/**
- *  The name of the configuration file for the connection manager factory.
- */
-static const std::string configFileName = "etc/connectionManagerFactory.xml";
-
 
 /* ===============================================  local function prototypes */
 
@@ -76,16 +72,9 @@ static const std::string configFileName = "etc/connectionManagerFactory.xml";
 void
 PostgresqlPlayLogTest :: setUp(void)            throw ()
 {
+    Ptr<SchedulerDaemon>::Ref   scheduler = SchedulerDaemon::getInstance();
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        Ptr<ConnectionManagerFactory>::Ref   cmf =
-                                        ConnectionManagerFactory::getInstance();
-        cmf->configure(*root);
-        cm = cmf->getConnectionManager();
+        cm = scheduler->getConnectionManager();
         
         playLog.reset(new PostgresqlPlayLog(cm));
         playLog->install();

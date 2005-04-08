@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGetVersionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,10 @@ RpcGetVersionTest :: simpleTest(void)
     XmlRpcValue                 parameters;
     XmlRpcValue                 result;
 
-    XmlRpcClient xmlRpcClient("localhost", 3344, "/RPC2", false);
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
 
     result.clear();
     xmlRpcClient.execute("getVersion", parameters, result);

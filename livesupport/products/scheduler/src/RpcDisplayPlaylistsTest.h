@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcDisplayPlaylistsTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -62,11 +63,11 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the DisplayPlaylistsMethod class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.4 $
  *  @see DisplayPlaylistsMethod
  */
-class RpcDisplayPlaylistsTest : public CPPUNIT_NS::TestFixture
+class RpcDisplayPlaylistsTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcDisplayPlaylistsTest);
     CPPUNIT_TEST(firstTest);

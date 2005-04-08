@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcGeneratePlayReportTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
 
+#include "BaseTestMethod.h"
 
 namespace LiveSupport {
 namespace Scheduler {
@@ -62,11 +63,11 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the GeneratePlayReportMethod class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.2 $
  *  @see GeneratePlayReportMethod
  */
-class RpcGeneratePlayReportTest : public CPPUNIT_NS::TestFixture
+class RpcGeneratePlayReportTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcGeneratePlayReportTest);
     CPPUNIT_TEST(firstTest);
