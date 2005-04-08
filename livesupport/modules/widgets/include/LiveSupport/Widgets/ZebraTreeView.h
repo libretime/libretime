@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Core;
  *  A list of items, in rows colored alternately grey and light blue.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class ZebraTreeView : public Gtk::TreeView
 {
@@ -83,6 +83,14 @@ class ZebraTreeView : public Gtk::TreeView
         ZebraTreeView(void)                                     throw ()
         {
         }
+
+        /**
+         *  The callback function to set the colors of the rows.
+         */
+        void 
+        cellDataFunction(Gtk::CellRenderer*               cell,
+                         const Gtk::TreeModel::iterator&  iter)
+                                                                throw ();
 
     protected:
 
@@ -105,7 +113,7 @@ class ZebraTreeView : public Gtk::TreeView
          *  Set the callback function for every column.
          */
         void 
-        setCellDataFunction(const Column::SlotCellData&    callback)
+        setCellDataFunction(void)
                                                                 throw ();
 };
 

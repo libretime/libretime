@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,8 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"    Gdk::Color      blueColor = Colors::getColor(Colors::LightBlue);
+#include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 
@@ -76,15 +77,32 @@ ZebraTreeView :: ~ZebraTreeView(void)                           throw ()
  *  Set the callback function for every column.
  *----------------------------------------------------------------------------*/
 void 
-ZebraTreeView :: setCellDataFunction(const Column::SlotCellData&    callback)                                    throw ()
+ZebraTreeView :: setCellDataFunction(void)                      throw ()
 {
     std::list<Column*>              columnList = get_columns();
     std::list<Column*>::iterator    it;
     
     for (it = columnList.begin(); it != columnList.end(); ++it) {
-        (*it)->set_cell_data_func(*(*it)->get_first_cell_renderer(), callback);
+        (*it)->set_cell_data_func(
+                    *(*it)->get_first_cell_renderer(), 
+                    sigc::mem_fun(*this, &ZebraTreeView::cellDataFunction) );
     }
 
 //    set_rules_hint();   // suggest coloring with alternate colors
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback function.
+ *----------------------------------------------------------------------------*/
+void 
+ZebraTreeView :: cellDataFunction(Gtk::CellRenderer*               cell,
+                                  const Gtk::TreeModel::iterator&  iter)
+                                                                throw ()
+{
+    ZebraTreeModelColumnRecord  model;
+
+    Gdk::Color  color = Colors::getColor((*iter)[model.colorColumn] );
+    cell->property_cell_background_gdk() = color;
 }
 

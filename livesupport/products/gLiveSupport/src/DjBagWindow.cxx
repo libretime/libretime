@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,8 +126,7 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     }
 
     // color the columns blue
-    treeView->setCellDataFunction(
-                        sigc::mem_fun(*this, &DjBagWindow::cellDataFunction));
+    treeView->setCellDataFunction();
 
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
@@ -644,18 +643,4 @@ DjBagWindow :: onStopButtonClicked(void)                      throw ()
                     << e.what() << std::endl;
     }
 }
-
-
-/*------------------------------------------------------------------------------
- *  The callback function.
- *----------------------------------------------------------------------------*/
-void 
-DjBagWindow :: cellDataFunction(Gtk::CellRenderer*               cell,
-                                const Gtk::TreeModel::iterator&  iter)
-                                                                throw ()
-{
-    Gdk::Color  color = Colors::getColor((*iter)[modelColumns.colorColumn]);
-    cell->property_cell_background_gdk() = color;
-}
-
 
