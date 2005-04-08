@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlPlayLog.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class PostgresqlPlayLog : public Configurable,
                           public PlayLogInterface
@@ -91,6 +91,16 @@ class PostgresqlPlayLog : public Configurable,
          *  The name of the configuration XML elmenent used by this object.
          */
         static const std::string    configElementNameStr;
+
+        /**
+         *  A SQL statement to check if the database can be accessed.
+         */
+        static const std::string    check1Stmt;
+
+        /**
+         *  A SQL statement to check if the log table exists.
+         */
+        static const std::string    logCountStmt;
 
         /**
          *  The SQL create statement used in the installation step.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,6 +56,17 @@ using namespace LiveSupport::Scheduler;
  *----------------------------------------------------------------------------*/
 const std::string PostgresqlSchedule::configElementNameStr =
                                                         "postgresqlSchedule";
+
+/*------------------------------------------------------------------------------
+ *  A statement to check if the database can be accessed.
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::check1Stmt = "SELECT 1";
+
+/*------------------------------------------------------------------------------
+ *  A statement to check if the schedule table exists.
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::scheduleCountStmt =
+                                        "SELECT COUNT(*) FROM schedule";
 
 /*------------------------------------------------------------------------------
  *  The SQL create statement, used for installation.
@@ -210,7 +221,7 @@ PostgresqlSchedule :: isInstalled(void)                 throw (std::exception)
 
         // see if we can connect at all
         stmt.reset(conn->createStatement());
-        stmt->execute("SELECT 1");
+        stmt->execute(check1Stmt);
         res = stmt->getResultSet();
         if (!res->next() || (res->getInt(1) != 1)) {
             throw std::runtime_error("Can't connect to database");
@@ -219,7 +230,7 @@ PostgresqlSchedule :: isInstalled(void)                 throw (std::exception)
         // see if the schedule table exists
         try {
             stmt.reset(conn->createStatement());
-            stmt->execute("SELECT COUNT(*) FROM schedule");
+            stmt->execute(scheduleCountStmt);
             res = stmt->getResultSet();
             if (!res->next() || (res->getInt(1) < 0)) {
                 return false;
