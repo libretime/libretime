@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/BaseTestMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,12 @@
 #include <pwd.h>
 #else
 #error need pwd.h
+#endif
+
+#ifdef HAVE_ERRNO_H
+#include <errno.h>
+#else
+#error need errno.h
 #endif
 
 #include <fstream>
