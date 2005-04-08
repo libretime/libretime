@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup_db.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -238,7 +238,7 @@ rm -f $odbc_template_tmp
 #-------------------------------------------------------------------------------
 #  Call the script that will do the user-specific setup.
 #-------------------------------------------------------------------------------
-su - $user $bindir/user_setup.sh -g $apache_group
+su - $user -c "$bindir/user_setup.sh -g $apache_group"
 
 
 #-------------------------------------------------------------------------------
