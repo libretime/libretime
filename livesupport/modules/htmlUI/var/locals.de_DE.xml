@@ -7,43 +7,43 @@
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-		<value />
+		<value>Die hochgeladene Datei ist grösser als die Einstellung in LiveSupport.</value>
 	</item>
 	<item>
 		<key>ScratchPad</key>
-		<value />
+		<value>ScratchPad</value>
 	</item>
 	<item>
 		<key>Access denied.</key>
-		<value />
+		<value>Zugriff verweigert.</value>
 	</item>
 	<item>
 		<key>Already active Playlist</key>
-		<value />
+		<value>Es ist bereits eine Programmliste aktiviert.</value>
 	</item>
 	<item>
 		<key>Audioclip Data saved</key>
-		<value />
+		<value>Audioclip Daten gespeichert.</value>
 	</item>
 	<item>
 		<key>Cannot create Playlist</key>
-		<value />
+		<value>Konnte Programmliste nicht anlegen.</value>
 	</item>
 	<item>
 		<key>Cannot delete this Playlist</key>
-		<value />
+		<value>Konnte diese Programmliste nicht löschen.</value>
 	</item>
 	<item>
 		<key>Cannot move item</key>
-		<value />
+		<value>Konnte Datei in Programmliste nicht bewegen.</value>
 	</item>
 	<item>
 		<key>Cannot remove Item from Playlist</key>
-		<value />
+		<value>Konnte Datei auf Programmliste nicht entfernen.</value>
 	</item>
 	<item>
 		<key>Change fade information failed.</key>
-		<value />
+		<value>Konnte fade Informationen nicht ändern.</value>
 	</item>
 	<item>
 		<key>Do</key>
@@ -51,55 +51,55 @@
 	</item>
 	<item>
 		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
-		<value />
+		<value>Datei $1 war bereits im ScratchPad. Sie wurde an die Spitze verschoben.</value>
 	</item>
 	<item>
 		<key>Entry added at $1 with ScheduleId: $2</key>
-		<value />
+		<value>Eintrag hinzugefügt um $1 unter ID $2.</value>
 	</item>
 	<item>
 		<key>Entry with ScheduleId $1 removed</key>
-		<value />
+		<value>Eintrag mit ID $1 entfernt.</value>
 	</item>
 	<item>
 		<key>Error on add item to Playlist</key>
-		<value />
+		<value>Fehler beim Hinzufügen einer Detei zur Programmliste.</value>
 	</item>
 	<item>
 		<key>Error saving Settings</key>
-		<value />
+		<value>Fehler beim Speichern der Stationseinstellungen.</value>
 	</item>
 	<item>
 		<key>Error uploading Logo</key>
-		<value />
+		<value>Fehler beim Hochladen des Logos.</value>
 	</item>
 	<item>
 		<key>Error: $1</key>
-		<value />
+		<value>Fehler: $1</value>
 	</item>
 	<item>
 		<key>File $1 was not uploaded.</key>
-		<value />
+		<value>Die Datei $1 wurde nicht hochgeladen.</value>
 	</item>
 	<item>
 		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
-		<value />
+		<value>Verzeichnis ist nicht leer. Der Löschschutz kann übergangen werden indem die Aktion jetzt wiederholt wird.</value>
 	</item>
 	<item>
 		<key>Found locked Playlist.</key>
-		<value />
+		<value>Eine gesperrte Programmliste wurde aufgefunden.</value>
 	</item>
 	<item>
 		<key>Invalid Form Data</key>
-		<value />
+		<value>Fehlerhafte Formulardaten.</value>
 	</item>
 	<item>
 		<key>Login failed</key>
-		<value />
+		<value>Anmeldung gescheitert.</value>
 	</item>
 	<item>
 		<key>Metadata saved</key>
-		<value />
+		<value>Metadaten gespeichert.</value>
 	</item>
 	<item>
 		<key>Missing value for $1</key>
@@ -107,51 +107,51 @@
 	</item>
 	<item>
 		<key>No Item(s) selected</key>
-		<value />
+		<value>Keine Detai(en) ausgäwählt.</value>
 	</item>
 	<item>
 		<key>No Playlist is locked by You.</key>
-		<value />
+		<value>Keine aktive Programmliste vorhanden.</value>
 	</item>
 	<item>
 		<key>Note: Station Preferences not setup proberly.</key>
-		<value />
+		<value>Achtung: Stationseinstellungen unvollständig.</value>
 	</item>
 	<item>
 		<key>Old password was incorrect.</key>
-		<value />
+		<value>Das alte Passwort war falsch.</value>
 	</item>
 	<item>
 		<key>Password changed.</key>
-		<value />
+		<value>Passwort geändert.</value>
 	</item>
 	<item>
 		<key>Passwords did not match.</key>
-		<value />
+		<value>Passwörter stimmen nicht überein.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; activated</key>
-		<value />
+		<value>Programmliste &quot;$1&quot; aktiviert.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; released</key>
-		<value />
+		<value>Programmliste &quot;$1&quot; freigegeben.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; reverted</key>
-		<value />
+		<value>Programmliste &quot;$1&quot; zurückgesetzt.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; saved</key>
-		<value />
+		<value>Programmliste &quot;$1&quot; gespeichert.</value>
 	</item>
 	<item>
 		<key>Playlist has been locked by $1</key>
-		<value />
+		<value>Diese Programmliste ist gesperrt von $1.</value>
 	</item>
 	<item>
 		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
-		<value />
+		<value>Das ScratchPad kann nicht benutzt werden solange seine Länge nicht nicht in den Stationseinstellungen gesetzt wurde.</value>
 	</item>
 	<item>
 		<key>Select a Value</key>
@@ -159,7 +159,7 @@
 	</item>
 	<item>
 		<key>Settings saved</key>
-		<value />
+		<value>Stationseinstellungen gespeichert.</value>
 	</item>
 	<item>
 		<key>Stream Data changed</key>
@@ -539,7 +539,7 @@
 	</item>
 	<item>
 		<key>Monthly View</key>
-		<value>Monatsansicht</value>
+		<value />
 	</item>
 	<item>
 		<key>Mood</key>
@@ -547,23 +547,23 @@
 	</item>
 	<item>
 		<key>Move</key>
-		<value>Verschieben</value>
+		<value />
 	</item>
 	<item>
 		<key>Multiple Action:</key>
-		<value>Aktionen</value>
+		<value />
 	</item>
 	<item>
 		<key>Music</key>
-		<value>Musik</value>
+		<value />
 	</item>
 	<item>
 		<key>Name</key>
-		<value>Name</value>
+		<value />
 	</item>
 	<item>
 		<key>New</key>
-		<value>Neu</value>
+		<value />
 	</item>
 	<item>
 		<key>New Password</key>
@@ -579,19 +579,19 @@
 	</item>
 	<item>
 		<key>New empty Playlist</key>
-		<value>Neue leere Liste</value>
+		<value />
 	</item>
 	<item>
 		<key>No Entry</key>
-		<value>Kein Eintrag</value>
+		<value />
 	</item>
 	<item>
 		<key>No match found.</key>
-		<value>Kein Eintrag gefunden</value>
+		<value />
 	</item>
 	<item>
 		<key>No objects</key>
-		<value>Keine Objekte</value>
+		<value />
 	</item>
 	<item>
 		<key>Old Password</key>
@@ -599,7 +599,7 @@
 	</item>
 	<item>
 		<key>Open last Playlist</key>
-		<value>Letzte Liste öffnen</value>
+		<value />
 	</item>
 	<item>
 		<key>Operator</key>
@@ -619,7 +619,7 @@
 	</item>
 	<item>
 		<key>Page</key>
-		<value>Seite</value>
+		<value />
 	</item>
 	<item>
 		<key>Password</key>
@@ -631,11 +631,11 @@
 	</item>
 	<item>
 		<key>Playlist Editor</key>
-		<value>Programmlisten</value>
+		<value />
 	</item>
 	<item>
 		<key>Playlist Metadata</key>
-		<value>Listen-Metadaten</value>
+		<value />
 	</item>
 	<item>
 		<key>Radio station name</key>
@@ -647,7 +647,7 @@
 	</item>
 	<item>
 		<key>Range</key>
-		<value>Bereich</value>
+		<value />
 	</item>
 	<item>
 		<key>Rating</key>
@@ -655,19 +655,19 @@
 	</item>
 	<item>
 		<key>RawAnalyze</key>
-		<value>RohAnalyse</value>
+		<value />
 	</item>
 	<item>
 		<key>Remove File from Playlist</key>
-		<value>Datei von der Liste entfernen</value>
+		<value />
 	</item>
 	<item>
 		<key>Remove Playlist</key>
-		<value>Liste entfernen</value>
+		<value />
 	</item>
 	<item>
 		<key>Remove Selected</key>
-		<value>Aufgewählte entfernen</value>
+		<value />
 	</item>
 	<item>
 		<key>Remove file(s)</key>
@@ -675,7 +675,7 @@
 	</item>
 	<item>
 		<key>Remove from Scratchpad</key>
-		<value>Vom Notizblock löschen</value>
+		<value />
 	</item>
 	<item>
 		<key>Repeat Password</key>
@@ -703,7 +703,7 @@
 	</item>
 	<item>
 		<key>Revert to Saved</key>
-		<value>Zurück zum letzten Speicherstand</value>
+		<value />
 	</item>
 	<item>
 		<key>Rows Per Page</key>
@@ -719,11 +719,11 @@
 	</item>
 	<item>
 		<key>Save Playlist</key>
-		<value>Programmliste speichern</value>
+		<value />
 	</item>
 	<item>
 		<key>Save and Close</key>
-		<value>Speichern und Schließen</value>
+		<value />
 	</item>
 	<item>
 		<key>Save and Close this Playlist</key>
@@ -731,15 +731,15 @@
 	</item>
 	<item>
 		<key>Scheduler</key>
-		<value>Programmautomatik</value>
+		<value />
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>
-		<value>Termine wählen</value>
+		<value />
 	</item>
 	<item>
 		<key>Search</key>
-		<value>Suche</value>
+		<value />
 	</item>
 	<item>
 		<key>Search Library</key>
@@ -747,7 +747,7 @@
 	</item>
 	<item>
 		<key>Signed in</key>
-		<value>Eingetragen</value>
+		<value />
 	</item>
 	<item>
 		<key>Station Logo</key>
@@ -759,11 +759,11 @@
 	</item>
 	<item>
 		<key>Station Settings</key>
-		<value>Studio Einstellungen</value>
+		<value />
 	</item>
 	<item>
 		<key>Station Time</key>
-		<value>Zeit im Studio</value>
+		<value />
 	</item>
 	<item>
 		<key>Station URL</key>
@@ -771,7 +771,7 @@
 	</item>
 	<item>
 		<key>Stream</key>
-		<value>Stream</value>
+		<value />
 	</item>
 	<item>
 		<key>Stream URL</key>
@@ -791,7 +791,7 @@
 	</item>
 	<item>
 		<key>Talk</key>
-		<value>Sprache</value>
+		<value />
 	</item>
 	<item>
 		<key>Time</key>
@@ -799,11 +799,11 @@
 	</item>
 	<item>
 		<key>Title</key>
-		<value>Titel</value>
+		<value />
 	</item>
 	<item>
 		<key>Today</key>
-		<value>Heute</value>
+		<value />
 	</item>
 	<item>
 		<key>Track number</key>
@@ -811,11 +811,11 @@
 	</item>
 	<item>
 		<key>Tree view</key>
-		<value>Baumansicht</value>
+		<value />
 	</item>
 	<item>
 		<key>Type</key>
-		<value>Typ</value>
+		<value />
 	</item>
 	<item>
 		<key>User Password</key>
@@ -823,7 +823,7 @@
 	</item>
 	<item>
 		<key>User/Groups</key>
-		<value>User/Gruppen</value>
+		<value />
 	</item>
 	<item>
 		<key>Username</key>
@@ -831,11 +831,11 @@
 	</item>
 	<item>
 		<key>Week</key>
-		<value>Woche</value>
+		<value />
 	</item>
 	<item>
 		<key>Weekly View</key>
-		<value>Wochenansicht</value>
+		<value />
 	</item>
 	<item>
 		<key>Year</key>
@@ -847,38 +847,38 @@
 	</item>
 	<item>
 		<key>copy</key>
-		<value>Kopieren</value>
+		<value />
 	</item>
 	<item>
 		<key>go up</key>
-		<value>Nach oben</value>
+		<value />
 	</item>
 	<item>
 		<key>move</key>
-		<value>Verschieben</value>
+		<value />
 	</item>
 	<item>
 		<key>move down</key>
-		<value>hoch</value>
+		<value />
 	</item>
 	<item>
 		<key>move up</key>
-		<value>runter</value>
+		<value />
 	</item>
 	<item>
 		<key>new&amp;nbsp;folder</key>
-		<value>Neuer Ordner</value>
+		<value />
 	</item>
 	<item>
 		<key>next</key>
-		<value>weiter</value>
+		<value />
 	</item>
 	<item>
 		<key>permissions</key>
-		<value>Rechte</value>
+		<value />
 	</item>
 	<item>
 		<key>previous</key>
-		<value>zurück</value>
+		<value />
 	</item>
 </language>

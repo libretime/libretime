@@ -182,9 +182,9 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setRedirect();
     break;
 
-    case "PL.create":  
+    case "PL.create":
         if (($ui_tmpid = $uiHandler->PLAYLIST->create($_REQUEST['id'])) !== FALSE) {
-            $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
+            if ($_REQUEST['id']) $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
         $uiHandler->PLAYLIST->setRedirect();

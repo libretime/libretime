@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
 	<Id>sr_CS</Id>
+	<status>checked</status>
 	<item>
 		<key>$1 must be $2</key>
 		<value>$1 mora da bude $2</value>
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-		<value />
+		<value>Poslati file $1 je veci nego sto LiveSupport sistem podrzava</value>
 	</item>
 	<item>
 		<key>ScratchPad</key>
@@ -15,35 +16,35 @@
 	</item>
 	<item>
 		<key>Access denied.</key>
-		<value />
+		<value>Pristup zabranjen</value>
 	</item>
 	<item>
 		<key>Already active Playlist</key>
-		<value />
+		<value>Play-lista je vec aktivna</value>
 	</item>
 	<item>
 		<key>Audioclip Data saved</key>
-		<value />
+		<value>Audiofile je sacuvan</value>
 	</item>
 	<item>
 		<key>Cannot create Playlist</key>
-		<value />
+		<value>Ne mozete da kreirate play-listu</value>
 	</item>
 	<item>
 		<key>Cannot delete this Playlist</key>
-		<value />
+		<value>Ne mozete da obrisete play-listu</value>
 	</item>
 	<item>
 		<key>Cannot move item</key>
-		<value />
+		<value>Ne mozete da pomerite file u play-listi</value>
 	</item>
 	<item>
 		<key>Cannot remove Item from Playlist</key>
-		<value />
+		<value>Ne mozete da uklonite file u play-listi</value>
 	</item>
 	<item>
 		<key>Change fade information failed.</key>
-		<value />
+		<value>Greska u Fade vrednostima</value>
 	</item>
 	<item>
 		<key>Do</key>
@@ -75,7 +76,7 @@
 	</item>
 	<item>
 		<key>Error: $1</key>
-		<value />
+		<value>Greska $1</value>
 	</item>
 	<item>
 		<key>File $1 was not uploaded.</key>
@@ -727,15 +728,15 @@
 	</item>
 	<item>
 		<key>Save and Close this Playlist</key>
-		<value />
+		<value>Snimi i zatvoriti play-listu</value>
 	</item>
 	<item>
 		<key>Scheduler</key>
-		<value>Programator</value>
+		<value>Raspored</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>
-		<value>Navigacija programatorom</value>
+		<value>Navigacija rasporeda</value>
 	</item>
 	<item>
 		<key>Search</key>
@@ -743,7 +744,7 @@
 	</item>
 	<item>
 		<key>Search Library</key>
-		<value />
+		<value>Pretrazivac baze</value>
 	</item>
 	<item>
 		<key>Signed in</key>
@@ -751,11 +752,11 @@
 	</item>
 	<item>
 		<key>Station Logo</key>
-		<value />
+		<value>Logo Stanice</value>
 	</item>
 	<item>
 		<key>Station Name</key>
-		<value />
+		<value>Ime stanice</value>
 	</item>
 	<item>
 		<key>Station Settings</key>
@@ -767,7 +768,7 @@
 	</item>
 	<item>
 		<key>Station URL</key>
-		<value />
+		<value>URL Stanice</value>
 	</item>
 	<item>
 		<key>Stream</key>
@@ -775,19 +776,19 @@
 	</item>
 	<item>
 		<key>Stream URL</key>
-		<value />
+		<value>Stream URL</value>
 	</item>
 	<item>
 		<key>Subject</key>
-		<value />
+		<value>Sadrzaj</value>
 	</item>
 	<item>
 		<key>Submit</key>
-		<value />
+		<value>Pridruzi</value>
 	</item>
 	<item>
 		<key>System Settings</key>
-		<value />
+		<value>Sistemsko podesavanje</value>
 	</item>
 	<item>
 		<key>Talk</key>
@@ -795,7 +796,7 @@
 	</item>
 	<item>
 		<key>Time</key>
-		<value />
+		<value>Vreme</value>
 	</item>
 	<item>
 		<key>Title</key>
@@ -819,15 +820,15 @@
 	</item>
 	<item>
 		<key>User Password</key>
-		<value />
+		<value>Korisnicka lozinka</value>
 	</item>
 	<item>
 		<key>User/Groups</key>
-		<value>Korisnik/grup</value>
+		<value>Korisnik/grupa</value>
 	</item>
 	<item>
 		<key>Username</key>
-		<value />
+		<value>Korisnicko ime</value>
 	</item>
 	<item>
 		<key>Week</key>
@@ -839,11 +840,11 @@
 	</item>
 	<item>
 		<key>Year</key>
-		<value />
+		<value>godina</value>
 	</item>
 	<item>
 		<key>calendar week</key>
-		<value />
+		<value>nedeljni kalendar</value>
 	</item>
 	<item>
 		<key>copy</key>

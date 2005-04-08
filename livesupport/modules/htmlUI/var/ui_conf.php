@@ -3,7 +3,7 @@ define('UI_VERBOSE', FALSE);
 define('UI_WARNING', TRUE);
 define('UI_ERROR',   TRUE);
 
-define('UI_DEFAULT_LANGID', 'en');
+define('UI_DEFAULT_LANGID', 'en_GB');
 #define('UI_TIMEZONE', ' +100');
 define('UI_TIMEZONEOFFSET', date('Z'));
 

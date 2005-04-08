@@ -184,10 +184,8 @@ class uiHandler extends uiBase {
         #$this->gb->replaceMetadata($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
         $ia = $this->gb->analyzeFile($id, $this->sessid);
-        $s  = $ia['playtime_seconds'];
-        $extent = date('H:i:s', floor($s)-date('Z')).substr(number_format($s, 6), strpos(number_format($s, 6), '.'));
 
-        $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $extent);
+        $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
         $this->_setMDataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
         foreach ($mask['pages'] as $key=>$val) {
