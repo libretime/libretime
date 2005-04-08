@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -97,7 +97,8 @@ fi
 scheduler_base_port=3344
 
 user=`whoami`
-hostname=`hostname -f`
+# force localhost always
+hostname=localhost
 http_port=80
 scheduler_port=`expr $scheduler_base_port + $UID`
 dbserver=localhost
