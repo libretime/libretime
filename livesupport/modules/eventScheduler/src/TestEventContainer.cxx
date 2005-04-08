@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/TestEventContainer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ TestEventContainer :: TestEventContainer(
 Ptr<ScheduledEventInterface>::Ref
 TestEventContainer :: getNextEvent(Ptr<ptime>::Ref  when)       throw ()
 {
-    if (*when < *event->getScheduledTime()) {
+    if (*when < (*event->getScheduledTime() - *event->maxTimeToInitialize())) {
         return event;
     } else {
         // return an empty reference

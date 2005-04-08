@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,13 +64,14 @@ using namespace LiveSupport::Core;
  *  Unit test to test the uploadPlaylist XML-RPC call.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see SchedulerDaemon
  */
 class RpcUploadPlaylistTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcUploadPlaylistTest);
     CPPUNIT_TEST(simpleTest);
+    CPPUNIT_TEST(postInitTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -89,6 +90,17 @@ class RpcUploadPlaylistTest : public BaseTestMethod
          */
         void
         simpleTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to try to schedule something that would have to have
+         *  been already initialized (thus, the start time is in the
+         *  future, but the initialize time is already in the past.)
+         *  see http://bugs.campware.org/view.php?id=757
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        postInitTest(void)                  throw (CPPUNIT_NS::Exception);
 
     public:
         

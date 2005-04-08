@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,6 +81,8 @@ PlaylistEvent :: PlaylistEvent(
 
     // this init time is a wild guess, say 5 seconds should be enough
     initTime.reset(new posix_time::time_duration(0, 0, 5, 0));
+
+    state = created;
 }
 
 
@@ -90,10 +92,16 @@ PlaylistEvent :: PlaylistEvent(
 void
 PlaylistEvent :: initialize(void)                  throw (std::exception)
 {
+    if (state != created) {
+        throw std::logic_error("PlaylistEvent in bad state");
+    }
+
+    state = initializing;
     // some ugliness because getPlaylistId() returns a const pointer
     Ptr<UniqueId>::Ref    playlistId(new UniqueId(scheduleEntry->getPlaylistId()
                                                                ->getId()));
     playlist = storage->acquirePlaylist(sessionId, playlistId);
+    state = initialized;
 }
 
 
@@ -103,8 +111,14 @@ PlaylistEvent :: initialize(void)                  throw (std::exception)
 void
 PlaylistEvent :: deInitialize(void)                throw ()
 {
+    if (state != stopped) {
+        // TODO: handle error?
+        return;
+    }
+
     storage->releasePlaylist(sessionId, playlist);
     playlist.reset();
+    state = deInitialized;
 }
 
 
@@ -114,6 +128,11 @@ PlaylistEvent :: deInitialize(void)                throw ()
 void
 PlaylistEvent :: start(void)                       throw ()
 {
+    if (state != initialized) {
+        // TODO: handle error?
+        return;
+    }
+
     try {
         audioPlayer->open(*playlist->getUri());
         audioPlayer->start();
@@ -123,6 +142,7 @@ PlaylistEvent :: start(void)                       throw ()
         std::cerr << e.what() << std::endl;
         // TODO: handle error?
     }
+    state = running;
 }
 
 
@@ -132,7 +152,13 @@ PlaylistEvent :: start(void)                       throw ()
 void
 PlaylistEvent :: stop(void)                        throw ()
 {
+    if (state != running) {
+        // TODO: handle error?
+        return;
+    }
+
     audioPlayer->stop();
     audioPlayer->close();
+    state = stopped;
 }
 

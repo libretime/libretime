@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcUploadPlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,6 +159,48 @@ RpcUploadPlaylistTest :: simpleTest(void)
     time.tm_hour = 10;
     time.tm_min  =  0;
     time.tm_sec  =  0;
+    parameters["playtime"] = &time;
+
+    result.clear();
+    xmlRpcClient.execute("uploadPlaylist", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A test to try to schedule something that would have to have
+ *  been already initialized (thus, the start time is in the
+ *  future, but the initialize time is already in the past.)
+ *  see http://bugs.campware.org/view.php?id=757
+ *----------------------------------------------------------------------------*/
+void
+RpcUploadPlaylistTest :: postInitTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    XmlRpc::XmlRpcValue     parameters;
+    XmlRpc::XmlRpcValue     result;
+    struct tm               time;
+
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
+
+    // first, get the scheduler time
+    result.clear();
+    xmlRpcClient.execute("getSchedulerTime", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("schedulerTime"));
+    time = result["schedulerTime"];
+
+    // try to schedule playlist #1 in 4 seconds from now
+    parameters.clear();
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["playlistId"] = "0000000000000001";
+    // TODO: hopefully time conversion will handle seconds > 60 OK
+    time.tm_sec += 4;
     parameters["playtime"] = &time;
 
     result.clear();

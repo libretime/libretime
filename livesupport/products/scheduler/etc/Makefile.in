@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.52 $
+#   Version  : $Revision: 1.53 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -122,6 +122,7 @@ SCHEDULER_SH      = ${BIN_DIR}/scheduler_devenv.sh
 SCHEDULER_CFG     = ${ETC_DIR}/scheduler.xml
 SCHEDULER_WEB_CFG = ${ETC_DIR}/scheduler-web.xml
 TEST_RUNNER       = ${TMP_DIR}/testRunner
+TEST_RUNNER_SH    = ${BIN_DIR}/run_tests.sh
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -295,13 +296,12 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER} storage_server_init start run_tests stop
+check: all ${TEST_RUNNER} storage_server_init start run run_tests stop
 
 check_local: all ${TEST_RUNNER} start_local run_tests stop_local
 
 run_tests: ${TEST_RUNNER}
-	./bin/run_tests.sh -o ${TEST_RESULTS} -s ${TEST_XSLT}
-#	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
+	${TEST_RUNNER_SH} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 install: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} install
@@ -309,6 +309,9 @@ install: ${SCHEDULER_EXE}
 start: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} start
 	sleep 2
+
+run: ${SCHEDULER_EXE}
+	${SCHEDULER_SH} run
 
 stop: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} stop

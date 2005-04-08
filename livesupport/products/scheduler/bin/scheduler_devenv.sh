@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/scheduler_devenv.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -81,6 +81,12 @@ case "$mode" in
         sleep 2
         ;;
 
+    'run')
+        echo "Running the LiveSupport scheduler..."
+        $scheduler_exe -c $config_file --debug start
+        sleep 2
+        ;;
+
     'stop')
         echo "Stopping the LiveSupport scheduler..."
         $scheduler_exe -c $config_file stop
@@ -113,7 +119,7 @@ case "$mode" in
         echo "LiveSupport scheduler System V runlevel init script."
         echo ""
         echo "Usage:"
-        echo "  $0 start|stop|status|install|uninstall|kill"
+        echo "  $0 start|run|stop|status|install|uninstall|kill"
         echo ""
 
 esac

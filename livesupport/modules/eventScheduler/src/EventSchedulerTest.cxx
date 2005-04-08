@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/EventSchedulerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -175,6 +175,59 @@ EventSchedulerTest :: firstTest(void)
                 CPPUNIT_FAIL("unrecognized event state");
         }
         state = event->getState();
+        TimeConversion::sleep(granularity);
+    }
+
+    eventScheduler->stop();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A test to see what happens, when an event is scheduled after it should
+ *  have been initialized, but not to be started yet.
+ *  See http://bugs.campware.org/view.php?id=757 for details.
+ *----------------------------------------------------------------------------*/
+void
+EventSchedulerTest :: postInitTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<TestScheduledEvent>::Ref        event;
+    Ptr<TestEventContainer>::Ref        container;
+    Ptr<EventScheduler>::Ref            eventScheduler;
+    Ptr<ptime>::Ref                     now;
+    Ptr<ptime>::Ref                     when;
+    Ptr<time_duration>::Ref             initTime;
+    Ptr<time_duration>::Ref             eventLength;
+    Ptr<time_duration>::Ref             granularity;
+    TestScheduledEvent::State           state;
+
+    /* time timeline for this test is:
+       initialize - 10 sec
+       start      - now + 5sec
+       stop       - start + 3 sec
+     */
+
+    now = TimeConversion::now();
+    when.reset(new ptime(*now + seconds(5)));
+    initTime.reset(new time_duration(seconds(10)));
+    eventLength.reset(new time_duration(seconds(3)));
+    granularity.reset(new time_duration(seconds(1)));
+
+    event.reset(new TestScheduledEvent(when, initTime, eventLength));
+    container.reset(new TestEventContainer(event));
+
+    eventScheduler.reset(new EventScheduler(container, granularity));
+
+    eventScheduler->start();
+
+    CPPUNIT_ASSERT(event->getState() == TestScheduledEvent::created);
+    state = event->getState();
+
+    Ptr<ptime>::Ref     end(new ptime(*when + seconds(10)));
+    while (*TimeConversion::now() < *end) {
+        // nothing should happen here, just wait for some to see that
+        // indeed it doesn't
+        CPPUNIT_ASSERT(event->getState() == TestScheduledEvent::created);
         TimeConversion::sleep(granularity);
     }
 

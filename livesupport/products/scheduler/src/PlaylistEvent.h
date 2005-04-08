@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,10 +72,21 @@ using namespace LiveSupport::Storage;
  *  A scheduled event for playing a playlist.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class PlaylistEvent : public virtual ScheduledEventInterface
 {
+    private:
+        /**
+         *  Enumeration describing the possible states of the event.
+         */
+        typedef enum {  created,
+                        initializing,
+                        initialized,
+                        running,
+                        stopped,
+                        deInitialized } State;
+
     private:
         /**
          *  The audio player to play the playlist with.
@@ -95,23 +106,28 @@ class PlaylistEvent : public virtual ScheduledEventInterface
         /**
          *  The schedule entry this event is playing.
          */
-        Ptr<ScheduleEntry>::Ref     scheduleEntry;
+        Ptr<ScheduleEntry>::Ref             scheduleEntry;
 
         /**
          *  The maximum time this event should get initialized in.
          */
-        Ptr<time_duration>::Ref     initTime;
+        Ptr<time_duration>::Ref             initTime;
 
         /**
          *  The Playlist this event is playing.
          */
-        Ptr<Playlist>::Ref          playlist;
+        Ptr<Playlist>::Ref                  playlist;
 
         /**
          *  The session ID used for authentication at the storage server.
          */
-        Ptr<SessionId>::Ref         sessionId;
+        Ptr<SessionId>::Ref                 sessionId;
 
+        /**
+         *  The current state of the event.
+         */
+        State                               state;
+ 
 
     public:
         /**

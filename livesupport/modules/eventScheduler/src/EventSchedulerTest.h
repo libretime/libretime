@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/src/EventSchedulerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,14 @@ namespace EventScheduler {
  *  Unit test for the EventScheduler class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see EventScheduler
  */
 class EventSchedulerTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(EventSchedulerTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(postInitTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -79,6 +80,15 @@ class EventSchedulerTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to see if an event is scheduled after it should have
+         *  been initialized (see http://bugs.campware.org/view.php?id=757)
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        postInitTest(void)                      throw (CPPUNIT_NS::Exception);
 
     public:
         
