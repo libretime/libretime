@@ -23,7 +23,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -134,4 +134,3 @@ if (file_exists($home_conf)) {
 }
 
 ?>
-
