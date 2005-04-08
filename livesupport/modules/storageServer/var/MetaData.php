@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -316,7 +316,8 @@ class MetaData{
             if(
                 is_null($lang) ||
                 strtolower($lang) == strtolower($atlang) ||
-                (is_null($atlang) && strtolower($lang) == 'en')
+//                (is_null($atlang) && strtolower($lang) == strtolower('en_GB'))
+                is_null($atlang)
             ){
                 $res[] = $all[$i];
             }
