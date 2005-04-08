@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.6 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -171,7 +171,7 @@ check: all ${TEST_RUNNER} install start run_tests stop uninstall
 run_tests: ${TEST_RUNNER}
 	-${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
-install: ${SCHEDULER_EXE}
+install: ${SCHEDULER_EXE} storage_server_init
 	${MAKE} -C ${SCHEDULER_DIR} install
 
 start: ${SCHEDULER_EXE}
@@ -207,6 +207,9 @@ ${AUTHENTICATION_LIB_FILE}:
 
 ${SCHEDULER_EXE}:
 	${MAKE} -C ${SCHEDULER_DIR}
+
+storage_server_init:
+	${MAKE} -C ${BASE_DIR}/../storageServer
 
 
 #-------------------------------------------------------------------------------
