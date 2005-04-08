@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,8 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/WidgetFactory.h"    Gdk::Color      blueColor = Colors::getColor(Colors::LightBlue);
+
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 
 
@@ -57,7 +58,7 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
-                                                                    throw ()
+                                                                throw ()
                 : Gtk::TreeView(treeModel)
 {
 }
@@ -66,22 +67,24 @@ ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-ZebraTreeView :: ~ZebraTreeView(void)                               throw ()
+ZebraTreeView :: ~ZebraTreeView(void)                           throw ()
 {
 }
 
 
 /*------------------------------------------------------------------------------
- *  Color the table blue.
+ *  Set the callback function for every column.
  *----------------------------------------------------------------------------*/
 void 
-ZebraTreeView :: colorBlue(void)                                    throw ()
+ZebraTreeView :: setCellDataFunction(const Column::SlotCellData&    callback)                                    throw ()
 {
-    Gdk::Color      bgColor = Colors::getColor(Colors::LightBlue);
-
-    for (int i = 0; i < get_columns().size(); i++) {
-        Gtk::CellRenderer*  renderer = get_column_cell_renderer(i);
-        renderer->property_cell_background_gdk() = bgColor;
-//        renderer->property_cell_background_set() = false;
+    std::list<Column*>              columnList = get_columns();
+    std::list<Column*>::iterator    it;
+    
+    for (it = columnList.begin(); it != columnList.end(); ++it) {
+        (*it)->set_cell_data_func(*(*it)->get_first_cell_renderer(), callback);
     }
+
+//    set_rules_hint();   // suggest coloring with alternate colors
 }
+

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,7 +126,8 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     }
 
     // color the columns blue
-    treeView->colorBlue();
+    treeView->setCellDataFunction(
+                        sigc::mem_fun(*this, &DjBagWindow::cellDataFunction));
 
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
@@ -246,6 +247,8 @@ DjBagWindow :: showContents(void)                       throw ()
     it  = djBagContents->begin();
     end = djBagContents->end();
     treeModel->clear();
+    int     rowNumber = 0;
+    
     while (it != end) {
         playable  = *it;
         row       = *(treeModel->append());
@@ -264,8 +267,11 @@ DjBagWindow :: showContents(void)                       throw ()
                 break;
         }
         row[modelColumns.titleColumn] = *playable->getTitle();
+        row[modelColumns.colorColumn] = rowNumber % 2 ? Colors::Gray
+                                                      : Colors::LightBlue;
 
-        it++;
+        ++it;
+        ++rowNumber;
     }
 }
 
@@ -638,4 +644,18 @@ DjBagWindow :: onStopButtonClicked(void)                      throw ()
                     << e.what() << std::endl;
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  The callback function.
+ *----------------------------------------------------------------------------*/
+void 
+DjBagWindow :: cellDataFunction(Gtk::CellRenderer*               cell,
+                                const Gtk::TreeModel::iterator&  iter)
+                                                                throw ()
+{
+    Gdk::Color  color = Colors::getColor((*iter)[modelColumns.colorColumn]);
+    cell->property_cell_background_gdk() = color;
+}
+
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,10 +71,18 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class DjBagWindow : public WhiteWindow, public LocalizedObject
 {
+    private:
+        /**
+         *  The callback function to set the colors of the rows.
+         */
+        void 
+        cellDataFunction(Gtk::CellRenderer*               cell,
+                         const Gtk::TreeModel::iterator&  iter)
+                                                                throw ();
 
     protected:
 
@@ -83,7 +91,7 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.10 $
+         *  @version $Revision: 1.11 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -104,6 +112,11 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
                 Gtk::TreeModelColumn<Glib::ustring>         titleColumn;
 
                 /**
+                 *  The column for the color of the row.
+                 */
+                Gtk::TreeModelColumn<Colors::ColorName>     colorColumn;
+
+                /**
                  *  Constructor.
                  */
                 ModelColumns(void)                  throw ()
@@ -111,6 +124,7 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
                     add(playableColumn);
                     add(typeColumn);
                     add(titleColumn);
+                    add(colorColumn);
                 }
         };
 
