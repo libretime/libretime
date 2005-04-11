@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Colors.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@
 #include "configure.h"
 #endif
 
-#include <iostream.h>
+#include <iostream>
 
 #include "gtkmm/widget.h"
 
