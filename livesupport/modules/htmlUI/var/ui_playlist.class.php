@@ -5,6 +5,7 @@ class uiPlaylist
     {
         $this->Base      =& $uiBase;
         $this->activeId  =& $_SESSION[UI_PLAYLIST_SESSNAME]['activeId'];
+        $this->title     = $this->Base->_getMDataValue($this->activeId, UI_MDATA_KEY_TITLE);
         $this->token     =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
         $this->reloadUrl   = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         $this->redirectUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
@@ -15,9 +16,12 @@ class uiPlaylist
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
-    function setRedirect()
+    function setRedirect($target=FALSE)
     {
-        $this->Base->redirUrl = $this->redirectUrl;
+        if ($target!==FALSE)
+            $this->Base->redirUrl = UI_BROWSER."?popup[]=$target&popup[]=_close";
+        else
+            $this->Base->redirUrl = $this->redirectUrl;
     }
 
     function get()

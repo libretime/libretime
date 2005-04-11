@@ -6,10 +6,12 @@
 ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
 nn6 = (document.getElementById && !document.all) ? 1 : 0;
 contextmenuStatus = 0;
-document.onmouseup = hidecontextmenu;
-document.write('<div id="contextmenucontainer"></div>');
 contextmenuWidth  = 0,
 contextmenuHeight = 0;
+
+document.onclick = hidecontextmenu;
+
+document.write('<div id="contextmenucontainer"></div>');
 
 function contextmenu(param) {
     var contextmenuHeader  = "<div class='contextmenu' id='contextmenu' style='position: absolute; top: -250; left: 0; z-index: 100'>" +
@@ -108,7 +110,7 @@ function contextmenu(param) {
 }
 
 
-function showcontextmenu(e) {
+function showcontextmenu(e) {   //alert("show:" + contextmenuStatus);
     if (ie5) {
         if (event.clientX > contextmenuWidth)  xPos = event.clientX - contextmenuWidth + document.body.scrollLeft;
         else                            xPos = event.clientX + document.body.scrollLeft;
@@ -123,7 +125,7 @@ function showcontextmenu(e) {
     }
 
     document.getElementById("contextmenu").style.left = xPos;
-    document.getElementById("contextmenu").style.top  = yPos;
+    setTimeout("document.getElementById('contextmenu').style.top  = yPos", 10);
     //document.getElementById('contextmenustyle').innerHTML = '<style type="text/css">#contextmenu {top: 50px; left: 300px; }</style>';
 
     contextmenuStatus = 1;
@@ -131,9 +133,9 @@ function showcontextmenu(e) {
 }
 
 
-function hidecontextmenu(e) {
+function hidecontextmenu(e) {    //alert("hide:" + contextmenuStatus);
     if (contextmenuStatus == 1) {
-        setTimeout("document.getElementById('contextmenu').style.top =- 250", 100);
+        setTimeout("document.getElementById('contextmenu').style.top =- 250", 0);
         contextmenuStatus = 0;
     }
 }

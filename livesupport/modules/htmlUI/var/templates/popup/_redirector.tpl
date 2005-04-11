@@ -1,4 +1,8 @@
 <script type="text/javascript">
-    opener.location.href = "{$UI_BROWSER}?act={$target}";
-    opener.location.reload();
+
+    if (opener.location.href.indexOf("{$target}") !== -1)
+        opener.location.reload();
+    else
+        opener.location.href = "{$UI_BROWSER}?act={$target}";
+
 </script>

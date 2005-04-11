@@ -187,7 +187,7 @@ switch($_REQUEST['act']){
             if ($_REQUEST['id']) $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
-        $uiHandler->PLAYLIST->setRedirect();
+        $uiHandler->PLAYLIST->setRedirect('_2PL.editMetaData'); 
     break;
 
     case "PL.addItem":

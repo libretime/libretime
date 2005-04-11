@@ -1,5 +1,5 @@
 <div class="container_elements" style="width: 607px;">
-<h1>##Playlist Metadata##</h1>
+<h1>##Playlist Metadata##: {$PL->title}</h1>
 {assign var="_form" value=$PL->metaDataForm($_PL.curr_langid)}
 
 {assign var="dynform" value=$_form.langswitch}

@@ -21,6 +21,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/_redirector.tpl');
             break;
 
+            case "_2PL.editMetaData":
+                $Smarty->assign('target', 'PL.editMetaData');
+                $Smarty->display('popup/_redirector.tpl');
+            break;
+
             case "login":
                 $Smarty->assign('dynform', $uiBrowser->login($ui_fmask));
                 $Smarty->display('popup/login.tpl');
