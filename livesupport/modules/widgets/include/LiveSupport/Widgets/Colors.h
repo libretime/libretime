@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Colors.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,8 +61,11 @@ namespace Widgets {
 /**
  *  A helper class to hold all the standard colors used by the LiveSupport GUI.
  *
+ *  The definitions of the colors can be found in doc/gui/styleguide.pdf;
+ *  the last two colors were taken from doc/gui/designs/livemode.gif.
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class Colors
 {
