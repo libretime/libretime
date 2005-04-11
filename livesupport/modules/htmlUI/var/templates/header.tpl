@@ -27,6 +27,7 @@
     {include file="script/basics.js.tpl"}
     {include file="script/contextmenu.js.tpl"}
     {include file="script/collector.js.tpl"}
+    {include file="script/alt.js.tpl"}
 </head>
 
 <body>

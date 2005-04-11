@@ -27,27 +27,25 @@
                     {foreach from=$PL->getFlat() key='pos' item='i'}
                         <!-- {$n++} -->
                         <!-- fade information -->
-                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #bbb">
+                        <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
                         </tr>
-                        <tr class="{cycle values='blue1, blue2'} " onContextmenu="return contextmenu('{$i.attrs.id}',
-                          {if $i.type|lower == "audioclip"}'listen', '{$i.gunid}', {/if}
-                          'PL.removeItem')">
+                        <tr class="{cycle values='blue1, blue2'}">
                             <td><input type="checkbox" class="checkbox" name="{$i.attrs.id}"/></td>
-                            <td>{$i.title}</td>
-                            <td>{$i.duration}</td>
-                            <td>{$i.creator}</td>
-                            <td>{$i.type}</td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.title}</td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.duration}</td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.creator}</td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.type}</td>
                             <td style="border: 0">
-                            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.gif" alt="##move up##" vspace=1 hspace=1/></a>
-                            <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos+1}')"><img src="img/bt_bottom_xsm.gif" alt="##move down##" vspace=1 hspace=1/></a>
+                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.gif" alt="##move up##" vspace=1 hspace=1/></a>
+                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos+1}')"><img src="img/bt_bottom_xsm.gif" alt="##move down##" vspace=1 hspace=1/></a>
                             </td>
                         </tr>
                     {/foreach}
                         {if $n}
                         <!-- fade information -->
-                        <tr onContextmenu="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeFadeOut'{/if})}" style="background-color: #bbb">
+                        <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeFadeOut'{/if})}" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0">##Fade## {$i.fadeout_ms|string_format:"%d"} ms</td>
                         </tr>

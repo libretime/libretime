@@ -15,18 +15,18 @@
                 </tr>
                 {foreach from=$_results.items item=i}
             <!-- start item -->
-                <tr class="background-color: {cycle values='blue1, blue2'}"  {assign var="moreContextBefore" value=", 'SP.addItem'"}{include file="sub/contextmenu.tpl"}>
+                <tr class="background-color: {cycle values='blue1, blue2'}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                    <td>
+                    <td {include file="library/actionhandler.tpl"}>
                         {if $PLAYLIST.id == $i.id}
                             <b>{$i.title|truncate:30}</b>
                         {else}
                             {$i.title|truncate:30}
                         {/if}
                     </td>
-                    <td>{$i.creator}</td>
-                    <td>{$i.duration}</td>
-                    <td style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type}" /></td>
+                    <td {include file="library/actionhandler.tpl"}>{$i.creator}</td>
+                    <td {include file="library/actionhandler.tpl"}>{$i.duration}</td>
+                    <td {include file="library/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type}" /></td>
                 </tr>
             <!-- end item -->
                 {/foreach}
@@ -49,13 +49,13 @@
             ##Range##:&nbsp;{$_criteria.offset+1}-{if ($_criteria.offset+$_criteria.limit)>$_results.cnt}{$_results.cnt}{else}{$_criteria.offset+$_criteria.limit}{/if}
          </div>
 
-         <select name="SEARCHRESULTS_multiaction">
+         <select name="SEARCHRESULTS_multiaction" onChange="collector_submit('SEARCHRESULTS', this.value)">
                 <option>##Multiple Action:##</option>
-                <option onClick="collector_submit('SEARCHRESULTS', 'SP.addItem')">##Add file(s) to ScratchPad##</option>
+                <option value="SP.addItem">##Add file(s) to ScratchPad##</option>
                 {if $_PL_activeId}
-                    <option onClick="collector_submit('SEARCHRESULTS', 'PL.addItem')">##Add file(s) to active Playlist##</option>
+                    <option value="PL.addItem">##Add file(s) to active Playlist##</option>
                 {else}
-                    <option onClick="collector_submit('SEARCHRESULTS', 'PL.create')">##New Playlist using this file(s)##</option>
+                    <option value="PL.create">##New Playlist using this file(s)##</option>
                 {/if}
          </select>
         <script type="text/javascript">

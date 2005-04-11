@@ -18,7 +18,7 @@
     <div class="content">
     {include file="scheduler/calendar.tpl"}
     {if $SCRATCHPAD}
-        {include file="scratchpad.tpl"}
+        {include file="scratchpad/main.tpl"}
     {/if}
     </div>
     </td><td valign="top" style="margin:0px;padding:0px;border:0">
@@ -39,7 +39,7 @@
     {/if}
 
     {if $showFile}
-        {include file="filedata.tpl"}
+        {include file="file/data.tpl"}
     {/if}
 
     {if $editItem}
@@ -60,7 +60,7 @@
     {/if}
 
     {if $SCRATCHPAD}
-        {include file="scratchpad.tpl"}
+        {include file="scratchpad/main.tpl"}
     {/if}
     </div>
 {/if}

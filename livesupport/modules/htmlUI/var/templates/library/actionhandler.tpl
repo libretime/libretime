@@ -1,7 +1,8 @@
-{assign var="_PL_activeId" value=$PL->getActiveId()}
-
+onMouseover="showAlt('Some info about file ID {$i.id}')" 
+onMouseout="hideAlt()"
 onClick="return contextmenu('{$i.id}'
-    {$moreContextBefore}
+    , 'SP.addItem'
+
     {if $i.type == 'audioclip'}
         , 'listen', '{$i.gunid}'
         {if $_PL_activeId}
@@ -32,11 +33,4 @@ onClick="return contextmenu('{$i.id}'
             , 'PL.activate', 'PL.create', 'delete'
         {/if}
     {/if}
-
-    {if ($i.type == 'Folder')}
-        , 'fileList', 'delete'
-    {/if}
-    {$moreContextAfter}
 )"
-
-{assign var="_PL_activeId" value=NULL}
