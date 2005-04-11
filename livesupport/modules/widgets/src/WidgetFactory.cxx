@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -156,7 +156,13 @@ static const std::string    comboBoxRightName = "combo/right.png";
 /**
  *  The name of the image for the resize handle.
  */
-static const std::string    resizeName = "whiteWindow/resize.png";
+static const std::string    resizeImageName = "whiteWindow/resize.png";
+
+/**
+ *  The name of the image for the title of the login window.
+ */
+static const std::string    scratchpadWindowTitleImageName 
+                            = "titleImages/scratchpadWindowTitle.png";
 
 
 /* ===============================================  local function prototypes */
@@ -215,9 +221,6 @@ WidgetFactory :: configure(const xmlpp::Element & element)
 
     // load the white window corner images
     whiteWindowImages.reset(new CornerImages(path + whiteWindowPath));
-
-    // load the bottom right resize image
-    resizeImage              = loadImage(resizeName);
 }
 
 
@@ -342,9 +345,22 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
  *  Create a resize image
  *----------------------------------------------------------------------------*/
 Gtk::Image *
-WidgetFactory :: createResizeImage(void)                        throw ()
+WidgetFactory :: createImage(ImageType  imageName)              throw ()
 {
-    return new Gtk::Image(resizeImage);
+    Glib::RefPtr<Gdk::Pixbuf>   rawImage;
+    
+    switch (imageName) {
+        case resizeImage:
+            rawImage = loadImage(resizeImageName);
+            break;
+        case scratchpadWindowTitleImage:
+            rawImage = loadImage(scratchpadWindowTitleImageName);
+            break;
+        default:
+            return 0;
+    }
+
+    return new Gtk::Image(rawImage);
 }
 
 

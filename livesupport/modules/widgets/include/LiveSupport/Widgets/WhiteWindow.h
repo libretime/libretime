@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class WhiteWindow : public Gtk::Window
 {
@@ -107,9 +107,9 @@ class WhiteWindow : public Gtk::Window
         Gtk::Alignment                * titleAlignment;
 
         /**
-         *  The title of the window.
+         *  The title of the window (if it's of text type, otherwise 0).
          */
-        Gtk::Label                    * title;
+        Gtk::Label                    * titleLabel;
 
         /**
          *  The right alignment contaner for the close button.
@@ -264,10 +264,37 @@ class WhiteWindow : public Gtk::Window
         virtual GtkType
         child_type_vfunc() const                            throw ();
 
+        /**
+         *  The common part of both constructors.
+         *
+         *  @param backgroundColor the background color.
+         *  @param cornerImages the corner images.
+         *  @param resizable true if the user can resize the window.
+         */
+        void
+        constructWindow(Colors::ColorName           backgroundColor,
+                        Ptr<CornerImages>::Ref      cornerImages,
+                        bool                        resizable = true)
+                                                            throw ();
+
 
     public:
         /**
-         *  Constructor.
+         *  Constructor for windows with image titles.
+         *
+         *  @param title the title of the window.
+         *  @param backgroundColor the background color.
+         *  @param cornerImages the corner images.
+         *  @param resizable true if the user can resize the window.
+         */
+        WhiteWindow(WidgetFactory::ImageType    title,
+                    Colors::ColorName           backgroundColor,
+                    Ptr<CornerImages>::Ref      cornerImages,
+                    bool                        resizable = true)
+                                                            throw ();
+
+        /**
+         *  Constructor for windows with text titles.
          *
          *  @param title the title of the window.
          *  @param backgroundColor the background color.

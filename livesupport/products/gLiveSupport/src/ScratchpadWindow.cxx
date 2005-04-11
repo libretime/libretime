@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::GLiveSupport;
 ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                       Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-          : WhiteWindow("",
+          : WhiteWindow(WidgetFactory::scratchpadWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle)
@@ -74,7 +74,6 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
     try {
-        set_title(*getResourceUstring("windowTitle"));
         playButton  = Gtk::manage(widgetFactory->createButton(
                                 WidgetFactory::smallPlayButton));
         pauseButton = Gtk::manage(widgetFactory->createButton(

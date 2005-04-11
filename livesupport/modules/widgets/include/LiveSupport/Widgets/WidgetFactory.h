@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -104,6 +104,13 @@ class WidgetFactory :
         typedef enum { deleteButton, 
                        smallPlayButton, smallPauseButton, smallStopButton }
                                                     ImageButtonType;
+
+        /**
+         *  The list of available miscellaneous images.
+         */
+        typedef enum { resizeImage,
+                       scratchpadWindowTitleImage }
+                                                    ImageType;
 
 
     private:
@@ -166,11 +173,6 @@ class WidgetFactory :
          *  The combo box right image.
          */
         Glib::RefPtr<Gdk::Pixbuf>       comboBoxRightImage;
-
-        /**
-         *  The image for the resize handle.
-         */
-        Glib::RefPtr<Gdk::Pixbuf>       resizeImage;
 
         /**
          *  The default constructor.
@@ -311,14 +313,14 @@ class WidgetFactory :
         }
 
         /**
-         *  Create and return a container holding a resize image.
+         *  Create and return a container holding an image.
          *  It is the reponsibility of the caller to dispose of the created
          *  object properly.
          *
-         *  @return the container holding the resize image.
+         *  @return the container holding the requested image.
          */
         Gtk::Image *
-        createResizeImage(void)                             throw ();
+        createImage(ImageType   imageName)                  throw ();
 
         /**
          *  Create and return a ZebraTreeView instance.

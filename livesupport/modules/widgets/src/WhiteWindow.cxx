@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,7 +54,27 @@ using namespace LiveSupport::Widgets;
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Constructor.
+ *  Constructor for windows with image titles.
+ *----------------------------------------------------------------------------*/
+WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
+                           Colors::ColorName            backgroundColor,
+                           Ptr<CornerImages>::Ref       cornerImages,
+                           bool                         resizable)
+                                                                    throw ()
+                : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
+{
+    // do the image title-specific stuff
+    Ptr<WidgetFactory>::Ref wf          = WidgetFactory::getInstance();
+    Gtk::Image*             titleImage  = Gtk::manage(wf->createImage(title));
+    titleEventBox                       = Gtk::manage(new Gtk::EventBox());
+    titleEventBox->add(*titleImage);
+    
+    constructWindow(backgroundColor, cornerImages, resizable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Constructor for windows with text titles.
  *----------------------------------------------------------------------------*/
 WhiteWindow :: WhiteWindow(Glib::ustring                title,
                            Colors::ColorName            backgroundColor,
@@ -62,6 +82,25 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
                            bool                         resizable)
                                                                     throw ()
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
+{
+    // do the text title-specific stuff
+    titleLabel      = Gtk::manage(new Gtk::Label(title));
+    titleLabel->modify_font(Pango::FontDescription("Bitstream Vera 10"));
+    titleEventBox   = Gtk::manage(new Gtk::EventBox());
+    titleEventBox->add(*titleLabel);
+
+    constructWindow(backgroundColor, cornerImages, resizable);
+}
+
+    
+/*------------------------------------------------------------------------------
+ *  The common part of both constructors.
+ *----------------------------------------------------------------------------*/
+void
+WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
+                               Ptr<CornerImages>::Ref       cornerImages,
+                               bool                         resizable)
+                                                                    throw ()
 {
     set_decorated(false);
     defaultWidth  = -1;
@@ -74,18 +113,13 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     // create the background color, as it is needed by the event box
     Gdk::Color      bgColor = Colors::getColor(backgroundColor);
 
-    // set the window title
-    this->title = Gtk::manage(new Gtk::Label(title));
-    this->title->modify_font(Pango::FontDescription("Bitstream Vera 10"));
+    // create the title
+    titleEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
     titleAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                                     Gtk::ALIGN_CENTER,
                                                     0, 0));
-    titleEventBox = Gtk::manage(new Gtk::EventBox());
-    titleEventBox->set_visible_window();
-    titleEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
-    titleAlignment->add(*this->title);
-    titleEventBox->add(*titleAlignment);
-    layout->attach(*titleEventBox, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
+    titleAlignment->add(*titleEventBox);
+    layout->attach(*titleAlignment, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
     // create the close button
     closeButton = Gtk::manage(wf->createButton(WidgetFactory::deleteButton));
@@ -101,7 +135,7 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
 
     // create the resize image
     if (resizable) {
-        resizeImage = Gtk::manage(wf->createResizeImage());
+        resizeImage = Gtk::manage(wf->createImage(WidgetFactory::resizeImage));
         resizeEventBox = Gtk::manage(new Gtk::EventBox());
         resizeEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
         resizeEventBox->add(*resizeImage);
@@ -309,7 +343,7 @@ WhiteWindow :: onCloseButtonClicked (void)                  throw ()
 void
 WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
 {
-    this->title->set_label(title);
+    titleLabel->set_label(title);
 }
 
 
@@ -319,7 +353,7 @@ WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
 Glib::ustring
 WhiteWindow :: get_title(void) const                        throw ()
 {
-    return title->get_label();
+    titleLabel->get_label();
 }
 
 
