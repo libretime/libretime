@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef DjBagWindow_h
-#define DjBagWindow_h
+#ifndef ScratchpadWindow_h
+#define ScratchpadWindow_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -72,9 +72,9 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.1 $
  */
-class DjBagWindow : public WhiteWindow, public LocalizedObject
+class ScratchpadWindow : public WhiteWindow, public LocalizedObject
 {
     private:
 
@@ -85,7 +85,7 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.12 $
+         *  @version $Revision: 1.1 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -298,14 +298,14 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
          *  @param bundle the resource bundle holding the localized
          *         resources for this window
          */
-        DjBagWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
-                    Ptr<ResourceBundle>::Ref    bundle)         throw ();
+        ScratchpadWindow(Ptr<GLiveSupport>::Ref      gLiveSupport,
+                         Ptr<ResourceBundle>::Ref    bundle)   throw ();
 
         /**
          *  Virtual destructor.
          */
         virtual
-        ~DjBagWindow(void)                                      throw ();
+        ~ScratchpadWindow(void)                                 throw ();
 
         /**
          *  Update the window contents, with the contents of the dj bag.
@@ -331,5 +331,5 @@ class DjBagWindow : public WhiteWindow, public LocalizedObject
 } // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // DjBagWindow_h
+#endif // ScratchpadWindow_h
 

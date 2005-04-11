@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/DjBagWindow.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -38,7 +38,7 @@
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
-#include "DjBagWindow.h"
+#include "ScratchpadWindow.h"
 
 
 using namespace Glib;
@@ -61,8 +61,8 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                            Ptr<ResourceBundle>::Ref    bundle)
+ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
+                                      Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
           : WhiteWindow("",
                         Colors::White,
@@ -91,23 +91,23 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     playButton->set_name("playButton");
     playButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &DjBagWindow::onPlayButtonClicked));
+                                &ScratchpadWindow::onPlayButtonClicked));
 
     pauseButton->set_name("pauseButton");
     pauseButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &DjBagWindow::onPauseButtonClicked));
+                                &ScratchpadWindow::onPauseButtonClicked));
 
     stopButton->set_name("stopButton");
     stopButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &DjBagWindow::onStopButtonClicked));
+                                &ScratchpadWindow::onStopButtonClicked));
 
     clearListButton->set_name("clearListButton");
     clearListButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &DjBagWindow::onClearListButtonClicked));
+                                &ScratchpadWindow::onClearListButtonClicked));
 
     removeButton->set_name("removeButton");
     removeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &DjBagWindow::onRemoveItem));
+                                &ScratchpadWindow::onRemoveItem));
 
     add(vBox);
 
@@ -130,7 +130,7 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
-                                            &DjBagWindow::onEntryClicked));
+                                            &ScratchpadWindow::onEntryClicked));
 
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
     scrolledWindow.add(*treeView);
@@ -161,27 +161,27 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onAddToPlaylist)));
+                                        &ScratchpadWindow::onAddToPlaylist)));
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("upMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onUpItem)));
+                                        &ScratchpadWindow::onUpItem)));
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("downMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onDownItem)));
+                                        &ScratchpadWindow::onDownItem)));
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onRemoveItem)));
+                                        &ScratchpadWindow::onRemoveItem)));
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onDeleteItem)));
+                                        &ScratchpadWindow::onDeleteItem)));
     audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("playMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onPlayItem)));
+                                        &ScratchpadWindow::onPlayItem)));
     audioClipMenu->accelerate(*this);
 
     // create the right-click entry context menu for playlists
@@ -191,31 +191,31 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onAddToPlaylist)));
+                                    &ScratchpadWindow::onAddToPlaylist)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("schedulePlaylistMenuItem"),
                                 sigc::mem_fun(*this,
-                                           &DjBagWindow::onSchedulePlaylist)));
+                                    &ScratchpadWindow::onSchedulePlaylist)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("upMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onUpItem)));
+                                    &ScratchpadWindow::onUpItem)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("downMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onDownItem)));
+                                    &ScratchpadWindow::onDownItem)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onRemoveItem)));
+                                    &ScratchpadWindow::onRemoveItem)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onDeleteItem)));
+                                    &ScratchpadWindow::onDeleteItem)));
     playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("playMenuItem"),
                                 sigc::mem_fun(*this,
-                                               &DjBagWindow::onPlayItem)));
+                                    &ScratchpadWindow::onPlayItem)));
     playlistMenu->accelerate(*this);
 
     // show
@@ -234,17 +234,17 @@ DjBagWindow :: DjBagWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
  *  Show all audio clips
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: showContents(void)                       throw ()
+ScratchpadWindow :: showContents(void)                          throw ()
 {
-    Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+    Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
     GLiveSupport::PlayableList::iterator    it;
     GLiveSupport::PlayableList::iterator    end;
     Ptr<Playable>::Ref                      playable;
     Gtk::TreeModel::Row                     row;
 
-    djBagContents = gLiveSupport->getDjBagContents();
-    it  = djBagContents->begin();
-    end = djBagContents->end();
+    scratchpadContents = gLiveSupport->getScratchpadContents();
+    it  = scratchpadContents->begin();
+    end = scratchpadContents->end();
     treeModel->clear();
     int     rowNumber = 0;
     
@@ -278,7 +278,7 @@ DjBagWindow :: showContents(void)                       throw ()
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-DjBagWindow :: ~DjBagWindow (void)                              throw ()
+ScratchpadWindow :: ~ScratchpadWindow (void)                    throw ()
 {
 }
 
@@ -287,11 +287,11 @@ DjBagWindow :: ~DjBagWindow (void)                              throw ()
  *  Event handler for the clear list button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onClearListButtonClicked (void)                  throw ()
+ScratchpadWindow :: onClearListButtonClicked (void)             throw ()
 {
-    Ptr<GLiveSupport::PlayableList>::Ref    djBagContents
-                                            = gLiveSupport->getDjBagContents();
-    djBagContents->clear();
+    Ptr<GLiveSupport::PlayableList>::Ref
+            scratchpadContents = gLiveSupport->getScratchpadContents();
+    scratchpadContents->clear();
     showContents();
 }
 
@@ -300,7 +300,7 @@ DjBagWindow :: onClearListButtonClicked (void)                  throw ()
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onEntryClicked (GdkEventButton     * event)      throw ()
+ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         // only show the context menu, if something is already selected
@@ -334,7 +334,7 @@ DjBagWindow :: onEntryClicked (GdkEventButton     * event)      throw ()
  *  Event handler for the Remove menu item selected from the entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onRemoveItem(void)                               throw ()
+ScratchpadWindow :: onRemoveItem(void)                          throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -355,7 +355,7 @@ DjBagWindow :: onRemoveItem(void)                               throw ()
  *  Event handler for the Up menu item selected from the entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onUpItem(void)                               throw ()
+ScratchpadWindow :: onUpItem(void)                              throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -365,24 +365,24 @@ DjBagWindow :: onUpItem(void)                               throw ()
         if (iter) {
             Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
 
-            Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+            Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
             GLiveSupport::PlayableList::iterator    it;
             GLiveSupport::PlayableList::iterator    end;
 
-            djBagContents = gLiveSupport->getDjBagContents();
-            it  = djBagContents->begin();
-            end = djBagContents->end();
+            scratchpadContents = gLiveSupport->getScratchpadContents();
+            it  = scratchpadContents->begin();
+            end = scratchpadContents->end();
             while (it != end) {
                 Ptr<Playable>::Ref      p= *it;
 
                 if (*p->getId() == *playable->getId()) {
                     // move one up, and insert the same before that
-                    if (it == djBagContents->begin()) {
+                    if (it == scratchpadContents->begin()) {
                         break;
                     }
-                    djBagContents->insert(--it, playable);
+                    scratchpadContents->insert(--it, playable);
                     // move back to what we've found, and erase it
-                    djBagContents->erase(++it);
+                    scratchpadContents->erase(++it);
 
                     showContents();
                     break;
@@ -400,7 +400,7 @@ DjBagWindow :: onUpItem(void)                               throw ()
  *  Event handler for the Down menu item selected from the entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onDownItem(void)                             throw ()
+ScratchpadWindow :: onDownItem(void)                            throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -410,13 +410,13 @@ DjBagWindow :: onDownItem(void)                             throw ()
         if (iter) {
             Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
 
-            Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+            Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
             GLiveSupport::PlayableList::iterator    it;
             GLiveSupport::PlayableList::iterator    end;
 
-            djBagContents = gLiveSupport->getDjBagContents();
-            it  = djBagContents->begin();
-            end = djBagContents->end();
+            scratchpadContents = gLiveSupport->getScratchpadContents();
+            it  = scratchpadContents->begin();
+            end = scratchpadContents->end();
             while (it != end) {
                 Ptr<Playable>::Ref      p= *it;
 
@@ -426,11 +426,11 @@ DjBagWindow :: onDownItem(void)                             throw ()
                     if (it == end) {
                         break;
                     }
-                    djBagContents->insert(++it, playable);
+                    scratchpadContents->insert(++it, playable);
                     // move back to what we've found, and erase it
                     --it;
                     --it;
-                    djBagContents->erase(--it);
+                    scratchpadContents->erase(--it);
 
                     showContents();
                     break;
@@ -448,7 +448,7 @@ DjBagWindow :: onDownItem(void)                             throw ()
  *  Event handler for the Delete menu item selected from the entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onDeleteItem(void)                               throw ()
+ScratchpadWindow :: onDeleteItem(void)                          throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -473,20 +473,20 @@ DjBagWindow :: onDeleteItem(void)                               throw ()
  *  Remove an item from the dj bag
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: removeItem(Ptr<const UniqueId>::Ref    id)           throw ()
+ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref    id)  throw ()
 {
-    Ptr<GLiveSupport::PlayableList>::Ref    djBagContents;
+    Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
     GLiveSupport::PlayableList::iterator    it;
     GLiveSupport::PlayableList::iterator    end;
 
-    djBagContents = gLiveSupport->getDjBagContents();
-    it  = djBagContents->begin();
-    end = djBagContents->end();
+    scratchpadContents = gLiveSupport->getScratchpadContents();
+    it  = scratchpadContents->begin();
+    end = scratchpadContents->end();
     while (it != end) {
         Ptr<Playable>::Ref      playable = *it;
 
         if (*playable->getId() == *id) {
-            djBagContents->erase(it);
+            scratchpadContents->erase(it);
             break;
         }
 
@@ -499,7 +499,7 @@ DjBagWindow :: removeItem(Ptr<const UniqueId>::Ref    id)           throw ()
  *  Delete an item from storage, and remove it from the dj bag
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: deleteItem(Ptr<Playable>::Ref    playable)
+ScratchpadWindow :: deleteItem(Ptr<Playable>::Ref    playable)
                                                         throw (XmlRpcException)
 {
     removeItem(playable->getId());
@@ -512,7 +512,7 @@ DjBagWindow :: deleteItem(Ptr<Playable>::Ref    playable)
  *  entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onAddToPlaylist(void)                            throw ()
+ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -533,7 +533,7 @@ DjBagWindow :: onAddToPlaylist(void)                            throw ()
  *  entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onSchedulePlaylist(void)                       throw ()
+ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -578,7 +578,7 @@ DjBagWindow :: onSchedulePlaylist(void)                       throw ()
  *  Event handler for the Play menu item selected from the entry conext menu
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onPlayItem(void)                               throw ()
+ScratchpadWindow :: onPlayItem(void)                            throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
@@ -606,7 +606,7 @@ DjBagWindow :: onPlayItem(void)                               throw ()
  *  Event handler for the Play button getting clicked
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onPlayButtonClicked(void)                      throw ()
+ScratchpadWindow :: onPlayButtonClicked(void)                   throw ()
 {
     onPlayItem();
 }
@@ -616,7 +616,7 @@ DjBagWindow :: onPlayButtonClicked(void)                      throw ()
  *  Event handler for the Pause button getting clicked
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onPauseButtonClicked(void)                      throw ()
+ScratchpadWindow :: onPauseButtonClicked(void)                  throw ()
 {
     try {
         gLiveSupport->pauseAudio();
@@ -631,7 +631,7 @@ DjBagWindow :: onPauseButtonClicked(void)                      throw ()
  *  Event handler for the Stop button getting clicked
  *----------------------------------------------------------------------------*/
 void
-DjBagWindow :: onStopButtonClicked(void)                      throw ()
+ScratchpadWindow :: onStopButtonClicked(void)                   throw ()
 {
     try {
         gLiveSupport->stopAudio();
