@@ -34,13 +34,10 @@
 <!ATTLIST location port     NMTOKEN     #REQUIRED >
 <!ATTLIST location path     CDATA       #REQUIRED >
 
-<!ELEMENT storageClientFactory (testStorage|webStorage) >
+<!ELEMENT storageClientFactory (testStorage) >
 
 <!ELEMENT testStorage (playlist*, audioClip*) >
 <!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
-
-<!ELEMENT webStorage (location) >
-<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
 
 <!ELEMENT playlist (playlistElement*) >
 <!ATTLIST playlist id           NMTOKEN     #REQUIRED >
@@ -95,17 +92,35 @@
     </connectionManagerFactory>
 
     <authenticationClientFactory>
-        <webAuthentication>
-            <location server="localhost" port="80"
-                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
-        </webAuthentication>
+        <testAuthentication>
+            <user login="root" password="q" />
+        </testAuthentication>
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <webStorage tempFiles="file:///tmp/webStorageClient" >
-            <location server="localhost" port="80" 
-                      path="/livesupportStorageServer/xmlrpc/xrLocStor.php" />
-        </webStorage>
+        <testStorage tempFiles="file:///tmp/tempPlaylist">
+            <playlist id="0000000000000001" playlength="01:30:00.000000">
+                <playlistElement id="0000000000000101" relativeOffset="0" >
+                        <audioClip id="0000000000010001" 
+                                   playlength="01:30:00.000000" 
+                                   title="one"
+                                   uri="file:var/test1.mp3" />
+                </playlistElement>
+                <playlistElement id="0000000000000102" 
+                                 relativeOffset="01:00:00.000" >
+                        <audioClip id="0000000000010002" 
+                                   playlength="00:30:00.000" 
+                                   title="two"
+                                   uri="file:var/test2.mp3" />
+                </playlistElement>
+            </playlist>
+            <audioClip id="0000000000010001" playlength="00:00:11.000000" 
+                       title="one"
+                       uri="file:var/test1.mp3" />
+            <audioClip id="0000000000010002" playlength="00:00:12.200000" 
+                       title="two"
+                       uri="file:var/test2.mp3" /> 
+        </testStorage>
     </storageClientFactory>
 
     <scheduleFactory>
@@ -124,7 +139,7 @@
                   xmlRpcPort  = "3344"
                   pidFileName = "tmp/scheduler.pid"
     />
-        
+    
     <tagConversionTable>
         <tag>
             <id3>Title</id3>

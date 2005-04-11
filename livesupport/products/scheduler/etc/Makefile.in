@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.53 $
+#   Version  : $Revision: 1.54 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -117,12 +117,12 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
-SCHEDULER_EXE     = ${TMP_DIR}/scheduler
-SCHEDULER_SH      = ${BIN_DIR}/scheduler_devenv.sh
-SCHEDULER_CFG     = ${ETC_DIR}/scheduler.xml
-SCHEDULER_WEB_CFG = ${ETC_DIR}/scheduler-web.xml
-TEST_RUNNER       = ${TMP_DIR}/testRunner
-TEST_RUNNER_SH    = ${BIN_DIR}/run_tests.sh
+SCHEDULER_EXE       = ${TMP_DIR}/scheduler
+SCHEDULER_SH        = ${BIN_DIR}/scheduler_devenv.sh
+SCHEDULER_CFG       = ${ETC_DIR}/scheduler.xml
+SCHEDULER_LOCAL_CFG = ${ETC_DIR}/scheduler-local.xml
+TEST_RUNNER         = ${TMP_DIR}/testRunner
+TEST_RUNNER_SH      = ${BIN_DIR}/run_tests.sh
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -324,25 +324,25 @@ uninstall: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} uninstall
 
 install_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} install
+	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} install
 
 start_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} start
+	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} start
 	sleep 2
 
 stop_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} stop
+	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} stop
 	sleep 2
 
 status_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} status
+	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} status
 
 run_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} --debug start
+	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} --debug start
 	sleep 2
 
 uninstall_local: ${SCHEDULER_EXE}
-	${SCHEDULER_EXE} -c ${SCHEDULER_CFG} uninstall
+	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} uninstall
 
 storage_server_init:
 	${MAKE} -C ${STORAGE_SERVER_DIR}
