@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.24 $
+#   Version  : $Revision: 1.25 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -186,7 +186,7 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/AudioClipListWindow.o \
                      ${TMP_DIR}/PlaylistListWindow.o \
                      ${TMP_DIR}/UploadFileWindow.o \
-                     ${TMP_DIR}/DjBagWindow.o \
+                     ${TMP_DIR}/ScratchpadWindow.o \
                      ${TMP_DIR}/SimplePlaylistManagementWindow.o \
                      ${TMP_DIR}/SchedulerWindow.o \
                      ${TMP_DIR}/SchedulePlaylistWindow.o
@@ -262,10 +262,10 @@ install: ${SCHEDULER_EXE}
 	-${MAKE} -C ${SCHEDULER_DIR} install_web
 
 start: ${SCHEDULER_EXE}
-	${MAKE} -C ${SCHEDULER_DIR} start_web
+	${MAKE} -C ${SCHEDULER_DIR} start
 
 stop: ${SCHEDULER_EXE}
-	${MAKE} -C ${SCHEDULER_DIR} stop_web
+	${MAKE} -C ${SCHEDULER_DIR} stop
 
 uninstall: ${SCHEDULER_EXE}
 	-${MAKE} -C ${SCHEDULER_DIR} uninstall_web

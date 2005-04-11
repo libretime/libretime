@@ -6,7 +6,7 @@ root:table
     loginButtonLabel:string  { "log in" }
     logoutButtonLabel:string { "log out" }
     uploadFileButtonLabel:string            { "upload file" }
-    djBagButtonLabel:string                 { "scratchpad" }
+    scratchpadButtonLabel:string            { "scratchpad" }
     simplePlaylistMgmtButtonLabel:string    { "simple playlist management" }
     schedulerButtonLabel:string             { "scheduler" }
 
@@ -32,7 +32,7 @@ root:table
         closeButtonLabel:string       { "close" }
     }
 
-    djBagWindow:table
+    scratchpadWindow:table
     {
         windowTitle:string            { "LiveSupport Scratchpad" }
 

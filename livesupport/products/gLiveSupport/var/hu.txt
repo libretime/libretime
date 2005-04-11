@@ -6,7 +6,7 @@ hu:table
     loginButtonLabel:string  { "bejelentkezés" }
     logoutButtonLabel:string { "kijelentkezés" }
     uploadFileButtonLabel:string            { "file feltöltés" }
-    djBagButtonLabel:string                 { "praktikus csupor" }
+    scratchpadButtonLabel:string            { "praktikus csupor" }
     simplePlaylistMgmtButtonLabel:string    { "egyszerű playlist kezelés" }
     schedulerButtonLabel:string             { "időzítő" }
 
@@ -32,7 +32,7 @@ hu:table
         closeButtonLabel:string       { "bezár" }
     }
 
-    djBagWindow:table
+    scratchpadWindow:table
     {
         windowTitle:string            { "LiveSupport Praktikus Csupor" }
 

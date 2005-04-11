@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@
 
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
-#include "DjBagWindow.h"
+#include "ScratchpadWindow.h"
 #include "SimplePlaylistManagementWindow.h"
 #include "SchedulerWindow.h"
 
@@ -87,8 +87,8 @@ using namespace LiveSupport::Widgets;
  *  +--------------------------------------------------+
  *  </code></pre>
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.10 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -187,7 +187,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The button to invoke the DJ Bag window.
          */
-        Button                    * djBagButton;
+        Button                    * scratchpadButton;
 
         /**
          *  The button to invoke the Simple Playlist Management Window.
@@ -207,7 +207,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The one and only DJ Bag window.
          */
-        Ptr<DjBagWindow>::Ref       djBagWindow;
+        Ptr<ScratchpadWindow>::Ref  scratchpadWindow;
 
         /**
          *  The one and only simple playlist management window.
@@ -258,7 +258,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  pressed.
          */
         virtual void
-        onDjBagButtonClicked(void)                          throw ();
+        onScratchpadButtonClicked(void)                     throw ();
 
         /**
          *  Function to catch the event of the Simple Playlist
@@ -322,10 +322,10 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Update the DJ Bag window.
          */
         void
-        updateDjBagWindow(void)                                 throw ()
+        updateScratchpadWindow(void)                            throw ()
         {
             // this will create, open and display the window.
-            onDjBagButtonClicked();
+            onScratchpadButtonClicked();
         }
 
         /**

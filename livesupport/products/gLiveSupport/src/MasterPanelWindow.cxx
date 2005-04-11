@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "UploadFileWindow.h"
-#include "DjBagWindow.h"
+#include "ScratchpadWindow.h"
 #include "MasterPanelWindow.h"
 
 
@@ -194,8 +194,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
 
         uploadFileButton = wf->createButton(
                                 *getResourceUstring("uploadFileButtonLabel"));
-        djBagButton = wf->createButton(
-                                *getResourceUstring("djBagButtonLabel"));
+        scratchpadButton = wf->createButton(
+                                *getResourceUstring("scratchpadButtonLabel"));
         simplePlaylistMgmtButton = wf->createButton(
                         *getResourceUstring("simplePlaylistMgmtButtonLabel"));
         schedulerButton = wf->createButton(
@@ -210,7 +210,7 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     buttonBar->attach(*uploadFileButton,           0, 1, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
-    buttonBar->attach(*djBagButton,                1, 2, 0, 1,
+    buttonBar->attach(*scratchpadButton,           1, 2, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
     buttonBar->attach(*simplePlaylistMgmtButton,   2, 3, 0, 1,
@@ -223,8 +223,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     // re-bind events to the buttons
     uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelWindow::onUploadFileButtonClicked));
-    djBagButton->signal_clicked().connect(sigc::mem_fun(*this,
-                            &MasterPanelWindow::onDjBagButtonClicked));
+    scratchpadButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onScratchpadButtonClicked));
     simplePlaylistMgmtButton->signal_clicked().connect(
             sigc::mem_fun(*this,
                  &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
@@ -310,25 +310,25 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
  *  The event when the DJ Bag button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onDjBagButtonClicked(void)                     throw ()
+MasterPanelWindow :: onScratchpadButtonClicked(void)                throw ()
 {
-    if (!djBagWindow.get()) {
+    if (!scratchpadWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
         try {
-            bundle       = getBundle("djBagWindow");
+            bundle       = getBundle("scratchpadWindow");
         } catch (std::invalid_argument &e) {
             std::cerr << e.what() << std::endl;
             return;
         }
 
-        djBagWindow.reset(new DjBagWindow(gLiveSupport, bundle));
+        scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport, bundle));
     }
 
-    if (!djBagWindow->is_visible()) {
-        djBagWindow->show();
+    if (!scratchpadWindow->is_visible()) {
+        scratchpadWindow->show();
     }
 
-    djBagWindow->showContents();
+    scratchpadWindow->showContents();
 }
 
 
@@ -390,7 +390,7 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     show_all();
     buttonBar->hide();
     uploadFileButton->hide();
-    djBagButton->hide();
+    scratchpadButton->hide();
     simplePlaylistMgmtButton->hide();
     schedulerButton->hide();
 }

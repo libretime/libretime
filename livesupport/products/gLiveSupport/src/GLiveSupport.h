@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -120,7 +120,7 @@ class GLiveSupport : public LocalizedConfigurable,
                          const std::string>                 LanguageMap;
 
         /**
-         *  The type of the list for storing the DjBag contents.
+         *  The type of the list for storing the Scratchpad contents.
          *  This is a list holding Ptr<Playable>::Ref references.
          */
         typedef std::list<Ptr<Playable>::Ref>       PlayableList;
@@ -175,7 +175,7 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  The contents of a DJ Bag, stored as a list.
          */
-        Ptr<PlayableList>::Ref          djBagContents;
+        Ptr<PlayableList>::Ref          scratchpadContents;
 
         /**
          *  The one and only playlist that may be edited at any one time.
@@ -208,13 +208,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Store the contents of the DJ Bag as a user preference.
          */
         void
-        storeDjBagContents(void)                            throw ();
+        storeScratchpadContents(void)                       throw ();
 
         /**
          *  Load the contents of the DJ Bag as a user preference.
          */
         void
-        loadDjBagContents(void)                             throw ();
+        loadScratchpadContents(void)                        throw ();
 
 
     public:
@@ -223,7 +223,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         GLiveSupport(void)                                  throw ()
         {
-            djBagContents.reset(new PlayableList());
+            scratchpadContents.reset(new PlayableList());
         }
 
         /**
@@ -393,9 +393,9 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the list holding the DJ Bag contents.
          */
         Ptr<PlayableList>::Ref
-        getDjBagContents(void)                                  throw ()
+        getScratchpadContents(void)                             throw ()
         {
-            return djBagContents;
+            return scratchpadContents;
         }
 
         /**

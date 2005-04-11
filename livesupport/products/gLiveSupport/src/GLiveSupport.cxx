@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ static const std::string nameAttrName = "name";
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing DJ Bag contents
  *----------------------------------------------------------------------------*/
-static const std::string djBagContentsKey = "djBagContents";
+static const std::string scratchpadContentsKey = "scratchpadContents";
 
 
 
@@ -261,7 +261,7 @@ GLiveSupport :: login(const std::string & login,
 {
     try {
         sessionId = authentication->login(login, password);
-        loadDjBagContents();
+        loadScratchpadContents();
         return true;
     } catch (XmlRpcException &e) {
         return false;
@@ -277,8 +277,8 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: logout(void)                                throw ()
 {
     if (sessionId.get() != 0) {
-        storeDjBagContents();
-        djBagContents->clear();
+        storeScratchpadContents();
+        scratchpadContents->clear();
         authentication->logout(sessionId);
         sessionId.reset();
     }
@@ -290,7 +290,7 @@ GLiveSupport :: logout(void)                                throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: storeDjBagContents(void)                    throw ()
+GLiveSupport :: storeScratchpadContents(void)               throw ()
 {
     // just store this as a space-delimited list of ids
     std::ostringstream                      prefsString;
@@ -298,8 +298,8 @@ GLiveSupport :: storeDjBagContents(void)                    throw ()
     GLiveSupport::PlayableList::iterator    end;
     Ptr<Playable>::Ref                      playable;
 
-    it  = djBagContents->begin();
-    end = djBagContents->end();
+    it  = scratchpadContents->begin();
+    end = scratchpadContents->end();
     while (it != end) {
         playable  = *it;
         prefsString << playable->getId()->getId() << " ";
@@ -310,7 +310,7 @@ GLiveSupport :: storeDjBagContents(void)                    throw ()
     Ptr<Glib::ustring>::Ref  prefsUstring(new Glib::ustring(prefsString.str()));
     try {
         authentication->savePreferencesItem(sessionId,
-                                            djBagContentsKey,
+                                            scratchpadContentsKey,
                                             prefsUstring);
     } catch (XmlRpcException &e) {
         // TODO: signal error
@@ -324,13 +324,13 @@ GLiveSupport :: storeDjBagContents(void)                    throw ()
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: loadDjBagContents(void)                     throw ()
+GLiveSupport :: loadScratchpadContents(void)                throw ()
 {
     Ptr<Glib::ustring>::Ref     prefsUstring;
 
     try {
         prefsUstring = authentication->loadPreferencesItem(sessionId,
-                                                           djBagContentsKey);
+                                                        scratchpadContentsKey);
     } catch (XmlRpcException &e) {
         // TODO: signal error
         std::cerr << "error loading user preferences: " << e.what()
@@ -356,10 +356,10 @@ GLiveSupport :: loadDjBagContents(void)                     throw ()
         // the storage
         if (storage->existsPlaylist(sessionId, id)) {
             Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id);
-            djBagContents->push_back(playlist);
+            scratchpadContents->push_back(playlist);
         } else if (storage->existsAudioClip(sessionId, id)) {
             Ptr<AudioClip>::Ref clip = storage->getAudioClip(sessionId, id);
-            djBagContents->push_back(clip);
+            scratchpadContents->push_back(clip);
         }
     }
 }
@@ -419,8 +419,8 @@ GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref      audioClip)
     storage->storeAudioClip(sessionId, audioClip);
 
     // add the uploaded file to the DJ Bag, and update it
-    djBagContents->push_front(audioClip);
-    masterPanel->updateDjBagWindow();   
+    scratchpadContents->push_front(audioClip);
+    masterPanel->updateScratchpadWindow();   
 }
 
 
@@ -505,8 +505,8 @@ GLiveSupport :: savePlaylist(void)
 
     // add the saved playlist to the DJ Bag, and update it
     // TODO: if already in the DJ bag, don't add, just pop it to the front
-    djBagContents->push_front(playlist);
-    masterPanel->updateDjBagWindow();   
+    scratchpadContents->push_front(playlist);
+    masterPanel->updateScratchpadWindow();   
 
     editedPlaylist.reset();
 
