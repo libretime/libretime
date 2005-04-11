@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -307,7 +307,7 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
 
 
 /*------------------------------------------------------------------------------
- *  The event when the DJ Bag button has been clicked.
+ *  The event when the Scratchpad button has been clicked.
  *----------------------------------------------------------------------------*/
 void
 MasterPanelWindow :: onScratchpadButtonClicked(void)                throw ()

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ static const std::string localeAttrName = "locale";
 static const std::string nameAttrName = "name";
 
 /*------------------------------------------------------------------------------
- *  The name of the user preference for storing DJ Bag contents
+ *  The name of the user preference for storing Scratchpad contents
  *----------------------------------------------------------------------------*/
 static const std::string scratchpadContentsKey = "scratchpadContents";
 
@@ -286,7 +286,7 @@ GLiveSupport :: logout(void)                                throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Store the DJ Bag contents as a user preference
+ *  Store the Scratchpad contents as a user preference
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
@@ -320,7 +320,7 @@ GLiveSupport :: storeScratchpadContents(void)               throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Load the DJ Bag contents from a user preference
+ *  Load the Scratchpad contents from a user preference
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
@@ -418,7 +418,7 @@ GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref      audioClip)
 {
     storage->storeAudioClip(sessionId, audioClip);
 
-    // add the uploaded file to the DJ Bag, and update it
+    // add the uploaded file to the Scratchpad, and update it
     scratchpadContents->push_front(audioClip);
     masterPanel->updateScratchpadWindow();   
 }
@@ -503,8 +503,8 @@ GLiveSupport :: savePlaylist(void)
     Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId,
                                                     editedPlaylist->getId());
 
-    // add the saved playlist to the DJ Bag, and update it
-    // TODO: if already in the DJ bag, don't add, just pop it to the front
+    // add the saved playlist to the Scratchpad, and update it
+    // TODO: if already in the Scratchpad, don't add, just pop it to the front
     scratchpadContents->push_front(playlist);
     masterPanel->updateScratchpadWindow();   
 

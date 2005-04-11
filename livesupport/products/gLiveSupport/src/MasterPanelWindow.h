@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -185,7 +185,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Button                    * uploadFileButton;
 
         /**
-         *  The button to invoke the DJ Bag window.
+         *  The button to invoke the Scratchpad window.
          */
         Button                    * scratchpadButton;
 
@@ -205,7 +205,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
-         *  The one and only DJ Bag window.
+         *  The one and only Scratchpad window.
          */
         Ptr<ScratchpadWindow>::Ref  scratchpadWindow;
 
@@ -254,7 +254,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         onUploadFileButtonClicked(void)                     throw ();
 
         /**
-         *  Function to catch the event of the DJ Bag button being
+         *  Function to catch the event of the Scratchpad button being
          *  pressed.
          */
         virtual void
@@ -319,7 +319,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         showLoggedInUI(void)                                    throw ();
 
         /**
-         *  Update the DJ Bag window.
+         *  Update the Scratchpad window.
          */
         void
         updateScratchpadWindow(void)                            throw ()

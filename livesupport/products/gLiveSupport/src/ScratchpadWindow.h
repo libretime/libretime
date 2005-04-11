@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,11 +68,11 @@ using namespace LiveSupport::Widgets;
 /* =============================================================== data types */
 
 /**
- *  The DJ Bag window, showing recent and relevant audio clips and
+ *  The Scratchpad window, showing recent and relevant audio clips and
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ScratchpadWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -281,7 +281,7 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
         onPlayItem(void)                                        throw ();
 
         /**
-         *  Delete an item from the storage and remove it from the dj bag.
+         *  Delete an item from the storage and remove it from the Scratchpad.
          *
          *  @param playable the Playable object to delete and remove.
          *  @exception XmlRpcException on XML-RPC errors.
@@ -308,13 +308,13 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
         ~ScratchpadWindow(void)                                 throw ();
 
         /**
-         *  Update the window contents, with the contents of the dj bag.
+         *  Update the window contents, with the contents of the Scratchpad.
          */
         void
         showContents(void)                                      throw ();
 
         /**
-         *  Remove an item from the dj bag.
+         *  Remove an item from the Scratchpad.
          *
          *  @param id the id of the item to remove.
          */

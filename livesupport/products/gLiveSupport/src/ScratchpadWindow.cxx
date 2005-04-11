@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -470,7 +470,7 @@ ScratchpadWindow :: onDeleteItem(void)                          throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Remove an item from the dj bag
+ *  Remove an item from the Scratchpad
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref    id)  throw ()
@@ -496,7 +496,7 @@ ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref    id)  throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Delete an item from storage, and remove it from the dj bag
+ *  Delete an item from storage, and remove it from the Scratchpad
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: deleteItem(Ptr<Playable>::Ref    playable)

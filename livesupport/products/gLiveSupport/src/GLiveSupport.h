@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -173,7 +173,7 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<MasterPanelWindow>::Ref     masterPanel;
 
         /**
-         *  The contents of a DJ Bag, stored as a list.
+         *  The contents of a Scratchpad, stored as a list.
          */
         Ptr<PlayableList>::Ref          scratchpadContents;
 
@@ -205,13 +205,13 @@ class GLiveSupport : public LocalizedConfigurable,
                                                 throw (std::invalid_argument);
 
         /**
-         *  Store the contents of the DJ Bag as a user preference.
+         *  Store the contents of the Scratchpad as a user preference.
          */
         void
         storeScratchpadContents(void)                       throw ();
 
         /**
-         *  Load the contents of the DJ Bag as a user preference.
+         *  Load the contents of the Scratchpad as a user preference.
          */
         void
         loadScratchpadContents(void)                        throw ();
@@ -388,9 +388,9 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
-         *  Return the DJ Bag contents.
+         *  Return the Scratchpad contents.
          *
-         *  @return the list holding the DJ Bag contents.
+         *  @return the list holding the Scratchpad contents.
          */
         Ptr<PlayableList>::Ref
         getScratchpadContents(void)                             throw ()
