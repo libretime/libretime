@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerEventListener.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef AudioPlayerEventListener_h
-#define AudioPlayerEventListener_h
+#ifndef LiveSupport_PlaylistExecutor_AudioPlayerEventListener_h
+#define LiveSupport_PlaylistExecutor_AudioPlayerEventListener_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -65,7 +65,7 @@ using namespace LiveSupport::Core;
  *  An event listener interface, for catching events of an audio player.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see AudioPlayerInterface
  */
 class AudioPlayerEventListener
@@ -99,5 +99,5 @@ class AudioPlayerEventListener
 } // namespace LiveSupport
 
 
-#endif // AudioPlayerEventListener_h
+#endif // LiveSupport_PlaylistExecutor_AudioPlayerEventListener_h
 

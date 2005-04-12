@@ -22,12 +22,12 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef AudioPlayerInterface_h
-#define AudioPlayerInterface_h
+#ifndef LiveSupport_PlaylistExecutor_AudioPlayerInterface_h
+#define LiveSupport_PlaylistExecutor_AudioPlayerInterface_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class AudioPlayerInterface
 {
@@ -252,5 +252,5 @@ class AudioPlayerInterface
 } // namespace LiveSupport
 
 
-#endif // AudioPlayerInterface_h
+#endif // LiveSupport_PlaylistExecutor_AudioPlayerInterface_h
 
