@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/Playlist.h"
 
+#include "LiveSupport/PlaylistExecutor/AudioPlayerEventListener.h"
 
 namespace LiveSupport {
 namespace PlaylistExecutor {
@@ -67,8 +68,8 @@ using namespace LiveSupport::Core;
 /**
  *  A generic interface for playing audio files.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.8 $
  */
 class AudioPlayerInterface
 {
@@ -95,6 +96,30 @@ class AudioPlayerInterface
          */
         virtual void
         deInitialize(void)                      throw ()                  = 0;
+
+        /**
+         *  Attach an event listener for this audio player.
+         *  After this call, the supplied event will recieve all events
+         *  related to this audio player.
+         *
+         *  @param eventListener the event listener to register.
+         *  @see #detach
+         */
+        virtual void
+        attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+                                                                throw ()  = 0;
+
+        /**
+         *  Detach an event listener for this audio player.
+         *
+         *  @param eventListener the event listener to unregister.
+         *  @exception std::invalid_argument if the supplied event listener
+         *             has not been previously registered.
+         *  @see #attach
+         */
+        virtual void
+        detachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+                                            throw (std::invalid_argument)  = 0;
 
         /**
          *  Specify which audio resource to play.

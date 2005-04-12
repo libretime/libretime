@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,8 +111,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST helixPlayer   fadeLookAheatTime    #IMPLIED >
  *  </pre></code>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.16 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -192,6 +192,20 @@ class HelixPlayer : virtual public Configurable,
          *  call isPlaying() instead.
          */
         bool                    playing;
+
+        /**
+         *  The type for the vector of listeners.
+         *  Just a shorthand notation, to make reference to the type
+         *  easier.
+         */
+        typedef std::vector<Ptr<AudioPlayerEventListener>::Ref>
+                                                        ListenerVector;
+
+        /**
+         *  A vector of event listeners, which are interested in events
+         *  related to this player.
+         */
+        ListenerVector          listeners;
 
         /**
          *  A thread for handling helix events, on a regular basis.
@@ -298,6 +312,36 @@ class HelixPlayer : virtual public Configurable,
          */
         virtual void
         deInitialize(void)                      throw ();
+
+        /**
+         *  Attach an event listener for this audio player.
+         *  After this call, the supplied event will recieve all events
+         *  related to this audio player.
+         *
+         *  @param eventListener the event listener to register.
+         *  @see #detach
+         */
+        virtual void
+        attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+                                                                    throw ();
+
+        /**
+         *  Detach an event listener for this audio player.
+         *
+         *  @param eventListener the event listener to unregister.
+         *  @exception std::invalid_argument if the supplied event listener
+         *             has not been previously registered.
+         *  @see #attach
+         */
+        virtual void
+        detachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  Send the onStop event to all attached listeners.
+         */
+        virtual void
+        fireOnStopEvent(void)                           throw ();
 
         /**
          *  Specify which audio resource to play.

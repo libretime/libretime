@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -265,6 +265,55 @@ HelixPlayer :: deInitialize(void)                       throw ()
         dllAccess.close();
 
         initialized = false;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Attach an event listener.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+                                                                    throw ()
+{
+    listeners.push_back(eventListener);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Detach an event listener.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: detachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+                                                throw (std::invalid_argument)
+{
+    ListenerVector::iterator    it  = listeners.begin();
+    ListenerVector::iterator    end = listeners.end();
+
+    while (it != end) {
+        if ((*it).get() == eventListener.get()) {
+            listeners.erase(it);
+            return;
+        }
+        ++it;
+    }
+
+    throw std::invalid_argument("supplied event listener not found");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Send the onStop event to all attached listeners.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: fireOnStopEvent(void)                        throw ()
+{
+    ListenerVector::iterator    it  = listeners.begin();
+    ListenerVector::iterator    end = listeners.end();
+
+    while (it != end) {
+        (*it)->onStop();
+        ++it;
     }
 }
 

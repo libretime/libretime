@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace PlaylistExecutor {
 /**
  *  Unit test for the HelixPlayer class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.9 $
  *  @see HelixPlayer
  */
 class HelixPlayerTest : public CPPUNIT_NS::TestFixture
@@ -69,13 +69,17 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST(checkErrorConditions);
     CPPUNIT_TEST(smilTest);
+
 //    CPPUNIT_TEST(smilParallelTest0);
 //    CPPUNIT_TEST(smilParallelTest1);
 //    CPPUNIT_TEST(smilParallelTest2);
 //    CPPUNIT_TEST(smilParallelTest3);
 //    CPPUNIT_TEST(smilParallelTest4);
 //    CPPUNIT_TEST(smilSoundAnimationTest);
+
     CPPUNIT_TEST(animationWorkaroundTest);
+    CPPUNIT_TEST(eventListenerAttachTest);
+    CPPUNIT_TEST(eventListenerTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -193,6 +197,22 @@ class HelixPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         animationWorkaroundTest(void)           throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test to see if attaching and detaching event listeners works.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        eventListenerAttachTest(void)           throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test to see if the player event listener mechanism works.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        eventListenerTest(void)                 throw (CPPUNIT_NS::Exception);
 
     public:
         

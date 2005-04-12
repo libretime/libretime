@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AdviseSink.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -254,6 +254,8 @@ AdviseSink::OnStop(void)                                    throw ()
     // figure out how many seconds we played
     now = pScheduler->GetCurrentSchedulerTime();
     ulStopTime = now.tv_sec;
+
+    helixPlayer->fireOnStopEvent();
 
 // TODO: maybe save the number of seconds played?
 //    GetGlobal()->g_ulNumSecondsPlayed = ulStopTime - ulStartTime;
