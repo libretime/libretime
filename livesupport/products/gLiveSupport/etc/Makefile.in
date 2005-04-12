@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.25 $
+#   Version  : $Revision: 1.26 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -259,7 +259,7 @@ run: all
 
 install: ${SCHEDULER_EXE}
 	-${MAKE} -C ${STORAGE_SERVER_DIR} db_init
-	-${MAKE} -C ${SCHEDULER_DIR} install_web
+	-${MAKE} -C ${SCHEDULER_DIR} install
 
 start: ${SCHEDULER_EXE}
 	${MAKE} -C ${SCHEDULER_DIR} start
@@ -268,7 +268,7 @@ stop: ${SCHEDULER_EXE}
 	${MAKE} -C ${SCHEDULER_DIR} stop
 
 uninstall: ${SCHEDULER_EXE}
-	-${MAKE} -C ${SCHEDULER_DIR} uninstall_web
+	-${MAKE} -C ${SCHEDULER_DIR} uninstall
 	-${MAKE} -C ${STORAGE_SERVER_DIR} db_clean
 
 storage_server_init:
