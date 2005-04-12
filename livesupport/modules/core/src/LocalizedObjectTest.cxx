@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -305,6 +305,36 @@ LocalizedObjectTest :: ustringTest(void)
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the ustring related functions in problematic situations
+ *  see http://bugs.campware.org/view.php?id=792
+ *----------------------------------------------------------------------------*/
+void
+LocalizedObjectTest :: ustringNegativeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    bool                      gotException;
+    UErrorCode                status = U_ZERO_ERROR;
+    Ptr<ResourceBundle>::Ref  bundle(new ResourceBundle("./tmp/" PACKAGE_NAME,
+                                                        "root",
+                                                        status));
+    CPPUNIT_ASSERT(U_SUCCESS(status));
+
+    // test getting a missing ustring resource
+    gotException = false;
+    try {
+        Ptr<LocalizedObject>::Ref   locObj(new LocalizedObject(bundle));
+        Ptr<LocalizedObject>::Ref   section1(new LocalizedObject(
+                                                locObj->getBundle("section1")));
+        Ptr<Glib::ustring>::Ref     foo =
+                                section1->getResourceUstring("nonexistentKey");
+    } catch (std::invalid_argument &e) {
+        gotException = true;
+    }
+    CPPUNIT_ASSERT(gotException);
 }
 
 

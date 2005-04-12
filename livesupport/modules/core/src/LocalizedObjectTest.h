@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the LocalizedObject class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see LocalizedObject
  */
 class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
@@ -70,6 +70,7 @@ class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(formatMessageTest);
     CPPUNIT_TEST(loadFromConfigTest);
     CPPUNIT_TEST(ustringTest);
+    CPPUNIT_TEST(ustringNegativeTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -123,6 +124,15 @@ class LocalizedObjectTest : public CPPUNIT_NS::TestFixture
          */
         void
         ustringTest(void)                       throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to check the Glib::ustring related function beaviour
+         *  in problematic situations.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        ustringNegativeTest(void)               throw (CPPUNIT_NS::Exception);
 
 
     public:
