@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.54 $
+#   Version  : $Revision: 1.55 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -296,7 +296,7 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
 
-check: all ${TEST_RUNNER} storage_server_init start run run_tests stop
+check: all ${TEST_RUNNER} storage_server_init start run_tests stop
 
 check_local: all ${TEST_RUNNER} start_local run_tests stop_local
 
