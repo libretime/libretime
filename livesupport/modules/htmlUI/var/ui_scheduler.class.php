@@ -388,7 +388,7 @@ class uiScheduler extends uiCalendar
     function _isError($r)
     {
         if (is_array($r['error'])) {
-            $this->Base->_retMsg('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message'])));
+            #$this->Base->_retMsg('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message'])));
             return TRUE;
         }
         return FALSE;

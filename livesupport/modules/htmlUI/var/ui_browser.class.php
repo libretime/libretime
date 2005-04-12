@@ -14,6 +14,7 @@ class uiBrowser extends uiBase {
     function uiBrowser(&$config)
     {
         $this->uiBase($config);
+        $this->mdatarecords =& $_SESSION[UI_MDATA_REC_SESSNAME];
     }
 
       /**
@@ -353,6 +354,34 @@ class uiBrowser extends uiBase {
     function getMdata($id)
     {
         return($this->gb->getMdata($id, $this->sessid));
+    }
+
+
+    function getMDataArr($param)
+    {
+        extract($param);
+        static $records, $relations;
+        $arr =& $records[$id];
+
+        if (is_array($arr)) return $arr;
+
+        require_once dirname(__FILE__).'/formmask/mdata_relations.inc.php';
+
+        require_once 'XML/Unserializer.php';
+        $handler =& new XML_Unserializer;
+        $handler->unserialize($this->getMdata($id));
+        $arr = $handler->getUnserializedData();
+
+        foreach ($arr['metadata'] as $key=>$val) {
+            if ($relations[$key]) {
+                unset($arr['metadata'][$key]);
+                $arr['metadata'][$relations[tra($key)]] = $val;
+            }
+        }
+
+        ksort($arr['metadata']);
+
+        return $arr;
     }
 
 

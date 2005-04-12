@@ -31,6 +31,7 @@ define('UI_STATIONINFO_SESSNAME', 'STATIONINFO');
 define('UI_SEARCH_SESSNAME',      'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',    'PLAYLIST');
 define('UI_BROWSE_SESSNAME',      'L_BROWSE');
+define('UI_MDATA_REC_SESSNAME',   'MDATAREC');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',      'dc:title');
