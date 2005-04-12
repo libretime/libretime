@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,6 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 
 

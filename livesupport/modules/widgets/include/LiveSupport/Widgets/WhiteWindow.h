@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,7 @@
 #include "LiveSupport/Widgets/Colors.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/BlueBin.h"
+#include "LiveSupport/Widgets/WidgetFactory.h"
 
 
 namespace LiveSupport {
@@ -71,7 +72,7 @@ using namespace LiveSupport::Core;
  *  A container holding exactly one child, habing a light blue border to it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class WhiteWindow : public Gtk::Window
 {
