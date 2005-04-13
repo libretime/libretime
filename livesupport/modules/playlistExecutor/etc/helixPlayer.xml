@@ -8,7 +8,7 @@
 <!ATTLIST helixPlayer   fadeLookAheadTime    NMTOKEN   #IMPLIED >
 ]>
 <helixPlayer dllPath = "../../usr/lib/helix"
-             audioDevice = "/dev/sound/dsp"
+             audioDevice = "/dev/dsp"
              audioStreamTimeout="6"
              fadeLookAheadTime="2510"
 />
