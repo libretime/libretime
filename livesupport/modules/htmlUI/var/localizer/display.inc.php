@@ -31,19 +31,6 @@ class Display {
             $file['sourceId'] = _DEFAULT_LANG_;
         }
 
-        $html .= '<tr><td colspan="2"><hr></td></tr>
-                  <tr>
-                   <td colspan="2">'.
-                    Display::sourceLangMenu($file[sourceId], $file).'
-                    <input type="submit" Value="'.getGS('ok').'">
-                   </td>
-                  </tr>
-                  <tr>
-                   <td colspan="2">  <br>
-                    <input type="submit" name="onlyUntranslated" Value="'.getGS('show only untranslated').'">
-                   </td>
-                  </tr>';
-        }
 
         $s = Data::convArr2GS($source);
         $t = Data::convArr2GS($target);
@@ -119,6 +106,20 @@ class Display {
           }
         }
 
+        $html .= '<tr><td colspan="2"><hr></td></tr>
+                  <tr>
+                   <td colspan="2">'.
+                    Display::sourceLangMenu($file[sourceId], $file).'
+                    <input type="submit" Value="'.getGS('ok').'">
+                   </td>
+                  </tr>
+                  <tr>
+                   <td colspan="2">  <br>
+                    <input type="submit" name="onlyUntranslated" Value="'.getGS('show only untranslated').'">
+                   </td>
+                  </tr>';
+        }
+        
         $html .= '<tr><td colspan="2"><hr></td></tr>
                   <tr>
                     <td>

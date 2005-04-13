@@ -89,7 +89,8 @@ class uiScheduler extends uiCalendar
 
         foreach ($arr as $key => $val) {
             $items[strftime('%d', $this->_datetime2timestamp($val['start']))][number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
-                'id'        => $val['id'],
+                'scheduleid'=> $val['id'],
+                'plid'      => $this->Base->gb->_idFromGunid($val['playlistId']),
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
@@ -115,7 +116,8 @@ class uiScheduler extends uiCalendar
 
         foreach ($arr as $key => $val) {
             $items[number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
-                'id'        => $val['id'],
+                'plid'      => $this->Base->gb->_idFromGunid($val['playlistId']),
+                'scheduleid'=> $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
@@ -388,7 +390,7 @@ class uiScheduler extends uiCalendar
     function _isError($r)
     {
         if (is_array($r['error'])) {
-            #$this->Base->_retMsg('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message'])));
+            $this->Base->_retMsg('Error: $1', str_replace("\n", "\\n", addslashes($r['error']['message'])));
             return TRUE;
         }
         return FALSE;

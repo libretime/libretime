@@ -31,7 +31,8 @@ class Data {
     function _realTransPath($file, $Id, $type='xml')
     {
         $s = '/';
-        return $_SERVER[DOCUMENT_ROOT].$s.dirname($_SERVER[SCRIPT_NAME]).$s.Data::langPath($file, $Id, $type);
+        #return $_SERVER[DOCUMENT_ROOT].$s.dirname($_SERVER[SCRIPT_NAME]).$s.Data::langPath($file, $Id, $type);
+        return dirname(__FILE__).$s.Data::langPath($file, $Id, $type);
     }
 
     function langPath($file, $Id, $type)

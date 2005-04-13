@@ -49,7 +49,7 @@
                 <td class="date_full" onClick="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={$_hour}', 'SCHEDULER.addItem')"></td>
                 <td class="day_full">
                 {foreach from=$_entrys[$_day.day][$_hour] item="i"}
-                    <div onClick="return contextmenu('scheduleId={$i.id}', 'SCHEDULER.removeItem')">
+                    <div {include file="scheduler/actionhandler.tpl"}>
                     <h2>{$i.title|truncate:12}</h2>
                     <p>{$i.start|truncate:5:""} - {$i.end|truncate:5:""}</p>
                     <p>{$i.creator}</p>

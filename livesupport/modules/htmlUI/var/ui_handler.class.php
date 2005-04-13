@@ -55,6 +55,7 @@ class uiHandler extends uiBase {
         #setcookie($this->config['authCookieName'], $sessid);
         echo "<meta http-equiv='set-cookie' content='".$this->config['authCookieName']."=".$sessid.";'>";
         ob_flush();
+
         $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
         if(PEAR::isError($id)) {
             $this->_retMsg('Login failed');

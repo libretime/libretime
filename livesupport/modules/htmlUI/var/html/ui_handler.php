@@ -6,7 +6,8 @@ switch($_REQUEST['act']){
     case "login":
         if ($uiHandler->login($_REQUEST, $ui_fmask["login"]) === TRUE) {
             $uiHandler->loadStationPrefs($ui_fmask['stationPrefs'], TRUE);
-            $uiHandler->PLAYLIST->reportLookedPL(TRUE);
+            # $uiHandler->PLAYLIST->reportLookedPL();
+            $uiHandler->PLAYLIST->loadLookedFromPref();
         }
     break;
 
@@ -187,7 +188,7 @@ switch($_REQUEST['act']){
             if ($_REQUEST['id']) $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
         }
-        $uiHandler->PLAYLIST->setRedirect('_2PL.editMetaData'); 
+        $uiHandler->PLAYLIST->setRedirect('_2PL.editMetaData');
     break;
 
     case "PL.addItem":

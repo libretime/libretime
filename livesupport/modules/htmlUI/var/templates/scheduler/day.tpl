@@ -37,7 +37,7 @@
                     <td style="border-right: 1px solid #ccc;">
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
-                        <div onClick="return contextmenu('scheduleId={$i.id}', 'SCHEDULER.removeItem')">
+                        <div {include file="scheduler/actionhandler.tpl"}>
                         <b>{$i.title}</b>
                         {$i.start}-{$i.end}
                         {$i.creator}
