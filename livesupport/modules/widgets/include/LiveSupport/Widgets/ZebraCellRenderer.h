@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraCellRenderer.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_ZebraTreeView_h
-#define LiveSupport_Widgets_ZebraTreeView_h
+#ifndef LiveSupport_Widgets_ZebraCellRenderer_h
+#define LiveSupport_Widgets_ZebraCellRenderer_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,26 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/treemodel.h>
-#include <gtkmm/treeview.h>
-#include <gtkmm/label.h>
-#include <gtkmm/table.h>
-#include <gtkmm/alignment.h>
-#include <gtkmm/eventbox.h>
-#include <gtkmm/image.h>
-#include <gtkmm/window.h>
-
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Widgets/CornerImages.h"
-#include "LiveSupport/Widgets/ImageButton.h"
-#include "LiveSupport/Widgets/BlueBin.h"
+#include "gtkmm/cellrenderertext.h"
 
 
 namespace LiveSupport {
 namespace Widgets {
 
-using namespace LiveSupport::Core;
-    
 /* ================================================================ constants */
 
 
@@ -69,66 +55,57 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A list of items, in rows colored alternately grey and light blue.
+ *  A custom cell renderer for blue-gray striped TreeView's.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.1 $
  */
-class ZebraTreeView : public Gtk::TreeView
+class ZebraCellRenderer : public Gtk::CellRendererText
 {
-    private:
+    public:
         /**
          *  Default constructor.
          */
-        ZebraTreeView(void)                                     throw ()
-        {
-        }
-
-        /**
-         *  The callback function to set the colors of the rows.
-         */
-        void 
-        cellDataFunction(Gtk::CellRenderer*               cell,
-                         const Gtk::TreeModel::iterator&  iter)
-                                                                throw ();
-
-    protected:
-
-    public:
-        /**
-         *  Constructor.
-         *
-         *  @param treeModel the data the treeView will show.
-         */
-        ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>   treeModel)
-                                                                throw ();
+        ZebraCellRenderer()                                     throw ();
 
         /**
          *  A virtual destructor.
          */
-        virtual
-        ~ZebraTreeView(void)                                    throw ();
+        virtual ~ZebraCellRenderer()                            throw ();
 
+    protected:
         /**
-         *  Add a column to the TreeView.
-         *
-         *  @param title    the title of the column
-         *  @param modelColumn  the model column this view will display
-         *  @return the number of columns after adding this one
+         *  Calculate the size of the cell.
          */
-        int 
-        appendColumn(const Glib::ustring&                       title, 
-                     const Gtk::TreeModelColumn<Glib::ustring>& modelColumn)
+        virtual void get_size_vfunc(Gtk::Widget& widget,
+                              const Gdk::Rectangle* cell_area,
+                              int* x_offset, int* y_offset,
+                              int* width,    int* height) const
                                                                 throw ();
 
         /**
-         *  Set the callback function for every column.
+         *  Draw the cell.
          */
-        void 
-        setCellDataFunction(void)
+        virtual void render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
+                            Gtk::Widget& widget,
+                            const Gdk::Rectangle& background_area,
+                            const Gdk::Rectangle& cell_area,
+                            const Gdk::Rectangle& expose_area,
+                            Gtk::CellRendererState flags)
                                                                 throw ();
+
+        /**
+         *  The user clicked on the cell.
+         */
+        virtual bool activate_vfunc(GdkEvent* event,
+                              Gtk::Widget& widget,
+                              const Glib::ustring& path,
+                              const Gdk::Rectangle& background_area,
+                              const Gdk::Rectangle& cell_area,
+                              Gtk::CellRendererState flags)
+                                                                throw ();
+
 };
-
 
 /* ================================================= external data structures */
 
@@ -139,5 +116,5 @@ class ZebraTreeView : public Gtk::TreeView
 } // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_ZebraTreeView_h
+#endif // LiveSupport_Widgets_ZebraCellRenderer_h
 

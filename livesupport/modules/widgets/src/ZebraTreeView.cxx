@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/ZebraCellRenderer.h"
 
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 
@@ -70,6 +71,25 @@ ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
  *----------------------------------------------------------------------------*/
 ZebraTreeView :: ~ZebraTreeView(void)                           throw ()
 {
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a column to the TreeView.
+ *----------------------------------------------------------------------------*/
+int 
+ZebraTreeView :: appendColumn(
+                    const Glib::ustring&                        title, 
+                    const Gtk::TreeModelColumn<Glib::ustring>&  modelColumn)
+                                                                throw ()
+{
+    ZebraCellRenderer*      renderer = Gtk::manage(new ZebraCellRenderer);
+    // the constructor packs the renderer into the TreeViewColumn
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
+                                Gtk::TreeViewColumn(title, *renderer) );
+    // and then we associate this renderer with the model column
+    viewColumn->set_renderer(*renderer, modelColumn);
+    return append_column(*viewColumn);
 }
 
 
