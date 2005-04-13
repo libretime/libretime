@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE gLiveSupport [
+
+<!ELEMENT gLiveSupport                (resourceBundle,
+                                       supportedLanguages,
+                                       widgetFactory,
+                                       authenticationClientFactory,
+                                       storageClientFactory,
+                                       schedulerClientFactory,
+                                       audioPlayer) >
+
+<!ELEMENT resourceBundle    EMPTY >
+<!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
+<!ATTLIST resourceBundle    locale  CDATA   #REQUIRED >
+
+<!ELEMENT supportedLanguages    (language+) >
+
+<!ELEMENT language          EMPTY >
+<!ATTLIST language          locale          CDATA #REQUIRED >
+<!ATTLIST language          name            CDATA #REQUIRED >
+
+<!ELEMENT widgetFactory   EMPTY >
+<!ATTLIST widgetFactory   path        CDATA   #REQUIRED >
+
+<!ELEMENT authenticationClientFactory (testAuthentication|
+                                       webAuthentication)>
+
+<!ELEMENT testAuthentication (user) >
+
+<!ELEMENT webAuthentication (location) >
+
+<!ELEMENT location EMPTY >
+<!ATTLIST location server   CDATA       #REQUIRED >
+<!ATTLIST location port     NMTOKEN     #REQUIRED >
+<!ATTLIST location path     CDATA       #REQUIRED >
+
+<!ELEMENT user EMPTY >
+<!ATTLIST user login        CDATA       #REQUIRED >
+<!ATTLIST user password     CDATA       #REQUIRED >
+
+<!ELEMENT storageClientFactory (testStorage|webStorage) >
+
+<!ELEMENT testStorage (playlist*, audioClip*) >
+<!ATTLIST testStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT playlist (playlistElement*) >
+<!ATTLIST playlist id           NMTOKEN     #REQUIRED >
+<!ATTLIST playlist playlength   NMTOKEN     #REQUIRED >
+
+<!ELEMENT playlistElement ((audioClip|playlist), fadeInfo?) >
+<!ATTLIST playlistElement id              NMTOKEN     #REQUIRED >
+<!ATTLIST playlistElement relativeOffset  NMTOKEN     #REQUIRED >
+
+<!ELEMENT audioClip EMPTY >
+<!ATTLIST audioClip id              NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip playlength      NMTOKEN     #REQUIRED >
+<!ATTLIST audioClip title           CDATA       #REQUIRED >
+<!ATTLIST audioClip uri             CDATA       #REQUIRED >
+
+<!ELEMENT fadeInfo EMPTY >
+<!ATTLIST fadeInfo id              NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeIn          NMTOKEN     #REQUIRED >
+<!ATTLIST fadeInfo fadeOut         NMTOKEN     #REQUIRED >
+
+<!ELEMENT webStorage (location) >
+<!ATTLIST webStorage tempFiles CDATA       #REQUIRED >
+
+<!ELEMENT schedulerClientFactory        (schedulerDaemonXmlRpcClient) >
+
+<!ELEMENT schedulerDaemonXmlRpcClient   EMPTY >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcHost    CDATA       #REQUIRED >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcPort    NMTOKEN     #REQUIRED >
+<!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
+
+<!ELEMENT audioPlayer   (helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+
+]>
+<gLiveSupport>
+    <resourceBundle path   = "./tmp/gLiveSupport"
+                    locale = "en"
+    />
+
+    <supportedLanguages>
+        <language locale="en" name="English"/>
+        <language locale="hu" name="Magyar"/>
+    </supportedLanguages>
+
+    <widgetFactory    path = "var/widgets/" />
+
+    <authenticationClientFactory>
+        <webAuthentication>
+            <location server="ls_php_host" port="ls_php_port"
+                      path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
+        </webAuthentication>
+    </authenticationClientFactory>
+
+    <storageClientFactory>
+        <webStorage tempFiles="file:///ls_install_dir/tmp/webStorageClient" >
+            <location server="ls_php_host" port="ls_php_port"
+                      path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
+        </webStorage>
+    </storageClientFactory>
+
+    <schedulerClientFactory>
+        <schedulerDaemonXmlRpcClient   xmlRpcHost = "ls_scheduler_host"
+                                       xmlRpcPort = "ls_scheduler_port"
+                                       xmlRpcUri  = "/ls_scheduler_xmlRpcPrefix"
+        />
+    </schedulerClientFactory>
+
+    <audioPlayer>
+        <helixPlayer dllPath = "ls_install_dir/lib/helix"/>
+    </audioPlayer>
+
+</gLiveSupport>
+

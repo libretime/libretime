@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.26 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.27 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -44,6 +44,7 @@ BASE_DIR     = @builddir@
 DOC_DIR      = ${BASE_DIR}/doc
 DOXYGEN_DIR  = ${DOC_DIR}/doxygen
 COVERAGE_DIR = ${DOC_DIR}/coverage
+BIN_DIR      = ${BASE_DIR}/bin
 ETC_DIR      = ${BASE_DIR}/etc
 SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
@@ -132,7 +133,7 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
 G_LIVESUPPORT_EXE = ${TMP_DIR}/gLiveSupport
-G_LIVESUPPORT_CFG = ${ETC_DIR}/gLiveSupport.xml
+G_LIVESUPPORT_SH  = ${BIN_DIR}/gLiveSupport_devenv.sh
 G_LIVESUPPORT_CFG = ${ETC_DIR}/gLiveSupport.xml
 TEST_RUNNER   = ${TMP_DIR}/testRunner
 
@@ -255,7 +256,7 @@ run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 run: all
-	${G_LIVESUPPORT_EXE} -c ${G_LIVESUPPORT_CFG}
+	${G_LIVESUPPORT_SH}
 
 install: ${SCHEDULER_EXE}
 	-${MAKE} -C ${STORAGE_SERVER_DIR} db_init

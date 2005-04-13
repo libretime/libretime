@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(AuthenticationClientFactoryTest);
 /**
  *  The name of the configuration file for the authentication client factory.
  */
-static const std::string configFileName = "etc/authenticationClient.xml";
+static const std::string configFileName = "authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -79,9 +79,9 @@ AuthenticationClientFactoryTest :: setUp(void)                         throw ()
     Ptr<AuthenticationClientFactory>::Ref
                             acf = AuthenticationClientFactory::getInstance();
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                            new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser        parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                             configFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         acf->configure(*root);

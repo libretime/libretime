@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -271,6 +271,10 @@ cat $modules_dir/archiveServer/var/conf_only.php.template \
     | sed -e "$replace_sed_string" \
     > $configdir/archiveServer.conf.php
 
+cat $modules_dir/authentication/etc/webAuthentication.xml.template \
+    | sed -e "$replace_sed_string" \
+    > $configdir/webAuthentication.xml
+
 cat $modules_dir/db/etc/connectionManagerFactory.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/connectionManagerFactory.xml
@@ -298,6 +302,10 @@ cat $modules_dir/storage/etc/webStorage.xml.template \
 cat $products_dir/scheduler/etc/scheduler.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/scheduler.xml
+
+cat $products_dir/gLiveSupport/etc/gLiveSupport.xml.template \
+    | sed -e "$replace_sed_string" \
+    > $configdir/gLiveSupport.xml
 
 
 #-------------------------------------------------------------------------------

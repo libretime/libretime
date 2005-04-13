@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/BaseTestMethod.h"
+
 #include "WebAuthenticationClient.h"
 
 namespace LiveSupport {
@@ -60,11 +62,11 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the WebAuthenticationClient class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.6 $
  *  @see WebAuthenticationClient
  */
-class WebAuthenticationClientTest : public CPPUNIT_NS::TestFixture
+class WebAuthenticationClientTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(WebAuthenticationClientTest);
     CPPUNIT_TEST(firstTest);

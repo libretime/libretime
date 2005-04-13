@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/AuthenticationClientFactoryTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include "LiveSupport/Core/BaseTestMethod.h"
+
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 
 namespace LiveSupport {
@@ -60,11 +62,11 @@ using namespace LiveSupport::Core;
 /**
  *  Unit test for the AuthenticationClientFactory class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.3 $
  *  @see AuthenticationClientFactory
  */
-class AuthenticationClientFactoryTest : public CPPUNIT_NS::TestFixture
+class AuthenticationClientFactoryTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(AuthenticationClientFactoryTest);
     CPPUNIT_TEST(firstTest);

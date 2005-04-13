@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(WebAuthenticationClientTest);
 /**
  *  The name of the configuration file for the authentication client factory.
  */
-static const std::string configFileName = "etc/webAuthentication.xml";
+static const std::string configFileName = "webAuthentication.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -77,9 +77,9 @@ void
 WebAuthenticationClientTest :: setUp(void)                         throw ()
 {
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser        parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                             configFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         wac.reset(new WebAuthenticationClient());
