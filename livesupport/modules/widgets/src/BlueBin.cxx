@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/BlueBin.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,16 +55,31 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 BlueBin :: BlueBin(Colors::ColorName            backgroundColor,
-                   Ptr<CornerImages>::Ref       cornerImages)
+                   Ptr<CornerImages>::Ref       cornerImages,
+                   bool                         transparentBorder)
                                                                     throw ()
 {
     set_flags(Gtk::NO_WINDOW);
 
-    this->cornerImages = cornerImages;
+    this->cornerImages      = cornerImages;
+    this->transparentBorder = transparentBorder;
 
     child = 0;
 
     bgColor = Colors::getColor(backgroundColor);
+
+    // generate the transparency mask bitmaps for the corners.
+    cornerBitmaps.reset(new CornerBitmaps());
+    Glib::RefPtr<Gdk::Pixmap>   pixmap;
+
+    cornerImages->topLeftImage->render_pixmap_and_mask(pixmap,
+                                         cornerBitmaps->topLeftBitmap, 100);
+    cornerImages->topRightImage->render_pixmap_and_mask(pixmap,
+                                         cornerBitmaps->topRightBitmap, 100);
+    cornerImages->bottomLeftImage->render_pixmap_and_mask(pixmap,
+                                         cornerBitmaps->bottomLeftBitmap, 100);
+    cornerImages->bottomRightImage->render_pixmap_and_mask(pixmap,
+                                         cornerBitmaps->bottomRightBitmap, 100);
 }
 
 
@@ -225,11 +240,10 @@ BlueBin :: on_realize()                                         throw ()
 
     if (!gdkWindow) {
         // create the Gdk::Window, if it didn't exist before
+        Gtk::Allocation     allocation = get_allocation();
 
         GdkWindowAttr       attributes;
         memset(&attributes, 0, sizeof(attributes));
-
-        Gtk::Allocation     allocation = get_allocation();
 
         // set initial position and size of the Gdk::Window
         attributes.x      = allocation.get_x();
@@ -282,11 +296,43 @@ BlueBin :: on_expose_event(GdkEventExpose* event)           throw ()
         return false;
     }  
 
+    int width  = get_width();
+    int height = get_height();
+
+    if (transparentBorder) {
+        unsigned int    bitmapSize = 1 + (width * height);
+
+        char  * bitmapData = new char[bitmapSize];
+        memset(bitmapData, 0xff, bitmapSize);
+
+        Glib::RefPtr<Gdk::Bitmap>    mask = Gdk::Bitmap::create(bitmapData,
+                                                                width,
+                                                                height);
+        delete[] bitmapData;
+
+        Glib::RefPtr<Gdk::GC>       gc = Gdk::GC::create(mask);
+        Glib::RefPtr<Gdk::Bitmap>   borderMask;
+
+        mask->draw_drawable(gc, cornerBitmaps->topLeftBitmap, 0, 0, 0, 0);
+
+        mask->draw_drawable(gc, cornerBitmaps->topRightBitmap, 0, 0,
+                            width - cornerImages->topRightImage->get_width(),
+                            0);
+
+        mask->draw_drawable(gc, cornerBitmaps->bottomLeftBitmap, 0, 0,
+                          0,
+                          height - cornerImages->bottomLeftImage->get_height());
+
+        mask->draw_drawable(gc, cornerBitmaps->bottomRightBitmap, 0, 0,
+                         width - cornerImages->bottomRightImage->get_width(),
+                         height - cornerImages->bottomRightImage->get_height());
+
+        get_parent_window()->shape_combine_mask(mask, 0, 0);
+    }
+
     if (gdkWindow) {
         gdkWindow->clear();
 
-        int     width  = get_width();
-        int     height = get_height();
         int     x;
         int     maxX;
         int     y;

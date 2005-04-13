@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -137,6 +137,18 @@ static const std::string    smallStopButtonPassiveName
  */
 static const std::string    smallStopButtonRollName 
                             = "imageButton/smallStopRoll.png";
+
+/**
+ *  The name of the passive image for the huge play button.
+ */
+static const std::string    hugePlayButtonPassiveName 
+                            = "imageButton/hugePlay.png";
+
+/**
+ *  The name of the rollover image for the huge play button.
+ */
+static const std::string    hugePlayButtonRollName 
+                            = "imageButton/hugePlayRoll.png";
 
 /**
  *  The name of the combo box left image.
@@ -331,6 +343,11 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
         case smallStopButton:
             passiveImage = loadImage(smallStopButtonPassiveName);
             rollImage    = loadImage(smallStopButtonRollName);
+            break;
+
+        case hugePlayButton:
+            passiveImage = loadImage(hugePlayButtonPassiveName);
+            rollImage    = loadImage(hugePlayButtonRollName);
             break;
 
         default:

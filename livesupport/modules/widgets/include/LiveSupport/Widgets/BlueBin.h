@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/BlueBin.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/CornerImages.h"
+#include "LiveSupport/Widgets/CornerBitmaps.h"
 #include "LiveSupport/Widgets/Colors.h"
 
 
@@ -63,12 +64,19 @@ using namespace LiveSupport::Core;
 /**
  *  A container holding exactly one child, habing a light blue border to it.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.7 $
  */
 class BlueBin : public Gtk::Bin
 {
     private:
+        /**
+         *  Flag to indicate if the bin should try to make its border
+         *  transparent (only where the border images are transparent,
+         *  of course).
+         */
+        bool                            transparentBorder;
+
         /**
          *  The Gdk::Window object, used to draw inside this button.
          */
@@ -93,6 +101,11 @@ class BlueBin : public Gtk::Bin
          *  The corner images.
          */
         Ptr<CornerImages>::Ref          cornerImages;
+
+        /**
+         *  The corner bitmaps, for masking for transparency.
+         */
+        Ptr<CornerBitmaps>::Ref         cornerBitmaps;
 
         /**
          *  Default constructor.
@@ -221,9 +234,13 @@ class BlueBin : public Gtk::Bin
          *
          *  @param backgroundColor the RGB value for the background color.
          *  @param cornerImages the corner images.
+         *  @param transparentBorder flag to indicate if the widget should
+         *         make its border transparent, where the border images
+         *         are transparent themselves
          */
         BlueBin(Colors::ColorName           backgroundColor,
-                Ptr<CornerImages>::Ref      cornerImages)
+                Ptr<CornerImages>::Ref      cornerImages,
+                bool                        transparentBorder = false)
                                                             throw ();
 
         /**

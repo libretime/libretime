@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ImageButton.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -61,6 +61,10 @@ ImageButton :: ImageButton(Glib::RefPtr<Gdk::Pixbuf>   image)
     state              = passiveState;
     this->passiveImage = image;
     this->rollImage.clear();
+
+    // read the mask from a transparent PNG, and set it to this widget
+    Glib::RefPtr<Gdk::Pixmap>   pixmap;
+    passiveImage->render_pixmap_and_mask(pixmap, passiveMask, 100);
 }
 
 
@@ -76,6 +80,11 @@ ImageButton :: ImageButton(Glib::RefPtr<Gdk::Pixbuf>   passiveImage,
     state              = passiveState;
     this->passiveImage = passiveImage;
     this->rollImage    = rollImage;
+
+    // read the mask from a transparent PNG, and set it to this widget
+    Glib::RefPtr<Gdk::Pixmap>   pixmap;
+    passiveImage->render_pixmap_and_mask(pixmap, passiveMask, 100);
+    rollImage->render_pixmap_and_mask(pixmap, rollMask, 100);
 }
 
 
@@ -260,17 +269,23 @@ ImageButton :: on_expose_event(GdkEventExpose* event)           throw ()
         gdkWindow->clear();
 
         Glib::RefPtr<Gdk::Pixbuf>   image;
+        Glib::RefPtr<Gdk::Bitmap>   mask;
 
         switch (state) {
             case passiveState:
             default:
                 image = passiveImage;
+                mask  = passiveMask;
                 break;
                 
             case rollState:
                 image = rollImage ? rollImage : passiveImage;
+                mask  = rollMask  ? rollMask  : passiveMask;
                 break;
         }
+        
+        // set the transparency mask
+        get_window()->shape_combine_mask(mask, 0, 0);
 
         // just draw the button image at the centre of the available space
         int x = (get_width() - image->get_width()) / 2;

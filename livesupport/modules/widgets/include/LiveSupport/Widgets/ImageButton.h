@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ImageButton.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ namespace Widgets {
  *  to represent it.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ImageButton : public Gtk::Button
 {
@@ -94,6 +94,16 @@ class ImageButton : public Gtk::Button
          *  The image of the button, when the mouse hovers above it.
          */
         Glib::RefPtr<Gdk::Pixbuf>       rollImage;
+
+        /**
+         *  The transparency mask for the button, in passive state.
+         */
+        Glib::RefPtr<Gdk::Bitmap>       passiveMask;
+
+        /**
+         *  The transparency mask for the button, in rollover state.
+         */
+        Glib::RefPtr<Gdk::Bitmap>       rollMask;
 
         /**
          *  Default constructor.
