@@ -1,884 +1,885 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-	<Id>cz_CZ</Id>
-	<item>
-		<key>$1 must be $2</key>
-		<value>$1 mus√≠ b√Ωt $2</value>
-	</item>
-	<item>
-		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-		<value>Nahr√°van√Ω soubor $1 je vƒõt≈°√≠ ne≈æ povoluje nastaven√≠ LiveSupportu.</value>
-	</item>
-	<item>
-		<key>ScratchPad</key>
-		<value>Pracovn√≠ plocha</value>
-	</item>
-	<item>
-		<key>Access denied.</key>
-		<value>P≈ô√≠stup zam√≠tnut.</value>
-	</item>
-	<item>
-		<key>Already active Playlist</key>
-		<value>Playlist je ji≈æ aktivn√≠.</value>
-	</item>
-	<item>
-		<key>Audioclip Data saved</key>
-		<value>Data audioklipu ulo≈æena.</value>
-	</item>
-	<item>
-		<key>Cannot create Playlist</key>
-		<value>Vytvo≈ôen√≠ playlistu nebylo √∫spƒõ≈°n√©.</value>
-	</item>
-	<item>
-		<key>Cannot delete this Playlist</key>
-		<value>Smaz√°n√≠ playlistu nebylo √∫spƒõ≈°n√©.</value>
-	</item>
-	<item>
-		<key>Cannot move item</key>
-		<value>P≈ôesunut√≠ souboru v playlistu nebylo √∫spƒõ≈°n√©.</value>
-	</item>
-	<item>
-		<key>Cannot remove Item from Playlist</key>
-		<value>Smaz√°n√≠ souboru z playlistu nebylo √∫spƒõ≈°n√©.</value>
-	</item>
-	<item>
-		<key>Change fade information failed.</key>
-		<value>Zmƒõna prol√≠n√°n√≠ nebyla √∫spƒõ≈°n√°.</value>
-	</item>
-	<item>
-		<key>Do</key>
-		<value>Proveƒète</value>
-	</item>
-	<item>
-		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
-		<value>Polo≈æka $1 je ji≈æ na pracovn√≠ plo≈°e. Byla p≈ôesunuta na vrchol seznamu.</value>
-	</item>
-	<item>
-		<key>Entry added at $1 with ScheduleId: $2</key>
-		<value>Polo≈æka p≈ôid√°na do $1 s identifik√°torem $2.</value>
-	</item>
-	<item>
-		<key>Entry with ScheduleId $1 removed</key>
-		<value>Polo≈æka s identifik√°torem $1 odstranƒõna.</value>
-	</item>
-	<item>
-		<key>Error on add item to Playlist</key>
-		<value>Chyba p≈ôi p≈ôid√°v√°n√≠ polo≈æky do playlistu.</value>
-	</item>
-	<item>
-		<key>Error saving Settings</key>
-		<value>Chyba p≈ôi ukl√°d√°n√≠ syst√©mov√©ho nastaven√≠.</value>
-	</item>
-	<item>
-		<key>Error uploading Logo</key>
-		<value>Chyba p≈ôi nahr√°v√°n√≠ loga.</value>
-	</item>
-	<item>
-		<key>Error: $1</key>
-		<value>Chyba: $1</value>
-	</item>
-	<item>
-		<key>File $1 was not uploaded.</key>
-		<value>Soubor $1 nebyl nahr√°n.</value>
-	</item>
-	<item>
-		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
-		<value>Slo≈æka nen√≠ pr√°zdn√°. Tuto ochranu m≈Ø≈æete obej√≠t opƒõtovn√Ωm stlaƒçen√≠m tlaƒç√≠tka DEL.</value>
-	</item>
-	<item>
-		<key>Found locked Playlist.</key>
-		<value>Byl nalezen zamƒçen√Ω playlist.</value>
-	</item>
-	<item>
-		<key>Invalid Form Data</key>
-		<value>Ve formul√°≈ôi byla nalezena neplatn√° data.</value>
-	</item>
-	<item>
-		<key>Login failed</key>
-		<value>P≈ôihl√°≈°en√≠ nebylo √∫spƒõ≈°n√©.</value>
-	</item>
-	<item>
-		<key>Metadata saved</key>
-		<value>Metadata byla ulo≈æena.</value>
-	</item>
-	<item>
-		<key>Missing value for $1</key>
-		<value>Chybƒõj√≠c√≠ hodnota pro $1</value>
-	</item>
-	<item>
-		<key>No Item(s) selected</key>
-		<value>Nebyl vybr√°n ≈æ√°dn√Ω soubor.</value>
-	</item>
-	<item>
-		<key>No Playlist is locked by You.</key>
-		<value>≈Ω√°dn√Ω playlist nen√≠ aktivn√≠.</value>
-	</item>
-	<item>
-		<key>Note: Station Preferences not setup proberly.</key>
-		<value>Pozn√°mka: P≈ôedvolby stanice nejsou spr√°vnƒõ zad√°ny.</value>
-	</item>
-	<item>
-		<key>Old password was incorrect.</key>
-		<value>Star√© heslo nen√≠ platn√©.</value>
-	</item>
-	<item>
-		<key>Password changed.</key>
-		<value>Heslo bylo zmƒõnƒõno.</value>
-	</item>
-	<item>
-		<key>Passwords did not match.</key>
-		<value>Hesla nesouhlas√≠.</value>
-	</item>
-	<item>
-		<key>Playlist &quot;$1&quot; activated</key>
-		<value>Playlist &quot;$1&quot; byl aktivov√°n.</value>
-	</item>
-	<item>
-		<key>Playlist &quot;$1&quot; released</key>
-		<value>Playlist &quot;$1&quot; byl uvolnƒõn.</value>
-	</item>
-	<item>
-		<key>Playlist &quot;$1&quot; reverted</key>
-		<value>Playlist &quot;$1&quot; byl vr√°cen do p≈ôedchoz√≠ho stavu.</value>
-	</item>
-	<item>
-		<key>Playlist &quot;$1&quot; saved</key>
-		<value>Playlist &quot;$1&quot; byl ulo≈æen.</value>
-	</item>
-	<item>
-		<key>Playlist has been locked by $1</key>
-		<value>Playlist byl uzamƒçen u≈æivatelem $1.</value>
-	</item>
-	<item>
-		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
-		<value>Pracovn√≠ plocha nem√° nastavenu velikost v syst√©mov√Ωch p≈ôedvolb√°ch, nem≈Ø≈æe tedy b√Ωt pou≈æita.</value>
-	</item>
-	<item>
-		<key>Select a Value</key>
-		<value />
-	</item>
-	<item>
-		<key>Settings saved</key>
-		<value />
-	</item>
-	<item>
-		<key>Stream Data changed</key>
-		<value />
-	</item>
-	<item>
-		<key>Stream Data saved</key>
-		<value />
-	</item>
-	<item>
-		<key>Subject $1 added.</key>
-		<value />
-	</item>
-	<item>
-		<key>Target is not Folder</key>
-		<value />
-	</item>
-	<item>
-		<key>There is no playlist available to unlock.</key>
-		<value />
-	</item>
-	<item>
-		<key>Unable to release Playlist.</key>
-		<value />
-	</item>
-	<item>
-		<key>Unable to revert to locked state.</key>
-		<value />
-	</item>
-	<item>
-		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
-		<value />
-	</item>
-	<item>
-		<key>Upload of file $1 was incomplete.</key>
-		<value />
-	</item>
-	<item>
-		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
-		<value />
-	</item>
-	<item>
-		<key>You have an Playlist already activated, first close it</key>
-		<value />
-	</item>
-	<item>
-		<key>Access</key>
-		<value />
-	</item>
-	<item>
-		<key>Activate this Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Add Audio</key>
-		<value />
-	</item>
-	<item>
-		<key>Add Criteria</key>
-		<value />
-	</item>
-	<item>
-		<key>Add file(s) to ScratchPad</key>
-		<value />
-	</item>
-	<item>
-		<key>Add file(s) to active Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Add to ScratchPad</key>
-		<value />
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Album</key>
-		<value />
-	</item>
-	<item>
-		<key>Artist</key>
-		<value />
-	</item>
-	<item>
-		<key>Artist web page</key>
-		<value />
-	</item>
-	<item>
-		<key>Audio file information web page</key>
-		<value />
-	</item>
-	<item>
-		<key>Audio source web page</key>
-		<value />
-	</item>
-	<item>
-		<key>BPM</key>
-		<value />
-	</item>
-	<item>
-		<key>Bitrate</key>
-		<value />
-	</item>
-	<item>
-		<key>Browse</key>
-		<value />
-	</item>
-	<item>
-		<key>Buy CD web page</key>
-		<value />
-	</item>
-	<item>
-		<key>CW</key>
-		<value />
-	</item>
-	<item>
-		<key>Cancel</key>
-		<value />
-	</item>
-	<item>
-		<key>Catalog number</key>
-		<value />
-	</item>
-	<item>
-		<key>Category</key>
-		<value />
-	</item>
-	<item>
-		<key>Change Fadein</key>
-		<value />
-	</item>
-	<item>
-		<key>Change Fadeout</key>
-		<value />
-	</item>
-	<item>
-		<key>Change Transition</key>
-		<value />
-	</item>
-	<item>
-		<key>Channels</key>
-		<value />
-	</item>
-	<item>
-		<key>Checksum</key>
-		<value />
-	</item>
-	<item>
-		<key>Clear</key>
-		<value />
-	</item>
-	<item>
-		<key>Clear Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Composer</key>
-		<value />
-	</item>
-	<item>
-		<key>Conductor</key>
-		<value />
-	</item>
-	<item>
-		<key>Contributor</key>
-		<value />
-	</item>
-	<item>
-		<key>Copyright</key>
-		<value />
-	</item>
-	<item>
-		<key>Count</key>
-		<value />
-	</item>
-	<item>
-		<key>Creator</key>
-		<value />
-	</item>
-	<item>
-		<key>Daily View</key>
-		<value />
-	</item>
-	<item>
-		<key>Data</key>
-		<value />
-	</item>
-	<item>
-		<key>Date</key>
-		<value />
-	</item>
-	<item>
-		<key>Day</key>
-		<value />
-	</item>
-	<item>
-		<key>Delete File</key>
-		<value />
-	</item>
-	<item>
-		<key>Delete Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Description</key>
-		<value />
-	</item>
-	<item>
-		<key>Disc number</key>
-		<value />
-	</item>
-	<item>
-		<key>Display this Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Duration</key>
-		<value />
-	</item>
-	<item>
-		<key>Edit</key>
-		<value />
-	</item>
-	<item>
-		<key>Edit File</key>
-		<value />
-	</item>
-	<item>
-		<key>Edit Metadata</key>
-		<value />
-	</item>
-	<item>
-		<key>Encoded by</key>
-		<value />
-	</item>
-	<item>
-		<key>Encoder software used</key>
-		<value />
-	</item>
-	<item>
-		<key>Fade</key>
-		<value />
-	</item>
-	<item>
-		<key>File</key>
-		<value />
-	</item>
-	<item>
-		<key>File List</key>
-		<value />
-	</item>
-	<item>
-		<key>File Management</key>
-		<value />
-	</item>
-	<item>
-		<key>File Type</key>
-		<value />
-	</item>
-	<item>
-		<key>File format</key>
-		<value />
-	</item>
-	<item>
-		<key>File type</key>
-		<value />
-	</item>
-	<item>
-		<key>Folder Structure</key>
-		<value />
-	</item>
-	<item>
-		<key>Format</key>
-		<value />
-	</item>
-	<item>
-		<key>Frequency</key>
-		<value />
-	</item>
-	<item>
-		<key>Genre</key>
-		<value />
-	</item>
-	<item>
-		<key>Go</key>
-		<value />
-	</item>
-	<item>
-		<key>Group Name</key>
-		<value />
-	</item>
-	<item>
-		<key>Help</key>
-		<value />
-	</item>
-	<item>
-		<key>ISRC number</key>
-		<value />
-	</item>
-	<item>
-		<key>Insert Playlist here</key>
-		<value />
-	</item>
-	<item>
-		<key>Item</key>
-		<value />
-	</item>
-	<item>
-		<key>Label</key>
-		<value />
-	</item>
-	<item>
-		<key>Language</key>
-		<value />
-	</item>
-	<item>
-		<key>Length</key>
-		<value />
-	</item>
-	<item>
-		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-		<value />
-	</item>
-	<item>
-		<key>Library Search</key>
-		<value />
-	</item>
-	<item>
-		<key>List Folder</key>
-		<value />
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value />
-	</item>
-	<item>
-		<key>Local Time</key>
-		<value />
-	</item>
-	<item>
-		<key>Lyricist</key>
-		<value />
-	</item>
-	<item>
-		<key>Lyrics</key>
-		<value />
-	</item>
-	<item>
-		<key>MDataXML</key>
-		<value />
-	</item>
-	<item>
-		<key>Main</key>
-		<value />
-	</item>
-	<item>
-		<key>Maximum length of ScratchPad</key>
-		<value />
-	</item>
-	<item>
-		<key>Media File</key>
-		<value />
-	</item>
-	<item>
-		<key>Media Library</key>
-		<value />
-	</item>
-	<item>
-		<key>Metadata</key>
-		<value />
-	</item>
-	<item>
-		<key>Month</key>
-		<value />
-	</item>
-	<item>
-		<key>Monthly View</key>
-		<value />
-	</item>
-	<item>
-		<key>Mood</key>
-		<value />
-	</item>
-	<item>
-		<key>Move</key>
-		<value />
-	</item>
-	<item>
-		<key>Multiple Action:</key>
-		<value />
-	</item>
-	<item>
-		<key>Music</key>
-		<value />
-	</item>
-	<item>
-		<key>Name</key>
-		<value />
-	</item>
-	<item>
-		<key>New</key>
-		<value />
-	</item>
-	<item>
-		<key>New Password</key>
-		<value />
-	</item>
-	<item>
-		<key>New Playlist using this File</key>
-		<value />
-	</item>
-	<item>
-		<key>New Playlist using this file(s)</key>
-		<value />
-	</item>
-	<item>
-		<key>New empty Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>No Entry</key>
-		<value />
-	</item>
-	<item>
-		<key>No match found.</key>
-		<value />
-	</item>
-	<item>
-		<key>No objects</key>
-		<value />
-	</item>
-	<item>
-		<key>Old Password</key>
-		<value />
-	</item>
-	<item>
-		<key>Open last Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Operator</key>
-		<value />
-	</item>
-	<item>
-		<key>Orchestra or band</key>
-		<value />
-	</item>
-	<item>
-		<key>Original artist</key>
-		<value />
-	</item>
-	<item>
-		<key>Original lyricist</key>
-		<value />
-	</item>
-	<item>
-		<key>Page</key>
-		<value />
-	</item>
-	<item>
-		<key>Password</key>
-		<value />
-	</item>
-	<item>
-		<key>Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Playlist Editor</key>
-		<value />
-	</item>
-	<item>
-		<key>Playlist Metadata</key>
-		<value />
-	</item>
-	<item>
-		<key>Radio station name</key>
-		<value />
-	</item>
-	<item>
-		<key>Radio station web page</key>
-		<value />
-	</item>
-	<item>
-		<key>Range</key>
-		<value />
-	</item>
-	<item>
-		<key>Rating</key>
-		<value />
-	</item>
-	<item>
-		<key>RawAnalyze</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove File from Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove Selected</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove file(s)</key>
-		<value />
-	</item>
-	<item>
-		<key>Remove from Scratchpad</key>
-		<value />
-	</item>
-	<item>
-		<key>Repeat Password</key>
-		<value />
-	</item>
-	<item>
-		<key>Report date/time</key>
-		<value />
-	</item>
-	<item>
-		<key>Report location</key>
-		<value />
-	</item>
-	<item>
-		<key>Report organizations</key>
-		<value />
-	</item>
-	<item>
-		<key>Reset</key>
-		<value />
-	</item>
-	<item>
-		<key>Retype Password</key>
-		<value />
-	</item>
-	<item>
-		<key>Revert to Saved</key>
-		<value />
-	</item>
-	<item>
-		<key>Rows Per Page</key>
-		<value />
-	</item>
-	<item>
-		<key>Rows per Page</key>
-		<value />
-	</item>
-	<item>
-		<key>Sample rate</key>
-		<value />
-	</item>
-	<item>
-		<key>Save Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Save and Close</key>
-		<value />
-	</item>
-	<item>
-		<key>Save and Close this Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Scheduler</key>
-		<value />
-	</item>
-	<item>
-		<key>Scheduler Navigation</key>
-		<value />
-	</item>
-	<item>
-		<key>Search</key>
-		<value />
-	</item>
-	<item>
-		<key>Search Library</key>
-		<value />
-	</item>
-	<item>
-		<key>Signed in</key>
-		<value />
-	</item>
-	<item>
-		<key>Station Logo</key>
-		<value />
-	</item>
-	<item>
-		<key>Station Name</key>
-		<value />
-	</item>
-	<item>
-		<key>Station Settings</key>
-		<value />
-	</item>
-	<item>
-		<key>Station Time</key>
-		<value />
-	</item>
-	<item>
-		<key>Station URL</key>
-		<value />
-	</item>
-	<item>
-		<key>Stream</key>
-		<value />
-	</item>
-	<item>
-		<key>Stream URL</key>
-		<value />
-	</item>
-	<item>
-		<key>Subject</key>
-		<value />
-	</item>
-	<item>
-		<key>Submit</key>
-		<value />
-	</item>
-	<item>
-		<key>System Settings</key>
-		<value />
-	</item>
-	<item>
-		<key>Talk</key>
-		<value />
-	</item>
-	<item>
-		<key>Time</key>
-		<value />
-	</item>
-	<item>
-		<key>Title</key>
-		<value />
-	</item>
-	<item>
-		<key>Today</key>
-		<value />
-	</item>
-	<item>
-		<key>Track number</key>
-		<value />
-	</item>
-	<item>
-		<key>Tree view</key>
-		<value />
-	</item>
-	<item>
-		<key>Type</key>
-		<value />
-	</item>
-	<item>
-		<key>User Password</key>
-		<value />
-	</item>
-	<item>
-		<key>User/Groups</key>
-		<value />
-	</item>
-	<item>
-		<key>Username</key>
-		<value />
-	</item>
-	<item>
-		<key>Week</key>
-		<value />
-	</item>
-	<item>
-		<key>Weekly View</key>
-		<value />
-	</item>
-	<item>
-		<key>Year</key>
-		<value />
-	</item>
-	<item>
-		<key>calendar week</key>
-		<value />
-	</item>
-	<item>
-		<key>copy</key>
-		<value />
-	</item>
-	<item>
-		<key>go up</key>
-		<value />
-	</item>
-	<item>
-		<key>move</key>
-		<value />
-	</item>
-	<item>
-		<key>move down</key>
-		<value />
-	</item>
-	<item>
-		<key>move up</key>
-		<value />
-	</item>
-	<item>
-		<key>new&amp;nbsp;folder</key>
-		<value />
-	</item>
-	<item>
-		<key>next</key>
-		<value />
-	</item>
-	<item>
-		<key>permissions</key>
-		<value />
-	</item>
-	<item>
-		<key>previous</key>
-		<value />
-	</item>
+    <Id>cz_CZ</Id>
+    <status>checked</status>
+    <item>
+        <key>$1 must be $2</key>
+        <value>$1 musÌ b˝t $2</value>
+    </item>
+    <item>
+        <key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
+        <value>Nahr·van˝ soubor $1 je ve(töÌ neû povoluje nastavenÌ LiveSupportu.</value>
+    </item>
+    <item>
+        <key>ScratchPad</key>
+        <value>PracovnÌ plocha</value>
+    </item>
+    <item>
+        <key>Access denied.</key>
+        <value>Pr(Ìstup zamÌtnut.</value>
+    </item>
+    <item>
+        <key>Already active Playlist</key>
+        <value>Playlist je jiû aktivnÌ.</value>
+    </item>
+    <item>
+        <key>Audioclip Data saved</key>
+        <value>Data audioklipu uloûena.</value>
+    </item>
+    <item>
+        <key>Cannot create Playlist</key>
+        <value>Vytvor(enÌ playlistu nebylo ˙spe(önÈ.</value>
+    </item>
+    <item>
+        <key>Cannot delete this Playlist</key>
+        <value>Smaz·nÌ playlistu nebylo ˙spe(önÈ.</value>
+    </item>
+    <item>
+        <key>Cannot move item</key>
+        <value>Pr(esunutÌ souboru v playlistu nebylo ˙spe(önÈ.</value>
+    </item>
+    <item>
+        <key>Cannot remove Item from Playlist</key>
+        <value>Smaz·nÌ souboru z playlistu nebylo ˙spe(önÈ.</value>
+    </item>
+    <item>
+        <key>Change fade information failed.</key>
+        <value>Zme(na prolÌn·nÌ nebyla ˙spe(ön·.</value>
+    </item>
+    <item>
+        <key>Do</key>
+        <value>Proved(te</value>
+    </item>
+    <item>
+        <key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
+        <value>Poloûka $1 je jiû na pracovnÌ ploöe. Byla pr(esunuta na vrchol seznamu.</value>
+    </item>
+    <item>
+        <key>Entry added at $1 with ScheduleId: $2</key>
+        <value>Poloûka pr(id·na do $1 s identifik·torem $2.</value>
+    </item>
+    <item>
+        <key>Entry with ScheduleId $1 removed</key>
+        <value>Poloûka s identifik·torem $1 odstrane(na.</value>
+    </item>
+    <item>
+        <key>Error on add item to Playlist</key>
+        <value>Chyba pr(i pr(id·v·nÌ poloûky do playlistu.</value>
+    </item>
+    <item>
+        <key>Error saving Settings</key>
+        <value>Chyba pr(i ukl·d·nÌ systÈmovÈho nastavenÌ.</value>
+    </item>
+    <item>
+        <key>Error uploading Logo</key>
+        <value>Chyba pr(i nahr·v·nÌ loga.</value>
+    </item>
+    <item>
+        <key>Error: $1</key>
+        <value>Chyba: $1</value>
+    </item>
+    <item>
+        <key>File $1 was not uploaded.</key>
+        <value>Soubor $1 nebyl nahr·n.</value>
+    </item>
+    <item>
+        <key>Folder is not empty. You can override this protection by clicking DEL again</key>
+        <value>Sloûka nenÌ pr·zdn·. Tuto ochranu mu*ûete obejÌt ope(tovn˝m stlac(enÌm tlac(Ìtka DEL.</value>
+    </item>
+    <item>
+        <key>Found locked Playlist.</key>
+        <value>Byl nalezen zamc(en˝ playlist.</value>
+    </item>
+    <item>
+        <key>Invalid Form Data</key>
+        <value>Ve formul·r(i byla nalezena neplatn· data.</value>
+    </item>
+    <item>
+        <key>Login failed</key>
+        <value>Pr(ihl·öenÌ nebylo ˙spe(önÈ.</value>
+    </item>
+    <item>
+        <key>Metadata saved</key>
+        <value>Metadata byla uloûena.</value>
+    </item>
+    <item>
+        <key>Missing value for $1</key>
+        <value>Chybe(jÌcÌ hodnota pro $1</value>
+    </item>
+    <item>
+        <key>No Item(s) selected</key>
+        <value>Nebyl vybr·n û·dn˝ soubor.</value>
+    </item>
+    <item>
+        <key>No Playlist is locked by You.</key>
+        <value>é·dn˝ playlist nenÌ aktivnÌ.</value>
+    </item>
+    <item>
+        <key>Note: Station Preferences not setup proberly.</key>
+        <value>Pozn·mka: Pr(edvolby stanice nejsou spr·vne( zad·ny.</value>
+    </item>
+    <item>
+        <key>Old password was incorrect.</key>
+        <value>StarÈ heslo nenÌ platnÈ.</value>
+    </item>
+    <item>
+        <key>Password changed.</key>
+        <value>Heslo bylo zme(ne(no.</value>
+    </item>
+    <item>
+        <key>Passwords did not match.</key>
+        <value>Hesla nesouhlasÌ.</value>
+    </item>
+    <item>
+        <key>Playlist &quot;$1&quot; activated</key>
+        <value>Playlist &quot;$1&quot; byl aktivov·n.</value>
+    </item>
+    <item>
+        <key>Playlist &quot;$1&quot; released</key>
+        <value>Playlist &quot;$1&quot; byl uvolne(n.</value>
+    </item>
+    <item>
+        <key>Playlist &quot;$1&quot; reverted</key>
+        <value>Playlist &quot;$1&quot; byl vr·cen do pr(edchozÌho stavu.</value>
+    </item>
+    <item>
+        <key>Playlist &quot;$1&quot; saved</key>
+        <value>Playlist &quot;$1&quot; byl uloûen.</value>
+    </item>
+    <item>
+        <key>Playlist has been locked by $1</key>
+        <value>Playlist byl uzamc(en uûivatelem $1.</value>
+    </item>
+    <item>
+        <key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
+        <value>PracovnÌ plocha nem· nastavenu velikost v systÈmov˝ch pr(edvolb·ch, nemu*ûe tedy b˝t pouûita.</value>
+    </item>
+    <item>
+        <key>Select a Value</key>
+        <value>Vyber hodnotu</value>
+    </item>
+    <item>
+        <key>Settings saved</key>
+        <value>Pr(edvolby stanice byly uloûeny.</value>
+    </item>
+    <item>
+        <key>Stream Data changed</key>
+        <value>Data streamu byla zme(ne(na.</value>
+    </item>
+    <item>
+        <key>Stream Data saved</key>
+        <value>Data streamu byla uloûena.</value>
+    </item>
+    <item>
+        <key>Subject $1 added.</key>
+        <value>Subjekt $1 pr(id·n.</value>
+    </item>
+    <item>
+        <key>Target is not Folder</key>
+        <value>CÌlov˝ objekt nenÌ sloûka.</value>
+    </item>
+    <item>
+        <key>There is no playlist available to unlock.</key>
+        <value>NenÌ zde û·dn˝ playlist k odemc(enÌ.</value>
+    </item>
+    <item>
+        <key>Unable to release Playlist.</key>
+        <value>Nepodar(ilo se uvolnit playlist.</value>
+    </item>
+    <item>
+        <key>Unable to revert to locked state.</key>
+        <value>Nepodar(ilo se vr·tit k zamc(enÈmu stavu.</value>
+    </item>
+    <item>
+        <key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
+        <value>Nepodar(ilo se nastavit &quot;$1&quot; na &quot;$2&quot; s jazykem &quot;$3&quot;.</value>
+    </item>
+    <item>
+        <key>Upload of file $1 was incomplete.</key>
+        <value>Nahr·nÌ souboru $1 nebylo kompletnÌ.</value>
+    </item>
+    <item>
+        <key>Uploaded file $1 is bigger than setting in php.ini.</key>
+        <value>Nahr·van˝ soubor $1 je ve(töÌ neû je povoleno v php.ini.</value>
+    </item>
+    <item>
+        <key>You have an Playlist already activated, first close it</key>
+        <value>M·te jiû aktivovan˝ playlist, nejdr(Ìve ho zavr(ete.</value>
+    </item>
+    <item>
+        <key>Access</key>
+        <value>Pr(Ìstup</value>
+    </item>
+    <item>
+        <key>Activate this Playlist</key>
+        <value>Aktivovat tento playlist</value>
+    </item>
+    <item>
+        <key>Add Audio</key>
+        <value>Pr(idat audio</value>
+    </item>
+    <item>
+        <key>Add Criteria</key>
+        <value>Pr(idat kriterium</value>
+    </item>
+    <item>
+        <key>Add file(s) to ScratchPad</key>
+        <value>Pr(idat soubor(y) na pracovnÌ plochu</value>
+    </item>
+    <item>
+        <key>Add file(s) to active Playlist</key>
+        <value>Pr(idat soubor(y) do aktivnÌho playlistu</value>
+    </item>
+    <item>
+        <key>Add to ScratchPad</key>
+        <value>Pr(idat na pracovnÌ plochu</value>
+    </item>
+    <item>
+        <key>Add to active Playlist</key>
+        <value>Pr(idat do aktivnÌho playlistu</value>
+    </item>
+    <item>
+        <key>Album</key>
+        <value>Album</value>
+    </item>
+    <item>
+        <key>Artist</key>
+        <value>Ume(lec</value>
+    </item>
+    <item>
+        <key>Artist web page</key>
+        <value>Webov· str·nka ume(lce</value>
+    </item>
+    <item>
+        <key>Audio file information web page</key>
+        <value>Webov· str·nka s informacemi o zvukovÈm souboru</value>
+    </item>
+    <item>
+        <key>Audio source web page</key>
+        <value>Webov· str·nka zdroje zvukovÈho souboru</value>
+    </item>
+    <item>
+        <key>BPM</key>
+        <value>BPM</value>
+    </item>
+    <item>
+        <key>Bitrate</key>
+        <value>Bitrate</value>
+    </item>
+    <item>
+        <key>Browse</key>
+        <value>Proch·zet</value>
+    </item>
+    <item>
+        <key>Buy CD web page</key>
+        <value>Webov· str·nka prodeje CD</value>
+    </item>
+    <item>
+        <key>CW</key>
+        <value>KT</value>
+    </item>
+    <item>
+        <key>Cancel</key>
+        <value>Storno</value>
+    </item>
+    <item>
+        <key>Catalog number</key>
+        <value>KatalogovÈ c(Ìslo</value>
+    </item>
+    <item>
+        <key>Category</key>
+        <value>Kategorie</value>
+    </item>
+    <item>
+        <key>Change Fadein</key>
+        <value>Zme(nit zesilov·nÌ n·stupu</value>
+    </item>
+    <item>
+        <key>Change Fadeout</key>
+        <value>Zme(nit zeslabovanÌ</value>
+    </item>
+    <item>
+        <key>Change Transition</key>
+        <value>Zme(nit pr(echod</value>
+    </item>
+    <item>
+        <key>Channels</key>
+        <value>Kan·ly</value>
+    </item>
+    <item>
+        <key>Checksum</key>
+        <value>KontrolnÌ souc(et</value>
+    </item>
+    <item>
+        <key>Clear</key>
+        <value>Vymazat (obsah)</value>
+    </item>
+    <item>
+        <key>Clear Playlist</key>
+        <value>Vypr·zdnit playlist</value>
+    </item>
+    <item>
+        <key>Composer</key>
+        <value>Skladatel</value>
+    </item>
+    <item>
+        <key>Conductor</key>
+        <value>Dirigent</value>
+    </item>
+    <item>
+        <key>Contributor</key>
+        <value>Pr(ispe(vatel</value>
+    </item>
+    <item>
+        <key>Copyright</key>
+        <value>Copyright</value>
+    </item>
+    <item>
+        <key>Count</key>
+        <value>Poc(et</value>
+    </item>
+    <item>
+        <key>Creator</key>
+        <value>Tvu*rce</value>
+    </item>
+    <item>
+        <key>Daily View</key>
+        <value>DennÌ program</value>
+    </item>
+    <item>
+        <key>Data</key>
+        <value>Data</value>
+    </item>
+    <item>
+        <key>Date</key>
+        <value>Datum</value>
+    </item>
+    <item>
+        <key>Day</key>
+        <value>Den</value>
+    </item>
+    <item>
+        <key>Delete File</key>
+        <value>Vymazat soubor</value>
+    </item>
+    <item>
+        <key>Delete Playlist</key>
+        <value>Vymazat playlist</value>
+    </item>
+    <item>
+        <key>Description</key>
+        <value>Popis</value>
+    </item>
+    <item>
+        <key>Disc number</key>
+        <value>C(Ìslo disku</value>
+    </item>
+    <item>
+        <key>Display this Playlist</key>
+        <value>Zobrazit tento playlist</value>
+    </item>
+    <item>
+        <key>Duration</key>
+        <value>DÈlka</value>
+    </item>
+    <item>
+        <key>Edit</key>
+        <value>Editovat</value>
+    </item>
+    <item>
+        <key>Edit File</key>
+        <value>Editovat soubor</value>
+    </item>
+    <item>
+        <key>Edit Metadata</key>
+        <value>Editovat metadata</value>
+    </item>
+    <item>
+        <key>Encoded by</key>
+        <value>KÛdoval</value>
+    </item>
+    <item>
+        <key>Encoder software used</key>
+        <value>Pouûit˝ kÛdovacÌ software</value>
+    </item>
+    <item>
+        <key>Fade</key>
+        <value>ProlÌnat</value>
+    </item>
+    <item>
+        <key>File</key>
+        <value>Soubor</value>
+    </item>
+    <item>
+        <key>File List</key>
+        <value>Seznam souboru*</value>
+    </item>
+    <item>
+        <key>File Management</key>
+        <value>Spr·va souboru*</value>
+    </item>
+    <item>
+        <key>File Type</key>
+        <value>Typ souboru</value>
+    </item>
+    <item>
+        <key>File format</key>
+        <value>Form·t souboru</value>
+    </item>
+    <item>
+        <key>File type</key>
+        <value>Typ souboru</value>
+    </item>
+    <item>
+        <key>Folder Structure</key>
+        <value>Struktura sloûek</value>
+    </item>
+    <item>
+        <key>Format</key>
+        <value>Form·t</value>
+    </item>
+    <item>
+        <key>Frequency</key>
+        <value>Frekvence</value>
+    </item>
+    <item>
+        <key>Genre</key>
+        <value>é·nr</value>
+    </item>
+    <item>
+        <key>Go</key>
+        <value>Jdi</value>
+    </item>
+    <item>
+        <key>Group Name</key>
+        <value>JmÈno skupiny</value>
+    </item>
+    <item>
+        <key>Help</key>
+        <value>Pomoc</value>
+    </item>
+    <item>
+        <key>ISRC number</key>
+        <value>SRC c(Ìslo</value>
+    </item>
+    <item>
+        <key>Insert Playlist here</key>
+        <value>Zde vloûit playlist</value>
+    </item>
+    <item>
+        <key>Item</key>
+        <value>Poloûka</value>
+    </item>
+    <item>
+        <key>Label</key>
+        <value>N·zev</value>
+    </item>
+    <item>
+        <key>Language</key>
+        <value>Jazyk</value>
+    </item>
+    <item>
+        <key>Length</key>
+        <value>DÈlka</value>
+    </item>
+    <item>
+        <key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
+        <value>DÈlka (zapiöte 0 pro live stream)</value>
+    </item>
+    <item>
+        <key>Library Search</key>
+        <value>Hledat v knihovne(</value>
+    </item>
+    <item>
+        <key>List Folder</key>
+        <value>Zobrazit sloûku</value>
+    </item>
+    <item>
+        <key>Listen to File</key>
+        <value>Poslouchat soubor</value>
+    </item>
+    <item>
+        <key>Local Time</key>
+        <value>MÌstnÌ c(as</value>
+    </item>
+    <item>
+        <key>Lyricist</key>
+        <value>Autor textu</value>
+    </item>
+    <item>
+        <key>Lyrics</key>
+        <value>Text</value>
+    </item>
+    <item>
+        <key>MDataXML</key>
+        <value>XML metadata</value>
+    </item>
+    <item>
+        <key>Main</key>
+        <value>HlavnÌ</value>
+    </item>
+    <item>
+        <key>Maximum length of ScratchPad</key>
+        <value>Maxim·lnÌ dÈlka pracovnÌ plochy</value>
+    </item>
+    <item>
+        <key>Media File</key>
+        <value>Medi·lnÌ soubor</value>
+    </item>
+    <item>
+        <key>Media Library</key>
+        <value>Knihovna mÈdiÌ</value>
+    </item>
+    <item>
+        <key>Metadata</key>
+        <value>Metadata</value>
+    </item>
+    <item>
+        <key>Month</key>
+        <value>Me(sÌc</value>
+    </item>
+    <item>
+        <key>Monthly View</key>
+        <value>Program na me(sÌc</value>
+    </item>
+    <item>
+        <key>Mood</key>
+        <value>N·lada</value>
+    </item>
+    <item>
+        <key>Move</key>
+        <value>Pr(emÌstit</value>
+    </item>
+    <item>
+        <key>Multiple Action:</key>
+        <value>MultiplicitnÌ akce</value>
+    </item>
+    <item>
+        <key>Music</key>
+        <value>Hudba</value>
+    </item>
+    <item>
+        <key>Name</key>
+        <value>JmÈno</value>
+    </item>
+    <item>
+        <key>New</key>
+        <value>Nov˝</value>
+    </item>
+    <item>
+        <key>New Password</key>
+        <value>NovÈ heslo</value>
+    </item>
+    <item>
+        <key>New Playlist using this File</key>
+        <value>Nov˝ playlist z tohoto souboru</value>
+    </item>
+    <item>
+        <key>New Playlist using this file(s)</key>
+        <value>Nov˝ playlist z te(chto souboru*</value>
+    </item>
+    <item>
+        <key>New empty Playlist</key>
+        <value>Nov˝ prazdn˝ playlist</value>
+    </item>
+    <item>
+        <key>No Entry</key>
+        <value>PrazdnÈ pole</value>
+    </item>
+    <item>
+        <key>No match found.</key>
+        <value>éadn˝ soubor nenalezen</value>
+    </item>
+    <item>
+        <key>No objects</key>
+        <value>éadnÈ objekty</value>
+    </item>
+    <item>
+        <key>Old Password</key>
+        <value>StarÈ heslo</value>
+    </item>
+    <item>
+        <key>Open last Playlist</key>
+        <value>Otevr(it poslednÌ playlist</value>
+    </item>
+    <item>
+        <key>Operator</key>
+        <value>Oper·tor</value>
+    </item>
+    <item>
+        <key>Orchestra or band</key>
+        <value>Orchestr nebo skupina</value>
+    </item>
+    <item>
+        <key>Original artist</key>
+        <value>Pu*vodnÌ ume(lec</value>
+    </item>
+    <item>
+        <key>Original lyricist</key>
+        <value>Pu*vodnÌ autor textu</value>
+    </item>
+    <item>
+        <key>Page</key>
+        <value>Str·nka</value>
+    </item>
+    <item>
+        <key>Password</key>
+        <value>Heslo</value>
+    </item>
+    <item>
+        <key>Playlist</key>
+        <value>Playlist</value>
+    </item>
+    <item>
+        <key>Playlist Editor</key>
+        <value>Editor playlistu</value>
+    </item>
+    <item>
+        <key>Playlist Metadata</key>
+        <value>Metadata playlistu</value>
+    </item>
+    <item>
+        <key>Radio station name</key>
+        <value>JmÈno rozhlasovÈ stanice</value>
+    </item>
+    <item>
+        <key>Radio station web page</key>
+        <value>Webov· str·nka rozhasovÈ stanice</value>
+    </item>
+    <item>
+        <key>Range</key>
+        <value>Rozsah</value>
+    </item>
+    <item>
+        <key>Rating</key>
+        <value>HodnocenÌ</value>
+    </item>
+    <item>
+        <key>RawAnalyze</key>
+        <value>Analyzovat soubor</value>
+    </item>
+    <item>
+        <key>Remove File from Playlist</key>
+        <value>Odstranit soubor z playlistu</value>
+    </item>
+    <item>
+        <key>Remove Playlist</key>
+        <value>Odstranit playlist</value>
+    </item>
+    <item>
+        <key>Remove Selected</key>
+        <value>Odstranit vybranÈ</value>
+    </item>
+    <item>
+        <key>Remove file(s)</key>
+        <value>Zruöit soubor(y)</value>
+    </item>
+    <item>
+        <key>Remove from Scratchpad</key>
+        <value>Odstranit z pracovnÌ plochy</value>
+    </item>
+    <item>
+        <key>Repeat Password</key>
+        <value>Zopakujte heslo</value>
+    </item>
+    <item>
+        <key>Report date/time</key>
+        <value>Datum/c(as report·ûe</value>
+    </item>
+    <item>
+        <key>Report location</key>
+        <value>MÌsto report·ûe</value>
+    </item>
+    <item>
+        <key>Report organizations</key>
+        <value>Organizace report·ûe</value>
+    </item>
+    <item>
+        <key>Reset</key>
+        <value>Reset</value>
+    </item>
+    <item>
+        <key>Retype Password</key>
+        <value>Zopakujte heslo</value>
+    </item>
+    <item>
+        <key>Revert to Saved</key>
+        <value>Vr·tit do uloûenÈho stavu</value>
+    </item>
+    <item>
+        <key>Rows Per Page</key>
+        <value>Poc(et r(·dek na str·nku</value>
+    </item>
+    <item>
+        <key>Rows per Page</key>
+        <value>Poc(et r(·dek na str·nku</value>
+    </item>
+    <item>
+        <key>Sample rate</key>
+        <value>VzorkovacÌ frekvence</value>
+    </item>
+    <item>
+        <key>Save Playlist</key>
+        <value>Uloûit playlist</value>
+    </item>
+    <item>
+        <key>Save and Close</key>
+        <value>Uloûit a zavr(it</value>
+    </item>
+    <item>
+        <key>Save and Close this Playlist</key>
+        <value>Uloûit a zavr(Ìt playlist</value>
+    </item>
+    <item>
+        <key>Scheduler</key>
+        <value>Pl·novac(</value>
+    </item>
+    <item>
+        <key>Scheduler Navigation</key>
+        <value>Navigace v pl·novac(i</value>
+    </item>
+    <item>
+        <key>Search</key>
+        <value>Vyhledat</value>
+    </item>
+    <item>
+        <key>Search Library</key>
+        <value>Hledat v knihovne(</value>
+    </item>
+    <item>
+        <key>Signed in</key>
+        <value>Zalogov·n</value>
+    </item>
+    <item>
+        <key>Station Logo</key>
+        <value>Logo stanice</value>
+    </item>
+    <item>
+        <key>Station Name</key>
+        <value>N·zev stanice</value>
+    </item>
+    <item>
+        <key>Station Settings</key>
+        <value>Pr(edvolby stanice</value>
+    </item>
+    <item>
+        <key>Station Time</key>
+        <value>MistnÌ c(as stanice</value>
+    </item>
+    <item>
+        <key>Station URL</key>
+        <value>URL stanice</value>
+    </item>
+    <item>
+        <key>Stream</key>
+        <value>Stream</value>
+    </item>
+    <item>
+        <key>Stream URL</key>
+        <value>URL streamu</value>
+    </item>
+    <item>
+        <key>Subject</key>
+        <value>Subjekt</value>
+    </item>
+    <item>
+        <key>Submit</key>
+        <value>Odeslat</value>
+    </item>
+    <item>
+        <key>System Settings</key>
+        <value>SystÈmovÈ nastavenÌ</value>
+    </item>
+    <item>
+        <key>Talk</key>
+        <value>MluvenÈ slovo</value>
+    </item>
+    <item>
+        <key>Time</key>
+        <value>C(as</value>
+    </item>
+    <item>
+        <key>Title</key>
+        <value>Titul</value>
+    </item>
+    <item>
+        <key>Today</key>
+        <value>Dnes</value>
+    </item>
+    <item>
+        <key>Track number</key>
+        <value>C(Ìslo stopy</value>
+    </item>
+    <item>
+        <key>Tree view</key>
+        <value>Zobrazit strom</value>
+    </item>
+    <item>
+        <key>Type</key>
+        <value>Typ</value>
+    </item>
+    <item>
+        <key>User Password</key>
+        <value>UûivatelskÈ heslo</value>
+    </item>
+    <item>
+        <key>User/Groups</key>
+        <value>UûivatelÈ a skupiny</value>
+    </item>
+    <item>
+        <key>Username</key>
+        <value>UûivatelskÈ jmÈno</value>
+    </item>
+    <item>
+        <key>Week</key>
+        <value>T˝den</value>
+    </item>
+    <item>
+        <key>Weekly View</key>
+        <value>T˝dennÌ program</value>
+    </item>
+    <item>
+        <key>Year</key>
+        <value>Rok</value>
+    </item>
+    <item>
+        <key>calendar week</key>
+        <value>t˝den v kalend·r(i</value>
+    </item>
+    <item>
+        <key>copy</key>
+        <value>kopÌrovat</value>
+    </item>
+    <item>
+        <key>go up</key>
+        <value>jdi nahoru</value>
+    </item>
+    <item>
+        <key>move</key>
+        <value>pr(emÌstit</value>
+    </item>
+    <item>
+        <key>move down</key>
+        <value>posunout dolu*</value>
+    </item>
+    <item>
+        <key>move up</key>
+        <value>posunout nahoru</value>
+    </item>
+    <item>
+        <key>new&amp;nbsp;folder</key>
+        <value>nov· sloûka</value>
+    </item>
+    <item>
+        <key>next</key>
+        <value>pr(ÌötÌ</value>
+    </item>
+    <item>
+        <key>permissions</key>
+        <value>pr·va</value>
+    </item>
+    <item>
+        <key>previous</key>
+        <value>pr(edeöl˝</value>
+    </item>
 </language>
