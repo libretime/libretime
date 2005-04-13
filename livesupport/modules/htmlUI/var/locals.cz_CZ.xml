@@ -4,75 +4,75 @@
     <status>checked</status>
     <item>
         <key>$1 must be $2</key>
-        <value>$1 musí bıt $2</value>
+        <value>$1 musÃ­ bÃ½t $2</value>
     </item>
     <item>
         <key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-        <value>Nahrávanı soubor $1 je ve(tší ne povoluje nastavení LiveSupportu.</value>
+        <value>NahrÃ¡vanÃ½ soubor $1 je vÄ›tÅ¡Ã­ neÅ¾ povoluje nastavenÃ­ LiveSupportu.</value>
     </item>
     <item>
         <key>ScratchPad</key>
-        <value>Pracovní plocha</value>
+        <value>PracovnÃ­ plocha</value>
     </item>
     <item>
         <key>Access denied.</key>
-        <value>Pr(ístup zamítnut.</value>
+        <value>PÅ™Ã­stup zamÃ­tnut.</value>
     </item>
     <item>
         <key>Already active Playlist</key>
-        <value>Playlist je ji aktivní.</value>
+        <value>Playlist je jiÅ¾ aktivnÃ­.</value>
     </item>
     <item>
         <key>Audioclip Data saved</key>
-        <value>Data audioklipu uloena.</value>
+        <value>Data audioklipu uloÅ¾ena.</value>
     </item>
     <item>
         <key>Cannot create Playlist</key>
-        <value>Vytvor(ení playlistu nebylo úspe(šné.</value>
+        <value>VytvoÅ™enÃ­ playlistu nebylo ÃºspÄ›Å¡nÃ©.</value>
     </item>
     <item>
         <key>Cannot delete this Playlist</key>
-        <value>Smazání playlistu nebylo úspe(šné.</value>
+        <value>SmazÃ¡nÃ­ playlistu nebylo ÃºspÄ›Å¡nÃ©.</value>
     </item>
     <item>
         <key>Cannot move item</key>
-        <value>Pr(esunutí souboru v playlistu nebylo úspe(šné.</value>
+        <value>PÅ™esunutÃ­ souboru v playlistu nebylo ÃºspÄ›Å¡nÃ©.</value>
     </item>
     <item>
         <key>Cannot remove Item from Playlist</key>
-        <value>Smazání souboru z playlistu nebylo úspe(šné.</value>
+        <value>SmazÃ¡nÃ­ souboru z playlistu nebylo ÃºspÄ›Å¡nÃ©.</value>
     </item>
     <item>
         <key>Change fade information failed.</key>
-        <value>Zme(na prolínání nebyla úspe(šná.</value>
+        <value>ZmÄ›na prolÃ­nÃ¡nÃ­ nebyla ÃºspÄ›Å¡nÃ¡.</value>
     </item>
     <item>
         <key>Do</key>
-        <value>Proved(te</value>
+        <value>ProveÄte</value>
     </item>
     <item>
         <key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
-        <value>Poloka $1 je ji na pracovní ploše. Byla pr(esunuta na vrchol seznamu.</value>
+        <value>PoloÅ¾ka $1 je jiÅ¾ na pracovnÃ­ ploÅ¡e. Byla pÅ™esunuta na vrchol seznamu.</value>
     </item>
     <item>
         <key>Entry added at $1 with ScheduleId: $2</key>
-        <value>Poloka pr(idána do $1 s identifikátorem $2.</value>
+        <value>PoloÅ¾ka pÅ™idÃ¡na do $1 s identifikÃ¡torem $2.</value>
     </item>
     <item>
         <key>Entry with ScheduleId $1 removed</key>
-        <value>Poloka s identifikátorem $1 odstrane(na.</value>
+        <value>PoloÅ¾ka s identifikÃ¡torem $1 odstranÄ›na.</value>
     </item>
     <item>
         <key>Error on add item to Playlist</key>
-        <value>Chyba pr(i pr(idávání poloky do playlistu.</value>
+        <value>Chyba pÅ™i pÅ™idÃ¡vÃ¡nÃ­ poloÅ¾ky do playlistu.</value>
     </item>
     <item>
         <key>Error saving Settings</key>
-        <value>Chyba pr(i ukládání systémového nastavení.</value>
+        <value>Chyba pÅ™i uklÃ¡dÃ¡nÃ­ systÃ©movÃ©ho nastavenÃ­.</value>
     </item>
     <item>
         <key>Error uploading Logo</key>
-        <value>Chyba pr(i nahrávání loga.</value>
+        <value>Chyba pÅ™i nahrÃ¡vÃ¡nÃ­ loga.</value>
     </item>
     <item>
         <key>Error: $1</key>
@@ -80,79 +80,79 @@
     </item>
     <item>
         <key>File $1 was not uploaded.</key>
-        <value>Soubor $1 nebyl nahrán.</value>
+        <value>Soubor $1 nebyl nahrÃ¡n.</value>
     </item>
     <item>
         <key>Folder is not empty. You can override this protection by clicking DEL again</key>
-        <value>Sloka není prázdná. Tuto ochranu mu*ete obejít ope(tovnım stlac(ením tlac(ítka DEL.</value>
+        <value>SloÅ¾ka nenÃ­ prÃ¡zdnÃ¡. Tuto ochranu mÅ¯Å¾ete obejÃ­t opÄ›tovnÃ½m stlaÄenÃ­m tlaÄÃ­tka DEL.</value>
     </item>
     <item>
         <key>Found locked Playlist.</key>
-        <value>Byl nalezen zamc(enı playlist.</value>
+        <value>Byl nalezen zamÄenÃ½ playlist.</value>
     </item>
     <item>
         <key>Invalid Form Data</key>
-        <value>Ve formulár(i byla nalezena neplatná data.</value>
+        <value>Ve formulÃ¡Å™i byla nalezena neplatnÃ¡ data.</value>
     </item>
     <item>
         <key>Login failed</key>
-        <value>Pr(ihlášení nebylo úspe(šné.</value>
+        <value>PÅ™ihlÃ¡Å¡enÃ­ nebylo ÃºspÄ›Å¡nÃ©.</value>
     </item>
     <item>
         <key>Metadata saved</key>
-        <value>Metadata byla uloena.</value>
+        <value>Metadata byla uloÅ¾ena.</value>
     </item>
     <item>
         <key>Missing value for $1</key>
-        <value>Chybe(jící hodnota pro $1</value>
+        <value>ChybÄ›jÃ­cÃ­ hodnota pro $1</value>
     </item>
     <item>
         <key>No Item(s) selected</key>
-        <value>Nebyl vybrán ádnı soubor.</value>
+        <value>Nebyl vybrÃ¡n Å¾Ã¡dnÃ½ soubor.</value>
     </item>
     <item>
         <key>No Playlist is locked by You.</key>
-        <value>ádnı playlist není aktivní.</value>
+        <value>Å½Ã¡dnÃ½ playlist nenÃ­ aktivnÃ­.</value>
     </item>
     <item>
         <key>Note: Station Preferences not setup proberly.</key>
-        <value>Poznámka: Pr(edvolby stanice nejsou správne( zadány.</value>
+        <value>PoznÃ¡mka: PÅ™edvolby stanice nejsou sprÃ¡vnÄ› zadÃ¡ny.</value>
     </item>
     <item>
         <key>Old password was incorrect.</key>
-        <value>Staré heslo není platné.</value>
+        <value>StarÃ© heslo nenÃ­ platnÃ©.</value>
     </item>
     <item>
         <key>Password changed.</key>
-        <value>Heslo bylo zme(ne(no.</value>
+        <value>Heslo bylo zmÄ›nÄ›no.</value>
     </item>
     <item>
         <key>Passwords did not match.</key>
-        <value>Hesla nesouhlasí.</value>
+        <value>Hesla nesouhlasÃ­.</value>
     </item>
     <item>
         <key>Playlist &quot;$1&quot; activated</key>
-        <value>Playlist &quot;$1&quot; byl aktivován.</value>
+        <value>Playlist &quot;$1&quot; byl aktivovÃ¡n.</value>
     </item>
     <item>
         <key>Playlist &quot;$1&quot; released</key>
-        <value>Playlist &quot;$1&quot; byl uvolne(n.</value>
+        <value>Playlist &quot;$1&quot; byl uvolnÄ›n.</value>
     </item>
     <item>
         <key>Playlist &quot;$1&quot; reverted</key>
-        <value>Playlist &quot;$1&quot; byl vrácen do pr(edchozího stavu.</value>
+        <value>Playlist &quot;$1&quot; byl vrÃ¡cen do pÅ™edchozÃ­ho stavu.</value>
     </item>
     <item>
         <key>Playlist &quot;$1&quot; saved</key>
-        <value>Playlist &quot;$1&quot; byl uloen.</value>
+        <value>Playlist &quot;$1&quot; byl uloÅ¾en.</value>
     </item>
     <item>
         <key>Playlist has been locked by $1</key>
-        <value>Playlist byl uzamc(en uivatelem $1.</value>
+        <value>Playlist byl uzamÄen uÅ¾ivatelem $1.</value>
     </item>
     <item>
         <key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
-        <value>Pracovní plocha nemá nastavenu velikost v systémovıch pr(edvolbách, nemu*e tedy bıt pouita.</value>
+        <value>PracovnÃ­ plocha nemÃ¡ nastavenu velikost v systÃ©movÃ½ch pÅ™edvolbÃ¡ch, nemÅ¯Å¾e tedy bÃ½t pouÅ¾ita.</value>
     </item>
     <item>
         <key>Select a Value</key>
@@ -160,55 +160,55 @@
     </item>
     <item>
         <key>Settings saved</key>
-        <value>Pr(edvolby stanice byly uloeny.</value>
+        <value>PÅ™edvolby stanice byly uloÅ¾eny.</value>
     </item>
     <item>
         <key>Stream Data changed</key>
-        <value>Data streamu byla zme(ne(na.</value>
+        <value>Data streamu byla zmÄ›nÄ›na.</value>
     </item>
     <item>
         <key>Stream Data saved</key>
-        <value>Data streamu byla uloena.</value>
+        <value>Data streamu byla uloÅ¾ena.</value>
     </item>
     <item>
         <key>Subject $1 added.</key>
-        <value>Subjekt $1 pr(idán.</value>
+        <value>Subjekt $1 pÅ™idÃ¡n.</value>
     </item>
     <item>
         <key>Target is not Folder</key>
-        <value>Cílovı objekt není sloka.</value>
+        <value>CÃ­lovÃ½ objekt nenÃ­ sloÅ¾ka.</value>
     </item>
     <item>
         <key>There is no playlist available to unlock.</key>
-        <value>Není zde ádnı playlist k odemc(ení.</value>
+        <value>NenÃ­ zde Å¾Ã¡dnÃ½ playlist k odemÄenÃ­.</value>
     </item>
     <item>
         <key>Unable to release Playlist.</key>
-        <value>Nepodar(ilo se uvolnit playlist.</value>
+        <value>NepodaÅ™ilo se uvolnit playlist.</value>
     </item>
     <item>
         <key>Unable to revert to locked state.</key>
-        <value>Nepodar(ilo se vrátit k zamc(enému stavu.</value>
+        <value>NepodaÅ™ilo se vrÃ¡tit k zamÄenÃ©mu stavu.</value>
     </item>
     <item>
         <key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
-        <value>Nepodar(ilo se nastavit &quot;$1&quot; na &quot;$2&quot; s jazykem &quot;$3&quot;.</value>
+        <value>NepodaÅ™ilo se nastavit &quot;$1&quot; na &quot;$2&quot; s jazykem &quot;$3&quot;.</value>
     </item>
     <item>
         <key>Upload of file $1 was incomplete.</key>
-        <value>Nahrání souboru $1 nebylo kompletní.</value>
+        <value>NahrÃ¡nÃ­ souboru $1 nebylo kompletnÃ­.</value>
     </item>
     <item>
         <key>Uploaded file $1 is bigger than setting in php.ini.</key>
-        <value>Nahrávanı soubor $1 je ve(tší ne je povoleno v php.ini.</value>
+        <value>NahrÃ¡vanÃ½ soubor $1 je vÄ›tÅ¡Ã­ neÅ¾ je povoleno v php.ini.</value>
     </item>
     <item>
         <key>You have an Playlist already activated, first close it</key>
-        <value>Máte ji aktivovanı playlist, nejdr(íve ho zavr(ete.</value>
+        <value>MÃ¡te jiÅ¾ aktivovanÃ½ playlist, nejdÅ™Ã­ve ho zavÅ™ete.</value>
     </item>
     <item>
         <key>Access</key>
-        <value>Pr(ístup</value>
+        <value>PÅ™Ã­stup</value>
     </item>
     <item>
         <key>Activate this Playlist</key>
@@ -216,27 +216,27 @@
     </item>
     <item>
         <key>Add Audio</key>
-        <value>Pr(idat audio</value>
+        <value>PÅ™idat audio</value>
     </item>
     <item>
         <key>Add Criteria</key>
-        <value>Pr(idat kriterium</value>
+        <value>PÅ™idat kriterium</value>
     </item>
     <item>
         <key>Add file(s) to ScratchPad</key>
-        <value>Pr(idat soubor(y) na pracovní plochu</value>
+        <value>PÅ™idat soubor(y) na pracovnÃ­ plochu</value>
     </item>
     <item>
         <key>Add file(s) to active Playlist</key>
-        <value>Pr(idat soubor(y) do aktivního playlistu</value>
+        <value>PÅ™idat soubor(y) do aktivnÃ­ho playlistu</value>
     </item>
     <item>
         <key>Add to ScratchPad</key>
-        <value>Pr(idat na pracovní plochu</value>
+        <value>PÅ™idat na pracovnÃ­ plochu</value>
     </item>
     <item>
         <key>Add to active Playlist</key>
-        <value>Pr(idat do aktivního playlistu</value>
+        <value>PÅ™idat do aktivnÃ­ho playlistu</value>
     </item>
     <item>
         <key>Album</key>
@@ -244,19 +244,19 @@
     </item>
     <item>
         <key>Artist</key>
-        <value>Ume(lec</value>
+        <value>UmÄ›lec</value>
     </item>
     <item>
         <key>Artist web page</key>
-        <value>Webová stránka ume(lce</value>
+        <value>WebovÃ¡ strÃ¡nka umÄ›lce</value>
     </item>
     <item>
         <key>Audio file information web page</key>
-        <value>Webová stránka s informacemi o zvukovém souboru</value>
+        <value>WebovÃ¡ strÃ¡nka s informacemi o zvukovÃ©m souboru</value>
     </item>
     <item>
         <key>Audio source web page</key>
-        <value>Webová stránka zdroje zvukového souboru</value>
+        <value>WebovÃ¡ strÃ¡nka zdroje zvukovÃ©ho souboru</value>
     </item>
     <item>
         <key>BPM</key>
@@ -268,11 +268,11 @@
     </item>
     <item>
         <key>Browse</key>
-        <value>Procházet</value>
+        <value>ProchÃ¡zet</value>
     </item>
     <item>
         <key>Buy CD web page</key>
-        <value>Webová stránka prodeje CD</value>
+        <value>WebovÃ¡ strÃ¡nka prodeje CD</value>
     </item>
     <item>
         <key>CW</key>
@@ -284,7 +284,7 @@
     </item>
     <item>
         <key>Catalog number</key>
-        <value>Katalogové c(íslo</value>
+        <value>KatalogovÃ© ÄÃ­slo</value>
     </item>
     <item>
         <key>Category</key>
@@ -292,23 +292,23 @@
     </item>
     <item>
         <key>Change Fadein</key>
-        <value>Zme(nit zesilování nástupu</value>
+        <value>ZmÄ›nit zesilovÃ¡nÃ­ nÃ¡stupu</value>
     </item>
     <item>
         <key>Change Fadeout</key>
-        <value>Zme(nit zeslabovaní</value>
+        <value>ZmÄ›nit zeslabovanÃ­</value>
     </item>
     <item>
         <key>Change Transition</key>
-        <value>Zme(nit pr(echod</value>
+        <value>ZmÄ›nit pÅ™echod</value>
     </item>
     <item>
         <key>Channels</key>
-        <value>Kanály</value>
+        <value>KanÃ¡ly</value>
     </item>
     <item>
         <key>Checksum</key>
-        <value>Kontrolní souc(et</value>
+        <value>KontrolnÃ­ souÄet</value>
     </item>
     <item>
         <key>Clear</key>
@@ -316,7 +316,7 @@
     </item>
     <item>
         <key>Clear Playlist</key>
-        <value>Vyprázdnit playlist</value>
+        <value>VyprÃ¡zdnit playlist</value>
     </item>
     <item>
         <key>Composer</key>
@@ -328,7 +328,7 @@
     </item>
     <item>
         <key>Contributor</key>
-        <value>Pr(ispe(vatel</value>
+        <value>PÅ™ispÄ›vatel</value>
     </item>
     <item>
         <key>Copyright</key>
@@ -336,15 +336,15 @@
     </item>
     <item>
         <key>Count</key>
-        <value>Poc(et</value>
+        <value>PoÄet</value>
     </item>
     <item>
         <key>Creator</key>
-        <value>Tvu*rce</value>
+        <value>TvÅ¯rce</value>
     </item>
     <item>
         <key>Daily View</key>
-        <value>Denní program</value>
+        <value>DennÃ­ program</value>
     </item>
     <item>
         <key>Data</key>
@@ -372,7 +372,7 @@
     </item>
     <item>
         <key>Disc number</key>
-        <value>C(íslo disku</value>
+        <value>ÄŒÃ­slo disku</value>
     </item>
     <item>
         <key>Display this Playlist</key>
@@ -380,7 +380,7 @@
     </item>
     <item>
         <key>Duration</key>
-        <value>Délka</value>
+        <value>DÃ©lka</value>
     </item>
     <item>
         <key>Edit</key>
@@ -396,15 +396,15 @@
     </item>
     <item>
         <key>Encoded by</key>
-        <value>Kódoval</value>
+        <value>KÃ³doval</value>
     </item>
     <item>
         <key>Encoder software used</key>
-        <value>Pouitı kódovací software</value>
+        <value>PouÅ¾itÃ½ kÃ³dovacÃ­ software</value>
     </item>
     <item>
         <key>Fade</key>
-        <value>Prolínat</value>
+        <value>ProlÃ­nat</value>
     </item>
     <item>
         <key>File</key>
@@ -412,11 +412,11 @@
     </item>
     <item>
         <key>File List</key>
-        <value>Seznam souboru*</value>
+        <value>Seznam souborÅ¯</value>
     </item>
     <item>
         <key>File Management</key>
-        <value>Správa souboru*</value>
+        <value>SprÃ¡va souborÅ¯</value>
     </item>
     <item>
         <key>File Type</key>
@@ -424,7 +424,7 @@
     </item>
     <item>
         <key>File format</key>
-        <value>Formát souboru</value>
+        <value>FormÃ¡t souboru</value>
     </item>
     <item>
         <key>File type</key>
@@ -432,11 +432,11 @@
     </item>
     <item>
         <key>Folder Structure</key>
-        <value>Struktura sloek</value>
+        <value>Struktura sloÅ¾ek</value>
     </item>
     <item>
         <key>Format</key>
-        <value>Formát</value>
+        <value>FormÃ¡t</value>
     </item>
     <item>
         <key>Frequency</key>
@@ -444,7 +444,7 @@
     </item>
     <item>
         <key>Genre</key>
-        <value>ánr</value>
+        <value>Å½Ã¡nr</value>
     </item>
     <item>
         <key>Go</key>
@@ -452,7 +452,7 @@
     </item>
     <item>
         <key>Group Name</key>
-        <value>Jméno skupiny</value>
+        <value>JmÃ©no skupiny</value>
     </item>
     <item>
         <key>Help</key>
@@ -460,19 +460,19 @@
     </item>
     <item>
         <key>ISRC number</key>
-        <value>SRC c(íslo</value>
+        <value>SRC ÄÃ­slo</value>
     </item>
     <item>
         <key>Insert Playlist here</key>
-        <value>Zde vloit playlist</value>
+        <value>Zde vloÅ¾it playlist</value>
     </item>
     <item>
         <key>Item</key>
-        <value>Poloka</value>
+        <value>PoloÅ¾ka</value>
     </item>
     <item>
         <key>Label</key>
-        <value>Název</value>
+        <value>NÃ¡zev</value>
     </item>
     <item>
         <key>Language</key>
@@ -480,19 +480,19 @@
     </item>
     <item>
         <key>Length</key>
-        <value>Délka</value>
+        <value>DÃ©lka</value>
     </item>
     <item>
         <key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-        <value>Délka (zapište 0 pro live stream)</value>
+        <value>DÃ©lka (zapiÅ¡te 0 pro live stream)</value>
     </item>
     <item>
         <key>Library Search</key>
-        <value>Hledat v knihovne(</value>
+        <value>Hledat v knihovnÄ›</value>
     </item>
     <item>
         <key>List Folder</key>
-        <value>Zobrazit sloku</value>
+        <value>Zobrazit sloÅ¾ku</value>
     </item>
     <item>
         <key>Listen to File</key>
@@ -500,7 +500,7 @@
     </item>
     <item>
         <key>Local Time</key>
-        <value>Místní c(as</value>
+        <value>MÃ­stnÃ­ Äas</value>
     </item>
     <item>
         <key>Lyricist</key>
@@ -516,19 +516,19 @@
     </item>
     <item>
         <key>Main</key>
-        <value>Hlavní</value>
+        <value>HlavnÃ­</value>
     </item>
     <item>
         <key>Maximum length of ScratchPad</key>
-        <value>Maximální délka pracovní plochy</value>
+        <value>MaximÃ¡lnÃ­ dÃ©lka pracovnÃ­ plochy</value>
     </item>
     <item>
         <key>Media File</key>
-        <value>Mediální soubor</value>
+        <value>MediÃ¡lnÃ­ soubor</value>
     </item>
     <item>
         <key>Media Library</key>
-        <value>Knihovna médií</value>
+        <value>Knihovna mÃ©diÃ­</value>
     </item>
     <item>
         <key>Metadata</key>
@@ -536,23 +536,23 @@
     </item>
     <item>
         <key>Month</key>
-        <value>Me(síc</value>
+        <value>MÄ›sÃ­c</value>
     </item>
     <item>
         <key>Monthly View</key>
-        <value>Program na me(síc</value>
+        <value>Program na mÄ›sÃ­c</value>
     </item>
     <item>
         <key>Mood</key>
-        <value>Nálada</value>
+        <value>NÃ¡lada</value>
     </item>
     <item>
         <key>Move</key>
-        <value>Pr(emístit</value>
+        <value>PÅ™emÃ­stit</value>
     </item>
     <item>
         <key>Multiple Action:</key>
-        <value>Multiplicitní akce</value>
+        <value>MultiplicitnÃ­ akce</value>
     </item>
     <item>
         <key>Music</key>
@@ -560,51 +560,51 @@
     </item>
     <item>
         <key>Name</key>
-        <value>Jméno</value>
+        <value>JmÃ©no</value>
     </item>
     <item>
         <key>New</key>
-        <value>Novı</value>
+        <value>NovÃ½</value>
     </item>
     <item>
         <key>New Password</key>
-        <value>Nové heslo</value>
+        <value>NovÃ© heslo</value>
     </item>
     <item>
         <key>New Playlist using this File</key>
-        <value>Novı playlist z tohoto souboru</value>
+        <value>NovÃ½ playlist z tohoto souboru</value>
     </item>
     <item>
         <key>New Playlist using this file(s)</key>
-        <value>Novı playlist z te(chto souboru*</value>
+        <value>NovÃ½ playlist z tÄ›chto souborÅ¯</value>
     </item>
     <item>
         <key>New empty Playlist</key>
-        <value>Novı prazdnı playlist</value>
+        <value>NovÃ½ prazdnÃ½ playlist</value>
     </item>
     <item>
         <key>No Entry</key>
-        <value>Prazdné pole</value>
+        <value>PrazdnÃ© pole</value>
     </item>
     <item>
         <key>No match found.</key>
-        <value>adnı soubor nenalezen</value>
+        <value>Å½adnÃ½ soubor nenalezen</value>
     </item>
     <item>
         <key>No objects</key>
-        <value>adné objekty</value>
+        <value>Å½adnÃ© objekty</value>
     </item>
     <item>
         <key>Old Password</key>
-        <value>Staré heslo</value>
+        <value>StarÃ© heslo</value>
     </item>
     <item>
         <key>Open last Playlist</key>
-        <value>Otevr(it poslední playlist</value>
+        <value>OtevÅ™it poslednÃ­ playlist</value>
     </item>
     <item>
         <key>Operator</key>
-        <value>Operátor</value>
+        <value>OperÃ¡tor</value>
     </item>
     <item>
         <key>Orchestra or band</key>
@@ -612,15 +612,15 @@
     </item>
     <item>
         <key>Original artist</key>
-        <value>Pu*vodní ume(lec</value>
+        <value>PÅ¯vodnÃ­ umÄ›lec</value>
     </item>
     <item>
         <key>Original lyricist</key>
-        <value>Pu*vodní autor textu</value>
+        <value>PÅ¯vodnÃ­ autor textu</value>
     </item>
     <item>
         <key>Page</key>
-        <value>Stránka</value>
+        <value>StrÃ¡nka</value>
     </item>
     <item>
         <key>Password</key>
@@ -640,11 +640,11 @@
     </item>
     <item>
         <key>Radio station name</key>
-        <value>Jméno rozhlasové stanice</value>
+        <value>JmÃ©no rozhlasovÃ© stanice</value>
     </item>
     <item>
         <key>Radio station web page</key>
-        <value>Webová stránka rozhasové stanice</value>
+        <value>WebovÃ¡ strÃ¡nka rozhasovÃ© stanice</value>
     </item>
     <item>
         <key>Range</key>
@@ -652,7 +652,7 @@
     </item>
     <item>
         <key>Rating</key>
-        <value>Hodnocení</value>
+        <value>HodnocenÃ­</value>
     </item>
     <item>
         <key>RawAnalyze</key>
@@ -668,15 +668,15 @@
     </item>
     <item>
         <key>Remove Selected</key>
-        <value>Odstranit vybrané</value>
+        <value>Odstranit vybranÃ©</value>
     </item>
     <item>
         <key>Remove file(s)</key>
-        <value>Zrušit soubor(y)</value>
+        <value>ZruÅ¡it soubor(y)</value>
     </item>
     <item>
         <key>Remove from Scratchpad</key>
-        <value>Odstranit z pracovní plochy</value>
+        <value>Odstranit z pracovnÃ­ plochy</value>
     </item>
     <item>
         <key>Repeat Password</key>
@@ -684,15 +684,15 @@
     </item>
     <item>
         <key>Report date/time</key>
-        <value>Datum/c(as reportáe</value>
+        <value>Datum/Äas reportÃ¡Å¾e</value>
     </item>
     <item>
         <key>Report location</key>
-        <value>Místo reportáe</value>
+        <value>MÃ­sto reportÃ¡Å¾e</value>
     </item>
     <item>
         <key>Report organizations</key>
-        <value>Organizace reportáe</value>
+        <value>Organizace reportÃ¡Å¾e</value>
     </item>
     <item>
         <key>Reset</key>
@@ -704,39 +704,39 @@
     </item>
     <item>
         <key>Revert to Saved</key>
-        <value>Vrátit do uloeného stavu</value>
+        <value>VrÃ¡tit do uloÅ¾enÃ©ho stavu</value>
     </item>
     <item>
         <key>Rows Per Page</key>
-        <value>Poc(et r(ádek na stránku</value>
+        <value>PoÄet Å™Ã¡dek na strÃ¡nku</value>
     </item>
     <item>
         <key>Rows per Page</key>
-        <value>Poc(et r(ádek na stránku</value>
+        <value>PoÄet Å™Ã¡dek na strÃ¡nku</value>
     </item>
     <item>
         <key>Sample rate</key>
-        <value>Vzorkovací frekvence</value>
+        <value>VzorkovacÃ­ frekvence</value>
     </item>
     <item>
         <key>Save Playlist</key>
-        <value>Uloit playlist</value>
+        <value>UloÅ¾it playlist</value>
     </item>
     <item>
         <key>Save and Close</key>
-        <value>Uloit a zavr(it</value>
+        <value>UloÅ¾it a zavÅ™it</value>
     </item>
     <item>
         <key>Save and Close this Playlist</key>
-        <value>Uloit a zavr(ít playlist</value>
+        <value>UloÅ¾it a zavÅ™Ã­t playlist</value>
     </item>
     <item>
         <key>Scheduler</key>
-        <value>Plánovac(</value>
+        <value>PlÃ¡novaÄ</value>
     </item>
     <item>
         <key>Scheduler Navigation</key>
-        <value>Navigace v plánovac(i</value>
+        <value>Navigace v plÃ¡novaÄi</value>
     </item>
     <item>
         <key>Search</key>
@@ -744,11 +744,11 @@
     </item>
     <item>
         <key>Search Library</key>
-        <value>Hledat v knihovne(</value>
+        <value>Hledat v knihovnÄ›</value>
     </item>
     <item>
         <key>Signed in</key>
-        <value>Zalogován</value>
+        <value>ZalogovÃ¡n</value>
     </item>
     <item>
         <key>Station Logo</key>
@@ -756,15 +756,15 @@
     </item>
     <item>
         <key>Station Name</key>
-        <value>Název stanice</value>
+        <value>NÃ¡zev stanice</value>
     </item>
     <item>
         <key>Station Settings</key>
-        <value>Pr(edvolby stanice</value>
+        <value>PÅ™edvolby stanice</value>
     </item>
     <item>
         <key>Station Time</key>
-        <value>Mistní c(as stanice</value>
+        <value>MistnÃ­ Äas stanice</value>
     </item>
     <item>
         <key>Station URL</key>
@@ -788,15 +788,15 @@
     </item>
     <item>
         <key>System Settings</key>
-        <value>Systémové nastavení</value>
+        <value>SystÃ©movÃ© nastavenÃ­</value>
     </item>
     <item>
         <key>Talk</key>
-        <value>Mluvené slovo</value>
+        <value>MluvenÃ© slovo</value>
     </item>
     <item>
         <key>Time</key>
-        <value>C(as</value>
+        <value>ÄŒas</value>
     </item>
     <item>
         <key>Title</key>
@@ -808,7 +808,7 @@
     </item>
     <item>
         <key>Track number</key>
-        <value>C(íslo stopy</value>
+        <value>ÄŒÃ­slo stopy</value>
     </item>
     <item>
         <key>Tree view</key>
@@ -820,23 +820,23 @@
     </item>
     <item>
         <key>User Password</key>
-        <value>Uivatelské heslo</value>
+        <value>UÅ¾ivatelskÃ© heslo</value>
     </item>
     <item>
         <key>User/Groups</key>
-        <value>Uivatelé a skupiny</value>
+        <value>UÅ¾ivatelÃ© a skupiny</value>
     </item>
     <item>
         <key>Username</key>
-        <value>Uivatelské jméno</value>
+        <value>UÅ¾ivatelskÃ© jmÃ©no</value>
     </item>
     <item>
         <key>Week</key>
-        <value>Tıden</value>
+        <value>TÃ½den</value>
     </item>
     <item>
         <key>Weekly View</key>
-        <value>Tıdenní program</value>
+        <value>TÃ½dennÃ­ program</value>
     </item>
     <item>
         <key>Year</key>
@@ -844,11 +844,11 @@
     </item>
     <item>
         <key>calendar week</key>
-        <value>tıden v kalendár(i</value>
+        <value>tÃ½den v kalendÃ¡Å™i</value>
     </item>
     <item>
         <key>copy</key>
-        <value>kopírovat</value>
+        <value>kopÃ­rovat</value>
     </item>
     <item>
         <key>go up</key>
@@ -856,11 +856,11 @@
     </item>
     <item>
         <key>move</key>
-        <value>pr(emístit</value>
+        <value>pÅ™emÃ­stit</value>
     </item>
     <item>
         <key>move down</key>
-        <value>posunout dolu*</value>
+        <value>posunout dolÅ¯</value>
     </item>
     <item>
         <key>move up</key>
@@ -868,18 +868,18 @@
     </item>
     <item>
         <key>new&amp;nbsp;folder</key>
-        <value>nová sloka</value>
+        <value>novÃ¡ sloÅ¾ka</value>
     </item>
     <item>
         <key>next</key>
-        <value>pr(íští</value>
+        <value>pÅ™Ã­Å¡tÃ­</value>
     </item>
     <item>
         <key>permissions</key>
-        <value>práva</value>
+        <value>prÃ¡va</value>
     </item>
     <item>
         <key>previous</key>
-        <value>pr(edešlı</value>
+        <value>pÅ™edeÅ¡lÃ½</value>
     </item>
 </language>
