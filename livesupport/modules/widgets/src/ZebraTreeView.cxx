@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -121,8 +121,9 @@ ZebraTreeView :: cellDataFunction(Gtk::CellRenderer*               cell,
                                                                 throw ()
 {
     ZebraTreeModelColumnRecord  model;
-
-    Gdk::Color  color = Colors::getColor((*iter)[model.colorColumn] );
-    cell->property_cell_background_gdk() = color;
+    Colors::ColorName   colorName = (*iter)[model.rowNumberColumn] ?
+                                                    Colors::Gray :
+                                                    Colors::LightBlue;
+    cell->property_cell_background_gdk() = Colors::getColor(colorName);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -264,9 +264,8 @@ ScratchpadWindow :: showContents(void)                          throw ()
             default:
                 break;
         }
-        row[modelColumns.titleColumn] = *playable->getTitle();
-        row[modelColumns.colorColumn] = rowNumber % 2 ? Colors::Gray
-                                                      : Colors::LightBlue;
+        row[modelColumns.titleColumn]     = *playable->getTitle();
+        row[modelColumns.rowNumberColumn] = rowNumber;
 
         ++it;
         ++rowNumber;

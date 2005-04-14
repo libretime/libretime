@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeModelColumnRecord.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,7 +57,7 @@ namespace Widgets {
  *  A basic column record class for tree models with colorable rows.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ZebraTreeModelColumnRecord : public Gtk::TreeModelColumnRecord
 {
@@ -65,14 +65,14 @@ class ZebraTreeModelColumnRecord : public Gtk::TreeModelColumnRecord
         /**
          *  The column for the color of the row.
          */
-        Gtk::TreeModelColumn<Colors::ColorName>     colorColumn;
+        Gtk::TreeModelColumn<int>       rowNumberColumn;
 
         /**
          *  Constructor.
          */
         ZebraTreeModelColumnRecord(void)                        throw ()
         {
-            add(colorColumn);
+            add(rowNumberColumn);
         }
 };
 

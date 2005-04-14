@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,10 +69,29 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A list of items, in rows colored alternately grey and light blue.
+ *  A table of items, in rows colored alternately gray and light blue.
+ *
+ *  TreeView's contain TreeViewColumns; these contain a title (a text Label)
+ *  and a table column body (a CellRenderer).  The CellRenderer needs to be
+ *  connected with a TreeModelColumn using the set_renderer() method of
+ *  TreeViewColumn [which, despite its name, does not set the renderer, just
+ *  connects it with a tree model column].
+ *
+ *  A single TreeViewColumn may contain several CellRenderer's, i.e., 
+ *  sub-columns.
+ *
+ *  The standard CellRenderer types (CellRendererText etc) can not be 
+ *  instantiated by the user; they can only be created by the shortcut
+ *  TreeViewColumn constructor or the append_column() or insert_column()
+ *  functions in TreeView.  These create the appropriate CellRenderer,
+ *  add it the tree view column, and connect it with the tree model column.
+ *
+ *  A derived CellRenderer sub-type needs to be 1) instantiated;
+ *  2) added to a TreeViewColumn using a constructor or pack_start() etc;
+ *  3) connected with a TreeModelColumn using set_renderer(). 
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class ZebraTreeView : public Gtk::TreeView
 {

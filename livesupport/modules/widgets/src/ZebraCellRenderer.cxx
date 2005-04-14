@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraCellRenderer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ ZebraCellRenderer::ZebraCellRenderer()                          throw ()
  *----------------------------------------------------------------------------*/
 ZebraCellRenderer::~ZebraCellRenderer()                         throw ()
 {
-    std::cerr << "### destructor\n";
+//    std::cerr << "### destructor\n";
 }
 
 
@@ -82,12 +82,32 @@ ZebraCellRenderer::get_size_vfunc(Gtk::Widget& widget,
                                   int* width,    int* height) const
                                                                 throw ()
 {
-    std::cerr << "### get_size_vfunc()...\n";
-    // call the parent method
+/*
+    std::cerr << "### get_size_vfunc():"
+        << (cell_area ? cell_area->get_x() : -1) << ", "
+        << (cell_area ? cell_area->get_y() : -1) << ";  "
+        << (cell_area ? cell_area->get_width() : -1) << ", "
+        << (cell_area ? cell_area->get_height() : -1) << ";  "
+        << (x_offset ? *x_offset : -1) << ", "
+        << (y_offset ? *y_offset : -1) << " --- "
+        << (width ? *width : -1) << ", "
+        << (height ? *height : -1) << "\n";
+*/
+        // call the parent method
     Gtk::CellRendererText::get_size_vfunc(widget, cell_area,
                                           x_offset, y_offset,
                                           width, height);
-    std::cerr << "... done.\n";
+/*
+    std::cerr << "... done: "
+        << (cell_area ? cell_area->get_x() : -1) << ", "
+        << (cell_area ? cell_area->get_y() : -1) << ";  "
+        << (cell_area ? cell_area->get_width() : -1) << ", "
+        << (cell_area ? cell_area->get_height() : -1) << ";  "
+        << (x_offset ? *x_offset : -1) << ", "
+        << (y_offset ? *y_offset : -1) << " --- "
+        << (width ? *width : -1) << ", "
+        << (height ? *height : -1) << "\n";
+*/
 /*
   enum { TOGGLE_WIDTH = 12 };
 
@@ -130,11 +150,26 @@ ZebraCellRenderer::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
                                 Gtk::CellRendererState  flags)
                                                                 throw ()
 {
-    std::cerr << "### render_vfunc()...\n";
+/*
+    std::cerr << "### render_vfunc(): "
+        << widget.get_name() << " --- "
+        << background_area.get_x() << ", "
+        << background_area.get_y() << ";  "
+        << background_area.get_width() << ", "
+        << background_area.get_height() << " -- "
+        << cell_area.get_x() << ", "
+        << cell_area.get_y() << ";  "
+        << cell_area.get_width() << ", "
+        << cell_area.get_height() << ";  "
+        << expose_area.get_x() << " -- "
+        << expose_area.get_y() << ";  "
+        << expose_area.get_width() << ", "
+        << expose_area.get_height() << " --  "
+        << flags << "\n";
+*/
     // call the parent function
     Gtk::CellRendererText::render_vfunc(window, widget, background_area,
                                         cell_area, expose_area, flags);
-    std::cerr << "... done.\n";
 /*
   const unsigned int cell_xpad = property_xpad();
   const unsigned int cell_ypad = property_ypad();
@@ -196,11 +231,18 @@ bool ZebraCellRenderer::activate_vfunc(GdkEvent*              event,
                                        Gtk::CellRendererState flags)
                                                                 throw ()
 {
-    std::cerr << "### activate_vfunc()...\n";
+/*
+    std::cerr << "### activate_vfunc(): "
+        << widget.get_name() << ", "
+        << path << ", "
+//        << background_area << ", "
+//        << cell_area << ", "
+        << flags << "\n";
     // call the parent function
     Gtk::CellRendererText::activate_vfunc(event, widget, path, 
                                           background_area, cell_area, flags);
     std::cerr << "... done.\n";
+*/
 /*
   if(property_activatable_)
   {
