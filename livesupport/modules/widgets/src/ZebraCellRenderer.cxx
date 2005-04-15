@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraCellRenderer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -223,12 +223,13 @@ ZebraCellRenderer::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window,
 /*------------------------------------------------------------------------------
  *  The user clicked on the cell.
  *----------------------------------------------------------------------------*/
-bool ZebraCellRenderer::activate_vfunc(GdkEvent*              event,
-                                       Gtk::Widget&           widget,
-                                       const Glib::ustring&   path,
-                                       const Gdk::Rectangle&  background_area,
-                                       const Gdk::Rectangle&  cell_area,
-                                       Gtk::CellRendererState flags)
+bool
+ZebraCellRenderer::activate_vfunc(GdkEvent*              event,
+                                  Gtk::Widget&           widget,
+                                  const Glib::ustring&   path,
+                                  const Gdk::Rectangle&  background_area,
+                                  const Gdk::Rectangle&  cell_area,
+                                  Gtk::CellRendererState flags)
                                                                 throw ()
 {
 /*
@@ -238,9 +239,11 @@ bool ZebraCellRenderer::activate_vfunc(GdkEvent*              event,
 //        << background_area << ", "
 //        << cell_area << ", "
         << flags << "\n";
+*/
     // call the parent function
-    Gtk::CellRendererText::activate_vfunc(event, widget, path, 
+    return Gtk::CellRendererText::activate_vfunc(event, widget, path, 
                                           background_area, cell_area, flags);
+/*
     std::cerr << "... done.\n";
 */
 /*
