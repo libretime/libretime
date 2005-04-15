@@ -1,5 +1,6 @@
 #!/bin/sh
-#-------------------------------------------------------------------------------#   Copyright (c) 2004 Media Development Loan Fund
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2004 Media Development Loan Fund
 #
 #   This file is part of the LiveSupport project.
 #   http://livesupport.campware.org/
@@ -21,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/bin/gLiveSupport_devenv.sh,v $
 #-------------------------------------------------------------------------------
 
