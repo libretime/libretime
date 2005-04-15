@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -267,9 +267,14 @@ MasterPanelWindow :: resetTimer(void)                                throw ()
 bool
 MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 {
-    Ptr<const ptime>::Ref   now = gLiveSupport->getScheduler()
-                                              ->getSchedulerTime();
-    
+    Ptr<const ptime>::Ref   now;
+
+    try {
+        now = gLiveSupport->getScheduler()->getSchedulerTime();
+    } catch (XmlRpcException &e) {
+        // TODO: handle error
+    }
+
     if (now.get()) {
         time_duration           dayTime = now->time_of_day();
         // get the time of day, only up to a second precision
