@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Button.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  A button holding a text.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class Button : public Gtk::Button
 {
@@ -261,7 +261,8 @@ class Button : public Gtk::Button
         set_label(const Glib::ustring & label)              throw ()
         {
             if (child && child->is_managed_()) {
-                delete child;
+                // as the child is managed, unparent will delete it
+                child->unparent();
             }
             this->label = label;
             child = Gtk::manage(new Gtk::Label(label));
