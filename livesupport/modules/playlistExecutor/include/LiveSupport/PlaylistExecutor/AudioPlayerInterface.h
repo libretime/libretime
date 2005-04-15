@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace LiveSupport::Core;
 /**
  *  A generic interface for playing audio files.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.10 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.11 $
  */
 class AudioPlayerInterface
 {
@@ -106,7 +106,7 @@ class AudioPlayerInterface
          *  @see #detach
          */
         virtual void
-        attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+        attachListener(AudioPlayerEventListener*    eventListener)
                                                                 throw ()  = 0;
 
         /**
@@ -120,7 +120,7 @@ class AudioPlayerInterface
          *  @see #attach
          */
         virtual void
-        detachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+        detachListener(AudioPlayerEventListener*    eventListener)
                                             throw (std::invalid_argument)  = 0;
 
         /**

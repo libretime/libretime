@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.19 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -273,7 +273,7 @@ HelixPlayer :: deInitialize(void)                       throw ()
  *  Attach an event listener.
  *----------------------------------------------------------------------------*/
 void
-HelixPlayer :: attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+HelixPlayer :: attachListener(AudioPlayerEventListener*     eventListener)
                                                                     throw ()
 {
     listeners.push_back(eventListener);
@@ -284,14 +284,14 @@ HelixPlayer :: attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
  *  Detach an event listener.
  *----------------------------------------------------------------------------*/
 void
-HelixPlayer :: detachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+HelixPlayer :: detachListener(AudioPlayerEventListener*     eventListener)
                                                 throw (std::invalid_argument)
 {
     ListenerVector::iterator    it  = listeners.begin();
     ListenerVector::iterator    end = listeners.end();
 
     while (it != end) {
-        if ((*it).get() == eventListener.get()) {
+        if (*it == eventListener) {
             listeners.erase(it);
             return;
         }

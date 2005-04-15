@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -445,39 +445,28 @@ HelixPlayerTest :: eventListenerAttachTest(void)
 
     Ptr<TestEventListener>::Ref     listener1(new TestEventListener());
     Ptr<TestEventListener>::Ref     listener2(new TestEventListener());
-    bool                            gotException;
 
     // try with one listener
-    helixPlayer->attachListener(listener1);
-    try {
-        helixPlayer->detachListener(listener1);
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    gotException = false;
-    try {
-        helixPlayer->detachListener(listener1);
-    } catch (std::invalid_argument &e) {
-        gotException = true;
-    }
-    CPPUNIT_ASSERT(gotException);
+    helixPlayer->attachListener(listener1.get());
+    CPPUNIT_ASSERT_NO_THROW(
+        helixPlayer->detachListener(listener1.get())
+    );
+    CPPUNIT_ASSERT_THROW(
+        helixPlayer->detachListener(listener1.get()),
+        std::invalid_argument
+    );
 
     // try with two listeners
-    helixPlayer->attachListener(listener1);
-    gotException = false;
-    try {
-        helixPlayer->detachListener(listener2);
-    } catch (std::invalid_argument &e) {
-        gotException = true;
-    }
-    CPPUNIT_ASSERT(gotException);
-    helixPlayer->attachListener(listener2);
-    try {
-        helixPlayer->detachListener(listener1);
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-
+    helixPlayer->attachListener(listener1.get());
+    CPPUNIT_ASSERT_THROW(
+        helixPlayer->detachListener(listener2.get()),
+        std::invalid_argument
+    );
+    helixPlayer->attachListener(listener2.get());
+    CPPUNIT_ASSERT_NO_THROW(
+        helixPlayer->detachListener(listener1.get());
+    );
+    
     helixPlayer->deInitialize();
 }
 
@@ -493,15 +482,13 @@ HelixPlayerTest :: eventListenerTest(void)
 
     Ptr<time_duration>::Ref         sleepT(new time_duration(microseconds(10)));
     Ptr<TestEventListener>::Ref     listener1(new TestEventListener());
-    helixPlayer->attachListener(listener1);
+    helixPlayer->attachListener(listener1.get());
 
     // try with one listener
     CPPUNIT_ASSERT(!listener1->stopFlag);
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         helixPlayer->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
     helixPlayer->start();
@@ -517,15 +504,13 @@ HelixPlayerTest :: eventListenerTest(void)
 
     // try with two listeners
     Ptr<TestEventListener>::Ref     listener2(new TestEventListener());
-    helixPlayer->attachListener(listener2);
+    helixPlayer->attachListener(listener2.get());
 
     CPPUNIT_ASSERT(!listener1->stopFlag);
     CPPUNIT_ASSERT(!listener2->stopFlag);
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         helixPlayer->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
     CPPUNIT_ASSERT(!listener2->stopFlag);
@@ -545,14 +530,13 @@ HelixPlayerTest :: eventListenerTest(void)
     listener2->stopFlag = false;
 
     // try with only the second listener
-    helixPlayer->detachListener(listener1);
-
+    CPPUNIT_ASSERT_NO_THROW(
+        helixPlayer->detachListener(listener1.get());
+    );
     CPPUNIT_ASSERT(!listener2->stopFlag);
-    try {
+    CPPUNIT_ASSERT_NO_THROW(
         helixPlayer->open("file:var/test.mp3");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    }
+    );
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     CPPUNIT_ASSERT(!listener2->stopFlag);
     helixPlayer->start();
@@ -565,7 +549,6 @@ HelixPlayerTest :: eventListenerTest(void)
     CPPUNIT_ASSERT(!helixPlayer->isPlaying());
     CPPUNIT_ASSERT(listener2->stopFlag);
     listener2->stopFlag = false;
-
 
     helixPlayer->close();
     helixPlayer->deInitialize();

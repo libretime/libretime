@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,8 +111,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST helixPlayer   fadeLookAheatTime    #IMPLIED >
  *  </pre></code>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.16 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.17 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
@@ -198,7 +198,7 @@ class HelixPlayer : virtual public Configurable,
          *  Just a shorthand notation, to make reference to the type
          *  easier.
          */
-        typedef std::vector<Ptr<AudioPlayerEventListener>::Ref>
+        typedef std::vector<AudioPlayerEventListener*>
                                                         ListenerVector;
 
         /**
@@ -322,7 +322,7 @@ class HelixPlayer : virtual public Configurable,
          *  @see #detach
          */
         virtual void
-        attachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+        attachListener(AudioPlayerEventListener*    eventListener)
                                                                     throw ();
 
         /**
@@ -334,7 +334,7 @@ class HelixPlayer : virtual public Configurable,
          *  @see #attach
          */
         virtual void
-        detachListener(Ptr<AudioPlayerEventListener>::Ref eventListener)
+        detachListener(AudioPlayerEventListener*    eventListener)
                                                 throw (std::invalid_argument);
 
         /**
