@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class AudioPlayerInterface
 {
@@ -111,6 +111,8 @@ class AudioPlayerInterface
 
         /**
          *  Detach an event listener for this audio player.
+         *  It is not necessary to call detach if the player is destroyed.
+         *  In that case, the listeners are detached automatically.
          *
          *  @param eventListener the event listener to unregister.
          *  @exception std::invalid_argument if the supplied event listener
