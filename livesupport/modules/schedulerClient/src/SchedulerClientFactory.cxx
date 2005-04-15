@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/src/SchedulerClientFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,6 +108,6 @@ SchedulerClientFactory :: configure(const xmlpp::Element & element)
         return;
     }
 
-    throw std::invalid_argument("no authentication client configuration found");
+    throw std::invalid_argument("no scheduler client configuration found");
 }
 
