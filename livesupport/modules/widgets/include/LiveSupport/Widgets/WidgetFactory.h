@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,6 +68,8 @@ using namespace LiveSupport::Core;
 
 /* =============================================================== data types */
 
+class WhiteWindow;
+
 /**
  *  A factory to provide access to LiveSupport Widgets.
  *  
@@ -86,8 +88,8 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST widgetFactory   path        CDATA   #REQUIRED >
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.14 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -334,6 +336,17 @@ class WidgetFactory :
         ZebraTreeView *
         createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
                                                             throw ();
+
+        /**
+         *  Create a window with a single line of text, and an OK button.
+         *  Good for displaying error messages.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @param message the message to include in the window.
+         */
+        WhiteWindow *
+        createMessageWindow(Ptr<Glib::ustring>::Ref message)    throw ();
 };
 
 

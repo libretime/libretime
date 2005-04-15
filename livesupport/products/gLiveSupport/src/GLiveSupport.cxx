@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,6 +54,7 @@ using namespace LiveSupport::Core;
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::Storage;
 using namespace LiveSupport::SchedulerClient;
+using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 
@@ -93,6 +94,15 @@ static const std::string nameAttrName = "name";
  *----------------------------------------------------------------------------*/
 static const std::string scratchpadContentsKey = "scratchpadContents";
 
+/*------------------------------------------------------------------------------
+ *  Static constant for the key of the scheduler not available key
+ *----------------------------------------------------------------------------*/
+static const std::string schedulerNotReachableKey = "schedulerNotReachableMsg";
+
+/*------------------------------------------------------------------------------
+ *  Static constant for the key of the locale not available key
+ *----------------------------------------------------------------------------*/
+static const std::string localeNotAvailableKey = "localeNotAvailableMsg";
 
 
 /* ===============================================  local function prototypes */
@@ -222,6 +232,67 @@ GLiveSupport :: configSupportedLanguages(const xmlpp::Element & element)
 
  
 /*------------------------------------------------------------------------------
+ *  Check all configured resources
+ *----------------------------------------------------------------------------*/
+bool
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: checkConfiguration(void)                    throw ()
+{
+    // first, check if resources are available for all configured languages
+    LanguageMap::iterator   it  = supportedLanguages->begin();
+    try {
+        LanguageMap::iterator   end = supportedLanguages->end();
+        while (it != end) {
+            changeLocale((*it).second);
+            ++it;
+        }
+        changeLocale("");
+    } catch (std::invalid_argument &e) {
+        Ptr<Glib::ustring>::Ref language(new Glib::ustring((*it).first));
+        Ptr<UnicodeString>::Ref uLanguage = ustringToUnicodeString(language);
+        Ptr<Glib::ustring>::Ref msg = formatMessage(localeNotAvailableKey,
+                                                    (*it).first);
+        displayMessageWindow(msg);
+
+        changeLocale("");
+        return false;
+    }
+
+    // TODO: check if the authentication server is available
+
+    // TODO: check if the storage server is available
+
+    // no need to check the widget factory
+
+    // check the scheduler client
+    try {
+        scheduler->getVersion();
+    } catch (XmlRpcException &e) {
+        displayMessageWindow(getResourceUstring(schedulerNotReachableKey));
+        return false;
+    }
+
+    // TODO: check the audio player?
+
+    return true;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display a message window.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
+                                                                    throw ()
+{
+    WhiteWindow   * window = widgetFactory->createMessageWindow(message);
+    Gtk::Main::run(*window);
+    delete window;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Show the main window.
  *----------------------------------------------------------------------------*/
 void
@@ -243,7 +314,7 @@ GLiveSupport :: show(void)                              throw ()
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: changeLanguage(Ptr<const std::string>::Ref  locale)
-                                                                    throw ()
+                                                 throw (std::invalid_argument)
 {
     changeLocale(*locale);
 

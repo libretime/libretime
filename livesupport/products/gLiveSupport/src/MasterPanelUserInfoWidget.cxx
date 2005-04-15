@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -227,10 +227,7 @@ MasterPanelUserInfoWidget :: updateStrings(void)
         loginButtonLabel = getResourceUstring("loginButtonLabel");
         loggedInMsg      = getResourceUstring("notLoggedInMsg");
     } else {
-        Ptr<UnicodeString>::Ref uLogin = ustringToUnicodeString(login);
-        Formattable             arguments[] = { *uLogin };
-        loggedInMsg = formatMessageUstring("loggedInMsg", arguments, 1);
-
+        loggedInMsg      = formatMessage("loggedInMsg", *login);
         loginButtonLabel = getResourceUstring("logoutButtonLabel");
     }
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -293,13 +293,9 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         gLiveSupport->uploadFile(audioClip);
 
         // display success in the status bar
-        Ptr<UnicodeString>::Ref uTitle = ustringToUnicodeString(
-                                                        audioClip->getTitle());
-        Formattable             arguments[] = { *uTitle };
-        Ptr<Glib::ustring>::Ref statusText = formatMessageUstring(
+        Ptr<Glib::ustring>::Ref statusText = formatMessage(
                                                     "clipUploadedMessage",
-                                                    arguments,
-                                                    1);
+                                                    *audioClip->getTitle());
         statusBar->set_text(*statusText);
 
         // clean the entry fields

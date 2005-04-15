@@ -10,6 +10,9 @@ root:table
     simplePlaylistMgmtButtonLabel:string    { "simple playlist management" }
     schedulerButtonLabel:string             { "scheduler" }
 
+    localeNotAvailableMsg:string        { "Locale {0} not available" }
+    schedulerNotReachableMsg:string     { "Scheduler server not available" }
+
     loginWindow:table
     {
         windowTitle:string          { "LOGIN" }

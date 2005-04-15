@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@
 #include "configure.h"
 #endif
 
-#include <iostream>
+#include <gtkmm/main.h>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Colors.h"
@@ -78,6 +78,8 @@ TestWindow :: TestWindow (void)
 
     // create a button
     button = Gtk::manage(widgetFactory->createButton("Hello, World!"));
+    button->signal_clicked().connect(sigc::mem_fun(*this,
+                                                &TestWindow::onButtonClicked));
 
     // create a combo box
     comboBoxText = Gtk::manage(widgetFactory->createComboBoxText());
@@ -116,6 +118,21 @@ TestWindow :: TestWindow (void)
  *----------------------------------------------------------------------------*/
 TestWindow :: ~TestWindow (void)                                throw ()
 {
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the button being clicked.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onButtonClicked(void)                                 throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    Ptr<Glib::ustring>::Ref     message(new Glib::ustring("Hello, World!"));
+
+    WhiteWindow   * helloWindow = wf->createMessageWindow(message);
+    Gtk::Main::run(*helloWindow);
+    delete helloWindow;
 }
 
 

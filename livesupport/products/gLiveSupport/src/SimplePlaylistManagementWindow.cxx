@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -155,13 +155,9 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
 
         playlist = gLiveSupport->savePlaylist();
 
-        Ptr<UnicodeString>::Ref uTitle = ustringToUnicodeString(
-                                                        playlist->getTitle());
-        Formattable             arguments[] = { *uTitle };
-        Ptr<Glib::ustring>::Ref statusText = formatMessageUstring(
+        Ptr<Glib::ustring>::Ref statusText = formatMessage(
                                                     "playlistSavedMessage",
-                                                    arguments,
-                                                    1);
+                                                    *playlist->getTitle());
         statusBar->set_text(*statusText);
 
         gLiveSupport->releaseEditedPlaylist();

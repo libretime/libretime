@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -166,6 +166,15 @@ int main (  int     argc,
     } catch (xmlpp::exception &e) {
         std::cerr << "error parsing configuration file" << std::endl
                   << e.what() << std::endl;
+        return 1;
+    } catch (std::logic_error &e) {
+        std::cerr << "error configuring..." << std::endl
+                  << e.what() << std::endl;
+        return 1;
+    }
+
+    if (!gLiveSupport->checkConfiguration()) {
+        std::cerr << "some problem with the configuration" << std::endl;
         return 1;
     }
 

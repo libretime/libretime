@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -171,13 +171,70 @@ LocalizedObject :: formatMessage(Ptr<const UnicodeString>::Ref   pattern,
 /*------------------------------------------------------------------------------
  *  Format a message, based on a resource key for its pattern
  *----------------------------------------------------------------------------*/
-Ptr<UnicodeString>::Ref
+Ptr<Glib::ustring>::Ref
 LocalizedObject :: formatMessage(const char       * patternKey,
                                  Formattable      * arguments,
                                  unsigned int       nArguments)
                                             throw (std::invalid_argument)
 {
-    return formatMessage(getResourceString(patternKey), arguments, nArguments);
+    return unicodeStringToUstring(
+           formatMessage(getResourceString(patternKey), arguments, nArguments));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Format a message, based on a resource key for its pattern
+ *  and one argument for formatting.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+LocalizedObject :: formatMessage(const std::string    & patternKey,
+                                 const Glib::ustring  & argument1)
+                                                throw (std::invalid_argument)
+{
+    Ptr<UnicodeString>::Ref     uArgument1 = ustringToUnicodeString(argument1);
+    Formattable                 arguments[] = { *uArgument1 };
+
+    return formatMessage(patternKey, arguments, 1);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Format a message, based on a resource key for its pattern
+ *  and two arguments for formatting.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+LocalizedObject :: formatMessage(const std::string    & patternKey,
+                                 const Glib::ustring  & argument1,
+                                 const Glib::ustring  & argument2)
+                                                throw (std::invalid_argument)
+{
+    Ptr<UnicodeString>::Ref     uArgument1 = ustringToUnicodeString(argument1);
+    Ptr<UnicodeString>::Ref     uArgument2 = ustringToUnicodeString(argument2);
+    Formattable                 arguments[] = { *uArgument1,
+                                                *uArgument2 };
+
+    return formatMessage(patternKey, arguments, 2);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Format a message, based on a resource key for its pattern
+ *  and one argument for formatting.
+ *----------------------------------------------------------------------------*/
+Ptr<Glib::ustring>::Ref
+LocalizedObject :: formatMessage(const std::string    & patternKey,
+                                 const Glib::ustring  & argument1,
+                                 const Glib::ustring  & argument2,
+                                 const Glib::ustring  & argument3)
+                                                throw (std::invalid_argument)
+{
+    Ptr<UnicodeString>::Ref     uArgument1 = ustringToUnicodeString(argument1);
+    Ptr<UnicodeString>::Ref     uArgument2 = ustringToUnicodeString(argument2);
+    Ptr<UnicodeString>::Ref     uArgument3 = ustringToUnicodeString(argument3);
+    Formattable                 arguments[] = { *uArgument1,
+                                                *uArgument2,
+                                                *uArgument3 };
+    return formatMessage(patternKey, arguments, 3);
 }
 
 
@@ -212,8 +269,27 @@ LocalizedObject :: ustringToUnicodeString(
 {
     Ptr<UnicodeString>::Ref     uString(new UnicodeString());
 
-    Glib::ustring::const_iterator     it = gString->begin();
+    Glib::ustring::const_iterator     it  = gString->begin();
     Glib::ustring::const_iterator     end = gString->end();
+    while (it < end) {
+        uString->append((UChar32) *it++);
+    }
+
+    return uString;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create an ICU UnicodeString from a Glib ustring
+ *----------------------------------------------------------------------------*/
+Ptr<UnicodeString>::Ref
+LocalizedObject :: ustringToUnicodeString(const Glib::ustring   & gString)
+                                                                    throw ()
+{
+    Ptr<UnicodeString>::Ref     uString(new UnicodeString());
+
+    Glib::ustring::const_iterator     it  = gString.begin();
+    Glib::ustring::const_iterator     end = gString.end();
     while (it < end) {
         uString->append((UChar32) *it++);
     }

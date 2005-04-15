@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObjectTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -207,7 +207,7 @@ LocalizedObjectTest :: formatMessageTest(void)
     CPPUNIT_ASSERT(U_SUCCESS(status));
 
     try {
-        Ptr<UnicodeString>::Ref     message;
+        Ptr<Glib::ustring>::Ref     message;
         Ptr<LocalizedObject>::Ref   locObj(new LocalizedObject(bundle));
         Ptr<LocalizedObject>::Ref   messages(new LocalizedObject(
                                                 locObj->getBundle("messages")));
@@ -215,14 +215,22 @@ LocalizedObjectTest :: formatMessageTest(void)
 
         // test formatting through a key
         message = messages->formatMessage("aMessage", arguments, 2);
-        CPPUNIT_ASSERT(
-                    message->compare("parameter 0: p1, parameter 1: p2" == 0));
+        CPPUNIT_ASSERT(*message == "parameter 0: p1, parameter 1: p2");
 
         // test formatting through an explicit pattern
+        Ptr<UnicodeString>::Ref     uMessage;
         Ptr<UnicodeString>::Ref     pattern(new UnicodeString(
                                                     "only 1 parameter: {0}"));
-        message = LocalizedObject::formatMessage(pattern, arguments, 1);
-        CPPUNIT_ASSERT(message->compare("only 1 parameter: p1") == 0);
+        uMessage = LocalizedObject::formatMessage(pattern, arguments, 1);
+        CPPUNIT_ASSERT(uMessage->compare("only 1 parameter: p1") == 0);
+
+        // test formatting through a key, and a fixed number of parameters
+        message = messages->formatMessage("aMessage3Args", "p0");
+        CPPUNIT_ASSERT(*message == "p0: p0, p2: {2}, p1: {1}");
+        message = messages->formatMessage("aMessage3Args", "p0", "p1");
+        CPPUNIT_ASSERT(*message == "p0: p0, p2: {2}, p1: p1");
+        message = messages->formatMessage("aMessage3Args", "p0", "p1", "p2");
+        CPPUNIT_ASSERT(*message == "p0: p0, p2: p2, p1: p1");
 
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
@@ -299,7 +307,7 @@ LocalizedObjectTest :: ustringTest(void)
         Formattable                 arguments[] = { "p1", "p2" };
 
         // test formatting through a key
-        message = messages->formatMessageUstring("aMessage", arguments, 2);
+        message = messages->formatMessage("aMessage", arguments, 2);
         CPPUNIT_ASSERT(*message == "parameter 0: p1, parameter 1: p2");
 
     } catch (std::invalid_argument &e) {

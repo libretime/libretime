@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,8 +36,9 @@
 #include <gtkmm/entry.h>
 
 #include "LiveSupport/Widgets/Colors.h"
-
 #include "LiveSupport/Widgets/WidgetFactory.h"
+#include "MessageWindow.h"
+
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
@@ -423,5 +424,16 @@ WidgetFactory :: createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
                                                                 throw ()
 {
     return new ZebraTreeView(treeModel);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a message window.
+ *----------------------------------------------------------------------------*/
+WhiteWindow *
+WidgetFactory :: createMessageWindow(Ptr<Glib::ustring>::Ref    message)
+                                                                throw ()
+{
+    return new MessageWindow(message);
 }
 

@@ -10,6 +10,9 @@ hu:table
     simplePlaylistMgmtButtonLabel:string    { "egyszerű playlist kezelés" }
     schedulerButtonLabel:string             { "időzítő" }
 
+    localeNotAvailableMsg:string        { "A {0} nyelv nem elérhető" }
+    schedulerNotReachableMsg:string     { "Az időzitő szerver nem elérhető" }
+
     loginWindow:table
     {
         windowTitle:string          { "Belépés" }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedObject.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ namespace Core {
  *  to make localized life easier.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class LocalizedObject
 {
@@ -236,10 +236,97 @@ class LocalizedObject
          *             specified by patternKey
          *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
          */
-        virtual Ptr<UnicodeString>::Ref
+        virtual Ptr<Glib::ustring>::Ref
         formatMessage(const char      * patternKey,
                       Formattable     * arguments,
                       unsigned int      nArguments)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param arguments the arguments to use in the formatting
+         *  @param nArguments the number of arguments supplied
+         *  @return the formatted string
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        formatMessage(const std::string  & patternKey,
+                      Formattable        * arguments,
+                      unsigned int         nArguments)
+                                                throw (std::invalid_argument)
+        {
+            return formatMessage(patternKey.c_str(), arguments, nArguments);
+        }
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource, with one argument.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param argument1 the single argument to the message.
+         *  @return the formatted string
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        formatMessage(const std::string     & patternKey,
+                      const Glib::ustring   & argument1)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource, with two arguments.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param argument1 the first argument to the message.
+         *  @param argument2 the second argument to the message.
+         *  @return the formatted string
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        formatMessage(const std::string     & patternKey,
+                      const Glib::ustring   & argument1,
+                      const Glib::ustring   & argument2)
+                                                throw (std::invalid_argument);
+
+        /**
+         *  A convenience function to format a message, based on a pattern
+         *  loaded from a resource, with three arguments.
+         *  For more information, see the ICU MessageFormat class
+         *  documentation.
+         *
+         *  @param patternKey the key of the pattern to format
+         *  @param argument1 the first argument to the message.
+         *  @param argument2 the second argument to the message.
+         *  @param argument3 the second argument to the message.
+         *  @return the formatted string
+         *  @exception std::invalid_argument if the pattern is bad, or
+         *             the arguments do not match, or there is no resource
+         *             specified by patternKey
+         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         */
+        virtual Ptr<Glib::ustring>::Ref
+        formatMessage(const std::string     & patternKey,
+                      const Glib::ustring   & argument1,
+                      const Glib::ustring   & argument2,
+                      const Glib::ustring   & argument3)
                                                 throw (std::invalid_argument);
 
         /**
@@ -263,6 +350,16 @@ class LocalizedObject
                                                                     throw ();
 
         /**
+         *  Convert a Glib ustring to an ICU unicode string.
+         *
+         *  @param gString the Glib ustring to convert
+         *  @return the same string as supplied, in ICU unicode form.
+         */
+        static Ptr<UnicodeString>::Ref
+        ustringToUnicodeString(const Glib::ustring            & gString)
+                                                                    throw ();
+
+        /**
          *  Get a string from the resource bundle, as a Glib ustring.
          *
          *  @param key the key identifying the requested string.
@@ -278,30 +375,20 @@ class LocalizedObject
         }
 
         /**
-         *  A convenience function to format a message, based on a pattern
-         *  loaded from a resource.
-         *  For more information, see the ICU MessageFormat class
-         *  documentation.
+         *  Get a string from the resource bundle, as a Glib ustring.
          *
-         *  @param patternKey the key of the pattern to format
-         *  @param arguments the arguments to use in the formatting
-         *  @param nArguments the number of arguments supplied
-         *  @return the formatted string, in Glib ustring form
-         *  @exception std::invalid_argument if the pattern is bad, or
-         *             the arguments do not match, or there is no resource
-         *             specified by patternKey
-         *  @see http://oss.software.ibm.com/icu/apiref/classMessageFormat.html
+         *  @param key the key identifying the requested string.
+         *  @return the requested string
+         *  @exception std::invalid_argument if there is no string for the
+         *             specified key.
          */
-        virtual Ptr<Glib::ustring>::Ref
-        formatMessageUstring(const char      * patternKey,
-                             Formattable     * arguments,
-                             unsigned int      nArguments)
+        Ptr<Glib::ustring>::Ref
+        getResourceUstring(const std::string &key)
                                                 throw (std::invalid_argument)
         {
-            return unicodeStringToUstring(formatMessage(patternKey,
-                                                        arguments,
-                                                        nArguments));
+            return unicodeStringToUstring(getResourceString(key.c_str()));
         }
+
 };
 
 /* ================================================= external data structures */

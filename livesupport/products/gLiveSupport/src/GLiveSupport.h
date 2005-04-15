@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,8 +99,8 @@ class MasterPanelWindow;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.24 $
+ *  @author $Author: maroy $
+ *  @version $Revision: 1.25 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -266,6 +266,25 @@ class GLiveSupport : public LocalizedConfigurable,
                                                        std::logic_error);
 
         /**
+         *  A function to check the configuration of this object.
+         *  Checks all resources configured by configure()
+         *
+         *  @retun true if all resources are accessible and working,
+         *         false otherwise
+         */
+        bool
+        checkConfiguration(void)                            throw ();
+
+        /**
+         *  Display a message window.
+         *  This function only returns after the message window is closed.
+         *
+         *  @param message the message to display
+         */
+        void
+        displayMessageWindow(Ptr<Glib::ustring>::Ref    message)    throw ();
+
+        /**
          *  Show the main window, and run the application.
          *  This call will only return after the main window has been closed.
          */
@@ -276,9 +295,12 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Change the language of the application.
          *
          *  @param locale the new locale of the appliction.
+         *  @exception std::invalid_argument if the specified locale is not
+         *             available
          */
         void
-        changeLanguage(Ptr<const std::string>::Ref  locale)     throw ();
+        changeLanguage(Ptr<const std::string>::Ref  locale)
+                                                throw (std::invalid_argument);
 
         /**
          *  Perform authentication for the user of the application.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -352,7 +352,7 @@ WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
 Glib::ustring
 WhiteWindow :: get_title(void) const                        throw ()
 {
-    titleLabel->get_label();
+    return titleLabel->get_label();
 }
 
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,10 +69,33 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A container holding exactly one child, habing a light blue border to it.
+ *  A container holding exactly one child, having a light blue border to it.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  To create a white window, subclass your window class from WhiteWindow,
+ *  and supply appropriate parameters to the WhiteWindow constructor,
+ *  upon construction.
+ *
+ *  For example:
+ *  <code><pre>
+ *  class MyWindow : public WhiteWindow
+ *  {
+ *      MyWindow(void);
+ *      ...
+ *  };
+ *
+ *  MyWindow::MyWindow(void)
+ *       : WhiteWindow("window title",
+ *                     Colors::White,
+ *                     WidgetFactory::getInstance()->getWhiteWindowCorners())
+ *  {
+ *      ...
+ *  }
+ *  </code></pre>
+ *
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.11 $
+ *  @see WidgetFactory
+ *  @see WidgetFactory#getWhiteWindowCorners
  */
 class WhiteWindow : public Gtk::Window
 {
