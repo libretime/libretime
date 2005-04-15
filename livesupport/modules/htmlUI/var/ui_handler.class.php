@@ -146,7 +146,7 @@ class uiHandler extends uiBase {
     function uploadFile(&$formdata, &$mask, $replace=NULL)
     {
         if ($this->test4audioType($formdata['mediafile']['name']) === FALSE) {
-            if (UI_ERROR) $this->_retMsg('$1 is unsupportet file type.', $formdata['mediafile']['name']);
+            if (UI_ERROR) $this->_retMsg('$1 uses an unsupported file type.', $formdata['mediafile']['name']);
             $this->redirUrl = UI_BROWSER."?act=editFile&folderId=".$formdata['folderId'];
             return FALSE;
         }
@@ -186,7 +186,7 @@ class uiHandler extends uiBase {
 
 
     function test4audioType($filename)
-    {        
+    {
         if (array_key_exists(strrchr($filename, "."), $this->config['audiofiles']))
             return TRUE;
         return FALSE;
@@ -292,7 +292,7 @@ class uiHandler extends uiBase {
         foreach ($mData as $key=>$val) {
             $r = $this->_setMDataValue($id, $key, $val, $curr_langid);
             if (PEAR::isError($r)) {
-                $this->_retMsg('Unable to set "$1" to "$2" langue "$3"', $key, $val, $curr_langid);
+                $this->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
         if (UI_VERBOSE) $this->_retMsg('Metadata saved');

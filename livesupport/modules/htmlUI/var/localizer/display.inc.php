@@ -22,15 +22,15 @@ class Display {
 
         if ($file[Id] != _DEFAULT_LANG_) {
 
-        /*
-            if ($onlyUntranslated=='on') {
-                $checker = ' checked';
+            /*
+                if ($onlyUntranslated=='on') {
+                    $checker = ' checked';
+                }
+            */
+            if (!$file['sourceId']) {
+                $file['sourceId'] = _DEFAULT_LANG_;
             }
-        */
-        if (!$file['sourceId']) {
-            $file['sourceId'] = _DEFAULT_LANG_;
         }
-
 
         $s = Data::convArr2GS($source);
         $t = Data::convArr2GS($target);
@@ -118,8 +118,7 @@ class Display {
                     <input type="submit" name="onlyUntranslated" Value="'.getGS('show only untranslated').'">
                    </td>
                   </tr>';
-        }
-        
+
         $html .= '<tr><td colspan="2"><hr></td></tr>
                   <tr>
                     <td>

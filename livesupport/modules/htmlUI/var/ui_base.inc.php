@@ -148,7 +148,8 @@ class uiBase
                 $this->STATIONPREFS['stationMaxfilesize'] = strtr(ini_get('upload_max_filesize'), array('M'=>'000000', 'k'=>'000'));
 
             if ($miss && $this->gb->getSessLogin($this->sessid)) {
-                $this->_retMsg('Note: Station Preferences not setup proberly.');
+                if (UI_WARNING) $this->_retMsg('Note: Station Preferences not setup proberly.');
+                $this->redirUrl = UI_BROWSER.'?popup[]=_2changeStationPrefs&popup[]=_close';
             }
 
         }

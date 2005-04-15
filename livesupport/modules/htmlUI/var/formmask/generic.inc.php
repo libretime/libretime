@@ -79,7 +79,8 @@ $ui_fmask = array(
                             5   => 5,
                             10  => 10,
                             25  => 25
-                           )
+                           ),
+            'required'  => TRUE
         ),
         array(
             'element'   => 'stationMaxfilesize',

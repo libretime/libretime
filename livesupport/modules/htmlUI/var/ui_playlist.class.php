@@ -422,7 +422,7 @@ class uiPlaylist
             $r = $this->Base->gb->setMDataValue($id, $key, $this->Base->sessid, $val, $curr_langid);
             if (PEAR::isError($r)) {
                 #print_r($r);
-                $this->Base->_retMsg('Unable to set "$1" to "$2" langue "$3"', $key, $val);
+                $this->Base->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
         if (UI_VERBOSE) $this->Base->_retMsg('Metadata saved');
