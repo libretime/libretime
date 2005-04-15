@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,11 +71,24 @@ using namespace LiveSupport::Core;
 /**
  *  A window, enabling interactive testing of UI components.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.9 $
  */
 class TestWindow : public WhiteWindow
 {
+    private:
+        /**
+         *  Change the image from "play" to "stop" on the button when pressed.
+         */
+        void
+        onPlayButtonPressed(void)                           throw ();
+    
+        /**
+         *  Change the image from "stop" to "play" on the button when pressed.
+         */
+        void
+        onStopButtonPressed(void)                           throw ();
+    
     protected:
         /**
          *  The layout used in the window.
@@ -88,9 +101,19 @@ class TestWindow : public WhiteWindow
         Notebook                  * notebook;
 
         /**
-         *  An image button.
+         *  An image button with transparent background.
          */
-        ImageButton               * imageButton;
+        ImageButton               * hugeImageButton;
+
+        /**
+         *  A clickable image button showing a "play" icon.
+         */
+        ImageButton               * cuePlayImageButton;
+
+        /**
+         *  A clickable image button showing a "stop" icon.
+         */
+        ImageButton               * cueStopImageButton;
 
         /**
          *  A button.

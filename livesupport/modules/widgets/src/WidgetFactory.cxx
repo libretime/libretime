@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.14 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -149,6 +149,30 @@ static const std::string    hugePlayButtonPassiveName
  */
 static const std::string    hugePlayButtonRollName 
                             = "imageButton/hugePlayRoll.png";
+
+/**
+ *  The name of the passive image for the cue play button.
+ */
+static const std::string    cuePlayButtonPassiveName 
+                            = "imageButton/cuePlay.png";
+
+/**
+ *  The name of the rollover image for the cue play button.
+ */
+static const std::string    cuePlayButtonRollName 
+                            = "imageButton/cuePlayRoll.png";
+
+/**
+ *  The name of the passive image for the cue stop button.
+ */
+static const std::string    cueStopButtonPassiveName 
+                            = "imageButton/cueStop.png";
+
+/**
+ *  The name of the rollover image for the cue stop button.
+ */
+static const std::string    cueStopButtonRollName 
+                            = "imageButton/cueStopRoll.png";
 
 /**
  *  The name of the combo box left image.
@@ -348,6 +372,16 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
         case hugePlayButton:
             passiveImage = loadImage(hugePlayButtonPassiveName);
             rollImage    = loadImage(hugePlayButtonRollName);
+            break;
+
+        case cuePlayButton:
+            passiveImage = loadImage(cuePlayButtonPassiveName);
+            rollImage    = loadImage(cuePlayButtonRollName);
+            break;
+
+        case cueStopButton:
+            passiveImage = loadImage(cueStopButtonPassiveName);
+            rollImage    = loadImage(cueStopButtonRollName);
             break;
 
         default:

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.14 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,16 +57,24 @@ using namespace LiveSupport::Widgets;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 TestWindow :: TestWindow (void)
-                                                                    throw ()
+                                                                throw ()
           : WhiteWindow("test window",
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners())
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
-    // init the imageButton
-    imageButton = Gtk::manage(
+    // init the imageButtons
+    hugeImageButton = Gtk::manage(
                     widgetFactory->createButton(WidgetFactory::hugePlayButton));
+    cuePlayImageButton = Gtk::manage(
+                    widgetFactory->createButton(WidgetFactory::cuePlayButton));
+    cuePlayImageButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                            &TestWindow::onPlayButtonPressed));
+    cueStopImageButton = Gtk::manage(
+                    widgetFactory->createButton(WidgetFactory::cueStopButton));
+    cueStopImageButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                            &TestWindow::onStopButtonPressed));
 
     // create a button
     button = Gtk::manage(widgetFactory->createButton("Hello, World!"));
@@ -93,19 +101,42 @@ TestWindow :: TestWindow (void)
 
     // create and set up the layout
     layout = Gtk::manage(new Gtk::Table());
-    layout->attach(*imageButton,    0, 1, 0, 1);
-    layout->attach(*notebook,       0, 1, 1, 2);
+    layout->attach(*hugeImageButton,    0, 1, 0, 1);
+    layout->attach(*cuePlayImageButton, 1, 2, 0, 1);
+    layout->attach(*notebook,           0, 2, 1, 2);
     blueBin->add(*layout);
     add(*blueBin);
     show_all();
+    layout->attach(*cueStopImageButton, 1, 2, 0, 1);
 }
 
 
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-TestWindow :: ~TestWindow (void)                                    throw ()
+TestWindow :: ~TestWindow (void)                                throw ()
 {
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Change the image from "play" to "stop" on the button when pressed.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onPlayButtonPressed(void)                         throw ()
+{
+    cuePlayImageButton->hide();
+    cueStopImageButton->show();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Change the image from "stop" to "play" on the button when pressed.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onStopButtonPressed(void)                         throw ()
+{
+    cueStopImageButton->hide();
+    cuePlayImageButton->show();
+}
 
