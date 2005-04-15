@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
+	<status />
 	<Id>de_DE</Id>
 	<item>
-		<key>$1 must be $2</key>
-		<value>$1 muss $2 sein</value>
+		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
+		<value />
+	</item>
+	<item>
+		<key>$1 uses an unsupported file type.</key>
+		<value />
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
@@ -191,10 +196,6 @@
 	</item>
 	<item>
 		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
-		<value />
-	</item>
-	<item>
-		<key>Upload of file $1 was incomplete.</key>
 		<value />
 	</item>
 	<item>

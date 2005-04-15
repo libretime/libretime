@@ -30,7 +30,7 @@ switch ($_REQUEST[action]) {
             loadLanguageFiles('..', 'globals');             // maybee localizers expressions are changed->reload
             loadLanguageFiles('', 'locals');
         }
-                  
+
         $source = $data->readTransXML2Arr($file, _DEFAULT_LANG_);
         $target = $data->readTransXML2Arr($file, $_REQUEST['Id']);
 

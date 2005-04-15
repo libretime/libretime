@@ -335,9 +335,9 @@ class Data {
     {
         $files = File_Find::mapTreeMultiple($file[dir], 1);
         foreach($files as $key=>$filename) {
-            if (preg_match("/$file[base]\.[^.]*\.[^.]*\.xml/", $filename)) {
+            if (preg_match("/$file[base]\.[a-z]{2}_[^.]*\.xml/", $filename)) {
                 list($lost, $code, $name, $lost) = explode('.', $filename);
-                $langIds[] = $code.'.'.$name;
+                $langIds[] = $code;
             }
         }
 

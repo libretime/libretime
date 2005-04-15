@@ -3,6 +3,10 @@
 	<status />
 	<Id>en_GB</Id>
 	<item>
+		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
+		<value />
+	</item>
+	<item>
 		<key>$1 uses an unsupported file type.</key>
 		<value />
 	</item>
@@ -193,10 +197,6 @@
 	<item>
 		<key>Unable to revert to locked state.</key>
 		<value>Unable to revert to locked state.</value>
-	</item>
-	<item>
-		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
-		<value>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;.</value>
 	</item>
 	<item>
 		<key>Upload of file $1 was incomplete.</key>

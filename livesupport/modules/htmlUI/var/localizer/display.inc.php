@@ -269,7 +269,7 @@ class Display {
         $space = 2;
 
         $structure = File_Find::mapTreeMultiple($dirname);
-        ksort($structure, SORT_STRING);
+        arsort($structure, SORT_STRING);
         #print_r($structure);
 
         if ($depth == 0) {
