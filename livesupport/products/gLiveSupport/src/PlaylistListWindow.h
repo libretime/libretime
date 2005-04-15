@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class PlaylistListWindow : public Gtk::Window, public LocalizedObject
 {
@@ -120,7 +120,7 @@ class PlaylistListWindow : public Gtk::Window, public LocalizedObject
          *  Lists one playlist per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.4 $
+         *  @version $Revision: 1.5 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -171,36 +171,36 @@ class PlaylistListWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The main container in the window.
          */
-        Gtk::VBox                   mainBox;
+        Gtk::VBox                 * mainBox;
 
         /**
          *  The container holding the two boxes for playlist viewing:
          *  one lists the playlist, the other the details of the selected
          *  playlist.
          */
-        Gtk::HBox                   playlistBox;
+        Gtk::HBox                 * playlistBox;
 
         /**
          *  The container holding the playlist list tree view and accompanying
          *  label.
          */
-        Gtk::VBox                   listBox;
+        Gtk::VBox                 * listBox;
 
         /**
          *  The label for listBox.
          */
-        Gtk::Label                  listBoxLabel;
+        Gtk::Label                * listBoxLabel;
 
         /**
          *  A scrolled window holding the list of playlists
          *  so that the list can be scrolled.
          */
-        Gtk::ScrolledWindow         listScrolledWindow;
+        Gtk::ScrolledWindow       * listScrolledWindow;
 
         /**
          *  A tree view, showing rows only, the list of playlists.
          */
-        Gtk::TreeView               listTreeView;
+        Gtk::TreeView             * listTreeView;
 
         /**
          *  The tree model, as a GTK reference, holding the list of
@@ -224,24 +224,24 @@ class PlaylistListWindow : public Gtk::Window, public LocalizedObject
          *  The container holding the playlist detail tree view and accompanying
          *  label.
          */
-        Gtk::VBox                   detailBox;
+        Gtk::VBox                 * detailBox;
 
         /**
          *  The label for detailBox.
          */
-        Gtk::Label                  detailBoxLabel;
+        Gtk::Label                * detailBoxLabel;
 
         /**
          *  A scrolled window holding the details of a playlist
          *  so that the details can be scrolled.
          */
-        Gtk::ScrolledWindow         detailScrolledWindow;
+        Gtk::ScrolledWindow       * detailScrolledWindow;
 
         /**
          *  A tree view, showing rows only, the details of the selected
          *  playlist.
          */
-        Gtk::TreeView               detailTreeView;
+        Gtk::TreeView             * detailTreeView;
 
         /**
          *  The tree model, as a GTK reference, holding the details of a
@@ -252,12 +252,12 @@ class PlaylistListWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The box containing the close button.
          */
-        Gtk::HButtonBox             buttonBox;
+        Gtk::HButtonBox           * buttonBox;
 
         /**
          *  The close button.
          */
-        Ptr<Gtk::Button>::Ref       closeButton;
+        Gtk::Button               * closeButton;
 
         /**
          *  Signal to catch the event of the user selecting a row

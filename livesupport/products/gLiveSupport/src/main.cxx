@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/main.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -132,21 +132,21 @@ int main (  int     argc,
 
             case 'h':
                 printUsage(argv[0], std::cout);
-                exit(EXIT_SUCCESS);
+                return 0;
 
             case 'v':
                 printVersion(std::cout);
-                exit(EXIT_SUCCESS);
+                return 0;
 
             default:
                 printUsage(argv[0], std::cout);
-                exit(EXIT_FAILURE);
+                return 1;
         }
     }
 
     if (optind != argc) {
         printUsage(argv[0], std::cout);
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     std::cerr << "using config file '" << configFileName << '\'' << std::endl;
@@ -162,16 +162,16 @@ int main (  int     argc,
     } catch (std::invalid_argument &e) {
         std::cerr << "semantic error in configuration file" << std::endl
                   << e.what() << std::endl;
-        exit(EXIT_FAILURE);
+        return 1;
     } catch (xmlpp::exception &e) {
         std::cerr << "error parsing configuration file" << std::endl
                   << e.what() << std::endl;
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
     gLiveSupport->show();
 
-    exit(EXIT_SUCCESS);
+    return 0;
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,7 @@ using namespace LiveSupport::Core;
  *  This widget handles login and login info display.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class MasterPanelUserInfoWidget : public Gtk::Table,
                                   public LocalizedObject
@@ -79,6 +79,11 @@ class MasterPanelUserInfoWidget : public Gtk::Table,
          */
         Widgets::Button           * logInOutButton;
 
+        /**
+         *  The close application button.
+         */
+        Widgets::ImageButton      * closeButton;
+        
         /**
          *  A label to display the currently logged in user.
          */
@@ -117,6 +122,12 @@ class MasterPanelUserInfoWidget : public Gtk::Table,
          */
         virtual void
         onLogoutButtonClicked(void)                         throw ();
+
+        /**
+         *  Signal handler for the close button clicked.
+         */
+        virtual void
+        onCloseButtonClicked(void)                          throw ();
 
         /**
          *  Update the strings in the widget, including the localized strings.

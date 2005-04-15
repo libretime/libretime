@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,23 +72,25 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
 
     try {
         set_title(*getResourceUstring("windowTitle"));
-        hourLabel.reset(new Gtk::Label(*getResourceUstring("hourLabel")));
-        minuteLabel.reset(new Gtk::Label(*getResourceUstring("minuteLabel")));
-        scheduleButton.reset(new Gtk::Button(
+        hourLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
+                                                                "hourLabel")));
+        minuteLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
+                                                            "minuteLabel")));
+        scheduleButton = Gtk::manage(new Gtk::Button(
                                   *getResourceUstring("scheduleButtonLabel")));
-        closeButton.reset(new Gtk::Button(
+        closeButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
 
-    playlistLabel.reset(new Gtk::Label(*playlist->getTitle()));
-    calendar.reset(new Gtk::Calendar());
-    hourEntry.reset(new Gtk::Entry());
-    minuteEntry.reset(new Gtk::Entry());
+    playlistLabel = Gtk::manage(new Gtk::Label(*playlist->getTitle()));
+    calendar      = Gtk::manage(new Gtk::Calendar());
+    hourEntry     = Gtk::manage(new Gtk::Entry());
+    minuteEntry   = Gtk::manage(new Gtk::Entry());
 
 
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
 
     layout->attach(*playlistLabel,  0, 4, 0, 1);
     layout->attach(*calendar,       0, 4, 1, 2);

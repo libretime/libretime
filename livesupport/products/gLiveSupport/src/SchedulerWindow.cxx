@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,19 +69,19 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     try {
         set_title(*getResourceUstring("windowTitle"));
-        closeButton.reset(new Gtk::Button(
+        closeButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
 
-    calendar.reset(new Gtk::Calendar());
-    dateLabel.reset(new Gtk::Label());
+    calendar  = Gtk::manage(new Gtk::Calendar());
+    dateLabel = Gtk::manage(new Gtk::Label());
 
     // create the tree view for the entries
     entryColumns.reset(new ModelColumns());
     entriesModel = Gtk::ListStore::create(*entryColumns);
-    entriesView.reset(new Gtk::TreeView());
+    entriesView  = Gtk::manage(new Gtk::TreeView());
     entriesView->set_model(entriesModel);
 
     // Add the TreeView's view columns:
@@ -101,7 +101,7 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                             &SchedulerWindow::onEntryClicked));
 
     // create the right-click entry context menu for audio clips
-    entryMenu.reset(new Gtk::Menu());
+    entryMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& menuList = entryMenu->items();
     // register the signal handlers for the popup menu
     menuList.push_back(Gtk::Menu_Helpers::MenuElem(
@@ -110,7 +110,7 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                             &SchedulerWindow::onDeleteItem)));
     entryMenu->accelerate(*this);
 
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
 
     layout->attach(*calendar,       0, 1, 0, 1);
     layout->attach(*dateLabel,      0, 1, 1, 2);

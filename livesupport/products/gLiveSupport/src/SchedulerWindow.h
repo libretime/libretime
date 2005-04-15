@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SchedulerWindow : public Gtk::Window, public LocalizedObject
 {
@@ -100,7 +100,7 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
          *  Lists one scheduled item per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -151,17 +151,17 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The main container in the window.
          */
-        Ptr<Gtk::Table>::Ref        layout;
+        Gtk::Table                * layout;
 
         /**
          *  The calendar to select a specific date from.
          */
-        Ptr<Gtk::Calendar>::Ref     calendar;
+        Gtk::Calendar             * calendar;
 
         /**
          *  The label saying which day is being displayed.
          */
-        Ptr<Gtk::Label>::Ref        dateLabel;
+        Gtk::Label                * dateLabel;
 
         /**
          *  The column model.
@@ -172,7 +172,7 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
          *  The tree view, now only showing rows, each scheduled entry for a
          *  specific day.
          */
-        Ptr<Gtk::TreeView>::Ref         entriesView;
+        Gtk::TreeView                 * entriesView;
 
         /**
          *  The tree model, as a GTK reference.
@@ -182,12 +182,12 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The right-click context menu for schedule entries.
          */
-        Ptr<Gtk::Menu>::Ref             entryMenu;
+        Gtk::Menu                     * entryMenu;
 
         /**
          *  The close button.
          */
-        Ptr<Gtk::Button>::Ref           closeButton;
+        Gtk::Button                   * closeButton;
 
         /**
          *  Signal handler for when a date is selected in the calendar.

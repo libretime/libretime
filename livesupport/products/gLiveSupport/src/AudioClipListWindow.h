@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A window, showing and handling audio clips.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class AudioClipListWindow : public Gtk::Window, public LocalizedObject
 {
@@ -79,7 +79,7 @@ class AudioClipListWindow : public Gtk::Window, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.3 $
+         *  @version $Revision: 1.4 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -130,17 +130,17 @@ class AudioClipListWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The main container in the window.
          */
-        Gtk::VBox                   vBox;
+        Gtk::VBox                 * vBox;
 
         /**
          *  A scrolled window, so that the list can be scrolled.
          */
-        Gtk::ScrolledWindow         scrolledWindow;
+        Gtk::ScrolledWindow       * scrolledWindow;
 
         /**
          *  The tree view, now only showing rows.
          */
-        Gtk::TreeView               treeView;
+        Gtk::TreeView             * treeView;
 
         /**
          *  The tree model, as a GTK reference.
@@ -150,12 +150,12 @@ class AudioClipListWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The box containing the close button.
          */
-        Gtk::HButtonBox             buttonBox;
+        Gtk::HButtonBox           * buttonBox;
 
         /**
          *  The close button.
          */
-        Ptr<Gtk::Button>::Ref       closeButton;
+        Gtk::Button               * closeButton;
 
         /**
          *  Signal handler for the close button clicked.

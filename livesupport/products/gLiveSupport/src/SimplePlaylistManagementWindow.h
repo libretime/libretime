@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,7 +83,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SimplePlaylistManagementWindow : public Gtk::Window,
                                        public LocalizedObject
@@ -96,7 +96,7 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: maroy $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {
@@ -147,27 +147,27 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
         /**
          *  The layout used in the window.
          */
-        Ptr<Gtk::Table>::Ref        layout;
+        Gtk::Table                * layout;
 
         /**
          *  The label for the name entry.
          */
-        Ptr<Gtk::Label>::Ref        nameLabel;
+        Gtk::Label                * nameLabel;
 
         /**
          *  The test input entry for the name of the playlist.
          */
-        Ptr<Gtk::Entry>::Ref        nameEntry;
+        Gtk::Entry                * nameEntry;
 
         /**
          *  A scrolled window, so that the entry list can be scrolled.
          */
-        Ptr<Gtk::ScrolledWindow>::Ref       entriesScrolledWindow;
+        Gtk::ScrolledWindow           * entriesScrolledWindow;
 
         /**
          *  The entry tree view, now only showing rows.
          */
-        Ptr<Gtk::TreeView>::Ref             entriesView;
+        Gtk::TreeView                 * entriesView;
 
         /**
          *  The entry tree model, as a GTK reference.
@@ -177,17 +177,17 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
         /**
          *  The save button.
          */
-        Ptr<Gtk::Button>::Ref       saveButton;
+        Gtk::Button               * saveButton;
 
         /**
          *  The close button.
          */
-        Ptr<Gtk::Button>::Ref       closeButton;
+        Gtk::Button               * closeButton;
 
         /**
          *  The status bar.
          */
-        Ptr<Gtk::Label>::Ref        statusBar;
+        Gtk::Label                * statusBar;
 
         /**
          *  Signal handler for the save button clicked.

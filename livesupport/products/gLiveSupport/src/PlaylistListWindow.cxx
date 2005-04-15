@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,13 +70,25 @@ PlaylistListWindow :: PlaylistListWindow (
     // get localized resources
     try {
         set_title(*getResourceUstring("windowTitle"));
-        listBoxLabel.set_text(*getResourceUstring("listBoxLabel"));
-        detailBoxLabel.set_text(*getResourceUstring("detailBoxLabel"));
-        closeButton.reset(new Gtk::Button(
+        listBoxLabel = Gtk::manage(new Gtk::Label(
+                                        *getResourceUstring("listBoxLabel")));
+        detailBoxLabel = Gtk::manage(new Gtk::Label(
+                                      *getResourceUstring("detailBoxLabel")));
+        closeButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
+
+    mainBox              = Gtk::manage(new Gtk::VBox());
+    playlistBox          = Gtk::manage(new Gtk::HBox());
+    listBox              = Gtk::manage(new Gtk::VBox());
+    listScrolledWindow   = Gtk::manage(new Gtk::ScrolledWindow());
+    listTreeView         = Gtk::manage(new Gtk::TreeView());
+    detailBox            = Gtk::manage(new Gtk::VBox());
+    detailScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
+    detailTreeView       = Gtk::manage(new Gtk::TreeView());
+    buttonBox            = Gtk::manage(new Gtk::HButtonBox());
 
     // set up the close button
     closeButton->set_name("closeButton");
@@ -91,33 +103,33 @@ PlaylistListWindow :: PlaylistListWindow (
     set_default_size(400, 200);
 
     // set up the main box
-    add(mainBox);
-    mainBox.pack_start(playlistBox);
-    mainBox.pack_start(buttonBox, PACK_SHRINK);
+    add(*mainBox);
+    mainBox->pack_start(*playlistBox);
+    mainBox->pack_start(*buttonBox, PACK_SHRINK);
 
     // set up the playlist box
-    playlistBox.pack_start(listBox, PACK_EXPAND_WIDGET, 5);
-    playlistBox.pack_start(detailBox, PACK_EXPAND_WIDGET, 5);
+    playlistBox->pack_start(*listBox, PACK_EXPAND_WIDGET, 5);
+    playlistBox->pack_start(*detailBox, PACK_EXPAND_WIDGET, 5);
 
     // set up the listBox
-    listBox.pack_start(listBoxLabel, PACK_SHRINK);
-    listBox.pack_start(listScrolledWindow);
+    listBox->pack_start(*listBoxLabel, PACK_SHRINK);
+    listBox->pack_start(*listScrolledWindow);
 
     // set up the listScrolledWindow
-    listScrolledWindow.add(listTreeView);
-    listScrolledWindow.set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC);
+    listScrolledWindow->add(*listTreeView);
+    listScrolledWindow->set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC);
 
     // create the list tree view, and add its columns
     listTreeModel = ListStore::create(modelColumns);
-    listTreeView.set_model(listTreeModel);
+    listTreeView->set_model(listTreeModel);
     try {
-        listTreeView.append_column(*getResourceUstring("idColumnLabel"),
+        listTreeView->append_column(*getResourceUstring("idColumnLabel"),
                                     modelColumns.idColumn);
-        listTreeView.append_column(*getResourceUstring("lengthColumnLabel"),
+        listTreeView->append_column(*getResourceUstring("lengthColumnLabel"),
                                     modelColumns.lengthColumn);
-        listTreeView.append_column(*getResourceUstring("uriColumnLabel"),
+        listTreeView->append_column(*getResourceUstring("uriColumnLabel"),
                                     modelColumns.uriColumn);
-        listTreeView.append_column(*getResourceUstring("tokenColumnLabel"),
+        listTreeView->append_column(*getResourceUstring("tokenColumnLabel"),
                                    modelColumns.tokenColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -125,29 +137,29 @@ PlaylistListWindow :: PlaylistListWindow (
 
     // attach the event handler for the user selecting a playlist from
     // the list of playlists
-    listTreeSelection = listTreeView.get_selection();
+    listTreeSelection = listTreeView->get_selection();
     listTreeSelection->signal_changed().connect(
             sigc::mem_fun(*this, &PlaylistListWindow::onPlaylistListSelection));
 
     // set up the detailBox
-    detailBox.pack_start(detailBoxLabel, PACK_SHRINK);
-    detailBox.pack_start(detailScrolledWindow);
+    detailBox->pack_start(*detailBoxLabel, PACK_SHRINK);
+    detailBox->pack_start(*detailScrolledWindow);
 
     // set up the detailed scroll window
-    detailScrolledWindow.add(detailTreeView);
-    detailScrolledWindow.set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC);
+    detailScrolledWindow->add(*detailTreeView);
+    detailScrolledWindow->set_policy(POLICY_AUTOMATIC, POLICY_AUTOMATIC);
 
     // create the detail tree view, and add its columns
     detailTreeModel = ListStore::create(modelColumns);
-    detailTreeView.set_model(detailTreeModel);
+    detailTreeView->set_model(detailTreeModel);
     try {
-        detailTreeView.append_column(*getResourceUstring("idColumnLabel"),
-                                     modelColumns.idColumn);
-        detailTreeView.append_column(*getResourceUstring("lengthColumnLabel"),
-                                     modelColumns.lengthColumn);
-        detailTreeView.append_column(*getResourceUstring("uriColumnLabel"),
-                                     modelColumns.uriColumn);
-        detailTreeView.append_column(*getResourceUstring("tokenColumnLabel"),
+        detailTreeView->append_column(*getResourceUstring("idColumnLabel"),
+                                      modelColumns.idColumn);
+        detailTreeView->append_column(*getResourceUstring("lengthColumnLabel"),
+                                      modelColumns.lengthColumn);
+        detailTreeView->append_column(*getResourceUstring("uriColumnLabel"),
+                                      modelColumns.uriColumn);
+        detailTreeView->append_column(*getResourceUstring("tokenColumnLabel"),
                                       modelColumns.tokenColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -155,14 +167,14 @@ PlaylistListWindow :: PlaylistListWindow (
 
     // attach the event handler for the user selecting an entry from
     // the list of playlist details
-    detailTreeSelection = detailTreeView.get_selection();
+    detailTreeSelection = detailTreeView->get_selection();
     detailTreeSelection->signal_changed().connect(
                 sigc::mem_fun(*this, &PlaylistListWindow::onDetailSelection));
 
     // set up the button box
-    buttonBox.pack_start(*closeButton, PACK_SHRINK);
-    buttonBox.set_border_width(5);
-    buttonBox.set_layout(BUTTONBOX_END);
+    buttonBox->pack_start(*closeButton, PACK_SHRINK);
+    buttonBox->set_border_width(5);
+    buttonBox->set_layout(BUTTONBOX_END);
 
     showAllPlaylists();
 

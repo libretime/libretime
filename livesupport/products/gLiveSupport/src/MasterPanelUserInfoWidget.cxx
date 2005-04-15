@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,11 +69,16 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
     this->gLiveSupport = gLiveSupport;
     loggedIn           = false;
 
-    logInOutButton = Gtk::manage(
-                            WidgetFactory::getInstance()->createButton(""));
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+
+    logInOutButton = Gtk::manage(wf->createButton(""));
     logInOutSignalConnection =
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));
+
+    closeButton = Gtk::manage(wf->createButton(WidgetFactory::deleteButton));
+    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelUserInfoWidget::onCloseButtonClicked));
 
     userInfoLabel = Gtk::manage(new Gtk::Label());
 
@@ -86,7 +91,10 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
     attach(*userInfoLabel,     1, 2, 0, 1,
            Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
            5, 0);
-    
+    attach(*closeButton,       2, 3, 0, 1,
+           Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+           5, 0);
+
     // show everything
     show_all();
 }
@@ -131,6 +139,11 @@ MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLoginButtonClicked));
 
+    // add the close button
+    attach(*closeButton,       2, 3, 0, 1,
+           Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+           5, 0);
+
     // show only the anonymous UI
     gLiveSupport->showAnonymousUI();
 }
@@ -171,12 +184,18 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
                 logInOutButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelUserInfoWidget::onLogoutButtonClicked));
 
+        // update the UI to the possibly selected locale
         Ptr<const std::string>::Ref   locale = loginWindow->getSelectedLocale();
         if (locale->size() > 0) {
             gLiveSupport->changeLanguage(locale);
         } else {
             // TODO: get and set default locale for user
         }
+
+        // remove the close button
+        remove(*closeButton);
+
+        // show the logged in UI
         gLiveSupport->showLoggedInUI();
     }
 }
@@ -219,4 +238,18 @@ MasterPanelUserInfoWidget :: updateStrings(void)
     logInOutButton->set_label(*loginButtonLabel);
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the close button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelUserInfoWidget :: onCloseButtonClicked (void)            throw ()
+{
+    // get the topmost container, should be the application window itself
+    Gtk::Container    * container = get_parent();
+    while (container->get_parent()) {
+        container = container->get_parent();
+    }
+    container->hide();
+}
 

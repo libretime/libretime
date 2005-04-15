@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ using namespace LiveSupport::Core;
  *  </pre></code>
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SchedulePlaylistWindow : public Gtk::Window, public LocalizedObject
 {
@@ -104,47 +104,47 @@ class SchedulePlaylistWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The main container in the window.
          */
-        Ptr<Gtk::Table>::Ref        layout;
+        Gtk::Table                * layout;
 
         /**
          *  The label displaying the name of the playlist to schedule.
          */
-        Ptr<Gtk::Label>::Ref        playlistLabel;
+        Gtk::Label                * playlistLabel;
 
         /**
          *  The calendar to select a specific date from.
          */
-        Ptr<Gtk::Calendar>::Ref     calendar;
+        Gtk::Calendar             * calendar;
 
         /**
          *  The hour label.
          */
-        Ptr<Gtk::Label>::Ref        hourLabel;
+        Gtk::Label                * hourLabel;
 
         /**
          *  The entry field for hour.
          */
-        Ptr<Gtk::Entry>::Ref        hourEntry;
+        Gtk::Entry                * hourEntry;
 
         /**
          *  The minute label.
          */
-        Ptr<Gtk::Label>::Ref        minuteLabel;
+        Gtk::Label                * minuteLabel;
 
         /**
          *  The minute entry field.
          */
-        Ptr<Gtk::Entry>::Ref        minuteEntry;
+        Gtk::Entry                * minuteEntry;
 
         /**
          *  The schedule button.
          */
-        Ptr<Gtk::Button>::Ref       scheduleButton;
+        Gtk::Button               * scheduleButton;
 
         /**
          *  The close button.
          */
-        Ptr<Gtk::Button>::Ref       closeButton;
+        Gtk::Button               * closeButton;
 
         /**
          *  Signal handler for the schedule button clicked.

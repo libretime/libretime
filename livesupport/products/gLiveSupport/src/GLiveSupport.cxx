@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -232,6 +232,8 @@ GLiveSupport :: show(void)                              throw ()
 
     // Shows the window and returns when it is closed.
     Gtk::Main::run(*masterPanel);
+
+    masterPanel.reset();
 }
 
 

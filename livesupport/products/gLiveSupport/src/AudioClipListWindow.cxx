@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/AudioClipListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,11 +68,16 @@ AudioClipListWindow :: AudioClipListWindow (
 
     try {
         set_title(*getResourceUstring("windowTitle"));
-        closeButton.reset(new Gtk::Button(
+        closeButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
+
+    vBox           = Gtk::manage(new Gtk::VBox());
+    scrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
+    treeView       = Gtk::manage(new Gtk::TreeView());
+    buttonBox      = Gtk::manage(new Gtk::HButtonBox());
 
     // set up the close button
     closeButton->set_name("closeButton");
@@ -86,35 +91,35 @@ AudioClipListWindow :: AudioClipListWindow (
     set_border_width(5);
     set_default_size(400, 200);
 
-    add(vBox);
+    add(*vBox);
 
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
-    scrolledWindow.add(treeView);
+    scrolledWindow->add(*treeView);
 
     // Only show the scrollbars when they are necessary:
-    scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-    vBox.pack_start(scrolledWindow);
-    vBox.pack_start(buttonBox, Gtk::PACK_SHRINK);
+    vBox->pack_start(*scrolledWindow);
+    vBox->pack_start(*buttonBox, Gtk::PACK_SHRINK);
 
-    buttonBox.pack_start(*closeButton, Gtk::PACK_SHRINK);
-    buttonBox.set_border_width(5);
-    buttonBox.set_layout(Gtk::BUTTONBOX_END);
+    buttonBox->pack_start(*closeButton, Gtk::PACK_SHRINK);
+    buttonBox->set_border_width(5);
+    buttonBox->set_layout(Gtk::BUTTONBOX_END);
 
     // Create the Tree model:
     treeModel = Gtk::ListStore::create(modelColumns);
-    treeView.set_model(treeModel);
+    treeView->set_model(treeModel);
 
     // Add the TreeView's view columns:
     try {
-        treeView.append_column(*getResourceUstring("idColumnLabel"),
-                               modelColumns.idColumn);
-        treeView.append_column(*getResourceUstring("lengthColumnLabel"),
-                               modelColumns.lengthColumn);
-        treeView.append_column(*getResourceUstring("uriColumnLabel"),
-                               modelColumns.uriColumn);
-        treeView.append_column(*getResourceUstring("tokenColumnLabel"),
-                               modelColumns.tokenColumn);
+        treeView->append_column(*getResourceUstring("idColumnLabel"),
+                                modelColumns.idColumn);
+        treeView->append_column(*getResourceUstring("lengthColumnLabel"),
+                                modelColumns.lengthColumn);
+        treeView->append_column(*getResourceUstring("uriColumnLabel"),
+                                modelColumns.uriColumn);
+        treeView->append_column(*getResourceUstring("tokenColumnLabel"),
+                                modelColumns.tokenColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }

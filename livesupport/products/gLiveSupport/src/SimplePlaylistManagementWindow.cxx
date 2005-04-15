@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,18 +68,19 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     try {
         set_title(*getResourceUstring("windowTitle"));
-        nameLabel.reset(new Gtk::Label(*getResourceUstring("nameLabel")));
-        saveButton.reset(new Gtk::Button(
+        nameLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
+                                                                "nameLabel")));
+        saveButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("saveButtonLabel")));
-        closeButton.reset(new Gtk::Button(
+        closeButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
 
-    nameEntry.reset(new Gtk::Entry());
-    entriesScrolledWindow.reset(new Gtk::ScrolledWindow());
-    entriesView.reset(new Gtk::TreeView());
+    nameEntry             = Gtk::manage(new Gtk::Entry());
+    entriesScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
+    entriesView           = Gtk::manage(new Gtk::TreeView());
 
     // set up the entry scrolled window, with the entry treeview inside.
     entriesScrolledWindow->add(*entriesView);
@@ -102,10 +103,10 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
         std::cerr << e.what() << std::endl;
     }
 
-    statusBar.reset(new Gtk::Label(*getResourceUstring("statusBar")));
+    statusBar = Gtk::manage(new Gtk::Label(*getResourceUstring("statusBar")));
 
     // set up the layout
-    layout.reset(new Gtk::Table());
+    layout = Gtk::manage(new Gtk::Table());
 
     set_border_width(10);
     layout->attach(*nameLabel,              0, 1, 0, 1);
