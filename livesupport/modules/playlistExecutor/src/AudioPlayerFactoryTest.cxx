@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/AudioPlayerFactoryTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -161,7 +161,13 @@ AudioPlayerFactoryTest :: simplePlayTest(void)
     audioPlayer->start();
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
     
-    sleepT.reset(new time_duration(seconds(8)));
+    sleepT.reset(new time_duration(seconds(5)));
+    TimeConversion::sleep(sleepT);
+    audioPlayer->pause();
+    sleepT.reset(new time_duration(seconds(1)));
+    TimeConversion::sleep(sleepT);
+    audioPlayer->start();
+    sleepT.reset(new time_duration(seconds(2)));
     TimeConversion::sleep(sleepT);
     audioPlayer->pause();
     sleepT.reset(new time_duration(seconds(1)));
