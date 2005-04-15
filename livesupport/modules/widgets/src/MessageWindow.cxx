@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/MessageWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,8 @@ MessageWindow :: MessageWindow (Ptr<Glib::ustring>::Ref message)
                                                                     throw ()
           : WhiteWindow(*message,
                         Colors::White,
-                        WidgetFactory::getInstance()->getWhiteWindowCorners())
+                        WidgetFactory::getInstance()->getWhiteWindowCorners(),
+                        false)
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
