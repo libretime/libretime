@@ -36,7 +36,7 @@
                             <td {include file="playlist/actionhandler.tpl"}>{$i.title}</td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.duration}</td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.creator}</td>
-                            <td {include file="playlist/actionhandler.tpl"}>{$i.type}</td>
+                            <td {include file="playlist/actionhandler.tpl"}>{$i.type|lower|capitalize}</td>
                             <td style="border: 0">
                                 <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.gif" alt="##move up##" vspace=1 hspace=1/></a>
                                 <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos+1}')"><img src="img/bt_bottom_xsm.gif" alt="##move down##" vspace=1 hspace=1/></a>

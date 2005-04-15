@@ -145,6 +145,12 @@ class uiHandler extends uiBase {
      */
     function uploadFile(&$formdata, &$mask, $replace=NULL)
     {
+        if ($this->test4audioType($formdata['mediafile']['name']) === FALSE) {
+            if (UI_ERROR) $this->_retMsg('$1 is unsupportet file type.', $formdata['mediafile']['name']);
+            $this->redirUrl = UI_BROWSER."?act=editFile&folderId=".$formdata['folderId'];
+            return FALSE;
+        }
+
         $id  = $formdata['id'];
         $folderId = $formdata['folderId'];
 
@@ -176,6 +182,14 @@ class uiHandler extends uiBase {
         $this->redirUrl = UI_BROWSER."?act=editFile&id=$r";
         if (UI_VERBOSE) $this->_retMsg('Audioclip Data saved');
         return $r;
+    }
+
+
+    function test4audioType($filename)
+    {        
+        if (array_key_exists(strrchr($filename, "."), $this->config['audiofiles']))
+            return TRUE;
+        return FALSE;
     }
 
 

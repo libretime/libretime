@@ -189,13 +189,16 @@ class uiPlaylist
             $this->Base->_retMsg('Already active Playlist');
             return FALSE;
         }
-        $datetime = date('Y-m-d H:i:s');
+        $datetime = strftime('%Y-%m-%d %H:%M:%S');
         $plid = $this->Base->gb->createPlaylist($this->Base->homeid, $datetime, $this->Base->sessid);
         if (!$plid) {
             $this->Base->_retMsg('Cannot create Playlist');
             return FALSE;
         }
-        $this->Base->_setMDataValue($plid, UI_MDATA_KEY_TITLE, $datetime);
+
+        $this->Base->_setMDataValue($plid, UI_MDATA_KEY_CREATOR,     $this->Base->login);
+        $this->Base->_setMDataValue($plid, UI_MDATA_KEY_DESCRIPTION, tra('created at $1', $datetime));
+
         if ($this->activate($plid)===FALSE) {
             return FALSE;
         }

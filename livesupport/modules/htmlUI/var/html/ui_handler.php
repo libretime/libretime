@@ -29,7 +29,7 @@ switch($_REQUEST['act']){
     break;
 
     case "uploadFile":
-        if ($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $ui_fmask["file"]))
+        if (($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $ui_fmask["file"])) !== FALSE)
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 

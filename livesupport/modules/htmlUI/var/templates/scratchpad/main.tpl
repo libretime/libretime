@@ -29,7 +29,7 @@
                         {/if}
                     </td>
                     <td {include file="scratchpad/actionhandler.tpl"}>{$i.duration}</td>
-                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type}" /></td>
+                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" /></td>
                 </tr>
                 {/foreach}
                 <!-- end item -->

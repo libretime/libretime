@@ -89,12 +89,13 @@ class uiScheduler extends uiCalendar
 
         foreach ($arr as $key => $val) {
             $items[strftime('%d', $this->_datetime2timestamp($val['start']))][number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
+                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
                 'scheduleid'=> $val['id'],
-                'plid'      => $this->Base->gb->_idFromGunid($val['playlistId']),
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'type'      => 'Playlist'
             );
         }
 
@@ -116,12 +117,13 @@ class uiScheduler extends uiCalendar
 
         foreach ($arr as $key => $val) {
             $items[number_format(strftime('%H', $this->_datetime2timestamp($val['start'])))][]= array (
-                'plid'      => $this->Base->gb->_idFromGunid($val['playlistId']),
+                'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
                 'scheduleid'=> $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
+                'type'      => 'Playlist'
             );
         }
 

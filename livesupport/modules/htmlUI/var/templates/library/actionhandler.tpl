@@ -1,11 +1,8 @@
-{UIBROWSER->getMDataArr id=$i.id assign="_metaarr"}
-
-onMouseover="showalttext('{foreach from=$_metaarr.metadata key=_key item=_item}{$_key}: {$_item}<br>{/foreach}')"
-onMouseout="hidealttext()"
+{include file="sub/mouseover.tpl"}
 onClick="return contextmenu('{$i.id}'
     , 'SP.addItem'
 
-    {if $i.type == 'audioclip'}
+    {if $i.type|lower == 'audioclip'}
         , 'listen', '{$i.gunid}'
         {if $_PL_activeId}
             , 'PL.addItem'
@@ -15,7 +12,7 @@ onClick="return contextmenu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if $i.type == 'webstream'}
+    {if $i.type|lower == 'webstream'}
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
@@ -24,7 +21,7 @@ onClick="return contextmenu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if $i.type == 'playlist'}
+    {if $i.type|lower == 'playlist'}
         {if $_PL_activeId}
             {if $_PL_activeId == $i.id}
                 , 'PL.release'
@@ -37,4 +34,3 @@ onClick="return contextmenu('{$i.id}'
     {/if}
 )"
 
-{assign var="_metaarr" value=NULL} 

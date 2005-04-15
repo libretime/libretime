@@ -2,7 +2,7 @@
 
 onClick="return contextmenu('{$i.id}'
     {$moreContextBefore}
-    {if $i.type == 'audioclip'}
+    {if $i.type|lower == 'audioclip'}
         , 'listen', '{$i.gunid}'
         {if $_PL_activeId}
             , 'PL.addItem'
@@ -12,7 +12,7 @@ onClick="return contextmenu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if $i.type == 'webstream'}
+    {if $i.type|lower == 'webstream'}
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
@@ -21,7 +21,7 @@ onClick="return contextmenu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if $i.type == 'playlist'}
+    {if $i.type|lower == 'playlist'}
         {if $_PL_activeId}
             {if $_PL_activeId == $i.id}
                 , 'PL.release'
@@ -33,7 +33,7 @@ onClick="return contextmenu('{$i.id}'
         {/if}
     {/if}
 
-    {if ($i.type == 'Folder')}
+    {if ($i.type|lower == 'folder')}
         , 'fileList', 'delete'
     {/if}
     {$moreContextAfter}

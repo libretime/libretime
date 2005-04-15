@@ -8,15 +8,17 @@
 {assign var="dynform" value=$_form.main}
 {include file="sub/dynForm_plain.tpl"}
 </div>
+
+
 <script type="text/javascript">
 {literal}
 
 var MData_confirmChangeVisited = false;
 function MData_confirmChange(element)
 {
-    //if (MData_confirmChangeVisited) return true;
+    if (MData_confirmChangeVisited) return true;
     MData_confirmChangeVisited = true;
-    if (confirm("Are you sure you want to change this information?") == false) element.blur();
+    if (confirm("##Are you sure you want to change existing metadata?##") == false) element.blur();
 }
 
 function MData_submit()
@@ -40,5 +42,6 @@ function MData_cancel()
     location.href="{$UI_BROWSER}?act=PL.simpleManagement";
     {literal}
 }
+
 {/literal}
 </script>

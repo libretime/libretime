@@ -21,7 +21,7 @@
             <tr class="{cycle values='blue1, blue2'}" {assign var="moreContextBefore" value=", 'SP.addItem'"}{include file="sub/contextmenu.tpl"}>
               <td>
                 <span id="ID{$i.id}">
-                    {if $i.type eq 'Folder'}
+                    {if $i.type|lower eq 'folder'}
                          <a href="{$UI_BROWSER}?act=fileList&id={$i.id}" >[{$i.title|truncate:30}]</b>
                     {else}
                         {if $_PL_activeId == $i.id}
@@ -32,7 +32,7 @@
                     {/if}
                 </span>
               </td>
-              <td>{$i.type}</td>
+              <td>{$i.type|lower|capitalize}</td>
               <td style="border: 0">
                   <!-- &nbsp;<a href="javascript:frename('{$i.name}', '{$i.id}')">[rename]</a> -->
                   &nbsp;<a href="javascript:fmove('{$i.id}', '.')">##move##</a>
@@ -46,12 +46,12 @@
                       <a href="{$UI_HANDLER}?act=delete&id={$i.id}"
                         onClick="return confirm('Delete &quot;{$i.name}&quot;?')">[DEL]</a>
                   {/if} -->
-                  {if $i.type != 'Folder'}
+                  {if $i.type|lower != 'folder'}
                       &nbsp;<a href="{$UI_BROWSER}?act=getMData&id={$i.id}">##MDataXML##</a>
                       <!-- &nbsp;<a href="{$UI_BROWSER}?act=editMetaData&id={$i.id}">[MDataForm]</a> -->
-                      {if $i.type eq 'webstream'}
+                      {if $i.type|lower eq 'webstream'}
                           &nbsp;<a href="{$UI_BROWSER}?act=editWebstream&id={$i.id}">##Edit##</a>
-                      {elseif $i.type eq 'audioclip'}
+                      {elseif $i.type|lower eq 'audioclip'}
                           &nbsp;<a href="{$UI_BROWSER}?act=editFile&id={$i.id}">##Edit##</a>
                           &nbsp;<a href="{$CONFIG.accessRawAudioUrl}?id={$i.gunid}&sessid={$START.sessid}">##Access##</a>
                           &nbsp;<a href="{$UI_BROWSER}?act=_analyzeFile&id={$i.id}">##RawAnalyze##</a>

@@ -39,6 +39,7 @@ define('UI_MDATA_KEY_CREATOR',    'dc:creator');
 define('UI_MDATA_KEY_DURATION',   'dcterms:extent');
 define('UI_MDATA_KEY_URL',        'ls:url');
 define('UI_MDATA_KEY_FORMAT',     'dc:format');
+define('UI_MDATA_KEY_DESCRIPTION','dc:description');
 define('UI_MDATA_VALUE_FORMAT_FILE',    'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM',  'live stream');
 
@@ -77,4 +78,10 @@ require_once 'HTML/QuickForm.php';
 #PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT);
+
+## extent config
+$config['audiofiles'] = array('.mp3' => TRUE,
+                              '.wav' => TRUE,
+                              '.ogg' => TRUE
+                        );
 ?>

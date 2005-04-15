@@ -26,7 +26,7 @@
                     </td>
                     <td {include file="library/actionhandler.tpl"}>{$i.creator}</td>
                     <td {include file="library/actionhandler.tpl"}>{$i.duration}</td>
-                    <td {include file="library/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type}" /></td>
+                    <td {include file="library/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" /></td>
                 </tr>
             <!-- end item -->
                 {/foreach}
