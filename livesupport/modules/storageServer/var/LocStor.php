@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -660,6 +660,18 @@ class LocStor extends BasicStor{
         if($ie === FALSE) return TRUE;
         if($getUid) return $ie;
         return FALSE;
+    }
+
+    /*===================================================== auxiliary methods */
+    /**
+     *  Dummy method - only returns livesupport version
+     *
+     *  @return string
+     */
+    function getVersion()
+    {
+        //return $this->config['version'];
+        return LS_VERSION;
     }
 
 }

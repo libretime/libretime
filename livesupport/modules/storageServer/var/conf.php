@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
  *  \file conf.php
  *  storageServer configuration file
  */
+
+define('LS_VERSION', '0.9');
 
 /**
  *  configuration structure:

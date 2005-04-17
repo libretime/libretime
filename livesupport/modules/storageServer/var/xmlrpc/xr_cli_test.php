@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,6 +64,8 @@ $infos = array(
     "methodSignature"   => array('m'=>"system.methodSignature", 'p'=>0),
     "test"              =>
         array('m'=>"locstor.test", 'p'=>array('sessid', 'teststring')),
+    "getVersion"      => array('m'=>"locstor.getVersion",
+        'p'=>array(), 'r'=>'version'),
     "authenticate"      => array('m'=>"locstor.authenticate",
         'p'=>array('login', 'pass'), 'r'=>'authenticate'),
     "login"             => array('m'=>"locstor.login",

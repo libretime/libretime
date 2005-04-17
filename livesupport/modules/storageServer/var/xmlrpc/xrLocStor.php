@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,6 +78,7 @@ $locStor = &new XR_LocStor($dbc, $config);
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.
                                   'teststring, sessid.',
+    'getVersion'              => 'Dummy function for connection testing.',
     'authenticate'            => 'Checks authentication.',
     'login'                   => 'Login to storage.',
     'logout'                  => 'Logout from storage.',
