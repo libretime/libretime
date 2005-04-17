@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ if($pars[0] == '-v'){ $verbose = TRUE; array_shift($pars); }
 if($pars[0] == '-s'){
     array_shift($pars);
     $serverPath = array_shift($pars);
-}else $serverPath = 'http://localhost:80/livesupportArchiveServer/xmlrpc/xrLocStor.php';
+}else $serverPath = 'http://localhost:80/livesupportArchiveServer/xmlrpc/xrArchive.php';
 
 #$serverPath = "http://localhost:80/livesupportArchiveServerCVS/xmlrpc/xrLocStor.php";
 
@@ -59,6 +59,8 @@ $infos = array(
     "methodSignature"   => array('m'=>"system.methodSignature", 'p'=>0),
     "test"              =>
         array('m'=>"archive.test", 'p'=>array('sessid', 'teststring')),
+    "getVersion"      => array('m'=>"archive.getVersion",
+        'p'=>array(), 'r'=>'version'),
     "authenticate"      => array('m'=>"archive.authenticate",
         'p'=>array('login', 'pass'), 'r'=>'authenticate'),
     "login"             => array('m'=>"archive.login",

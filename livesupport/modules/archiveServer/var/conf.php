@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
  *  \file conf.php
  *  archiveServer configuration file
  */
+
+define('LS_VERSION', '0.9');
 
 /**
  *  configuration structure:

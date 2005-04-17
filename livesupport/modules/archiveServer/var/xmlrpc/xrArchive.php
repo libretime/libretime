@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xrArchive.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -77,6 +77,7 @@ $archive = &new XR_Archive($dbc, $config);
 $methods = array(
     'test'                    => 'Tests toupper and checks sessid, params: '.
                                   'teststring, sessid.',
+    'getVersion'              => 'Dummy function for connection testing.',
     'authenticate'            => 'Checks authentication.',
     'login'                   => 'Login to storage.',
     'logout'                  => 'Logout from storage.',
