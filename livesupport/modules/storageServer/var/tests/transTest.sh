@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/tests/transTest.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -53,7 +53,9 @@ storeOpen() {
     <audioClip><metadata xmlns=\"http://www.streamonthefly.org/\"
      xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
      xmlns:dcterms=\"http://purl.org/dc/terms/\">
-    <dcterms:extent>00:00:11</dcterms:extent></metadata></audioClip>"
+     <dcterms:extent>00:00:11.000000</dcterms:extent>
+     <dc:title>Transport test file 1</dc:title>
+    </metadata></audioClip>"
     MEDIA=../tests/ex1.mp3
     MD5=`md5sum $MEDIA`; for i in $MD5; do MD5=$i; break; done
     RES=`$XR_CLI storeAudioClipOpen "$SESSID" "$GUNID" "$METADATA" "stored_file.mp3" "$MD5"` || \
