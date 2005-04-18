@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,13 +63,14 @@ using namespace LiveSupport::Core;
  *  Unit test for the WebAuthenticationClient class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see WebAuthenticationClient
  */
 class WebAuthenticationClientTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(WebAuthenticationClientTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(getVersionTest);
     CPPUNIT_TEST(preferencesTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -88,6 +89,14 @@ class WebAuthenticationClientTest : public BaseTestMethod
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the getVersion() function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        getVersionTest(void)                    throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test saving and load of user preferences.

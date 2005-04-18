@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -105,14 +105,14 @@ TestStorageClientTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the singleton Hello object is accessible
+ *  Some very simple smoke tests
  *----------------------------------------------------------------------------*/
 void
 TestStorageClientTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-        Ptr<UniqueId>::Ref  id1(new UniqueId(1));
-        Ptr<UniqueId>::Ref  id2(new UniqueId(77));
+    Ptr<UniqueId>::Ref  id1(new UniqueId(1));
+    Ptr<UniqueId>::Ref  id2(new UniqueId(77));
 
     try {
         CPPUNIT_ASSERT(tsc->existsPlaylist(dummySessionId, id1));
@@ -134,6 +134,26 @@ TestStorageClientTest :: firstTest(void)
     }
     CPPUNIT_ASSERT(playlist->getId());
     CPPUNIT_ASSERT(playlist->getId()->getId() == id1->getId());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the getVersion function
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClientTest :: getVersionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<const Glib::ustring>::Ref   version;
+
+    try {
+        version = tsc->getVersion();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    CPPUNIT_ASSERT(version.get());
+    CPPUNIT_ASSERT(*version == "TestStorage");
 }
 
 

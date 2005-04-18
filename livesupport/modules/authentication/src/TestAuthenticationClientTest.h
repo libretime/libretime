@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,13 +63,14 @@ using namespace LiveSupport::Core;
  *  Unit test for the TestAuthenticationClient class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see TestAuthenticationClient
  */
 class TestAuthenticationClientTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(TestAuthenticationClientTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(getVersionTest);
     CPPUNIT_TEST(preferencesTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -88,6 +89,14 @@ class TestAuthenticationClientTest : public BaseTestMethod
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the gerVersion() function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        getVersionTest(void)                    throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test saving and load of user preferences.

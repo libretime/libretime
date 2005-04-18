@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,6 +87,16 @@ static const std::string    locationPathAttrName = "path";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: login */
+
+/*------------------------------------------------------------------------------
+ *  The name of the get version method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    getVersionMethodName = "locstor.getVersion";
+
+/*------------------------------------------------------------------------------
+ *  The name of version return parameter for getVersion
+ *----------------------------------------------------------------------------*/
+static const std::string    getVersionResultParamName = "version";
 
 /*------------------------------------------------------------------------------
  *  The name of the login method on the server
@@ -249,6 +259,63 @@ WebAuthenticationClient :: configure(const xmlpp::Element   &  element)
         eMsg += " XML element";
         throw std::invalid_argument(eMsg);
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the version string of the test storage.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+WebAuthenticationClient :: getVersion(void)
+                                                throw (Core::XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    // add a dummy parameter, as this is the only way to enforce parameters
+    // to be of XML-RPC type struct
+    parameters["dummy"] = 0;
+    result.clear();
+    if (!xmlRpcClient.execute(getVersionMethodName.c_str(),
+                              parameters, result)) {
+        xmlRpcClient.close();
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += getVersionMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+    xmlRpcClient.close();
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getVersionMethodName
+             << "' returned error message:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (!result.hasMember(getVersionResultParamName)
+            || result[getVersionResultParamName].getType() 
+                                            != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << getVersionMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    Ptr<Glib::ustring>::Ref     version(new Glib::ustring(
+                                            result[getVersionResultParamName]));
+
+    xmlRpcClient.close();
+
+    return version;
 }
 
 

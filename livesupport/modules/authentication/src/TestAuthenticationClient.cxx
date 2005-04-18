@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,6 +85,11 @@ static const std::string    userPasswordAttrName = "password";
  *----------------------------------------------------------------------------*/
 static const std::string    dummySessionIdString = "dummySessionId";
 
+/*------------------------------------------------------------------------------
+ *  The version string, returned by getVersion
+ *----------------------------------------------------------------------------*/
+static const std::string    versionStr = "TestAuthentication";
+
 
 /* ===============================================  local function prototypes */
 
@@ -144,8 +149,21 @@ TestAuthenticationClient :: configure(const xmlpp::Element   &  element)
         throw std::invalid_argument(eMsg);
     }
     
+    versionString.reset(new Glib::ustring(versionStr));
+
     sessionIdList.clear();
     sessionCounter = 0;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the version string of the test storage.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+TestAuthenticationClient :: getVersion(void)
+                                                throw (Core::XmlRpcException)
+{
+    return versionString;
 }
 
 

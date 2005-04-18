@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -142,6 +142,26 @@ TestAuthenticationClientTest :: firstTest(void)
         CPPUNIT_FAIL("Allowed to logout twice.");
     } catch (XmlRpcException &e) {
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the getVersion function
+ *----------------------------------------------------------------------------*/
+void
+TestAuthenticationClientTest :: getVersionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<const Glib::ustring>::Ref   version;
+
+    try {
+        version = tac->getVersion();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    CPPUNIT_ASSERT(version.get());
+    CPPUNIT_ASSERT(*version == "TestAuthentication");
 }
 
 

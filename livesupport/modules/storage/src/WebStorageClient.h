@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,8 +95,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST location path          CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.24 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.25 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -204,6 +204,17 @@ class WebStorageClient :
         virtual void
         configure(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument);
+
+
+        /**
+         *  Return the version string from the storage.
+         *
+         *  @return the version string of the storage.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<const Glib::ustring>::Ref
+        getVersion(void)                        throw (XmlRpcException);
 
 
         /**

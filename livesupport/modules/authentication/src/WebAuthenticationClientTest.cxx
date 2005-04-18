@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -141,6 +141,25 @@ WebAuthenticationClientTest :: firstTest(void)
         CPPUNIT_FAIL("Allowed to logout twice.");
     } catch (XmlRpcException &e) {
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the getVersion function
+ *----------------------------------------------------------------------------*/
+void
+WebAuthenticationClientTest :: getVersionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<const Glib::ustring>::Ref   version;
+
+    try {
+        version = wac->getVersion();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    CPPUNIT_ASSERT(version.get());
 }
 
 

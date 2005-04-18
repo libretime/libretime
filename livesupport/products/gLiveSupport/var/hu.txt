@@ -12,6 +12,8 @@ hu:table
 
     localeNotAvailableMsg:string        { "A {0} nyelv nem elérhető" }
     schedulerNotReachableMsg:string     { "Az időzitő szerver nem elérhető" }
+    storageNotReachableMsg:string       { "Az tároló szerver nem elérhető" }
+    authenticationNotReachableMsg:string  { "A beléptető szerver nem elérhető" }
 
     loginWindow:table
     {

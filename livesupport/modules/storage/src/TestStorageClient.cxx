@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,6 +128,11 @@ static const std::string    smilPlaylistNodeName = "audio";
  *----------------------------------------------------------------------------*/
 static const std::string    smilPlaylistUriAttrName = "src";
 
+/*------------------------------------------------------------------------------
+ *  The version string, returned by getVersion
+ *----------------------------------------------------------------------------*/
+static const std::string    versionStr = "TestStorage";
+
 
 /* ===============================================  local function prototypes */
 
@@ -146,11 +151,29 @@ TestStorageClient :: configure(const xmlpp::Element   &  element)
         eMsg += element.get_name();
         throw std::invalid_argument(eMsg);
     }
-    
+
+    versionString.reset(new Glib::ustring(versionStr));
+
     savedConfigurationElement.reset(new xmlpp::Document);
     savedConfigurationElement->create_root_node_by_import(&element, true);
                                                     // true == recursive
     reset();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the version string of the test storage.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+TestStorageClient :: getVersion(void)
+                                                throw (Core::XmlRpcException)
+{
+    if (!savedConfigurationElement) {
+        throw Core::XmlRpcInvalidArgumentException("storage has not been"
+                                                   " configured yet");
+    }
+
+    return versionString;
 }
 
 

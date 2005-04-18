@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,13 +64,14 @@ using namespace LiveSupport::Authentication;
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see WebStorageClient
  */
 class WebStorageClientTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(WebStorageClientTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(getVersionTest);
     CPPUNIT_TEST(simplePlaylistTest);
     CPPUNIT_TEST(playlistTest);
     CPPUNIT_TEST(audioClipTest);
@@ -98,6 +99,14 @@ class WebStorageClientTest : public BaseTestMethod
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the getVersion() function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        getVersionTest(void)                    throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the audio clip operations.

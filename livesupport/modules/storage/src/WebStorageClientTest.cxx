@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -172,6 +172,25 @@ WebStorageClientTest :: firstTest(void)
         eMsg += e.what();
         CPPUNIT_FAIL(eMsg);
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the getVersion function
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: getVersionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<const Glib::ustring>::Ref   version;
+
+    try {
+        version = wsc->getVersion();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    CPPUNIT_ASSERT(version.get());
 }
 
 

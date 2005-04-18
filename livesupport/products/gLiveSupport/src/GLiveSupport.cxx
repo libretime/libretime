@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -98,6 +98,17 @@ static const std::string scratchpadContentsKey = "scratchpadContents";
  *  Static constant for the key of the scheduler not available key
  *----------------------------------------------------------------------------*/
 static const std::string schedulerNotReachableKey = "schedulerNotReachableMsg";
+
+/*------------------------------------------------------------------------------
+ *  Static constant for the key of the storage not available key
+ *----------------------------------------------------------------------------*/
+static const std::string storageNotReachableKey = "storageNotReachableMsg";
+
+/*------------------------------------------------------------------------------
+ *  Static constant for the key of the authentication not available key
+ *----------------------------------------------------------------------------*/
+static const std::string authenticationNotReachableKey =
+                                            "authenticationNotReachableMsg";
 
 /*------------------------------------------------------------------------------
  *  Static constant for the key of the locale not available key
@@ -258,9 +269,22 @@ GLiveSupport :: checkConfiguration(void)                    throw ()
         return false;
     }
 
-    // TODO: check if the authentication server is available
+    // check if the authentication server is available
+    try {
+        authentication->getVersion();
+    } catch (XmlRpcException &e) {
+        displayMessageWindow(getResourceUstring(authenticationNotReachableKey));
+        return false;
+    }
 
-    // TODO: check if the storage server is available
+
+    // check if the storage server is available
+    try {
+        storage->getVersion();
+    } catch (XmlRpcException &e) {
+        displayMessageWindow(getResourceUstring(storageNotReachableKey));
+        return false;
+    }
 
     // no need to check the widget factory
 

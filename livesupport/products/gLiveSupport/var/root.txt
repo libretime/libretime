@@ -12,6 +12,9 @@ root:table
 
     localeNotAvailableMsg:string        { "Locale {0} not available" }
     schedulerNotReachableMsg:string     { "Scheduler server not available" }
+    storageNotReachableMsg:string       { "Storage server not available" }
+    authenticationNotReachableMsg:string
+                                      { "Authentication server not available" }
 
     loginWindow:table
     {

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,12 +66,23 @@ using namespace Core;
 /**
  *  An interface for storage clients.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.11 $
  */
 class StorageClientInterface
 {
     public:
+        /**
+         *  Return the version string from the storage.
+         *
+         *  @return the version string of the storage.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<const Glib::ustring>::Ref
+        getVersion(void)                        throw (XmlRpcException)
+                                                                        = 0;
+
         /**
          *  Create a new, empty, playlist.  Does not automatically open the
          *  playlist for editing; for that, use editPlaylist() and

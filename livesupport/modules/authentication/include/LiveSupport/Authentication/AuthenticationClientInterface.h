@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,13 +68,24 @@ using namespace LiveSupport::Core;
 /**
  *  An interface for authentication clients.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.9 $
  */
 class AuthenticationClientInterface
 {
     public:
     
+        /**
+         *  Return the version string from the storage.
+         *
+         *  @return the version string of the storage.
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<const Glib::ustring>::Ref
+        getVersion(void)                        throw (XmlRpcException)
+                                                                        = 0;
+
         /**
          *  Login to the authentication server.
          *  Returns a new session ID; in case of an error, throws
