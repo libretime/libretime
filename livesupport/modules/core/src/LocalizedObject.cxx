@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/LocalizedObject.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,12 @@ LocalizedObject :: getBundle(const char  * key)
     Ptr<ResourceBundle>::Ref    resourceBundle(new ResourceBundle(
                                         bundle->getWithFallback(key, status)));
     if (!U_SUCCESS(status)) {
-        throw std::invalid_argument("can't get resource bundle");
+        std::string     eMsg = "can't get resource bundle for key '";
+        eMsg += key;
+        eMsg += "' and locale '";
+        eMsg += bundle->getLocale().getName();
+        eMsg += "'";
+        throw std::invalid_argument(eMsg);
     }
 
     return resourceBundle;

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,8 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         cancelButton = Gtk::manage(widgetFactory->createButton(
                                     *getResourceUstring("cancelButtonLabel")));
     } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;\
+        std::exit(1);
     }
 
     // set up the login label

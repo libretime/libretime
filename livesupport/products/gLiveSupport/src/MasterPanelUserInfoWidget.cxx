@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -127,7 +127,7 @@ MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
         notLoggedInMsg   = getResourceUstring("notLoggedInMsg");
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
-        return;
+        std::exit(1);
     }
 
     userInfoLabel->set_label(*notLoggedInMsg);
@@ -176,7 +176,12 @@ MasterPanelUserInfoWidget :: onLoginButtonClicked (void)            throw ()
     }
 
     if (loggedIn) {
-        updateStrings();
+        try {
+            updateStrings();
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            std::exit(1);
+        }
 
         // change the login button to a logout button
         logInOutSignalConnection.disconnect();
@@ -209,7 +214,12 @@ MasterPanelUserInfoWidget :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
 {
     setBundle(bundle);
-    updateStrings();
+    try {
+        updateStrings();
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
 }
 
 

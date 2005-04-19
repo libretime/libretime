@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,6 +78,7 @@ PlaylistListWindow :: PlaylistListWindow (
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     mainBox              = Gtk::manage(new Gtk::VBox());
@@ -133,6 +134,7 @@ PlaylistListWindow :: PlaylistListWindow (
                                    modelColumns.tokenColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     // attach the event handler for the user selecting a playlist from
@@ -163,6 +165,7 @@ PlaylistListWindow :: PlaylistListWindow (
                                       modelColumns.tokenColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     // attach the event handler for the user selecting an entry from

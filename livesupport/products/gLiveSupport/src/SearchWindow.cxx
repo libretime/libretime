@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,11 +80,16 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     Gtk::VBox *     advancedSearchView = constructAdvancedSearchView();
     Gtk::VBox *     browseView = Gtk::manage(new Gtk::VBox);
 
-    Notebook *      views = Gtk::manage(new Notebook);    
-    views->appendPage(*searchView,          *getResourceUstring("searchTab"));
-    views->appendPage(*advancedSearchView,  *getResourceUstring(
+    Notebook *      views = Gtk::manage(new Notebook);
+    try {
+        views->appendPage(*searchView, *getResourceUstring("searchTab"));
+        views->appendPage(*advancedSearchView, *getResourceUstring(
                                                         "advancedSearchTab"));
-    views->appendPage(*browseView,          *getResourceUstring("browseTab"));
+        views->appendPage(*browseView, *getResourceUstring("browseTab"));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
 
     add(*views);    
 
@@ -128,39 +133,44 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     view->pack_start(*searchResults,    Gtk::PACK_SHRINK, 5);
 
     // set up the search options box
-    Gtk::Label *    searchByLabel = Gtk::manage(new Gtk::Label(
+    try {
+        Gtk::Label *    searchByLabel = Gtk::manage(new Gtk::Label(
                                     *getResourceUstring("searchByTextLabel") ));
+        searchOptionsBox->pack_start(*searchByLabel, Gtk::PACK_SHRINK, 5);
+
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
     ComboBoxText *  metadataType = Gtk::manage(wf->createComboBoxText());
     metadataType->append_text("Title");
     metadataType->append_text("Creator");
     metadataType->append_text("Length");
     metadataType->set_active_text("Title");
+    searchOptionsBox->pack_start(*metadataType, Gtk::PACK_EXPAND_WIDGET, 5);
+
     ComboBoxText *  operatorType = Gtk::manage(wf->createComboBoxText());
     operatorType->append_text("contains");
     operatorType->append_text("equals");
     operatorType->append_text(">=");
     operatorType->append_text("<");
     operatorType->set_active_text("contains");
-    EntryBin *      entryBin = Gtk::manage(wf->createEntryBin());
-    searchOptionsBox->pack_start(*searchByLabel, Gtk::PACK_SHRINK, 5);
-    searchOptionsBox->pack_start(*metadataType, Gtk::PACK_EXPAND_WIDGET, 5);
     searchOptionsBox->pack_start(*operatorType, Gtk::PACK_EXPAND_WIDGET, 5);
+
+    EntryBin *      entryBin = Gtk::manage(wf->createEntryBin());
     searchOptionsBox->pack_start(*entryBin,     Gtk::PACK_EXPAND_WIDGET, 5);
     
     // set up the search button box
-    Button *        searchButton = Gtk::manage(wf->createButton(
+    try {
+        Button *        searchButton = Gtk::manage(wf->createButton(
                                     *getResourceUstring("searchButtonLabel") ));
-    searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
+        searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
+
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
     
     return view;
 }
 
-
-
-
-
-
-
-
-
-    

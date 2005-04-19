@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,6 +86,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 *getResourceUstring("removeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     playButton->set_name("playButton");
@@ -122,6 +123,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                modelColumns.titleColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     // color the columns blue
@@ -157,64 +159,77 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     audioClipMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& audioClipMenuList = audioClipMenu->items();
     // register the signal handlers for the popup menu
-    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+    try {
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onAddToPlaylist)));
-    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("upMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onUpItem)));
-    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("downMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onDownItem)));
-    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onRemoveItem)));
-    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onDeleteItem)));
-    audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("playMenuItem"),
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onPlayItem)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
     audioClipMenu->accelerate(*this);
 
     // create the right-click entry context menu for playlists
     playlistMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& playlistMenuList = playlistMenu->items();
     // register the signal handlers for the popup menu
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+
+    try{
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onAddToPlaylist)));
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("schedulePlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onSchedulePlaylist)));
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("upMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onUpItem)));
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("downMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onDownItem)));
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onRemoveItem)));
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onDeleteItem)));
-    playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("playMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onPlayItem)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
     playlistMenu->accelerate(*this);
 
     // show

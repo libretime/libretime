@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,6 +76,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     nameEntry             = Gtk::manage(new Gtk::Entry());
@@ -99,11 +100,13 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                    modelColumns.titleColumn);
         entriesView->append_column(*getResourceUstring("lengthColumnLabel"),
                                    modelColumns.lengthColumn);
+
+        statusBar = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring("statusBar")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
-
-    statusBar = Gtk::manage(new Gtk::Label(*getResourceUstring("statusBar")));
 
     // set up the layout
     layout = Gtk::manage(new Gtk::Table());

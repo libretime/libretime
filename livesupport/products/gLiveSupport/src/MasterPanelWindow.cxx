@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -204,6 +204,7 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                                 *getResourceUstring("searchButtonLabel"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     userInfoWidget->changeLanguage(bundle);

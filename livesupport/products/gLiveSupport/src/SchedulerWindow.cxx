@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,6 +73,7 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     calendar  = Gtk::manage(new Gtk::Calendar());
@@ -94,6 +95,7 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                entryColumns->endColumn);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     // register the signal handler for entries view entries being clicked
@@ -104,10 +106,16 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     entryMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& menuList = entryMenu->items();
     // register the signal handlers for the popup menu
-    menuList.push_back(Gtk::Menu_Helpers::MenuElem(
+    try {
+        menuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("deleteMenuItem"),
                                 sigc::mem_fun(*this,
                                             &SchedulerWindow::onDeleteItem)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
     entryMenu->accelerate(*this);
 
     layout = Gtk::manage(new Gtk::Table());

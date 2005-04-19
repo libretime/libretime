@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -131,6 +131,7 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     } catch (std::invalid_argument &e) {
         // TODO: signal error
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     // build up the main section
@@ -191,9 +192,14 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
 {
     Ptr<Gtk::FileChooserDialog>::Ref    dialog;
 
-    dialog.reset(new Gtk::FileChooserDialog(
+    try {
+        dialog.reset(new Gtk::FileChooserDialog(
                         *getResourceUstring("fileChooserDialogTitle"),
                         Gtk::FILE_CHOOSER_ACTION_OPEN));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
 
     dialog->set_transient_for(*this);
 

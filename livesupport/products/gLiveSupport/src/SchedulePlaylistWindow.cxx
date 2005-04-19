@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,6 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
 {
     this->gLiveSupport = gLiveSupport;
     this->playlist     = playlist;
-
     try {
         set_title(*getResourceUstring("windowTitle"));
         hourLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
@@ -82,6 +81,7 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
+        std::exit(1);
     }
 
     playlistLabel = Gtk::manage(new Gtk::Label(*playlist->getTitle()));
