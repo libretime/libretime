@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Validator.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -146,7 +146,7 @@ class Validator{
      */
     function validateNode(&$node, $fname)
     {
-        $dname = strtolower(($node->ns? $node->ns.":" : '').$node->name);
+        $dname = (($node->ns? $node->ns.":" : '').$node->name);
         $formTree =& $this->formTree;
         if(DEBUG) echo"\nVAL::validateNode: 1 $dname/$fname\n";
         // check root node name:
@@ -181,7 +181,7 @@ class Validator{
         $attrs = array();
         // check if all attrs are permitted here:
         foreach($node->attrs as $i=>$attr){
-            $aname = strtolower(($attr->ns? $attr->ns.":" : '').$attr->name);
+            $aname = (($attr->ns? $attr->ns.":" : '').$attr->name);
             $attrs[$aname] =& $node->attrs[$i];
             if(!$this->isAttrInFormat($fname, $aname))
                 return $this->_err(VAL_UNKNOWNA, $aname);
@@ -219,7 +219,7 @@ class Validator{
         $childs = array();
         // check if all children are permitted here:
         foreach($node->children as $i=>$ch){
-            $chname = strtolower(($ch->ns? $ch->ns.":" : '').$ch->name);
+            $chname = (($ch->ns? $ch->ns.":" : '').$ch->name);
             // echo "XXE $chname\n";
             if(!$this->isChildInFormat($fname, $chname))
                 return $this->_err(VAL_UNKNOWNE, $chname);

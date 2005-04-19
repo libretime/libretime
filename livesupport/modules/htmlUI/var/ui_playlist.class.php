@@ -223,20 +223,20 @@ class uiPlaylist
     function plwalk($arr, $parent=0, $attrs=0)
     {
         foreach ($arr['children'] as $node=>$sub) {
-            if ($sub['elementname']==='playlistelement') {
+            if ($sub['elementname']==='playlistElement') {
                 $this->plwalk($sub, $node, $sub['attrs']);
             }
-            if ($sub['elementname']==='audioclip' || $sub['elementname']==='playlist') {
+            if ($sub['elementname']==='audioClip' || $sub['elementname']==='playlist') {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
                 $this->flat[$parent] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
                 $this->flat[$parent]['attrs'] = $attrs;
             }
-            if ($sub['elementname']==='fadeinfo') {
-                $this->flat[$parent]['fadein']  = GreenBox::_plTimeToSecs($sub['attrs']['fadein']);
-                $this->flat[$parent]['fadeout'] = GreenBox::_plTimeToSecs($sub['attrs']['fadeout']);
-                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadein']  ? GreenBox::_plTimeToSecs($sub['attrs']['fadein'])  * 1000 : 0;
-                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeout'] ? GreenBox::_plTimeToSecs($sub['attrs']['fadeout']) * 1000 : 0;
+            if ($sub['elementname']==='fadeInfo') {
+                $this->flat[$parent]['fadein']  = GreenBox::_plTimeToSecs($sub['attrs']['fadeIn']);
+                $this->flat[$parent]['fadeout'] = GreenBox::_plTimeToSecs($sub['attrs']['fadeOut']);
+                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadeIn']  ? GreenBox::_plTimeToSecs($sub['attrs']['fadeIn'])  * 1000 : 0;
+                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeOut'] ? GreenBox::_plTimeToSecs($sub['attrs']['fadeOut']) * 1000 : 0;
             }
         }
     }

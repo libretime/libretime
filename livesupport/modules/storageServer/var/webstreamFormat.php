@@ -22,15 +22,15 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-    Author   : $Author: sebastian $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/webstreamFormat.php,v $
 
 ------------------------------------------------------------------------------*/
 
 $webstreamFormat = array(
-    '_root'=>'audioclip',
-    'audioclip'=>array(
+    '_root'=>'audioClip',
+    'audioClip'=>array(
         'childs'=>array(
             'required'=>array('metadata'),
         ),
@@ -56,7 +56,7 @@ $webstreamFormat = array(
                 'dcterms:spatial', 'dcterms:entity', 'dc:description',
                 'dc:creator', 'dc:subject', 'dc:type', 'dc:format',
                 'dc:contributor', 'dc:language', 'dc:rights',
-                'dcterms:ispartof', 'dc:date',
+                'dcterms:isPartOf', 'dc:date',
                 'dc:publisher',
                 // extra
                 'dcterms:alternative',
@@ -330,7 +330,7 @@ $webstreamFormat = array(
         'area'=>'Talk',
         'attrs'=>array('implied'=>array('xml:lang')),
     ),
-    'dcterms:ispartof'=>array(
+    'dcterms:isPartOf'=>array(
         'type'=>'Text',
         'area'=>'Talk',
         'attrs'=>array('implied'=>array('xml:lang')),

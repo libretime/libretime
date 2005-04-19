@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ class Playlist extends StoredFile{
      *   <li>acGunid, string - audioClip gunid</li>
      *   <li>acLen string - length of clip in dcterms:extent format</li>
      *   <li>acTit string - clip title</li>
-     *   <li>elType string - audioclip | playlist</li>
+     *   <li>elType string - audioClip | playlist</li>
      *  </ul>
      */
     function getAcInfo($acId)
@@ -89,7 +89,10 @@ class Playlist extends StoredFile{
         if(isset($r[0]['value'])) $acTit = $r[0]['value'];
         else $acTit = $acGunid;
         $elType = $this->gb->getObjType($acId);
-        if($elType == 'webstream') $elType = 'audioclip';
+        $trTbl = array('audioclip'=>'audioClip', 'webstream'=>'audioClip',
+            'playlist'=>'playlist');
+        $elType = $trTbl[$elType];
+        if($elType == 'webstream') $elType = 'audioClip';
         return compact('acGunid', 'acLen', 'acTit', 'elType');
     }
 
@@ -163,8 +166,8 @@ class Playlist extends StoredFile{
      *  @param acGunid string - audioClip gunid
      *  @param acLen string - audiClip length in extent format
      *  @param acTit string - audioClip title
-     *  @param fadeIn string - fadein value in ss.ssssss or extent format
-     *  @param fadeOut string - fadeout value in ss.ssssss or extent format
+     *  @param fadeIn string - fadeIn value in ss.ssssss or extent format
+     *  @param fadeOut string - fadeOut value in ss.ssssss or extent format
      *  @param plElGunid string - optional playlist element gunid
      *  @param elType string - optional 'audioClip' | 'playlist'
      *  @return array with fields:
@@ -287,7 +290,7 @@ class Playlist extends StoredFile{
     }
     
     /**
-     *  Add audioclip specified by local id to the playlist
+     *  Add audioClip specified by local id to the playlist
      *
      *  @param acId string, local ID of added file
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
@@ -329,7 +332,7 @@ class Playlist extends StoredFile{
 
 
     /**
-     *  Remove audioclip from playlist
+     *  Remove audioClip from playlist
      *
      *  @param plElGunid string, global id of deleted playlistElement
      *  @return boolean
@@ -440,7 +443,7 @@ class Playlist extends StoredFile{
         $arr = $this->md->genPhpArray();
         $els =& $arr['children'];
         foreach($els as $i=>$el){
-            if($el['elementname'] != 'playlistelement'){
+            if($el['elementname'] != 'playlistElement'){
                 $metadata = array_splice($els, $i, 1);
                 continue;
             }
@@ -462,11 +465,11 @@ class Playlist extends StoredFile{
             $fadeIn = NULL;
             $fadeOut = NULL;
             foreach($el['children'] as $j=>$af){
-                if($af['elementname'] == 'audioclip'){
+                if($af['elementname'] == 'audioClip'){
                     $acGunid = $af['attrs']['id'];
-                }elseif($af['elementname'] == 'fadeinfo'){
-                    $fadeIn = $af['attrs']['fadein'];
-                    $fadeOut = $af['attrs']['fadeout'];
+                }elseif($af['elementname'] == 'fadeInfo'){
+                    $fadeIn = $af['attrs']['fadeIn'];
+                    $fadeOut = $af['attrs']['fadeOut'];
                 }else{
                 }
             }
@@ -508,8 +511,8 @@ class Playlist extends StoredFile{
             $plElGunidArr = $this->md->getMetadataEl('id', $elId);
             if(PEAR::isError($plElGunidArr)){ return $plElGunidArr; }
             $plElGunid = $plElGunidArr[0]['value'];
-            // get relativeoffset:
-            $offArr = $this->md->getMetadataEl('relativeoffset', $elId);
+            // get relativeOffset:
+            $offArr = $this->md->getMetadataEl('relativeOffset', $elId);
             if(PEAR::isError($offArr)){ return $offArr; }
             $offsetId = $offArr[0]['mid'];
             $offset = $offArr[0]['value'];
@@ -598,26 +601,26 @@ class Playlist extends StoredFile{
         $plArr = array('els'=>array());
         foreach($arr[children] as $i=>$plEl){
             switch($plEl['elementname']){
-            case"playlistelement":
+            case"playlistElement":
                 $plInfo = array(
                     'acLen'   => '00:00:00.000000', 'acLenS'   => 0,
-                    'fadein'  => '00:00:00.000000', 'fadeinS'  => 0,
-                    'fadeout' => '00:00:00.000000', 'fadeoutS' => 0,
+                    'fadeIn'  => '00:00:00.000000', 'fadeInS'  => 0,
+                    'fadeOut' => '00:00:00.000000', 'fadeOutS' => 0,
                 );
-                $plInfo['elOffset']  = $pom = $plEl['attrs']['relativeoffset'];
+                $plInfo['elOffset']  = $pom = $plEl['attrs']['relativeOffset'];
                 $plInfo['elOffsetS'] = $this->_plTimeToSecs($pom);
                 foreach($plEl['children'] as $j=>$acFi){
                     switch($acFi['elementname']){
-                    case"audioclip":
+                    case"audioClip":
                         $plInfo['acLen'] = $pom = $acFi['attrs']['playlength'];
                         $plInfo['acLenS'] = $this->_plTimeToSecs($pom);
                         $plInfo['acGunid'] = $pom = $acFi['attrs']['id'];
                         break;
-                    case"fadeinfo":
-                        $plInfo['fadein'] = $pom = $acFi['attrs']['fadein'];
-                        $plInfo['fadeinS'] = $this->_plTimeToSecs($pom);
-                        $plInfo['fadeout'] = $pom = $acFi['attrs']['fadeout'];
-                        $plInfo['fadeoutS'] = $this->_plTimeToSecs($pom);
+                    case"fadeInfo":
+                        $plInfo['fadeIn'] = $pom = $acFi['attrs']['fadeIn'];
+                        $plInfo['fadeInS'] = $this->_plTimeToSecs($pom);
+                        $plInfo['fadeOut'] = $pom = $acFi['attrs']['fadeOut'];
+                        $plInfo['fadeOutS'] = $this->_plTimeToSecs($pom);
                         break;
                     }
                 }
@@ -705,7 +708,7 @@ class Playlist extends StoredFile{
      *  Cyclic-recursion checking
      *
      *  @param insGunid string, gunid of playlist beeing inserted
-     *  @return 
+     *  @return boolean - true if recursion is detected
      */
     function _cyclicRecursion($insGunid)
     {
@@ -717,7 +720,7 @@ class Playlist extends StoredFile{
         $els =& $arr['children'];
         if(!is_array($els)) return FALSE;
         foreach($els as $i=>$plEl){
-            if($plEl['elementname'] != "playlistelement") continue;
+            if($plEl['elementname'] != "playlistElement") continue;
             foreach($plEl['children'] as $j=>$elCh){
                 if($elCh['elementname'] != "playlist") continue;
                 $nextGunid = $elCh['attrs']['id'];

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -906,7 +906,8 @@ class XR_LocStor extends LocStor{
      *
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
-     *      <li> url : string - readable url</li>
+     *      <li> url : string - readable url of accessed playlist in
+     *          XML format</li>
      *      <li> token : string - playlist token</li>
      *      <li> chsum : string - md5 checksum</li>
      *  </ul>

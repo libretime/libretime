@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,7 +188,7 @@ class MetaData{
     function getMetadataEl($category, $parid=NULL)
     {
         // handle predicate namespace shortcut
-        $a     = XML_Util::splitQualifiedName(strtolower($category));
+        $a     = XML_Util::splitQualifiedName($category);
         if(PEAR::isError($a)) return $a;
         $catNs = $a['namespace'];
         $cat   = $a['localPart'];
@@ -268,7 +268,7 @@ class MetaData{
      */
     function insertMetadataEl($parid, $category, $value=NULL, $predxml='T')
     {
-        $category = strtolower($category);
+        //$category = strtolower($category);
         $parent = $this->dbc->getRow("
             SELECT predns, predicate, predxml FROM {$this->mdataTable}
             WHERE gunid=x'{$this->gunid}'::bigint AND id=$parid
@@ -647,8 +647,8 @@ class MetaData{
         $objns=NULL, $object=NULL)
     {
         //echo "$subjns, $subject, $predns, $predicate, $predxml, $objns, $object\n";
-        $predns = strtolower($predns);
-        $predicate = strtolower($predicate);
+        //$predns = strtolower($predns);
+        //$predicate = strtolower($predicate);
         $predns_sql = (is_null($predns) ? "NULL" : "'$predns'" );
         $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
         $object_sql = (is_null($object)? "NULL" : "'$object'");

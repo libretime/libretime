@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<audioclip>
+<audioClip>
     <metadata
        xmlns="http://mdlf.org/livesupport/elements/1.0/"
        xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
@@ -11,4 +11,4 @@
         <dcterms:extent>01:30:00.000000</dcterms:extent>
         <ls:url>http://localhost/y</ls:url>
     </metadata>
-</audioclip>
+</audioClip>

@@ -4,7 +4,7 @@
     <playlistElement id="0000000000000101" relativeOffset="0" >
         <audioClip   id="0000000000010001" playlength="01:00:00.000000" 
                                            title="one"/>
-        <fadeinfo fadein="02.000000" fadeout="03.000000"
+        <fadeInfo fadeIn="02.000000" fadeOut="03.000000"
             id="15015b4b70a054f1" />
     </playlistElement>
     <playlistElement id="0000000000000102" relativeOffset="01:00:00.000000" >

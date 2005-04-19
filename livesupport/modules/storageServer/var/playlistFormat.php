@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/playlistFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,24 +32,24 @@ $playlistFormat = array(
     '_root'=>'playlist',
     'playlist'=>array(
         'childs'=>array(
-            // 'repeatable'=>array('playlistelement'),
-            'optional'=>array('metadata', 'playlistelement'),
+            // 'repeatable'=>array('playlistElement'),
+            'optional'=>array('metadata', 'playlistElement'),
         ),
         'attrs'=>array(
             'required'=>array('id', 'playlength'),
             'implied'=>array('title'),
         ),
     ),
-    'playlistelement'=>array(
+    'playlistElement'=>array(
         'childs'=>array(
-            'oneof'=>array('audioclip', 'playlist'),
-            'optional'=>array('fadeinfo'),
+            'oneof'=>array('audioClip', 'playlist'),
+            'optional'=>array('fadeInfo'),
         ),
         'attrs'=>array(
-            'required'=>array('id', 'relativeoffset'),
+            'required'=>array('id', 'relativeOffset'),
         ),
     ),
-    'audioclip'=>array(
+    'audioClip'=>array(
         'childs'=>array(
             'optional'=>array('metadata'),
         ),
@@ -57,9 +57,9 @@ $playlistFormat = array(
             'implied'=>array('id', 'title', 'playlength', 'uri'),
         ),
     ),
-    'fadeinfo'=>array(
+    'fadeInfo'=>array(
         'attrs'=>array(
-            'required'=>array('id', 'fadein', 'fadeout'),
+            'required'=>array('id', 'fadeIn', 'fadeOut'),
         ),
     ),
     'metadata'=>array(
@@ -98,11 +98,11 @@ $playlistFormat = array(
         'type'=>'Attribute',
         'regexp'=>'^[0-9a-f]{16}$',
     ),
-    'fadein'=>array(
+    'fadeIn'=>array(
         'type'=>'Attribute',
         'regexp'=>'^((\d{2}:)?\d{2}:)?\d{1,2}(.\d{6})?$',
     ),
-    'fadeout'=>array(
+    'fadeOut'=>array(
         'type'=>'Attribute',
         'regexp'=>'^((\d{2}:)?\d{2}:)?\d{1,2}(.\d{6})?$',
     ),
