@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -196,10 +196,16 @@ static const std::string    comboBoxRightName = "combo/right.png";
 static const std::string    resizeImageName = "whiteWindow/resize.png";
 
 /**
- *  The name of the image for the title of the login window.
+ *  The name of the image for the title of the scratchpad window.
  */
 static const std::string    scratchpadWindowTitleImageName 
                             = "titleImages/scratchpadWindowTitle.png";
+
+/**
+ *  The name of the image for the title of the search window.
+ */
+static const std::string    searchWindowTitleImageName 
+                            = "titleImages/searchWindowTitle.png";
 
 
 /* ===============================================  local function prototypes */
@@ -402,12 +408,20 @@ WidgetFactory :: createImage(ImageType  imageName)              throw ()
     Glib::RefPtr<Gdk::Pixbuf>   rawImage;
     
     switch (imageName) {
+
         case resizeImage:
             rawImage = loadImage(resizeImageName);
             break;
+
+        
         case scratchpadWindowTitleImage:
             rawImage = loadImage(scratchpadWindowTitleImageName);
             break;
+
+        case searchWindowTitleImage:
+            rawImage = loadImage(searchWindowTitleImageName);
+            break;
+
         default:
             return 0;
     }

@@ -9,6 +9,7 @@ root:table
     scratchpadButtonLabel:string            { "scratchpad" }
     simplePlaylistMgmtButtonLabel:string    { "simple playlist management" }
     schedulerButtonLabel:string             { "scheduler" }
+    searchButtonLabel:string                { "search" }
 
     localeNotAvailableMsg:string        { "Locale {0} not available" }
     schedulerNotReachableMsg:string     { "Scheduler server not available" }
@@ -130,5 +131,9 @@ root:table
         closeButtonLabel:string       { "close" }
     }
 
+    searchWindow:table
+    {
+        windowTitle:string            { "LiveSupport Search/Browse Window" }
+    }
 }
 

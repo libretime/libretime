@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.18 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -200,6 +200,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                         *getResourceUstring("simplePlaylistMgmtButtonLabel"));
         schedulerButton = wf->createButton(
                                 *getResourceUstring("schedulerButtonLabel"));
+        searchButton = wf->createButton(
+                                *getResourceUstring("searchButtonLabel"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -219,6 +221,9 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     buttonBar->attach(*schedulerButton,            3, 4, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
+    buttonBar->attach(*searchButton,               4, 5, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
 
     // re-bind events to the buttons
     uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -230,7 +235,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
                  &MasterPanelWindow::onSimplePlaylistMgmtButtonClicked));
     schedulerButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelWindow::onSchedulerButtonClicked));
-
+    searchButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onSearchButtonClicked));
 }
 
 
@@ -382,6 +388,30 @@ MasterPanelWindow :: onSchedulerButtonClicked(void)                 throw ()
 
     if (!schedulerWindow->is_visible()) {
         schedulerWindow->show();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The event when the Search button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: onSearchButtonClicked(void)                    throw ()
+{
+    if (!searchWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("searchWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        searchWindow.reset(new SearchWindow(gLiveSupport, bundle));
+    }
+
+    if (!searchWindow->is_visible()) {
+        searchWindow->show();
     }
 }
 

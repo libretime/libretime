@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,6 +53,7 @@
 #include "ScratchpadWindow.h"
 #include "SimplePlaylistManagementWindow.h"
 #include "SchedulerWindow.h"
+#include "SearchWindow.h"
 
 
 namespace LiveSupport {
@@ -88,7 +89,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -200,6 +201,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Button                    * schedulerButton;
 
         /**
+         *  The button to invoke the Search Window.
+         */
+        Button                    * searchButton;
+
+        /**
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
@@ -218,6 +224,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  The one and only scheduler window.
          */
         Ptr<SchedulerWindow>::Ref   schedulerWindow;
+
+        /**
+         *  The one and only search window.
+         */
+        Ptr<SearchWindow>::Ref   searchWindow;
 
         /**
          *  Function that updates timeLabel with the current time.
@@ -273,6 +284,13 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onSchedulerButtonClicked(void)                  throw ();
+
+        /**
+         *  Function to catch the event of the Search button
+         *  button being pressed.
+         */
+        virtual void
+        onSearchButtonClicked(void)                             throw ();
 
 
     public:
@@ -365,6 +383,15 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
             schedulerWindow->showContents();
         }
 
+        /**
+         *  Update the Search Window
+         */
+        void
+        updateSearchWindow(void)                                throw ()
+        {
+            // this will create, open and display the window.
+            onSearchButtonClicked();
+        }
 };
 
 /* ================================================= external data structures */

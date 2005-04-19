@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,6 +104,7 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     set_decorated(false);
     defaultWidth  = -1;
     defaultHeight = -1;
+    set_resizable(resizable);
 
     Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 

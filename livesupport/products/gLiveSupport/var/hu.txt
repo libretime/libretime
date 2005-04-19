@@ -9,6 +9,7 @@ hu:table
     scratchpadButtonLabel:string            { "praktikus csupor" }
     simplePlaylistMgmtButtonLabel:string    { "egyszerű playlist kezelés" }
     schedulerButtonLabel:string             { "időzítő" }
+    searchButtonLabel:string                { "keresés" }
 
     localeNotAvailableMsg:string        { "A {0} nyelv nem elérhető" }
     schedulerNotReachableMsg:string     { "Az időzitő szerver nem elérhető" }
@@ -126,6 +127,11 @@ hu:table
         minuteLabel:string           { "perc: " }
         scheduleButtonLabel:string   { "időzít" }
         closeButtonLabel:string      { "bezár" }
+    }
+
+    searchWindow:table
+    {
+        windowTitle:string            { "LiveSupport Keresés Ablak" }
     }
 }
 
