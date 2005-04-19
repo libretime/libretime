@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.29 $
+#   Version  : $Revision: 1.30 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -267,6 +267,9 @@ start: ${SCHEDULER_EXE}
 
 stop: ${SCHEDULER_EXE}
 	${MAKE} -C ${SCHEDULER_DIR} stop
+
+status: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} status
 
 uninstall: ${SCHEDULER_EXE}
 	-${MAKE} -C ${SCHEDULER_DIR} uninstall

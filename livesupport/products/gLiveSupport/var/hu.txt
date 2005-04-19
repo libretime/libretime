@@ -132,6 +132,13 @@ hu:table
     searchWindow:table
     {
         windowTitle:string            { "LiveSupport Keresés Ablak" }
+
+        searchTab:string              { "Keresés" }
+        advancedSearchTab:string      { "Összetett keresés" }
+        browseTab:string              { "Nézelődés" }
+
+        searchByTextLabel:string      { "Keresési feltétel:" }
+        searchButtonLabel:string      { "Keress!" }
     }
 }
 

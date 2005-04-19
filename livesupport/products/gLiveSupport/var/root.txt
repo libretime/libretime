@@ -134,6 +134,13 @@ root:table
     searchWindow:table
     {
         windowTitle:string            { "LiveSupport Search/Browse Window" }
+
+        searchTab:string              { "Search" }
+        advancedSearchTab:string      { "Advanced Search" }
+        browseTab:string              { "Browse" }
+        
+        searchByTextLabel:string      { "Search by" }
+        searchButtonLabel:string      { "Search" }
     }
 }
 

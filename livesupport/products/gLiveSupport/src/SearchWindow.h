@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,11 +72,20 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
     private:
+
+        /**
+         *  Construct the advanced search view.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructAdvancedSearchView(void)               throw ();
+
 
     protected:
 
@@ -85,7 +94,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -130,34 +139,19 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
 
 
         /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
-
-        /**
          *  The column model.
          */
-        ModelColumns                modelColumns;
-
-        /**
-         *  The main container in the window.
-         */
-        Gtk::VBox                   vBox;
-
-        /**
-         *  A scrolled window, so that the list can be scrolled.
-         */
-        Gtk::ScrolledWindow         scrolledWindow;
-
-        /**
-         *  The tree view.
-         */
-        ZebraTreeView *             treeView;
+        ModelColumns                    modelColumns;
 
         /**
          *  The tree model, as a GTK reference.
          */
         Glib::RefPtr<Gtk::ListStore>    treeModel;
+
+        /**
+         *  The GLiveSupport object, holding the state of the application.
+         */
+        Ptr<GLiveSupport>::Ref          gLiveSupport;
 
     public:
 

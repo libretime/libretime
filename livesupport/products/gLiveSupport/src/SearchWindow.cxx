@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,11 @@
 #include <stdexcept>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/Notebook.h"
+#include "LiveSupport/Widgets/Button.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SearchWindow.h"
 
 
@@ -69,10 +74,23 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
             LocalizedObject(bundle)
 {
     this->gLiveSupport = gLiveSupport;
+    treeModel = Gtk::ListStore::create(modelColumns);
+
+    Gtk::VBox *     searchView = Gtk::manage(new Gtk::VBox);
+    Gtk::VBox *     advancedSearchView = constructAdvancedSearchView();
+    Gtk::VBox *     browseView = Gtk::manage(new Gtk::VBox);
+
+    Notebook *      views = Gtk::manage(new Notebook);    
+    views->appendPage(*searchView,          *getResourceUstring("searchTab"));
+    views->appendPage(*advancedSearchView,  *getResourceUstring(
+                                                        "advancedSearchTab"));
+    views->appendPage(*browseView,          *getResourceUstring("browseTab"));
+
+    add(*views);    
 
     // show
     set_name("searchWindow");
-    set_default_size(300, 300);
+//    set_default_size(300, 300);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -88,3 +106,61 @@ SearchWindow :: ~SearchWindow (void)                            throw ()
 {
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Construct the advanced search view.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+SearchWindow :: constructAdvancedSearchView(void)               throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+
+    // the three main components of the window    
+    Gtk::Box *      searchOptionsBox = Gtk::manage(new Gtk::HBox);
+    Gtk::Box *      searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
+                                                        Gtk::BUTTONBOX_END ));
+    ZebraTreeView * searchResults = Gtk::manage(wf->createTreeView(treeModel));
+
+    // make a new box, and pack the main components into it
+    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
+    view->pack_start(*searchButtonBox,  Gtk::PACK_SHRINK, 5);
+    view->pack_start(*searchResults,    Gtk::PACK_SHRINK, 5);
+
+    // set up the search options box
+    Gtk::Label *    searchByLabel = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring("searchByTextLabel") ));
+    ComboBoxText *  metadataType = Gtk::manage(wf->createComboBoxText());
+    metadataType->append_text("Title");
+    metadataType->append_text("Creator");
+    metadataType->append_text("Length");
+    metadataType->set_active_text("Title");
+    ComboBoxText *  operatorType = Gtk::manage(wf->createComboBoxText());
+    operatorType->append_text("contains");
+    operatorType->append_text("equals");
+    operatorType->append_text(">=");
+    operatorType->append_text("<");
+    operatorType->set_active_text("contains");
+    EntryBin *      entryBin = Gtk::manage(wf->createEntryBin());
+    searchOptionsBox->pack_start(*searchByLabel, Gtk::PACK_SHRINK, 5);
+    searchOptionsBox->pack_start(*metadataType, Gtk::PACK_EXPAND_WIDGET, 5);
+    searchOptionsBox->pack_start(*operatorType, Gtk::PACK_EXPAND_WIDGET, 5);
+    searchOptionsBox->pack_start(*entryBin,     Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    // set up the search button box
+    Button *        searchButton = Gtk::manage(wf->createButton(
+                                    *getResourceUstring("searchButtonLabel") ));
+    searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
+    
+    return view;
+}
+
+
+
+
+
+
+
+
+
+    

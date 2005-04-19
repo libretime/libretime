@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Notebook.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,8 +64,8 @@ Notebook :: Notebook(void)                                      throw ()
     tabBox     = Gtk::manage(new Gtk::HBox());
     pageHolder = Gtk::manage(new Gtk::Alignment());
 
-    layout->attach(*tabBox,     0, 1, 0, 1);
-    layout->attach(*pageHolder, 0, 1, 1, 2);
+    layout->attach(*tabBox,     0, 1, 0, 1, Gtk::SHRINK, Gtk::SHRINK, 5, 5);
+    layout->attach(*pageHolder, 0, 1, 1, 2, Gtk::SHRINK, Gtk::SHRINK, 5, 5);
 
     add(*layout);
 
