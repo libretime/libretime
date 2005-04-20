@@ -3,6 +3,22 @@
 	<status />
 	<Id>hu_HU</Id>
 	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to delete active Playlist?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to logout $1?</key>
+		<value />
+	</item>
+	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
 		<value />
 	</item>
@@ -387,11 +403,11 @@
 		<value />
 	</item>
 	<item>
-		<key>Edit File</key>
+		<key>Edit Metadata</key>
 		<value />
 	</item>
 	<item>
-		<key>Edit Metadata</key>
+		<key>Edit Playlist</key>
 		<value />
 	</item>
 	<item>
@@ -703,15 +719,15 @@
 		<value />
 	</item>
 	<item>
+		<key>Reset Criteria</key>
+		<value />
+	</item>
+	<item>
 		<key>Revert to Saved</key>
 		<value />
 	</item>
 	<item>
 		<key>Rows Per Page</key>
-		<value />
-	</item>
-	<item>
-		<key>Rows per Page</key>
 		<value />
 	</item>
 	<item>
@@ -728,10 +744,6 @@
 	</item>
 	<item>
 		<key>Save and Close this Playlist</key>
-		<value />
-	</item>
-	<item>
-		<key>Scheduler</key>
 		<value />
 	</item>
 	<item>

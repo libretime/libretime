@@ -4,7 +4,7 @@ class uiSearch
     function uiSearch(&$uiBase)
     {
         $this->Base       =& $uiBase;
-        $this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
+        #$this->results    =& $_SESSION[UI_SEARCH_SESSNAME]['results'];
         $this->criteria   =& $_SESSION[UI_SEARCH_SESSNAME]['criteria'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
     }
@@ -14,18 +14,16 @@ class uiSearch
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
-
     function getResult()
     {
+        $this->searchDB();
         return $this->results;
     }
-
 
     function getCriteria()
     {
         return $this->criteria;
     }
-
 
     function searchForm($id, &$mask2)
     {
@@ -98,7 +96,7 @@ class uiSearch
             }
         }
         $this->Base->redirUrl = UI_BROWSER.'?act=SEARCH';
-        $this->searchDB();
+        #$this->searchDB();
     }
 
 
@@ -140,12 +138,15 @@ class uiSearch
                                                );
         }
         $this->Base->redirUrl = UI_BROWSER.'?act=SEARCH';
-        $this->searchDB();
+        #$this->searchDB();
     }
 
 
     function searchDB()
     {
+        if (count($this->criteria) === 0)
+            return FALSE;
+            
         $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
 
         #print_r($this->criteria);
@@ -223,7 +224,7 @@ class uiSearch
 
         $this->criteria['orderby'] = $by;
         $this->setReload();
-        $this->searchDB();
+        #$this->searchDB();
     }
 
 
@@ -248,7 +249,7 @@ class uiSearch
             $o = $l * ($page-1);
         }
         $this->setReload();
-        $this->searchDB();
+        #$this->searchDB();
     }
 }
 ?>

@@ -14,11 +14,18 @@
 {literal}
 
 var MData_confirmChangeVisited = false;
+
 function MData_confirmChange(element)
 {
     if (MData_confirmChangeVisited) return true;
-    MData_confirmChangeVisited = true;
-    if (confirm("##Are you sure you want to change existing metadata?##") == false) element.blur();
+
+    if (confirm("##Are you sure you want to change existing metadata?##")) {
+        MData_confirmChangeVisited = true;
+        return true;
+    } else {
+        document.forms['langswitch'].elements['target_langid'].focus();
+        return false;
+    }
 }
 
 function MData_submit()

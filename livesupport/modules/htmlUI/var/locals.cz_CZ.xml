@@ -3,6 +3,22 @@
 	<status />
 	<Id>cz_CZ</Id>
 	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to delete active Playlist?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to logout $1?</key>
+		<value />
+	</item>
+	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
 		<value />
 	</item>
@@ -387,12 +403,12 @@
 		<value>Editovat</value>
 	</item>
 	<item>
-		<key>Edit File</key>
-		<value>Editovat soubor</value>
-	</item>
-	<item>
 		<key>Edit Metadata</key>
 		<value>Editovat metadata</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value />
 	</item>
 	<item>
 		<key>Encoded by</key>
@@ -703,15 +719,15 @@
 		<value>Zopakujte heslo</value>
 	</item>
 	<item>
+		<key>Reset Criteria</key>
+		<value />
+	</item>
+	<item>
 		<key>Revert to Saved</key>
 		<value>Vrátit do uloženého stavu</value>
 	</item>
 	<item>
 		<key>Rows Per Page</key>
-		<value>Počet řádek na stránku</value>
-	</item>
-	<item>
-		<key>Rows per Page</key>
 		<value>Počet řádek na stránku</value>
 	</item>
 	<item>
@@ -729,10 +745,6 @@
 	<item>
 		<key>Save and Close this Playlist</key>
 		<value>Uložit a zavřít playlist</value>
-	</item>
-	<item>
-		<key>Scheduler</key>
-		<value>Plánovač</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>

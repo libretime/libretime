@@ -199,7 +199,7 @@ class uiBase
             }
             ## add required rule ###################
             if ($v['required']) {
-                $form->addRule($v['element'], isset($v['requiredmsg'])?tra($v['requiredmsg']):tra('Missing value for $1', tra($v['label'])), 'required', NULL, $side);
+                $form->addRule($v['element'], isset($v['requiredmsg']) ? tra($v['requiredmsg']) : tra('Missing value for $1', tra($v['label'])), 'required', NULL, $side);
             }
             ## add constant value ##################
             if (isset($v['constant'])) {

@@ -18,8 +18,8 @@
     {if count($structure.listdata)}
         {foreach from=$structure.listdata item=i}
             {assign var="_listen_gunid" value=$i.gunid}
-            <tr class="{cycle values='blue1, blue2'}" {assign var="moreContextBefore" value=", 'SP.addItem'"}{include file="sub/contextmenu.tpl"}>
-              <td>
+            <tr class="{cycle values='blue1, blue2'}" {assign var="moreContextBefore" value=", 'SP.addItem'"}>
+              <td {include file="sub/contextmenu.tpl"}>
                 <span id="ID{$i.id}">
                     {if $i.type|lower eq 'folder'}
                          <a href="{$UI_BROWSER}?act=fileList&id={$i.id}" >[{$i.title|truncate:30}]</b>
@@ -32,7 +32,7 @@
                     {/if}
                 </span>
               </td>
-              <td>{$i.type|lower|capitalize}</td>
+              <td {include file="sub/contextmenu.tpl"}>{$i.type|lower|capitalize}</td>
               <td style="border: 0">
                   <!-- &nbsp;<a href="javascript:frename('{$i.name}', '{$i.id}')">[rename]</a> -->
                   &nbsp;<a href="javascript:fmove('{$i.id}', '.')">##move##</a>

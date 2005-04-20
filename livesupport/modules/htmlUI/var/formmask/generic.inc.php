@@ -212,7 +212,8 @@ $ui_fmask = array(
             'element'   => 'pass',
             'type'      => 'password',
             'label'     => 'Password',
-            'required'  => TRUE
+            'required'  => TRUE,
+            'requiredmsg' => ""
         ),
         array(
             'element'   => 'cancel',
@@ -411,15 +412,15 @@ $ui_fmask = array(
         array(
             'element'   => 'clear',
             'type'      => 'button',
-            'label'     => 'Reset',
-            'attributes'  => array('onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
+            'label'     => 'Reset Criteria',
+            'attributes'  => array('class' => 'button_wide', 'onClick' => "this.form.reset(); hpopup('".UI_HANDLER."?act=SEARCH.clear', 'SF')"),
             'groupit'   => TRUE,
         ),
         array(
             'element'   => 'addrow',
             'type'      => 'button',
             'label'     => 'Add Criteria',
-            'attributes'  => array('onClick' => 'SearchForm_addRow()'),
+            'attributes'  => array('class' => 'button_wide', 'onClick' => 'SearchForm_addRow()'),
             'groupit'   => TRUE,
         ),
         array(
@@ -427,6 +428,7 @@ $ui_fmask = array(
             'type'      => 'submit',
             'label'     => 'Submit',
             'groupit'   => TRUE,
+            'attributes'  => array('class' => 'button_wide')
         ),
         array('group'   => array('clear', 'addrow', 'submit')
         ),
@@ -532,7 +534,25 @@ $ui_fmask = array(
                             100 => 100
                            ),
             'attributes'=> array('onChange' => 'hpopup("'.UI_HANDLER.'?act=BROWSE.setLimit&limit=" + this.form.limit.value)')
+        ),
+        /*        do we need reset?
+        array(
+            'element'   => 'spacer',
+            'type'      => 'static',
+            'constant'  => '',
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'reset',
+            'type'      => 'button',
+            'label'     => 'Reset Criteria',
+            'attributes'=> array('class' => 'button_wide', 'onClick' => 'hpopup("'.UI_HANDLER.'?act=BROWSE.setDefaults")'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('spacer', 'reset')
         )
+        */
     ),
 
     'simplesearch'  => array(
@@ -646,14 +666,14 @@ $ui_fmask = array(
                 'element'   => 'switchdown',
                 'type'      => 'button',
                 'label'     => '-',
-                'attributes'=> array('onClick' => 'pl_switchDown()', 'onMousedown' => 'pl_start("Down")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
+                'attributes'=> array('class' => 'button_small', 'onClick' => 'pl_switchDown()', 'onMousedown' => 'pl_start("Down")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
                 'groupit'   => TRUE
             ),
             array(
                 'element'   => 'switchup',
                 'type'      => 'button',
                 'label'     => '+',
-                'attributes'=> array('onClick' => 'pl_switchUp()', 'onMousedown' => 'pl_start("Up")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
+                'attributes'=> array('class' => 'button_small', 'onClick' => 'pl_switchUp()', 'onMousedown' => 'pl_start("Up")', 'onMouseUp' => "pl_stop()", 'onMouseOut' => "pl_stop()"),
                 'groupit'   => TRUE
             ),
             array(

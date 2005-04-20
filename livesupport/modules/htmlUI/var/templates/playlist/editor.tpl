@@ -63,13 +63,13 @@
                     <input type="button" class="button_large" onClick="collector_clearAll('PL', 'PL.removeItem')" value="##Clear Playlist##" />
                 </div>
                 <div class="container_button">
-                    <input type="button" class="button_large" value="##Save Playlist##" onClick="hpopup('{$UI_HANDLER}?act=PL.save')">
-                    <input type="button" class="button_large" value="##Revert to Saved##" onClick="hpopup('{$UI_HANDLER}?act=PL.revert')">
-                    <input type="button" class="button_large" value="##Delete Playlist##" onClick="popup('{$UI_BROWSER}?popup[]=PL.deleteActive', 'PL.deleteActive', 400, 200)">
+                    <input type="button" class="button_large" value="##Save Playlist##"   onClick="hpopup('{$UI_HANDLER}?act=PL.save')">
+                    <input type="button" class="button_large" value="##Revert to Saved##" onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmRevert', 'PL.revertChanges', 400, 50)">
+                    <input type="button" class="button_large" value="##Delete Playlist##" onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmDelete', 'PL.deleteActive', 400, 50)">
                 </div>
                 <div class="container_button">
-                    <input type="button" class="button_large" value="##Save and Close##" onClick="hpopup('{$UI_HANDLER}?act=PL.release')">
-                    <input type="button" class="button_large" value="##Metadata##" onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'">
+                    <input type="button" class="button_large" value="##Close Playlist##"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)">
+                    <input type="button" class="button_large" value="##Metadata##"        onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'">
                 </div>
             </div>
 

@@ -6,20 +6,14 @@ class uiBrowse
         $this->Base       =& $uiBase;
         $this->col        =& $_SESSION[UI_BROWSE_SESSNAME]['col'];
         $this->criteria   =& $_SESSION[UI_BROWSE_SESSNAME]['criteria'];
-        $this->results    =& $_SESSION[UI_BROWSE_SESSNAME]['results'];
+        #$this->results    =& $_SESSION[UI_BROWSE_SESSNAME]['results'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
-        $this->criteria['limit'] ? NULL : $this->criteria['limit'] = 5;
+        $this->criteria['limit'] ? NULL : $this->criteria['limit'] = 10;
 
         if (!is_array($this->col)) {
-            $this->col[1]['category'] = 'dc:type';
-            $this->col[2]['category'] = 'dc:creator';
-            $this->col[3]['category'] = 'dc:source';
-            for ($col=1; $col<=3; $col++) {
-                $this->setCategory(array('col' => $col, 'category' => $this->col[$col]['category']));
-            }
+            $this->setDefaults();
         }
-        #print_r($this->col);
     }
 
     function setReload()
@@ -27,6 +21,27 @@ class uiBrowse
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
+
+    function setDefaults($reload=FALSE)
+    {
+        $this->col[1]['category'] = 'dc:type';
+        $this->col[1]['value'][0] = '%%all%%';
+        $this->col[2]['category'] = 'dc:creator';
+        $this->col[2]['value'][0] = '%%all%%';
+        $this->col[3]['category'] = 'dc:source';
+        $this->col[3]['value'][0] = '%%all%%';
+        for ($col=1; $col<=3; $col++) {
+            $this->setCategory(array('col' => $col, 'category' => $this->col[$col]['category'], 'value' => array(0=>'%%all%%')));
+        }
+
+        $this->setValue(array('col' => 1,
+                              'category' => 'dc:type',
+                              'value' => Array(0 => '%%all%%')
+                        )
+        );
+
+        if ($reload === TRUE) $this->setReload();
+    }
 
     function getCriteria()
     {
@@ -36,6 +51,7 @@ class uiBrowse
 
     function getResult()
     {
+        $this->searchDB();
         return $this->results;
     }
 
@@ -116,7 +132,7 @@ class uiBrowse
         #echo "\nvalues: "; print_r($this->col[$next]['values']);
 
         $this->clearHierarchy($next);
-        $this->searchDB();
+        #$this->searchDB();
         $this->Base->redirUrl = UI_BROWSER.'?act=BROWSE';
     }
 
@@ -217,7 +233,7 @@ class uiBrowse
 
         $this->criteria['orderby'] = $by;
         $this->setReload();
-        $this->searchDB();
+        #$this->searchDB();
     }
 
 
@@ -234,21 +250,21 @@ class uiBrowse
             $o = $l * ($page-1);
         }
         $this->setReload();
-        $this->searchDB();
+        #$this->searchDB();
     }
 
     function setLimit($limit)
     {
         $this->criteria['limit'] = $limit;
         $this->setReload();
-        $this->searchDB();
+        #$this->searchDB();
     }
 
     function setFiletype($filetype)
     {
         $this->criteria['filetype'] = $filetype;
         $this->setReload();
-        $this->searchDB();
+        #$this->searchDB();
     }
 }
 ?>

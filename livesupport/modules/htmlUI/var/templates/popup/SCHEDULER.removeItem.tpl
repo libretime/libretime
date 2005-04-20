@@ -1,10 +1,10 @@
 {include file="popup/header.tpl"}
 
 <center>
-<b>Are you sure to remove this entry?</b>
-<br>
-<input type="button" onClick="window.close()" value="Cancel">
-<input type="button" onClick="location.href='{$UI_HANDLER}?act=SCHEDULER.removeItem&scheduleId={$scheduleId}'" value="OK">
+<b>{tra 0='Are you sure to remove playlist "$1"?' 1=$plname}</b>
+<br><br>
+<input type="button" class="button" onClick="window.close()" value="Cancel">
+<input type="button" class="button" onClick="location.href='{$UI_HANDLER}?act=SCHEDULER.removeItem&scheduleId={$scheduleId}'" value="OK">
 </center>
 
 </body>

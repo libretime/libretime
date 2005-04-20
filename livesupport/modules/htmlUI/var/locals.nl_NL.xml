@@ -3,6 +3,22 @@
 	<status />
 	<Id>nl_NL</Id>
 	<item>
+		<key>Are you sure to delete file &quot;$1&quot;?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to delete active Playlist?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to logout $1?</key>
+		<value />
+	</item>
+	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
 		<value />
 	</item>
@@ -387,12 +403,12 @@
 		<value>Bewerken</value>
 	</item>
 	<item>
-		<key>Edit File</key>
-		<value>Bestand bewerken</value>
-	</item>
-	<item>
 		<key>Edit Metadata</key>
 		<value>Meta-gegevens aanpassen</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value />
 	</item>
 	<item>
 		<key>Encoded by</key>
@@ -703,15 +719,15 @@
 		<value>Wachtwoord opnieuw invoeren</value>
 	</item>
 	<item>
+		<key>Reset Criteria</key>
+		<value />
+	</item>
+	<item>
 		<key>Revert to Saved</key>
 		<value>Ongedaan maken</value>
 	</item>
 	<item>
 		<key>Rows Per Page</key>
-		<value>Aantal rijen per pagina</value>
-	</item>
-	<item>
-		<key>Rows per Page</key>
 		<value>Aantal rijen per pagina</value>
 	</item>
 	<item>
@@ -729,10 +745,6 @@
 	<item>
 		<key>Save and Close this Playlist</key>
 		<value>Playlist opslaan en afsluiten</value>
-	</item>
-	<item>
-		<key>Scheduler</key>
-		<value>Scheduler</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>

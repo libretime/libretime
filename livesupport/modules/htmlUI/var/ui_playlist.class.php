@@ -47,7 +47,7 @@ class uiPlaylist
         # look PL
         # store access token to ls_pref abd session
         # load PL into session
-        if($this->token) {
+        if ($this->token) {
              if (UI_WARNING) $this->Base->_retMsg('You have an Playlist already activated, first close it');
             return FALSE;
         }
@@ -55,7 +55,13 @@ class uiPlaylist
              if (UI_WARNING) $this->Base->_retMsg('Playlist has been locked by $1', $this->Base->gb->getSubjName($userid));
             return FALSE;
         }
-        $this->token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
+        $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
+        if (PEAR::isError($token)) {
+            #print_r($this->token);
+            $this->Base->_retMsg('Unable to activate playlist "$1"'. $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+            return FALSE;
+        }
+        $this->token = $token;
         $this->Base->gb->savePref($this->Base->sessid, UI_PL_ACCESSTOKEN_KEY, $plid.':'.$this->token);
         $this->activeId = $plid;
         if ($msg && UI_VERBOSE) $this->Base->_retMsg('Playlist "$1" activated', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
@@ -223,20 +229,20 @@ class uiPlaylist
     function plwalk($arr, $parent=0, $attrs=0)
     {
         foreach ($arr['children'] as $node=>$sub) {
-            if ($sub['elementname']==='playlistElement') {
+            if (strtolower($sub['elementname'])==='playlistelement') {
                 $this->plwalk($sub, $node, $sub['attrs']);
             }
-            if ($sub['elementname']==='audioClip' || $sub['elementname']==='playlist') {
+            if (strtolower($sub['elementname'])==='audioclip' || strtolower($sub['elementname'])==='playlist') {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
                 $this->flat[$parent] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
                 $this->flat[$parent]['attrs'] = $attrs;
             }
-            if ($sub['elementname']==='fadeInfo') {
-                $this->flat[$parent]['fadein']  = GreenBox::_plTimeToSecs($sub['attrs']['fadeIn']);
-                $this->flat[$parent]['fadeout'] = GreenBox::_plTimeToSecs($sub['attrs']['fadeOut']);
-                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadeIn']  ? GreenBox::_plTimeToSecs($sub['attrs']['fadeIn'])  * 1000 : 0;
-                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeOut'] ? GreenBox::_plTimeToSecs($sub['attrs']['fadeOut']) * 1000 : 0;
+            if (strtolower($sub['elementname'])==='fadeinfo') {
+                $this->flat[$parent]['fadein']  = GreenBox::_plTimeToSecs($sub['attrs']['fadein']);
+                $this->flat[$parent]['fadeout'] = GreenBox::_plTimeToSecs($sub['attrs']['fadeout']);
+                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadein']  ? GreenBox::_plTimeToSecs($sub['attrs']['fadein'])  * 1000 : 0;
+                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeout'] ? GreenBox::_plTimeToSecs($sub['attrs']['fadeout']) * 1000 : 0;
             }
         }
     }
@@ -408,9 +414,15 @@ class uiPlaylist
     function editMetaData(&$formdata)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
+
         $id             = $this->activeId;
         $curr_langid    = $formdata['curr_langid'];
-        $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
+
+        ## if language switched stay on metadataform ##
+        if ($curr_langid === $formdata['target_langid'])
+            $this->Base->redirUrl = UI_BROWSER."?act=PL.simpleManagement";
+        else
+            $this->Base->redirUrl = UI_BROWSER."?act=PL.editMetaData&id=$id&curr_langid=".$formdata['target_langid'];
 
         foreach ($mask['playlist'] as $k=>$v) {
             $formdata[$this->Base->_formElementEncode($v['element'])] ? $mData[$this->Base->_formElementDecode($v['element'])] = $formdata[$this->Base->_formElementEncode($v['element'])] : NULL;

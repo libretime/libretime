@@ -61,8 +61,16 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/PLAYLIST.changeTransition.tpl');
             break;
 
-            case "PL.deleteActive":
-                $Smarty->display('popup/PLAYLIST.deleteActive.tpl');
+            case "PL.confirmDelete":
+                $Smarty->display('popup/PLAYLIST.confirmDelete.tpl');
+            break;
+
+            case "PL.confirmRevert":
+                $Smarty->display('popup/PLAYLIST.confirmRevert.tpl');
+            break;
+
+            case "PL.confirmRelease":
+                $Smarty->display('popup/PLAYLIST.confirmRelease.tpl');
             break;
 
             case "SCHEDULER.addItem":

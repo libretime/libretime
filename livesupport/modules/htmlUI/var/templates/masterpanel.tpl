@@ -1,6 +1,3 @@
-{*Smarty template*}
-
-
 {include file="statusbar.tpl"}
 
 {if $showMenuTop}

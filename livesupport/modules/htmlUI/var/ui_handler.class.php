@@ -58,7 +58,7 @@ class uiHandler extends uiBase {
 
         $id = $this->gb->getObjId($formdata['login'], $this->gb->storId);
         if(PEAR::isError($id)) {
-            $this->_retMsg('Login failed');
+            $this->_retMsg('Access to home directory failed.');
             $_SESSION['retransferFormData']['login']=$formdata['login'];
             $this->redirUrl = UI_BROWSER.'?popup[]=login';
             return FALSE;

@@ -1,5 +1,5 @@
 {include file="sub/mouseover.tpl"}
-onClick="return contextmenu('{$i.id}'
+onClick="hidealttextnow(); return contextmenu('{$i.id}'
     , 'SP.addItem'
 
     {if $i.type|lower == 'audioclip'}

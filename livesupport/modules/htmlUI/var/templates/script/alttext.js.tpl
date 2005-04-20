@@ -6,7 +6,7 @@
     alttextHeight = 0;
 
     function showalttext(param) {
-        var alttextHeader  = "<div class='alttext' id='alttext' style='position: absolute; top: -250; left: 0; z-index: 99'>";
+        var alttextHeader  = "<div class='alttext' id='alttext' style='position: absolute; top: -1000; left: 0; z-index: 99'>";
         var alttextFooter  = "</div>";
         var alttextHtml    = '';
 
@@ -57,7 +57,7 @@
     }
 
     function hidealttextnow() {
-        document.getElementById('alttext').style.top = -250;
+        document.getElementById('alttext').style.top = -1000;
     }
 
 </script>

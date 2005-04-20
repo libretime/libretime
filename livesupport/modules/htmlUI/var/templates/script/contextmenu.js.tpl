@@ -14,7 +14,7 @@
 
 
     function contextmenu(param) {
-        var contextmenuHeader  = "<div class='contextmenu' id='contextmenu' style='position: absolute; top: -250; left: 0; z-index: 100'>" +
+        var contextmenuHeader  = "<div class='contextmenu' id='contextmenu' style='position: absolute; top: -1000; left: 0; z-index: 100'>" +
                                     "<ul>";
         var contextmenuFooter  = "</ul></div>";
         var contextmenuHtml    = '';
@@ -33,7 +33,7 @@
                 break;
 
                 case "PL.release":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=PL.release')\" "+oF+">&nbsp;##Save and Close this Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)\" "+oF+">&nbsp;##Close playlist##&nbsp;</a></li>";
                 break;
 
                 case "PL.addItem":
@@ -45,7 +45,7 @@
                 break;
 
                 case "PL.activate":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;##Activate this Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;##Edit Playlist##&nbsp;</a></li>";
                 break;
 
                 case "PL.create":
@@ -86,7 +86,7 @@
                 break;
 
                 case "delete":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 200)\"')"+oF+">&nbsp;##Delete File##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 50)\"')"+oF+">&nbsp;##Delete File##&nbsp;</a></li>";
                 break;
 
                 case "fileList":
@@ -94,11 +94,11 @@
                 break;
 
                 case "SCHEDULER.addItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 400, 200)\"')"+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\"')"+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
                 break;
 
                 case "SCHEDULER.removeItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 200)\"')"+oF+">&nbsp;##Remove Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 50)\"')"+oF+">&nbsp;##Remove Playlist##&nbsp;</a></li>";
                 break;
                 {literal}
             }
@@ -136,7 +136,7 @@
             contextmenuStatus = 0;
         }
     }
-    
+
 </script>
 
 

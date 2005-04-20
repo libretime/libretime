@@ -371,6 +371,8 @@ class uiBrowser extends uiBase {
         $handler =& new XML_Unserializer;
         $handler->unserialize($this->getMdata($id));
         $arr = $handler->getUnserializedData();
+        if (!is_array($arr))
+            return FALSE;
 
         foreach ($arr['metadata'] as $key=>$val) {
             if ($relations[$key]) {

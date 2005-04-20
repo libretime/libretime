@@ -161,8 +161,8 @@ switch($_REQUEST['act']){
         $uiHandler->BROWSE->reOrder($_REQUEST['by']);
     break;
 
-    case "BROWSE.clear":
-        $uiHandler->BROWSE->clear();
+    case "BROWSE.setDefaults":
+        $uiHandler->BROWSE->setDefaults(TRUE);
     break;
 
     case "BROWSE.setOffset":
@@ -219,6 +219,12 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReload();
     break;
 
+    case "PL.revertANDclose":
+        $uiHandler->PLAYLIST->revert();
+        $uiHandler->PLAYLIST->release();
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
     case"PL.unlook":
         $uiHandler->PLAYLIST->loadLookedFromPref();
         $uiHandler->PLAYLIST->setReload();
@@ -261,7 +267,7 @@ switch($_REQUEST['act']){
     break;
 
     default:
-        $uiHandler->_retMsg("Unknown method: $1", $_REQUEST["act"]);
+        if ($uiHandler->userid) $uiHandler->_retMsg("Unknown method: $1", $_REQUEST["act"]);
         $uiHandler->redirUrl = UI_BROWSER;
         if ($_REQUEST['is_popup'])
              $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';
