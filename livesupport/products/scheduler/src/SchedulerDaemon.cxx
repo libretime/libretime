@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -266,20 +266,6 @@ SchedulerDaemon :: configure(const xmlpp::Element    & element)
     audioPlayer       = apf->getAudioPlayer();
     playLog           = plf->getPlayLog();
     schedule          = sf->getSchedule();
-
-    Ptr<PlaylistEventContainer>::Ref    eventContainer;
-    Ptr<time_duration>::Ref             granularity;
-    eventContainer.reset(new PlaylistEventContainer(sessionId,
-                                                    storage,
-                                                    schedule,
-                                                    audioPlayer,
-                                                    playLog));
-    // TODO: read granularity from config file
-    granularity.reset(new time_duration(seconds(1)));
-
-    eventScheduler.reset(
-            new LiveSupport::EventScheduler::EventScheduler(eventContainer,
-                                                            granularity));
 }
 
 
@@ -402,7 +388,23 @@ SchedulerDaemon :: startup (void)                           throw ()
         // TODO: mark error
         std::cerr << "Helix initialization problem: " << e.what() << std::endl;
     }
+    if (!eventScheduler.get()) {
+        Ptr<PlaylistEventContainer>::Ref    eventContainer;
+        Ptr<time_duration>::Ref             granularity;
+        eventContainer.reset(new PlaylistEventContainer(sessionId,
+                                                        storage,
+                                                        schedule,
+                                                        audioPlayer,
+                                                        playLog));
+        // TODO: read granularity from config file
+        granularity.reset(new time_duration(seconds(1)));
+
+        eventScheduler.reset(
+                new LiveSupport::EventScheduler::EventScheduler(eventContainer,
+                                                                granularity));
+    }
     eventScheduler->start();
+
     XmlRpcDaemon::startup();
 }
 
@@ -413,7 +415,9 @@ SchedulerDaemon :: startup (void)                           throw ()
 void
 SchedulerDaemon :: shutdown(void)               throw (std::logic_error)
 {
-    eventScheduler->stop();
+    if (eventScheduler.get()) {
+        eventScheduler->stop();
+    }
     audioPlayer->deInitialize();
 
     XmlRpcDaemon::shutdown();
@@ -427,6 +431,8 @@ void
 SchedulerDaemon :: update (void)                throw (std::logic_error)
 {
     // TODO: check if we've been configured
-    eventScheduler->update();
+    if (eventScheduler.get()) {
+        eventScheduler->update();
+    }
 }
 
