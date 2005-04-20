@@ -23,11 +23,11 @@
  
     Author   : $Author: fgerlits $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/SearchCriteriaTest.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Attic/AdvancedSearchEntry.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef SearchCriteriaTest_h
-#define SearchCriteriaTest_h
+#ifndef LiveSupport_Widgets_AdvancedSearchEntry_h
+#define LiveSupport_Widgets_AdvancedSearchEntry_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,12 +40,20 @@
 #include "configure.h"
 #endif
 
-#include <cppunit/extensions/HelperMacros.h>
+#include <gtkmm/box.h>
+
+#include "LiveSupport/Core/Ptr.h"
+#include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/SearchCriteria.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/EntryBin.h"
 
 
 namespace LiveSupport {
-namespace Storage {
+namespace Widgets {
 
+using namespace LiveSupport::Core;
+    
 /* ================================================================ constants */
 
 
@@ -55,42 +63,61 @@ namespace Storage {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the SearchCriteria class.
+ *  A Gtk::VBox with one or more search input fields in it.
  *
  *  @author  $Author: fgerlits $
  *  @version $Revision: 1.1 $
- *  @see SearchCriteria
  */
-class SearchCriteriaTest : public CPPUNIT_NS::TestFixture
+class AdvancedSearchEntry : public Gtk::VBox,
+                            public LocalizedObject
 {
-    CPPUNIT_TEST_SUITE(SearchCriteriaTest);
-    CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST_SUITE_END();
-
-    protected:
+    private:
+    
+        /**
+         *  The metadata field.
+         */
+        ComboBoxText *      metadataType;
 
         /**
-         *  A simple test.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
+         *  The operator field.
          */
-        void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+        ComboBoxText *      operatorType;
+
+        /**
+         *  The "search for this value" field.
+         */
+        EntryBin *          entryBin;
+        
+        /**
+         *  Default constructor.
+         */
+        AdvancedSearchEntry(void)                               throw ();
 
 
     public:
-        
+    
         /**
-         *  Set up the environment for the test case.
+         *  Constructor with localization parameter.
          */
-        void
-        setUp(void)                                     throw ();
+        AdvancedSearchEntry(Ptr<ResourceBundle>::Ref    bundle)
+                                                                throw ();
 
         /**
-         *  Clean up the environment after the test case.
+         *  A virtual destructor.
          */
-        void
-        tearDown(void)                                  throw ();
+        virtual
+        ~AdvancedSearchEntry(void)                              throw ()
+        {
+        }
+
+        /**
+         *  Return the current state of the search fields.
+         *
+         *  @return a new LiveSupport::Storage::SearchCriteria instance,
+         *          which contains the data entered by the user
+         */
+        Ptr<SearchCriteria>::Ref
+        getSearchCriteria(void)                                 throw ();
 };
 
 
@@ -100,8 +127,8 @@ class SearchCriteriaTest : public CPPUNIT_NS::TestFixture
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace Widgets
 } // namespace LiveSupport
 
-#endif // SearchCriteriaTest_h
+#endif // LiveSupport_Widgets_AdvancedSearchEntry_h
 

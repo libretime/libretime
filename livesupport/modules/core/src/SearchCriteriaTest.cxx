@@ -22,17 +22,19 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/SearchCriteriaTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/SearchCriteriaTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ============================================================ include files */
 
-#include "LiveSupport/Storage/SearchCriteria.h"
+#include <iostream>
+
+#include "LiveSupport/Core/SearchCriteria.h"
 #include "SearchCriteriaTest.h"
 
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::Core;
 
 
 /* ===================================================  local data structures */
@@ -65,8 +67,6 @@ SearchCriteriaTest :: tearDown(void)                      throw ()
 {
 }
 
-
-#include <iostream>
 
 /*------------------------------------------------------------------------------
  *  Test to see if we can do some simple operations

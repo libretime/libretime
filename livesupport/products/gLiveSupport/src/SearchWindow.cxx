@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,8 +39,7 @@
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Notebook.h"
 #include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ComboBoxText.h"
-#include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/AdvancedSearchEntry.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SearchWindow.h"
 
@@ -121,49 +120,24 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
     // the three main components of the window    
-    Gtk::Box *      searchOptionsBox = Gtk::manage(new Gtk::HBox);
+    advancedSearchOptions = Gtk::manage(new AdvancedSearchEntry(getBundle()));
     Gtk::Box *      searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END ));
-    ZebraTreeView * searchResults = Gtk::manage(wf->createTreeView(treeModel));
+    ZebraTreeView * searchResults = Gtk::manage(wf->createTreeView(
+                                                        treeModel ));
 
     // make a new box, and pack the main components into it
     Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
-    view->pack_start(*searchButtonBox,  Gtk::PACK_SHRINK, 5);
-    view->pack_start(*searchResults,    Gtk::PACK_SHRINK, 5);
-
-    // set up the search options box
-    try {
-        Gtk::Label *    searchByLabel = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring("searchByTextLabel") ));
-        searchOptionsBox->pack_start(*searchByLabel, Gtk::PACK_SHRINK, 5);
-
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    ComboBoxText *  metadataType = Gtk::manage(wf->createComboBoxText());
-    metadataType->append_text("Title");
-    metadataType->append_text("Creator");
-    metadataType->append_text("Length");
-    metadataType->set_active_text("Title");
-    searchOptionsBox->pack_start(*metadataType, Gtk::PACK_EXPAND_WIDGET, 5);
-
-    ComboBoxText *  operatorType = Gtk::manage(wf->createComboBoxText());
-    operatorType->append_text("contains");
-    operatorType->append_text("equals");
-    operatorType->append_text(">=");
-    operatorType->append_text("<");
-    operatorType->set_active_text("contains");
-    searchOptionsBox->pack_start(*operatorType, Gtk::PACK_EXPAND_WIDGET, 5);
-
-    EntryBin *      entryBin = Gtk::manage(wf->createEntryBin());
-    searchOptionsBox->pack_start(*entryBin,     Gtk::PACK_EXPAND_WIDGET, 5);
+    view->pack_start(*advancedSearchOptions,    Gtk::PACK_SHRINK, 5);
+    view->pack_start(*searchButtonBox,          Gtk::PACK_SHRINK, 5);
+    view->pack_start(*searchResults,            Gtk::PACK_SHRINK, 5);
     
     // set up the search button box
     try {
         Button *        searchButton = Gtk::manage(wf->createButton(
                                     *getResourceUstring("searchButtonLabel") ));
+        searchButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                    &SearchWindow::onSearchButtonClicked));
         searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
 
     } catch (std::invalid_argument &e) {
@@ -173,4 +147,19 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     
     return view;
 }
+
+
+#include <XmlRpcValue.h>
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Search button getting clicked
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onSearchButtonClicked(void)                     throw ()
+{
+    XmlRpc::XmlRpcValue     xmlRpcValue(*advancedSearchOptions
+                                                    ->getSearchCriteria());
+    std::cerr << xmlRpcValue << std::endl;
+}
+
 

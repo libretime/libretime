@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/EntryBin.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/SearchCriteriaTest.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_EntryBin_h
-#define LiveSupport_Widgets_EntryBin_h
+#ifndef SearchCriteriaTest_h
+#define SearchCriteriaTest_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,19 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/entry.h>
-
-#include "LiveSupport/Core/Ptr.h"
-#include "LiveSupport/Widgets/CornerImages.h"
-#include "LiveSupport/Widgets/Colors.h"
-#include "LiveSupport/Widgets/BlueBin.h"
+#include <cppunit/extensions/HelperMacros.h>
 
 
 namespace LiveSupport {
-namespace Widgets {
+namespace Core {
 
-using namespace LiveSupport::Core;
-    
 /* ================================================================ constants */
 
 
@@ -62,58 +55,42 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A container, holding a Gtk::Entry as its only child.
+ *  Unit test for the SearchCriteria class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.1 $
+ *  @see SearchCriteria
  */
-class EntryBin : public BlueBin
+class SearchCriteriaTest : public CPPUNIT_NS::TestFixture
 {
-    private:
+    CPPUNIT_TEST_SUITE(SearchCriteriaTest);
+    CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST_SUITE_END();
+
+    protected:
+
         /**
-         *  The text entry for this container.
+         *  A simple test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
          */
-        Gtk::Entry                * entry;
+        void
+        firstTest(void)                         throw (CPPUNIT_NS::Exception);
 
 
     public:
+        
         /**
-         *  Constructor, with only one state.
-         *
-         *  @param backgroundColor the RGB value for the background color.
-         *  @param cornerImages the corner images.
+         *  Set up the environment for the test case.
          */
-        EntryBin(Colors::ColorName           backgroundColor,
-                 Ptr<CornerImages>::Ref      cornerImages)
-                                                            throw ();
+        void
+        setUp(void)                                     throw ();
 
         /**
-         *  A virtual destructor.
+         *  Clean up the environment after the test case.
          */
-        virtual
-        ~EntryBin(void)                                     throw ();
-
-        /**
-         *  Return the entry held in this container.
-         *
-         *  @return the entry held in this container.
-         */
-        Gtk::Entry *
-        getEntry(void)                                      throw ()
-        {
-            return entry;
-        }
-
-        /**
-         *  Return the text of the entry.
-         *
-         *  @return the get_text() string of the Gtk::Entry.
-         */
-        Glib::ustring
-        get_text(void)                                      throw ()
-        {
-            return getEntry()->get_text();
-        }
+        void
+        tearDown(void)                                  throw ();
 };
 
 
@@ -123,8 +100,8 @@ class EntryBin : public BlueBin
 /* ====================================================== function prototypes */
 
 
-} // namespace Widgets
+} // namespace Core
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_EntryBin_h
+#endif // SearchCriteriaTest_h
 

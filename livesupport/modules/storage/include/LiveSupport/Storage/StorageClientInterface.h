@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,8 +46,7 @@
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/SessionId.h"
 #include "LiveSupport/Core/XmlRpcException.h"
-
-#include "LiveSupport/Storage/SearchCriteria.h"
+#include "LiveSupport/Core/SearchCriteria.h"
 
 
 namespace LiveSupport {
@@ -66,8 +65,8 @@ using namespace Core;
 /**
  *  An interface for storage clients.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.11 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.12 $
  */
 class StorageClientInterface
 {

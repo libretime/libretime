@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/Attic/SearchCriteria.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/SearchCriteria.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -33,9 +33,9 @@
 #include "configure.h"
 #endif
 
-#include "LiveSupport/Storage/SearchCriteria.h"
+#include "LiveSupport/Core/SearchCriteria.h"
 
-using namespace LiveSupport::Storage;
+using namespace LiveSupport::Core;
 
 /* ===================================================  local data structures */
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,6 +51,7 @@
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/AdvancedSearchEntry.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -72,11 +73,16 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
     private:
+
+        /**
+         *  The box containing the advanced search input fields.
+         */
+        AdvancedSearchEntry *       advancedSearchOptions;
 
         /**
          *  Construct the advanced search view.
@@ -84,17 +90,20 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
         Gtk::VBox*
-        constructAdvancedSearchView(void)               throw ();
+        constructAdvancedSearchView(void)                       throw ();
 
-
-    protected:
+        /**
+         *  Event handler for the Search button getting clicked.
+         */
+        void
+        onSearchButtonClicked(void)                             throw ();
 
         /**
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -137,7 +146,6 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
                 }
         };
 
-
         /**
          *  The column model.
          */
@@ -152,6 +160,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  The GLiveSupport object, holding the state of the application.
          */
         Ptr<GLiveSupport>::Ref          gLiveSupport;
+
 
     public:
 

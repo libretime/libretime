@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/Attic/SearchCriteria.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Storage_SearchCriteria_h
-#define LiveSupport_Storage_SearchCriteria_h
+#ifndef LiveSupport_Core_SearchCriteria_h
+#define LiveSupport_Core_SearchCriteria_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -44,10 +44,14 @@
 #include <cctype>
 #include <XmlRpcValue.h>
 
+// forward declaration of friend class
 namespace LiveSupport {
 namespace Storage {
+    class TestStorageClient;
+} }
 
-class TestStorageClient;        // forward declaration of friend class
+namespace LiveSupport {
+namespace Core {
 
 /* ================================================================ constants */
 
@@ -150,7 +154,7 @@ class SearchCriteria
         /**
          *  Give access of private members to the TestStorageClient.
          */
-        friend class Storage::TestStorageClient;
+        friend class LiveSupport::Storage::TestStorageClient;
 
 
     public:
@@ -283,8 +287,8 @@ class SearchCriteria
 /* ====================================================== function prototypes */
 
 
-} // namespace Storage
+} // namespace Core
 } // namespace LiveSupport
 
-#endif // LiveSupport_Storage_SearchCriteria_h
+#endif // LiveSupport_Core_SearchCriteria_h
 

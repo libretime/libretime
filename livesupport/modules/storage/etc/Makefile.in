@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.20 $
+#   Version  : $Revision: 1.21 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -115,13 +115,11 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
-STORAGE_LIB_OBJS = ${TMP_DIR}/SearchCriteria.o \
-                   ${TMP_DIR}/StorageClientFactory.o \
+STORAGE_LIB_OBJS = ${TMP_DIR}/StorageClientFactory.o \
                    ${TMP_DIR}/TestStorageClient.o \
                    ${TMP_DIR}/WebStorageClient.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/SearchCriteriaTest.o \
                    ${TMP_DIR}/StorageClientFactoryTest.o \
                    ${TMP_DIR}/TestStorageClientTest.o \
                    ${TMP_DIR}/WebStorageClientTest.o                   
