@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,7 +116,12 @@ PlaylistEvent :: deInitialize(void)                throw ()
         return;
     }
 
-    storage->releasePlaylist(sessionId, playlist);
+    try {
+        storage->releasePlaylist(sessionId, playlist);
+    } catch (XmlRpcException &e) {
+        std::cerr << e.what() << std::endl;
+        // TODO: handle error?
+    }
     playlist.reset();
     state = deInitialized;
 }
@@ -157,8 +162,14 @@ PlaylistEvent :: stop(void)                        throw ()
         return;
     }
 
-    audioPlayer->stop();
-    audioPlayer->close();
+    try {
+        audioPlayer->stop();
+        audioPlayer->close();
+    } catch (std::logic_error &e) {
+        // TODO: handle error
+        std::cerr << "PlaylistEvent::stop error: " << std::endl;
+        std::cerr << e.what() << std::endl;
+    }
     state = stopped;
 }
 
