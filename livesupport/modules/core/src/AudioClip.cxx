@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -416,7 +416,7 @@ AudioClip :: getMetadata(const string &key) const
     if (rootList.size() == 0) {
         return value;
     }
-    
+
     xmlpp::Node*            metadata = rootList.front();
     xmlpp::Node::NodeList   nodeList = metadata->get_children(name);
     xmlpp::Node::NodeList::iterator it = nodeList.begin();
@@ -424,9 +424,13 @@ AudioClip :: getMetadata(const string &key) const
     while (it != nodeList.end()) {
         xmlpp::Node*        node = *it;
         if (node->get_namespace_prefix() == prefix) {
-            xmlpp::Element* element = dynamic_cast<xmlpp::Element*> (node);
-            value.reset(new Glib::ustring(element->get_child_text()
-                                                 ->get_content()));
+            xmlpp::Element*   element  = dynamic_cast<xmlpp::Element*> (node);
+            xmlpp::TextNode*  textNode = element->get_child_text();
+            if (textNode) {
+                value.reset(new Glib::ustring(textNode->get_content()));
+            } else {
+                value.reset(new Glib::ustring(""));
+            }
             return value;
         }
         ++it;

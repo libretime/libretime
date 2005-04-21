@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,13 +83,18 @@ ZebraTreeView :: appendColumn(
                     const Gtk::TreeModelColumn<Glib::ustring>&  modelColumn)
                                                                 throw ()
 {
+/*
     ZebraCellRenderer*      renderer = Gtk::manage(new ZebraCellRenderer);
     // the constructor packs the renderer into the TreeViewColumn
     Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
                                 Gtk::TreeViewColumn(title, *renderer) );
     // and then we associate this renderer with the model column
     viewColumn->set_renderer(*renderer, modelColumn);
+
     return append_column(*viewColumn);
+*/
+    // instead of the above, we just do the simple-minded thing, for now
+    return append_column(title, modelColumn);
 }
 
 
@@ -121,9 +126,9 @@ ZebraTreeView :: cellDataFunction(Gtk::CellRenderer*               cell,
                                                                 throw ()
 {
     ZebraTreeModelColumnRecord  model;
-    Colors::ColorName   colorName = (*iter)[model.rowNumberColumn] ?
-                                                    Colors::Gray :
-                                                    Colors::LightBlue;
+    Colors::ColorName   colorName = (*iter)[model.rowNumberColumn] % 2
+                                                  ? Colors::Gray
+                                                  : Colors::LightBlue;
     cell->property_cell_background_gdk() = Colors::getColor(colorName);
 }
 

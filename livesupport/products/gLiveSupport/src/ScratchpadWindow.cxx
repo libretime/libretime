@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,7 +126,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         std::exit(1);
     }
 
-    // color the columns blue
+    // color the rows blue and gray
     treeView->setCellDataFunction();
 
     // register the signal handler for treeview entries being clicked

@@ -139,6 +139,11 @@ hu:table
 
         searchByTextLabel:string      { "Keresési feltétel:" }
         searchButtonLabel:string      { "Keress!" }
+        
+        typeColumnLabel:string        { "" }
+        titleColumnLabel:string       { "Cím" }
+        creatorColumnLabel:string     { "Előadó" }
+        lengthColumnLabel:string      { "Hossz" }
     }
 }
 

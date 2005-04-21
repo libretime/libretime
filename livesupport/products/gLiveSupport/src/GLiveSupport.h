@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.25 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -99,8 +99,8 @@ class MasterPanelWindow;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.25 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.26 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -410,6 +410,14 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
+         *  Add a file to the Scratchpad, and update it.
+         *
+         *  @param playable the audio clip or playlist to be added
+         */
+        void
+        addToScratchPad(Ptr<Playable>::Ref  playable)           throw ();
+        
+        /**
          *  Return the Scratchpad contents.
          *
          *  @return the list holding the Scratchpad contents.
@@ -574,6 +582,17 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual void
         pauseAudio(void)
                                                 throw (std::logic_error);
+
+        /**
+         *  Search in the local storage.
+         *
+         *  @param criteria the search conditions to use.
+         *  @return the list of audio clips and playlists found.
+         *  @exception XmlRpcException passed on from Storage::search()
+         */
+        Ptr<PlayableList>::Ref
+        search(Ptr<SearchCriteria>::Ref     criteria)
+                                                throw (XmlRpcException);
 
 };
 

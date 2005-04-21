@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -605,9 +605,13 @@ Playlist :: getMetadata(const string &key) const
     while (it != nodeList.end()) {
         xmlpp::Node*        node = *it;
         if (node->get_namespace_prefix() == prefix) {
-            xmlpp::Element* element = dynamic_cast<xmlpp::Element*> (node);
-            value.reset(new Glib::ustring(element->get_child_text()
-                                                 ->get_content()));
+            xmlpp::Element*   element = dynamic_cast<xmlpp::Element*> (node);
+            xmlpp::TextNode*  textNode = element->get_child_text();
+            if (textNode) {
+                value.reset(new Glib::ustring(textNode->get_content()));
+            } else {
+                value.reset(new Glib::ustring(""));
+            }
             return value;
         }
         ++it;

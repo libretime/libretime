@@ -141,6 +141,11 @@ root:table
         
         searchByTextLabel:string      { "Search by" }
         searchButtonLabel:string      { "Search" }
+        
+        typeColumnLabel:string        { "" }
+        titleColumnLabel:string       { "Title" }
+        creatorColumnLabel:string     { "Creator" }
+        lengthColumnLabel:string      { "Length" }
     }
 }
 

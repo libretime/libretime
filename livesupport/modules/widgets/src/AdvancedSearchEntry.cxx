@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Attic/AdvancedSearchEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -142,5 +142,16 @@ AdvancedSearchEntry :: getSearchCriteria(void)                  throw ()
 
     criteria->addCondition(key, comparisonOperator, value);
     return criteria;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Connect a callback to the "enter key pressed" event.
+ *----------------------------------------------------------------------------*/
+void
+AdvancedSearchEntry :: connectCallback(const sigc::slot<void> &     callback)
+                                                                throw ()
+{
+    entryBin->signal_activate().connect(callback);
 }
 

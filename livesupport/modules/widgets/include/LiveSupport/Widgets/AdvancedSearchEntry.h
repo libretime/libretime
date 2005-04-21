@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Attic/AdvancedSearchEntry.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Core;
  *  A Gtk::VBox with one or more search input fields in it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class AdvancedSearchEntry : public Gtk::VBox,
                             public LocalizedObject
@@ -118,6 +118,14 @@ class AdvancedSearchEntry : public Gtk::VBox,
          */
         Ptr<SearchCriteria>::Ref
         getSearchCriteria(void)                                 throw ();
+
+        /**
+         *  Connect a callback to the "enter key pressed" event.
+         *
+         *  @param callback the function to execute when enter is pressed.
+         */
+        void
+        connectCallback(const sigc::slot<void> &    callback)   throw ();
 };
 
 

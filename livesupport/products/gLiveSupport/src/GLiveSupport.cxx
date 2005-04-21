@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.29 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -510,13 +510,24 @@ GLiveSupport :: getPlaylength(Ptr<const std::string>::Ref   uri)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref      audioClip)
+GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref  audioClip)
                                                     throw (XmlRpcException)
 {
     storage->storeAudioClip(sessionId, audioClip);
 
-    // add the uploaded file to the Scratchpad, and update it
-    scratchpadContents->push_front(audioClip);
+    addToScratchPad(audioClip);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a file to the Scratchpad, and update it.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: addToScratchPad(Ptr<Playable>::Ref  playable)
+                                                            throw ()
+{
+    scratchpadContents->push_front(playable);
     masterPanel->updateScratchpadWindow();   
 }
 
@@ -743,5 +754,35 @@ GLiveSupport :: stopAudio(void)
     }
 
     audioPlayerIsPaused = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Search in the local storage.
+ *----------------------------------------------------------------------------*/
+Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
+                                                throw (XmlRpcException)
+{
+    Ptr<LiveSupport::GLiveSupport::GLiveSupport::PlayableList>::Ref
+            results(new PlayableList);
+    
+    storage->search(sessionId, criteria);
+
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+            audioClipIds = storage->getAudioClipIds();
+    std::vector<Ptr<UniqueId>::Ref>::const_iterator it;
+    for (it = audioClipIds->begin(); it != audioClipIds->end(); ++it) {
+        results->push_back(storage->getAudioClip(sessionId, *it));
+    }
+    
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+            playlistIds = storage->getPlaylistIds();
+    for (it = playlistIds->begin(); it != playlistIds->end(); ++it) {
+        results->push_back(storage->getPlaylist(sessionId, *it));
+    }
+    
+    return results;
 }
 

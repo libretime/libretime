@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Notebook.h"
@@ -45,6 +46,7 @@
 
 
 using namespace Glib;
+using namespace boost::posix_time;
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
@@ -94,7 +96,7 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // show
     set_name("searchWindow");
-//    set_default_size(300, 300);
+    set_default_size(450, 350);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -126,6 +128,28 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     ZebraTreeView * searchResults = Gtk::manage(wf->createTreeView(
                                                         treeModel ));
 
+    // set up the callback function for the entry field
+    advancedSearchOptions->connectCallback(sigc::mem_fun(*this,
+                                                    &SearchWindow::onSearch));
+    
+    // add the TreeView's view columns
+    try {
+        searchResults->appendColumn(*getResourceUstring("typeColumnLabel"),
+                               modelColumns.typeColumn);
+        searchResults->appendColumn(*getResourceUstring("titleColumnLabel"),
+                               modelColumns.titleColumn);
+        searchResults->appendColumn(*getResourceUstring("creatorColumnLabel"),
+                               modelColumns.creatorColumn);
+        searchResults->appendColumn(*getResourceUstring("lengthColumnLabel"),
+                               modelColumns.lengthColumn);
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    // color the rows blue and gray
+    searchResults->setCellDataFunction();
+    
     // make a new box, and pack the main components into it
     Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
     view->pack_start(*advancedSearchOptions,    Gtk::PACK_SHRINK, 5);
@@ -149,17 +173,60 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
 }
 
 
-#include <XmlRpcValue.h>
-
 /*------------------------------------------------------------------------------
- *  Event handler for the Search button getting clicked
+ *  Event handler for the Search button getting clicked.
  *----------------------------------------------------------------------------*/
 void
 SearchWindow :: onSearchButtonClicked(void)                     throw ()
 {
-    XmlRpc::XmlRpcValue     xmlRpcValue(*advancedSearchOptions
-                                                    ->getSearchCriteria());
-    std::cerr << xmlRpcValue << std::endl;
+    onSearch();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Do the searching.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onSearch(void)                                  throw ()
+{
+    Ptr<SearchCriteria>::Ref    criteria = advancedSearchOptions
+                                                    ->getSearchCriteria();    
+    Ptr<std::list<Ptr<Playable>::Ref> >::Ref
+            searchResults = gLiveSupport->search(criteria);
+    std::list<Ptr<Playable>::Ref>::const_iterator it;
+
+    treeModel->clear();
+    int     rowNumber = 0;
+    
+    for (it = searchResults->begin(); it != searchResults->end(); 
+                                                        ++it, ++rowNumber) {
+        Ptr<Playable>::Ref      playable = *it;
+        Gtk::TreeModel::Row     row = *treeModel->append();
+        
+        row[modelColumns.rowNumberColumn]   = rowNumber;
+
+        row[modelColumns.playableColumn]    = playable;
+        
+        switch (playable->getType()) {
+            case Playable::AudioClipType:
+                row[modelColumns.typeColumn]  = "audioclip";
+                break;
+            case Playable::PlaylistType:
+                row[modelColumns.typeColumn]  = "playlist";
+                break;
+            default:
+                break;
+        }
+
+        Ptr<const Glib::ustring>::Ref   title   = playable->getTitle();
+        row[modelColumns.titleColumn]           = title ? *title : "";
+
+        Ptr<Glib::ustring>::Ref creator = playable->getMetadata("dc:creator");
+        row[modelColumns.creatorColumn] = creator ? *creator : "";
+
+        Ptr<time_duration>::Ref length = playable->getPlaylength();
+        row[modelColumns.lengthColumn] = length ? to_simple_string(*length)
+                                                : "";
+    }
+}
 

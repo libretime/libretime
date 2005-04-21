@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraCellRenderer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,9 +56,11 @@ namespace Widgets {
 
 /**
  *  A custom cell renderer for blue-gray striped TreeView's.
+ *  This is not used anywhere at the moment, but it's left in here because 
+ *  we will probably need (something like) this later.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class ZebraCellRenderer : public Gtk::CellRendererText
 {

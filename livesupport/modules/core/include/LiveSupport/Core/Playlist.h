@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.33 $
+ *  @version $Revision: 1.34 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -663,6 +663,8 @@ class Playlist : public Configurable,
 
         /**
          *  Return the value of a metadata field in this playlist.
+         *  If the playlist does not have this metadata field, returns a null
+         *  pointer.
          *
          *  @param  key  the name of the metadata field
          *  @return the value of the metadata field; 0 if there is 

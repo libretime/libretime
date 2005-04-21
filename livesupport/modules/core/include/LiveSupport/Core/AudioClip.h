@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,7 +130,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -479,6 +479,8 @@ class AudioClip : public Configurable,
 
         /**
          *  Return the value of a metadata field in this audio clip.
+         *  If the audio clip does not have this metadata field, returns a null
+         *  pointer.
          *
          *  @param  key the name of the metadata field
          *  @return the value of the metadata field; 0 if there is 

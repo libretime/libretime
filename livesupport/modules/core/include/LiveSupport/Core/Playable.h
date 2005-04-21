@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {
@@ -192,6 +192,8 @@ class Playable : public boost::enable_shared_from_this<Playable>
 
         /**
          *  Return the value of a metadata field in this audio clip or playlist.
+         *  If the playable does not have this metadata field, returns a null
+         *  pointer.
          *
          *  @param  key  the name of the metadata field
          *  @return the value of the metadata field; 0 if there is 
