@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.1 $
+dnl Version  : $Revision: 1.2 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/acinclude.m4,v $
 dnl-----------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ dnl also defines GSTUFF_PKG_ERRORS on error
 dnl
 dnl This function was taken from the glade-- project
 dnl-----------------------------------------------------------------------------
-AC_DEFUN(PKG_CHECK_MODULES, [
+AC_DEFUN([PKG_CHECK_MODULES], [
   succeeded=no
 
   if test -z "$PKG_CONFIG"; then
