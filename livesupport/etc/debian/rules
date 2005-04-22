@@ -1,0 +1,145 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+#
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+config.status: configure
+	dh_testdir
+	# Add here commands to configure the package.
+	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/opt/livesupport --with-apache-group=www-data
+
+
+build: build-arch
+
+build-arch: build-arch-stamp
+build-arch-stamp:  config.status
+
+	# Add here commands to compile the arch part of the package.
+	$(MAKE) setup compile
+	touch build-arch-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-arch-stamp #CONFIGURE-STAMP#
+
+	# Add here commands to clean up after the build process.
+	-$(MAKE) distclean clean
+
+	dh_clean 
+
+install: install-arch
+
+install-arch:
+	dh_testdir
+	dh_testroot
+	dh_clean -k -s 
+	dh_installdirs -s
+
+	# this will install everything into debian/livesupport
+	$(MAKE) install prefix=$(CURDIR)/debian/livesupport/opt/livesupport
+
+	# copy the template config files into their final places
+	# so as to please the conffiles file, and the debian packager
+	# that such a file really exist
+	cp -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml.template \
+          $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml
+	cp -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml.template \
+          $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml
+
+	# now separate the libraries into debian/livesupport-libs
+	mkdir -p $(CURDIR)/debian/livesupport-libs
+	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport
+	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/tmp
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/lib \
+	      $(CURDIR)/debian/livesupport-libs/opt/livesupport
+
+	# now separate the station (server) files into debian/livesupport-station
+	mkdir -p $(CURDIR)/debian/livesupport-station
+	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport
+	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
+	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
+	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/tmp
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallScheduler.sh \
+		  $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \
+		  $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var \
+          $(CURDIR)/debian/livesupport-station/opt/livesupport
+
+	# now separate the studio (client) files into debian/livesupport-studio
+	mkdir -p $(CURDIR)/debian/livesupport-studio
+	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport
+	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
+	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
+	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/tmp
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallGLiveSupport.sh \
+		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml* \
+		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
+
+
+	dh_install -s
+
+binary-common:
+	dh_testdir
+	dh_testroot
+#	dh_installchangelogs 
+#	dh_installdocs
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate	
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+#	dh_installman
+	dh_link
+	dh_strip
+	dh_compress 
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture dependant packages using the common target.
+binary-arch: build-arch install-arch
+	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
+
+binary: binary-arch
+.PHONY: build clean binary-arch binary install install-arch 

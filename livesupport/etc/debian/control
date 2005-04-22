@@ -1,0 +1,66 @@
+Source: livesupport
+Section: unknown
+Priority: optional
+Maintainer: Akos Maroy <maroy@campware.org>
+Build-Depends: debhelper (>= 4.0.0),
+               binutils (>= 2.13),
+               gcc (>= 3.3),
+               g++ (>= 3.3),
+               make (>= 3.80).
+               automake1.7,
+               autoconf (>= 2.59),
+               libtool,
+               pkgconfig (>= 0.15),
+               patch (>= 2.5.9),
+               doxygen,
+               tar,
+               gzip,
+               bzip2,
+               curl,
+               unixodbc-dev (>= 2.2),
+               x-window-system-dev,
+               libfontconfig1-dev,
+               libpng12-dev,
+               libjpeg62-dev,
+               libssl-dev,
+               libxml2-dev
+Standards-Version: 3.6.1
+
+Package: livesupport-libs
+Architecture: any
+Depends: ${shlibs:Depends},
+         unixodbc (>= 2.2),
+         x-window-system,
+         libfontconfig1,
+         libpng12-0,
+         libjpeg62,
+         libssl0.9.7,
+         libxml2
+Description: A radio program automation and support tool.
+ This package contains the libraries used by LiveSupport.
+
+Package: livesupport-station
+Architecture: any
+Depends: ${shlibs:Depends},
+         livesupport-libs (${dpkg:Version}),
+         sed,
+         odbc-postgresql,
+         apache | apache2,
+         php4,
+         php4-domxml,
+         php4-pear,
+         php4-pgsql,
+         libapache-mod-php4 | libapache2-mod-php4,
+         postgresql (>= 7.4),
+         postgresql-client (>=7.4)
+Description: A radio program automation and support tool.
+ This package contains the server components of LiveSupport.
+ This includes a scheluer deamon, and web-based server components.
+
+Package: livesupport-studio
+Architecture: any
+Depends: ${shlibs:Depends},
+         livesupport-libs (${dpkg:Version}),
+         sed
+Description: A radio program automation and support tool.
+ This package contains the GUI client components of LiveSupport.

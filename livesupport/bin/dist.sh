@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -32,22 +32,8 @@
 #  livesupport-libraries-<version>.tar.bz2  - dependent libraries
 #
 #  Invoke as:
-#  ./bin/dist.sh <version.number>
+#  ./bin/dist.sh -v <version.number>
 #-------------------------------------------------------------------------------
-
-if [ "x$1" == "x" ]; then
-    echo "Please provide a version number as the first paramter.";
-    exit 0;
-fi
-
-version=$1
-tarball=livesupport-$version.tar.bz2
-tarball_libs=livesupport-libraries-$version.tar.bz2
-
-echo "WARNING! make sure to run this script on a freshly checked-out copy";
-echo "         of LiveSupport, with NO generated files!";
-echo "";
-echo "Creating $tarball and $tarball_libs";
 
 #-------------------------------------------------------------------------------
 #  Determine directories, files
@@ -63,6 +49,80 @@ modules_dir=$basedir/modules
 products_dir=$basedir/products
 
 usrdir=`cd $basedir/usr; pwd;`
+
+
+#-------------------------------------------------------------------------------
+#  Print the usage information for this script.
+#-------------------------------------------------------------------------------
+printUsage()
+{
+    echo "LiveSupport install script.";
+    echo "parameters";
+    echo "";
+    echo "  -d, --directory     Place the tarballs in the specified directory.";
+    echo "                      [default: current directory]";
+    echo "  -h, --help          Print this message and exit.";
+    echo "  -v, --version       The version number of the created packages.";
+    echo "";
+}
+
+
+#-------------------------------------------------------------------------------
+#  Process command line parameters
+#-------------------------------------------------------------------------------
+CMD=${0##*/}
+
+opts=$(getopt -o d:hv: -l directory:,help,version: -n $CMD -- "$@") || exit 1
+eval set -- "$opts"
+while true; do
+    case "$1" in
+        -d|--directory)
+            directory=$2;
+            shift; shift;;
+        -h|--help)
+            printUsage;
+            exit 0;;
+        -v|--version)
+            version=$2;
+            shift; shift;;
+        --)
+            shift;
+            break;;
+        *)
+            echo "Unrecognized option $1.";
+            printUsage;
+            exit 1;
+    esac
+done
+
+if [ "x$version" == "x" ]; then
+    echo "Required parameter version not specified.";
+    printUsage;
+    exit 1;
+fi
+
+if [ "x$directory" == "x" ]; then
+    directory=`pwd`;
+fi
+
+
+echo "Creating tarballs for LiveSupport.";
+echo "";
+echo "Using the following parameters:";
+echo "";
+echo "  output directory:               $directory";
+echo "  package version number:         $version";
+echo ""
+echo "WARNING! make sure to run this script on a freshly checked-out copy";
+echo "         of LiveSupport, with NO generated files!";
+echo ""
+
+
+#-------------------------------------------------------------------------------
+#   More definitions
+#-------------------------------------------------------------------------------
+tarball=$directory/livesupport-$version.tar.bz2
+tarball_libs=$directory/livesupport-libraries-$version.tar.bz2
 
 ls_tmpdir=$tmpdir/livesupport-$version
 tools_tmpdir=$ls_tmpdir/tools

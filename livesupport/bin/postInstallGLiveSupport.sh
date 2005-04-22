@@ -22,14 +22,14 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
+#   Version  : $Revision: 1.1 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallGLiveSupport.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script installs LiveSupport.
+#  This script makes post-installation steps for GLiveSupport.
 #
 #  Invoke as:
-#  ./bin/install.sh
+#  ./bin/postInstallGLiveSupport.sh
 #
 #  To get usage help, try the -h option
 #-------------------------------------------------------------------------------
@@ -43,11 +43,6 @@ bindir=$basedir/bin
 etcdir=$basedir/etc
 docdir=$basedir/doc
 tmpdir=$basedir/tmp
-toolsdir=$basedir/tools
-modules_dir=$basedir/modules
-products_dir=$basedir/products
-
-usrdir=`cd $basedir/usr; pwd;`
 
 
 #-------------------------------------------------------------------------------
@@ -55,27 +50,15 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport install script.";
+    echo "GLiveSupport post-install script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
-    echo "  -g, --apache-group  The group the apache daemon runs as.";
-    echo "                      [default: apache]";
     echo "  -H, --host          The fully qualified host name of the system";
     echo "                      [default: guess].";
     echo "  -p, --port          The port of the apache web server [default: 80]"
     echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
     echo "                          [default: 3344]";
-    echo "  -r, --www-root      The root directory for web documents served";
-    echo "                      by apache [default: /var/www]";
-    echo "  -s, --dbserver      The name of the database server host.";
-    echo "                      [default: localhost]";
-    echo "  -u, --dbuser        The name of the database user to access the"
-    echo "                      database. [default: livesupport]";
-    echo "  -w, --dbpassword    The database user password.";
-    echo "                      [default: livesupport]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -86,18 +69,12 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:H:hp:P:r:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port:,www-root: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:H:hp:P: -l directory:,host:,help,port:,scheduler-port: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
         -d|--directory)
             installdir=$2;
-            shift; shift;;
-        -D|--database)
-            database=$2;
-            shift; shift;;
-        -g|--apache-group)
-            apache_group=$2;
             shift; shift;;
         -H|--host)
             hostname=$2;
@@ -110,18 +87,6 @@ while true; do
             shift; shift;;
         -P|--scheduler-port)
             scheduler_port=$2;
-            shift; shift;;
-        -r|--www-root)
-            www_root=$2;
-            shift; shift;;
-        -s|--dbserver)
-            dbserver=$2;
-            shift; shift;;
-        -u|--dbuser)
-            dbuser=$2;
-            shift; shift;;
-        -w|--dbpassword)
-            dbpassword=$2;
             shift; shift;;
         --)
             shift;
@@ -151,32 +116,8 @@ if [ "x$scheduler_port" == "x" ]; then
     scheduler_port=3344;
 fi
 
-if [ "x$dbserver" == "x" ]; then
-    dbserver=localhost;
-fi
 
-if [ "x$database" == "x" ]; then
-    database=LiveSupport;
-fi
-
-if [ "x$dbuser" == "x" ]; then
-    dbuser=livesupport;
-fi
-
-if [ "x$dbpassword" == "x" ]; then
-    dbpassword=livesupport;
-fi
-
-if [ "x$apache_group" == "x" ]; then
-    apache_group=apache;
-fi
-
-if [ "x$www_root" == "x" ]; then
-    www_root=/var/www
-fi
-
-
-echo "Installing LiveSupport.";
+echo "Making post-install steps for GLiveSupport.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
@@ -184,47 +125,92 @@ echo "  installation directory: $installdir";
 echo "  host name:              $hostname";
 echo "  web server port:        $http_port";
 echo "  scheduler port:         $scheduler_port";
-echo "  database server:        $dbserver";
-echo "  database:               $database";
-echo "  database user:          $dbuser";
-echo "  database user password: $dbpassword";
-echo "  apache daemon group:    $apache_group";
-echo "  apache document root:   $www_root";
 echo ""
 
+#-------------------------------------------------------------------------------
+#  The details of installation
+#-------------------------------------------------------------------------------
+ls_php_host=$hostname
+ls_php_port=$http_port
+ls_php_urlPrefix=livesupport
+
+ls_alib_xmlRpcPrefix="xmlrpc/xrLocStor.php"
+ls_storage_xmlRpcPrefix="xmlrpc/xrLocStor.php"
+
+ls_scheduler_host=$hostname
+ls_scheduler_port=$scheduler_port
+ls_scheduler_urlPrefix=
+ls_scheduler_xmlRpcPrefix=RC2
+
+
+install_bin=$installdir/bin
+install_etc=$installdir/etc
+install_lib=$installdir/lib
+install_tmp=$installdir/tmp
+install_var=$installdir/var
+
+
+# replace / characters with a \/ sequence, for sed below
+# the sed statement is really "s/\//\\\\\//g", but needs escaping because of
+# bash, hence the extra '\' characters
+installdir_s=`echo $installdir | sed -e "s/\//\\\\\\\\\//g"`
+ls_storage_xmlRpcPrefix_s=`echo $ls_storage_xmlRpcPrefix | \
+                                sed -e "s/\//\\\\\\\\\//g"`
+ls_alib_xmlRpcPrefix_s=`echo $ls_alib_xmlRpcPrefix | sed -e "s/\//\\\\\\\\\//g"`
+ls_php_urlPrefix_s=`echo $ls_php_urlPrefix | sed -e "s/\//\\\\\\\\\//g"`
+ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
+                                sed -e "s/\//\\\\\\\\\//g"`
+ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
+                                sed -e "s/\//\\\\\\\\\//g"`
+
+replace_sed_string="s/ls_install_dir/$installdir_s/; \
+              s/ls_storageUrlPath/\/$ls_php_urlPrefix_s\/storageServer\/var/; \
+              s/ls_php_urlPrefix/$ls_php_urlPrefix_s/; \
+              s/ls_storage_xmlRpcPrefix/$ls_storage_xmlRpcPrefix_s/; \
+              s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
+              s/ls_php_host/$ls_php_host/; \
+              s/ls_php_port/$ls_php_port/; \
+              s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
+              s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
+              s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
+              s/ls_scheduler_host/$ls_scheduler_host/; \
+              s/ls_scheduler_port/$ls_scheduler_port/;"
+
+
 
 #-------------------------------------------------------------------------------
-#   Do pre-install checks
+#  Function to check for the existence of an executable on the PATH
+#
+#  @param $1 the name of the exectuable
+#  @return 0 if the executable exists on the PATH, non-0 otherwise
 #-------------------------------------------------------------------------------
-$bindir/preInstall.sh --apache-group $apache_group || exit 1;
+check_exe() {
+    if [ -x "`which $1 2> /dev/null`" ]; then
+        echo "Exectuable $1 found...";
+        return 0;
+    else
+        echo "Exectuable $1 not found...";
+        return 1;
+    fi
+}
 
 
 #-------------------------------------------------------------------------------
-#   Copy the files
+#  Check for required tools
 #-------------------------------------------------------------------------------
-$bindir/copyInstall.sh --directory $installdir || exit 1;
+echo "Checking for required tools..."
+
+check_exe "sed" || exit 1;
 
 
 #-------------------------------------------------------------------------------
-#   Do post-install setup
+#  Customize the configuration files with the appropriate values
 #-------------------------------------------------------------------------------
-$bindir/postInstallScheduler.sh --directory $installdir \
-                                --database $database \
-                                --apache-group $apache_group \
-                                --host $hostname \
-                                --port $http_port \
-                                --scheduler-port $scheduler_port \
-                                --dbserver $dbserver \
-                                --dbuser $dbuser \
-                                --dbpassword $dbpassword \
-                                --www-root $www_root \
-    || exit 1;
+echo "Customizing configuration files..."
 
-$bindir/postInstallGLiveSupport.sh --directory $installdir \
-                                   --host $hostname \
-                                   --port $http_port \
-                                   --scheduler-port $scheduler_port \
-    || exit 1;
+cat $install_etc/gLiveSupport.xml.template \
+    | sed -e "$replace_sed_string" \
+    > $install_etc/gLiveSupport.xml
 
 
 #-------------------------------------------------------------------------------

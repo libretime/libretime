@@ -22,14 +22,14 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
+#   Version  : $Revision: 1.1 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postUninstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script installs LiveSupport.
+#  This script makes post-uninstallation steps for LiveSupport.
 #
 #  Invoke as:
-#  ./bin/install.sh
+#  ./bin/postUninstall.sh
 #
 #  To get usage help, try the -h option
 #-------------------------------------------------------------------------------
@@ -43,11 +43,6 @@ bindir=$basedir/bin
 etcdir=$basedir/etc
 docdir=$basedir/doc
 tmpdir=$basedir/tmp
-toolsdir=$basedir/tools
-modules_dir=$basedir/modules
-products_dir=$basedir/products
-
-usrdir=`cd $basedir/usr; pwd;`
 
 
 #-------------------------------------------------------------------------------
@@ -55,27 +50,18 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport install script.";
+    echo "LiveSupport post-uninstall script.";
     echo "parameters";
     echo "";
     echo "  -d, --directory     The installation directory, required.";
     echo "  -D, --database      The name of the LiveSupport database.";
     echo "                      [default: LiveSupport]";
-    echo "  -g, --apache-group  The group the apache daemon runs as.";
-    echo "                      [default: apache]";
-    echo "  -H, --host          The fully qualified host name of the system";
-    echo "                      [default: guess].";
-    echo "  -p, --port          The port of the apache web server [default: 80]"
-    echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
-    echo "                          [default: 3344]";
     echo "  -r, --www-root      The root directory for web documents served";
     echo "                      by apache [default: /var/www]";
     echo "  -s, --dbserver      The name of the database server host.";
     echo "                      [default: localhost]";
     echo "  -u, --dbuser        The name of the database user to access the"
     echo "                      database. [default: livesupport]";
-    echo "  -w, --dbpassword    The database user password.";
-    echo "                      [default: livesupport]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -86,7 +72,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:H:hp:P:r:s:u:w: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port:,www-root: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:D:hr:s:u: -l database:,dbserver:,dbuser:,directory:,help,www-root: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -96,21 +82,9 @@ while true; do
         -D|--database)
             database=$2;
             shift; shift;;
-        -g|--apache-group)
-            apache_group=$2;
-            shift; shift;;
-        -H|--host)
-            hostname=$2;
-            shift; shift;;
         -h|--help)
             printUsage;
             exit 0;;
-        -p|--port)
-            http_port=$2;
-            shift; shift;;
-        -P|--scheduler-port)
-            scheduler_port=$2;
-            shift; shift;;
         -r|--www-root)
             www_root=$2;
             shift; shift;;
@@ -119,9 +93,6 @@ while true; do
             shift; shift;;
         -u|--dbuser)
             dbuser=$2;
-            shift; shift;;
-        -w|--dbpassword)
-            dbpassword=$2;
             shift; shift;;
         --)
             shift;
@@ -139,18 +110,6 @@ if [ "x$installdir" == "x" ]; then
     exit 1;
 fi
 
-if [ "x$hostname" == "x" ]; then
-    hostname=`hostname -f`;
-fi
-
-if [ "x$http_port" == "x" ]; then
-    http_port=80;
-fi
-
-if [ "x$scheduler_port" == "x" ]; then
-    scheduler_port=3344;
-fi
-
 if [ "x$dbserver" == "x" ]; then
     dbserver=localhost;
 fi
@@ -163,68 +122,139 @@ if [ "x$dbuser" == "x" ]; then
     dbuser=livesupport;
 fi
 
-if [ "x$dbpassword" == "x" ]; then
-    dbpassword=livesupport;
-fi
-
-if [ "x$apache_group" == "x" ]; then
-    apache_group=apache;
-fi
-
 if [ "x$www_root" == "x" ]; then
     www_root=/var/www
 fi
 
 
-echo "Installing LiveSupport.";
+echo "Making post-uninstall steps for LiveSupport.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
 echo "  installation directory: $installdir";
-echo "  host name:              $hostname";
-echo "  web server port:        $http_port";
-echo "  scheduler port:         $scheduler_port";
 echo "  database server:        $dbserver";
 echo "  database:               $database";
 echo "  database user:          $dbuser";
-echo "  database user password: $dbpassword";
-echo "  apache daemon group:    $apache_group";
 echo "  apache document root:   $www_root";
 echo ""
 
-
 #-------------------------------------------------------------------------------
-#   Do pre-install checks
+#  The details of installation
 #-------------------------------------------------------------------------------
-$bindir/preInstall.sh --apache-group $apache_group || exit 1;
-
-
-#-------------------------------------------------------------------------------
-#   Copy the files
-#-------------------------------------------------------------------------------
-$bindir/copyInstall.sh --directory $installdir || exit 1;
+ls_dbserver=$dbserver
+ls_dbuser=$dbuser
+ls_database=$database
 
 
-#-------------------------------------------------------------------------------
-#   Do post-install setup
-#-------------------------------------------------------------------------------
-$bindir/postInstallScheduler.sh --directory $installdir \
-                                --database $database \
-                                --apache-group $apache_group \
-                                --host $hostname \
-                                --port $http_port \
-                                --scheduler-port $scheduler_port \
-                                --dbserver $dbserver \
-                                --dbuser $dbuser \
-                                --dbpassword $dbpassword \
-                                --www-root $www_root \
-    || exit 1;
+postgres_user=postgres
 
-$bindir/postInstallGLiveSupport.sh --directory $installdir \
-                                   --host $hostname \
-                                   --port $http_port \
-                                   --scheduler-port $scheduler_port \
-    || exit 1;
+install_bin=$installdir/bin
+install_etc=$installdir/etc
+install_lib=$installdir/lib
+install_tmp=$installdir/tmp
+install_var=$installdir/var
+
+
+#-------------------------------------------------------------------------------
+#  Function to check for the existence of an executable on the PATH
+#
+#  @param $1 the name of the exectuable
+#  @return 0 if the executable exists on the PATH, non-0 otherwise
+#-------------------------------------------------------------------------------
+check_exe() {
+    if [ -x "`which $1 2> /dev/null`" ]; then
+        echo "Exectuable $1 found...";
+        return 0;
+    else
+        echo "Exectuable $1 not found...";
+        return 1;
+    fi
+}
+
+
+#-------------------------------------------------------------------------------
+#  Check to see if this script is being run as root
+#-------------------------------------------------------------------------------
+if [ `whoami` != "root" ]; then
+    echo "Please run this script as root.";
+    exit ;
+fi
+
+
+#-------------------------------------------------------------------------------
+#  Check for required tools
+#-------------------------------------------------------------------------------
+echo "Checking for required tools..."
+
+check_exe "psql" || exit 1;
+check_exe "odbcinst" || exit 1;
+
+
+#-------------------------------------------------------------------------------
+#  Remove symlinks
+#-------------------------------------------------------------------------------
+echo "Removing symlinks...";
+
+# remove symlink for the PHP pages in apache's document root
+rm -f $www_root/livesupport
+
+
+#-------------------------------------------------------------------------------
+#  Delete data files
+#-------------------------------------------------------------------------------
+echo "Deleting data files...";
+
+rm -rf $installdir/var/htmlUI/var/html/img/*
+rm -rf $installdir/var/htmlUI/var/templates_c/*
+rm -rf $installdir/var/storageServer/var/stor/*
+rm -rf $installdir/var/storageServer/var/access/*
+rm -rf $installdir/var/storageServer/var/trans/*
+rm -rf $installdir/var/archiveServer/var/stor/*
+rm -rf $installdir/var/archiveServer/var/access/*
+rm -rf $installdir/var/archiveServer/var/trans/*
+
+
+#-------------------------------------------------------------------------------
+#  Remove the ODBC data source and driver
+#-------------------------------------------------------------------------------
+echo "Removing ODBC data source and driver...";
+
+echo "Removing LiveSupport ODBC data source...";
+odbcinst -u -s -l -n $ls_database || exit 1;
+
+echo "De-registering ODBC PostgreSQL driver...";
+odbcinst -u -d -v -n PostgreSQL || exit 1;
+
+
+#-------------------------------------------------------------------------------
+#  Remove the database user and the database itself
+#-------------------------------------------------------------------------------
+echo "Removing database and database user...";
+
+if [ "x$ls_dbserver" == "xlocalhost" ]; then
+    su - $postgres_user -c "echo \"DROP DATABASE \\\"$ls_database\\\" \"\
+                            | psql template1" \
+        || echo "Couldn't drop database $ls_database.";
+
+    su - $postgres_user -c "echo \"DROP USER $ls_dbuser \"\
+                            | psql template1" \
+        || echo "Couldn't drop database user $ls_dbuser.";
+
+else
+    echo "Unable to automatically drop database user and table for";
+    echo "remote database $ls_dbserver.";
+    echo "Make sure to drop database user $ls_dbuser on database server";
+    echo "at $ls_dbserver.";
+    echo "Also drop the database called $ld_database, owned by this user.";
+    echo "";
+    echo "The easiest way to achieve this is by issuing the following SQL";
+    echo "commands to PostgreSQL:";
+    echo "DROP DATABASE \"$ls_database\";";
+    echo "DROP USER $ls_dbuser;";
+fi
+
+
+# TODO: check for the success of these operations somehow
 
 
 #-------------------------------------------------------------------------------

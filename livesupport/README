@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/README,v $
 
 --------------------------------------------------------------------------------
@@ -34,6 +34,7 @@ The generic documentation start page is doc/index.html
 
 For the impatient, do the following:
 
+./configure
 make setup
 make compile
 

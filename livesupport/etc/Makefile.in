@@ -21,8 +21,8 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.29 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/Makefile,v $
+#   Version  : $Revision: 1.1 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -42,10 +42,12 @@ FLAWFINDER = flawfinder
 #   Basic directory and file definitions
 #-------------------------------------------------------------------------------
 BASE_DIR     = .
+BIN_DIR      = ${BASE_DIR}/bin
 DOC_DIR      = ${BASE_DIR}/doc
 DOXYGEN_DIR  = ${DOC_DIR}/doxygen
 COVERAGE_DIR = ${DOC_DIR}/coverage
 ETC_DIR      = ${BASE_DIR}/etc
+TMP_DIR      = ${BASE_DIR}/tmp
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 XMLRPC-DOXYGEN_CONFIG = ${ETC_DIR}/xmlrpc-doxygen.config
@@ -155,12 +157,16 @@ flawfinder:
 clean:
 	${RMDIR} ${DOXYGEN_DIR}/html
 	${RMDIR} ${COVERAGE_DIR}/*
+	${RM} ${TMP_DIR}/*.stamp
 
-setup: tools_setup doxytag_setup modules_setup products_setup
+setup: ${TMP_DIR}/setup.stamp
+${TMP_DIR}/setup.stamp: tools_setup doxytag_setup modules_setup products_setup
+	touch ${TMP_DIR}/setup.stamp
 
 recompile: distclean modules_setup products_setup compile
 
-tools_setup:
+tools_setup: ${TMP_DIR}/tools_setup.stamp
+${TMP_DIR}/tools_setup.stamp:
 	${BOOST_DIR}/${BOOST_VERSION}/bin/install.sh
 	${CXXUNIT_DIR}/${CXXUNIT_VERSION}/bin/install.sh
 	${LIBODBCXX_DIR}/${LIBODBCXX_VERSION}/bin/install.sh
@@ -173,11 +179,15 @@ tools_setup:
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh
 	${TAGLIB_DIR}/${TAGLIB_VERSION}/bin/install.sh
+	touch ${TMP_DIR}/tools_setup.stamp
 
-doxytag_setup:
+doxytag_setup: ${TMP_DIR}/doxytag_setup.stamp
+${TMP_DIR}/doxytag_setup.stamp:
 	${DOXYTAG} -t ${TAGFILE} ${EXTERNAL_DOC_PAGES}
+	touch ${TMP_DIR}/doxytag_setup.stamp
 
-modules_setup:
+modules_setup: ${TMP_DIR}/modules_setup.stamp
+${TMP_DIR}/modules_setup.stamp:
 	${CORE_DIR}/bin/autogen.sh
 	${AUTHENTICATION_DIR}/bin/autogen.sh
 	${DB_DIR}/bin/autogen.sh
@@ -188,10 +198,13 @@ modules_setup:
 	${WIDGETS_DIR}/bin/autogen.sh
 #	-${MAKE} -C ${STORAGE_SERVER_DIR} dir_setup
 	-${MAKE} -C ${STORAGE_SERVER_DIR} all
+	touch ${TMP_DIR}/modules_setup.stamp
 
-products_setup:
+products_setup: ${TMP_DIR}/products_setup.stamp
+${TMP_DIR}/products_setup.stamp:
 	${SCHEDULER_DIR}/bin/autogen.sh
 	${GLIVESUPPORT_DIR}/bin/autogen.sh
+	touch ${TMP_DIR}/products_setup.stamp
 
 distclean:
 	${MAKE} -C ${CORE_DIR} distclean
@@ -218,7 +231,8 @@ depclean:
 	${MAKE} -C ${GLIVESUPPORT_DIR} depclean
 	-${MAKE} -C ${STORAGE_SERVER_DIR} depclean
 
-compile:
+compile: ${TMP_DIR}/compile.stamp
+${TMP_DIR}/compile.stamp:
 	${MAKE} -C ${CORE_DIR} all
 	${MAKE} -C ${AUTHENTICATION_DIR} all
 	${MAKE} -C ${DB_DIR} all
@@ -229,6 +243,7 @@ compile:
 	${MAKE} -C ${WIDGETS_DIR} all
 	${MAKE} -C ${SCHEDULER_DIR} all
 	${MAKE} -C ${GLIVESUPPORT_DIR} all
+	touch ${TMP_DIR}/compile.stamp
 
 check:
 	-${MAKE} -C ${CORE_DIR} check
@@ -242,4 +257,21 @@ check:
 	-${MAKE} -C ${SCHEDULER_DIR} check
 #	-${MAKE} -C ${GLIVESUPPORT_DIR} check
 #	-${MAKE} -C ${STORAGE_SERVER_DIR} check
+
+
+#-------------------------------------------------------------------------------
+#   Installation related targets
+#-------------------------------------------------------------------------------
+.PHONY: install
+
+INSTALL_COPY_EXE = ${BIN_DIR}/copyInstall.sh
+ifeq (${prefix},)
+    INSTALL_PREFIX   = @prefix@
+else
+    INSTALL_PREFIX   = ${prefix}
+endif
+APACHE_GROUP     = @apache_group@
+
+install: setup compile
+	${INSTALL_COPY_EXE} --directory ${INSTALL_PREFIX}
 
