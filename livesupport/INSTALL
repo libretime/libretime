@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/INSTALL,v $
 
 --------------------------------------------------------------------------------
@@ -37,9 +37,9 @@ wget http://livesupport.campware.org/look/campware/download/livesupport-librarie
 tar xfj livesupport-<version>.tar.bz2
 tar xfj livesupport-libraries-<version>.tar.bz2
 cd livesupport-<version>
+./configure
 make setup && make compile
-./bin/install.sh -d /usr/local/livesupport -g apache
-ln -s /usr/local/livesupport/var /var/www/livesupport
+./bin/install.sh -d /usr/local/livesupport -g apache -r /var/www
 /usr/local/livesupport/bin/scheduler.sh start
 
 

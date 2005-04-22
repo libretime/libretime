@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -270,7 +270,6 @@ ifeq (${prefix},)
 else
     INSTALL_PREFIX   = ${prefix}
 endif
-APACHE_GROUP     = @apache_group@
 
 install: setup compile
 	${INSTALL_COPY_EXE} --directory ${INSTALL_PREFIX}

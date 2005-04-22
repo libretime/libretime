@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.1 $
+dnl Version  : $Revision: 1.2 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,20 +35,11 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(LiveSupport, 0.9, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.1 $)
+AC_REVISION($Revision: 1.2 $)
 
 AC_CONFIG_SRCDIR(../products/scheduler/src/main.cxx)
 
 AC_PROG_CXX()
-
-AC_ARG_WITH([apache-group],
-[  --with-apache-group     specify the system group the apache daemon runs as
-                              defaults to: [apache]],
-    CONFIG_APACHE_GROUP=${withval}, CONFIG_APACHE_GROUP="apache")
-
-apache_group=${CONFIG_APACHE_GROUP}
-AC_MSG_RESULT([using apache daemon group: ${apache_group}])
-AC_SUBST(apache_group)
 
 AC_CONFIG_FILES(../Makefile:../etc/Makefile.in)
 

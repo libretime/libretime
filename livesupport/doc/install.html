@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.3 $</li>
+  <li>Version: $Revision: 1.4 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -36,7 +36,7 @@ Those who think they know everything, the quick steps to install
 LiveSupport are (make sure to run at least the <code>./bin/install.sh</code>
 script as root):<br>
 <br>
-<pre><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>make setup &amp;&amp; make compile<br>./bin/install.sh -d /usr/local/livesupport -g apache<br>ln -s /usr/local/livesupport/var /var/www/livesupport<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
+<pre><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>./configure<br>make setup &amp;&amp; make compile<br>./bin/install.sh -d /usr/local/livesupport -g apache -r /var/www<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
 <br>
 Then try the URL <code>http://localhost/livesupport/htmlUI/var/html/ </code>,
 and log in using username: <code>root</code>, password: <code>q</code>.<br>
@@ -149,7 +149,11 @@ list</code> and installed by e.g.: <code>pear install DB</code>):</li>
 </ul>
 Please note the user group your apache daemon is running as (usually <code>apache</code>
 or <code>www-data</code>), you will need this information later. Later
-on in this document, this group will be referred to as <code>&lt;apache-group&gt;</code>.<br>
+on in this document, this group will be referred to as <code>&lt;apache-group&gt;</code>.
+Also note the document root directory for your apache installation
+(usually <code>/var/www</code> or <code>/var/www/htdocs</code>
+or <code>/var/www/&lt;yourhost&gt;/htdocs</code>). Later on in this
+document, this directory will be reffered to as <code>&lt;www-root&gt;</code>.<br>
 <h1>Obtaining LiveSupport sources</h1>
 LiveSupport sources come in two different tarballs:<br>
 <ul>
@@ -180,7 +184,7 @@ LiveSupport.<br>
 To compile LiveSupport, enter the LiveSupport directory, and execute
 the following commands:<br>
 <br>
-<pre><code>cd livesupport-&lt;version&gt;<br>make setup &amp;&amp; make compile<br></code></pre>
+<pre><code>cd livesupport-&lt;version&gt;<br>./configure<br>make setup &amp;&amp; make compile<br></code></pre>
 <br>
 This will take quite a while, so go have a tea, watch a movie, relax,
 etc.<br>
@@ -205,6 +209,13 @@ The user group the apache web server daemon runs at (see the section
 above on installing apache). Supply the <code>&lt;apache-group&gt;</code>
 value here, as mentioned above, which is usually either <code>apache</code>
 or <code>www-data</code>.<br>
+<br>
+<pre>  -r, --www-root      The root directory for web documents served<br>                      by apache [default: /var/www]<br><br></pre>
+The document root of your apache installation (see the section above on
+installing apache). Supply the <code>&lt;www-root&gt;</code>
+value here, as mentioned above, which is usually <code>/var/www</code>
+or <code>/var/www/htdocs</code>
+or <code>/var/www/&lt;yourhost&gt;/htdocs.</code>
 <pre><code><br>  -H, --host          The fully qualified host name of the system<br>                      [default: guess].<br></code><br></pre>
 The fully qualified domain name of your system. If the install script
 cannot determine your host name correctly, please supply the FQDN via
@@ -212,7 +223,7 @@ this parameter.<br>
 <br>
 Thus a typical invocation of the install script is the following:<br>
 <br>
-<pre><code>./bin/install.sh -d &lt;ls-installdir&gt; -g &lt;apache-group&gt;</code><br></pre>
+<pre><code>./bin/install.sh -d &lt;ls-installdir&gt; -g &lt;apache-group&gt; -r &lt;www-root&gt;</code><br></pre>
 <br>
 The install script has more options, which enable you to customize your
 installation of LiveSupport. Note that the defaults are usually quite
@@ -225,22 +236,9 @@ password <code>livesupport</code>.</li>
   <li>an ODBC data source named <code>LiveSupport</code>, connecting
 to the database of the same name.</li>
   <li>initialize the database with appropriate tables</li>
+  <li>create a symlink into your apache root to point to <code>&lt;ls-installdir&gt;/var</code>.<br>
+  </li>
 </ul>
-<h2>Configuring apache</h2>
-After a successful run of the installation script, all LiveSupport
-files are copied to <code>&lt;ls-installdir&gt;</code>. An additional
-manual installation step is required, to make sure that the LiveSupport
-web and XML-RPC interfaces are accessible through your apache web
-server. LiveSupport expects that the URL <code>http://&lt;yourhost&gt;/livesupport</code>
-points to the directory <code>&lt;ls-installdir&gt;/var</code>. To
-achieve this, create a symbolic link from your apache document root to
-the LiveSupport installation directory:<br>
-<br>
-<pre><code>ln -s &lt;ls-installdir&gt;/var &lt;apache-docroot&gt;/livesupport<br></code></pre>
-<br>
-Where <code>&lt;apache-docroot&gt;</code> is dependent on your
-installation, but is usually something like <code>/var/www</code> or <code>/var/www/htdocs</code>
-or <code>/var/www/&lt;yourhost&gt;/htdocs</code>. <br>
 <h1>Try it out</h1>
 After a successful installation, the LiveSupport scheduler has to be
 started. The scheduler has a System V runlevel-style startup script,

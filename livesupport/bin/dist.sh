@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ cp -pPR $products_dir/* $products_tmpdir
 #-------------------------------------------------------------------------------
 cp -pPR $docdir $ls_tmpdir
 cp -pPR $etcdir $ls_tmpdir
-cp -pPR README Makefile $ls_tmpdir
+cp -pPR README INSTALL configure $ls_tmpdir
 
 
 #-------------------------------------------------------------------------------
