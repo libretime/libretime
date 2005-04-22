@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,8 +39,6 @@
 #include <gtkmm/main.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
-#include "UploadFileWindow.h"
-#include "ScratchpadWindow.h"
 #include "MasterPanelWindow.h"
 
 
@@ -303,18 +301,21 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 void
 MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
 {
-    Ptr<ResourceBundle>::Ref    bundle;
-    try {
-        bundle       = getBundle("uploadFileWindow");
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        return;
+    if (!scratchpadWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("uploadFileWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        uploadFileWindow.reset(new UploadFileWindow(gLiveSupport, bundle));
     }
 
-    Ptr<UploadFileWindow>::Ref  uploadWindow(new UploadFileWindow(gLiveSupport,
-                                                                  bundle));
-
-    Gtk::Main::run(*uploadWindow);
+    if (!uploadFileWindow->is_visible()) {
+        uploadFileWindow->show();
+    }
 }
 
 
@@ -429,6 +430,23 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     scratchpadButton->hide();
     simplePlaylistMgmtButton->hide();
     schedulerButton->hide();
+    searchButton->hide();
+    
+    if (uploadFileWindow) {
+        uploadFileWindow->hide();
+    }
+    if (scratchpadWindow) {
+        scratchpadWindow->hide();
+    }
+    if (simplePlaylistMgmtWindow) {
+        simplePlaylistMgmtWindow->hide();
+    }
+    if (schedulerWindow) {
+        schedulerWindow->hide();
+    }
+    if (searchWindow) {
+        searchWindow->hide();
+    }
 }
 
 

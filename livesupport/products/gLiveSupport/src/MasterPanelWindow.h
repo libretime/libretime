@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
+#include "UploadFileWindow.h"
 #include "ScratchpadWindow.h"
 #include "SimplePlaylistManagementWindow.h"
 #include "SchedulerWindow.h"
@@ -89,7 +90,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -209,6 +210,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
+
+        /**
+         *  The one and only Upload File window.
+         */
+        Ptr<UploadFileWindow>::Ref  uploadFileWindow;
 
         /**
          *  The one and only Scratchpad window.
