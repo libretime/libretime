@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.56 $
+    Version  : $Revision: 1.57 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.56 $
+ *  @version $Revision: 1.57 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -867,5 +867,46 @@ class GreenBox extends BasicStor{
         return $pa;
     }
 
+    /**
+     *   Insert permission record
+     *
+     *   @param sessid string, session id
+     *   @param sid int - local user/group id
+     *   @param action string
+     *   @param oid int - local object id
+     *   @param type char - 'A'|'D' (allow/deny)
+     *   @return int - local permission id
+     */
+    function addPerm($sessid, $sid, $action, $oid, $type='A')
+    {
+        $parid = $this->getParent($oid);
+        if(($res = $this->_authorize('editPerms', $parid, $sessid)) !== TRUE){
+            return $res;
+        }
+        return parent::addPerm($sid, $action, $oid, $type);
+    }
+    
+    /**
+     *   Remove permission record
+     *
+     *   @param sessid string, session id
+     *   @param permid int OPT - local permission id
+     *   @param subj int OPT - local user/group id
+     *   @param obj int OPT - local object id
+     *   @return boolean/error
+     */
+    function removePerm($sessid, $permid=NULL, $subj=NULL, $obj=NULL)
+    {
+        $oid = $this->_getPermOid($permid);
+        if(PEAR::isError($oid)) return $oid;
+        if(!is_null($oid)){
+            $parid = $this->getParent($oid);
+            if(($res = $this->_authorize('editPerms', $parid, $sessid)) !== TRUE)
+                return $res;
+        }
+        $res = parent::removePerm($permid, $subj, $obj);
+        return $res;
+    }
+    
 }
 ?>

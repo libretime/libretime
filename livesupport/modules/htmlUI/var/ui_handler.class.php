@@ -530,8 +530,11 @@ class uiHandler extends uiBase {
      */
     function addPerm($subj, $permAction, $id, $allowDeny)
     {
-        #if($this->gb->checkPerm($this->userid, 'editPerms', $id)){
-        if (PEAR::isError($this->gb->addPerm($subj, $permAction, $id, $allowDeny))) {
+        if (PEAR::isError(
+            $this->gb->addPerm(
+                $this->sessid, $subj, $permAction, $id, $allowDeny
+            )
+        )) {
             $this->_retMsg('Access denied.');
             return FALSE;
         }
@@ -549,8 +552,7 @@ class uiHandler extends uiBase {
      */
     function removePerm($permid, $oid)
     {
-        #if($this->gb->checkPerm($this->userid, 'editPerms', $oid))
-        if (PEAR::isError($this->gb->removePerm($permid))) {
+        if (PEAR::isError($this->gb->removePerm($this->sessid, $permid))) {
             $this->_retMsg('Access denied.');
             return FALSE;
         }

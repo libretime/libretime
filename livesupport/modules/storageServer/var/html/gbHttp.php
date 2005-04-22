@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -363,13 +363,8 @@ switch($_REQUEST['act']){
  *  @param allowDeny char, A or D
  */
     case"addPerm";
-        $parid = $gb->getParent($_REQUEST['oid']);
         $redirUrl="gbHtmlPerms.php?id=$id";
-        if(!$gb->checkPerm($userid, 'editPerms', $parid)){
-            $_SESSION['alertMsg']='Access denied.';
-            break;
-        }
-        $res = $gb->addPerm($_REQUEST['subj'], $_REQUEST['permAction'],
+        $res = $gb->addPerm($sessid, $_REQUEST['subj'], $_REQUEST['permAction'],
             $_REQUEST['id'], $_REQUEST['allowDeny']);
         if($dbc->isError($res)){
             $_SESSION['alertMsg'] = $res->getMessage()." (".$res->getCode().")";
@@ -383,10 +378,10 @@ switch($_REQUEST['act']){
  *  @param permid int, local id of permission record
  */
     case"removePerm";
-        $parid = $gb->getParent($_REQUEST['oid']);
-        if($gb->checkPerm($userid, 'editPerms', $parid))
-            $gb->removePerm($_REQUEST['permid']);
-        else $_SESSION['alertMsg']='Access denied.';
+        $res = $gb->removePerm($sessid, $_REQUEST['permid']);
+        if($dbc->isError($res)){
+            $_SESSION['alertMsg'] = $res->getMessage()." (".$res->getCode().")";
+        }
         $redirUrl="gbHtmlPerms.php?id=$id";
     break;
 
