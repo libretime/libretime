@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/createDebianPackages.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -63,6 +63,10 @@ printUsage()
     echo "  -o, --output-directory      the output directory for the files";
     echo "                              [default: current directory]";
     echo "  -v, --version       The version number of the created packages.";
+    echo "                      From package_x.y-z_i386.deb, this is x.y";
+    echo "  -V, --debian-version        The debian release version of the";
+    echo "                              created packages. [default: 1]";
+    echo "                              From package_x.y-z_i386.deb, this is z";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -73,7 +77,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:hm:o:v: -l directory:,help,maintainer:,output-directory,version: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:hm:o:v:V: -l debian-version:,directory:,help,maintainer:,output-directory,version: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -91,6 +95,9 @@ while true; do
             shift; shift;;
         -v|--version)
             version=$2;
+            shift; shift;;
+        -V|--debian-version)
+            debianVersion=$2;
             shift; shift;;
         --)
             shift;
@@ -112,6 +119,10 @@ if [ "x$version" == "x" ]; then
     echo "Required parameter version not specified.";
     printUsage;
     exit 1;
+fi
+
+if [ "x$debianVersion" == "x" ]; then
+    debianVersion=1
 fi
 
 if [ "x$directory" == "x" ]; then
@@ -139,6 +150,33 @@ echo ""
 
 
 #-------------------------------------------------------------------------------
+#  Function to check for the existence of an executable on the PATH
+#
+#  @param $1 the name of the exectuable
+#  @return 0 if the executable exists on the PATH, non-0 otherwise
+#-------------------------------------------------------------------------------
+check_exe() {
+    if [ -x "`which $1 2> /dev/null`" ]; then
+        echo "Exectuable $1 found...";
+        return 0;
+    else
+        echo "Exectuable $1 not found...";
+        return 1;
+    fi
+}
+
+
+#-------------------------------------------------------------------------------
+#   Check for executables needed by this script
+#-------------------------------------------------------------------------------
+check_exe "tar" || exit 1;
+check_exe "md5sum" || exit 1;
+check_exe "find" || exit 1;
+check_exe "gzip" || exit 1;
+check_exe "sed" || exit 1;
+
+
+#-------------------------------------------------------------------------------
 #   More definitions
 #-------------------------------------------------------------------------------
 tarball=$directory/livesupport-$version.tar.bz2
@@ -155,8 +193,6 @@ if [ ! -f $tarball_libs ]; then
 fi
 
 
-# TODO: maybe read debianVersion as a command line parameter
-debianVersion=1
 packageName=livesupport-$version
 packageNameOrig=$packageName.orig
 workdir=$tmpdir/debianize
@@ -241,7 +277,7 @@ mv -f $origTarGz $diffGz $dsc $outdir
 echo "Cleaning up...";
 
 cd $basedir
-#rm -rf $workdir
+rm -rf $workdir
 
 
 #-------------------------------------------------------------------------------
