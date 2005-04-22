@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.15 $</li>
+  <li>Version: $Revision: 1.16 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -35,6 +35,8 @@ development environment.<br>
   </li>
   <li>set up additional system resources</li>
   <li>check out the sources</li>
+  <li>configure the environment<br>
+  </li>
   <li>set up tools used by LiveSupport</li>
   <li>personalize your development environment<br>
   </li>
@@ -116,6 +118,11 @@ would check out the development tree:<br>
 This will check out and create the LiveSupport development <a
  href="developmentEnvironment/directoryStructure.html">directory
 structure</a>.<br>
+<h2>Configure the environment</h2>
+The development environment as to be configured with an autoconf-style
+configure script. To do this, simply type:<br>
+<pre><code><br></code><code>cd livesupport<br></code><code>./configure<br></code></pre>
+after checking out the sources.<br>
 <h2>Set up tools</h2>
 LiveSupport uses widely available tools for development, like the GNU
 C++ compiler, but also uses more specific tools. As these tools, or the
@@ -133,7 +140,7 @@ To achieve all these goals, invoke the target <code>setup</code> in
 the main <code>Makefile</code>, at the root of the LiveSupport
 directory structure, by issuing the following command in the
 livesupport directory:<br>
-<pre><code><br>cd livesupport<br>make setup<br><br></code></pre>
+<pre><code><br>make setup<br><br></code></pre>
 The execution of this command will take a while, as all the supporting
 libraries and tools are compiled and installed to the <code>livesupport/usr</code>
 directory. Please note that nothing is installed outside of the
