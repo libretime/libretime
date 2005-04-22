@@ -79,7 +79,7 @@
 
 ]>
 <gLiveSupport>
-    <resourceBundle path   = "./tmp/gLiveSupport"
+    <resourceBundle path   = "ls_install_dir/var/gLiveSupport"
                     locale = "en"
     />
 
@@ -88,7 +88,7 @@
         <language locale="hu" name="Magyar"/>
     </supportedLanguages>
 
-    <widgetFactory    path = "var/widgets/" />
+    <widgetFactory    path = "ls_install_dir/var/widgets/" />
 
     <authenticationClientFactory>
         <webAuthentication>

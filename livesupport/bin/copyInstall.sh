@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -164,6 +164,8 @@ cp -pPR $products_dir/scheduler/bin/scheduler.sh $install_bin
 #-------------------------------------------------------------------------------
 cp -pPR $products_dir/gLiveSupport/tmp/gLiveSupport $install_bin
 cp -pPR $products_dir/gLiveSupport/bin/gLiveSupport.sh $install_bin
+cp -pPR $products_dir/gLiveSupport/var/widgets $install_var
+cp -pPR $products_dir/gLiveSupport/var/gLiveSuppprt*.res $install_var
 
 
 #-------------------------------------------------------------------------------

@@ -106,6 +106,9 @@ install-arch:
 		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml* \
 		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/widgets \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/var/gLiveSupport*.res \
+		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/var
 
 
 	dh_install -s
