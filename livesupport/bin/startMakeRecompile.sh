@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fberckel $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/startMakeRecompile.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -49,6 +49,8 @@ cd $bindir/..
 cvs update -dP >& $logdir/cvs_before_setup.log
 ls -l $logdir/cvs_before_setup.log >> $logdir/cvs_before_setup.log
 echo "Compare with cvs is be done, cvs_before_setup.log is created"
+bin/autogen.sh >& $logdir/configure_before_setup.log
+echo "Run autogen.sh & configure, configure_before_setup.log is created"
 make distclean >& $logdir/distclean_before_setup.log
 ls -l $logdir/distclean_before_setup.log >> $logdir/distclean_before_setup.log
 echo "Cleaning the setup is be done, distclean_before_setup.log is created"

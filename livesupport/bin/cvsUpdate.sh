@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fberckel $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/cvsUpdate.sh,v $
 #-------------------------------------------------------------------------------
 
