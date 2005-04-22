@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -150,11 +150,11 @@ class Alib extends Subjects{
     /**
      *   Insert permission record
      *
-     *   @param sid int
+     *   @param sid int - local user/group id
      *   @param action string
-     *   @param oid int
-     *   @param type char
-     *   @return int/err
+     *   @param oid int - local object id
+     *   @param type char - 'A'|'D' (allow/deny)
+     *   @return int - local permission id
      */
     function addPerm($sid, $action, $oid, $type='A')
     {
@@ -170,10 +170,10 @@ class Alib extends Subjects{
     /**
      *   Remove permission record
      *
-     *   @param permid int OPT
-     *   @param subj int OPT
-     *   @param obj int OPT
-     *   @return null/error
+     *   @param permid int OPT - local permission id
+     *   @param subj int OPT - local user/group id
+     *   @param obj int OPT - local object id
+     *   @return boolean/error
      */
     function removePerm($permid=NULL, $subj=NULL, $obj=NULL)
     {
@@ -184,6 +184,19 @@ class Alib extends Subjects{
         $cond = join(" AND ", $ca);
         if(!$cond) return TRUE;
         return $this->dbc->query("DELETE FROM {$this->permTable} WHERE $cond");
+    }
+
+    /**
+     *   Return object related with permission record
+     *
+     *   @param permid int - local permission id
+     *   @return int - local object id
+     */
+    function _getPermOid($permid)
+    {
+        $res = $this->dbc->getOne(
+            "SELECT obj FROM {$this->permTable} WHERE permid=$permid");
+        return $res;
     }
 
     /**
