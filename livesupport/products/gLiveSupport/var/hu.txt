@@ -12,15 +12,15 @@ hu:table
     searchButtonLabel:string                { "keresés" }
 
     localeNotAvailableMsg:string        { "A {0} nyelv nem elérhető" }
-    schedulerNotReachableMsg:string     { "Az időzitő szerver nem elérhető" }
-    storageNotReachableMsg:string       { "Az tároló szerver nem elérhető" }
+    schedulerNotReachableMsg:string     { "Az időzítő szerver nem elérhető" }
+    storageNotReachableMsg:string       { "A tároló szerver nem elérhető" }
     authenticationNotReachableMsg:string  { "A beléptető szerver nem elérhető" }
 
     loginWindow:table
     {
         windowTitle:string          { "Belépés" }
 
-        loginLabel:string           { "Azonositó" }
+        loginLabel:string           { "Azonosító" }
         passwordLabel:string        { "Jelszó" }
         okButtonLabel:string        { "Belépés" }
         cancelButtonLabel:string    { "Mégsem" }
@@ -28,9 +28,9 @@ hu:table
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "LiveSupport Hang Anyag Ablak" }
+        windowTitle:string            { "LiveSupport Hanganyag ablak" }
 
-        idColumnLabel:string          { "azonositó" }
+        idColumnLabel:string          { "azonosító" }
         lengthColumnLabel:string      { "hossz" }
         uriColumnLabel:string         { "URI" }
         tokenColumnLabel:string       { "token" }
@@ -40,7 +40,7 @@ hu:table
 
     scratchpadWindow:table
     {
-        windowTitle:string            { "LiveSupport Praktikus Csupor" }
+        windowTitle:string            { "LiveSupport Praktikus csupor" }
 
         typeColumnLabel:string        { "típus" }
         titleColumnLabel:string       { "cím" }
@@ -50,7 +50,7 @@ hu:table
         upMenuItem:string               { "_Fel" }
         downMenuItem:string             { "_Le" }
         removeMenuItem:string           { "_Eltávolít" }
-        addToPlaylistMenuItem:string    { "_Hozzáad Playlist-hez" }
+        addToPlaylistMenuItem:string    { "_Hozzáad Playlisthez" }
         schedulePlaylistMenuItem:string { "_Playlist időzítése" }
         deleteMenuItem:string           { "_Töröl" }
         playMenuItem:string             { "Le_játszâs" }
@@ -58,12 +58,12 @@ hu:table
 
     playlistListWindow:table
     {
-        windowTitle:string            { "LiveSupport Playlist Ablak" }
+        windowTitle:string            { "LiveSupport Playlist ablak" }
 
         listBoxLabel                  { "Playlistek" }
         detailBoxLabel                { "Playlist részletek" }
 
-        idColumnLabel:string          { "azonositó" }
+        idColumnLabel:string          { "azonosító" }
         lengthColumnLabel:string      { "hossz" }
         uriColumnLabel:string         { "URI" }
         tokenColumnLabel:string       { "token" }
@@ -73,29 +73,29 @@ hu:table
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "File Feltőltés" }
+        windowTitle:string            { "File feltöltés" }
 
         chooseFileLabel:string        { "Filenév" }
         chooseFileButtonLabel:string  { "Tallóz" }
 
-        mainSectionLabel:string       { "Fő" }
-        titleLabel:string             { "Cim" }
+        mainSectionLabel:string       { "Általános" }
+        titleLabel:string             { "Cím" }
         creatorLabel:string           { "Szerző" }
-        genreLabel:string             { "Stilus" }
-        fileFormatLabel:string        { "File tipus" }
+        genreLabel:string             { "Stílus" }
+        fileFormatLabel:string        { "File típusa" }
         lengthLabel:string            { "Hossz" }
 
         uploadButtonLabel:string      { "feltölt" }
         closeButtonLabel:string       { "bezár" }
         statusBar:string              { "állapotsor" }
 
-        fileChooserDialogTitle:string { "File Választás" }
-        clipUploadedMessage:string    { "hang file {0} feltöltve" }
+        fileChooserDialogTitle:string { "File Kiválasztása" }
+        clipUploadedMessage:string    { "hangfile {0} feltöltve" }
     }
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Egyszerű Playlist Szerkesztő Ablak" }
+        windowTitle:string            { "LiveSupport Egyszerű playlistszerkesztő ablak" }
 
         startColumnLabel:string       { "kezdet" }
         titleColumnLabel:string       { "cím" }
@@ -114,7 +114,7 @@ hu:table
         startColumnLabel:string      { "kezdet" }
         titleColumnLabel:string      { "cím" }
         endColumnLabel:string        { "vég" }
-        deleteMenuItem:string        { "_Töröl" }
+        deleteMenuItem:string        { "_töröl" }
 
         closeButtonLabel:string      { "bezár" }
     }
@@ -133,9 +133,9 @@ hu:table
     {
         windowTitle:string            { "LiveSupport Keresés Ablak" }
 
-        searchTab:string              { "Keresés" }
+        simpleSearchTab:string        { "Keresés" }
         advancedSearchTab:string      { "Összetett keresés" }
-        browseTab:string              { "Nézelődés" }
+        browseTab:string              { "Böngészés" }
 
         searchByTextLabel:string      { "Keresési feltétel:" }
         searchButtonLabel:string      { "Keress!" }
@@ -144,6 +144,24 @@ hu:table
         titleColumnLabel:string       { "Cím" }
         creatorColumnLabel:string     { "Előadó" }
         lengthColumnLabel:string      { "Hossz" }
+        
+        titleMetadataDisplay:string       { "Cím" }
+        titleMetadataSearchKey:string     { "dc:title" }
+        creatorMetadataDisplay:string     { "Előadó" }
+        creatorMetadataSearchKey:string   { "dc:creator" }
+        lengthMetadataDisplay:string      { "Hossz" }
+        lengthMetadataSearchKey:string    { "dcterms:extent" }
+        
+        partialOperatorDisplay:string     { "része" }
+        partialOperatorSearchKey:string   { "partial" }
+        prefixOperatorDisplay:string      { "kezdete" }
+        prefixOperatorSearchKey:string    { "prefix" }
+        =OperatorDisplay:string           { "=" }
+        =OperatorSearchKey:string         { "=" }
+        <=OperatorDisplay:string          { "<=" }
+        <=OperatorSearchKey:string        { "<=" }
+        >=OperatorDisplay:string          { ">=" }
+        >=OperatorSearchKey:string        { ">=" }
     }
 }
 

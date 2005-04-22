@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,16 +71,34 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
     private:
 
         /**
+         *  The simple search input field.
+         */
+        EntryBin *                  simpleSearchEntry;
+
+        /**
          *  The box containing the advanced search input fields.
          */
-        AdvancedSearchEntry *       advancedSearchOptions;
+        AdvancedSearchEntry *       advancedSearchEntry;
+
+        /**
+         *  Construct the simple search view.
+         *  If you enter a string in the simple search view and press Enter
+         *  (or the Search button), the local storage will be searched for
+         *  items (both audio clips and playlists) where either the title
+         *  (dc:title), the creator (dc:creator) or the album (dc:source)
+         *  metadata fields contain this string.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructSimpleSearchView(void)                         throw ();
 
         /**
          *  Construct the advanced search view.
@@ -91,23 +109,45 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         constructAdvancedSearchView(void)                       throw ();
 
         /**
-         *  Event handler for the Search button getting clicked.
+         *  Construct the browse view.
+         *
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         */
+        Gtk::VBox*
+        constructBrowseView(void)                               throw ();
+
+        /**
+         *  Construct the search results display.
+         *
+         *  @return a pointer to the new TreeView (already Gtk::manage()'ed)
+         */
+        ZebraTreeView*
+        constructSearchResults(void)                            throw ();
+
+        /**
+         *  Event handler for the simple Search button getting clicked.
          */
         void
-        onSearchButtonClicked(void)                             throw ();
+        onSimpleSearch(void)                                    throw ();
+
+        /**
+         *  Event handler for the advanced Search button getting clicked.
+         */
+        void
+        onAdvancedSearch(void)                                  throw ();
 
         /**
          *  Do the searching.
          */
         void
-        onSearch(void)                                          throw ();
+        onSearch(Ptr<SearchCriteria>::Ref   criteria)           throw ();
 
         /**
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.4 $
+         *  @version $Revision: 1.5 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

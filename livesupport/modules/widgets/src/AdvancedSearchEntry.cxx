@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Attic/AdvancedSearchEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,33 +68,37 @@ AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<ResourceBundle>::Ref    bundle)
     Gtk::Box *      searchOptionsBox = Gtk::manage(new Gtk::HBox);
     pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
 
+    Gtk::Label *    searchByLabel;
     try {
-        Gtk::Label *    searchByLabel = Gtk::manage(new Gtk::Label(
+        searchByLabel = Gtk::manage(new Gtk::Label(
                                     *getResourceUstring("searchByTextLabel") ));
-        searchOptionsBox->pack_start(*searchByLabel, Gtk::PACK_SHRINK, 0);
+        readMetadataTypes();
+        readOperatorTypes();
 
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
-    metadataType = Gtk::manage(wf->createComboBoxText());
-    metadataType->append_text("Title");
-    metadataType->append_text("Creator");
-    metadataType->append_text("Length");
-    metadataType->set_active_text("Title");
-    searchOptionsBox->pack_start(*metadataType, Gtk::PACK_EXPAND_WIDGET, 0);
+    
+    searchOptionsBox->pack_start(*searchByLabel, Gtk::PACK_SHRINK, 0);
 
-    operatorType = Gtk::manage(wf->createComboBoxText());
-    operatorType->append_text("contains");
-    operatorType->append_text("starts with");
-    operatorType->append_text("equals");
-    operatorType->append_text(">=");
-    operatorType->append_text("<=");
-    operatorType->set_active_text("contains");
-    searchOptionsBox->pack_start(*operatorType, Gtk::PACK_EXPAND_WIDGET, 0);
+    metadataEntry = Gtk::manage(wf->createComboBoxText());
+    MapVector::const_iterator   it;
+    for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
+        metadataEntry->append_text(it->first);
+    }
+    metadataEntry->set_active_text(metadataTypes->front().first);
+    searchOptionsBox->pack_start(*metadataEntry, Gtk::PACK_EXPAND_WIDGET, 0);
 
-    entryBin = Gtk::manage(wf->createEntryBin());
-    searchOptionsBox->pack_start(*entryBin,     Gtk::PACK_EXPAND_WIDGET, 0);
+    operatorEntry = Gtk::manage(wf->createComboBoxText());
+    for (it = operatorTypes->begin(); it != operatorTypes->end(); ++it) {
+        operatorEntry->append_text(it->first);
+    }
+    operatorEntry->set_active_text(operatorTypes->front().first);
+    searchOptionsBox->pack_start(*operatorEntry, Gtk::PACK_EXPAND_WIDGET, 0);
+
+    valueEntry = Gtk::manage(wf->createEntryBin());
+    searchOptionsBox->pack_start(*valueEntry,     Gtk::PACK_EXPAND_WIDGET, 0);
 }
 
 
@@ -105,42 +109,43 @@ Ptr<SearchCriteria>::Ref
 AdvancedSearchEntry :: getSearchCriteria(void)                  throw ()
 {
     Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all"));
-    
-    std::string     key;
-    if (metadataType->get_active_text() == "Title") {
-        key = "dc:title";
-    } else if (metadataType->get_active_text() == "Creator") {
-        key = "dc:creator";
-    } else if (metadataType->get_active_text() == "Length") {
-        key = "dcterms:extent";
-    } else {
-        std::cerr << "unknown metadata type in advanced search entry" 
-                                                                    << std::endl
-                  << "(this should never happen)" << std::endl;
+
+    std::string    metadataName = metadataEntry->get_active_text();
+    std::string    metadataKey;
+    bool           found = false;
+    MapVector::const_iterator   it;
+    for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
+        if (it->first == metadataName) {
+            found = true;
+            metadataKey = it->second;
+            break;
+        }
+    }
+    if (!found) {
+        std::cerr << "unknown metadata type: " << metadataName
+                  << std::endl << "(this should never happen)" << std::endl;
         std::exit(1);
     }
 
-    std::string     comparisonOperator;
-    if (operatorType->get_active_text() == "contains") {
-        comparisonOperator = "partial";
-    } else if (operatorType->get_active_text() == "starts with") {
-        comparisonOperator = "prefix";
-    } else if (operatorType->get_active_text() == "equals") {
-        comparisonOperator = "=";
-    } else if (operatorType->get_active_text() == ">=") {
-        comparisonOperator = ">=";
-    } else if (operatorType->get_active_text() == "<=") {
-        comparisonOperator = "<=";
-    } else {
-        std::cerr << "unknown comparison operator in advanced search entry"
-                                                                    << std::endl
-                  << "(this should never happen)" << std::endl;
+    std::string     operatorName = operatorEntry->get_active_text();
+    std::string     operatorKey;
+    found = false;
+    for (it = operatorTypes->begin(); it != operatorTypes->end(); ++it) {
+        if (it->first == operatorName) {
+            found = true;
+            operatorKey = it->second;
+            break;
+        }
+    }
+    if (!found) {
+        std::cerr << "unknown comparison operator: " << operatorName
+                  << std::endl << "(this should never happen)" << std::endl;
         std::exit(1);
     }
 
-    std::string     value = entryBin->get_text();
+    std::string     value = valueEntry->get_text();
 
-    criteria->addCondition(key, comparisonOperator, value);
+    criteria->addCondition(metadataKey, operatorKey, value);
     return criteria;
 }
 
@@ -152,6 +157,54 @@ void
 AdvancedSearchEntry :: connectCallback(const sigc::slot<void> &     callback)
                                                                 throw ()
 {
-    entryBin->signal_activate().connect(callback);
+    valueEntry->signal_activate().connect(callback);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read the localized metadata field names.
+ *----------------------------------------------------------------------------*/
+void
+AdvancedSearchEntry :: readMetadataTypes(void) 
+                                                throw (std::invalid_argument)
+{
+    metadataTypes.reset(new MapVector);
+    
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("titleMetadataDisplay"),
+                            *getResourceUstring("titleMetadataSearchKey") ));
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("creatorMetadataDisplay"),
+                            *getResourceUstring("creatorMetadataSearchKey") ));
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("lengthMetadataDisplay"),
+                            *getResourceUstring("lengthMetadataSearchKey") ));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Read the localized comparison operator names.
+ *----------------------------------------------------------------------------*/
+void
+AdvancedSearchEntry :: readOperatorTypes(void) 
+                                                throw (std::invalid_argument)
+{
+    operatorTypes.reset(new MapVector);
+    
+    operatorTypes->push_back(std::make_pair(
+                            *getResourceUstring("partialOperatorDisplay"),
+                            *getResourceUstring("partialOperatorSearchKey") ));
+    operatorTypes->push_back(std::make_pair(
+                            *getResourceUstring("prefixOperatorDisplay"),
+                            *getResourceUstring("prefixOperatorSearchKey") ));
+    operatorTypes->push_back(std::make_pair(
+                            *getResourceUstring("=OperatorDisplay"),
+                            *getResourceUstring("=OperatorSearchKey") ));
+    operatorTypes->push_back(std::make_pair(
+                            *getResourceUstring("<=OperatorDisplay"),
+                            *getResourceUstring("<=OperatorSearchKey") ));
+    operatorTypes->push_back(std::make_pair(
+                            *getResourceUstring(">=OperatorDisplay"),
+                            *getResourceUstring(">=OperatorSearchKey") ));
 }
 

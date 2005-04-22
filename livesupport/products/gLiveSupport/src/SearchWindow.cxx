@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -77,16 +77,18 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     this->gLiveSupport = gLiveSupport;
     treeModel = Gtk::ListStore::create(modelColumns);
 
-    Gtk::VBox *     searchView = Gtk::manage(new Gtk::VBox);
-    Gtk::VBox *     advancedSearchView = constructAdvancedSearchView();
-    Gtk::VBox *     browseView = Gtk::manage(new Gtk::VBox);
+    Gtk::Box *      simpleSearchView = constructSimpleSearchView();
+    Gtk::Box *      advancedSearchView = constructAdvancedSearchView();
+    Gtk::Box *      browseView = constructBrowseView();
 
     Notebook *      views = Gtk::manage(new Notebook);
     try {
-        views->appendPage(*searchView, *getResourceUstring("searchTab"));
+        views->appendPage(*simpleSearchView,   *getResourceUstring(
+                                                        "simpleSearchTab"));
         views->appendPage(*advancedSearchView, *getResourceUstring(
                                                         "advancedSearchTab"));
-        views->appendPage(*browseView, *getResourceUstring("browseTab"));
+        views->appendPage(*browseView,         *getResourceUstring(
+                                                        "browseTab"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -96,7 +98,7 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // show
     set_name("searchWindow");
-    set_default_size(450, 350);
+    set_default_size(450, 250);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -114,6 +116,46 @@ SearchWindow :: ~SearchWindow (void)                            throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Construct the simple search view.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+SearchWindow :: constructSimpleSearchView(void)                 throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+
+    // set up the entry box
+    simpleSearchEntry = Gtk::manage(wf->createEntryBin());
+    
+    Button *        searchButton;
+    try {
+        searchButton = Gtk::manage(wf->createButton(
+                                    *getResourceUstring("searchButtonLabel") ));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    simpleSearchEntry->signal_activate().connect(sigc::mem_fun(
+                                    *this, &SearchWindow::onSimpleSearch ));
+    searchButton->signal_clicked().connect(sigc::mem_fun(
+                                    *this, &SearchWindow::onSimpleSearch ));
+
+    Gtk::HBox *         entryBox = Gtk::manage(new Gtk::HBox);
+    entryBox->pack_start(*simpleSearchEntry,    Gtk::PACK_SHRINK,  5);
+    entryBox->pack_start(*searchButton,         Gtk::PACK_SHRINK,  5);
+
+    // set up the search results display
+    ZebraTreeView *     searchResults = constructSearchResults();
+    
+    // make a new box and pack the main components into it
+    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*entryBox,         Gtk::PACK_EXPAND_WIDGET, 5);
+    view->pack_start(*searchResults,    Gtk::PACK_EXPAND_WIDGET,  5);
+    return view;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Construct the advanced search view.
  *----------------------------------------------------------------------------*/
 Gtk::VBox*
@@ -122,16 +164,62 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
     // the three main components of the window    
-    advancedSearchOptions = Gtk::manage(new AdvancedSearchEntry(getBundle()));
-    Gtk::Box *      searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
+    advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(getBundle()));
+    Gtk::Box *          searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END ));
-    ZebraTreeView * searchResults = Gtk::manage(wf->createTreeView(
-                                                        treeModel ));
-
-    // set up the callback function for the entry field
-    advancedSearchOptions->connectCallback(sigc::mem_fun(*this,
-                                                    &SearchWindow::onSearch));
+    ZebraTreeView *     searchResults   = constructSearchResults();
     
+    // set up the callback function for the entry field
+    advancedSearchEntry->connectCallback(sigc::mem_fun(
+                                    *this, &SearchWindow::onAdvancedSearch ));
+    
+    // set up the search button box
+    try {
+        Button *        searchButton = Gtk::manage(wf->createButton(
+                                    *getResourceUstring("searchButtonLabel") ));
+        searchButton->signal_clicked().connect(sigc::mem_fun(
+                                    *this, &SearchWindow::onAdvancedSearch ));
+        searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
+
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    // make a new box and pack the main components into it
+    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*advancedSearchEntry,    Gtk::PACK_SHRINK,         5);
+    view->pack_start(*searchButtonBox,        Gtk::PACK_SHRINK,         5);
+    view->pack_start(*searchResults,          Gtk::PACK_EXPAND_WIDGET,  5);
+    
+    return view;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the browse view.
+ *----------------------------------------------------------------------------*/
+Gtk::VBox*
+SearchWindow :: constructBrowseView(void)                       throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+
+    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
+    return view;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct the search results display.
+ *----------------------------------------------------------------------------*/
+ZebraTreeView*
+SearchWindow :: constructSearchResults(void)                    throw ()
+{
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
+    ZebraTreeView *     searchResults = Gtk::manage(wf->createTreeView(
+                                                                treeModel ));
+
     // add the TreeView's view columns
     try {
         searchResults->appendColumn(*getResourceUstring("typeColumnLabel"),
@@ -150,36 +238,34 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     // color the rows blue and gray
     searchResults->setCellDataFunction();
     
-    // make a new box, and pack the main components into it
-    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*advancedSearchOptions,    Gtk::PACK_SHRINK, 5);
-    view->pack_start(*searchButtonBox,          Gtk::PACK_SHRINK, 5);
-    view->pack_start(*searchResults,            Gtk::PACK_SHRINK, 5);
-    
-    // set up the search button box
-    try {
-        Button *        searchButton = Gtk::manage(wf->createButton(
-                                    *getResourceUstring("searchButtonLabel") ));
-        searchButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &SearchWindow::onSearchButtonClicked));
-        searchButtonBox->pack_start(*searchButton, Gtk::PACK_SHRINK, 5);
-
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-    
-    return view;
+    return searchResults;
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Search button getting clicked.
+ *  Event handler for the simple Search button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-SearchWindow :: onSearchButtonClicked(void)                     throw ()
+SearchWindow :: onSimpleSearch(void)                            throw ()
 {
-    onSearch();
+    Glib::ustring               value = simpleSearchEntry->get_text();
+    
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "or"));
+    criteria->addCondition("dc:title",   "partial", value);    // id3v2 Title
+    criteria->addCondition("dc:creator", "partial", value);    // id3v2 Artist
+    criteria->addCondition("dc:source",  "partial", value);    // id3v2 Album
+    
+    onSearch(criteria);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the advanced Search button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onAdvancedSearch(void)                          throw ()
+{
+    onSearch(advancedSearchEntry->getSearchCriteria());
 }
 
 
@@ -187,10 +273,9 @@ SearchWindow :: onSearchButtonClicked(void)                     throw ()
  *  Do the searching.
  *----------------------------------------------------------------------------*/
 void
-SearchWindow :: onSearch(void)                                  throw ()
+SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
+                                                                throw ()
 {
-    Ptr<SearchCriteria>::Ref    criteria = advancedSearchOptions
-                                                    ->getSearchCriteria();    
     Ptr<std::list<Ptr<Playable>::Ref> >::Ref
             searchResults = gLiveSupport->search(criteria);
     std::list<Ptr<Playable>::Ref>::const_iterator it;

@@ -135,7 +135,7 @@ root:table
     {
         windowTitle:string            { "LiveSupport Search/Browse Window" }
 
-        searchTab:string              { "Search" }
+        simpleSearchTab:string        { "Search" }
         advancedSearchTab:string      { "Advanced Search" }
         browseTab:string              { "Browse" }
         
@@ -146,6 +146,24 @@ root:table
         titleColumnLabel:string       { "Title" }
         creatorColumnLabel:string     { "Creator" }
         lengthColumnLabel:string      { "Length" }
+        
+        titleMetadataDisplay:string       { "Title" }
+        titleMetadataSearchKey:string     { "dc:title" }
+        creatorMetadataDisplay:string     { "Creator" }
+        creatorMetadataSearchKey:string   { "dc:creator" }
+        lengthMetadataDisplay:string      { "Length" }
+        lengthMetadataSearchKey:string    { "dcterms:extent" }
+        
+        partialOperatorDisplay:string     { "contains" }
+        partialOperatorSearchKey:string   { "partial" }
+        prefixOperatorDisplay:string      { "starts with" }
+        prefixOperatorSearchKey:string    { "prefix" }
+        =OperatorDisplay:string           { "equals" }
+        =OperatorSearchKey:string         { "=" }
+        <=OperatorDisplay:string          { "<=" }
+        <=OperatorSearchKey:string        { "<=" }
+        >=OperatorDisplay:string          { ">=" }
+        >=OperatorSearchKey:string        { ">=" }
     }
 }
 
