@@ -29,7 +29,6 @@ endif
 
 config.status: configure
 	dh_testdir
-	# Add here commands to configure the package.
 	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/opt/livesupport
 
 
@@ -38,7 +37,6 @@ build: build-arch
 build-arch: build-arch-stamp
 build-arch-stamp:  config.status
 
-	# Add here commands to compile the arch part of the package.
 	$(MAKE) setup compile
 	touch build-arch-stamp
 
@@ -47,7 +45,6 @@ clean:
 	dh_testroot
 	rm -f build-arch-stamp #CONFIGURE-STAMP#
 
-	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean clean
 
 	dh_clean 

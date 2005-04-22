@@ -1,7 +1,7 @@
 Source: livesupport
 Section: unknown
 Priority: optional
-Maintainer: Akos Maroy <maroy@campware.org>
+Maintainer: ls_maintainer
 Build-Depends: debhelper (>= 4.0.0),
                binutils (>= 2.13),
                gcc (>= 3.3),

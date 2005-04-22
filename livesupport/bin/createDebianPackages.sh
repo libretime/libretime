@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/createDebianPackages.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -64,9 +64,6 @@ printUsage()
     echo "                              [default: current directory]";
     echo "  -v, --version       The version number of the created packages.";
     echo "                      From package_x.y-z_i386.deb, this is x.y";
-    echo "  -V, --debian-version        The debian release version of the";
-    echo "                              created packages. [default: 1]";
-    echo "                              From package_x.y-z_i386.deb, this is z";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -77,7 +74,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:hm:o:v:V: -l debian-version:,directory:,help,maintainer:,output-directory,version: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:hm:o:v: -l directory:,help,maintainer:,output-directory,version: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -95,9 +92,6 @@ while true; do
             shift; shift;;
         -v|--version)
             version=$2;
-            shift; shift;;
-        -V|--debian-version)
-            debianVersion=$2;
             shift; shift;;
         --)
             shift;
@@ -121,10 +115,6 @@ if [ "x$version" == "x" ]; then
     exit 1;
 fi
 
-if [ "x$debianVersion" == "x" ]; then
-    debianVersion=1
-fi
-
 if [ "x$directory" == "x" ]; then
     directory=`pwd`;
 else
@@ -142,10 +132,10 @@ echo "Creating Debian source packages for LiveSupport.";
 echo "";
 echo "Using the following parameters:";
 echo "";
-echo "  tarball directory:         $directory";
-echo "  maintainer:                $maintainer";
-echo "  package version:           $version-$debianVersion";
-echo "  output directory:          $outdir";
+echo "  tarball directory:     $directory";
+echo "  maintainer:            $maintainer";
+echo "  package version:       $version";
+echo "  output directory:      $outdir";
 echo ""
 
 
@@ -169,10 +159,9 @@ check_exe() {
 #-------------------------------------------------------------------------------
 #   Check for executables needed by this script
 #-------------------------------------------------------------------------------
+echo "Checking for tools used by this script...";
 check_exe "tar" || exit 1;
-check_exe "md5sum" || exit 1;
-check_exe "find" || exit 1;
-check_exe "gzip" || exit 1;
+check_exe "dpkg-source" || exit 1;
 check_exe "sed" || exit 1;
 
 
@@ -196,14 +185,8 @@ fi
 packageName=livesupport-$version
 packageNameOrig=$packageName.orig
 workdir=$tmpdir/debianize
-fullVersion=$version-$debianVersion
-diffGz=livesupport_$fullVersion.diff.gz
-origTarGz=livesupport_$fullVersion.orig.tar.gz
-dsc=livesupport_$fullVersion.dsc
 
-replace_sed_string="s/ls_version/$version/; \
-                    s/ls_debianVersion/$debianVersion/; \
-                    s/ls_maintainer/$maintainer/;"
+replace_sed_string="s/ls_maintainer/$maintainer/;"
 
 
 #-------------------------------------------------------------------------------
@@ -228,13 +211,16 @@ mv $packageName $packageNameOrig
 tar xfj $tarball
 tar xfj $tarball_libs
 
-
 #-------------------------------------------------------------------------------
 #   Debianize the livesupport-$version sources
 #-------------------------------------------------------------------------------
 echo "Debianizing sources...";
 
 cp -pPR $etcdir/debian $packageName
+
+# customize the control file, with the maintainer name
+cat $etcdir/debian/control | sed -e "$replace_sed_string" \
+    > $packageName/debian/control
 
 # get rid of the remnants of the CVS system
 rm -rf `find $packageName -name CVS -type d`
@@ -245,22 +231,7 @@ rm -rf `find $packageName -name CVS -type d`
 #-------------------------------------------------------------------------------
 echo "Creating debian source package...";
 
-diff -Naur $packageNameOrig $packageName | gzip -9 > $diffGz
-
-# create the original source tarball
-tar cfz $origTarGz $packageNameOrig
-
-# customize the dsc file
-cat $etcdir/livesupport.dsc.template | sed -e "$replace_sed_string" > $dsc
-
-# append with checksums, sizes and source file names
-md5sum=`md5sum $origTarGz | cut -d" " -f1`
-size=`find . -name $origTarGz -printf "%s"`
-echo " $md5sum $size $origTarGz" >> $dsc
-
-md5sum=`md5sum $diffGz | cut -d" " -f1`
-size=`find . -name $diffGz -printf "%s"`
-echo " $md5sum $size $diffGz" >> $dsc
+dpkg-source -b $packageName $packageNameOrig
 
 
 #-------------------------------------------------------------------------------
@@ -268,7 +239,7 @@ echo " $md5sum $size $diffGz" >> $dsc
 #-------------------------------------------------------------------------------
 echo "Moving debian source package files to target directory...";
 
-mv -f $origTarGz $diffGz $dsc $outdir
+mv -f livesupport_$version* $outdir
 
 
 #-------------------------------------------------------------------------------
