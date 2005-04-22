@@ -105,11 +105,11 @@ case "$1" in
 
         if [ "$1" = "upgrade" ]; then
             if command -v invoke-rc.d >/dev/null 2>&1 ; then
-                invoke-rc.d livesupport-station stop
-                invoke-rc.d livesupport-station kill
+                invoke-rc.d livesupport-station stop || true
+                invoke-rc.d livesupport-station kill || true
             else
-                /etc/init.d/livesupport-station stop
-                /etc/init.d/livesupport-station kill
+                /etc/init.d/livesupport-station stop || true
+                /etc/init.d/livesupport-station kill || true
             fi
         fi
     ;;
