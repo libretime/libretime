@@ -2,7 +2,7 @@
 onClick="hidealttextnow(); return contextmenu('{$i.id}'
     , 'SP.removeItem'
 
-    {if $i.type|lower == 'audioclip'}
+    {if $i.type === 'audioclip'}
         , 'listen', '{$i.gunid}'
         {if $_PL_activeId}
             , 'PL.addItem'
@@ -12,7 +12,7 @@ onClick="hidealttextnow(); return contextmenu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if $i.type|lower == 'webstream'}
+    {if $i.type === 'webstream'}
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
@@ -21,14 +21,14 @@ onClick="hidealttextnow(); return contextmenu('{$i.id}'
         , 'edit', 'delete'
     {/if}
 
-    {if $i.type|lower == 'playlist'}
+    {if $i.type === 'playlist'}
         {if $_PL_activeId}
-            {if $_PL_activeId == $i.id}
+            {if $_PL_activeId === $i.id}
                 , 'PL.release'
-            {else}
+            {elseif $PL->isAvailable($i.id) === TRUE}
                 , 'PL.addItem', 'delete'
             {/if}
-        {else}
+        {elseif  $PL->isAvailable($i.id) === TRUE}
             , 'PL.activate', 'PL.create', 'delete'
         {/if}
     {/if}

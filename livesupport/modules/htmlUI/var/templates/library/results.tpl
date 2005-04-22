@@ -33,20 +33,25 @@
             </table>
 
     </div>
-    <div class="footer" style="width: 535px;">
+    <div class="footer" style="width: 530px;">
 
          <div class="counter">
-            {if $_results.prev}<a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page=prev', 'pager')" id="blue_head">##previous##</a>{/if}
+            {* {if $_results.prev}<a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page=prev', 'pager')" id="blue_head">##previous##</a>{/if}  *}
 
             {foreach from=$_results.pagination item=p key=k}
-                <a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page={$k}', 'pager')" id="blue_head">{$p}</a>
+                {if $k != $_results.page+1}
+                    <a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page={$k}', 'pager')" id="blue_head">{$p}</a>
+                {else}
+                    {$p}
+                {/if}
             {/foreach}
 
-            {if $_results.next}<a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page=next', 'pager')" id="blue_head">##next##</a>{/if}
+            {* {if $_results.next}<a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.setOffset&page=next', 'pager')" id="blue_head">##next##</a>{/if}  *}
             &nbsp;&nbsp;
-            ##Count##:&nbsp;{$_results.cnt}&nbsp;&nbsp;
-            ##Page##:&nbsp;&nbsp;{$_results.page+1}&nbsp;&nbsp;
-            ##Range##:&nbsp;{$_criteria.offset+1}-{if ($_criteria.offset+$_criteria.limit)>$_results.cnt}{$_results.cnt}{else}{$_criteria.offset+$_criteria.limit}{/if}
+            ##Range##:&nbsp;{$_criteria.offset+1}-{if ($_criteria.offset+$_criteria.limit)>$_results.cnt}{$_results.cnt}{else}{$_criteria.offset+$_criteria.limit}{/if}&nbsp;
+            ##Count##:&nbsp;{$_results.cnt}&nbsp;
+            {* ##Page##:&nbsp;&nbsp;{$_results.page+1}&nbsp;&nbsp; *}
+
          </div>
 
          <select name="SEARCHRESULTS_multiaction" onChange="collector_submit('SEARCHRESULTS', this.value)">
@@ -58,11 +63,11 @@
                     <option value="PL.create">##New Playlist using this file(s)##</option>
                 {/if}
          </select>
-        <script type="text/javascript">
+         <script type="text/javascript">
             document.forms['SEARCHRESULTS'].elements['SEARCHRESULTS_multiaction'].options[0].selected=true;
             //document.forms['SEARCHRESULTS'].elements['all'].checked = false;
             //collector_switchAll('SEARCHRESULTS')
-        </script>
+         </script>
 
     </div>
    </form>

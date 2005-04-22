@@ -3,7 +3,9 @@ class uiScheduler extends uiCalendar
 {
     function uiScheduler(&$uiBase)
     {
-        $this->curr   =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
+        $this->curr         =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
+        $this->scheduleAt =& $_SESSION[UI_CALENDAR_SESSNAME]['schedule'];
+
         if (!is_array($this->curr)) {
             $this->curr['view']     = 'month';
             $this->curr['year']     = strftime("%Y");
@@ -18,6 +20,7 @@ class uiScheduler extends uiCalendar
 
         $this->Base =& $uiBase;
         $this->reloadUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->closeUrl  = UI_BROWSER.'?popup[]=_close';
 
         $this->uiCalendar();
         $this->initXmlRpc();
@@ -28,6 +31,13 @@ class uiScheduler extends uiCalendar
     {
         $this->Base->redirUrl = $this->reloadUrl;
     }
+
+
+    function setClose()
+    {
+        $this->Base->redirUrl = $this->closeUrl;
+    }
+
 
     function set($arr)
     {
@@ -43,17 +53,17 @@ class uiScheduler extends uiCalendar
         $stampNow    = $this->_datetime2timestamp($this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$this->curr['hour'].':00:00');
         $stampTarget = $stampNow;
 
-        if ($month=='++')
+        if ($month==='++')
             $stampTarget = strtotime("+1 month", $stampNow);
-        if ($month=='--')
+        if ($month==='--')
             $stampTarget = strtotime("-1 month", $stampNow);
-        if ($week=='++')
+        if ($week==='++')
             $stampTarget = strtotime("+1 week", $stampNow);
-        if ($week=='--')
+        if ($week==='--')
             $stampTarget = strtotime("-1 week", $stampNow);
-        if ($day=='++')
+        if ($day==='++')
             $stampTarget = strtotime("+1 day", $stampNow);
-        if ($day=='--')
+        if ($day==='--')
             $stampTarget = strtotime("-1 day", $stampNow);
 
         if ($today)
@@ -67,13 +77,26 @@ class uiScheduler extends uiCalendar
         $this->curr['dayname']  = strftime("%A", $stampTarget);
         $this->curr['monthname']= strftime("%B", $stampTarget);
 
-        if ($this->curr['year'] == strftime("%Y") && $this->curr['month'] == strftime("%m") && $this->curr['day'] == strftime("%d"))
+        if ($this->curr['year'] === strftime("%Y") && $this->curr['month'] === strftime("%m") && $this->curr['day'] === strftime("%d"))
             $this->curr['isToday'] = TRUE;
         else
             $this->curr['isToday'] = FALSE;
         #print_r($this->curr);
     }
 
+
+    function setscheduleAt($arr)
+    {
+        extract($arr);
+        #print_r($arr);
+
+        if (is_numeric($year))          $this->scheduleAt['year']    = $year;
+        if (is_numeric($month))         $this->scheduleAt['month']   = sprintf('%02d', $month);
+        if (is_numeric($day))           $this->scheduleAt['day']     = sprintf('%02d', $day);
+        if (is_numeric($hour))          $this->scheduleAt['hour']    = sprintf('%02d', $hour);
+        if (is_numeric($minute))        $this->scheduleAt['minute']  = sprintf('%02d', $minute);
+        if (is_numeric($second))        $this->scheduleAt['second']  = sprintf('%02d', $second);
+    }
 
     function getWeekEntrys()
     {
@@ -242,15 +265,19 @@ class uiScheduler extends uiCalendar
     function getScheduleForm()
     {
         global $ui_fmask;
-        foreach ($this->playlists as $val)
+
+        foreach ($this->availablePlaylists as $val)
             $ui_fmask['schedule']['playlist']['options'][$val['gunid']] = $val['title'];
         #print_r($ui_fmask);
         $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $ui_fmask['schedule']);
-        $settime = array('H' => $this->curr['hour']);
-        $setdate = array('Y' => $this->curr['year'],
-                         'm' => $this->curr['month'],
-                         'd' => $this->curr['day']);
+        $settime = array('H' => $this->scheduleAt['hour'],
+                         'i' => $this->scheduleAt['minute'],
+                         's' => $this->scheduleAt['second']
+                        );
+        $setdate = array('Y' => $this->scheduleAt['year'],
+                         'm' => $this->scheduleAt['month'],
+                         'd' => $this->scheduleAt['day']);
         $form->setDefaults(array('time'     => $settime,
                                  'date'     => $setdate,
                                  'playlist' => $setplaylist));
@@ -260,6 +287,19 @@ class uiScheduler extends uiCalendar
         #print_r($output);
         return $output;
 
+    }
+
+
+    function copyPlFromSP()
+    {
+        foreach ($this->Base->SCRATCHPAD->get() as $val) {
+            if ($val['type'] === 'playlist' && $this->Base->gb->playlistIsAvailable($val['id'], $this->Base->sessid) === TRUE && $val['id'] != $this->Base->PLAYLIST->activeId)
+                $this->availablePlaylists[] = $val;
+        }
+        if (!count($this->availablePlaylists))
+            return FALSE;
+
+        return TRUE;
     }
 
 
@@ -286,18 +326,6 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function _copyPlFromSP()
-    {
-        foreach ($this->Base->SCRATCHPAD->get() as $val) {
-            if (strtolower($val['type'])=='playlist' && $val['id']!=$this->Base->PLAYLIST->activeId)
-                $this->playlists[] = $val;
-        }
-        if (!count($this->playlists))
-            return FALSE;
-        return TRUE;
-    }
-
-
     function _datetime2timestamp($i)
     {
         $i = str_replace('T', ' ', $i);
@@ -321,11 +349,11 @@ class uiScheduler extends uiCalendar
 
     function _scheduledDays($period)
     {
-        if ($period=='month') {
+        if ($period==='month') {
             require_once 'Calendar/Month/Weekdays.php';
             $Period = new Calendar_Month_Weekdays($this->curr['year'], $this->curr['month'], $this->firstDayOfWeek);
             $Period->build();
-        } elseif ($period=='week') {
+        } elseif ($period==='week') {
             require_once 'Calendar/Week.php';
             $Period = new Calendar_Week ($this->curr['year'], $this->curr['month'], $this->curr['day'], $this->firstDayOfWeek);
             $Period->build();

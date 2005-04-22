@@ -88,7 +88,6 @@ if (is_array($_REQUEST['popup'])){
 
 if ($uiBrowser->userid) {
     $Smarty->assign('showMenuTop',        TRUE);
-    $Smarty->assign('SCRATCHPAD',         $uiBrowser->SCRATCHPAD->get());
 
     switch ($_REQUEST['act']){
     case "fileList":
@@ -104,7 +103,7 @@ if ($uiBrowser->userid) {
     break;
 
     case "permissions":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+        $Smarty->assign('structure',   $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('permissions', $uiBrowser->permissions($uiBrowser->id));
         $Smarty->assign('fileList', TRUE);
     break;

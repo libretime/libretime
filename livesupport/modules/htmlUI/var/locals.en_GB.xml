@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
+	<status />
 	<Id>en_GB</Id>
 	<item>
 		<key>Are you sure to delete file &quot;$1&quot;?</key>
@@ -484,6 +485,10 @@
 	<item>
 		<key>Insert Playlist here</key>
 		<value>Insert playlist here</value>
+	</item>
+	<item>
+		<key>Insert Playlist after previous</key>
+		<value />
 	</item>
 	<item>
 		<key>Item</key>

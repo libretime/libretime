@@ -326,12 +326,14 @@ class uiBase
 
     function _getMetaInfo($id)
     {
+        $type = strtolower($this->gb->getFileType($id));
         $data = array('id'          => $id,
                       'gunid'       => $this->gb->_gunidFromId($id),
                       'title'       => $this->_getMDataValue($id, UI_MDATA_KEY_TITLE),
                       'creator'     => $this->_getMDataValue($id, UI_MDATA_KEY_CREATOR),
                       'duration'    => $this->_niceTime($this->_getMDataValue($id, UI_MDATA_KEY_DURATION)),
-                      'type'        => $this->gb->getFileType($id),
+                      'type'        => $type,
+                      #'isAvailable' => $type == 'playlist' ? $this->gb->playlistIsAvailable($id, $this->sessid) : NULL,
                 );
          return ($data);
     }

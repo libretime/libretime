@@ -9,7 +9,7 @@ class uiBrowse
         #$this->results    =& $_SESSION[UI_BROWSE_SESSNAME]['results'];
         $this->reloadUrl  = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
 
-        $this->criteria['limit'] ? NULL : $this->criteria['limit'] = 10;
+        $this->criteria['limit'] ? NULL : $this->criteria['limit'] = UI_BROWSE_DEFAULT_LIMIT;
 
         if (!is_array($this->col)) {
             $this->setDefaults();
@@ -21,22 +21,21 @@ class uiBrowse
         $this->Base->redirUrl = $this->reloadUrl;
     }
 
-
     function setDefaults($reload=FALSE)
     {
-        $this->col[1]['category'] = 'dc:type';
+        $this->col[1]['category'] = UI_BROWSE_DEFAULT_KEY_1;
         $this->col[1]['value'][0] = '%%all%%';
-        $this->col[2]['category'] = 'dc:creator';
+        $this->col[2]['category'] = UI_BROWSE_DEFAULT_KEY_2;
         $this->col[2]['value'][0] = '%%all%%';
-        $this->col[3]['category'] = 'dc:source';
+        $this->col[3]['category'] = UI_BROWSE_DEFAULT_KEY_3;
         $this->col[3]['value'][0] = '%%all%%';
         for ($col=1; $col<=3; $col++) {
-            $this->setCategory(array('col' => $col, 'category' => $this->col[$col]['category'], 'value' => array(0=>'%%all%%')));
+            $this->setCategory(array('col' => $col, 'category' => $this->col[$col]['category'], 'value' => array(0 => '%%all%%')));
         }
 
-        $this->setValue(array('col' => 1,
-                              'category' => 'dc:type',
-                              'value' => Array(0 => '%%all%%')
+        $this->setValue(array('col'      => 1,
+                              'category' => UI_BROWSE_DEFAULTKEY_1,
+                              'value'    => Array(0 => '%%all%%')
                         )
         );
 
@@ -183,7 +182,7 @@ class uiBrowse
                 (
                     'id' => 24,
                     'gunid' => '1cc472228d0cb2ac',
-                    'title' => 'Strom 10min',
+                    'title' => 'Item '.$n,
                     'creator' => 'Sebastian',
                     'duration' => '&nbsp;&nbsp;&nbsp;10:00',
                     'type' => 'webstream'
@@ -193,6 +192,7 @@ class uiBrowse
         $this->results['cnt'] = $results['cnt'];
         ## end test
         */
+
         $this->pagination($results);
         #print_r($this->criteria);
         #print_r($this->results);
@@ -205,17 +205,31 @@ class uiBrowse
         if (sizeof($this->results['items']) == 0) {
             return FALSE;
         }
-        $currp =  ($this->criteria['offset']/$this->criteria['limit']) + 1;   # current page
-        $maxp  =  ceil($results['cnt'] / $this->criteria['limit']);           # maximum page
+        $delta = 4;
+        $currp = ($this->criteria['offset'] / $this->criteria['limit']) + 1;   # current page
+        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);           # maximum page
 
+        /*
         for ($n = 1; $n <= $maxp; $n = $n+$width) {
             $width = pow(10, floor(($n)/10));
             $this->results['pagination'][$n] = $n;
         }
+        */
+
+        $deltaLower = UI_BROWSERESULTS_DELTA;
+        $deltaUpper = UI_BROWSERESULTS_DELTA;
+        $start = $currp;
+
+        if ($start+$delta-$maxp > 0) $deltaLower += $start+$delta-$maxp;  ## correct lower boarder if page is near end
+
+        for ($n = $start-$deltaLower; $n <= $start+$deltaUpper; $n++) {
+            if ($n <= 0)            $deltaUpper++;                        ## correct upper boarder if page is near zero
+            elseif ($n <= $maxp)    $this->results['pagination'][$n] = $n;
+        }
 
         #array_pop($this->results['pagination']);
-        $this->results['pagination'][1] = '|<<';
-        $this->results['pagination'][$maxp] = '>>|';
+        $this->results['pagination'][1] ? NULL : $this->results['pagination'][1] = '|<<';
+        $this->results['pagination'][$maxp] ? NULL : $this->results['pagination'][$maxp] = '>>|';
         $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
         $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
         ksort($this->results['pagination']);
@@ -263,6 +277,7 @@ class uiBrowse
     function setFiletype($filetype)
     {
         $this->criteria['filetype'] = $filetype;
+        $this->criteria['offset'] = 0;
         $this->setReload();
         #$this->searchDB();
     }

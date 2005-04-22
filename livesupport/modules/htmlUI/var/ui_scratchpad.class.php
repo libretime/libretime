@@ -76,7 +76,7 @@ class uiScratchPad
         }
         if (!is_array($ids))
             $ids = array($ids);
-            
+
         $sp   = $this->get();
         foreach ($ids as $id) {
             $item = $this->Base->_getMetaInfo($id);

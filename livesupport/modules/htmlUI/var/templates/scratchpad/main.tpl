@@ -1,13 +1,14 @@
 {assign var="_PL_activeId" value=$PL->getActiveId()}
+{assign var="SCRATCHPAD"   value=$SCRATCHPAD->get()}
 
 <!-- start scratch pad -->
-{if is_array($SCRATCHPAD)}
 <form name="SP">
     <div class="container_elements">
         <h1>##ScratchPad##</h1>
         <div class="head" style="width:255px; height: 21px;">&nbsp;</div>
         <div class="container_table" style="width:275px;">
             <table style="width:255px;">
+
             <!-- start table header -->
                 <tr class="blue_head">
                     <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></td>
@@ -17,26 +18,43 @@
                 </tr>
             <!-- end table header -->
 
-                {foreach from=$SCRATCHPAD item=i}
+    {if count($SCRATCHPAD) >= 1}
+        {foreach from=$SCRATCHPAD item=i}
                 <!-- start item -->
                 <tr class="{cycle values='blue1, blue2'}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td {include file="scratchpad/actionhandler.tpl"}>
-                        {if $_PL_activeId == $i.id}
-                            <b>{$i.title|truncate:12}</b>
+                        {if $i.type === "playlist"}
+                            {if $PL->isAvailable($i.id) === FALSE}
+                                <div style="text-decoration : line-through">
+                            {else}
+                                <div>
+                            {/if}
+                            {if $_PL_activeId === $i.id}
+                                <div style="font-weight : bold">
+                            {else}
+                                <div>
+                            {/if}
+                                {$i.title|truncate:12}
+                            </div></div>
                         {else}
                             {$i.title|truncate:12}
                         {/if}
                     </td>
                     <td {include file="scratchpad/actionhandler.tpl"}>{$i.duration}</td>
-                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" /></td>
+                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" /></td>
                 </tr>
-                {/foreach}
                 <!-- end item -->
+        {/foreach}
+    {else}
+        <tr class="blue1">
+            <td style="border: 0" colspan="4" align="center">##empty##</td>
+        </tr>
+    {/if}
             </table>
         </div>
 
-        <div class="footer" style="width:255px;">
+        <div class="footer" style="width:250px;">
             <select name="SP_multiaction" onChange="collector_submit('SP', this.value)">
                 <option>##Multiple Action:##</option>
                 <option value="SP.removeItem">##Remove file(s)##</option>
@@ -53,9 +71,9 @@
             </script>
             <a href="#" onClick="collector_clearAll('SP', 'SP.removeItem')" id="blue_head">##Clear##</a>
         </div>
+
     </div>
 </form>
-{/if}
 <!-- end scratch pad -->
 
 {assign var="_PL_activeId" value=NULL}

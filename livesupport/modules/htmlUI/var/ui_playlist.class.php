@@ -57,8 +57,8 @@ class uiPlaylist
         }
         $token = $this->Base->gb->lockPlaylistForEdit($plid, $this->Base->sessid);
         if (PEAR::isError($token)) {
-            #print_r($this->token);
-            $this->Base->_retMsg('Unable to activate playlist "$1"'. $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
+            #print_r($token);
+            $this->Base->_retMsg('Unable to activate playlist "$1"', $this->Base->_getMDataValue($plid, UI_MDATA_KEY_TITLE));
             return FALSE;
         }
         $this->token = $token;
@@ -448,6 +448,14 @@ class uiPlaylist
         if ($this->Base->delete($id))
             return $id;
         $this->Base->_retMsg('Cannot delete this Playlist');
+        return FALSE;
+    }
+
+
+    function isAvailable($id)
+    {
+        if (strtolower($this->Base->gb->getFileType($id))==="playlist" && $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE)
+            return TRUE;
         return FALSE;
     }
 

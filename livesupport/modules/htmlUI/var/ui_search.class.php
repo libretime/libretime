@@ -125,7 +125,7 @@ class uiSearch
         $this->criteria['counter']          = UI_SIMPLESEARCH_ROWS;
         $this->criteria['form']['operator'] = 'OR';    ## $criteria['form'] is used for retransfer to form ##
         $this->criteria['form']['filetype'] = 'File';
-        $this->criteria['form']['limit']    = 5;
+        $this->criteria['form']['limit']    = UI_SIMPLESEARCH_LIMIT;
 
         for ($n = 1; $n<=UI_SIMPLESEARCH_ROWS; $n++) {
             $this->criteria['conditions'][$n] = array('cat'     => constant('UI_SIMPLESEARCH_CAT'.$n),
@@ -146,8 +146,8 @@ class uiSearch
     {
         if (count($this->criteria) === 0)
             return FALSE;
-            
-        $this->results = array('page' => $this->criteria['offset']/$this->criteria['limit']);
+
+        $this->results = array('page' => $this->criteria['offset'] / $this->criteria['limit']);
 
         #print_r($this->criteria);
         $results = $this->Base->gb->localSearch($this->criteria, $this->Base->sessid);
@@ -167,7 +167,7 @@ class uiSearch
                 (
                     'id' => 24,
                     'gunid' => '1cc472228d0cb2ac',
-                    'title' => 'Strom 10min',
+                    'title' => 'Item '.$n,
                     'creator' => 'Sebastian',
                     'duration' => '&nbsp;&nbsp;&nbsp;10:00',
                     'type' => 'webstream'
@@ -185,28 +185,34 @@ class uiSearch
 
     function pagination(&$results)
     {
-        if (sizeof($this->results) == 0) {
+        if (sizeof($this->results['items']) == 0) {
             return FALSE;
         }
 
-        $pot = 0;             # potence
-        $lpr = 10;            # links pro range
-        $width = 1;           # width bettween pages
-        $currp = ($this->criteria['offset']/$this->criteria['limit']) +1 ; # current page
-        $maxp = ceil($results['cnt']/$this->criteria['limit']);            # maximum page
+        $currp = ($this->criteria['offset'] / $this->criteria['limit']) + 1;   # current page
+        $maxp  = ceil($results['cnt'] / $this->criteria['limit']);           # maximum page
 
+        /*
         for ($n = 1; $n <= $maxp; $n = $n+$width) {
-            if ($n<$currp)
-                 $width = pow($lpr, floor(log10(abs($n-$currp))));
-            else
-                 $width = pow($lpr, floor(log10(abs($n-$currp)+1)));
+            $width = pow(10, floor(($n)/10));
             $this->results['pagination'][$n] = $n;
+        }
+        */
 
+        $deltaLower = UI_SEARCHRESULTS_DELTA;
+        $deltaUpper = UI_SEARCHRESULTS_DELTA;
+        $start = $currp;
+
+        if ($start+$delta-$maxp > 0) $deltaLower += $start+$delta-$maxp;  ## correct lower boarder if page is near end
+
+        for ($n = $start-$deltaLower; $n <= $start+$deltaUpper; $n++) {
+            if ($n <= 0)            $deltaUpper++;                        ## correct upper boarder if page is near zero
+            elseif ($n <= $maxp)    $this->results['pagination'][$n] = $n;
         }
 
         #array_pop($this->results['pagination']);
-        $this->results['pagination'][$maxp] = '>>|';
-        $this->results['pagination'][1] = '|<<';
+        $this->results['pagination'][1] ? NULL : $this->results['pagination'][1] = '|<<';
+        $this->results['pagination'][$maxp] ? NULL : $this->results['pagination'][$maxp] = '>>|';
         $this->results['next']  = $results['cnt'] > $this->criteria['offset'] + $this->criteria['limit'] ? TRUE : FALSE;
         $this->results['prev']  = $this->criteria['offset'] > 0 ? TRUE : FALSE;
         ksort($this->results['pagination']);

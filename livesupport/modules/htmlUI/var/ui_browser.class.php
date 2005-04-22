@@ -317,13 +317,14 @@ class uiBrowser extends uiBase {
      *  @return array
      */
     function permissions($id)
-    {
+    {                 
         return array('pathdata'  => $this->gb->getPath($id),
                      'perms'     => $this->gb->getObjPerms($id),
                      'actions'   => $this->gb->getAllowedActions($this->gb->getObjType($id)),
                      'subjects'  => $this->gb->getSubjects(),
                      'id'        => $id,
-                     'loggedAs'  => $this->login);
+                     'loggedAs'  => $this->login
+               );
     }
 
 

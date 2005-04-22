@@ -1,6 +1,6 @@
 {include file="popup/header.tpl"}
 
-{if $SCHEDULER->_copyPlFromSP()}
+{if $SCHEDULER->copyPlFromSP()}
     {assign var="dynform" value=$SCHEDULER->getScheduleForm()}
     <table height="100%" width="100%">
         <tr>
@@ -17,7 +17,7 @@
     </table>
 {else}
     <center>
-    ##You need to have at least one inactive playlist on ScratchPad to schedule it.##
+    ##You need to have at least one non-open playlist on ScratchPad to schedule it.##
     </center>
 {/if}
 

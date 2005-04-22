@@ -1,16 +1,19 @@
 <?php
-$Smarty->register_object('UIBROWSER', $uiBrowser);
-$Smarty->register_object('BROWSE',    $uiBrowser->BROWSE);
-$Smarty->register_object('SEARCH',    $uiBrowser->SEARCH);
-$Smarty->assign_by_ref  ('PL',        $uiBrowser->PLAYLIST);
-$Smarty->assign_by_ref  ('SCHEDULER', $uiBrowser->SCHEDULER);
+$Smarty->register_object('UIBROWSER',  $uiBrowser);
+$Smarty->register_object('BROWSE',     $uiBrowser->BROWSE);
+$Smarty->register_object('SEARCH',     $uiBrowser->SEARCH);
+$Smarty->assign_by_ref  ('PL',         $uiBrowser->PLAYLIST);
+$Smarty->assign_by_ref  ('SCHEDULER',  $uiBrowser->SCHEDULER);
+$Smarty->assign_by_ref  ('SCRATCHPAD', $uiBrowser->SCRATCHPAD);
 
-$Smarty->register_function('str_repeat', 'S_str_repeat');
-$Smarty->register_function('urlencode',  'S_urlencode');
-$Smarty->register_function('htmlspecialchars', 'S_htmlspecialchars');
-$Smarty->register_function('system', 'S_system');
-$Smarty->register_function('tra', 'S_tra');
-
+$Smarty->register_function('str_repeat',        'S_str_repeat');
+$Smarty->register_function('urlencode',         'S_urlencode');
+$Smarty->register_function('htmlspecialchars',  'S_htmlspecialchars');
+$Smarty->register_function('system',            'S_system');
+$Smarty->register_function('tra',               'S_tra');
+$Smarty->register_function('getHour',           'S_getHour');
+$Smarty->register_function('getMinute',         'S_getMinute');
+$Smarty->register_function('getSecond',         'S_getSecond');
 
 // --- Smarty Extensions ---
 /**
@@ -61,20 +64,6 @@ function S_htmlspecialchars($param)
 
 
 /**
- *  system
- *
- *  Execute some PHP-code.
- *
- *  @param code string, code to execute
- */
-function S_system($param)
-{
-    extract($param);
-    eval($code);
-}
-
-
-/**
  *  tra
  *
  *  Translate given string.
@@ -86,5 +75,30 @@ function S_tra($param)
     global $uiBrowser;
 
     echo tra($param[0], $param[1], $param[2], $param[3], $param[4], $param[5], $param[6], $param[7], $param[8], $param[9]);
+}
+
+
+function S_getHour($param)
+{
+    ## input format is HH:MM:SS.dddddd
+    extract ($param);
+    list ($h, $m, $s) = explode (':', $time);
+    return $h;
+}
+
+function S_getMinute($param)
+{
+    ## input format is HH:MM:SS.dddddd
+    extract ($param);
+    list ($h, $m, $s) = explode (':', $time);
+    return $m;
+}
+
+function S_getSecond($param)
+{
+    ## input format is HH:MM:SS.dddddd
+    extract ($param);
+    list ($h, $m, $s) = explode (':', $time);
+    return $s;
 }
 ?>

@@ -256,6 +256,11 @@ switch($_REQUEST['act']){
         $uiHandler->SCHEDULER->setReload();
     break;
 
+    case "SCHEDULER.setScheduleTime":
+        $uiHandler->SCHEDULER->setScheduleTime($_REQUEST);
+        $uiHandler->SCHEDULER->setClose();
+    break;
+
     case "SCHEDULER.addItem":
         $uiHandler->SCHEDULER->uploadPlaylistMethod($_REQUEST);
         $uiHandler->SCHEDULER->setReload();

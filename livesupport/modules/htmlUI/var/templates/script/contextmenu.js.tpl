@@ -94,7 +94,11 @@
                 break;
 
                 case "SCHEDULER.addItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.set&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\"')"+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\"')"+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
+                break;
+
+                case "SCHEDULER.addNextItem":
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#' onClick=\"hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\"')"+oF+">&nbsp;##Insert Playlist after previous##&nbsp;</a></li>";
                 break;
 
                 case "SCHEDULER.removeItem":

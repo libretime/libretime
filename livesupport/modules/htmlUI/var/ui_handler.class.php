@@ -530,13 +530,13 @@ class uiHandler extends uiBase {
      */
     function addPerm($subj, $permAction, $id, $allowDeny)
     {
-        if($this->gb->checkPerm($this->userid, 'editPerms', $id)){
-            $this->gb->addPerm($subj, $permAction,
-                $id, $allowDeny);
-        }else{
+        #if($this->gb->checkPerm($this->userid, 'editPerms', $id)){
+        if (PEAR::isError($this->gb->addPerm($subj, $permAction, $id, $allowDeny))) {
             $this->_retMsg('Access denied.');
+            return FALSE;
         }
         $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$id;
+        return TRUE;
     }
 
     /**
@@ -549,10 +549,13 @@ class uiHandler extends uiBase {
      */
     function removePerm($permid, $oid)
     {
-        if($this->gb->checkPerm($this->userid, 'editPerms', $oid))
-            $this->gb->removePerm($permid);
-        else $this->_retMsg('Access denied.');
+        #if($this->gb->checkPerm($this->userid, 'editPerms', $oid))
+        if (PEAR::isError($this->gb->removePerm($permid))) {
+            $this->_retMsg('Access denied.');
+            return FALSE;
+        }
         $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$oid;
+        return TRUE;
     }
 
 
