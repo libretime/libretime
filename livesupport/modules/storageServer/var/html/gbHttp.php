@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $ $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ require_once"gbHtml_h.php";
  *  storageServer WWW-form interface
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *  @see Alib
  *  @see GreenBox
  */
@@ -363,7 +363,7 @@ switch($_REQUEST['act']){
  *  @param allowDeny char, A or D
  */
     case"addPerm";
-        $parid = $gb->getparent($_REQUEST['oid']);
+        $parid = $gb->getParent($_REQUEST['oid']);
         $redirUrl="gbHtmlPerms.php?id=$id";
         if(!$gb->checkPerm($userid, 'editPerms', $parid)){
             $_SESSION['alertMsg']='Access denied.';
@@ -383,7 +383,7 @@ switch($_REQUEST['act']){
  *  @param permid int, local id of permission record
  */
     case"removePerm";
-        $parid = $gb->getparent($_REQUEST['oid']);
+        $parid = $gb->getParent($_REQUEST['oid']);
         if($gb->checkPerm($userid, 'editPerms', $parid))
             $gb->removePerm($_REQUEST['permid']);
         else $_SESSION['alertMsg']='Access denied.';
