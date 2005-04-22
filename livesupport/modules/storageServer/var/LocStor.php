@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -555,7 +555,7 @@ class LocStor extends BasicStor{
         if(PEAR::isError($playlistId)){ return $playlistId; }
         $ac =& StoredFile::recallByGunid($this, $playlistId);
         if(PEAR::isError($ac)){ return $ac; }
-        $res = $ac->replaceMetaData($newPlaylist, 'string');
+        $res = $ac->replaceMetaData($newPlaylist, 'string', 'playlist');
         if(PEAR::isError($res)){ return $res; }
         $r = $this->_setEditFlag($playlistId, FALSE, $sessid);
         if(PEAR::isError($r)){ return $r; }

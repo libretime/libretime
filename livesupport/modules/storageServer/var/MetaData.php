@@ -23,12 +23,12 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
 define('DEBUG', FALSE);
-#define('DEBUG', TRUE);
+//define('DEBUG', TRUE);
 define('MODIFY_LAST_MATCH', TRUE);
 
 require_once "XML/Util.php";
@@ -122,15 +122,18 @@ class MetaData{
      *
      *  @param mdata string, local path to metadata XML file or XML string
      *  @param loc string 'file'|'string'
+     *  @param format string, metadata format for validation
+     *      ('audioclip' | 'playlist' | 'webstream' | NULL)
+     *      (NULL = no validation)
      *  @return true or PEAR::error
      */
-    function replace($mdata, $loc='file')
+    function replace($mdata, $loc='file', $format=NULL)
     {
         if($this->exists){
             $res = $this->delete();
             if(PEAR::isError($res)) return $res;
         }
-        return $this->insert($mdata, $loc);
+        return $this->insert($mdata, $loc, $format);
     }
 
     /**
@@ -205,7 +208,11 @@ class MetaData{
         $transTbl = get_html_translation_table();
         $transTbl = array_flip($transTbl);
         foreach($all as $i=>$v){
-            $all[$i]['value']=strtr($all[$i]['value'], $transTbl);
+            if(!is_null($all[$i]['value'])){
+                $all[$i]['value'] = strtr($all[$i]['value'], $transTbl);
+            }else{
+                $all[$i]['value'] = '';
+            }
         }
         if(PEAR::isError($all)) return $all;
         return $all;
@@ -246,7 +253,7 @@ class MetaData{
         if(!is_null($value)){
             $sql = "
                 UPDATE {$this->mdataTable}
-                SET object='$value'
+                SET object='$value', objns='_L'
                 WHERE id={$mid}
             ";
             $res = $this->dbc->query($sql);
@@ -587,7 +594,7 @@ class MetaData{
         $object  = $node->content;
         if(is_null($object) || $object == ''){
             $objns  = '_blank';
-            $object = 'NULL';
+            $object = NULL;
         }else $objns = '_L';
         $id = $this->storeRecord($subjns, $subject,
             $node->ns, $node->name, 'T', $objns, $object);
@@ -620,8 +627,10 @@ class MetaData{
      */
     function updateRecord($mdid, $object, $objns='_L')
     {
+        $objns_sql  = (is_null($objns) ? "NULL" : "'$objns'" );
+        $object_sql = (is_null($object)? "NULL" : "'$object'");
         $res = $this->dbc->query("UPDATE {$this->mdataTable}
-            SET objns  = '$objns',  object    = '$object'
+            SET objns  = $objns_sql,  object    = $object_sql
             WHERE gunid = x'{$this->gunid}'::bigint AND id='$mdid'
         ");
         if(PEAR::isError($res)) return $res;

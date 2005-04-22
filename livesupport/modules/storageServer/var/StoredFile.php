@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -329,12 +329,15 @@ class StoredFile{
      *
      *  @param metadata string, local path to metadata XML file or XML string
      *  @param mdataLoc string 'file'|'string'
+     *  @param format string, metadata format for validation
+     *      ('audioclip' | 'playlist' | 'webstream' | NULL)
+     *      (NULL = no validation)
      *  @return boolean
      */
-    function replaceMetaData($metadata, $mdataLoc='file')
+    function replaceMetaData($metadata, $mdataLoc='file', $format=NULL)
     {
         $this->dbc->query("BEGIN");
-        $res = $this->md->replace($metadata, $mdataLoc);
+        $res = $this->md->replace($metadata, $mdataLoc, $format);
         if(PEAR::isError($res)){ $this->dbc->query("ROLLBACK"); return $res; }
         $res = $this->dbc->query("COMMIT");
         if(PEAR::isError($res)) return $res;
