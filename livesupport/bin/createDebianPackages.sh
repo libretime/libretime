@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/createDebianPackages.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ echo "Using the following parameters:";
 echo "";
 echo "  tarball directory:         $directory";
 echo "  maintainer:                $maintainer";
-echo "  package version number:    $version";
+echo "  package version:           $version-$debianVersion";
 echo "  output directory:          $outdir";
 echo ""
 
