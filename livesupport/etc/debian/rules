@@ -81,6 +81,7 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/tmp
+	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallScheduler.sh \
@@ -88,8 +89,12 @@ install-arch:
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \
 		  $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var \
-          $(CURDIR)/debian/livesupport-station/opt/livesupport
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/alib \
+          $(CURDIR)/debian/livesupport/opt/livesupport/var/archiveServer \
+          $(CURDIR)/debian/livesupport/opt/livesupport/var/getid3 \
+          $(CURDIR)/debian/livesupport/opt/livesupport/var/htmlUI \
+          $(CURDIR)/debian/livesupport/opt/livesupport/var/storageServer \
+          $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 
 	# now separate the studio (client) files into debian/livesupport-studio
 	mkdir -p $(CURDIR)/debian/livesupport-studio
@@ -97,6 +102,7 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
 	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
 	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/tmp
+	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport.sh \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallGLiveSupport.sh \

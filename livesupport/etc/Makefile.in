@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -100,6 +100,7 @@ PLAYLIST_EXECUTOR_DIR = ${MODULES_DIR}/playlistExecutor
 EVENT_SCHEDULER_DIR   = ${MODULES_DIR}/eventScheduler
 SCHEDULER_CLIENT_DIR  = ${MODULES_DIR}/schedulerClient
 WIDGETS_DIR           = ${MODULES_DIR}/widgets
+ARCHIVE_SERVER_DIR    = ${MODULES_DIR}/archiveServer
 STORAGE_SERVER_DIR    = ${MODULES_DIR}/storageServer
 
 PRODUCTS_DIR  = ${BASE_DIR}/products
@@ -196,7 +197,7 @@ ${TMP_DIR}/modules_setup.stamp:
 	${EVENT_SCHEDULER_DIR}/bin/autogen.sh
 	${SCHEDULER_CLIENT_DIR}/bin/autogen.sh
 	${WIDGETS_DIR}/bin/autogen.sh
-#	-${MAKE} -C ${STORAGE_SERVER_DIR} dir_setup
+	-${MAKE} -C ${ARCHIVE_SERVER_DIR} all
 	-${MAKE} -C ${STORAGE_SERVER_DIR} all
 	touch ${TMP_DIR}/modules_setup.stamp
 
@@ -229,6 +230,7 @@ depclean:
 	${MAKE} -C ${WIDGETS_DIR} depclean
 	${MAKE} -C ${SCHEDULER_DIR} depclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} depclean
+	-${MAKE} -C ${ARCHIVE_SERVER_DIR} depclean
 	-${MAKE} -C ${STORAGE_SERVER_DIR} depclean
 
 compile: ${TMP_DIR}/compile.stamp
@@ -256,6 +258,7 @@ check:
 	-${MAKE} -C ${WIDGETS_DIR} check
 	-${MAKE} -C ${SCHEDULER_DIR} check
 #	-${MAKE} -C ${GLIVESUPPORT_DIR} check
+#	-${MAKE} -C ${ARCHIVE_SERVER_DIR} check
 #	-${MAKE} -C ${STORAGE_SERVER_DIR} check
 
 
