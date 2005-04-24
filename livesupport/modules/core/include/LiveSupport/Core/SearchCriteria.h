@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,6 +93,18 @@ namespace Core {
  */
 class SearchCriteria
 {
+    public:
+    
+        /**
+         *  A type to hold a single search condition.
+         */
+        struct SearchConditionType
+        {
+            std::string key;
+            std::string comparisonOperator;
+            std::string value;
+        };
+        
     private:
 
         /**
@@ -105,16 +117,6 @@ class SearchCriteria
          */
         std::string                         logicalOperator;
 
-        /**
-         *  A type to hold a single search condition.
-         */
-        struct SearchConditionType
-        {
-            std::string key;
-            std::string comparisonOperator;
-            std::string value;
-        };
-        
         /**
          *  A type to hold the list of search conditions.
          */
@@ -240,6 +242,20 @@ class SearchCriteria
                      const std::string & comparisonOperator,
                      const std::string & value)
                                                 throw(std::invalid_argument);
+
+        /**
+         *  Add a search condition.
+         *
+         *  @param condition the search condition to add
+         */
+        void
+        addCondition(const SearchConditionType &    condition)
+                                                throw(std::invalid_argument)
+        {
+            addCondition(condition.key,
+                         condition.comparisonOperator,
+                         condition.value);
+        }
 
         /**
          *  Set the limit field.
