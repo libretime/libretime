@@ -24,13 +24,13 @@
                 <tr class="{cycle values='blue1, blue2'}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td {include file="scratchpad/actionhandler.tpl"}>
-                        {if $i.type === "playlist"}
-                            {if $PL->isAvailable($i.id) === FALSE}
+                        {if $i.type == "playlist"}
+                            {if $PL->isAvailable($i.id) == FALSE}
                                 <div style="text-decoration : line-through">
                             {else}
                                 <div>
                             {/if}
-                            {if $_PL_activeId === $i.id}
+                            {if $_PL_activeId == $i.id}
                                 <div style="font-weight : bold">
                             {else}
                                 <div>
@@ -39,9 +39,9 @@
                             </div></div>
                         {else}
                             {$i.title|truncate:12}
-                        {/if}
-                    </td>
-                    <td {include file="scratchpad/actionhandler.tpl"}>{$i.duration}</td>
+                        {/if}                                         {* on some reason object call doesn´t like usage of array *}
+                    </td>                                             {assign var="_duration" value=$i.duration}
+                    <td {include file="scratchpad/actionhandler.tpl"}>{niceTime in=$_duration}</td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" /></td>
                 </tr>
                 <!-- end item -->

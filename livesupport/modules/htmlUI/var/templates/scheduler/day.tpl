@@ -33,7 +33,7 @@
 
             {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
-                    <td style="border-left: 1px solid #ccc;" onClick="return contextmenu('hour={$_hour}', 'SCHEDULER.addItem')">{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-left: 1px solid #ccc;" onClick="return contextmenu('year={$SCHEDULER->curr.year}&month={$SCHEDULER->curr.month}&day={$SCHEDULER->curr.day}&hour={$_hour}&minute=0&second=0', 'SCHEDULER.addItem')">{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;">
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
@@ -42,12 +42,13 @@
                         {$i.start}-{$i.end}
                         {$i.creator}
                         </div>
+                        <div style="background-color: #FF6F1F; height: 3px" onClick="return contextmenu('year={$SCHEDULER->curr.year}&month={$SCHEDULER->curr.month}&day={$SCHEDULER->curr.day}&hour={getHour time=$i.end}&minute={getMinute time=$i.end}&second={getSecond time=$i.end plus=1}', 'SCHEDULER.addItem')"></div>
                     {/foreach}
 
                     </td>
                 </tr>
             {else}
-                <tr class="blue2" onClick="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={$_hour}', 'SCHEDULER.addItem')">
+                <tr class="blue2" onClick="return contextmenu('year={$SCHEDULER->curr.year}&month={$SCHEDULER->curr.month}&day={$SCHEDULER->curr.day}&hour={$_hour}&minute=0&second=0', 'SCHEDULER.addItem')">
                     <td style="border-left: 1px solid #ccc;">{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;"></td>
                 </tr>

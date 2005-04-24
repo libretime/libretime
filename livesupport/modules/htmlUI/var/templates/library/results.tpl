@@ -25,7 +25,7 @@
                         {/if}
                     </td>
                     <td {include file="library/actionhandler.tpl"}>{$i.creator}</td>
-                    <td {include file="library/actionhandler.tpl"}>{$i.duration}</td>
+                    <td {include file="library/actionhandler.tpl"}>{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file="library/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" /></td>
                 </tr>
             <!-- end item -->

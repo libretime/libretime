@@ -21,6 +21,74 @@
     </center>
 {/if}
 
+<script type="text/javascript">
+{literal}
+function SCHEDULE_submit()
+{
+    document.forms["schedule"].elements["playlist"].value = SCHEDULE_selectedGunid();
+    document.forms["schedule"].submit();
+}
+
+function SCHEDULE_snap2Hour()
+{
+{/literal}
+    document.forms["schedule"].elements["time[H]"].value = {$SCHEDULER->scheduleAt.hour};
+    document.forms["schedule"].elements["time[i]"].value = 0;
+    document.forms["schedule"].elements["time[s]"].value = 0;
+{literal}
+}
+
+function SCHEDULE_snap2Prev()
+{
+{/literal}
+    document.forms["schedule"].elements["time[H]"].value = {$SCHEDULER->schedulePrev.hour};
+    document.forms["schedule"].elements["time[i]"].value = {$SCHEDULER->schedulePrev.minute};
+    document.forms["schedule"].elements["time[s]"].value = {$SCHEDULER->schedulePrev.second};
+{literal}
+}
+
+function SCHEDULE_snap2Next()
+{
+{/literal}
+    var beginD = new Date();
+    var colon = ":";
+    var duration  = SCHEDULE_selectedDuration();
+    var nextD     = new Date("january 01, 1970 {$SCHEDULER->scheduleNext.hour}:{$SCHEDULER->scheduleNext.minute}:{$SCHEDULER->scheduleNext.second}");
+    var durationD = new Date("january 01, 1970 " + SCHEDULE_selectedDuration());
+    //alert(durationD.getTime());
+    beginD.setTime(nextD.getTime() - durationD.getTime() - 3600000);
+
+    //alert(nextD.toLocaleString());
+    //alert(durationD.toLocaleString());
+    //alert (beginD.toLocaleString());
+
+    document.forms["schedule"].elements["time[H]"].value = beginD.getHours();
+    document.forms["schedule"].elements["time[i]"].value = beginD.getMinutes();
+    document.forms["schedule"].elements["time[s]"].value = beginD.getSeconds();
+{literal}
+}
+
+function SCHEDULE_selectedDuration()
+{
+    var arr = document.forms["schedule"].elements["gunid_duration"].value.split("|");
+    return arr[1].slice(0, 8);
+}
+
+function SCHEDULE_selectedGunid()
+{
+    var arr = document.forms["schedule"].elements["gunid_duration"].value.split("|");
+    return arr[0];
+}
+/*
+date1 = new Date("january 01, 1970 00:00:10");
+date2 = new Date("january 01, 1970 00:00:33");
+date3 = new Date();
+date3.setTime(date1.getTime() + date2.getTime());
+alert(date3.getSeconds());
+*/
+{/literal}
+</script>
+
 
 
 </body>

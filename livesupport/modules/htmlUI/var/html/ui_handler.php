@@ -257,7 +257,7 @@ switch($_REQUEST['act']){
     break;
 
     case "SCHEDULER.setScheduleTime":
-        $uiHandler->SCHEDULER->setScheduleTime($_REQUEST);
+        $uiHandler->SCHEDULER->setScheduleAt($_REQUEST);
         $uiHandler->SCHEDULER->setClose();
     break;
 

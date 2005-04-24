@@ -331,34 +331,14 @@ class uiBase
                       'gunid'       => $this->gb->_gunidFromId($id),
                       'title'       => $this->_getMDataValue($id, UI_MDATA_KEY_TITLE),
                       'creator'     => $this->_getMDataValue($id, UI_MDATA_KEY_CREATOR),
-                      'duration'    => $this->_niceTime($this->_getMDataValue($id, UI_MDATA_KEY_DURATION)),
+                      'duration'    => $this->_getMDataValue($id, UI_MDATA_KEY_DURATION),
                       'type'        => $type,
                       #'isAvailable' => $type == 'playlist' ? $this->gb->playlistIsAvailable($id, $this->sessid) : NULL,
                 );
          return ($data);
     }
 
-
-    function _niceTime($in, $all=FALSE)
-    {
-        if(is_array($in)) $in = current($in);
-
-        if (strpos($in, '.')) list ($in, $lost) = explode('.', $in);
-        $in = str_replace('&nbsp;', '', $in);
-
-        if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in))    list($h, $i, $s) = explode(':', $in);
-        elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))           list($i, $s) = explode(':', $in);
-        else                                                            $s = $in;
-
-        if ($all || $h > 0) $H = sprintf('%02d', $h).':';
-        else        $H = '&nbsp;&nbsp;&nbsp;';
-        $I = sprintf('%02d', $i).':';
-        $S = sprintf('%02d', $s);
-
-        return $H.$I.$S;
-    }
-
-
+    
     function _getMDataValue($id, $key, $langid=UI_DEFAULT_LANGID)
     {
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid))) {

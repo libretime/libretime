@@ -3,19 +3,21 @@ class uiScheduler extends uiCalendar
 {
     function uiScheduler(&$uiBase)
     {
-        $this->curr         =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
-        $this->scheduleAt =& $_SESSION[UI_CALENDAR_SESSNAME]['schedule'];
+        $this->curr           =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
+        $this->scheduleAt     =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleAt'];
+        $this->schedulePrev   =& $_SESSION[UI_CALENDAR_SESSNAME]['schedulePrev'];
+        $this->scheduleNext   =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
 
         if (!is_array($this->curr)) {
-            $this->curr['view']     = 'month';
-            $this->curr['year']     = strftime("%Y");
-            $this->curr['month']    = strftime("%m");
-            $this->curr['week']     = strftime("%V");
-            $this->curr['day']      = strftime("%d");
-            $this->curr['hour']     = strftime("%H");
-            $this->curr['dayname']  = strftime("%A");
-            $this->curr['monthname']= strftime("%B");
-            $this->curr['isToday']  = TRUE;
+            $this->curr['view']      = 'month';
+            $this->curr['year']      = strftime("%Y");
+            $this->curr['month']     = strftime("%m");
+            $this->curr['week']      = strftime("%V");
+            $this->curr['day']       = strftime("%d");
+            $this->curr['hour']      = strftime("%H");
+            $this->curr['dayname']   = strftime("%A");
+            $this->curr['monthname'] = strftime("%B");
+            $this->curr['isToday']   = TRUE;
         }
 
         $this->Base =& $uiBase;
@@ -69,13 +71,13 @@ class uiScheduler extends uiCalendar
         if ($today)
             $stampTarget = time();
 
-        $this->curr['year']     = strftime("%Y", $stampTarget);
-        $this->curr['month']    = strftime("%m", $stampTarget);
-        $this->curr['week']     = strftime("%V", $stampTarget);
-        $this->curr['day']      = strftime("%d", $stampTarget);
-        $this->curr['hour']     = strftime("%H", $stampTarget);
-        $this->curr['dayname']  = strftime("%A", $stampTarget);
-        $this->curr['monthname']= strftime("%B", $stampTarget);
+        $this->curr['year']      = strftime("%Y", $stampTarget);
+        $this->curr['month']     = strftime("%m", $stampTarget);
+        $this->curr['week']      = strftime("%V", $stampTarget);
+        $this->curr['day']       = strftime("%d", $stampTarget);
+        $this->curr['hour']      = strftime("%H", $stampTarget);
+        $this->curr['dayname']   = strftime("%A", $stampTarget);
+        $this->curr['monthname'] = strftime("%B", $stampTarget);
 
         if ($this->curr['year'] === strftime("%Y") && $this->curr['month'] === strftime("%m") && $this->curr['day'] === strftime("%d"))
             $this->curr['isToday'] = TRUE;
@@ -85,7 +87,7 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function setscheduleAt($arr)
+    function setScheduleAt($arr)
     {
         extract($arr);
         #print_r($arr);
@@ -96,6 +98,27 @@ class uiScheduler extends uiCalendar
         if (is_numeric($hour))          $this->scheduleAt['hour']    = sprintf('%02d', $hour);
         if (is_numeric($minute))        $this->scheduleAt['minute']  = sprintf('%02d', $minute);
         if (is_numeric($second))        $this->scheduleAt['second']  = sprintf('%02d', $second);
+
+        $week = $this->getWeekEntrys();
+        ## search for next entry
+        foreach ($week[$this->scheduleAt['day']] as $entry) {
+            if (strtotime($entry[0]['start']) >=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
+                list($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['start'])-1));
+                break;
+            }
+        }
+
+        reset ($week);
+        ## search for previous entry
+        foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
+            if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
+                list($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['end'])+1));
+                break;
+            }
+        }
+        #print_r($this->schedulePrev);
+        #print_r($this->scheduleNext);
+
     }
 
     function getWeekEntrys()
@@ -265,22 +288,26 @@ class uiScheduler extends uiCalendar
     function getScheduleForm()
     {
         global $ui_fmask;
+        #print_r($this->availablePlaylists);
+        foreach ($this->availablePlaylists as $val) {
+            $ui_fmask['schedule']['gunid_duration']['options'][$val['gunid'].'|'.$val['duration']] = $val['title'];
+        }
+        #print_r($ui_fmask['schedule']);
 
-        foreach ($this->availablePlaylists as $val)
-            $ui_fmask['schedule']['playlist']['options'][$val['gunid']] = $val['title'];
-        #print_r($ui_fmask);
         $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $ui_fmask['schedule']);
         $settime = array('H' => $this->scheduleAt['hour'],
                          'i' => $this->scheduleAt['minute'],
                          's' => $this->scheduleAt['second']
-                        );
+                   );
         $setdate = array('Y' => $this->scheduleAt['year'],
                          'm' => $this->scheduleAt['month'],
-                         'd' => $this->scheduleAt['day']);
-        $form->setDefaults(array('time'     => $settime,
-                                 'date'     => $setdate,
-                                 'playlist' => $setplaylist));
+                         'd' => $this->scheduleAt['day']
+                   );
+        $form->setDefaults(array('time'         => $settime,
+                                 'date'         => $setdate,
+        ));
+
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         $output = $renderer->toArray();

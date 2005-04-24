@@ -205,8 +205,9 @@ class uiBrowser extends uiBase {
                        'act'    => 'editWebstream',
                        'title'  => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_TITLE) : NULL,
                        'url'    => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_URL) : 'http://',
-                       'length' => $id ? $this->_niceTime($this->_getMDataValue($id, UI_MDATA_KEY_DURATION), TRUE) : NULL
+                       'length' => $id ? preg_replace("/\.[0-9]{1,6}/", "", $this->_getMDataValue($id, UI_MDATA_KEY_DURATION)) : NULL
                       );
+
         $form->setConstants($const);
         $this->_parseArr2Form($form, $mask);
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
@@ -317,7 +318,7 @@ class uiBrowser extends uiBase {
      *  @return array
      */
     function permissions($id)
-    {                 
+    {
         return array('pathdata'  => $this->gb->getPath($id),
                      'perms'     => $this->gb->getObjPerms($id),
                      'actions'   => $this->gb->getAllowedActions($this->gb->getObjType($id)),

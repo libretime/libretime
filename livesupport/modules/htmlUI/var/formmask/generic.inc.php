@@ -710,6 +710,10 @@ $ui_fmask = array(
             'type'      => 'hidden',
             'constant'  => 'SCHEDULER.addItem'
         ),
+        array(
+            'element'   => 'playlist',
+            'type'      => 'hidden'
+        ),
         'date'      => array(
             'element'   => 'date',
             'type'      => 'date',
@@ -722,11 +726,35 @@ $ui_fmask = array(
             'label'     => 'Time',
             'options'   => array('format' => 'His'),
         ),
-        'playlist'  => array(
-            'element'   => 'playlist',
+        'gunid_duration'  => array(
+            'element'   => 'gunid_duration',
             'type'      => 'select',
             'label'     => 'Playlist',
             'required'  => TRUE,
+        ),
+        array(
+            'element'   => 'snap2Prev',
+            'type'      => 'button',
+            'label'     => 'Snap to previous',
+            'attributes'=> array('onClick' => 'SCHEDULE_snap2Prev()'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'snap2Hour',
+            'type'      => 'button',
+            'label'     => 'Snap to hour',
+            'attributes'=> array('onClick' => 'SCHEDULE_snap2Hour()'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'element'   => 'snap2Next',
+            'type'      => 'button',
+            'label'     => 'Snap to next',
+            'attributes'=> array('onClick' => 'SCHEDULE_snap2Next()'),
+            'groupit'   => TRUE
+        ),
+        array(
+            'group'     => array('snap2Prev', 'snap2Hour', 'snap2Next')
         ),
         array(
             'element'   => 'cancel',
@@ -742,13 +770,14 @@ $ui_fmask = array(
             'groupit'   => TRUE
         ),
         array(
-            'element'   => 'submit',
-            'type'      => 'submit',
+            'element'   => 'submitter',
+            'type'      => 'button',
             'label'     => 'Submit',
+            'attributes'=> array('onClick' => 'SCHEDULE_submit()'),
             'groupit'   => TRUE
         ),
         array(
-            'group'     => array('cancel', 'reset', 'submit')
+            'group'     => array('cancel', 'reset', 'submitter')
         )
     )
 );
