@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Attic/AdvancedSearchEntry.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,8 +45,6 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/SearchCriteria.h"
-#include "LiveSupport/Widgets/ComboBoxText.h"
-#include "LiveSupport/Widgets/EntryBin.h"
 
 
 namespace LiveSupport {
@@ -66,7 +64,7 @@ using namespace LiveSupport::Core;
  *  A Gtk::VBox with one or more search input fields in it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class AdvancedSearchEntry : public Gtk::VBox,
                             public LocalizedObject
@@ -74,60 +72,9 @@ class AdvancedSearchEntry : public Gtk::VBox,
     private:
     
         /**
-         *  The type for storing both the metadata and the comparison operator
-         *  localizations.
-         */
-        typedef std::vector<std::pair<Glib::ustring, Glib::ustring> >
-                            MapVector;
-
-        /**
-         *  The list of possible metadata field names.
-         */
-        Ptr<MapVector>::Ref     metadataTypes;
-    
-        /**
-         *  The list of possible comparison operators.
-         */
-        Ptr<MapVector>::Ref     operatorTypes;
-    
-        /**
-         *  The metadata field.
-         */
-        ComboBoxText *          metadataEntry;
-
-        /**
-         *  The operator field.
-         */
-        ComboBoxText *          operatorEntry;
-
-        /**
-         *  The "search for this value" field.
-         */
-        EntryBin *              valueEntry;
-        
-        /**
          *  Default constructor.
          */
         AdvancedSearchEntry(void)                               throw ();
-
-        /**
-         *  Read the localized metadata field names.
-         *
-         *  @exception std::invalid_argument if some keys are not found in
-         *                                   the resource bundle
-         */
-        void
-        readMetadataTypes(void)                 throw (std::invalid_argument);
-
-        /**
-         *  Read the localized comparison operator names.
-         *
-         *  @exception std::invalid_argument if some keys are not found in
-         *                                   the resource bundle
-         */
-        void
-        readOperatorTypes(void)                 throw (std::invalid_argument);
-
 
     public:
     
@@ -144,6 +91,12 @@ class AdvancedSearchEntry : public Gtk::VBox,
         ~AdvancedSearchEntry(void)                              throw ()
         {
         }
+
+        /**
+         *  Add a new search condition entry item.
+         */
+        void
+        onAddNewCondition(void)                                 throw ();
 
         /**
          *  Return the current state of the search fields.

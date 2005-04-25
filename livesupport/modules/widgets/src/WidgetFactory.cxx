@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,6 +102,16 @@ static const std::string    deleteButtonPassiveName = "imageButton/delete.png";
  *  The name of the rollover image for the delete button.
  */
 static const std::string    deleteButtonRollName = "imageButton/deleteRoll.png";
+
+/**
+ *  The name of the passive image for the plus button.
+ */
+static const std::string    plusButtonPassiveName = "imageButton/plus.png";
+
+/**
+ *  The name of the rollover image for the plus button.
+ */
+static const std::string    plusButtonRollName = "imageButton/plusRoll.png";
 
 /**
  *  The name of the passive image for the small play button.
@@ -359,6 +369,11 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
         case deleteButton:
             passiveImage = loadImage(deleteButtonPassiveName);
             rollImage    = loadImage(deleteButtonRollName);
+            break;
+
+        case plusButton:
+            passiveImage = loadImage(plusButtonPassiveName);
+            rollImage    = loadImage(plusButtonRollName);
             break;
 
         case smallPlayButton:

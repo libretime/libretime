@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,8 @@
 #include <stdexcept>
 #include <cctype>
 #include <XmlRpcValue.h>
+
+#include "LiveSupport/Core/Ptr.h"
 
 // forward declaration of friend class
 namespace LiveSupport {
@@ -103,6 +105,13 @@ class SearchCriteria
             std::string key;
             std::string comparisonOperator;
             std::string value;
+            
+            SearchConditionType(const std::string &     key,
+                                const std::string &     comparisonOperator,
+                                const std::string &     value)
+                : key(key), comparisonOperator(comparisonOperator), value(value)
+            {
+            }
         };
         
     private:
@@ -249,12 +258,12 @@ class SearchCriteria
          *  @param condition the search condition to add
          */
         void
-        addCondition(const SearchConditionType &    condition)
+        addCondition(const Ptr<SearchConditionType>::Ref  condition)
                                                 throw(std::invalid_argument)
         {
-            addCondition(condition.key,
-                         condition.comparisonOperator,
-                         condition.value);
+            addCondition(condition->key,
+                         condition->comparisonOperator,
+                         condition->value);
         }
 
         /**

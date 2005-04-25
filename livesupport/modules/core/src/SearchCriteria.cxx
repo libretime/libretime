@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/SearchCriteria.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -78,7 +78,7 @@ SearchCriteria :: addCondition(const std::string & key,
             || lowerCaseOp == "partial" || lowerCaseOp == "prefix"
             || lowerCaseOp == "<" || lowerCaseOp == "<="
             || lowerCaseOp == ">" || lowerCaseOp == ">=") {
-        SearchConditionType  condition = { key, lowerCaseOp, value };
+        SearchConditionType  condition(key, lowerCaseOp, value);
         searchConditions.push_back(condition);
     } else {
         throw std::invalid_argument("bad comparison operator argument");
