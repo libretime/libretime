@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.40 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -706,6 +706,43 @@ WebStorageClientTest :: searchTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Browse test.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: browseTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    CPPUNIT_ASSERT_NO_THROW(
+        wsc->reset()
+    );
+
+    Ptr<SessionId>::Ref sessionId;
+    CPPUNIT_ASSERT_NO_THROW(
+        sessionId = authentication->login("root", "q")
+    );
+    CPPUNIT_ASSERT(sessionId);
+
+    Ptr<Glib::ustring>::Ref     metadata(new Glib::ustring("dc:title"));
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria());
+    Ptr<std::vector<Glib::ustring> >::Ref   values;
+    CPPUNIT_ASSERT_NO_THROW(
+        values = wsc->browse(sessionId, metadata, criteria)
+    );
+    CPPUNIT_ASSERT(values);
+    CPPUNIT_ASSERT(values->size() >= 6);
+
+    metadata.reset(new Glib::ustring("dcterms:extent"));
+    criteria.reset(new SearchCriteria("all", "dc:title", "=", "one"));
+    CPPUNIT_ASSERT_NO_THROW(
+        values = wsc->browse(sessionId, metadata, criteria)
+    );
+    CPPUNIT_ASSERT(values);
+    CPPUNIT_ASSERT(values->size() >= 1);
+    CPPUNIT_ASSERT((*values)[0] == Glib::ustring("00:00:11.000000"));
 }
 
 

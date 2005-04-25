@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.38 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -244,6 +244,39 @@ static const std::string    searchAudioClipCountParamName = "audioClipCnt";
  *  The name of the playlist count parameter returned by the method
  *----------------------------------------------------------------------------*/
 static const std::string    searchPlaylistCountParamName = "playlistCnt";
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: browse */
+
+/*------------------------------------------------------------------------------
+ *  The name of the search method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    browseMethodName 
+                            = "locstor.browseCategory";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    browseSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the metadata type parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    browseMetadataParamName = "category";
+
+/*------------------------------------------------------------------------------
+ *  The name of the search criteria parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    browseCriteriaParamName = "criteria";
+
+/*------------------------------------------------------------------------------
+ *  The name of the list of metadata values parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    browseResultParamName = "results";
+
+/*------------------------------------------------------------------------------
+ *  The name of the count parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    browseResultCountParamName = "cnt";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ playlist methods */
@@ -2090,6 +2123,80 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
 
     return int(result[searchAudioClipCountParamName])
            + int(result[searchPlaylistCountParamName]);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Browse for metadata values.
+ *----------------------------------------------------------------------------*/
+Ptr<std::vector<Glib::ustring> >::Ref
+WebStorageClient :: browse(Ptr<SessionId>::Ref      sessionId,
+                           Ptr<Glib::ustring>::Ref  metadataType,
+                           Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException)
+{
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[browseSessionIdParamName] 
+            = sessionId->getId();
+    parameters[browseMetadataParamName] 
+            = std::string(*metadataType);
+    parameters[browseCriteriaParamName] 
+            = *searchCriteria;
+
+    result.clear();
+    if (!xmlRpcClient.execute(browseMethodName.c_str(),
+                              parameters, result)) {
+        xmlRpcClient.close();
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += browseMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+    xmlRpcClient.close();
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << browseMethodName
+             << "' returned error message:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (! result.hasMember(browseResultParamName)
+            || result[browseResultParamName].getType() 
+                                                != XmlRpcValue::TypeArray) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << browseMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
+
+    XmlRpcValue     metadataValues = result[browseResultParamName];
+    Ptr<std::vector<Glib::ustring> >::Ref 
+                                    results(new std::vector<Glib::ustring>);
+    
+    for (int i=0; i < metadataValues.size(); i++) {
+        if (metadataValues[i].getType() != XmlRpcValue::TypeString) {
+            std::stringstream eMsg;
+            eMsg << "Non-string metadata value returned by XML-RPC method '"
+                 << browseMethodName
+                 << "':\n"
+                 << result;
+            throw XmlRpcMethodResponseException(eMsg.str());
+        }
+        results->push_back(Glib::ustring(metadataValues[i]));
+    }
+
+    return results;
 }
 
 

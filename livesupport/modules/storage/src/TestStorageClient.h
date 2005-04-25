@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.31 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,8 +85,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST testStorage tempFiles CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.31 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.32 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -524,6 +524,26 @@ class TestStorageClient :
         search(Ptr<SessionId>::Ref      sessionId,
                Ptr<SearchCriteria>::Ref searchCriteria) 
                                                 throw (XmlRpcException);
+
+        /**
+         *  Browse for metadata values.  Not implemented; always returns 0.
+         *
+         *  @param sessionId      the session ID from the authentication client
+         *  @param metadataType   the type of metadata to browse for
+         *  @param searchCriteria an object containing the search criteria
+         *  @return a vector containing the metadata values found
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Glib::ustring> >::Ref
+        browse(Ptr<SessionId>::Ref      sessionId,
+               Ptr<Glib::ustring>::Ref  metadataType,
+               Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException)
+        {
+            Ptr<std::vector<Glib::ustring> >::Ref    null;
+            return null;
+        }
 
         /**
          *  Return the list of audio clip IDs found by the search method.

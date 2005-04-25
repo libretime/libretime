@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class StorageClientInterface
 {
@@ -373,6 +373,23 @@ class StorageClientInterface
          */
         virtual int
         search(Ptr<SessionId>::Ref      sessionId,
+               Ptr<SearchCriteria>::Ref searchCriteria) 
+                                                throw (XmlRpcException)
+                                                                        = 0;
+
+        /**
+         *  Browse for metadata values.
+         *
+         *  @param sessionId      the session ID from the authentication client
+         *  @param metadataType   the type of metadata to browse for
+         *  @param searchCriteria an object containing the search criteria
+         *  @return a vector containing the metadata values found
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call.
+         */
+        virtual Ptr<std::vector<Glib::ustring> >::Ref
+        browse(Ptr<SessionId>::Ref      sessionId,
+               Ptr<Glib::ustring>::Ref  metadata,
                Ptr<SearchCriteria>::Ref searchCriteria) 
                                                 throw (XmlRpcException)
                                                                         = 0;
