@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LoginWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -167,28 +167,28 @@ LoginWindow :: LoginWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     
     // set up the table, which provides the layout, and place the widgets
     // inside the table
-    table = Gtk::manage(new Gtk::Table(2, 2, false));
+    table = Gtk::manage(new Gtk::Table(8, 9, false));
     table->set_name("table");
-    table->set_row_spacings(0);
+    table->set_row_spacings(5);
     table->set_col_spacings(0);
     table->attach(*loginLabel,
-                  0, 1, 0, 1,
+                  0, 8, 3, 4,
                   Gtk::FILL, Gtk::AttachOptions(), 0, 0);
     table->attach(*loginEntryBin,
-                  0, 1, 1, 2,
+                  0, 8, 4, 5,
                   Gtk::EXPAND|Gtk::FILL, Gtk::AttachOptions(), 0, 0);
     table->attach(*passwordLabel,
-                  0, 1, 2, 3,
-                  Gtk::FILL, Gtk::AttachOptions(), 0, 0);
+                  0, 8, 5, 6,
+                  Gtk::FILL, Gtk::AttachOptions(), 0, 5);
     table->attach(*passwordEntryBin,
-                  0, 1, 3, 4,
+                  0, 8, 6, 7,
                   Gtk::EXPAND|Gtk::FILL, Gtk::AttachOptions(), 0, 0);
     table->attach(*languageList,
-                  0, 1, 4, 5,
-                  Gtk::EXPAND|Gtk::FILL, Gtk::AttachOptions(), 0, 0);
+                  0, 1, 7, 8,
+                  Gtk::SHRINK, Gtk::AttachOptions(), 0, 10);
     table->attach(*buttonBox,
-                  0, 1, 5, 6,
-                  Gtk::FILL, Gtk::AttachOptions(), 0, 0);
+                  0, 8, 8, 9,
+                  Gtk::FILL, Gtk::AttachOptions(), 0, 10);
 
     // set up the window itself
     set_name("loginWindow");
