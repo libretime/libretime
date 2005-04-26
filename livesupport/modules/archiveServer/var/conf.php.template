@@ -22,8 +22,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: tomas $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php.template,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
  *  \file conf.php
  *  archiveServer configuration file
  */
+
+define('LS_VERSION', '0.9');
 
 /**
  *  configuration structure:
@@ -45,6 +47,9 @@
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
  *   <dt>isArchive <dd>local/central flag
+ *   <dt>validate <dd>enable/disable validator
+ *   <dt>useTrash <dd>enable/disable safe delete (move to trash)
+ *          (FALSE on archiveServer)
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *      (on central archive side: storage=archive)
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
@@ -54,6 +59,9 @@
  *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
  *  </dl>
  */
+
+// these are the default values for the config
+
 $config = array(
     /* ================================================== basic configuration */
     'dsn'           => array(
@@ -64,6 +72,8 @@ $config = array(
         'database'      => 'ls_database',
     ),
     'tblNamePrefix' => 'as_',
+
+    /* ================================================ storage configuration */
     'authCookieName'=> 'assid',
     'StationPrefsGr'=> '',
     'AllGr'         => 'All',
@@ -73,6 +83,7 @@ $config = array(
     'accessDir'     =>  dirname(__FILE__).'/../../archiveServer/var/access',
     'isArchive'     =>  TRUE,
     'validate'      =>  TRUE,
+    'useTrash'      =>  FALSE,
 
     /* ==================================================== URL configuration */
     // on central archive side: archive is the storage !

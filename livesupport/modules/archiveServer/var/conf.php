@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,9 @@ define('LS_VERSION', '0.9');
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
  *   <dt>isArchive <dd>local/central flag
+ *   <dt>validate <dd>enable/disable validator
+ *   <dt>useTrash <dd>enable/disable safe delete (move to trash)
+ *          (FALSE on archiveServer)
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *      (on central archive side: storage=archive)
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
@@ -69,6 +72,8 @@ $config = array(
         'database'      => 'LiveSupport-test',
     ),
     'tblNamePrefix' => 'as_',
+
+    /* ================================================ storage configuration */
     'authCookieName'=> 'assid',
     'StationPrefsGr'=> '',
     'AllGr'         => 'All',
@@ -78,6 +83,7 @@ $config = array(
     'accessDir'     =>  dirname(__FILE__).'/../../archiveServer/var/access',
     'isArchive'     =>  TRUE,
     'validate'      =>  TRUE,
+    'useTrash'      =>  FALSE,
 
     /* ==================================================== URL configuration */
     // on central archive side: archive is the storage !

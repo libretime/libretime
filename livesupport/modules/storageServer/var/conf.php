@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,12 +44,14 @@ define('LS_VERSION', '0.9');
  *   <dt>authCookieName <dd>secret token cookie name
  *   <dt>StationPrefsGr <dd>name of station preferences group
  *   <dt>AllGr <dd>name of 'all users' group
+ *   <dt>TrashName <dd>name of trash folder (subfolder of the storageRoot)
  *   <dt>storageDir <dd>main directory for storing binary media files
  *   <dt>bufferDir <dd>directory for temporary files
  *   <dt>transDir <dd>directory for incomplete transferred files
  *   <dt>accessDir <dd>directory for symlinks to accessed files
  *   <dt>isArchive <dd>local/central flag
  *   <dt>validate <dd>enable/disable validator
+ *   <dt>useTrash <dd>enable/disable safe delete (move to trash)
  *   <dt>storageUrlPath<dd>path-URL-part of storageServer base dir
  *   <dt>storageXMLRPC<dd>XMLRPC server script address relative to storageUrlPath
  *   <dt>storageUrlHost, storageUrlPort<dd>host and port of storageServer
@@ -73,15 +75,19 @@ $config = array(
         'database'      => 'LiveSupport-test',
     ),
     'tblNamePrefix' => 'ls_',
+
+    /* ================================================ storage configuration */
     'authCookieName'=> 'lssid',
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
+    'TrashName'     => '.trash',
     'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
     'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
     'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
+    'useTrash'      =>  TRUE,
 
     /* ==================================================== URL configuration */
     'storageUrlPath'        => '/livesupportStorageServer',
@@ -131,7 +137,7 @@ $config = array(
     'tmpRootPass'   => 'q',
 );
 
-// see if a ~/.livesupport/archiveServer.conf.php exists, and
+// see if a ~/.livesupport/storageServer.conf.php exists, and
 // overwrite the settings from there if any
 
 $this_file         = null;
