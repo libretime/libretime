@@ -145,10 +145,14 @@ hu:table
         creatorColumnLabel:string     { "Előadó" }
         lengthColumnLabel:string      { "Hossz" }
         
-        titleMetadataDisplay:string       { "Cím" }
-        titleMetadataSearchKey:string     { "dc:title" }
+        genreMetadataDisplay:string       { "Műfaj" }
+        genreMetadataSearchKey:string     { "dc:type" }
         creatorMetadataDisplay:string     { "Előadó" }
         creatorMetadataSearchKey:string   { "dc:creator" }
+        albumMetadataDisplay:string       { "Lemez" }
+        albumMetadataSearchKey:string     { "dc:source" }
+        titleMetadataDisplay:string       { "Cím" }
+        titleMetadataSearchKey:string     { "dc:title" }
         lengthMetadataDisplay:string      { "Hossz" }
         lengthMetadataSearchKey:string    { "dcterms:extent" }
         

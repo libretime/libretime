@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Attic/AdvancedSearchItem.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -178,11 +178,17 @@ AdvancedSearchItem :: readMetadataTypes(void)
     metadataTypes.reset(new MapVector);
     
     metadataTypes->push_back(std::make_pair(
-                            *getResourceUstring("titleMetadataDisplay"),
-                            *getResourceUstring("titleMetadataSearchKey") ));
+                            *getResourceUstring("genreMetadataDisplay"),
+                            *getResourceUstring("genreMetadataSearchKey") ));
     metadataTypes->push_back(std::make_pair(
                             *getResourceUstring("creatorMetadataDisplay"),
                             *getResourceUstring("creatorMetadataSearchKey") ));
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("albumMetadataDisplay"),
+                            *getResourceUstring("albumMetadataSearchKey") ));
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("titleMetadataDisplay"),
+                            *getResourceUstring("titleMetadataSearchKey") ));
     metadataTypes->push_back(std::make_pair(
                             *getResourceUstring("lengthMetadataDisplay"),
                             *getResourceUstring("lengthMetadataSearchKey") ));

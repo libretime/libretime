@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,13 +35,12 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/BrowseItem.h"
-
 #include "BrowseEntry.h"
 
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
+using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
 
@@ -57,71 +56,37 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-BrowseEntry :: BrowseEntry(Ptr<ResourceBundle>::Ref    bundle)
-                                                                throw ()
+BrowseEntry :: BrowseEntry(
+        Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
+        Ptr<ResourceBundle>::Ref                            bundle)
+                                                        throw ()
           : LocalizedObject(bundle)
 {
-    BrowseItem *    searchOptionsBox = Gtk::manage(new 
-                                BrowseItem(true, getBundle()) );
-    pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
-
-    searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
-                                    &BrowseEntry::onAddNewCondition ));
-}
-
-
-/*------------------------------------------------------------------------------
- *  Add a new search condition entrys item.
- *----------------------------------------------------------------------------*/
-void
-BrowseEntry :: onAddNewCondition(void)                  throw ()
-{
-    BrowseItem *    searchOptionsBox = Gtk::manage(new 
-                                BrowseItem(false, getBundle()) );
-    pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
-
-    searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
-                                    &BrowseEntry::onAddNewCondition ));
-    searchOptionsBox->show_all_children();
-    searchOptionsBox->show();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Return the current state of the search fields.
- *----------------------------------------------------------------------------*/
-Ptr<SearchCriteria>::Ref
-BrowseEntry :: getSearchCriteria(void)                  throw ()
-{
-    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "and"));
-
-    Gtk::Box_Helpers::BoxList                       children = this->children();
-    Gtk::Box_Helpers::BoxList::type_base::iterator  it;
+    browseItemOne   = Gtk::manage(new BrowseItem(
+                            gLiveSupport, 
+                            *getResourceUstring("genreMetadataDisplay"),
+                            bundle ));
+    browseItemTwo   = Gtk::manage(new BrowseItem(
+                            gLiveSupport, 
+                            *getResourceUstring("creatorMetadataDisplay"),
+                            bundle ));
+    browseItemThree = Gtk::manage(new BrowseItem(
+                            gLiveSupport, 
+                            *getResourceUstring("albumMetadataDisplay"),
+                            bundle ));
     
-    for (it = children.begin(); it != children.end(); ++it) {
-        BrowseItem *    child = dynamic_cast<BrowseItem *>(
-                                                            it->get_widget() );
-        criteria->addCondition(child->getSearchCondition());
-    }
     
-    return criteria;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Connect a callback to the "enter key pressed" event.
- *----------------------------------------------------------------------------*/
-void
-BrowseEntry :: connectCallback(const sigc::slot<void> &     callback)
-                                                                throw ()
-{
-    Gtk::Box_Helpers::BoxList                       children = this->children();
-    Gtk::Box_Helpers::BoxList::type_base::iterator  it;
-    
-    for (it = children.begin(); it != children.end(); ++it) {
-        BrowseItem *    child = dynamic_cast<BrowseItem *>(
-                                                            it->get_widget() );
-        child->signal_activate().connect(callback);
-    }
+    browseItemOne->signalSelectionChanged().connect(
+        sigc::bind<BrowseItem*>(
+            sigc::mem_fun(*browseItemTwo, &BrowseItem::onParentChangedShow),
+            browseItemOne ));
+    browseItemTwo->signalSelectionChanged().connect(
+        sigc::bind<BrowseItem*>(
+            sigc::mem_fun(*browseItemThree, &BrowseItem::onParentChangedShow),
+            browseItemTwo ));
+                                 
+    pack_start(*browseItemOne,   Gtk::PACK_EXPAND_WIDGET, 5);
+    pack_start(*browseItemTwo,   Gtk::PACK_EXPAND_WIDGET, 5);
+    pack_start(*browseItemThree, Gtk::PACK_EXPAND_WIDGET, 5);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -202,27 +202,19 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
 Gtk::VBox*
 SearchWindow :: constructBrowseView(void)                       throw ()
 {
-    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
-
-// FIXME
-Ptr<Glib::ustring>::Ref   metadata(new Glib::ustring("Title"));
-Ptr<SearchCriteria>::Ref  criteria(new SearchCriteria);
-
-    // set up the selection panel
-// FIXME
-    BrowseItem *       browsePanel = Gtk::manage(new BrowseItem(
-                                                    gLiveSupport,
-                                                    metadata,
-                                                    criteria,
-                                                    getBundle() ));
+    // set up the browse input fields
+    browseEntry = Gtk::manage(new BrowseEntry(gLiveSupport, getBundle()));
+    
+    browseEntry->signalSelectionChanged().connect(sigc::mem_fun(
+                                            *this, &SearchWindow::onBrowse ));
 
     // set up the search results display
     ZebraTreeView *     searchResults = constructSearchResults();
     
     // make a new box and pack the main components into it
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*browsePanel,      Gtk::PACK_EXPAND_WIDGET, 5);
-    view->pack_start(*searchResults,    Gtk::PACK_EXPAND_WIDGET,  5);
+    view->pack_start(*browseEntry,    Gtk::PACK_EXPAND_WIDGET, 5);
+    view->pack_start(*searchResults,  Gtk::PACK_EXPAND_WIDGET, 5);
     return view;
 }
 
@@ -281,6 +273,16 @@ void
 SearchWindow :: onAdvancedSearch(void)                          throw ()
 {
     onSearch(advancedSearchEntry->getSearchCriteria());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for changed selection in the Browse view.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onBrowse(void)                                  throw ()
+{
+    onSearch(browseEntry->getSearchCriteria());
 }
 
 

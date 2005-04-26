@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,8 +52,8 @@
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/AdvancedSearchEntry.h"
 #include "GLiveSupport.h"
-//FIXME
-#include "BrowseItem.h"
+#include "BrowseEntry.h"
+
 
 namespace LiveSupport {
 namespace GLiveSupport {
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -92,8 +92,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The box containing the browse input fields.
          */
-// FIXME
-        BrowseItem *                browseEntry;
+        BrowseEntry *               browseEntry;
 
         /**
          *  Construct the simple search view.
@@ -145,6 +144,12 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         onAdvancedSearch(void)                                  throw ();
 
         /**
+         *  Event handler for changed selection in the Browse view.
+         */
+        void
+        onBrowse(void)                                          throw ();
+
+        /**
          *  Do the searching.
          */
         void
@@ -155,7 +160,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.6 $
+         *  @version $Revision: 1.7 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

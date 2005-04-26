@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ComboBoxText.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,8 +63,8 @@ using namespace LiveSupport::Core;
 /**
  *  A combo box holding text entries.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  */
 class ComboBoxText : public Gtk::ComboBoxText
 {
@@ -240,6 +240,11 @@ class ComboBoxText : public Gtk::ComboBoxText
         virtual GtkType
         child_type_vfunc() const                            throw ();
 
+        /**
+         *  A signal object to notify people that the selection has changed.
+         */
+        sigc::signal<void>      signalSelectionChangedObject;
+
 
     public:
         /**
@@ -293,6 +298,20 @@ class ComboBoxText : public Gtk::ComboBoxText
         void
         set_active_text(const Glib::ustring   & text)       throw ();
         
+        /**
+         *  Accessor for the selectionChanged signal.
+         *  This signal is emitted by onMenuItemSelected() when the active
+         *  text of the ComboBoxText has changed.
+         *  It has the same function as Gtk::ComboBoxText::signal_changed().
+         *
+         *  TODO: it would be nicer to override signal_changed();
+         *  need to figure out how.
+         *
+         *  @return the signal object (a protected member of this class)
+         */
+        sigc::signal<void>
+        signalSelectionChanged(void)                        throw ();
+
 };
 
 

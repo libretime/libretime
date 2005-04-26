@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseEntry.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,8 @@
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Core/SearchCriteria.h"
+#include "BrowseItem.h"
+#include "GLiveSupport.h"
 
 
 namespace LiveSupport {
@@ -61,13 +63,13 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A Gtk::VBox with one or more search input fields in it.
+ *  A Gtk::HBox with one or more search input fields in it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class BrowseEntry : public Gtk::VBox,
-                            public LocalizedObject
+class BrowseEntry : public Gtk::HBox,
+                    public LocalizedObject
 {
     private:
     
@@ -76,13 +78,31 @@ class BrowseEntry : public Gtk::VBox,
          */
         BrowseEntry(void)                               throw ();
 
+        /**
+         *  The first BrowseItem entry field.
+         */
+        BrowseItem *        browseItemOne;
+
+        /**
+         *  The second BrowseItem entry field.
+         */
+        BrowseItem *        browseItemTwo;
+
+        /**
+         *  The third BrowseItem entry field.
+         */
+        BrowseItem *        browseItemThree;
+
+
     public:
     
         /**
          *  Constructor with localization parameter.
          */
-        BrowseEntry(Ptr<ResourceBundle>::Ref    bundle)
-                                                                throw ();
+        BrowseEntry(
+            Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
+            Ptr<ResourceBundle>::Ref                            bundle)
+                                                        throw ();
 
         /**
          *  A virtual destructor.
@@ -93,27 +113,29 @@ class BrowseEntry : public Gtk::VBox,
         }
 
         /**
-         *  Add a new search condition entry item.
-         */
-        void
-        onAddNewCondition(void)                                 throw ();
-
-        /**
          *  Return the current state of the search fields.
          *
          *  @return a new LiveSupport::Storage::SearchCriteria instance,
          *          which contains the data entered by the user
          */
         Ptr<SearchCriteria>::Ref
-        getSearchCriteria(void)                                 throw ();
+        getSearchCriteria(void)                                 throw ()
+        {
+            return browseItemThree->getSearchCriteria();
+        }
+
 
         /**
-         *  Connect a callback to the "enter key pressed" event.
+         *  The signal raised when either the combo box or the tree view
+         *  selection has changed.
          *
-         *  @param callback the function to execute when enter is pressed.
+         *  @return the signalSelectionChanged() of the last browse item
          */
-        void
-        connectCallback(const sigc::slot<void> &    callback)   throw ();
+        sigc::signal<void>
+        signalSelectionChanged(void)                        throw ()
+        {
+            return browseItemThree->signalSelectionChanged();
+        }
 };
 
 

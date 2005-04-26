@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseItem.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,8 +72,15 @@ using namespace LiveSupport::Widgets;
 /**
  *  A single browse input field.
  *
+ *  It consists of a Widgets::ComboBoxText and a Widgets::ZebraTreeView
+ *  (without header).  It stores a "parent search criteria", and shows all
+ *  possible metadata values of the type selected in the ComboBoxText which
+ *  match this condition.  The parent search criteria should be conjunction
+ *  of all search conditions selected in BrowseItem objects to the left of
+ *  this one.
+ *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class BrowseItem : public Gtk::VBox,
                    public LocalizedObject
@@ -112,7 +119,7 @@ class BrowseItem : public Gtk::VBox,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -140,6 +147,12 @@ class BrowseItem : public Gtk::VBox,
          *  The tree model, as a GTK reference.
          */
         Glib::RefPtr<Gtk::ListStore>    treeModel;
+
+        /**
+         *  This is pretty lame, but we store the localized version of the 
+         *  "--- all ---" string here.
+         */
+        Glib::ustring                   allString;
 
         /**
          *  The GLiveSupport object, holding the state of the application.
@@ -174,6 +187,23 @@ class BrowseItem : public Gtk::VBox,
         void
         readOperatorTypes(void)                 throw (std::invalid_argument);
 
+        /**
+         *  Emit the "selection changed" signal.
+         */
+        void
+        emitSignalSelectionChanged(void)        throw ()
+        {
+            signalSelectionChanged().emit();
+        }
+
+
+    protected:
+    
+        /**
+         *  A signal object to notify people that the selection has changed.
+         */
+        sigc::signal<void>              signalSelectionChangedObject;
+
 
     public:
     
@@ -186,8 +216,7 @@ class BrowseItem : public Gtk::VBox,
          */
         BrowseItem(
             Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
-            Ptr<Glib::ustring>::Ref                             metadata,
-            Ptr<SearchCriteria>::Ref                            parentCriteria,
+            const Glib::ustring &                               metadata,
             Ptr<ResourceBundle>::Ref                            bundle)
                                                        throw ();
 
@@ -200,20 +229,50 @@ class BrowseItem : public Gtk::VBox,
         }
 
         /**
-         *  Return the current state of the search fields.
+         *  Return the search criteria selected by the user.
+         *  This is the parent criteria (assumed to have operator "and")
+         *  with the search condition showing the current selection added
+         *  (if any).
          *
          *  @return a new LiveSupport::Storage::SearchCriteria instance,
          *          which contains the data entered by the user
          */
-        Ptr<SearchCriteria::SearchConditionType>::Ref
-        getSearchCondition(void)               throw (std::invalid_argument);
+        Ptr<SearchCriteria>::Ref
+        getSearchCriteria(void)                 throw (std::invalid_argument);
         
         /**
          *  Fill in the column with the possible values (limited by the
          *  parent criteria), and set the selection to "all".
          */
         void
-        reset(void)                                     throw ();
+        onShow(void)                                    throw ();
+
+        /**
+         *  The signal handler for refreshing the treeview of metadata values,
+         *  if we also need to change the parent criteria.  Same as onShow(),
+         *  plus changing the parent criteria.
+         *
+         *  @param criteria     the new parent search criteria
+         */
+        void
+        onParentChangedShow(BrowseItem *    leftNeighbor)
+                                                        throw ()
+        {
+            parentCriteria = leftNeighbor->getSearchCriteria();
+            onShow();
+        }
+        
+        /**
+         *  The signal raised when either the combo box or the tree view
+         *  selection has changed.
+         *
+         *  @return the signal object (a protected member of this class)
+         */
+        sigc::signal<void>
+        signalSelectionChanged(void)                        throw ()
+        {
+            return signalSelectionChangedObject;
+        }
 };
 
 

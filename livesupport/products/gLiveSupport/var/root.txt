@@ -147,10 +147,14 @@ root:table
         creatorColumnLabel:string     { "Creator" }
         lengthColumnLabel:string      { "Length" }
         
-        titleMetadataDisplay:string       { "Title" }
-        titleMetadataSearchKey:string     { "dc:title" }
+        genreMetadataDisplay:string       { "Genre" }
+        genreMetadataSearchKey:string     { "dc:type" }
         creatorMetadataDisplay:string     { "Creator" }
         creatorMetadataSearchKey:string   { "dc:creator" }
+        albumMetadataDisplay:string       { "Album" }
+        albumMetadataSearchKey:string     { "dc:source" }
+        titleMetadataDisplay:string       { "Title" }
+        titleMetadataSearchKey:string     { "dc:title" }
         lengthMetadataDisplay:string      { "Length" }
         lengthMetadataSearchKey:string    { "dcterms:extent" }
         

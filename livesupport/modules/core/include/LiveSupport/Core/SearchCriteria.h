@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/SearchCriteria.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ namespace Core {
  *  Its fields are:
  *  <ul>
  *    <li>type     - values in (audioClip | playlist | all); the default is
- *                          <i>audioClip</i></li>
+ *                          <i>all</i></li>
  *    <li>operator - values in (and | or); the default is <i>and</i></li>
  *    <li>condition1 : { key : string, comparison: string, value : string }
  *                          - a search condition, where <i>key</i> is one of the
@@ -177,7 +177,7 @@ class SearchCriteria
          *  @param type one of "audioClip" (default), "playlist" or "all"
          *  @param logicalOperator either "and" (default) or "or"
          */
-        SearchCriteria(const std::string & type = "audioClip", 
+        SearchCriteria(const std::string & type = "all", 
                        const std::string & logicalOperator = "and")
                                                 throw(std::invalid_argument)
                        : limit(0), offset(0)

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -393,6 +393,7 @@ ComboBoxText :: onMenuItemSelected(void)                    throw ()
     Gtk::MenuItem  * item     = menu->get_active();
     Gtk::Label     * selected = (Gtk::Label*) item->get_child();
     set_active_text(selected->get_text());
+    signalSelectionChanged().emit();
 }
 
 
@@ -446,5 +447,15 @@ ComboBoxText :: set_active_text(const Glib::ustring   & text)       throw ()
     menu->activate_item(item);
 
     label->set_text(text);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Accessor for the selectionChanged signal.
+ *----------------------------------------------------------------------------*/
+sigc::signal<void>
+ComboBoxText :: signalSelectionChanged(void)                        throw ()
+{
+    return signalSelectionChangedObject;
 }
 

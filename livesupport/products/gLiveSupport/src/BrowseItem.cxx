@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseItem.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,13 +60,11 @@ using namespace LiveSupport::GLiveSupport;
  *----------------------------------------------------------------------------*/
 BrowseItem :: BrowseItem(
         Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
-        Ptr<Glib::ustring>::Ref                             metadata,
-        Ptr<SearchCriteria>::Ref                            parentCriteria,
+        const Glib::ustring &                               metadata,
         Ptr<ResourceBundle>::Ref                            bundle)
                                                                     throw ()
           : LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
-            parentCriteria(parentCriteria)
+            gLiveSupport(gLiveSupport)
 {
     try {
         if (!metadataTypes) {
@@ -80,6 +78,8 @@ BrowseItem :: BrowseItem(
         std::exit(1);
     }
     
+    parentCriteria.reset(new SearchCriteria);
+    
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
     metadataEntry = Gtk::manage(wf->createComboBoxText());
@@ -87,28 +87,32 @@ BrowseItem :: BrowseItem(
     for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
         metadataEntry->append_text(it->first);
     }
-    metadataEntry->set_active_text(*metadata);
-    if (metadataEntry->get_active_text() != *metadata) {
+    metadataEntry->set_active_text(metadata);
+    if (metadataEntry->get_active_text() != metadata) {
         metadataEntry->set_active_text(metadataTypes->front().first);
     }
-    pack_start(*metadataEntry, Gtk::PACK_EXPAND_WIDGET, 5);
+    metadataEntry->signalSelectionChanged().connect(sigc::mem_fun(*this,
+                                                        &BrowseItem::onShow ));
+    pack_start(*metadataEntry, Gtk::PACK_SHRINK, 5);
 
     treeModel = Gtk::ListStore::create(modelColumns);
     
     metadataValues = Gtk::manage(wf->createTreeView(treeModel));
     metadataValues->appendColumn("", modelColumns.column);
     metadataValues->set_headers_visible(false);
-    pack_start(*metadataValues, Gtk::PACK_EXPAND_WIDGET, 5);
+    metadataValues->signal_cursor_changed().connect(sigc::mem_fun(*this,
+                                    &BrowseItem::emitSignalSelectionChanged ));
+    pack_start(*metadataValues, Gtk::PACK_SHRINK, 5);
     
-    reset();
+    onShow();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Return the current state of the search fields.
+ *  Return the search criteria selected by the user.
  *----------------------------------------------------------------------------*/
-Ptr<SearchCriteria::SearchConditionType>::Ref
-BrowseItem :: getSearchCondition(void)          throw (std::invalid_argument)
+Ptr<SearchCriteria>::Ref
+BrowseItem :: getSearchCriteria(void)           throw (std::invalid_argument)
 {
     std::string    metadataName = metadataEntry->get_active_text();
     std::string    metadataKey;
@@ -134,18 +138,23 @@ BrowseItem :: getSearchCondition(void)          throw (std::invalid_argument)
     if (refSelection) {
         Gtk::TreeModel::iterator iter = refSelection->get_selected();
         if (iter) {
+            found = true;
             metadataValue = (*iter)[modelColumns.column];
         }
     }
     
     if (!found) {
-        metadataValue = *getResourceUstring("allStringForBrowse");
-    }                                   // may throw std::invalid_argument
+        return parentCriteria;      // should never happen, but für alle Fälle
+    }
     
-    Ptr<SearchCriteria::SearchConditionType>::Ref
-            condition(new SearchCriteria::SearchConditionType(
-                                            metadataKey, "=", metadataValue ));
-    return condition;
+    if (metadataValue == allString) {
+        return parentCriteria;
+        
+    } else {
+        Ptr<SearchCriteria>::Ref  criteria(new SearchCriteria(*parentCriteria));
+        criteria->addCondition(metadataKey, "=", metadataValue);
+        return criteria;
+    }
 }
 
 
@@ -159,11 +168,17 @@ BrowseItem :: readMetadataTypes(void)
     metadataTypes.reset(new MapVector);
     
     metadataTypes->push_back(std::make_pair(
-                            *getResourceUstring("titleMetadataDisplay"),
-                            *getResourceUstring("titleMetadataSearchKey") ));
+                            *getResourceUstring("genreMetadataDisplay"),
+                            *getResourceUstring("genreMetadataSearchKey") ));
     metadataTypes->push_back(std::make_pair(
                             *getResourceUstring("creatorMetadataDisplay"),
                             *getResourceUstring("creatorMetadataSearchKey") ));
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("albumMetadataDisplay"),
+                            *getResourceUstring("albumMetadataSearchKey") ));
+    metadataTypes->push_back(std::make_pair(
+                            *getResourceUstring("titleMetadataDisplay"),
+                            *getResourceUstring("titleMetadataSearchKey") ));
     metadataTypes->push_back(std::make_pair(
                             *getResourceUstring("lengthMetadataDisplay"),
                             *getResourceUstring("lengthMetadataSearchKey") ));
@@ -201,7 +216,7 @@ BrowseItem :: readOperatorTypes(void)
  *  Fill in the column with the possible values.
  *----------------------------------------------------------------------------*/
 void
-BrowseItem :: reset(void)                                           throw ()
+BrowseItem :: onShow(void)                                          throw ()
 {
     std::string                metadataName = metadataEntry->get_active_text();
     Ptr<Glib::ustring>::Ref    metadataKey(new Glib::ustring);
@@ -224,11 +239,12 @@ BrowseItem :: reset(void)                                           throw ()
     int rowNumber = 1;
     Gtk::TreeModel::Row     row = *treeModel->append();
     try {
-        row[modelColumns.column] = *getResourceUstring("allStringForBrowse");
+        allString = *getResourceUstring("allStringForBrowse");
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
+    row[modelColumns.column]                = allString;
     row[modelColumns.rowNumberColumn]       = rowNumber++;
     metadataValues->get_selection()->select(*row);
 
@@ -240,5 +256,7 @@ BrowseItem :: reset(void)                                           throw ()
         row[modelColumns.column]            = *valuesIt;
         row[modelColumns.rowNumberColumn]   = rowNumber++;
     }
+    
+    emitSignalSelectionChanged();
 }
 
