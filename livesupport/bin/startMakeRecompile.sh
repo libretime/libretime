@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fberckel $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/startMakeRecompile.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -40,17 +40,17 @@ logdir=$basedir/tmp
 export PATH=~/bin:$PATH
 
 echo "";
-echo "The source code will be updated first and the recompile process"; 
+echo "The source code will be updated and the recompile process"; 
 echo "will be started. All steps are being logged within the log";
 echo "directory $logdir";
+echo "";
+echo "Are you certainly of ran ./configure first !";
 echo "";
 
 cd $bindir/..
 cvs update -dP >& $logdir/cvs_before_setup.log
 ls -l $logdir/cvs_before_setup.log >> $logdir/cvs_before_setup.log
 echo "Compare with cvs is be done, cvs_before_setup.log is created"
-bin/autogen.sh >& $logdir/configure_before_setup.log
-echo "Run autogen.sh & configure, configure_before_setup.log is created"
 make distclean >& $logdir/distclean_before_setup.log
 ls -l $logdir/distclean_before_setup.log >> $logdir/distclean_before_setup.log
 echo "Cleaning the setup is be done, distclean_before_setup.log is created"
