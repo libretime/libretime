@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -301,7 +301,7 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 void
 MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
 {
-    if (!scratchpadWindow.get()) {
+    if (!uploadFileWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
         try {
             bundle       = getBundle("uploadFileWindow");
@@ -432,20 +432,25 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     schedulerButton->hide();
     searchButton->hide();
     
-    if (uploadFileWindow) {
+    if (uploadFileWindow.get()) {
         uploadFileWindow->hide();
+        uploadFileWindow.reset();
     }
-    if (scratchpadWindow) {
+    if (scratchpadWindow.get()) {
         scratchpadWindow->hide();
+        scratchpadWindow.reset();
     }
-    if (simplePlaylistMgmtWindow) {
+    if (simplePlaylistMgmtWindow.get()) {
         simplePlaylistMgmtWindow->hide();
+        simplePlaylistMgmtWindow.reset();
     }
-    if (schedulerWindow) {
+    if (schedulerWindow.get()) {
         schedulerWindow->hide();
+        schedulerWindow.reset();
     }
-    if (searchWindow) {
+    if (searchWindow.get()) {
         searchWindow->hide();
+        searchWindow.reset();
     }
 }
 
