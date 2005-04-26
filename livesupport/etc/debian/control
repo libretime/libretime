@@ -1,5 +1,5 @@
 Source: livesupport
-Section: unknown
+Section: sound
 Priority: optional
 Maintainer: ls_maintainer
 Build-Depends: debhelper (>= 4.0.0),
