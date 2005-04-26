@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,8 +50,8 @@ function errCallback($err)
     exit(1);
 }
 
-if(!function_exists('domxml_open_file')){
-  trigger_error("DOMXML PHP extension required and not found.", E_USER_ERROR);
+if(!function_exists('pg_connect')){
+  trigger_error("PostgreSQL PHP extension required and not found.", E_USER_ERROR);
   exit(2);
 }
 
