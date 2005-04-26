@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,7 +33,7 @@ if(isset($arr["DOCUMENT_ROOT"]) && $arr["DOCUMENT_ROOT"] != ""){
     header("HTTP/1.1 400");
     header("Content-type: text/plain; charset=UTF-8");
     echo "400 Not executable\r\n";
-    exit;
+    exit(1);
 }
 
 require_once '../conf.php';
@@ -48,7 +48,7 @@ function errCallback($err)
     echo "ERROR:\n";
     echo "request: "; print_r($_REQUEST);
     echo "gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo().
-        "\nui:\n".$err->getUserInfo()."\n</pre>\n";
+        "\nui:\n".$err->getUserInfo()."\n";
     exit(1);
 }
 
@@ -83,11 +83,11 @@ echo "# Install ...\n";
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
 $r = $gb->install();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
 
 echo "# Testing ...\n";
 $r = $gb->test();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+if(PEAR::isError($r)){ echo $r->getMessage()."\n"; exit(1); }
 $log = $gb->test_log;
 if($log) echo "# testlog:\n{$log}";
 
@@ -114,12 +114,12 @@ if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))){
 
 echo "# Install Transport submodule ...";
 $r = $tr->install();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
 echo "\n";
 
 echo "# Install Prefs submodule ...";
 $r = $pr->install();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit; }
+if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
 echo "\n";
 
 echo "#storageServer submodules: OK\n";
