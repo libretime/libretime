@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -204,7 +204,25 @@ SearchWindow :: constructBrowseView(void)                       throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
+// FIXME
+Ptr<Glib::ustring>::Ref   metadata(new Glib::ustring("Title"));
+Ptr<SearchCriteria>::Ref  criteria(new SearchCriteria);
+
+    // set up the selection panel
+// FIXME
+    BrowseItem *       browsePanel = Gtk::manage(new BrowseItem(
+                                                    gLiveSupport,
+                                                    metadata,
+                                                    criteria,
+                                                    getBundle() ));
+
+    // set up the search results display
+    ZebraTreeView *     searchResults = constructSearchResults();
+    
+    // make a new box and pack the main components into it
+    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*browsePanel,      Gtk::PACK_EXPAND_WIDGET, 5);
+    view->pack_start(*searchResults,    Gtk::PACK_EXPAND_WIDGET,  5);
     return view;
 }
 
@@ -235,9 +253,6 @@ SearchWindow :: constructSearchResults(void)                    throw ()
         std::exit(1);
     }
 
-    // color the rows blue and gray
-    searchResults->setCellDataFunction();
-    
     return searchResults;
 }
 

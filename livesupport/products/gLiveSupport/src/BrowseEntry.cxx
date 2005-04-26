@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -35,11 +35,9 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/WidgetFactory.h"
-#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
-#include "LiveSupport/Widgets/ZebraCellRenderer.h"
+#include "LiveSupport/Widgets/BrowseItem.h"
 
-#include "LiveSupport/Widgets/ZebraTreeView.h"
+#include "BrowseEntry.h"
 
 
 using namespace LiveSupport::Core;
@@ -59,61 +57,71 @@ using namespace LiveSupport::Widgets;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-ZebraTreeView :: ZebraTreeView(Glib::RefPtr<Gtk::TreeModel>  treeModel)
+BrowseEntry :: BrowseEntry(Ptr<ResourceBundle>::Ref    bundle)
                                                                 throw ()
-                : Gtk::TreeView(treeModel)
+          : LocalizedObject(bundle)
 {
+    BrowseItem *    searchOptionsBox = Gtk::manage(new 
+                                BrowseItem(true, getBundle()) );
+    pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
+
+    searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
+                                    &BrowseEntry::onAddNewCondition ));
 }
 
 
 /*------------------------------------------------------------------------------
- *  Destructor.
+ *  Add a new search condition entrys item.
  *----------------------------------------------------------------------------*/
-ZebraTreeView :: ~ZebraTreeView(void)                           throw ()
+void
+BrowseEntry :: onAddNewCondition(void)                  throw ()
 {
+    BrowseItem *    searchOptionsBox = Gtk::manage(new 
+                                BrowseItem(false, getBundle()) );
+    pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
+
+    searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
+                                    &BrowseEntry::onAddNewCondition ));
+    searchOptionsBox->show_all_children();
+    searchOptionsBox->show();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Add a column to the TreeView.
+ *  Return the current state of the search fields.
  *----------------------------------------------------------------------------*/
-int 
-ZebraTreeView :: appendColumn(
-                    const Glib::ustring&                        title, 
-                    const Gtk::TreeModelColumn<Glib::ustring>&  modelColumn)
-                                                                throw ()
+Ptr<SearchCriteria>::Ref
+BrowseEntry :: getSearchCriteria(void)                  throw ()
 {
-    // a standard cell renderer; can be replaced with a ZebraCellRenderer
-    Gtk::CellRendererText*  renderer = Gtk::manage(new Gtk::CellRendererText);
+    Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "and"));
+
+    Gtk::Box_Helpers::BoxList                       children = this->children();
+    Gtk::Box_Helpers::BoxList::type_base::iterator  it;
     
-    // the constructor packs the renderer into the TreeViewColumn
-    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
-                                Gtk::TreeViewColumn(title, *renderer) );
-                                
-    // and then we associate this renderer with the model column
-    viewColumn->set_renderer(*renderer, modelColumn);
-
-    // this cell data function will do the blue-gray zebra stripes
-    viewColumn->set_cell_data_func(
-                    *renderer,
-                    sigc::mem_fun(*this, &ZebraTreeView::cellDataFunction) );
+    for (it = children.begin(); it != children.end(); ++it) {
+        BrowseItem *    child = dynamic_cast<BrowseItem *>(
+                                                            it->get_widget() );
+        criteria->addCondition(child->getSearchCondition());
+    }
     
-    return append_column(*viewColumn);
+    return criteria;
 }
 
 
 /*------------------------------------------------------------------------------
- *  The callback function.
+ *  Connect a callback to the "enter key pressed" event.
  *----------------------------------------------------------------------------*/
-void 
-ZebraTreeView :: cellDataFunction(Gtk::CellRenderer*               cell,
-                                  const Gtk::TreeModel::iterator&  iter)
+void
+BrowseEntry :: connectCallback(const sigc::slot<void> &     callback)
                                                                 throw ()
 {
-    ZebraTreeModelColumnRecord  model;
-    Colors::ColorName   colorName = (*iter)[model.rowNumberColumn] % 2
-                                                  ? Colors::Gray
-                                                  : Colors::LightBlue;
-    cell->property_cell_background_gdk() = Colors::getColor(colorName);
+    Gtk::Box_Helpers::BoxList                       children = this->children();
+    Gtk::Box_Helpers::BoxList::type_base::iterator  it;
+    
+    for (it = children.begin(); it != children.end(); ++it) {
+        BrowseItem *    child = dynamic_cast<BrowseItem *>(
+                                                            it->get_widget() );
+        child->signal_activate().connect(callback);
+    }
 }
 

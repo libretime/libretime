@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -592,6 +592,19 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         Ptr<PlayableList>::Ref
         search(Ptr<SearchCriteria>::Ref     criteria)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Browse in the local storage.
+         *
+         *  @param metadata the type of metadata to list (e.g., "dc:title").
+         *  @param criteria the search conditions to use.
+         *  @return the list of metadata values found.
+         *  @exception XmlRpcException passed on from Storage::browse()
+         */
+        Ptr<std::vector<Glib::ustring> >::Ref
+        browse(Ptr<Glib::ustring>::Ref      metadata,
+               Ptr<SearchCriteria>::Ref     criteria)
                                                 throw (XmlRpcException);
 
 };

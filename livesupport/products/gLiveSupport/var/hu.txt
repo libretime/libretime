@@ -162,6 +162,8 @@ hu:table
         <=OperatorSearchKey:string        { "<=" }
         >=OperatorDisplay:string          { ">=" }
         >=OperatorSearchKey:string        { ">=" }
+
+        allStringForBrowse                { "--- minden ---" }
     }
 }
 
