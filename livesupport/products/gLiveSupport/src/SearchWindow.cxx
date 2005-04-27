@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,10 +72,12 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
           : WhiteWindow(WidgetFactory::searchWindowTitleImage,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle)
+            LocalizedObject(bundle),
+            gLiveSupport(gLiveSupport)
 {
-    this->gLiveSupport = gLiveSupport;
     treeModel = Gtk::ListStore::create(modelColumns);
+    
+    searchResults = constructSearchResults();
 
     Gtk::Box *      simpleSearchView = constructSimpleSearchView();
     Gtk::Box *      advancedSearchView = constructAdvancedSearchView();
@@ -96,6 +98,23 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     add(*views);    
 
+    // create the right-click entry context menu
+    contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList& contextMenuList = contextMenu->items();
+
+    // register the signal handlers for the context menu
+    try {
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToScratchpadMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onAddToScratchpad)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    contextMenu->accelerate(*this);
+    
     // show
     set_name("searchWindow");
     set_default_size(450, 250);
@@ -144,9 +163,6 @@ SearchWindow :: constructSimpleSearchView(void)                 throw ()
     entryBox->pack_start(*simpleSearchEntry,    Gtk::PACK_SHRINK,  5);
     entryBox->pack_start(*searchButton,         Gtk::PACK_SHRINK,  5);
 
-    // set up the search results display
-    ZebraTreeView *     searchResults = constructSearchResults();
-    
     // make a new box and pack the main components into it
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
     view->pack_start(*entryBox,         Gtk::PACK_EXPAND_WIDGET, 5);
@@ -167,7 +183,6 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(getBundle()));
     Gtk::Box *          searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END ));
-    ZebraTreeView *     searchResults   = constructSearchResults();
     
     // set up the callback function for the entry field
     advancedSearchEntry->connectCallback(sigc::mem_fun(
@@ -208,9 +223,6 @@ SearchWindow :: constructBrowseView(void)                       throw ()
     browseEntry->signalSelectionChanged().connect(sigc::mem_fun(
                                             *this, &SearchWindow::onBrowse ));
 
-    // set up the search results display
-    ZebraTreeView *     searchResults = constructSearchResults();
-    
     // make a new box and pack the main components into it
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
     view->pack_start(*browseEntry,    Gtk::PACK_EXPAND_WIDGET, 5);
@@ -244,6 +256,10 @@ SearchWindow :: constructSearchResults(void)                    throw ()
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
+    
+    // register the signal handler for treeview entries being clicked
+    searchResults->signal_button_press_event().connect_notify(sigc::mem_fun(
+                                        *this, &SearchWindow::onEntryClicked));
 
     return searchResults;
 }
@@ -329,6 +345,71 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
         Ptr<time_duration>::Ref length = playable->getPlaylength();
         row[modelColumns.lengthColumn] = length ? to_simple_string(*length)
                                                 : "";
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for an entry being clicked in the list
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onEntryClicked (GdkEventButton *    event)      throw ()
+{
+    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                searchResults->get_selection();
+        if (refSelection) {
+            Gtk::TreeModel::iterator iter = refSelection->get_selected();
+            
+            // if nothing is currently selected, select row at mouse pointer
+            if (!iter) {
+                Gtk::TreeModel::Path    path;
+                Gtk::TreeViewColumn *   column;
+                int     cell_x,
+                        cell_y;
+                if (searchResults->get_path_at_pos(
+                                                int(event->x), int(event->y),
+                                                path, column,
+                                                cell_x, cell_y )) {
+                    refSelection->select(path);
+                    iter = refSelection->get_selected();
+                }
+            }
+
+            if (iter) {
+                Ptr<Playable>::Ref  playable =
+                                         (*iter)[modelColumns.playableColumn];
+
+                switch (playable->getType()) {
+                    case Playable::AudioClipType:
+                        contextMenu->popup(event->button, event->time);
+                        break;
+                        
+                    case Playable::PlaylistType:
+                        contextMenu->popup(event->button, event->time);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a playable to the scratchpad.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onAddToScratchpad(void)                         throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                searchResults->get_selection();
+    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+        gLiveSupport->addToScratchPad(playable);
     }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -94,6 +94,16 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          */
         BrowseEntry *               browseEntry;
 
+        /**
+         *  The tree view showing the search results.
+         */
+        ZebraTreeView *             searchResults;
+
+        /**
+         *  The pop-up context menu for found items.
+         */
+        Gtk::Menu *                 contextMenu;
+        
         /**
          *  Construct the simple search view.
          *  If you enter a string in the simple search view and press Enter
@@ -156,11 +166,25 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         onSearch(Ptr<SearchCriteria>::Ref   criteria)           throw ();
 
         /**
+         *  Signal handler for the mouse clicked on one of the entries.
+         *
+         *  @param event the button event received
+         */
+        void
+        onEntryClicked(GdkEventButton     * event)              throw ();
+
+        /**
+         *  Add a playable to the scratchpad.
+         */
+        void
+        onAddToScratchpad(void)                                 throw ();
+
+        /**
          *  The columns model needed by Gtk::TreeView.
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.7 $
+         *  @version $Revision: 1.8 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

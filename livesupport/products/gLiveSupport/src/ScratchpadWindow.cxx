@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -313,11 +313,25 @@ void
 ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        // only show the context menu, if something is already selected
         Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                       treeView->get_selection();
         if (refSelection) {
             Gtk::TreeModel::iterator iter = refSelection->get_selected();
+            
+            // if nothing is currently selected, select row at mouse pointer
+            if (!iter) {
+                Gtk::TreeModel::Path    path;
+                Gtk::TreeViewColumn *   column;
+                int     cell_x,
+                        cell_y;
+                if (treeView->get_path_at_pos(int(event->x), int(event->y),
+                                              path, column,
+                                              cell_x, cell_y)) {
+                    refSelection->select(path);
+                    iter = refSelection->get_selected();
+                }
+            }
+
             if (iter) {
                 Ptr<Playable>::Ref  playable =
                                          (*iter)[modelColumns.playableColumn];

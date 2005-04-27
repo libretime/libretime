@@ -170,6 +170,8 @@ root:table
         >=OperatorSearchKey:string        { ">=" }
         
         allStringForBrowse                { "--- all ---" }
+        
+        addToScratchpadMenuItem:string    { "_Add To Scratchpad" }
     }
 }
 

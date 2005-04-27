@@ -168,6 +168,8 @@ hu:table
         >=OperatorSearchKey:string        { ">=" }
 
         allStringForBrowse                { "--- minden ---" }
+        
+        addToScratchpadMenuItem:string    { "_Hasznos csuporba betenni" }
     }
 }
 
