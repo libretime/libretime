@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/playlistFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,8 +36,8 @@ $playlistFormat = array(
             'optional'=>array('metadata', 'playlistElement'),
         ),
         'attrs'=>array(
-            'required'=>array('id', 'playlength'),
-            'implied'=>array('title'),
+            'required'=>array('id'),
+            'implied'=>array('title', 'playlength'),
         ),
     ),
     'playlistElement'=>array(
