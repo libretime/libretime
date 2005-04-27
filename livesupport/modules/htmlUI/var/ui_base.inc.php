@@ -128,6 +128,7 @@ class uiBase
         $this->BROWSE       =& new uiBrowse($this);
         $this->PLAYLIST     =& new uiPlaylist($this);
         $this->SCHEDULER    =& new uiScheduler($this);
+        $this->SUBJECTS     =& new uiSubjects($this);
     }
 
 
@@ -149,7 +150,7 @@ class uiBase
 
             if ($miss && $this->gb->getSessLogin($this->sessid)) {
                 if (UI_WARNING) $this->_retMsg('Note: Station Preferences not setup proberly.');
-                $this->redirUrl = UI_BROWSER.'?popup[]=_2changeStationPrefs&popup[]=_close';
+                $this->redirUrl = UI_BROWSER.'?popup[]=_2changeStationPrefs&popup[]=_close';         ## popup because check is taken in login-popup
             }
 
         }
@@ -338,7 +339,7 @@ class uiBase
          return ($data);
     }
 
-    
+
     function _getMDataValue($id, $key, $langid=UI_DEFAULT_LANGID)
     {
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid))) {

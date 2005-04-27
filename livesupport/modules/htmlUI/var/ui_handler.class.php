@@ -437,86 +437,6 @@ class uiHandler extends uiBase {
         print_r($r);
     }
 
-   // --- subjs ----
-   /**
-    *  addSubj
-    *
-    *  Create new user or group (empty pass => create group)
-    *
-    *  @param formdata array('login', 'pass')
-    */
-    function addSubj(&$formdata, &$mask)
-    {
-        $this->redirUrl = UI_BROWSER.'?act='.$formdata['act'];
-
-        ## first validate the form data
-        if ($this->_validateForm($formdata, $mask)) {
-            if($this->gb->checkPerm($this->userid, 'subjects')){
-                $res = $this->gb->addSubj($formdata['login'], ($formdata['pass']=='' ? NULL : $formdata['pass']));
-                if (UI_VERBOSE) $this->_retMsg('Subject $1 added.', $formdata['login']);
-            } else {
-                $this->_retMsg('Access denied.');
-                return;
-            }
-        }
-        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
-    }
-
-    /**
-     *  removeSubj
-     *
-     *  Remove existing user or group
-     *
-     *  @param login string, login name of removed user
-     */
-    function removeSubj($login)
-    {
-        $this->redirUrl = UI_BROWSER.'?act=subjects';
-
-        if($this->gb->checkPerm($this->userid, 'subjects')){
-            $res = $this->gb->removeSubj($login);
-        }else{
-            $this->_retMsg('Access denied.');
-            return;
-        }
-        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
-    }
-
-    /**
-     *  chgPasswd
-     *
-     *  Change password for specified user
-     *
-     *  @param uid int, local user id
-     *  @param oldpass string, old user password
-     *  @param pass string, new password
-     *  @param pass2 string, retype of new password
-     */
-    function chgPasswd($uid, $oldpass, $pass, $pass2)
-    {
-        $this->redirUrl = UI_BROWSER.'?act=chgPasswd&uid='.$uid;
-        $ulogin = $this->gb->getSubjName($uid);
-
-        if($this->userid != $uid &&
-            ! $this->gb->checkPerm($this->userid, 'subjects')){
-            $this->_retMsg('Access denied.');
-            return;
-        }
-        if(FALSE === $this->gb->authenticate($ulogin, $oldpass)){
-            $this->_retMsg('Old password was incorrect.');
-            return;
-        }
-        if($pass !== $pass2){
-            $this->_retMsg("Passwords did not match.").
-                "($pass/$pass2)";
-            $this->redirUrl = UI_BROWSER.'?act=subjects';
-            return;
-        }
-        $this->_retMsg('Password changed.');
-        $this->redirUrl = UI_BROWSER.'?act=subjects';
-        $this->gb->passwd($ulogin, $oldpass, $pass);
-    }
-
     // --- perms ---
     /**
      *  addPerm
@@ -558,51 +478,6 @@ class uiHandler extends uiBase {
         }
         $this->redirUrl = UI_BROWSER.'?act=permissions&id='.$oid;
         return TRUE;
-    }
-
-
-    /**
-     *   addSubj2Group
-     *
-     *   Add {login} and direct/indirect members to {gname} and to groups,
-     *   where {gname} is [in]direct member
-     *
-     *   @param login string
-     *   @param gname string
-     *   @param reid string, local id of managed group, just needed for redirect
-     */
-    function addSubj2Group(&$formdata)
-    {
-        if($this->gb->checkPerm($this->userid, 'subjects')){
-            $res = $this->gb->addSubj2Gr($formdata['login'], $formdata['gname']);
-        }else{
-            $this->_retMsg('Access denied.');
-            return;
-        }
-        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
-
-        $this->redirUrl = UI_BROWSER.'?act=groupMembers&id='.$formdata['reid'];
-    }
-
-    /**
-     *   removeGroupMember
-     *
-     *   Remove subject from group
-     *
-     *   @param login string
-     *   @param gname string
-     *   @param reid string, local id of managed group, just needed for redirect
-     */
-    function removeGroupMember(&$formdata)
-    {
-        if ($this->gb->checkPerm($this->userid, 'subjects')){
-            $res = $this->gb->removeSubjFromGr($formdata['login'], $formdata['gname']);
-        } else {
-            $this->_retMsg('Access denied.');
-            return;
-        }
-        if(PEAR::isError($res)) $this->_retMsg($res->getMessage());
-        $this->redirUrl = UI_BROWSER.'?act=groupMembers&id='.$formdata['reid'];
     }
 
 
@@ -656,10 +531,12 @@ class uiHandler extends uiBase {
         }
         foreach($mask as $key=>$val) {
             if ($val['isPref']) {
-                if (strlen($formdata[$val['element']]))
-                    $this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']]);
-                else
-                    $this->gb->delGroupPref($this->sessid, 'StationPrefs',  $val['element']);
+                if (strlen($formdata[$val['element']])) {
+                    if (PEAR::isError($this->gb->saveGroupPref($this->sessid, 'StationPrefs', $val['element'], $formdata[$val['element']])))
+                        $this->_retMsg('Error saving Settings');
+                } else {
+                    $this->gb->delGroupPref($this->sessid,  'StationPrefs', $val['element']);
+                }
             }
             if ($val['type'] == 'file' && $formdata[$val['element']]['name']) {
                 if (FALSE === @move_uploaded_file($formdata[$val['element']]['tmp_name'], $this->gb->loadGroupPref($this->sessid, 'StationPrefs', 'stationLogoPath')))

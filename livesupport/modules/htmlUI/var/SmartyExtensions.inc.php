@@ -1,10 +1,11 @@
-<?php
+<?php        
 $Smarty->register_object('UIBROWSER',  $uiBrowser);
 $Smarty->register_object('BROWSE',     $uiBrowser->BROWSE);
 $Smarty->register_object('SEARCH',     $uiBrowser->SEARCH);
 $Smarty->assign_by_ref  ('PL',         $uiBrowser->PLAYLIST);
 $Smarty->assign_by_ref  ('SCHEDULER',  $uiBrowser->SCHEDULER);
 $Smarty->assign_by_ref  ('SCRATCHPAD', $uiBrowser->SCRATCHPAD);
+$Smarty->assign_by_ref  ('SUBJECTS',   $uiBrowser->SUBJECTS);
 
 $Smarty->register_function('str_repeat',        'S_str_repeat');
 $Smarty->register_function('urlencode',         'S_urlencode');

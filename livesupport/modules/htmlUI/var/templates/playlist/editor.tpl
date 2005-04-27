@@ -5,7 +5,7 @@
                 <div class="head" style="width: 574px;">
                     <div class="left">&nbsp;</div>
                     <div class="right">&nbsp;</div>
-                    <div class="clearer"></div>
+                    <div class="clearer">&nbsp;</div>
                 </div>
                 <div class="container_table" style="width: 594px;">
                     <table style="width: 574px;">
@@ -27,7 +27,7 @@
                     {foreach from=$PL->getFlat() key='pos' item='i'}
                         <!-- {$n++} -->
                         <!-- fade information -->
-                        <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})}" style="background-color: #bbb">
+                        <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0">##Fade## {$i.fadein_ms|string_format:"%d"} ms</td>
                         </tr>
@@ -45,7 +45,7 @@
                     {/foreach}
                         {if $n}
                         <!-- fade information -->
-                        <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeFadeOut'{/if})}" style="background-color: #bbb">
+                        <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeFadeOut'{/if})" style="background-color: #bbb">
                             <td></td>
                             <td colspan="5" style="border: 0">##Fade## {$i.fadeout_ms|string_format:"%d"} ms</td>
                         </tr>

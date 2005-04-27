@@ -81,6 +81,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('scheduleId', $_REQUEST['scheduleId']);
                 $Smarty->display('popup/SCHEDULER.removeItem.tpl');
             break;
+
+            case "SUBJECTS.confirmRemoveSubj":
+                $Smarty->assign('lgoin', $_REQUEST['login']);
+                $Smarty->display('popup/SUBJECTS.confirmRemoveSubj.tpl');
+            break;
         }
     }
     die();
@@ -139,28 +144,6 @@ if ($uiBrowser->userid) {
         $Smarty->assign('showLibrary', TRUE);
     break;
 
-    case "subjects":
-    case "addUser":
-    case "addGroup":
-        $Smarty->assign('subjects', $uiBrowser->getSubjects());
-        switch($_REQUEST['act']) {
-            case "addUser":  $Smarty->assign('addSubjectForm', $uiBrowser->getAddSubjectForm($ui_fmask['addUser']));  break;
-            case "addGroup": $Smarty->assign('addSubjectForm', $uiBrowser->getAddSubjectForm($ui_fmask['addGroup'])); break;
-        }
-        $Smarty->assign('showSubjects', TRUE);
-    break;
-
-    case "chgPasswd":
-        $Smarty->assign('chgPasswd', $uiBrowser->chgPasswd($_REQUEST['uid'], $ui_fmask['chgPasswd']));
-        $Smarty->assign('showSubjects', TRUE);
-    break;
-
-    case "groupMembers":
-        $Smarty->assign('groupMembers', $uiBrowser->groupMembers($uiBrowser->id));
-        $Smarty->assign('addGroupMember', $uiBrowser->addGroupMember($uiBrowser->id));
-        $Smarty->assign('showSubjects', TRUE);
-    break;
-
     case "getFile":
         $Smarty->assign('fData', $uiBrowser->getFile($uiBrowser->id));
         $Smarty->assign('showFile', TRUE);
@@ -194,6 +177,17 @@ if ($uiBrowser->userid) {
 
     case "SCHEDULER":
         $Smarty->assign('showScheduler', TRUE);
+    break;
+
+
+    case "SUBJECTS":
+    case "SUBJECTS.manageGroupMember":
+    case "SUBJECTS.addUser":
+    case "SUBJECTS.addGroup":
+    case "SUBJECTS.remSubj":
+    case "SUBJECTS.chgPasswd":
+        $Smarty->assign('showSubjects', TRUE);
+        $Smarty->assign('act', $_REQUEST['act']);
     break;
     }
 

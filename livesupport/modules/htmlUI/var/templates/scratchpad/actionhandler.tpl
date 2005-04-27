@@ -25,12 +25,11 @@ onClick="hidealttextnow(); return contextmenu('{$i.id}'
         {if $_PL_activeId}
             {if $_PL_activeId == $i.id}
                 , 'PL.release'
-            {elseif $PL->isAvailable($i.id) == TRUE}
+            {elseif $PL->isAvailable($i.id) == true}
                 , 'PL.addItem', 'delete'
             {/if}
-        {elseif  $PL->isAvailable($i.id) == TRUE}
+        {elseif  $PL->isAvailable($i.id) == true}
             , 'PL.activate', 'PL.create', 'delete'
         {/if}
     {/if}
 )"
-

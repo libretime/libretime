@@ -2,8 +2,9 @@
 <script type="text/javascript">
 
     document.write('<div id="alttextContainer"></div>');
-    alttextWidth  = 200;
-    alttextHeight = 0;
+    alttextWidth    = 200;
+    alttextHeight   = 0;
+    alttextduration = 0;
 
     function showalttext(param) {
         var alttextHeader  = "<div class='alttext' id='alttext' style='position: absolute; top: -1000; left: 0; z-index: 99'>";
@@ -39,7 +40,7 @@
         }
 
         alttexthide = false;
-        setTimeout("showalttextnow("+xPos+", "+yPos+")", 1000);
+        setTimeout("showalttextnow("+xPos+", "+yPos+")", alttextduration);
         document.onmouseover = null;
 
     }
@@ -53,7 +54,7 @@
 
     function hidealttext() {
         alttexthide = true;
-        setTimeout("hidealttextnow()", 1000);
+        setTimeout("hidealttextnow()", alttextduration);
     }
 
     function hidealttextnow() {

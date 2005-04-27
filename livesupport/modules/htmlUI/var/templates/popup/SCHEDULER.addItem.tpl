@@ -32,18 +32,18 @@ function SCHEDULE_submit()
 function SCHEDULE_snap2Hour()
 {
 {/literal}
-    document.forms["schedule"].elements["time[H]"].value = {$SCHEDULER->scheduleAt.hour};
-    document.forms["schedule"].elements["time[i]"].value = 0;
-    document.forms["schedule"].elements["time[s]"].value = 0;
+    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->scheduleAt.hour}";
+    document.forms["schedule"].elements["time[i]"].value = "0";
+    document.forms["schedule"].elements["time[s]"].value = "0";
 {literal}
 }
 
 function SCHEDULE_snap2Prev()
 {
 {/literal}
-    document.forms["schedule"].elements["time[H]"].value = {$SCHEDULER->schedulePrev.hour};
-    document.forms["schedule"].elements["time[i]"].value = {$SCHEDULER->schedulePrev.minute};
-    document.forms["schedule"].elements["time[s]"].value = {$SCHEDULER->schedulePrev.second};
+    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->schedulePrev.hour}";
+    document.forms["schedule"].elements["time[i]"].value = "{$SCHEDULER->schedulePrev.minute}";
+    document.forms["schedule"].elements["time[s]"].value = "{$SCHEDULER->schedulePrev.second}";
 {literal}
 }
 
@@ -79,13 +79,6 @@ function SCHEDULE_selectedGunid()
     var arr = document.forms["schedule"].elements["gunid_duration"].value.split("|");
     return arr[0];
 }
-/*
-date1 = new Date("january 01, 1970 00:00:10");
-date2 = new Date("january 01, 1970 00:00:33");
-date3 = new Date();
-date3.setTime(date1.getTime() + date2.getTime());
-alert(date3.getSeconds());
-*/
 {/literal}
 </script>
 

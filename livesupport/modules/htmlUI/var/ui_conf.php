@@ -85,6 +85,7 @@ require_once dirname(__FILE__).'/../../storageServer/var/GreenBox.php';
 require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';
+require_once dirname(__FILE__).'/ui_subjects.class.php';
 
 ## well known classes
 require_once 'DB.php';

@@ -34,8 +34,8 @@
             {include file="library/main.tpl"}
         {/if}
 
-        {if $showSubjects}
-            {include file="subjects.tpl"}
+        {if $showSubjects}   
+            {include file="subjects/main.tpl"}
         {/if}
 
         {if $showFile}
@@ -47,7 +47,7 @@
         {/if}
 
         {if $changeStationPrefs}
-            {include file="stationprefs.tpl"}
+            {include file="system/stationprefs.tpl"}
         {/if}
 
         {if $PL_simpleManagement}
@@ -55,13 +55,13 @@
         {/if}
 
         <div class="content">
-        {if $simpleSearchForm}
-            {include file="library/simpleSearchForm.tpl"}
-        {/if}
+            {if $simpleSearchForm}
+                {include file="library/simpleSearchForm.tpl"}
+            {/if}
 
-        {if $SCRATCHPAD}
-            {include file="scratchpad/main.tpl"}
-        {/if}
+            {if $SCRATCHPAD}
+                {include file="scratchpad/main.tpl"}
+            {/if}
         </div>
     {/if}
 

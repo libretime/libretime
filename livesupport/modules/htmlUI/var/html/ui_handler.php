@@ -73,22 +73,6 @@ switch($_REQUEST['act']){
                 $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
     break;
 
-    case "addUser":
-        $uiHandler->addSubj($_REQUEST, $ui_fmask["addUser"]);
-    break;
-
-    case "addGroup":
-        $uiHandler->addSubj($_REQUEST, $ui_fmask["addGroup"]);
-    break;
-
-    case "removeSubj":
-        $uiHandler->removeSubj($_REQUEST["login"]);
-    break;
-
-    case "chgPasswd":
-        $uiHandler->chgPasswd($_REQUEST["uid"], $_REQUEST["oldpass"], $_REQUEST["pass"], $_REQUEST["pass2"]);
-    break;
-
     case "addPerm":
         $uiHandler->addPerm($_REQUEST["subj"], $_REQUEST["permAction"], $uiHandler->id, $_REQUEST["allowDeny"]);
     break;
@@ -97,12 +81,25 @@ switch($_REQUEST['act']){
         $uiHandler->removePerm($_REQUEST["permid"], $_REQUEST["oid"]);
     break;
 
-    case "addGroupMember":
-        $uiHandler->addSubj2Group($_REQUEST);
+    ## SUBJECTS
+    case "SUBJECTS.addSubj":
+        $uiHandler->SUBJECTS->addSubj($_REQUEST);
     break;
 
-    case "removeGroupMember":
-        $uiHandler->removeGroupMember($_REQUEST);
+    case "SUBJECTS.removeSubj":
+        $uiHandler->SUBJECTS->removeSubj($_REQUEST);
+    break;
+
+    case "SUBJECTS.addSubj2Group":
+        $uiHandler->SUBJECTS->addSubj2Group($_REQUEST);
+    break;
+
+    case "SUBJECTS.removeSubjFromGr":
+        $uiHandler->SUBJECTS->removeSubjFromGr($_REQUEST);
+    break;
+
+    case "SUBJECTS.chgPasswd":
+        $uiHandler->SUBJECTS->chgPasswd($_REQUEST);
     break;
 
     case "changeStationPrefs":
