@@ -5,5 +5,7 @@ jp:table
         foo:string      { "ふ" }
         bar:string      { "ばる" }
     }
+
+    dc_creator:string   { "クリエーター" }
 }
 

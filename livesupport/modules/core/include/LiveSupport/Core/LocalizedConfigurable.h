@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/LocalizedConfigurable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,8 +59,26 @@ namespace Core {
  *  A configurable element, that is also localized. Reads localization
  *  information from the configuration file itself.
  *
+ *  The configure() function expects the following XML element:
+ *
+ *  <pre><code>
+ *  <resourceBundle path   = "path/to/Bundle"
+ *                  locale = "en"
+ *  />
+ *  </code></pre>
+ *
+ *  <pre><code>
+ *  <!DOCTYPE resourceBundle [
+ *
+ *  <!ELEMENT resourceBundle    EMPTY >
+ *  <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
+ *  <!ATTLIST resourceBundle    locale  CDATA   #REQUIRED >
+ *
+ *  ]>
+ *  </code></pre>
+ *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class LocalizedConfigurable : public Configurable, public LocalizedObject
 {

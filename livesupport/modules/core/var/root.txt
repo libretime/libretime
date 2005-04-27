@@ -11,5 +11,7 @@ root:table
         aMessage:string         { "parameter 0: {0}, parameter 1: {1}" }
         aMessage3Args:string    { "p0: {0}, p2: {2}, p1: {1}" }
     }
+
+    dc_creator:string   { "Creator" }
 }
 

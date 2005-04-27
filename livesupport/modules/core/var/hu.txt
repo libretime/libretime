@@ -5,5 +5,7 @@ hu:table
         foo:string      { "fú" }
         bar:string      { "bár" }
     }
+
+    dc_creator:string   { "Létrehozó" }
 }
 
