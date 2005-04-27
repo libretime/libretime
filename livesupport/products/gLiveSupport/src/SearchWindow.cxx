@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,10 +75,6 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
             LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    treeModel = Gtk::ListStore::create(modelColumns);
-    
-    searchResults = constructSearchResults();
-
     Gtk::Box *      simpleSearchView = constructSimpleSearchView();
     Gtk::Box *      advancedSearchView = constructAdvancedSearchView();
     Gtk::Box *      browseView = constructBrowseView();
@@ -96,24 +92,14 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         std::exit(1);
     }
 
-    add(*views);    
+    // set up the search results box    
+    Gtk::Box *      searchResultsView = constructSearchResultsView();
 
-    // create the right-click entry context menu
-    contextMenu = Gtk::manage(new Gtk::Menu());
-    Gtk::Menu::MenuList& contextMenuList = contextMenu->items();
-
-    // register the signal handlers for the context menu
-    try {
-        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToScratchpadMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &SearchWindow::onAddToScratchpad)));
-    } catch (std::invalid_argument &e) {
-        std::cerr << e.what() << std::endl;
-        std::exit(1);
-    }
-
-    contextMenu->accelerate(*this);
+    // put them in one big box
+    Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
+    bigBox->pack_start(*views);
+    bigBox->pack_start(*searchResultsView);
+    add(*bigBox);
     
     // show
     set_name("searchWindow");
@@ -121,7 +107,6 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
-//  showContents();
     show_all_children();
 }
 
@@ -166,7 +151,6 @@ SearchWindow :: constructSimpleSearchView(void)                 throw ()
     // make a new box and pack the main components into it
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
     view->pack_start(*entryBox,         Gtk::PACK_EXPAND_WIDGET, 5);
-    view->pack_start(*searchResults,    Gtk::PACK_EXPAND_WIDGET,  5);
     return view;
 }
 
@@ -205,7 +189,6 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     Gtk::VBox *     view = Gtk::manage(new Gtk::VBox);
     view->pack_start(*advancedSearchEntry,    Gtk::PACK_SHRINK,         5);
     view->pack_start(*searchButtonBox,        Gtk::PACK_SHRINK,         5);
-    view->pack_start(*searchResults,          Gtk::PACK_EXPAND_WIDGET,  5);
     
     return view;
 }
@@ -226,7 +209,6 @@ SearchWindow :: constructBrowseView(void)                       throw ()
     // make a new box and pack the main components into it
     Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
     view->pack_start(*browseEntry,    Gtk::PACK_EXPAND_WIDGET, 5);
-    view->pack_start(*searchResults,  Gtk::PACK_EXPAND_WIDGET, 5);
     return view;
 }
 
@@ -234,13 +216,13 @@ SearchWindow :: constructBrowseView(void)                       throw ()
 /*------------------------------------------------------------------------------
  *  Construct the search results display.
  *----------------------------------------------------------------------------*/
-ZebraTreeView*
-SearchWindow :: constructSearchResults(void)                    throw ()
+Gtk::VBox*
+SearchWindow :: constructSearchResultsView(void)                throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
-    ZebraTreeView *     searchResults = Gtk::manage(wf->createTreeView(
-                                                                treeModel ));
+    treeModel = Gtk::ListStore::create(modelColumns);
+    searchResults = Gtk::manage(wf->createTreeView(treeModel));
 
     // add the TreeView's view columns
     try {
@@ -259,9 +241,29 @@ SearchWindow :: constructSearchResults(void)                    throw ()
     
     // register the signal handler for treeview entries being clicked
     searchResults->signal_button_press_event().connect_notify(sigc::mem_fun(
-                                        *this, &SearchWindow::onEntryClicked));
+                                    *this, &SearchWindow::onEntryClicked));
 
-    return searchResults;
+    // create the right-click entry context menu
+    contextMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList& contextMenuList = contextMenu->items();
+
+    // register the signal handlers for the context menu
+    try {
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("addToScratchpadMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &SearchWindow::onAddToScratchpad)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    contextMenu->accelerate(*this);
+    
+    // make a new box and pack the one and only component into it
+    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
+    view->pack_start(*searchResults,    Gtk::PACK_EXPAND_WIDGET, 5);
+    return view;
 }
 
 

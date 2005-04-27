@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -95,18 +95,8 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         BrowseEntry *               browseEntry;
 
         /**
-         *  The tree view showing the search results.
-         */
-        ZebraTreeView *             searchResults;
-
-        /**
-         *  The pop-up context menu for found items.
-         */
-        Gtk::Menu *                 contextMenu;
-        
-        /**
          *  Construct the simple search view.
-         *  If you enter a string in the simple search view and press Enter
+         *  If you enter a string in theGtk::VBox simple search view and press Enter
          *  (or the Search button), the local storage will be searched for
          *  items (both audio clips and playlists) where either the title
          *  (dc:title), the creator (dc:creator) or the album (dc:source)
@@ -136,10 +126,10 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         /**
          *  Construct the search results display.
          *
-         *  @return a pointer to the new TreeView (already Gtk::manage()'ed)
+         *  @return a pointer to the new box (already Gtk::manage()'ed)
          */
-        ZebraTreeView*
-        constructSearchResults(void)                            throw ();
+        Gtk::VBox*
+        constructSearchResultsView(void)                        throw ();
 
         /**
          *  Event handler for the simple Search button getting clicked.
@@ -171,7 +161,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  @param event the button event received
          */
         void
-        onEntryClicked(GdkEventButton     * event)              throw ();
+        onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
          *  Add a playable to the scratchpad.
@@ -184,7 +174,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.8 $
+         *  @version $Revision: 1.9 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -237,6 +227,16 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          */
         Glib::RefPtr<Gtk::ListStore>    treeModel;
 
+        /**
+         *  The tree view showing the search results.
+         */
+        ZebraTreeView *                 searchResults;
+
+        /**
+         *  The pop-up context menu for found items.
+         */
+        Gtk::Menu *                     contextMenu;
+        
         /**
          *  The GLiveSupport object, holding the state of the application.
          */
