@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -218,6 +218,9 @@ distclean:
 	${MAKE} -C ${WIDGETS_DIR} distclean
 	${MAKE} -C ${SCHEDULER_DIR} distclean
 	${MAKE} -C ${GLIVESUPPORT_DIR} distclean
+	${RM} ${TMP_DIR}/compile.stamp
+	${RM} ${TMP_DIR}/modules_setup.stamp
+	${RM} ${TMP_DIR}/products_setup.stamp
 
 depclean:
 	${MAKE} -C ${CORE_DIR} depclean
