@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -156,6 +156,11 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     set_decorated(false);
 
     // set the localized resources
+    uploadFileButton         = 0;
+    scratchpadButton         = 0;
+    simplePlaylistMgmtButton = 0;
+    schedulerButton          = 0;
+    searchButton             = 0;
     changeLanguage(bundle);
 
     // show what's there to see
@@ -185,21 +190,37 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
 {
     setBundle(bundle);
 
+    if (uploadFileButton) {
+        buttonBar->remove(*uploadFileButton);
+    }
+    if (scratchpadButton) {
+        buttonBar->remove(*scratchpadButton);
+    }
+    if (simplePlaylistMgmtButton) {
+        buttonBar->remove(*simplePlaylistMgmtButton);
+    }
+    if (schedulerButton) {
+        buttonBar->remove(*schedulerButton);
+    }
+    if (searchButton) {
+        buttonBar->remove(*searchButton);
+    }
+
     try {
         set_title(*getResourceUstring("windowTitle"));
 
         Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance();
 
-        uploadFileButton = wf->createButton(
-                                *getResourceUstring("uploadFileButtonLabel"));
-        scratchpadButton = wf->createButton(
-                                *getResourceUstring("scratchpadButtonLabel"));
-        simplePlaylistMgmtButton = wf->createButton(
-                        *getResourceUstring("simplePlaylistMgmtButtonLabel"));
-        schedulerButton = wf->createButton(
-                                *getResourceUstring("schedulerButtonLabel"));
-        searchButton = wf->createButton(
-                                *getResourceUstring("searchButtonLabel"));
+        uploadFileButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("uploadFileButtonLabel")));
+        scratchpadButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("scratchpadButtonLabel")));
+        simplePlaylistMgmtButton = Gtk::manage(wf->createButton(
+                        *getResourceUstring("simplePlaylistMgmtButtonLabel")));
+        schedulerButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("schedulerButtonLabel")));
+        searchButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("searchButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
