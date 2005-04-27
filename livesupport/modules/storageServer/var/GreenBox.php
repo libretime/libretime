@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.57 $
+    Version  : $Revision: 1.58 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.57 $
+ *  @version $Revision: 1.58 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -221,41 +221,6 @@ class GreenBox extends BasicStor{
             return $res;
         return $this->bsDeleteFile($id);
     }
-
-    /* ---------------------------------------------- replicas, versions etc. */
-    /**
-     *  Create replica.<br>
-     *  <b>TODO: NOT FINISHED</b>
-     *
-     *  @param id int, virt.file's local id
-     *  @param did int, destination folder local id
-     *  @param replicaName string, name of new replica
-     *  @param sessid string, session id
-     *  @return int, local id of new object
-     */
-    function createReplica($id, $did, $replicaName='', $sessid='')
-    {
-        if(($res = $this->_authorize(
-            array('read', 'write'), array($id, $did), $sessid
-        )) !== TRUE) return $res;
-        return $this->bsCreateReplica($id, $did, $replicaName);
-    }
-
-    /**
-     *  Create version.<br>
-     *  <b>TODO: NOT FINISHED</b>
-     *
-     *  @param id int, virt.file's local id
-     *  @param did int, destination folder local id
-     *  @param versionLabel string, name of new version
-     *  @param sessid string, session id
-     *  @return int, local id of new object
-     */
-    function createVersion($id, $did, $versionLabel, $sessid='')
-    {
-        return $this->bsCreateVersion($id, $did, $versionLabel);
-    }
-
 
     /* ------------------------------------------------------------- metadata */
 
@@ -868,16 +833,49 @@ class GreenBox extends BasicStor{
     }
 
     /**
+     *   Change user password.
+     *
+     *   ('superuser mode'= superuser is changing some password without
+     *    knowledge of the old password)
+     *
+     *   @param login string
+     *   @param oldpass string, old password
+     *      (should be null or empty for 'superuser mode')
+     *   @param pass string, optional
+     *   @param sessid string, session id, required for 'superuser mode'
+     *   @return boolean/err
+     */
+    function passwd($login, $oldpass=null, $pass='', $sessid='')
+    {
+        if(is_null($oldpass) || $oldpass == ''){
+            if(($res = $this->_authorize('subjects', $this->rootId, $sessid))
+                !== TRUE
+            ){ sleep(2); return $res; }
+            else $oldpass=null;
+        }else{
+            if(FALSE === $this->authenticate($login, $oldpass)){
+                sleep(2);
+                return PEAR::raiseError(
+                    "GreenBox::passwd: access denied (oldpass)", GBERR_DENY);
+            }
+        }
+        return PEAR::raiseError("GreenBox::passwd: OK");
+        $res = parent::passwd($login, $oldpass, $pass);
+        if(PEAR::isError($res)) return $res;
+        return TRUE;
+    }
+
+    /**
      *   Insert permission record
      *
-     *   @param sessid string, session id
      *   @param sid int - local user/group id
      *   @param action string
      *   @param oid int - local object id
      *   @param type char - 'A'|'D' (allow/deny)
+     *   @param sessid string, session id
      *   @return int - local permission id
      */
-    function addPerm($sessid, $sid, $action, $oid, $type='A')
+    function addPerm($sid, $action, $oid, $type='A', $sessid='')
     {
         $parid = $this->getParent($oid);
         if(($res = $this->_authorize('editPerms', $parid, $sessid)) !== TRUE){
@@ -889,20 +887,22 @@ class GreenBox extends BasicStor{
     /**
      *   Remove permission record
      *
-     *   @param sessid string, session id
      *   @param permid int OPT - local permission id
      *   @param subj int OPT - local user/group id
      *   @param obj int OPT - local object id
+     *   @param sessid string, session id
      *   @return boolean/error
      */
-    function removePerm($sessid, $permid=NULL, $subj=NULL, $obj=NULL)
+    function removePerm($permid=NULL, $subj=NULL, $obj=NULL, $sessid='')
     {
-        $oid = $this->_getPermOid($permid);
-        if(PEAR::isError($oid)) return $oid;
-        if(!is_null($oid)){
-            $parid = $this->getParent($oid);
-            if(($res = $this->_authorize('editPerms', $parid, $sessid)) !== TRUE)
-                return $res;
+        if(!is_null($permid)){
+            $oid = $this->_getPermOid($permid);
+            if(PEAR::isError($oid)) return $oid;
+            if(!is_null($oid)){
+                $parid = $this->getParent($oid);
+                if(($res = $this->_authorize('editPerms', $parid, $sessid)) !== TRUE)
+                    return $res;
+            }
         }
         $res = parent::removePerm($permid, $subj, $obj);
         return $res;

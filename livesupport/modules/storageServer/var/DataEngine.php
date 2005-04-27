@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/DataEngine.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class DataEngine{
         $whereArr   = array();
         if(is_array($conditions)){
             foreach($conditions as $cond){
-                $catQn  = strtolower($cond['cat']);
+                $catQn  = $cond['cat'];
                 $op     = strtolower($cond['op']);
                 $value  = strtolower($cond['val']);
                 $splittedQn = XML_Util::splitQualifiedName($catQn);
@@ -112,7 +112,8 @@ class DataEngine{
                 $opVal  = str_replace("%", "%%", $opVal);
                 $sqlCond =
                     " %s.predicate = '{$cat}' AND".
-                    " %s.objns='_L' AND lower(%s.object) {$opVal}\n";
+                    " %s.objns='_L' AND %s.predxml='T'".
+                    " AND lower(%s.object) {$opVal}\n";
                 if(!is_null($catNs)){
                     $catNs  = str_replace("%", "%%", $catNs);
                     $sqlCond = " %s.predns = '{$catNs}' AND $sqlCond";
@@ -140,7 +141,7 @@ class DataEngine{
     {
         $innerBlocks = array();
         foreach($whereArr as $i=>$v){
-            $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i");
+            $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
             $lastTbl = ($i==0 ? "f" : "md".($i-1));
             $innerBlocks[] = 
                 "INNER JOIN {$this->mdataTable} md$i ON md$i.gunid = $lastTbl.gunid\n";
@@ -149,7 +150,8 @@ class DataEngine{
         $sql =  "SELECT $fldsPart\nFROM {$this->filesTable} f\n".join("", $innerBlocks);
         if($browse){
             $sql .= "INNER JOIN {$this->mdataTable} br".
-                "\n ON br.gunid = f.gunid AND br.objns='_L' AND br.predicate='{$brFld}'";
+                "\n ON br.gunid = f.gunid AND br.objns='_L'".
+                " AND br.predicate='{$brFld}' AND br.predxml='T'";
             if(!is_null($brFldNs)) $sql .= " AND br.predns='{$brFldNs}'";
             $sql .= "\n";
         }
@@ -178,7 +180,7 @@ class DataEngine{
             $fldsPart, $whereArr, $fileCond, $browse, $brFldNs, $brFld);
         $isectBlocks = array();
         foreach($whereArr as $i=>$v){
-            $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i");
+            $whereArr[$i] = sprintf($v, "md$i", "md$i", "md$i", "md$i", "md$i");
             $isectBlocks[] = 
                 " SELECT gunid FROM {$this->mdataTable} md$i\n".
                 " WHERE\n {$whereArr[$i]}";
@@ -195,7 +197,7 @@ class DataEngine{
             "SELECT $fldsPart\n".$isectBlock;
         if($browse){
             $sql .= "\nINNER JOIN {$this->mdataTable} br ON br.gunid = f.gunid\n".
-            "WHERE br.objns='_L' AND br.predicate='{$brFld}'";
+            "WHERE br.objns='_L' AND br.predxml='T' AND br.predicate='{$brFld}'";
             if(!is_null($brFldNs)) $sql .= " AND br.predns='{$brFldNs}'";
             $glue = " AND";
         }else{ $glue = "WHERE";}
@@ -218,15 +220,16 @@ class DataEngine{
     function _makeOrSql($fldsPart, $whereArr, $fileCond, $browse,
         $brFldNs=NULL, $brFld=NULL)
     {
-        $whereArr[] = " FALSE\n";
+        //$whereArr[] = " FALSE\n";
         foreach($whereArr as $i=>$v){
-            $whereArr[$i] = sprintf($v, "md", "md", "md", "md");
+            $whereArr[$i] = sprintf($v, "md", "md", "md", "md", "md");
         }
         // query construcion:
         $sql = "SELECT $fldsPart\nFROM {$this->filesTable} f\n";
         if($browse){
             $sql .= "INNER JOIN {$this->mdataTable} br".
-                "\n ON br.gunid = f.gunid AND br.objns='_L' AND br.predicate='{$brFld}'";
+                "\n ON br.gunid = f.gunid AND br.objns='_L'".
+                " AND br.predxml='T' AND br.predicate='{$brFld}'";
             if(!is_null($brFldNs)) $sql .= " AND br.predns='{$brFldNs}'";
             $sql .= "\n";
         }
@@ -278,8 +281,8 @@ class DataEngine{
         $operator   = strtolower($criteria['operator']);
         $desc       = (isset($criteria['desc']) ? $criteria['desc'] : NULL);
         $whereArr   = $this->_makeWhereArr($criteria['conditions']);
-        $orderbyQn  = (isset($criteria['orderby']) ?
-            strtolower($criteria['orderby']) : NULL);
+        $orderbyQn  =
+            (isset($criteria['orderby']) ? $criteria['orderby'] : NULL);
         $obSplitQn  = XML_Util::splitQualifiedName($orderbyQn);
         $obNs       = $obSplitQn['namespace'];
         $orderby    = $obSplitQn['localPart'];
@@ -309,7 +312,8 @@ class DataEngine{
                 "SELECT to_hex(sq2.gunid)as gunid, m.object\n".
                 "FROM (\n$sql\n)sq2\n".
                 "LEFT JOIN ls_mdata m\n".
-                "  ON m.gunid = sq2.gunid AND m.predicate='$orderby' AND m.objns='_L'".
+                "  ON m.gunid = sq2.gunid AND m.predicate='$orderby'".
+                " AND m.objns='_L' AND m.predxml='T'".
                 (!is_null($obNs)? " AND m.predns='$obNs'":'')."\n".
                 "ORDER BY m.object".($desc? ' DESC':'')."\n";
         }
@@ -339,14 +343,14 @@ class DataEngine{
      */
     function browseCategory($category, $limit=0, $offset=0, $criteria=NULL)
     {
-        $category = strtolower($category);
+        //$category = strtolower($category);
         $r = XML_Util::splitQualifiedName($category);
         $catNs  = $r['namespace'];
         $cat    = $r['localPart'];
         if(is_array($criteria) && count($criteria)>0){
             return $this->_localGenSearch($criteria, $limit, $offset, $catNs, $cat);
         }
-        $sqlCond = "m.predicate='$cat' AND m.objns='_L'";
+        $sqlCond = "m.predicate='$cat' AND m.objns='_L' AND m.predxml='T'";
         if(!is_null($catNs)){
             $sqlCond = "m.predns = '{$catNs}' AND  $sqlCond";
         }

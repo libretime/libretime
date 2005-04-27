@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -127,17 +127,20 @@ class Subjects extends ObjClasses{
      *   Change user password
      *
      *   @param login string
-     *   @param oldpass string
+     *   @param oldpass string, old password (optional for 'superuser mode')
      *   @param pass string, optional
      *   @return boolean/err
      */
-    function passwd($login, $oldpass, $pass='')
+    function passwd($login, $oldpass=null, $pass='')
     {
         $cpass = md5($pass);
-        $oldcpass = md5($oldpass);
+        if(!is_null($oldpass)){
+            $oldcpass = md5($oldpass);
+            $oldpCond = "AND pass='$oldcpass'";
+        }else{ $oldpCond = ''; }
         $this->dbc->query("
             UPDATE {$this->subjTable} SET pass='$cpass'
-            WHERE login='$login' AND pass='$oldcpass' AND type='U'
+            WHERE login='$login' $oldpCond AND type='U'
         ");
         if(PEAR::isError($id)) return $id;
         return TRUE;

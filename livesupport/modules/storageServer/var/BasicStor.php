@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.46 $
+    Version  : $Revision: 1.47 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.46 $
+ *  @version $Revision: 1.47 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -236,7 +236,30 @@ class BasicStor extends Alib{
      */
     function bsDeleteFile($id, $forced=FALSE)
     {
-        $res = $this->removeObj($id, $forced);
+        // full delete:
+        if(!$this->config['useTrash'] || $forced){
+            $res = $this->removeObj($id, $forced);
+            return $res;
+        }
+        // move to trash:
+        $did = $this->getObjId($this->config['TrashName'], $this->storId);
+        if($this->dbc->isError($did)) return $did;
+        switch($this->getObjType($id)){
+            case"audioclip":
+            case"playlist":
+            case"webstream":
+                $ac =& StoredFile::recall($this, $id);
+                if($this->dbc->isError($ac)) return $ac;
+                if(is_null($did)){
+                    return PEAR::raiseError("BasicStor::bsDeleteFile: ".
+                        "trash not found", GBERR_NOTF);
+                }
+                $res = $ac->setState('deleted');
+                if($this->dbc->isError($res)) return $res;
+                break;
+            default:
+        }
+        $res = $this->bsMoveFile($id, $did);
         return $res;
     }
 
@@ -1311,9 +1334,14 @@ class BasicStor extends Alib{
 //        if($this->dbc->isError($p = parent::test())) return $p;
         $this->deleteData();
         $this->testData();
+        if($this->config['useTrash']){
+            $trash = "{$this->config['TrashName']}\n        ";
+        }else{
+            $trash = "";
+        }
         if(!$this->config['isArchive']){
             $this->test_correct = "    StorageRoot
-        root
+        {$trash}root
         test1
             file1.mp3
             public
@@ -1332,7 +1360,7 @@ class BasicStor extends Alib{
 ";
         }else{
             $this->test_correct = "    StorageRoot
-        root
+        {$trash}root
         test1
             file1.mp3
             test1_folder1
@@ -1349,9 +1377,9 @@ class BasicStor extends Alib{
         $this->test_dump = $this->dumpTree($this->storId, '    ', '    ', '{name}');
         if($this->test_dump==$this->test_correct)
             { $this->test_log.="# BasicStor::test: OK\n"; return true; }
-        else PEAR::raiseError('BasicStor::test:', 1, PEAR_ERROR_DIE, '%s'.
-            "<pre>\ncorrect:\n.{$this->test_correct}.\n".
-            "dump:\n.{$this->test_dump}.\n</pre>\n");
+        else return PEAR::raiseError(
+            "BasicStor::test:\ncorrect:\n.{$this->test_correct}.\n".
+            "dump:\n.{$this->test_dump}.\n", 1, PEAR_ERROR_RETURN);
     }
 
     /**
@@ -1365,7 +1393,16 @@ class BasicStor extends Alib{
             $this->addObj('StorageRoot', 'Folder', $this->rootId);
         $rootUid = parent::addSubj('root', $this->config['tmpRootPass']);
         $res = parent::addPerm($rootUid, '_all', $this->rootId, 'A');
+        if($this->dbc->isError($res)) return $res;
+        $res = parent::addPerm($rootUid, 'subjects', $this->rootId, 'A');
+        if($this->dbc->isError($res)) return $res;
         $fid = $this->bsCreateFolder($this->storId, 'root');
+        if($this->dbc->isError($fid)) return $fid;
+        if($this->config['useTrash']){
+            $tfid = $this->bsCreateFolder(
+                $this->storId, $this->config["TrashName"]);
+            if($this->dbc->isError($tfid)) return $tfid;
+        }
         if(!$this->config['isArchive']){
             $stPrefGr = parent::addSubj($this->config['StationPrefsGr']);
             $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
@@ -1377,6 +1414,7 @@ class BasicStor extends Alib{
             if($this->dbc->isError($r)) return $r;
         }
     }
+
     /**
      *  install - create tables
      *
@@ -1386,6 +1424,7 @@ class BasicStor extends Alib{
      *      <li>incomplete</li>
      *      <li>ready</li>
      *      <li>edited</li>
+     *      <li>deleted</li>
      *  </ul>
 
      *  file types:
