@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/SearchCriteriaTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ SearchCriteriaTest :: firstTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("filetype"));
-    CPPUNIT_ASSERT(xmlRpcValue["filetype"] == "audioclip");
+    CPPUNIT_ASSERT(xmlRpcValue["filetype"] == "all");
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("conditions"));
     CPPUNIT_ASSERT(xmlRpcValue["conditions"].getType() 
                                 == XmlRpc::XmlRpcValue::TypeArray);
