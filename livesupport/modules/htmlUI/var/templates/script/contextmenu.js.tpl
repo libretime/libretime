@@ -109,8 +109,8 @@
                     contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=SUBJECTS.manageGroupMember&"+param+"' "+oF+">&nbsp;##Manage group members##&nbsp;</a></li>";
                 break;
 
-                case "SUBJECTS.addSubj2Group":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#'  onClick=\"hpopup('{$UI_HANDLER}?act=SUBJECTS.addSubj2Group&"+param+"')\" "+oF+">&nbsp;##Add to group##&nbsp;</a></li>";
+                case "SUBJECTS.addSubj2Gr":
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='#'  onClick=\"hpopup('{$UI_HANDLER}?act=SUBJECTS.addSubj2Gr&"+param+"')\" "+oF+">&nbsp;##Add to group##&nbsp;</a></li>";
                 break;
 
                 case "SUBJECTS.removeSubjFromGr":

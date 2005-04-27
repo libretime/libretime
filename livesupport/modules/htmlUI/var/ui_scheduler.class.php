@@ -101,25 +101,41 @@ class uiScheduler extends uiCalendar
 
         $week = $this->getWeekEntrys();
         ## search for next entry
-        foreach ($week[$this->scheduleAt['day']] as $entry) {
-            if (strtotime($entry[0]['start']) >=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
-                list($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['start'])-1));
-                break;
+        if (count($week[$this->scheduleAt['day']]) >= 1) {
+            foreach ($week[$this->scheduleAt['day']] as $entry) {
+                if (strtotime($entry[0]['start']) >=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
+                    list($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['start'])-1));
+                    break;
+                }
             }
+        } else {
+        ## start at midnight
+            $this->scheduleNext['hour']     = 0;
+            $this->scheduleNext['minute']   = 0;
+            $this->scheduleNext['second']   = 0;
         }
 
         reset ($week);
         ## search for previous entry
-        foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
-            if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
-                list($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['end'])+1));
-                break;
+        if (count($week[$this->scheduleAt['day']]) >= 1) {
+            foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
+                if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
+                    list($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['end'])+1));
+                    break;
+                }
             }
+        } else {
+        ## start at midnight
+            $this->schedulePrev['hour']     = 0;
+            $this->schedulePrev['minute']   = 0;
+            $this->schedulePrev['second']   = 0;
         }
+
         #print_r($this->schedulePrev);
         #print_r($this->scheduleNext);
 
     }
+
 
     function getWeekEntrys()
     {

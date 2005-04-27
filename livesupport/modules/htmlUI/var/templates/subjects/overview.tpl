@@ -5,24 +5,25 @@
         <table style="width: 574px;">
 
             <tr class="blue_head">
-                <td style="width: 189px">##Name##</td>
-                <td style="width: 85px;">##Members##</td>
-                <td style="width: 85px; border: 0">##Type##</td>
+                <td>##Login##</td>
+                <td style="width: 40px; text-align: center">##Members##</td>
+                <td style="width: 40px; border: 0; text-align: center">##Type##</td>
             </tr>
 
         {foreach from=$SUBJECTS->getSubjectsWCnt() item=i}
+            {if $i.type|lower == 'g'}{assign var="_type" value="group"}{else}{assign var="_type" value="user"}{/if}
             <tr class="{cycle values='blue1, blue2'}"
                 onClick="return contextmenu('id={$i.id}&login={urlencode str=$i.login}', {if $i.type|lower eq 'g'}'SUBJECTS.manageGroupMember', {else}'SUBJECTS.chgPasswd', {/if} 'SUBJECTS.removeSubj')"
             >
                 <td>{$i.login}</td>
-                <td>
+                <td style="width: 30px; text-align: center;">
                     {if $i.type|lower == 'g'}
                         {$i.cnt}
                     {else}
                         -
                     {/if}
                 </td>
-                <td style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|capitalize}" /></td>
+                <td style="border: 0; text-align: center;"><img src="img/{$_type}.png" border="0" alt="{$_type|capitalize}" /></td>
 
             </tr>
         {/foreach}
@@ -37,3 +38,5 @@
 
     </div>
 </div>
+
+{assign var="_type" value=null}

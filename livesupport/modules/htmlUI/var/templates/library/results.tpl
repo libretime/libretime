@@ -8,10 +8,10 @@
             <table style="width: 535px;">
                 <tr class="blue_head">
                     <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SEARCHRESULTS')"></td>
-                    <td style="width: 160px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
-                    <td style="width: 134px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=creator', 'order');" id="blue_head">##Creator##</a></td>
-                    <td style="width: 89px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=extent', 'order');" id="blue_head">##Duration##</a></td>
-                    <td style="width: 37px; border: 0"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=type', 'order');" id="blue_head">##Type##</a></td>
+                    <td style="width: 200px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
+                    <td style="width: 195px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=creator', 'order');" id="blue_head">##Creator##</a></td>
+                    <td><a href="#"  onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=extent', 'order');" id="blue_head">##Duration##</a></td>
+                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act={$_act_prefix}.reOrder&by=type', 'order');" id="blue_head">##Type##</a></td>
                 </tr>
                 {foreach from=$_results.items item=i}
             <!-- start item -->
@@ -25,8 +25,10 @@
                         {/if}
                     </td>
                     <td {include file="library/actionhandler.tpl"}>{$i.creator}</td>
-                    <td {include file="library/actionhandler.tpl"}>{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
-                    <td {include file="library/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" /></td>
+                    <td {include file="library/actionhandler.tpl"} style="text-align: right">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
+                    <td {include file="library/actionhandler.tpl"} style="border: 0; text-align: center">
+                        <img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/mouseover.tpl"} />
+                    </td>
                 </tr>
             <!-- end item -->
                 {/foreach}
@@ -76,4 +78,5 @@
     ##No match found.##
 {/if}
 
-{assign var="_PL_activeId" value=NULL}
+{assign var="_PL_activeId" value=null}
+{assign var="_duration"    value=null}

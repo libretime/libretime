@@ -32,7 +32,7 @@ function SCHEDULE_submit()
 function SCHEDULE_snap2Hour()
 {
 {/literal}
-    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->scheduleAt.hour}";
+    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->scheduleAt.hour|string_format:'%d'}";
     document.forms["schedule"].elements["time[i]"].value = "0";
     document.forms["schedule"].elements["time[s]"].value = "0";
 {literal}

@@ -21,7 +21,7 @@
                     <ul>
                         <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a></li>
                         <li><a href="{$UI_BROWSER}?act=SUBJECTS">##User/Groups##</a></li>
-                        <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li>
+                        <!-- <li><a href="{$UI_BROWSER}?act=fileList&id={$START.fid}">##File List##</a></li> -->
                     </ul>
                 </li>
                 {/if}

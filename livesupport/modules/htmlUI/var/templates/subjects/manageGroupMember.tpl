@@ -14,8 +14,8 @@
                     <form name="GRP">
                     <tr class="blue_head">
                         <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('GRP')"></td>
-                        <td style="width: 164px">##Name##</td>
-                        <td style="width: 41px; border: 0">##Type##</td>
+                        <td style="width: 164px">##Login##</td>
+                        <td style="width: 41px; border: 0; text-align: center">##Type##</td>
                     </tr>
 
                     {assign var="_member" value=$SUBJECTS->getGroupMember($_REQUEST.id)}
@@ -25,7 +25,7 @@
                                 onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                                 <td>{$i.login}</td>
-                                 <td style="border: 0"><img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" /></td>
+                                 <td style="border: 0; text-align: center"><img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|capitalize}" /></td>
                             </tr>
                         {/foreach}
                     {else}
@@ -35,10 +35,12 @@
                 </table>
             </div>
             <div class="footer" style="width:250px;">
-                <a href="" onClick="collector_submit('GRP', this.value)" id="blue_head">##Add selected##</a>
+                <a href="" onClick="collector_submit('GRP', 'SUBJECTS.removeSubjFromGr&gname={urlencode str=$_gname}')" id="blue_head">##Remove selected##</a>
             </div>
         </div>
         <!-- end current group member -->
+
+
 
         <!-- start add group member -->
         <div class="container_elements" style="float: right">
@@ -50,7 +52,7 @@
                 <!-- start table header -->
                     <tr class="blue_head">
                         <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('NOGRP')"></td>
-                        <td style="width: 164px">##Name##</td>
+                        <td style="width: 164px">##Login##</td>
                         <td style="width: 41px; border: 0">##Type##</td>
                     </tr>
                 <!-- end table header -->
@@ -62,8 +64,8 @@
                             <!-- start item -->
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                                <td onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.addSubj2Group')">{$i.login}</td>
-                                <td style="border: 0"><img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" /></td>
+                                <td onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.addSubj2Gr')">{$i.login}</td>
+                                <td style="border: 0; text-align: center"><img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|capitalize}" /></td>
                             </tr>
                             <!-- end item -->
                         {/if}
@@ -76,7 +78,7 @@
                 </table>
             </div>
             <div class="footer" style="width:250px;">
-                <a href="" onClick="collector_submit('GRP', this.value)" id="blue_head">##Add selected##</a>
+                <a href="" onClick="collector_submit('NOGRP', 'SUBJECTS.addSubj2Gr&gname={urlencode str=$_gname}')" id="blue_head">##Add selected##</a>
             </div>
         </div>
         <!-- end add group member -->

@@ -1,5 +1,4 @@
-{include file="sub/mouseover.tpl"}
-onClick="hidealttextnow(); return contextmenu('{$i.id}'
+onClick="return contextmenu('{$i.id}'
     , 'SP.removeItem'
 
     {if $i.type == 'audioclip'}

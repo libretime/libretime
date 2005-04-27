@@ -43,29 +43,29 @@ class uiSubjects
     *
     *  @param formdata array('login', 'pass')
     */
-    function addSubj(&$formdata)
+    function addSubj(&$request)
     {
         include dirname(__FILE__). '/formmask/subjects.php';
         $this->setRedir();
 
-        if ($this->Base->_validateForm($formdata, $mask[$formdata['passwd'] ? 'addUser' : 'addGroup']) !== TRUE) {
+        if ($this->Base->_validateForm($request, $mask[$request['passwd'] ? 'addUser' : 'addGroup']) !== TRUE) {
             return FALSE;
         }
         if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE) {
             $this->Base->_retMsg('Access denied.');
             return FALSE;
         }
-        if ($this->Base->gb->getSubjId($formdata['login'])) {
-            $this->Base->_retMsg('User or group "$1" already exists.', $formdata['login']);
+        if ($this->Base->gb->getSubjId($request['login'])) {
+            $this->Base->_retMsg('User or group "$1" already exists.', $request['login']);
             $this->Base->redirUrl = $_SERVER['HTTP_REFERER'];
             return FALSE;
         }
 
-        if (PEAR::isError($res = $this->Base->gb->addSubj($formdata['login'], ($formdata['passwd']==='' ? NULL : $formdata['passwd'])))) {
+        if (PEAR::isError($res = $this->Base->gb->addSubj($request['login'], ($request['passwd']==='' ? NULL : $request['passwd'])))) {
             $this->Base->_retMsg($res->getMessage());
             return FALSE;
         }
-        if (UI_VERBOSE) $this->Base->_retMsg('Subject $1 added.', $formdata['login']);
+        if (UI_VERBOSE) $this->Base->_retMsg('Subject $1 added.', $request['login']);
 
         return TRUE;
     }
@@ -77,7 +77,7 @@ class uiSubjects
      *
      *  @param login string, login name of removed user
      */
-    function removeSubj($request)
+    function removeSubj(&$request)
     {
         $this->setReload();
 
@@ -127,7 +127,7 @@ class uiSubjects
      *  @param pass string, new password
      *  @param pass2 string, retype of new password
      */
-    function chgPasswd($request)
+    function chgPasswd(&$request)
     {
         $this->setRedir();
 
@@ -204,7 +204,6 @@ class uiSubjects
     }
 
 
-
     /**
      *   addSubj2Group
      *
@@ -215,9 +214,23 @@ class uiSubjects
      *   @param gname string
      *   @param reid string, local id of managed group, just needed for redirect
      */
-    function addSubj2Group(&$request)
+    function addSubj2Gr(&$request)
     {
-        $this->Base->redirUrl = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
+        $this->setReload();
+
+        if (!$request['login'] && !$request['id']) {
+            $this->Base->_retMsg('Nothing selected.');
+            return FALSE;
+        }
+        
+        ## loop for multiple action
+        if (is_array($request['id'])) {
+            foreach ($request['id'] as $val) {
+                $req = array('login' => $this->Base->gb->getSubjName($val), 'gname' => $request['gname']);
+                $this->addSubj2Gr($req);
+            }
+            return TRUE;
+        }
 
         if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE){
             $this->Base->_retMsg('Access denied.');
@@ -243,6 +256,21 @@ class uiSubjects
     function removeSubjFromGr(&$request)
     {
         $this->setReload();
+
+        if (!$request['login'] && !$request['id']) {
+            $this->Base->_retMsg('Nothing selected.');
+            return FALSE;
+        }
+
+        ## loop for multiple action
+        if (is_array($request['id'])) {
+            foreach ($request['id'] as $val) {
+                $req = array('login' => $this->Base->gb->getSubjName($val), 'gname' => $request['gname']);
+                $this->removeSubjFromGr($req);
+            }
+            return TRUE;
+        }
+
         if ($this->Base->gb->checkPerm($this->Base->userid, 'subjects') !== TRUE){
             $this->Base->_retMsg('Access denied.');
             return FALSE;

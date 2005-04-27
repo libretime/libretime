@@ -16,10 +16,10 @@
                                 <script type="text/javascript">
                                     document.forms['PL'].elements['all'].checked = false;
                                 </script>
-                            <td style="width: 155px">##Name##</td>
-                            <td style="width: 69px">##Duration##</td>
-                            <td style="width: 178px">##Artist##</td>
-                            <td style="width: 107px;">##Type##</td>
+                            <td style="width: 200px">##Name##</td>
+                            <td>                     ##Duration##</td>
+                            <td style="width: 200px">##Artist##</td>
+                            <td style="width: 30px;">##Type##</td>
                             <td style="width: 30px; border: 0">##Move##</td>
                         </tr>
                     <!-- end repeat after 14 columns -->
@@ -34,11 +34,15 @@
                         <tr class="{cycle values='blue1, blue2'}">
                             <td><input type="checkbox" class="checkbox" name="{$i.attrs.id}"/></td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.title}</td>
-                            <td {include file="playlist/actionhandler.tpl"}>{$i.duration}</td>
+                            <td {include file="playlist/actionhandler.tpl"} style="text-align: right">
+                                {assign var="_duration" value=$i.duration}{niceTime in=$_duration}
+                            </td>
                             <td {include file="playlist/actionhandler.tpl"}>{$i.creator}</td>
-                            <td {include file="playlist/actionhandler.tpl"}>{$i.type|lower|capitalize}</td>
+                            <td {include file="playlist/actionhandler.tpl"}>
+                                <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} />
+                            </td>
                             <td style="border: 0">
-                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.gif" alt="##move up##" vspace=1 hspace=1/></a>
+                                <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.gif"    alt="##move up##" vspace=1 hspace=1/></a>
                                 <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos+1}')"><img src="img/bt_bottom_xsm.gif" alt="##move down##" vspace=1 hspace=1/></a>
                             </td>
                         </tr>
@@ -75,4 +79,4 @@
 
         <!-- end playlist editor -->
 
-
+{assign var="_duration"    value=null}

@@ -54,7 +54,7 @@
                     <p>{$i.start|truncate:5:""} - {$i.end|truncate:5:""}</p>
                     <p>{$i.creator}</p>
                     </div>
-                    <div style="background-color: #FF6F1F; height: 3px" onClick="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={getHour time=$i.end}&minute={getMinute time=$i.end}&second={getSecond time=$i.end}', 'SCHEDULER.addItem')"></div>
+                    {* <div style="background-color: #FF6F1F; height: 3px" onClick="return contextmenu('year={$_day.year}&month={$_day.month}&day={$_day.day}&hour={getHour time=$i.end}&minute={getMinute time=$i.end}&second={getSecond time=$i.end}', 'SCHEDULER.addItem')"></div> *}
                 {/foreach}
                 </td>
             {else}

@@ -3,15 +3,19 @@
 
 function collector_submit(formname, action)
 {
-    var href = '{/literal}{$UI_HANDLER}{literal}?act='+action;
+    var href = '';
     var n;
 
     for (n=0; n < (document.forms[formname].elements.length); n++) {
-        if (document.forms[formname].elements[n].checked && document.forms[formname].elements[n].name!='all') {
+        if (document.forms[formname].elements[n].checked && document.forms[formname].elements[n].name != 'all') {
             href = href + '&id[]=' + document.forms[formname].elements[n].name;
         }
     }
-    hpopup(href);
+
+    if (href == '')
+        return false;
+
+    hpopup({/literal}'{$UI_HANDLER}{literal}?act=' + action + href);
 }
 
 function collector_switchAll(formname)

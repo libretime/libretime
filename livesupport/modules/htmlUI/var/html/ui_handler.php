@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__).'/../ui_handler_init.php';
-
+     
 switch($_REQUEST['act']){
 
     case "login":
@@ -90,8 +90,8 @@ switch($_REQUEST['act']){
         $uiHandler->SUBJECTS->removeSubj($_REQUEST);
     break;
 
-    case "SUBJECTS.addSubj2Group":
-        $uiHandler->SUBJECTS->addSubj2Group($_REQUEST);
+    case "SUBJECTS.addSubj2Gr":
+        $uiHandler->SUBJECTS->addSubj2Gr($_REQUEST);
     break;
 
     case "SUBJECTS.removeSubjFromGr":

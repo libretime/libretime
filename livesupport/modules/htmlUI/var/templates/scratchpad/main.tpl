@@ -14,7 +14,7 @@
                     <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SP')"></td>
                     <td style="width: 95px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Title##</a></td>
                     <td style="width: 69px"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Duration##</td>
-                    <td style="width: 41px; border: 0"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Type##</td>
+                    <td style="width: 41px; border: 0; text-align: center"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SP.reOrder&by=title', 'order');" id="blue_head">##Type##</td>
                 </tr>
             <!-- end table header -->
 
@@ -41,8 +41,10 @@
                             {$i.title|truncate:12:'...':true}
                         {/if}                                         {* on some reason object call doesn´t like usage of array *}
                     </td>                                             {assign var="_duration" value=$i.duration}
-                    <td {include file="scratchpad/actionhandler.tpl"}>{niceTime in=$_duration}</td>
-                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0"><img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" /></td>
+                    <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right">{niceTime in=$_duration}</td>
+                    <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center">
+                        <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} />
+                    </td>
                 </tr>
                 <!-- end item -->
         {/foreach}
@@ -66,8 +68,8 @@
             </select>
             <script type="text/javascript">
                 document.forms['SP'].elements['SP_multiaction'].options[0].selected = true;
-                //document.forms['SP'].elements['all'].checked = false;
-                //collector_switchAll('SP');
+                document.forms['SP'].elements['all'].checked = false;
+                collector_switchAll('SP');
             </script>
             <a href="#" onClick="collector_clearAll('SP', 'SP.removeItem')" id="blue_head">##Clear##</a>
         </div>
@@ -76,4 +78,5 @@
 </form>
 <!-- end scratch pad -->
 
-{assign var="_PL_activeId" value=NULL}
+{assign var="_PL_activeId" value=null}
+{assign var="_duration"    value=null}
