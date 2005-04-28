@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/UniqueId.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,8 @@
 
 #include <cstdlib>
 
+#include "LiveSupport/Core/Uuid.h"
+#include "LiveSupport/Core/Md5.h"
 #include "LiveSupport/Core/UniqueId.h"
 
 
@@ -57,10 +59,12 @@ using namespace LiveSupport::Core;
 Ptr<UniqueId>::Ref
 UniqueId :: generateId(void)                        throw ()
 {
-    // TODO: implement this properly, e.g. use a GUID pattern
-    //       one example is the algorithm found in xdoclet for GUID
-
-    Ptr<UniqueId>::Ref  id(new UniqueId(rand()));
+    Ptr<Uuid>::Ref      uuid = Uuid::generateId();
+    // as uuid is 128 bits, but we have only 64 bits, create an md5 hash
+    // (which is still 128 bits), and use its values to create a 64 value
+    // hopefully this is unique enough
+    Md5                 md5((std::string)*uuid);
+    Ptr<UniqueId>::Ref  id(new UniqueId(md5.high64bits() + md5.low64bits()));
 
     return id;
 }

@@ -72,8 +72,8 @@ documentation and/or software.
 
   ------------------------------------------------------------------------------
 
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Md5.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,6 +108,7 @@ Md5::Md5(const std::string &s)                  throw(std::invalid_argument)
   init();
   update (s);
   finalize();
+  calcNumericRepresentation();
 }
 
 
@@ -119,6 +120,7 @@ Md5::Md5(std::istream& stream)                  throw(std::invalid_argument)
   init();
   update (stream);
   finalize();
+  calcNumericRepresentation();
 }
 
 
@@ -130,6 +132,7 @@ Md5::Md5(FILE *file)                            throw(std::invalid_argument)
   init();
   update(file);
   finalize ();
+  calcNumericRepresentation();
 }
 
 
@@ -146,6 +149,32 @@ std::string Md5::hexDigest()                    throw()
     }
     
     return strStr.str();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Calculate the numeric representation of the checksum
+ *----------------------------------------------------------------------------*/
+void
+Md5 :: calcNumericRepresentation(void)                  throw ()
+{
+    low64  = (uint64_t) digest[15];
+    low64 |= ((uint64_t) digest[14]) << 8;
+    low64 |= ((uint64_t) digest[13]) << 16;
+    low64 |= ((uint64_t) digest[12]) << 24;
+    low64 |= ((uint64_t) digest[11]) << 32;
+    low64 |= ((uint64_t) digest[10]) << 40;
+    low64 |= ((uint64_t) digest[9])  << 48;
+    low64 |= ((uint64_t) digest[8])  << 56;
+
+    high64  = (uint64_t) digest[7];
+    high64 |= ((uint64_t) digest[6]) << 8;
+    high64 |= ((uint64_t) digest[5]) << 16;
+    high64 |= ((uint64_t) digest[4]) << 24;
+    high64 |= ((uint64_t) digest[3]) << 32;
+    high64 |= ((uint64_t) digest[2]) << 40;
+    high64 |= ((uint64_t) digest[1]) << 48;
+    high64 |= ((uint64_t) digest[0]) << 56;
 }
 
 
@@ -558,4 +587,7 @@ inline void Md5::II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x,
  a += I(b, c, d) + x + ac;
  a = rotate_left (a, s) +b;
 }
+
+
+
 

@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Md5Test.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/UuidTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -43,8 +43,8 @@
 #include <string>
 #include <iostream>
 
-#include "LiveSupport/Core/Md5.h"
-#include "Md5Test.h"
+#include "LiveSupport/Core/Uuid.h"
+#include "UuidTest.h"
 
 
 using namespace std;
@@ -55,7 +55,7 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(Md5Test);
+CPPUNIT_TEST_SUITE_REGISTRATION(UuidTest);
 
 
 /* ===============================================  local function prototypes */
@@ -67,7 +67,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(Md5Test);
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-Md5Test :: setUp(void)                         throw ()
+UuidTest :: setUp(void)                         throw ()
 {
 }
 
@@ -76,44 +76,24 @@ Md5Test :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-Md5Test :: tearDown(void)                      throw ()
+UuidTest :: tearDown(void)                      throw ()
 {
 }
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if we can construct some simple md5 sums
+ *  Test to see if the singleton Hello object is accessible
  *----------------------------------------------------------------------------*/
 void
-Md5Test :: firstTest(void)
+UuidTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    // test the construction from string
-    Md5     emptyString("");
-    CPPUNIT_ASSERT(emptyString.hexDigest() 
-                   == "d41d8cd98f00b204e9800998ecf8427e");
+    Ptr<Uuid>::Ref  id1;
+    Ptr<Uuid>::Ref  id2;
 
-    Md5     someString("Some other random string.");
-    CPPUNIT_ASSERT(someString.hexDigest() 
-                   == "9007a3599f5d3ae2ac11a29308f964eb");
+    id1 = Uuid::generateId();
+    id2 = Uuid::generateId();
 
-    std::string s = someString;
-    CPPUNIT_ASSERT(s == "9007a3599f5d3ae2ac11a29308f964eb");
-    CPPUNIT_ASSERT(someString.low64bits() == 0xac11a29308f964ebLL);
-    CPPUNIT_ASSERT(someString.high64bits() == 0x9007a3599f5d3ae2LL);
-
-    // test the construction from a FILE*
-    FILE    *f = fopen("src/Md5Test.h", "r");
-    Md5     testFile(f);
-    CPPUNIT_ASSERT(testFile.hexDigest()
-                   == "f60ee2049d9ed598ad35ee24f98de1f6");
-    fclose(f);
-
-    // test the construction from an istream
-    std::ifstream   ifs("src/Md5Test.h");
-    Md5             testFileStream(ifs);
-    CPPUNIT_ASSERT(testFileStream.hexDigest()
-                   == "f60ee2049d9ed598ad35ee24f98de1f6");
-    ifs.close();
+    CPPUNIT_ASSERT(*id1 != *id2);
 }
 

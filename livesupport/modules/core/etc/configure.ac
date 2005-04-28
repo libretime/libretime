@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.10 $
+dnl Version  : $Revision: 1.11 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,14 +35,20 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(Core, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.10 $)
+AC_REVISION($Revision: 1.11 $)
 
 AC_CONFIG_SRCDIR(../src/UniqueId.cxx)
 
 AC_CONFIG_HEADERS(configure.h)
 AC_PROG_CXX()
 
-AC_CHECK_HEADERS(getopt.h sys/time.h time.h sys/types.h pwd.h errno.h)
+AC_CHECK_TYPES([uint64_t, uint32_t, uint16_t, uint8_t],
+                HAVE_INTEGRAL_TYPES="yes", HAVE_INTEGRAL_TYPES="no")
+if test "x${HAVE_INTEGRAL_TYPES}" = "xno" ; then
+    AC_MSG_ERROR([a required integral type is not available])
+fi
+
+AC_CHECK_HEADERS(getopt.h sys/time.h time.h sys/types.h pwd.h errno.h stdint.h)
 
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.6.0])
 AC_SUBST(LIBXMLPP_CFLAGS)

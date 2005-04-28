@@ -72,8 +72,8 @@ documentation and/or software.
 
   ------------------------------------------------------------------------------
 
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Md5.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,6 +86,17 @@ documentation and/or software.
 
 
 /* ============================================================ include files */
+
+#ifdef HAVE_CONFIG_H
+#include "configure.h"
+#endif
+
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#else
+#error need stdint.h
+#endif
+
 
 #include <stdio.h>
 #include <sstream>
@@ -118,8 +129,8 @@ namespace Core {
  *  on the basis of the original C code by RSA Data Security, Inc.  See the
  *  header of the source file for further information.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.2 $
  */
 class Md5
 {
@@ -143,6 +154,16 @@ class Md5
       uint1 buffer[64];   // input buffer
       uint1 digest[16];
       uint1 finalized;
+
+      /**
+       *  The low 64 bits of the checksum.
+       */
+      uint64_t      low64;
+
+      /**
+       *  The high 64 bits of the checksum.
+       */
+      uint64_t      high64;
     
     // last, the private methods, mostly static:
       void init             ();               // called by all constructors
@@ -167,6 +188,13 @@ class Md5
     			    uint4 s, uint4 ac);
       static inline void   II  (uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
     			    uint4 s, uint4 ac);
+
+      /**
+       *  Calculate the lower and higher 64 bit values for the checksum
+       */
+      void
+      calcNumericRepresentation(void)                           throw ();
+
 
     public:
 
@@ -199,6 +227,27 @@ class Md5
      */
       operator std::string  ()                  throw();
 
+    /**
+     *  Return the lower 64 bits of the checksum.
+     *
+     *  @return the lower 64 bits of the checksum.
+     */
+    uint64_t
+    low64bits(void) const                       throw ()
+    {
+        return low64;
+    }
+
+    /**
+     *  Return the higher 64 bits of the checksum.
+     *
+     *  @return the higher 64 bits of the checksum.
+     */
+    uint64_t
+    high64bits(void) const                      throw ()
+    {
+        return high64;
+    }
 };
 
 
