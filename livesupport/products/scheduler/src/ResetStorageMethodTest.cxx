@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ResetStorageMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ ResetStorageMethodTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcClient.execute("displayPlaylist", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("playlist"));
-    
+/*    
     parameters.clear();
     parameters["sessionId"]     = sessionId;
     parameters["playlistId"]    = "0000000000000001";
@@ -118,7 +118,7 @@ ResetStorageMethodTest :: firstTest(void)
     CPPUNIT_ASSERT(xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("faultCode"));
     CPPUNIT_ASSERT(int(result["faultCode"]) == 1003);
-    
+*/    
     result.clear();
     CPPUNIT_ASSERT(xmlRpcClient.execute("resetStorage", parameters, result));
     CPPUNIT_ASSERT(!xmlRpcClient.isFault());

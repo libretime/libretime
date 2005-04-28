@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -356,7 +356,7 @@ WebStorageClientTest :: playlistTest(void)
     }
     CPPUNIT_ASSERT(!newPlaylist->getUri());
 
-
+/*
     // test deletePlaylist()
     try {
         wsc->deletePlaylist(sessionId, playlistIdxx);
@@ -370,6 +370,7 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
+*/
 }
 
 
@@ -418,7 +419,7 @@ WebStorageClientTest :: audioClipTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-
+/*
     try {
         wsc->deleteAudioClip(sessionId, id01);
     } catch (XmlRpcException &e) {
@@ -431,7 +432,7 @@ WebStorageClientTest :: audioClipTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!exists);
-
+*/
     Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
     try {
         exists = wsc->existsAudioClip(sessionId, id77);
