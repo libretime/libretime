@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.47 $
+    Version  : $Revision: 1.48 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.47 $
+ *  @version $Revision: 1.48 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1335,13 +1335,13 @@ class BasicStor extends Alib{
         $this->deleteData();
         $this->testData();
         if($this->config['useTrash']){
-            $trash = "{$this->config['TrashName']}\n        ";
+            $trash = "\n        {$this->config['TrashName']}";
         }else{
             $trash = "";
         }
         if(!$this->config['isArchive']){
             $this->test_correct = "    StorageRoot
-        {$trash}root
+        root
         test1
             file1.mp3
             public
@@ -1356,11 +1356,11 @@ class BasicStor extends Alib{
         test3
             public
         test4
-            public
+            public{$trash}
 ";
         }else{
             $this->test_correct = "    StorageRoot
-        {$trash}root
+        root
         test1
             file1.mp3
             test1_folder1
@@ -1371,7 +1371,7 @@ class BasicStor extends Alib{
         test2
             test2_folder1
         test3
-        test4
+        test4{$trash}
 ";
         }
         $this->test_dump = $this->dumpTree($this->storId, '    ', '    ', '{name}');

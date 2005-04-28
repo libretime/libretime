@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,7 @@ $config = array(
     'authCookieName'=> 'lssid',
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
-    'TrashName'     => '.trash',
+    'TrashName'     => 'trash_',
     'storageDir'    =>  dirname(__FILE__).'/../../storageServer/var/stor',
     'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
