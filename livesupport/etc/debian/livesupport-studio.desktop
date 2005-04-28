@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+
+Name=LiveSupport-Studio
+GenericName=LiveSupport Studio GUI Client
+Comment=
+Icon=/opt/livesupport/var/livesupport.png
+
+Type=Application
+Categories=Application;AudioVideo;Audio;
+
+Exec=/opt/livesupport/bin/gLiveSupport.sh
+Terminal=false
+

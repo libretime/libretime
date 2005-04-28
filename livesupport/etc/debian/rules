@@ -111,8 +111,13 @@ install-arch:
 		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/widgets \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/var/gLiveSupport*.res \
+		  $(CURDIR)/debian/livesupport.png \
 		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/var
-
+    mkdir -p $(CURDIR)/debian/livesupport-studio/usr/share/applications
+    cp -a $(CURDIR)debian/livesupport-studio.desktop \
+		  $(CURDIR)/debian/livesupport-studio/usr/share/applications/
+    dh_desktop -plivesupport-studio    
+    dh_installmenu 
 
 	dh_install -s
 
