@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/UniqueId.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,11 +60,19 @@ Ptr<UniqueId>::Ref
 UniqueId :: generateId(void)                        throw ()
 {
     Ptr<Uuid>::Ref      uuid = Uuid::generateId();
-    // as uuid is 128 bits, but we have only 64 bits, create an md5 hash
-    // (which is still 128 bits), and use its values to create a 64 value
+    // as uuid is 128 bits, but we have only 63 bits, create an md5 hash
+    // (which is still 128 bits), and use its values to create a 63 value
     // hopefully this is unique enough
     Md5                 md5((std::string)*uuid);
-    Ptr<UniqueId>::Ref  id(new UniqueId(md5.high64bits() + md5.low64bits()));
+    uint64_t            idValue;
+
+    idValue  = md5.high64bits();
+    idValue += md5.low64bits();
+    // make sure it's 63 bits only, so that signed 64 bit containers can
+    // also accept it
+    idValue &= 0x7fffffffffffffffLL;
+
+    Ptr<UniqueId>::Ref  id(new UniqueId(idValue));
 
     return id;
 }
