@@ -172,6 +172,7 @@ hu:table
         allStringForBrowse                { "--- minden ---" }
         
         addToScratchpadMenuItem:string    { "_Hasznos csuporba betenni" }
+        addToLiveModeMenuItem:string      { "Élő _adásba" }
     }
 
     liveModeWindow:table

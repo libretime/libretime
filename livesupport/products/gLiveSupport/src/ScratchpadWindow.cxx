@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,9 +118,9 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Add the TreeView's view columns:
     try {
         treeView->appendColumn(*getResourceUstring("typeColumnLabel"),
-                               modelColumns.typeColumn);
+                               modelColumns.typeColumn, 60);
         treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn);
+                               modelColumns.titleColumn, 200);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
