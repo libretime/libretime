@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class ScratchpadWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -279,6 +279,13 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
          */
         virtual void
         onPlayItem(void)                                        throw ();
+
+        /**
+         *  Signal handler for the "add to live mode" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onAddToLiveMode(void)                                   throw ();
 
         /**
          *  Delete an item from the storage and remove it from the Scratchpad.

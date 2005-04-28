@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ class WhiteWindow;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -114,7 +114,8 @@ class WidgetFactory :
          */
         typedef enum { resizeImage,
                        scratchpadWindowTitleImage,
-                       searchWindowTitleImage }
+                       searchWindowTitleImage,
+                       liveModeWindowTitleImage }
                                                     ImageType;
 
 

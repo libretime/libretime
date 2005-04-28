@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.23 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,10 +62,9 @@ using namespace LiveSupport::GLiveSupport;
 MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                         Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-                        : LocalizedObject(bundle)
+                        : LocalizedObject(bundle),
+                          gLiveSupport(gLiveSupport)
 {
-    this->gLiveSupport = gLiveSupport;
-
     Ptr<WidgetFactory>::Ref widgetFactory = WidgetFactory::getInstance();
 
     // TODO: remove hard-coded station logo path reference
@@ -118,6 +117,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     bottomBar->attach(*userInfoAlignment,  1, 2, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
+    
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
     set_border_width(10);
@@ -156,6 +156,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     set_decorated(false);
 
     // set the localized resources
+    liveModeButton           = 0;
     uploadFileButton         = 0;
     scratchpadButton         = 0;
     simplePlaylistMgmtButton = 0;
@@ -190,6 +191,9 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
 {
     setBundle(bundle);
 
+    if (liveModeButton) {
+        buttonBar->remove(*liveModeButton);
+    }
     if (uploadFileButton) {
         buttonBar->remove(*uploadFileButton);
     }
@@ -211,6 +215,8 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
 
         Ptr<WidgetFactory>::Ref wf = WidgetFactory::getInstance();
 
+        liveModeButton = Gtk::manage(wf->createButton(
+                                *getResourceUstring("liveModeButtonLabel")));
         uploadFileButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("uploadFileButtonLabel")));
         scratchpadButton = Gtk::manage(wf->createButton(
@@ -229,23 +235,28 @@ MasterPanelWindow :: changeLanguage(Ptr<ResourceBundle>::Ref    bundle)
     userInfoWidget->changeLanguage(bundle);
 
     // re-attach the localized widgets to the layout
-    buttonBar->attach(*uploadFileButton,           0, 1, 0, 1,
+    buttonBar->attach(*liveModeButton,             0, 1, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
-    buttonBar->attach(*scratchpadButton,           1, 2, 0, 1,
+    buttonBar->attach(*uploadFileButton,           1, 2, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
-    buttonBar->attach(*simplePlaylistMgmtButton,   2, 3, 0, 1,
+    buttonBar->attach(*scratchpadButton,           2, 3, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
-    buttonBar->attach(*schedulerButton,            3, 4, 0, 1,
+    buttonBar->attach(*simplePlaylistMgmtButton,   3, 4, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
-    buttonBar->attach(*searchButton,               4, 5, 0, 1,
+    buttonBar->attach(*schedulerButton,            4, 5, 0, 1,
+                      Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
+                      5, 0);
+    buttonBar->attach(*searchButton,               5, 6, 0, 1,
                       Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                       5, 0);
 
     // re-bind events to the buttons
+    liveModeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &MasterPanelWindow::onLiveModeButtonClicked));
     uploadFileButton->signal_clicked().connect(sigc::mem_fun(*this,
                             &MasterPanelWindow::onUploadFileButtonClicked));
     scratchpadButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -313,6 +324,32 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
     }
 
     return true;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The event when the Live Mode button has been clicked.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: onLiveModeButtonClicked(void)                  throw ()
+{
+    if (!liveModeWindow.get()) {
+        Ptr<ResourceBundle>::Ref    bundle;
+        try {
+            bundle       = getBundle("liveModeWindow");
+        } catch (std::invalid_argument &e) {
+            std::cerr << e.what() << std::endl;
+            return;
+        }
+
+        liveModeWindow.reset(new LiveModeWindow(gLiveSupport, bundle));
+    }
+
+    if (!liveModeWindow->is_visible()) {
+        liveModeWindow->show();
+    }
+
+    liveModeWindow->showContents();
 }
 
 
@@ -453,6 +490,10 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
     schedulerButton->hide();
     searchButton->hide();
     
+    if (liveModeWindow.get()) {
+        liveModeWindow->hide();
+        liveModeWindow.reset();
+    }
     if (uploadFileWindow.get()) {
         uploadFileWindow->hide();
         uploadFileWindow.reset();

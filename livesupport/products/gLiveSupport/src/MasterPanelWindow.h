@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 
 #include "GLiveSupport.h"
 #include "MasterPanelUserInfoWidget.h"
+#include "LiveModeWindow.h"
 #include "UploadFileWindow.h"
 #include "ScratchpadWindow.h"
 #include "SimplePlaylistManagementWindow.h"
@@ -90,7 +91,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -182,6 +183,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         Gtk::Table                * buttonBar;
 
         /**
+         *  The button to invoke the live mode window.
+         */
+        Button                    * liveModeButton;
+
+        /**
          *  The button to invoke the upload file window.
          */
         Button                    * uploadFileButton;
@@ -210,6 +216,11 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  The gLiveSupport object, handling the logic of the application.
          */
         Ptr<GLiveSupport>::Ref      gLiveSupport;
+
+        /**
+         *  The one and only Live Mode window.
+         */
+        Ptr<LiveModeWindow>::Ref    liveModeWindow;
 
         /**
          *  The one and only Upload File window.
@@ -269,6 +280,13 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         virtual void
         onUploadFileButtonClicked(void)                     throw ();
+
+        /**
+         *  Function to catch the event of the live mode button being
+         *  pressed.
+         */
+        virtual void
+        onLiveModeButtonClicked(void)                       throw ();
 
         /**
          *  Function to catch the event of the Scratchpad button being
@@ -341,6 +359,16 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         showLoggedInUI(void)                                    throw ();
+
+        /**
+         *  Update the Live Mode window.
+         */
+        void
+        updateLiveModeWindow(void)                              throw ()
+        {
+            // this will create, open and display the window.
+            onLiveModeButtonClicked();
+        }
 
         /**
          *  Update the Scratchpad window.

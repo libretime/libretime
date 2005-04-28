@@ -5,9 +5,10 @@ hu:table
     loggedInMsg:string       { "Bejelentkezve {0} felhasználóként" }
     loginButtonLabel:string  { "bejelentkezés" }
     logoutButtonLabel:string { "kijelentkezés" }
-    uploadFileButtonLabel:string            { "file feltöltés" }
+    liveModeButtonLabel:string              { "élő adás" }
+    uploadFileButtonLabel:string            { "filefeltöltés" }
     scratchpadButtonLabel:string            { "praktikus csupor" }
-    simplePlaylistMgmtButtonLabel:string    { "egyszerű playlist kezelés" }
+    simplePlaylistMgmtButtonLabel:string    { "playlistkezelés" }
     schedulerButtonLabel:string             { "időzítő" }
     searchButtonLabel:string                { "keresés" }
 
@@ -54,6 +55,7 @@ hu:table
         schedulePlaylistMenuItem:string { "_Playlist időzítése" }
         deleteMenuItem:string           { "_Töröl" }
         playMenuItem:string             { "Le_játszâs" }
+        addToLiveModeMenuItem:string    { "Élő _adásba" }
     }
 
     playlistListWindow:table
@@ -170,6 +172,15 @@ hu:table
         allStringForBrowse                { "--- minden ---" }
         
         addToScratchpadMenuItem:string    { "_Hasznos csuporba betenni" }
+    }
+
+    liveModeWindow:table
+    {
+        windowTitle:string            { "LiveSupport Élő adás ablak" }
+        
+        titleColumnLabel:string       { "Cím" }
+        creatorColumnLabel:string     { "Előadó" }
+        lengthColumnLabel:string      { "Hossz" }
     }
 }
 

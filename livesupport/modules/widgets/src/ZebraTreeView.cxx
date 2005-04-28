@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,8 @@ ZebraTreeView :: ~ZebraTreeView(void)                           throw ()
 int 
 ZebraTreeView :: appendColumn(
                     const Glib::ustring&                        title, 
-                    const Gtk::TreeModelColumn<Glib::ustring>&  modelColumn)
+                    const Gtk::TreeModelColumn<Glib::ustring>&  modelColumn,
+                    int                                         minimumWidth)
                                                                 throw ()
 {
     // a standard cell renderer; can be replaced with a ZebraCellRenderer
@@ -97,6 +98,11 @@ ZebraTreeView :: appendColumn(
     viewColumn->set_cell_data_func(
                     *renderer,
                     sigc::mem_fun(*this, &ZebraTreeView::cellDataFunction) );
+    
+    // set the minimum width of the column
+    if (minimumWidth) {
+        viewColumn->set_min_width(minimumWidth);
+    }
     
     return append_column(*viewColumn);
 }

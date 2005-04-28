@@ -5,9 +5,10 @@ root:table
     loggedInMsg:string       { "Logged in as {0}" }
     loginButtonLabel:string  { "log in" }
     logoutButtonLabel:string { "log out" }
+    liveModeButtonLabel:string              { "live mode" }
     uploadFileButtonLabel:string            { "upload file" }
     scratchpadButtonLabel:string            { "scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "simple playlist management" }
+    simplePlaylistMgmtButtonLabel:string    { "edit playlist" }
     schedulerButtonLabel:string             { "scheduler" }
     searchButtonLabel:string                { "search" }
 
@@ -55,6 +56,7 @@ root:table
         schedulePlaylistMenuItem:string { "_Schedule Playlist" }
         deleteMenuItem:string           { "_Delete" }
         playMenuItem:string             { "_Play" }
+        addToLiveModeMenuItem:string    { "Add To _Live Mode" }
     }
 
     playlistListWindow:table
@@ -172,6 +174,15 @@ root:table
         allStringForBrowse                { "--- all ---" }
         
         addToScratchpadMenuItem:string    { "_Add To Scratchpad" }
+    }
+
+    liveModeWindow:table
+    {
+        windowTitle:string            { "LiveSupport Live Mode Window" }
+        
+        titleColumnLabel:string       { "Title" }
+        creatorColumnLabel:string     { "Creator" }
+        lengthColumnLabel:string      { "Length" }
     }
 }
 

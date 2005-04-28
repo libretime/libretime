@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -216,6 +216,12 @@ static const std::string    scratchpadWindowTitleImageName
  */
 static const std::string    searchWindowTitleImageName 
                             = "titleImages/searchWindowTitle.png";
+
+/**
+ *  The name of the image for the title of the live mode window.
+ */
+static const std::string    liveModeWindowTitleImageName 
+                            = "titleImages/liveModeWindowTitle.png";
 
 
 /* ===============================================  local function prototypes */
@@ -435,6 +441,10 @@ WidgetFactory :: createImage(ImageType  imageName)              throw ()
 
         case searchWindowTitleImage:
             rawImage = loadImage(searchWindowTitleImageName);
+            break;
+
+        case liveModeWindowTitleImage:
+            rawImage = loadImage(liveModeWindowTitleImageName);
             break;
 
         default:

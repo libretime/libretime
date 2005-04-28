@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -529,6 +529,19 @@ GLiveSupport :: addToScratchPad(Ptr<Playable>::Ref  playable)
 {
     scratchpadContents->push_front(playable);
     masterPanel->updateScratchpadWindow();   
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a file to the Live Mode, and update it.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
+                                                            throw ()
+{
+    liveModeContents->push_back(playable);
+    masterPanel->updateLiveModeWindow();   
 }
 
 

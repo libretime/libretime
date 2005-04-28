@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Core;
  *  3) connected with a TreeModelColumn using set_renderer(). 
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class ZebraTreeView : public Gtk::TreeView
 {
@@ -133,11 +133,14 @@ class ZebraTreeView : public Gtk::TreeView
          *
          *  @param title    the title of the column
          *  @param modelColumn  the model column this view will display
+         *  @param minimumWidth the minimum width of the column, in pixels
+         *                      (optional)
          *  @return the number of columns after adding this one
          */
         int 
         appendColumn(const Glib::ustring&                       title, 
-                     const Gtk::TreeModelColumn<Glib::ustring>& modelColumn)
+                     const Gtk::TreeModelColumn<Glib::ustring>& modelColumn,
+                     int   minimumWidth = 0)
                                                                 throw ();
 };
 
