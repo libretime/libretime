@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/MetadataTypeContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -195,69 +195,6 @@ MetadataTypeContainerTest :: firstTest(void)
         gotException = true;
     }
     CPPUNIT_ASSERT(gotException);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Test the MetadataType class
- *----------------------------------------------------------------------------*/
-void
-MetadataTypeContainerTest :: metadataTypeTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    Ptr<MetadataTypeContainer>::Ref     container;
-
-    // create a container
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        container.reset(new MetadataTypeContainer(bundle));
-        container->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(std::string("semantic error in configuration file:\n")
-                   + e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(std::string("XML error in configuration file:\n")
-                   + e.what());
-    }
-
-    Ptr<MetadataType>::Ref      metadataType;
-
-    // first check the trivial constructor
-    metadataType.reset(new MetadataType(container,
-                                        "dc:creator",
-                                        "TPE2",
-                                        "dc_creator"));
-
-    CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:creator");
-    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE2");
-    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "dc_creator");
-    metadataType.reset();
-
-    // test configuration from a configuration file
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                       new xmlpp::DomParser(metadataTypeConfigFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        metadataType.reset(new MetadataType(container));
-        metadataType->configure(*root);
-
-        CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:creator");
-        CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE2");
-        CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "dc_creator");
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(std::string("semantic error in configuration file:\n")
-                   + e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(std::string("XML error in configuration file:\n")
-                   + e.what());
-    }
 }
 
 

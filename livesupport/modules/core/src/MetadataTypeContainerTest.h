@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/MetadataTypeContainerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,14 +58,13 @@ namespace Core {
  *  Unit test for the MetadataTypeContainer class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see MetadataTypeContainer
  */
 class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(MetadataTypeContainerTest);
     CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(metadataTypeTest);
     CPPUNIT_TEST(iteratorTest);
     CPPUNIT_TEST(localizedTest);
     CPPUNIT_TEST_SUITE_END();
@@ -84,14 +83,6 @@ class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
-
-        /**
-         *  Test the MetadataType class (which needs a container as well)
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        metadataTypeTest(void)                  throw (CPPUNIT_NS::Exception);
 
         /**
          *  Testing the iterators available from the container.

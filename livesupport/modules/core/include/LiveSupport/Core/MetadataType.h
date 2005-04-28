@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/MetadataType.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,11 +85,13 @@ class MetadataTypeContainer;
  *
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see MetadataTypeContainer
  */
 class MetadataType : public Configurable
 {
+    friend class MetadataTypeContainer;
+
     private:
         /**
          *  The name of the configuration XML element used by MetadataType.
@@ -117,7 +119,7 @@ class MetadataType : public Configurable
         Ptr<Glib::ustring>::Ref     localizationKey;
 
 
-    public:
+    protected:
         /**
          *  Default constructor.
          *
@@ -141,15 +143,6 @@ class MetadataType : public Configurable
                      Glib::ustring                      localizationKey)
                                                                     throw ();
 
-
-        /**
-         *  A virtual destructor, as this class has virtual functions.
-         */
-        virtual
-        ~MetadataType(void)                                     throw ()
-        {
-        }
-
         /**
          *  Return the name of the XML element this object expects
          *  to be sent to a call to configure().
@@ -172,6 +165,16 @@ class MetadataType : public Configurable
         virtual void
         configure(const xmlpp::Element &element)
                                                 throw (std::invalid_argument);
+
+
+    public:
+        /**
+         *  A virtual destructor, as this class has virtual functions.
+         */
+        virtual
+        ~MetadataType(void)                                     throw ()
+        {
+        }
 
         /**
          *  Return the Dublic Core name of the metadata type.
