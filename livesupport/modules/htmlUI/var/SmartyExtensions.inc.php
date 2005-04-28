@@ -1,4 +1,4 @@
-<?php        
+<?php
 $Smarty->register_object('UIBROWSER',  $uiBrowser);
 $Smarty->register_object('BROWSE',     $uiBrowser->BROWSE);
 $Smarty->register_object('SEARCH',     $uiBrowser->SEARCH);
@@ -118,7 +118,7 @@ function S_niceTime($param)
     $in = str_replace('&nbsp;', '', $in);
 
     if (preg_match('/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/', $in))    list($h, $i, $s) = explode(':', $in);
-    elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))           list($i, $s) = explode(':', $in);
+    elseif (preg_match('/^[0-9]{1,2}:[0-9]{1,2}$/', $in))           list($i, $s)     = explode(':', $in);
     else                                                            $s = $in;
 
     if ($all || $h > 0) $H = sprintf('%02d', $h).':';

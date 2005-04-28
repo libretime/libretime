@@ -70,7 +70,8 @@ define('UI_BROWSE_DEFAULT_KEY_3',       'dc:source');
 define('UI_BROWSE_DEFAULT_LIMIT',       10);
 
 ## Scheduler / Calendar
-define('UI_SCHEDULER_FIRSTWEEKDAY', 1);
+define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
+define('UI_SCHEDULER_PAUSE_PL2PL',      '5 seconds');
 
 
 

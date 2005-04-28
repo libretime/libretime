@@ -100,35 +100,49 @@ class uiScheduler extends uiCalendar
         if (is_numeric($second))        $this->scheduleAt['second']  = sprintf('%02d', $second);
 
         $week = $this->getWeekEntrys();
-        ## search for next entry
-        if (count($week[$this->scheduleAt['day']]) >= 1) {
-            foreach ($week[$this->scheduleAt['day']] as $entry) {
-                if (strtotime($entry[0]['start']) >=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
-                    list($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['start'])-1));
-                    break;
-                }
-            }
-        } else {
-        ## start at midnight
-            $this->scheduleNext['hour']     = 0;
-            $this->scheduleNext['minute']   = 0;
-            $this->scheduleNext['second']   = 0;
-        }
 
-        reset ($week);
         ## search for previous entry
         if (count($week[$this->scheduleAt['day']]) >= 1) {
             foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
                 if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
-                    list($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) = explode(':', strftime('%H:%M:%S', strtotime($entry[0]['end'])+1));
+                    $prev = TRUE;
+                    list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second'])
+                        = explode (':', strftime('%H:%M:%S', strtotime('+'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry[0]['end'])))
+                    );
                     break;
                 }
             }
-        } else {
+        }
+        if ($prev !== TRUE) {
         ## start at midnight
             $this->schedulePrev['hour']     = 0;
             $this->schedulePrev['minute']   = 0;
             $this->schedulePrev['second']   = 0;
+        }
+
+        reset ($week);
+
+        ## search for next entry
+        if (count($week[$this->scheduleAt['day']]) >= 1) {
+            foreach ($week[$this->scheduleAt['day']] as $entry) {
+                if (strtotime($entry[0]['start']) >=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
+                    $next = TRUE;
+                    list ($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second'])
+                        = explode (':', strftime('%H:%M:%S', strtotime('-'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry[0]['start']))));
+                    break;
+                }
+            }
+        }
+        if ($next !== TRUE) {
+        ## end at midnight
+            $thisDay = $this->scheduleAt['year']."-".$this->scheduleAt['month']."-".$this->scheduleAt['day'];
+            $nextDayStamp = strtotime('+1 day', $thisDay);
+            $this->scheduleNext['year']     = strftime('%Y', $nextDayStamp);
+            $this->scheduleNext['month']    = strftime('%m', $nextDayStamp);;
+            $this->scheduleNext['day']      = strftime('%d', $nextDayStamp);
+            $this->scheduleNext['hour']     = 0;
+            $this->scheduleNext['minute']   = 0;
+            $this->scheduleNext['second']   = 0;
         }
 
         #print_r($this->schedulePrev);
@@ -141,9 +155,9 @@ class uiScheduler extends uiCalendar
     {
         ## build array within all entrys of current week ##
         $this->buildWeek();
-        $weekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
-        $weekEnd   = strftime("%Y%m%d", $this->Week[6]['timestamp']);
-        $arr = $this->displayScheduleMethod($weekStart.'T00:00:00', $weekEnd.'T23:59:59.999999');
+        $thisWeekStart = strftime("%Y%m%d", $this->Week[0]['timestamp']);
+        $nextWeekStart = strftime("%Y%m%d", $this->Week[6]['timestamp'] + 86400);
+        $arr = $this->displayScheduleMethod($thisWeekStart.'T00:00:00', $nextWeekStart.'T00:00:00');
         #print_r($arr);
 
         if (!count($arr))
@@ -154,7 +168,7 @@ class uiScheduler extends uiCalendar
                 'id'        => $this->Base->gb->_idFromGunid($val['playlistId']),
                 'scheduleid'=> $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
-                'end'       => substr($val['end'],   strpos($val['end'], 'T') + 1),
+                'end'       => substr($val['end'],   strpos($val['end'], 'T')+1),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
                 'type'      => 'Playlist'
@@ -170,8 +184,9 @@ class uiScheduler extends uiCalendar
     {
         ## build array within all entrys of current day ##
         $this->buildDay();
-        $day = strftime("%Y%m%d", $this->Day[0]['timestamp']);
-        $arr = $this->displayScheduleMethod($day.'T00:00:00', $day.'T23:59:59.999999');
+        $thisDay = strftime("%Y%m%d", $this->Day[0]['timestamp']);
+        $nextDay = strftime("%Y%m%d", $this->Day[0]['timestamp'] + 86400);
+        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
         #print_r($arr);
 
         if (!count($arr))
@@ -193,6 +208,7 @@ class uiScheduler extends uiCalendar
         return $items;
     }
 
+    /*
     function getDayHourlyEntrys($year, $month, $day)
     {
         $date = $year.$month.$day;
@@ -210,11 +226,13 @@ class uiScheduler extends uiCalendar
         #print_r($items);
         return $items;
     }
+    */
 
     function getDayUsage($year, $month, $day)
     {
-        $date = $year.$month.$day;
-        $arr = $this->displayScheduleMethod($date.'T00:00:00', $date.'T23:59:59.999999');
+        $thisDay = $year.$month.$day;
+        $nextDay = strftime("%Y%m%d", strtotime('+1 day', strtotime("$year-$month-$day")));
+        $arr = $this->displayScheduleMethod($thisDay.'T00:00:00', $nextDay.'T00:00:00');
         if (!count($arr))
             return FALSE;
         foreach ($arr as $key=>$val) {
@@ -239,6 +257,7 @@ class uiScheduler extends uiCalendar
     }
 
 
+    /*
     function getDayTiming($year, $month, $day)
     {
         #echo $year.$month.$day;
@@ -288,7 +307,7 @@ class uiScheduler extends uiCalendar
         #print_r($list);
         return $list;
     }
-
+    */
 
     function getDayTimingScale()
     {

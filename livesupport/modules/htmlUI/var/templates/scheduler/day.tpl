@@ -33,11 +33,11 @@
 
             {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
-                    <td style="border-left: 1px solid #ccc;" onClick="return contextmenu('year={$SCHEDULER->curr.year}&month={$SCHEDULER->curr.month}&day={$SCHEDULER->curr.day}&hour={$_hour}&minute=0&second=0', 'SCHEDULER.addItem')">{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-left: 1px solid #ccc;" {include file="scheduler/day_onclick.tpl"}>{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;">
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
-                        <div {include file="scheduler/actionhandler.tpl"}>
+                        <div {include file="scheduler/day_onclick.tpl"}>
                         <b>{$i.title}</b>
                         {$i.start}-{$i.end}
                         {$i.creator}
@@ -48,7 +48,7 @@
                     </td>
                 </tr>
             {else}
-                <tr class="blue2" onClick="return contextmenu('year={$SCHEDULER->curr.year}&month={$SCHEDULER->curr.month}&day={$SCHEDULER->curr.day}&hour={$_hour}&minute=0&second=0', 'SCHEDULER.addItem')">
+                <tr class="blue2" {include file="scheduler/day_onclick.tpl"}>
                     <td style="border-left: 1px solid #ccc;">{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;"></td>
                 </tr>

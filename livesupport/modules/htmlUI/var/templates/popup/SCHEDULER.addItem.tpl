@@ -41,9 +41,9 @@ function SCHEDULE_snap2Hour()
 function SCHEDULE_snap2Prev()
 {
 {/literal}
-    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->schedulePrev.hour}";
-    document.forms["schedule"].elements["time[i]"].value = "{$SCHEDULER->schedulePrev.minute}";
-    document.forms["schedule"].elements["time[s]"].value = "{$SCHEDULER->schedulePrev.second}";
+    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->schedulePrev.hour|string_format:'%d'}";
+    document.forms["schedule"].elements["time[i]"].value = "{$SCHEDULER->schedulePrev.minute|string_format:'%d'}";
+    document.forms["schedule"].elements["time[s]"].value = "{$SCHEDULER->schedulePrev.second|string_format:'%d'}";
 {literal}
 }
 
