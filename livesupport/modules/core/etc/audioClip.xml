@@ -2,11 +2,11 @@
 <audioClip id="0000000000000001" 
            playlength="00:18:30.000000" uri="file:var/test1.mp3">
     <metadata
-      xmlns="http://www.streamonthefly.org/"
-      xmlns:dc="http://purl.org/dc/elements/1.1/"
-      xmlns:dcterms="http://purl.org/dc/terms/"
-      xmlns:xbmf="http://www.streamonthefly.org/xbmf"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://mdlf.org/livesupport/elements/1.0/"
+       xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+       xmlns:dc="http://purl.org/dc/elements/1.1/"
+       xmlns:dcterms="http://purl.org/dc/terms/"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace"
      >
         <dc:title  >File Title txt</dc:title>
         <dcterms:alternative  >Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ</dcterms:alternative>
@@ -17,20 +17,9 @@
         <dcterms:issued  >2004-05-23</dcterms:issued>
         <dcterms:modified  >2004-05-24</dcterms:modified>
         <dcterms:valid  >2004-05-25</dcterms:valid>
-        <dc:type xsi:type="dcterms:DCMIType" >Sound</dc:type>
-        <dc:format xsi:type="dcterms:IMT" >audio/mpeg</dc:format>
         <dcterms:extent  >00:18:30.000000</dcterms:extent>
         <dcterms:medium  >online</dcterms:medium>
-        <dc:identifier  >streamonthefly:</dc:identifier>
-        <dc:identifier  >http://some.url.mdlf.org/</dc:identifier>
         <dcterms:spatial  >Spatial Coverage</dcterms:spatial>
         <dcterms:temporal  >Temporal Covarage</dcterms:temporal>
-        <xbmf:episodetitle  >Episode Title txt</xbmf:episodetitle>
-        <xbmf:episodesequence  >Episode sequence</xbmf:episodesequence>
-        <xbmf:contributor>
-            <xbmf:role>Editor</xbmf:role>
-            <xbmf:name>John X</xbmf:name>
-            <xbmf:phone>123456789</xbmf:phone>
-        </xbmf:contributor>
     </metadata>
 </audioClip>

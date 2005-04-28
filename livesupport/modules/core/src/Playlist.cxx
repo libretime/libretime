@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,11 +87,6 @@ static const std::string    extentElementPrefix = "dcterms";
 static const std::string    extentElementName = "extent";
 
 /**
- *  The URI identifier for the "dcterms" prefix
- */
-static const std::string    extentElementUri = "http://purl.org/dc/terms/";
-
-/**
  *  The prefix of the title metadata element.
  */
 static const std::string    titleElementPrefix = "dc";
@@ -102,25 +97,44 @@ static const std::string    titleElementPrefix = "dc";
 static const std::string    titleElementName = "title";
 
 /**
- *  The URI identifier for the "dc" prefix
- */
-static const std::string    titleElementUri ="http://purl.org/dc/elements/1.1/";
-
-/**
- *  The URI identifier for the default XML namespace
- */
-static const std::string    defaultPrefixUri ="http://www.streamonthefly.org/";
-
-/**
  *  The prefix for the Live Support extension elements.
  */
 static const std::string    liveSupportNamespacePrefix = "ls";
+
+/**
+ *  The prefix for the "xml:" prefix elements.
+ */
+static const std::string    xmlNamespacePrefix = "xml";
+
+/**
+ *  The URI identifier for the default namespace
+ */
+static const std::string    defaultNamespaceUri 
+                            = "http://mdlf.org/livesupport/elements/1.0/";
 
 /**
  *  The URI identifier for the "ls" prefix.
  */
 static const std::string    liveSupportNamespaceUri 
                             = "http://mdlf.org/livesupport/elements/1.0/";
+
+/**
+ *  The URI identifier for the "dc" prefix
+ */
+static const std::string    dcNamespaceUri 
+                            = "http://purl.org/dc/elements/1.1/";
+
+/**
+ *  The URI identifier for the "dcterms" prefix
+ */
+static const std::string    dctermsNamespaceUri 
+                            = "http://purl.org/dc/terms/";
+
+/**
+ *  The URI identifier for the "xml" prefix
+ */
+static const std::string    xmlNamespaceUri 
+                            = "http://www.w3.org/XML/1998/namespace";
 
 
 /* ===============================================  local function prototypes */
@@ -670,13 +684,15 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
         metadata = dynamic_cast<xmlpp::Element*> (rootList.front());
     } else {
         metadata = rootNode->add_child(metadataElementName);
-        metadata->set_namespace_declaration(defaultPrefixUri);
-        metadata->set_namespace_declaration(titleElementUri, 
-                                            titleElementPrefix);
-        metadata->set_namespace_declaration(extentElementUri, 
-                                            extentElementPrefix);
+        metadata->set_namespace_declaration(defaultNamespaceUri);
         metadata->set_namespace_declaration(liveSupportNamespaceUri, 
                                             liveSupportNamespacePrefix);
+        metadata->set_namespace_declaration(dcNamespaceUri, 
+                                            titleElementPrefix);
+        metadata->set_namespace_declaration(dctermsNamespaceUri, 
+                                            extentElementPrefix);
+        metadata->set_namespace_declaration(xmlNamespaceUri, 
+                                            xmlNamespacePrefix);
     }
 
     // find the element to be modified
@@ -761,13 +777,15 @@ Playlist :: getXmlDocumentString() const        throw ()
         }
         
         xmlpp::Element*     metadata = rootNode->add_child(metadataElementName);
-        metadata->set_namespace_declaration(defaultPrefixUri);
-        metadata->set_namespace_declaration(titleElementUri, 
-                                            titleElementPrefix);
-        metadata->set_namespace_declaration(extentElementUri, 
-                                            extentElementPrefix);
+        metadata->set_namespace_declaration(defaultNamespaceUri);
         metadata->set_namespace_declaration(liveSupportNamespaceUri, 
                                             liveSupportNamespacePrefix);
+        metadata->set_namespace_declaration(dcNamespaceUri, 
+                                            titleElementPrefix);
+        metadata->set_namespace_declaration(dctermsNamespaceUri, 
+                                            extentElementPrefix);
+        metadata->set_namespace_declaration(xmlNamespaceUri, 
+                                            xmlNamespacePrefix);
     }
 
     Glib::ustring               playlistElementsXmlString("\n");

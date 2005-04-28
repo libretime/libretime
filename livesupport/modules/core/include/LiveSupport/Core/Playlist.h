@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,11 +81,11 @@ using namespace boost::posix_time;
  *      ...
  *      &lt;playlistElement&gt; ... &lt;/playlistElement&gt;
  *      &lt;metadata
- *                xmlns="http://www.streamonthefly.org/"
- *                xmlns:dc="http://purl.org/dc/elements/1.1/"
- *                xmlns:dcterms="http://purl.org/dc/terms/"
- *                xmlns:xbmf="http://www.streamonthefly.org/xbmf"
- *                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" &gt;
+ *                   xmlns="http://mdlf.org/livesupport/elements/1.0/"
+ *                   xmlns:ls="http://mdlf.org/livesupport/elements/1.0/"
+ *                   xmlns:dc="http://purl.org/dc/elements/1.1/"
+ *                   xmlns:dcterms="http://purl.org/dc/terms/"
+ *                   xmlns:xml="http://www.w3.org/XML/1998/namespace" &gt;
  *             &lt;dc:title  &gt;File Title txt&lt;/dc:title&gt;
  *             &lt;dcterms:extent  &gt;00:02:30.000000&lt;/dcterms:extent&gt;
  *             ...
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  */
 class Playlist : public Configurable,
                  public Playable
