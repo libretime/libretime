@@ -13,6 +13,6 @@
 <embed src="img/preloader.swf" quality="high" bgcolor="#ffffff" width="50" height="50" name="preloader" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </object>
 -->
-<img src="img/progress.gif" height="100px">
+<img src="img/ls_logo_animated.gif">
 </center>
 </td></tr></table>

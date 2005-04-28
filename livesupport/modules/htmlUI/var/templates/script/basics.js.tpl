@@ -49,7 +49,7 @@
             Pwidth   = window.innerWidth;
             Pheight  = window.innerHeight;
         }
-        
+
         url = url + '&is_popup=1';
         screenX = (Xpos + Pwidth/2  - width/2);
         screenY = (Ypos + Pheight/2 - height/2);
@@ -61,8 +61,8 @@
 
      function hpopup(url, name)
      {
-        var width  = 50;
-        var height = 50;
+        var width  = 160;
+        var height = 120;
         var screenX;
         var screenY;
         var Xpos;

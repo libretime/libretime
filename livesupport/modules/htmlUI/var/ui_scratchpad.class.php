@@ -124,6 +124,9 @@ class uiScratchPad
 
     function reOrder($by)
     {
+        if (count($this->items) == 0)
+            return FALSE;
+
         foreach ($this->items as $key=>$val) {
             $s[$key] = $val[$by];
         }
