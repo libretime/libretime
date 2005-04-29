@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -90,6 +90,7 @@ CURL_DIR          = ${TOOLS_DIR}/curl
 CURL_VERSION      = curl-7.12.3
 TAGLIB_DIR        = ${TOOLS_DIR}/taglib
 TAGLIB_VERSION    = taglib-1.3.1
+PEAR_DIR          = ${TOOLS_DIR}/pear
 
 MODULES_DIR           = ${BASE_DIR}/modules
 CORE_DIR              = ${MODULES_DIR}/core
@@ -180,6 +181,7 @@ ${TMP_DIR}/tools_setup.stamp:
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh
 	${TAGLIB_DIR}/${TAGLIB_VERSION}/bin/install.sh
+	${PEAR_DIR}/bin/install.sh
 	touch ${TMP_DIR}/tools_setup.stamp
 
 doxytag_setup: ${TMP_DIR}/doxytag_setup.stamp
