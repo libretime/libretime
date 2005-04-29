@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.58 $
+    Version  : $Revision: 1.59 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.58 $
+ *  @version $Revision: 1.59 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -593,7 +593,7 @@ class GreenBox extends BasicStor{
     }
 
     /**
-     *  <span style="color:red">Find info about clip at specified offset in playlist.</span>
+     *  Find info about clip at specified offset in playlist.
      *
      *  @param sessid string, session id
      *  @param plid string, playlist global unique id
