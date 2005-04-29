@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -67,9 +67,10 @@ class Subjects extends ObjClasses{
      *
      *   @param login string
      *   @param pass string, optional
+     *   @param realname string, optional
      *   @return int/err
      */
-    function addSubj($login, $pass=NULL)
+    function addSubj($login, $pass=NULL, $realname='')
     {
         if(!$login) return $this->dbc->raiseError(
             get_class($this)."::addSubj: empty login"
@@ -77,9 +78,10 @@ class Subjects extends ObjClasses{
         $id = $this->dbc->nextId("{$this->subjTable}_id_seq");
         if(PEAR::isError($id)) return $id;
         $r = $this->dbc->query("
-            INSERT INTO {$this->subjTable} (id, login, pass, type)
+            INSERT INTO {$this->subjTable} (id, login, pass, type, realname)
             VALUES ($id, '$login', ".
-                (is_null($pass) ? "'!', 'G'" : "'".md5($pass)."', 'U'").")
+                (is_null($pass) ? "'!', 'G'" : "'".md5($pass)."', 'U'").",
+                '$realname')
         ");
         if(PEAR::isError($r)) return $r;
         return $id;
@@ -121,6 +123,24 @@ class Subjects extends ObjClasses{
         ");
         if(PEAR::isError($id)) return $id;
         return (is_null($id) ? FALSE : $id);
+    }
+
+    /**
+     *   Set lastlogin or lastfail timestamp
+     *
+     *   @param login string
+     *   @param failed boolean, true=> set lastfail, false=> set lastlogin
+     *   @return boolean/int/err
+     */
+    function setTimeStamp($login, $failed=FALSE)
+    {
+        $fld = ($failed ? 'lastfail' : 'lastlogin');
+        $r = $this->dbc->query("
+            UPDATE {$this->subjTable} SET $fld=now()
+            WHERE login='$login'
+        ");
+        if(PEAR::isError($r)) return $r;
+        return TRUE;
     }
 
     /**
@@ -531,7 +551,10 @@ class Subjects extends ObjClasses{
             id int not null PRIMARY KEY,
             login varchar(255) not null default'',
             pass varchar(255) not null default'',
-            type char(1) not null default 'U'
+            type char(1) not null default 'U',
+            realname varchar(255) not null default'',
+            lastlogin timestamp,
+            lastfail timestamp
         )");
         $this->dbc->query("CREATE UNIQUE INDEX {$this->subjTable}_id_idx
             ON {$this->subjTable} (id)");

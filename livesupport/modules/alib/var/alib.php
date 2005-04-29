@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/alib.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@ define('ALIBERR_NOTEXISTS', 31);
  *   authentication/authorization class
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  *  @see Subjects
  *  @see GreenBox
  */
@@ -77,7 +77,10 @@ class Alib extends Subjects{
      */
     function login($login, $pass)
     {
-        if(FALSE === $this->authenticate($login, $pass)) return FALSE;
+        if(FALSE === $this->authenticate($login, $pass)){
+            $this->setTimeStamp($login, TRUE);
+            return FALSE;
+        }
         $sessid = $this->_createSessid();
         if(PEAR::isError($sessid)) return $sessid;
         $userid = $this->getSubjId($login);
@@ -89,6 +92,7 @@ class Alib extends Subjects{
         $this->login = $login;
         $this->userid = $userid;
         $this->sessid = $sessid;
+        $this->setTimeStamp($login, FALSE);
         return $sessid;
     }
     

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.48 $
+    Version  : $Revision: 1.49 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.48 $
+ *  @version $Revision: 1.49 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -890,11 +890,12 @@ class BasicStor extends Alib{
      *
      *  @param login string
      *  @param pass string OPT
+     *  @param realname string OPT
      *  @return int/err
      */
-    function addSubj($login, $pass=NULL)
+    function addSubj($login, $pass=NULL, $realname='')
     {
-        $uid = parent::addSubj($login, $pass);
+        $uid = parent::addSubj($login, $pass, $realname);
         if($this->dbc->isError($uid)) return $uid;
         if($this->isGroup($uid) === FALSE){
             $fid = $this->bsCreateFolder($this->storId, $login);
@@ -919,14 +920,17 @@ class BasicStor extends Alib{
         return $uid;
     }
     /**
-     *  Remove user by login or by uid and his home folder
+     *  Remove user by login and remove also his home folder
      *
      *  @param login string
-     *  @param uid int OPT
      *  @return boolean/err
      */
-    function removeSubj($login, $uid=NULL)
+    function removeSubj($login)
     {
+        if(FALSE !== array_search($login, $this->config['sysSubjs'])){
+            return $this->dbc->raiseError(
+                "BasicStor::removeSubj: cannot remove system user/group");
+        }
         $res = parent::removeSubj($login);
         if($this->dbc->isError($res)) return $res;
         $id = $this->getObjId($login, $this->storId);
@@ -1403,15 +1407,20 @@ class BasicStor extends Alib{
                 $this->storId, $this->config["TrashName"]);
             if($this->dbc->isError($tfid)) return $tfid;
         }
+        $allid = parent::addSubj($this->config['AllGr']);
+        if($this->dbc->isError($allid)) return $allid;
+        $r = $this->addSubj2Gr('root', $this->config['AllGr']);
+        $r = $res = parent::addPerm($allid, 'read', $this->rootId, 'A');
+        $admid = parent::addSubj($this->config['AdminsGr']);
+        if($this->dbc->isError($admid)) return $admid;
+        $r = $this->addSubj2Gr('root', $this->config['AdminsGr']);
+        if($this->dbc->isError($r)) return $r;
+        $res = parent::addPerm($admid, '_all', $this->rootId, 'A');
+        if($this->dbc->isError($res)) return $res;
         if(!$this->config['isArchive']){
             $stPrefGr = parent::addSubj($this->config['StationPrefsGr']);
+            if($this->dbc->isError($stPrefGr)) return $stPrefGr;
             $this->addSubj2Gr('root', $this->config['StationPrefsGr']);
-            $allid = $stPrefGr = parent::addSubj($this->config['AllGr']);
-            if($this->dbc->isError($allid)) return $allid;
-            $r = $this->addSubj2Gr('root', $this->config['AllGr']);
-            if($this->dbc->isError($r)) return $r;
-            $r = $res = parent::addPerm($allid, 'read', $this->rootId, 'A');
-            if($this->dbc->isError($r)) return $r;
         }
     }
 

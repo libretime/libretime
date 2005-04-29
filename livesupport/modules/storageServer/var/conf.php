@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@ define('LS_VERSION', '0.9');
  *   <dt>dsn<dd> datasource setting
  *   <dt>tblNamePrefix <dd>prefix for table names in the database
  *   <dt>authCookieName <dd>secret token cookie name
+ *   <dt>AdminsGr <dd>name of admin group
  *   <dt>StationPrefsGr <dd>name of station preferences group
  *   <dt>AllGr <dd>name of 'all users' group
  *   <dt>TrashName <dd>name of trash folder (subfolder of the storageRoot)
@@ -60,6 +61,7 @@ define('LS_VERSION', '0.9');
  *   <dt>archiveUrlHost, archiveUrlPort<dd>host and port of archiveServer
  *   <dt>archiveAccountLogin, archiveAccountPass <dd>account info
  *           for login to archive
+ *   <dt>sysSubjs<dd>system users/groups - cannot be deleted
  *  </dl>
  */
 
@@ -78,6 +80,7 @@ $config = array(
 
     /* ================================================ storage configuration */
     'authCookieName'=> 'lssid',
+    'AdminsGr'      => 'Admins',
     'StationPrefsGr'=> 'StationPrefs',
     'AllGr'         => 'All',
     'TrashName'     => 'trash_',
@@ -135,6 +138,9 @@ $config = array(
     /* ============================================== auxiliary configuration */
     'RootNode'	    => 'RootNode',
     'tmpRootPass'   => 'q',
+);
+$config['sysSubjs'] = array(
+    'root', $config['AdminsGr'], $config['AllGr'], $config['StationPrefsGr']
 );
 
 // see if a ~/.livesupport/storageServer.conf.php exists, and
