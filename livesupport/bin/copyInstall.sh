@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -147,9 +147,10 @@ cp -pPR $modules_dir/htmlUI/var $install_var/htmlUI
 
 
 #-------------------------------------------------------------------------------
-#  Copy libraries
+#  Copy libraries and related files
 #-------------------------------------------------------------------------------
 cp -pPR $usrdir/lib/* $install_lib
+cp -pPR $usrdir/etc/* $install_etc
 
 
 #-------------------------------------------------------------------------------

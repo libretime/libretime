@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallGLiveSupport.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -208,6 +208,24 @@ check_exe "sed" || exit 1;
 #-------------------------------------------------------------------------------
 echo "Customizing configuration files..."
 
+tmp_file=/tmp/livesupport_setup.$$
+
+# customize the GTK- config files, which have hard-coded values in them :(
+cat $install_etc/gtk-2.0/gdk-pixbuf.loaders \
+    | sed -e "s/^\"\/.*\/usr\/lib/\/\"$installdir_s\/lib/g"
+    > $tmp_file
+mv -f $tmp_file $install_etc/gtk-2.0/gdk-pixbuf.loaders
+
+# customize the pango config files, which have hard-coded values in them :(
+pango_rc=$install_etc/pango/pango.rc
+echo "[Pango]" > $pango_rc
+echo "ModuleFiles=$install_etc/pango/pango.modules" > $pango_rc
+cat $install_etc/pango/pango.modules \
+    | sed -e "s/^\/.*\/usr\/lib/\/$installdir_s\/lib/g"
+    > $tmp_file
+mv -f $tmp_file $install_etc/pango/pango.modules
+
+# customize the gLiveSupport config file
 cat $install_etc/gLiveSupport.xml.template \
     | sed -e "$replace_sed_string" \
     > $install_etc/gLiveSupport.xml

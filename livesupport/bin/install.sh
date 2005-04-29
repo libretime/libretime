@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -191,6 +191,16 @@ echo "  database user password: $dbpassword";
 echo "  apache daemon group:    $apache_group";
 echo "  apache document root:   $www_root";
 echo ""
+
+
+#-------------------------------------------------------------------------------
+#   Check if we're in the CVS, and bail out if so
+#-------------------------------------------------------------------------------
+if [ -f CVS/Root ]; then
+    echo "ERROR: this script is not intended to be run from the CVS sources.";
+    echo "       run this script from inside the source tarball";
+    exit 1;
+fi
 
 
 #-------------------------------------------------------------------------------
