@@ -48,7 +48,7 @@ class uiPlaylist
         # store access token to ls_pref abd session
         # load PL into session
         if ($this->token) {
-             if (UI_WARNING) $this->Base->_retMsg('You have an Playlist already activated, first close it');
+            if (UI_WARNING) $this->Base->_retMsg('You have an Playlist already activated, first close it');
             return FALSE;
         }
         if(($userid = $this->Base->gb->playlistIsAvailable($plid, $this->Base->sessid)) !== TRUE) {

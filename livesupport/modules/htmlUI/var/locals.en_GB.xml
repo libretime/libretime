@@ -155,7 +155,7 @@
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; activated</key>
-		<value>Playlist &quot;$1&quot; activated.</value>
+		<value>Playlist &quot;$1&quot; opened.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; released</key>
@@ -223,7 +223,7 @@
 	</item>
 	<item>
 		<key>You have an Playlist already activated, first close it</key>
-		<value>You have an Playlist already activated, first close it.</value>
+		<value>You have already an open Playlist, first close it.</value>
 	</item>
 	<item>
 		<key>Access</key>

@@ -23,7 +23,7 @@
                         -
                     {/if}
                 </td>
-                <td style="border: 0; text-align: center;"><img src="img/{$_type}.png" border="0" alt="{$_type|capitalize}" /></td>
+                <td style="border: 0; text-align: center;"><img src="img/{$_type}.gif" border="0" alt="{$_type|capitalize}" /></td>
 
             </tr>
         {/foreach}

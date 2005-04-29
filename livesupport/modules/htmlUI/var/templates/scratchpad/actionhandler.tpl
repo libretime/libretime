@@ -25,7 +25,7 @@ onClick="return contextmenu('{$i.id}'
             {if $_PL_activeId == $i.id}
                 , 'PL.release'
             {elseif $PL->isAvailable($i.id) == true}
-                , 'PL.addItem', 'delete'
+                , 'PL.addItem', 'PL.activate', 'delete'
             {/if}
         {elseif  $PL->isAvailable($i.id) == true}
             , 'PL.activate', 'PL.create', 'delete'

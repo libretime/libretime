@@ -103,7 +103,7 @@ class uiScheduler extends uiCalendar
 
         ## search for previous entry
         if (count($week[$this->scheduleAt['day']]) >= 1) {
-            foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
+            foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) { 
                 if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
                     $prev = TRUE;
                     list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second'])
