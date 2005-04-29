@@ -33,22 +33,24 @@
 
             {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
-                    <td style="border-left: 1px solid #ccc;" {include file="scheduler/day_onclick.tpl"}>{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-left:  1px solid #ccc;" {include file="scheduler/day_additem.tpl"}>{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;">
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
-                        <div {include file="scheduler/day_onclick.tpl"}>
-                        <b>{$i.title}</b>
-                        {$i.start}-{$i.end}
-                        {$i.creator}
+                        <div {include file="scheduler/removeitem.tpl"}>
+                            <img src="img/playlist.gif" border="0" {include file="sub/mouseover.tpl"}>
+                            &nbsp;
+                            <b>{$i.title}</b>
+                            {$i.start}-{$i.end}
+                            {$i.creator}
                         </div>
-                        {* <div style="background-color: #FF6F1F; height: 3px" onClick="return contextmenu('year={$SCHEDULER->curr.year}&month={$SCHEDULER->curr.month}&day={$SCHEDULER->curr.day}&hour={getHour time=$i.end}&minute={getMinute time=$i.end}&second={getSecond time=$i.end plus=1}', 'SCHEDULER.addItem')"></div> *}
+                        {* <div style="background-color: #FF6F1F; height: 3px" {include file="scheduler/week_additem.tpl"}></div> *}
                     {/foreach}
 
                     </td>
                 </tr>
             {else}
-                <tr class="blue2" {include file="scheduler/day_onclick.tpl"}>
+                <tr class="blue2" {include file="scheduler/day_additem.tpl"}>
                     <td style="border-left: 1px solid #ccc;">{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;"></td>
                 </tr>

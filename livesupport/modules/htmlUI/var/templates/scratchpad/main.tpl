@@ -25,7 +25,7 @@
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                     <td {include file="scratchpad/actionhandler.tpl"}>
                         {if $i.type|lower == "playlist"}
-                            {if $PL->isAvailable($i.id) == FALSE}
+                            {if $PL->isAvailable($i.id) == false}
                                 <div style="text-decoration : line-through">
                             {else}
                                 <div>

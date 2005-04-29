@@ -73,6 +73,17 @@ define('UI_BROWSE_DEFAULT_LIMIT',       10);
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
 define('UI_SCHEDULER_PAUSE_PL2PL',      '5 seconds');
 
+## File types
+define('UI_FILETYPE_PLAYLIST',          'playlist');
+define('UI_FILETYPE_AUDIOCLIP',         'audioClip');
+define('UI_FILETYPE_WEBSTREAM',         'webstream');
+
+## Playlist elements
+define('UI_PL_ELEM_PLAYLIST',           'playlistElement'); 
+define('UI_PL_ELEM_FADEINFO',           'fadeInfo');
+define('UI_PL_ELEM_FADEIN',             'fadeIn');
+define('UI_PL_ELEM_FADEOUT',            'fadeOut');
+
 
 
 ## LS stuff

@@ -49,15 +49,15 @@
                 break;
 
                 case "PL.changeFadeIn":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;##Change Fadein##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeIn&id="+param+"', 'PL', '400', '150')\" "+oF+">&nbsp;##Change Fadein##&nbsp;</a></li>";
                 break;
 
                 case "PL.changeTransition":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;##Change Transition##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=transition&id="+param+"', 'PL', '400', '150')\" "+oF+">&nbsp;##Change Transition##&nbsp;</a></li>";
                 break;
 
                 case "PL.changeFadeOut":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '400', '100')\" "+oF+">&nbsp;##Change Fadeout##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.changeTransition&type=fadeOut&id="+param+"', 'PL', '400', '150')\" "+oF+">&nbsp;##Change Fadeout##&nbsp;</a></li>";
                 break;
 
                 case "SP.addItem":

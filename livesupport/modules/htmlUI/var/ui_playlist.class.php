@@ -220,6 +220,7 @@ class uiPlaylist
 
     function getFlat()
     {
+        #print_r($this->get());
         $this->plwalk($this->get());
         #echo '<pre><div align="left">'; print_r($this->flat); echo '</div></pre>';
         return $this->flat;
@@ -229,20 +230,20 @@ class uiPlaylist
     function plwalk($arr, $parent=0, $attrs=0)
     {
         foreach ($arr['children'] as $node=>$sub) {
-            if (strtolower($sub['elementname'])==='playlistelement') {
+            if ($sub['elementname']===UI_PL_ELEM_PLAYLIST) {
                 $this->plwalk($sub, $node, $sub['attrs']);
             }
-            if (strtolower($sub['elementname'])==='audioclip' || strtolower($sub['elementname'])==='playlist') {
+            if ($sub['elementname']===UI_FILETYPE_AUDIOCLIP || $sub['elementname']===UI_FILETYPE_PLAYLIST) {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
                 #$this->flat["$parent.$node"]['type'] = $sub['elementname'];
                 $this->flat[$parent] = $this->Base->_getMetaInfo($this->Base->gb->_idFromGunid($sub['attrs']['id']));
                 $this->flat[$parent]['attrs'] = $attrs;
             }
-            if (strtolower($sub['elementname'])==='fadeinfo') {
-                $this->flat[$parent]['fadein']  = GreenBox::_plTimeToSecs($sub['attrs']['fadein']);
-                $this->flat[$parent]['fadeout'] = GreenBox::_plTimeToSecs($sub['attrs']['fadeout']);
-                $this->flat[$parent]['fadein_ms']  = $sub['attrs']['fadein']  ? GreenBox::_plTimeToSecs($sub['attrs']['fadein'])  * 1000 : 0;
-                $this->flat[$parent]['fadeout_ms'] = $sub['attrs']['fadeout'] ? GreenBox::_plTimeToSecs($sub['attrs']['fadeout']) * 1000 : 0;
+            if ($sub['elementname']===UI_PL_ELEM_FADEINFO) {
+                $this->flat[$parent][UI_PL_ELEM_FADEIN]  = GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEIN]);
+                $this->flat[$parent][UI_PL_ELEM_FADEOUT] = GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEOUT]);
+                $this->flat[$parent]['fadein_ms']  = $sub['attrs'][UI_PL_ELEM_FADEIN]  ? GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEIN])  * 1000 : 0;
+                $this->flat[$parent]['fadeout_ms'] = $sub['attrs'][UI_PL_ELEM_FADEOUT] ? GreenBox::_plTimeToSecs($sub['attrs'][UI_PL_ELEM_FADEOUT]) * 1000 : 0;
             }
         }
     }
@@ -257,30 +258,30 @@ class uiPlaylist
         switch ($type) {
             case "fadeX":
                 $item[$prev['attrs']['id']] =
-                              array('fadeIn'  => GreenBox::_secsToPlTime($prev['fadein']),
-                                    'fadeOut' => GreenBox::_secsToPlTime($duration/1000));
-                $item[$id]  = array('fadeIn'  => GreenBox::_secsToPlTime($duration/1000),
-                                    'fadeOut' => GreenBox::_secsToPlTime($curr['fadeout']));
+                              array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
+                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($duration/1000));
+                $item[$id]  = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($duration/1000),
+                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT]));
             break;
             case "pause":
                 $item[$prev['attrs']['id']] =
-                              array('fadeIn'  => GreenBox::_secsToPlTime($prev['fadein']),
-                                    'fadeOut' => GreenBox::_secsToPlTime(-$duration/1000));
-                $item[$id]  = array('fadeIn'  => GreenBox::_secsToPlTime(-$duration/1000),
-                                    'fadeOut' => GreenBox::_secsToPlTime($curr['fadeout']));
+                              array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
+                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime(-$duration/1000));
+                $item[$id]  = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime(-$duration/1000),
+                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT]));
             break;
             case "fadeIn":
-                $item[$id]  = array('fadeIn'  => GreenBox::_secsToPlTime($duration/1000),
-                                    'fadeOut' => GreenBox::_secsToPlTime($curr['fadeout']));
+                $item[$id]  = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($duration/1000),
+                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT]));
             break;
             case "fadeOut":
-                $item[$id] = array('fadeIn'  => GreenBox::_secsToPlTime($curr['fadein']),
-                                   'fadeOut' => GreenBox::_secsToPlTime($duration/1000));
+                $item[$id] = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEIN]),
+                                   UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($duration/1000));
             break;
         }
         #print_r($item);
         foreach ($item as $i=>$val) {
-            $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val['fadeIn'], $val['fadeOut'], $this->Base->sessid);
+            $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
             #print_r($r);
             if (PEAR::isError($r)) {
                     if (UI_VERBOSE) print_r($r);
@@ -454,26 +455,23 @@ class uiPlaylist
 
     function isAvailable($id)
     {
-        if (strtolower($this->Base->gb->getFileType($id))==="playlist" && $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE)
+        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST)
             return TRUE;
+
+        if ($this->Base->gb->playlistIsAvailable($id, $this->Base->sessid) === TRUE)
+            return TRUE;
+
         return FALSE;
     }
 
-
-    function _plTimeToSecs($plt, $length=4)
+    function isUsedBy($id)
     {
-         $arr = split(':', $plt);
-         if(isset($arr[2])){ return ($arr[0]*60 + $arr[1])*60 + $arr[2]; }
-         if(isset($arr[1])){ return $arr[0]*60 + $arr[1]; }
-         return $arr[0];
-    }
+        if ($this->Base->gb->getFileType($id) !== UI_FILETYPE_PLAYLIST)
+            return FALSE;
 
-    function _secsToPlTime($s0)
-    {
-        $m = intval($s0 / 60);
-        $r = $s0 - $m*60;
-        $h = $m  / 60;
-        $m = $m  % 60;
-        return sprintf("%02d:%02d:%09.6f", $h, $m, $r);
+        if (($userid = $this->Base->gb->playlistIsAvailable($id, $this->Base->sessid)) !== TRUE)
+             return $this->Base->gb->getSubjName($userid);
+
+        return FALSE;
     }
 }

@@ -677,8 +677,12 @@ $ui_fmask = array(
                 'groupit'   => TRUE
             ),
             array(
-                'group'     => array('duration', 'switchdown', 'switchup'),
-                'label'     => 'Duration'
+                'group'     => array('duration'),
+                'label'     => 'Duration (ms)'
+            ),
+            array(
+                'group'     => array('switchdown', 'switchup'),
+                'label'     => '&nbsp;'
             ),
             array(
                 'element'   => 'cancel',

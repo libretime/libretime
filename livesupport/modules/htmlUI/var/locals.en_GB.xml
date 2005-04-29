@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-	<status />
 	<Id>en_GB</Id>
 	<item>
 		<key>Are you sure to delete file &quot;$1&quot;?</key>
@@ -12,7 +11,7 @@
 	</item>
 	<item>
 		<key>Are you sure to delete active Playlist?</key>
-		<value />
+		<value>Are you sure to delete open Playlist?</value>
 	</item>
 	<item>
 		<key>Are you sure to logout $1?</key>
@@ -44,7 +43,7 @@
 	</item>
 	<item>
 		<key>Already active Playlist</key>
-		<value>Already active playlist.</value>
+		<value>Already open playlist.</value>
 	</item>
 	<item>
 		<key>Audioclip Data saved</key>
@@ -132,7 +131,7 @@
 	</item>
 	<item>
 		<key>No Item(s) selected</key>
-		<value>No file(s) selected.</value>
+		<value>No files selected.</value>
 	</item>
 	<item>
 		<key>No Playlist is locked by You.</key>
@@ -140,7 +139,7 @@
 	</item>
 	<item>
 		<key>Note: Station Preferences not setup proberly.</key>
-		<value>Note: Station Preferences not setup proberly.</value>
+		<value>Note: Station Preferences not setup properly.</value>
 	</item>
 	<item>
 		<key>Old password was incorrect.</key>
@@ -244,11 +243,11 @@
 	</item>
 	<item>
 		<key>Add file(s) to ScratchPad</key>
-		<value>Add file(s) to ScratchPad</value>
+		<value>Add files to ScratchPad</value>
 	</item>
 	<item>
 		<key>Add file(s) to active Playlist</key>
-		<value>Add file(s) to active Playlist</value>
+		<value>Add files to open Playlist</value>
 	</item>
 	<item>
 		<key>Add to ScratchPad</key>
@@ -256,7 +255,7 @@
 	</item>
 	<item>
 		<key>Add to active Playlist</key>
-		<value>Add to active Playlist</value>
+		<value>Add to open Playlist</value>
 	</item>
 	<item>
 		<key>Album</key>
@@ -596,11 +595,11 @@
 	</item>
 	<item>
 		<key>New Playlist using this File</key>
-		<value>New playlist using this file</value>
+		<value>New playlist using file</value>
 	</item>
 	<item>
 		<key>New Playlist using this file(s)</key>
-		<value>New playlist using this file(s)</value>
+		<value>New playlist using files</value>
 	</item>
 	<item>
 		<key>New empty Playlist</key>
@@ -696,7 +695,7 @@
 	</item>
 	<item>
 		<key>Remove file(s)</key>
-		<value>Remove file(s)</value>
+		<value>Remove files</value>
 	</item>
 	<item>
 		<key>Remove from Scratchpad</key>

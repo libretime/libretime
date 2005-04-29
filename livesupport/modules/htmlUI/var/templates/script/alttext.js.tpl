@@ -25,7 +25,7 @@
         //return false;
     }
 
-    function showalttextthan(e) {    // alert("now");
+    function showalttextthan(e) {
         if (ie5) {
             if (event.clientX + contextmenuWidth  > document.body.clientWidth)  xPos = event.clientX - contextmenuWidth + document.body.scrollLeft;
             else                                                                xPos = event.clientX + document.body.scrollLeft;
@@ -65,17 +65,17 @@
 
 <style type="text/css">
     #alttext {
-        font-size : 80%;
-        float: left;
-        width: 200px;
-        list-style: none;
-        line-height: 20px;
-        padding: 4px;
-        margin: 0px 0px 0px 0px;
-        display: block;
-        clear: left;
-        background: yellow;
-        border: 1px solid #ACB3BA;
+        font-size :     80%;
+        float:          left;
+        width:          200px;
+        list-style:     none;
+        line-height:    16px;
+        padding:        4px;
+        margin:         0px 0px 0px 0px;
+        display:        block;
+        clear:          left;
+        background:     #FFFACD;
+        border:         1px solid #ACB3BA;
     }
 </style>
 {/literal}

@@ -84,6 +84,6 @@
         <!-- end add group member -->
     </div>
 
-    <input type="button" class="button" value="##Cancel##" onClick="location.href='{$UI_BROWSER}?act=SUBJECTS'">
+    <input type="button" class="button" value="##Close##" onClick="location.href='{$UI_BROWSER}?act=SUBJECTS'">
 </div>
 
