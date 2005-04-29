@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -527,6 +527,15 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToScratchPad(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
+    PlayableList::iterator  it;
+    for (it = scratchpadContents->begin(); it != scratchpadContents->end();
+                                                                     ++it) {
+        Ptr<Playable>::Ref  listElement = *it;
+        if (*listElement->getId() == *playable->getId()) {
+            scratchpadContents->erase(it);
+            break;
+        }
+    }
     scratchpadContents->push_front(playable);
     masterPanel->updateScratchpadWindow();   
 }
