@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,17 +93,20 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     }
 
     // set up the search results box    
-    Gtk::Box *      searchResultsView = constructSearchResultsView();
+    ZebraTreeView *       searchResultsView = constructSearchResultsView();
+    Gtk::ScrolledWindow * scrolledWindow = Gtk::manage(new Gtk::ScrolledWindow);
+    scrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scrolledWindow->add(*searchResultsView);
 
     // put them in one big box
     Gtk::VBox *         bigBox = Gtk::manage(new Gtk::VBox);
-    bigBox->pack_start(*views);
-    bigBox->pack_start(*searchResultsView);
+    bigBox->pack_start(*views, Gtk::PACK_SHRINK);
+    bigBox->pack_start(*scrolledWindow);
     add(*bigBox);
     
     // show
     set_name("searchWindow");
-    set_default_size(600, 250);
+    set_default_size(600, 500);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -216,7 +219,7 @@ SearchWindow :: constructBrowseView(void)                       throw ()
 /*------------------------------------------------------------------------------
  *  Construct the search results display.
  *----------------------------------------------------------------------------*/
-Gtk::VBox*
+ZebraTreeView *
 SearchWindow :: constructSearchResultsView(void)                throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
@@ -263,11 +266,7 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     }
 
     contextMenu->accelerate(*this);
-    
-    // make a new box and pack the one and only component into it
-    Gtk::VBox *         view = Gtk::manage(new Gtk::VBox);
-    view->pack_start(*searchResults,    Gtk::PACK_EXPAND_WIDGET, 5);
-    return view;
+    return searchResults;
 }
 
 

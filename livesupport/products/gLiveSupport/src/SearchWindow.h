@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -126,9 +126,9 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         /**
          *  Construct the search results display.
          *
-         *  @return a pointer to the new box (already Gtk::manage()'ed)
+         *  @return a pointer to the new tree view (already Gtk::manage()'ed)
          */
-        Gtk::VBox*
+        ZebraTreeView *
         constructSearchResultsView(void)                        throw ();
 
         /**
@@ -180,7 +180,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.10 $
+         *  @version $Revision: 1.11 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

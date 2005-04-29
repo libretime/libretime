@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseItem.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -98,12 +98,17 @@ BrowseItem :: BrowseItem(
     treeModel = Gtk::ListStore::create(modelColumns);
     
     metadataValues = Gtk::manage(wf->createTreeView(treeModel));
-    metadataValues->appendColumn("", modelColumns.column);
+    metadataValues->appendColumn("", modelColumns.column, 200);
+    metadataValues->set_size_request(230,150);
     metadataValues->set_headers_visible(false);
     metadataValues->signal_cursor_changed().connect(sigc::mem_fun(*this,
                                     &BrowseItem::emitSignalSelectionChanged ));
-    pack_start(*metadataValues, Gtk::PACK_SHRINK, 5);
     
+    Gtk::ScrolledWindow * scrolledWindow = Gtk::manage(new Gtk::ScrolledWindow);
+    scrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scrolledWindow->add(*metadataValues);
+    pack_start(*scrolledWindow, Gtk::PACK_SHRINK, 5);
+        
     onShow();
 }
 

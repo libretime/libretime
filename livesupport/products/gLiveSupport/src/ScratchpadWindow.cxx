@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -242,7 +242,6 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     set_default_size(300, 300);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
-    set_resizable(true);
     
     showContents();
     show_all_children();
