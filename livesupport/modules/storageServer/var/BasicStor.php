@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.49 $
+    Version  : $Revision: 1.50 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.49 $
+ *  @version $Revision: 1.50 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -890,7 +890,7 @@ class BasicStor extends Alib{
      *
      *  @param login string
      *  @param pass string OPT
-     *  @param realname string OPT
+     *  <span style="color:red">@param realname string OPT</span>
      *  @return int/err
      */
     function addSubj($login, $pass=NULL, $realname='')
