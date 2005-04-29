@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Playlist.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -465,12 +465,20 @@ class Playlist extends StoredFile{
             $fadeIn = NULL;
             $fadeOut = NULL;
             foreach($el['children'] as $j=>$af){
-                if($af['elementname'] == 'audioClip'){
-                    $acGunid = $af['attrs']['id'];
-                }elseif($af['elementname'] == 'fadeInfo'){
-                    $fadeIn = $af['attrs']['fadeIn'];
-                    $fadeOut = $af['attrs']['fadeOut'];
-                }else{
+                switch($af['elementname']){
+                    case"audioClip":
+                    case"playlist":
+                        $acGunid = $af['attrs']['id'];
+                        break;
+                    case"fadeInfo":
+                        $fadeIn = $af['attrs']['fadeIn'];
+                        $fadeOut = $af['attrs']['fadeOut'];
+                        break;
+                    default:
+                        return PEAR::raiseError(
+                            "Playlist::moveAudioClip: unknown element type".
+                            " in playlistElement ({$af['elementname']})"
+                        );
                 }
             }
             $acId = $this->gb->_idFromGunid($acGunid);

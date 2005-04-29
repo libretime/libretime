@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -784,7 +784,7 @@ class MetaData{
                 'namespace' => $predns,
                 'localPart' => $predicate,
                 'attributes'=> $attrs,
-                'content'   => ($object == 'NULL' ? $children : $object),
+                'content'   => (is_null($object) ? $children : $object),
             ), FALSE);
         }else{
             $node = array_merge(
@@ -815,8 +815,7 @@ class MetaData{
         if(DEBUG) echo" getSubrows:\n";
         $qh = $this->dbc->query($q = "
             SELECT
-                id, predxml, predns, predicate, objns,
-                coalesce(object, 'NULL')as object
+                id, predxml, predns, predicate, objns, object
             FROM {$this->mdataTable}
             WHERE
                 subjns='_I' AND subject='$parid' AND
