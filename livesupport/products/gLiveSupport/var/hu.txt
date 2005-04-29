@@ -183,7 +183,10 @@ hu:table
         creatorColumnLabel:string     { "Előadó" }
         lengthColumnLabel:string      { "Hossz" }
         
-        cueMenuItem:string            { "Belehallgatni" }
+        cueMenuItem:string            { "Bele_hallgatni" }
+        upMenuItem:string             { "_Fel" }
+        downMenuItem:string           { "_Le" }
+        removeMenuItem:string         { "_Eltávolít" }
     }
 }
 

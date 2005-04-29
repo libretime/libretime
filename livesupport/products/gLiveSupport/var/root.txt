@@ -185,7 +185,10 @@ root:table
         creatorColumnLabel:string     { "Creator" }
         lengthColumnLabel:string      { "Length" }
         
-        cueMenuItem:string            { "Cue" }
+        cueMenuItem:string            { "_Cue" }
+        upMenuItem:string             { "Move _Up" }
+        downMenuItem:string           { "Move D_own" }
+        removeMenuItem:string         { "_Remove" }
     }
 }
 

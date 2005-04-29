@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -541,7 +541,8 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
     liveModeContents->push_back(playable);
-    masterPanel->updateLiveModeWindow();   
+    masterPanel->updateLiveModeWindow();
+    addToScratchPad(playable);
 }
 
 

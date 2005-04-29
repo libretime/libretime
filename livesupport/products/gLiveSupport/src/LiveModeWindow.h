@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -179,6 +179,35 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          */
         virtual void
         onCueMenuOption(void)                                   throw ();
+
+        /**
+         *  Signal handler for the "up" menu option selected from
+         *  the context menu.
+         */
+        virtual void
+        onUpMenuOption(void)                                    throw ();
+
+        /**
+         *  Signal handler for the "down" menu option selected from
+         *  the context menu.
+         */
+        virtual void
+        onDownMenuOption(void)                                  throw ();
+
+        /**
+         *  Signal handler for the "remove" menu option selected from
+         *  the context menu.
+         */
+        virtual void
+        onRemoveMenuOption(void)                                throw ();
+
+        /**
+         *  Remove an item from the Live Mode.
+         *
+         *  @param id the id of the item to remove.
+         */
+        void
+        removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
 
 
     public:

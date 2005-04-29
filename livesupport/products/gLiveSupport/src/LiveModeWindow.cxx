@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,6 +114,18 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                  *getResourceUstring("cueMenuItem"),
                                   sigc::mem_fun(*this,
                                         &LiveModeWindow::onCueMenuOption)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("upMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onUpMenuOption)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("downMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onDownMenuOption)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("removeMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onRemoveMenuOption)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -234,6 +246,138 @@ LiveModeWindow :: onCueMenuOption(void)                             throw ()
             std::cerr << "GLiveSupport::playAudio() error:" << std::endl
                         << e.what() << std::endl;
         }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Up menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onUpMenuOption(void)                              throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView->get_selection();
+    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+        Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
+        GLiveSupport::PlayableList::iterator    it;
+        GLiveSupport::PlayableList::iterator    end;
+
+        liveModeContents = gLiveSupport->getLiveModeContents();
+        it  = liveModeContents->begin();
+        end = liveModeContents->end();
+        while (it != end) {
+            Ptr<Playable>::Ref      p= *it;
+
+            if (*p->getId() == *playable->getId()) {
+                // move one up, and insert the same before that
+                if (it == liveModeContents->begin()) {
+                    break;
+                }
+                liveModeContents->insert(--it, playable);
+                // move back to what we've found, and erase it
+                liveModeContents->erase(++it);
+
+                showContents();
+                break;
+            }
+
+            it++;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Down menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onDownMenuOption(void)                            throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView->get_selection();
+    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+        Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
+        GLiveSupport::PlayableList::iterator    it;
+        GLiveSupport::PlayableList::iterator    end;
+
+        liveModeContents = gLiveSupport->getLiveModeContents();
+        it  = liveModeContents->begin();
+        end = liveModeContents->end();
+        while (it != end) {
+            Ptr<Playable>::Ref      p= *it;
+
+            if (*p->getId() == *playable->getId()) {
+                // move two down, and insert the same before that
+                ++it;
+                if (it == end) {
+                    break;
+                }
+                liveModeContents->insert(++it, playable);
+                // move back to what we've found, and erase it
+                --it;
+                --it;
+                liveModeContents->erase(--it);
+
+                showContents();
+                break;
+            }
+
+            it++;
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onRemoveMenuOption(void)                          throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView->get_selection();
+    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+        removeItem(playable->getId());
+        showContents();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove an item from the Scratchpad
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: removeItem(Ptr<const UniqueId>::Ref    id)        throw ()
+{
+    Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
+    GLiveSupport::PlayableList::iterator    it;
+    GLiveSupport::PlayableList::iterator    end;
+
+    liveModeContents = gLiveSupport->getLiveModeContents();
+    it  = liveModeContents->begin();
+    end = liveModeContents->end();
+    while (it != end) {
+        Ptr<Playable>::Ref      playable = *it;
+
+        if (*playable->getId() == *id) {
+            liveModeContents->erase(it);
+            break;
+        }
+
+        it++;
     }
 }
 
