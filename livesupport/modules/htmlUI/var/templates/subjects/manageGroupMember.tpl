@@ -21,11 +21,17 @@
                     {assign var="_member" value=$SUBJECTS->getGroupMember($_REQUEST.id)}
                     {if (is_array($_member) && count($_member)>0)}
                         {foreach from=$_member item="i"}
-                            <tr class="{cycle values='blue1, blue2'}"
-                                onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
+                            <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                                <td>{$i.login}</td>
-                                 <td style="border: 0; text-align: center"><img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|capitalize}" /></td>
+                                <td onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">{$i.login}</td>
+                                <td style="border: 0; text-align: center"
+                                    onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
+                                    {if $i.type|lower == 'u'}
+                                        <img src="img/user.png" border="0" alt="User" />
+                                    {else}
+                                        <img src="img/group.png" border="0" alt="Group" />
+                                    {/if}
+                                </td>
                             </tr>
                         {/foreach}
                     {else}
@@ -65,7 +71,14 @@
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
                                 <td onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.addSubj2Gr')">{$i.login}</td>
-                                <td style="border: 0; text-align: center"><img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|capitalize}" /></td>
+                                <td style="border: 0; text-align: center"
+                                    onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
+                                    {if $i.type|lower == 'u'}
+                                        <img src="img/user.png" border="0" alt="User" />
+                                    {else}
+                                        <img src="img/group.png" border="0" alt="Group" />
+                                    {/if}
+                                </td>
                             </tr>
                             <!-- end item -->
                         {/if}

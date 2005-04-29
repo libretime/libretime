@@ -89,7 +89,7 @@ $ui_fmask = array(
             'label'     => 'Reduce Upload Filesize',
             'rule'      => 'numeric',
             'attributes'   => array(
-                                'onFocus'  => 'alert ("'.tra('Note: System Maximum is set to $1 in php.ini. You can just reduce this amount here.',
+                                'onClick'  => 'alert ("'.tra('Note: System Maximum is set to $1 in php.ini. You can just reduce this amount here.',
                                                             ini_get('upload_max_filesize')).'")'
                            )
         ),
