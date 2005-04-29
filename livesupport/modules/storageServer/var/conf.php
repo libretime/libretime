@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/conf.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,6 +88,7 @@ $config = array(
     'bufferDir'     =>  dirname(__FILE__).'/../../storageServer/var/stor/buffer',
     'transDir'      =>  dirname(__FILE__).'/../../storageServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../storageServer/var/access',
+    'pearPath'      =>  dirname(__FILE__).'/../../../usr/lib/php/php',
     'isArchive'     =>  FALSE,
     'validate'      =>  TRUE,
     'useTrash'      =>  TRUE,
@@ -142,6 +143,8 @@ $config = array(
 $config['sysSubjs'] = array(
     'root', $config['AdminsGr'], $config['AllGr'], $config['StationPrefsGr']
 );
+$old_ip = get_include_path();
+set_include_path('.'.PATH_SEPARATOR.$config['pearPath'].PATH_SEPARATOR.$old_ip);
 
 // see if a ~/.livesupport/storageServer.conf.php exists, and
 // overwrite the settings from there if any
