@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.1 $
+         *  @version $Revision: 1.2 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -164,7 +164,21 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  The right-click context menu,
          *  that comes up when right-clicking an entry in the entry list.
          */
-//        Gtk::Menu                 * contextMenu;
+        Gtk::Menu                 * contextMenu;
+
+        /**
+         *  Signal handler for the mouse clicked on one of the entries.
+         *
+         *  @param event the button event recieved
+         */
+        virtual void
+        onEntryClicked(GdkEventButton     * event)              throw ();
+
+        /**
+         *  Signal handler for the cue menu option selected.
+         */
+        virtual void
+        onCueMenuOption(void)                                   throw ();
 
 
     public:

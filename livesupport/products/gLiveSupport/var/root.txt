@@ -184,6 +184,8 @@ root:table
         titleColumnLabel:string       { "Title" }
         creatorColumnLabel:string     { "Creator" }
         lengthColumnLabel:string      { "Length" }
+        
+        cueMenuItem:string            { "Cue" }
     }
 }
 

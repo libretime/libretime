@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,11 +91,11 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     
     treeView->columns_autosize();
     
-/*
+
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
                                             &LiveModeWindow::onEntryClicked));
-*/
+
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
     scrolledWindow.add(*treeView);
 
@@ -104,23 +104,23 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     vBox.pack_start(scrolledWindow);
     add(vBox);
-/*
+
     // create the right-click entry context menu for audio clips
     contextMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& contextMenuList = contextMenu->items();
     // register the signal handlers for the popup menu
     try {
-        contextMenu.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("addToPlaylistMenuItem"),
-                                 sigc::mem_fun(*this,
-                                        &LiveModeWindow::onAddToPlaylist)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("cueMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onCueMenuOption)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
 
     contextMenu->accelerate(*this);
-*/
+
     // show
     set_name("liveModeWindow");
     set_default_size(530, 300);
@@ -137,7 +137,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
  *  Show all audio clips
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: showContents(void)                          throw ()
+LiveModeWindow :: showContents(void)                                throw ()
 {
     Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
     GLiveSupport::PlayableList::iterator    it;
@@ -173,7 +173,67 @@ LiveModeWindow :: showContents(void)                          throw ()
 /*------------------------------------------------------------------------------
  *  Destructor.
  *----------------------------------------------------------------------------*/
-LiveModeWindow :: ~LiveModeWindow (void)                    throw ()
+LiveModeWindow :: ~LiveModeWindow (void)                            throw ()
 {
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for an entry being clicked in the list
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
+{
+    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                      treeView->get_selection();
+        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+        
+        // if nothing is currently selected, select row at mouse pointer
+        if (!iter) {
+            Gtk::TreeModel::Path    path;
+            Gtk::TreeViewColumn *   column;
+            int     cell_x,
+                    cell_y;
+            if (treeView->get_path_at_pos(int(event->x), int(event->y),
+                                          path, column,
+                                          cell_x, cell_y)) {
+                refSelection->select(path);
+                iter = refSelection->get_selected();
+            }
+        }
+
+        if (iter) {
+            Ptr<Playable>::Ref  playable =
+                                        (*iter)[modelColumns.playableColumn];
+            contextMenu->popup(event->button, event->time);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the cue menu option selected.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onCueMenuOption(void)                             throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView->get_selection();
+    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+
+        try {
+            gLiveSupport->playAudio(playable);
+        } catch (XmlRpcException &e) {
+            std::cerr << "GLiveSupport::playAudio() error:" << std::endl
+                        << e.what() << std::endl;
+        } catch (std::exception &e) {
+            std::cerr << "GLiveSupport::playAudio() error:" << std::endl
+                        << e.what() << std::endl;
+        }
+    }
 }
 
