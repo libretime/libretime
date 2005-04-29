@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.59 $
+    Version  : $Revision: 1.60 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.59 $
+ *  @version $Revision: 1.60 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -639,7 +639,7 @@ class GreenBox extends BasicStor{
      *
      *  @param id int, local id
      *  @param sessid string, session ID
-     *  @return FALSE | int - id of user editing it
+     *  @return TRUE | int - id of user editing it
      */
     function playlistIsAvailable($id, $sessid)
     {
