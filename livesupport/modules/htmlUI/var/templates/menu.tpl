@@ -16,7 +16,7 @@
                 <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Playlist Editor##</a></li>
                 <li><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a></li>
 
-                {if $USER.login == 'root'}
+                {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'subjects')}
                 <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a>
                     <ul>
                         <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a></li>
