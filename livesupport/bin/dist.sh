@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -181,6 +181,7 @@ taglib_version=taglib-1.3.1
 taglib_tmpdir=$tools_tmpdir/taglib
 
 pear_dir=$toolsdir/pear
+pear_tmpdir=$tools_tmpdir/pear
 
 #-------------------------------------------------------------------------------
 #  Create the sources tarball first
@@ -287,7 +288,7 @@ mkdir -p $taglib_tmpdir
 cp -pPR $taglib_dir/$taglib_version $taglib_tmpdir
 
 mkdir -p $pear_tmpdir
-cp -pPR $pear_dir $tools_tmpdir
+cp -pPR $pear_dir/* $pear_tmpdir
 
 
 #-------------------------------------------------------------------------------

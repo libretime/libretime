@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.5 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -151,7 +151,6 @@ cp -pPR $modules_dir/htmlUI/var $install_var/htmlUI
 #-------------------------------------------------------------------------------
 cp -pPR $usrdir/lib/* $install_lib
 cp -pPR $usrdir/etc/* $install_etc
-cp -pPR $usrdir/lib/php/* $install_lib
 
 
 #-------------------------------------------------------------------------------
