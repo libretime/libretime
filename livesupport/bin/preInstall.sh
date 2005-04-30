@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/preInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -164,18 +164,20 @@ check_exe "php" || exit 1;
 check_exe "pear" || exit 1;
 check_exe "odbcinst" || exit 1;
 
-check_pear_module "DB" || exit 1;
-check_pear_module "Calendar" || exit 1;
-check_pear_module "File" || exit 1;
-check_pear_module "File_Find" || exit 1;
-check_pear_module "HTML_Common" || exit 1;
-check_pear_module "HTML_QuickForm" || exit 1;
-check_pear_module "XML_Beautifier" || exit 1;
-check_pear_module "XML_Parser" || exit 1;
-check_pear_module "XML_RPC" || exit 1;
-check_pear_module "XML_Serializer" || exit 1;
-check_pear_module "XML_Util" || exit 1;
+#check_pear_module "DB" || exit 1;
+#check_pear_module "Calendar" || exit 1;
+#check_pear_module "File" || exit 1;
+#check_pear_module "File_Find" || exit 1;
+#check_pear_module "HTML_Common" || exit 1;
+#check_pear_module "HTML_QuickForm" || exit 1;
+#check_pear_module "XML_Beautifier" || exit 1;
+#check_pear_module "XML_Parser" || exit 1;
+#check_pear_module "XML_RPC" || exit 1;
+#check_pear_module "XML_Serializer" || exit 1;
+#check_pear_module "XML_Util" || exit 1;
 
+echo "preinstalling pear packages..."
+$toolsdir/pear/bin/install.sh || exit 1;
 
 #-------------------------------------------------------------------------------
 #  Say goodbye
