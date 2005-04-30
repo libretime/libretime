@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php.template,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,6 +75,7 @@ $config = array(
 
     /* ================================================ storage configuration */
     'authCookieName'=> 'assid',
+    'AdminsGr'      => 'Admins',
     'StationPrefsGr'=> '',
     'AllGr'         => 'All',
     'storageDir'    =>  dirname(__FILE__).'/../../archiveServer/var/stor',
