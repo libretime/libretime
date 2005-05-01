@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/conf.php.template,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,7 +82,7 @@ $config = array(
     'bufferDir'     =>  dirname(__FILE__).'/../../archiveServer/var/stor/buffer',
     'transDir'      =>  dirname(__FILE__).'/../../archiveServer/var/trans',
     'accessDir'     =>  dirname(__FILE__).'/../../archiveServer/var/access',
-    'pearPath'      =>  'ls_install_dir/lib/php/php',
+    'pearPath'      =>  'ls_install_dir/usr/lib/php/php',
     'isArchive'     =>  TRUE,
     'validate'      =>  TRUE,
     'useTrash'      =>  FALSE,
