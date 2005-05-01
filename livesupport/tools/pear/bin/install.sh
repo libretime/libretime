@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -55,6 +55,7 @@ basedir=`cd $reldir; pwd;`
 rootdir=`cd $basedir/../..; pwd;`
 tmpdir=$basedir/tmp
 etcdir=$basedir/etc
+usrdir=$rootdir/usr
 
 echo "installing $description (with rootdir: $rootdir)"
 
@@ -64,6 +65,14 @@ do echo $i
     pear install -R $rootdir $i || \
         { echo "*** ERROR installing $i"; exit 1; }
 done
+
+# ugly work-around, as some system install the modules under
+# usr/share/pear, but we're expecting it to be at usr/lib/php
+
+if [ -d $usrdir/share/pear ]; then
+    rm -rf $usrdir/lib/php
+    mv -f $usrdir/share/pear $usrdir/lib/php
+fi
 
 echo "PEAR packages install finished OK"
 exit 0
