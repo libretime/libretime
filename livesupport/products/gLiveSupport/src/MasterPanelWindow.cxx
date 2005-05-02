@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -343,13 +343,17 @@ MasterPanelWindow :: onLiveModeButtonClicked(void)                  throw ()
         }
 
         liveModeWindow.reset(new LiveModeWindow(gLiveSupport, bundle));
+        liveModeWindow->show();
+        liveModeWindow->showContents();
+        return;
     }
 
     if (!liveModeWindow->is_visible()) {
         liveModeWindow->show();
+        liveModeWindow->showContents();
+    } else {
+        liveModeWindow->hide();
     }
-
-    liveModeWindow->showContents();
 }
 
 
@@ -369,10 +373,14 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
         }
 
         uploadFileWindow.reset(new UploadFileWindow(gLiveSupport, bundle));
+        uploadFileWindow->show();
+        return;
     }
 
     if (!uploadFileWindow->is_visible()) {
         uploadFileWindow->show();
+    } else {
+        uploadFileWindow->hide();
     }
 }
 
@@ -393,13 +401,17 @@ MasterPanelWindow :: onScratchpadButtonClicked(void)                throw ()
         }
 
         scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport, bundle));
+        scratchpadWindow->show();
+        scratchpadWindow->showContents();
+        return;
     }
 
     if (!scratchpadWindow->is_visible()) {
         scratchpadWindow->show();
+        scratchpadWindow->showContents();
+    } else {
+        scratchpadWindow->hide();
     }
-
-    scratchpadWindow->showContents();
 }
 
 
@@ -420,10 +432,14 @@ MasterPanelWindow :: onSimplePlaylistMgmtButtonClicked(void)        throw ()
 
         simplePlaylistMgmtWindow.reset(
                 new SimplePlaylistManagementWindow(gLiveSupport, bundle));
+        simplePlaylistMgmtWindow->show();
+        return;
     }
     
     if (!simplePlaylistMgmtWindow->is_visible()) {
         simplePlaylistMgmtWindow->show();
+    } else {
+        simplePlaylistMgmtWindow->hide();
     }
 }
 
@@ -444,10 +460,14 @@ MasterPanelWindow :: onSchedulerButtonClicked(void)                 throw ()
         }
 
         schedulerWindow.reset(new SchedulerWindow(gLiveSupport, bundle));
+        schedulerWindow->show();
+        return;
     }
 
     if (!schedulerWindow->is_visible()) {
         schedulerWindow->show();
+    } else {
+        schedulerWindow->hide();
     }
 }
 
@@ -468,10 +488,14 @@ MasterPanelWindow :: onSearchButtonClicked(void)                    throw ()
         }
 
         searchWindow.reset(new SearchWindow(gLiveSupport, bundle));
+        searchWindow->show();
+        return;
     }
 
     if (!searchWindow->is_visible()) {
         searchWindow->show();
+    } else {
+        searchWindow->hide();
     }
 }
 
