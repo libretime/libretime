@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include <XmlRpcValue.h>
 
 #include "ScheduleFactory.h"
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Authentication/AuthenticationClientFactory.h"
 #include "LiveSupport/Storage/StorageClientFactory.h"
 
@@ -53,6 +54,8 @@
 #include "RemoveFromScheduleMethod.h"
 #include "RemoveFromScheduleMethodTest.h"
 
+
+using namespace boost::posix_time;
 
 using namespace LiveSupport::Authentication;
 using namespace LiveSupport::Storage;
@@ -206,4 +209,71 @@ RemoveFromScheduleMethodTest :: negativeTest(void)
     } catch (XmlRpc::XmlRpcException &e) {
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  A test to try to remove a currently playing entry.
+ *----------------------------------------------------------------------------*/
+void
+RemoveFromScheduleMethodTest :: currentlyPlayingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<UploadPlaylistMethod>::Ref  uploadMethod(
+                                    new UploadPlaylistMethod());
+    Ptr<RemoveFromScheduleMethod>::Ref  removeMethod(
+                                    new RemoveFromScheduleMethod());
+    XmlRpc::XmlRpcValue             parameters;
+    XmlRpc::XmlRpcValue             rootParameter;
+    rootParameter.setSize(1);
+    XmlRpc::XmlRpcValue             result;
+    Ptr<ptime>::Ref                 now;
+    struct tm                       time;
+    Ptr<time_duration>::Ref         duration;
+    Ptr<UniqueId>::Ref              entryId;
+    bool                            gotException;
+
+    // first schedule (upload) a playlist, for 10 seconds from now
+    now   = TimeConversion::now();
+    *now += seconds(10);
+    TimeConversion::ptimeToTm(now, time);
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["playlistId"] = "0000000000000001";
+    parameters["playtime"] = &time;
+    rootParameter[0]       = parameters;
+
+    result.clear();
+    try {
+        uploadMethod->execute(rootParameter, result);
+    } catch (XmlRpc::XmlRpcException &e) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method returned error: " << e.getCode()
+             << " - " << e.getMessage();
+        CPPUNIT_FAIL(eMsg.str());
+    }
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+                                        == XmlRpc::XmlRpcValue::TypeString);
+    entryId.reset(new UniqueId(std::string(result["scheduleEntryId"])));
+
+    // wait 10 seconds, so that what we've scheduled is the currently playing
+    // entry
+    duration.reset(new time_duration(seconds(10)));
+    TimeConversion::sleep(duration);
+
+    // now try to remove what we've scheduled, this should fail
+    parameters.clear();
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["scheduleEntryId"] = std::string(*entryId);
+    rootParameter[0]              = parameters;
+
+    result.clear();
+    gotException = false;
+    try {
+        removeMethod->execute(rootParameter, result);
+    } catch (XmlRpc::XmlRpcException &e) {
+        gotException = true;
+    }
+    CPPUNIT_ASSERT(gotException);
+}
+
 

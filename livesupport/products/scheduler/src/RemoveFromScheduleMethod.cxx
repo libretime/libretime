@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,8 +123,17 @@ RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
 
     Ptr<ScheduleFactory>::Ref   sf       = ScheduleFactory::getInstance();
     Ptr<ScheduleInterface>::Ref schedule = sf->getSchedule();
+    Ptr<ScheduleEntry>::Ref     currentlyPlaying;
 
     try {
+        currentlyPlaying = schedule->getCurrentlyPlaying();
+        if (currentlyPlaying.get()
+         && currentlyPlaying->getId()->getId() == entryId->getId()) {
+            XmlRpcTools::markError(errorId+4,
+                                 "the entry to be deleted is currently playing",
+                                   returnValue);
+            return;
+        }
         schedule->removeFromSchedule(entryId);
 
     } catch (std::invalid_argument &e) {
@@ -133,3 +142,4 @@ RemoveFromScheduleMethod :: execute(XmlRpc::XmlRpcValue  & rootParameter,
         return;
     }
 }
+

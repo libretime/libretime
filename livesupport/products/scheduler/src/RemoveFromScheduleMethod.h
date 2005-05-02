@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RemoveFromScheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,11 +86,12 @@ using namespace LiveSupport::Core;
  *     <li>1201 - invalid argument format </li>
  *     <li>1202 - missing schedule entry ID argument </li>
  *     <li>1203 - schedule entry not found </li>
+ *     <li>1204 - the entry to be deleted is currently playing </li>
  *     <li>1220 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.8 $
  */
 class RemoveFromScheduleMethod : public XmlRpc::XmlRpcServerMethod
 {

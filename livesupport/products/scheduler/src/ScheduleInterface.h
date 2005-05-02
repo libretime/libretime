@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/ScheduleInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,8 +69,8 @@ using namespace LiveSupport::Core;
 /**
  *  The generic interface for the component scheduling events.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.8 $
  */
 class ScheduleInterface : virtual public Installable
 {
@@ -115,6 +115,16 @@ class ScheduleInterface : virtual public Installable
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
                                                             throw ()
+                                                                    = 0;
+
+        /**
+         *  Return the schedule entry that is being played at the moment.
+         *
+         *  @return the schedule entry that is being played at the monent,
+         *          or a reference to null, if nothing is playing currently.
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getCurrentlyPlaying(void)                           throw ()
                                                                     = 0;
 
         /**

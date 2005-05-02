@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRemoveFromScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "RpcRemoveFromScheduleTest.h"
 
@@ -183,3 +184,53 @@ RpcRemoveFromScheduleTest :: negativeTest(void)
     xmlRpcClient.close();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  A test to try to remove a currently playing entry.
+ *----------------------------------------------------------------------------*/
+void
+RpcRemoveFromScheduleTest :: currentlyPlayingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    XmlRpcValue                 parameters;
+    XmlRpcValue                 result;
+    Ptr<ptime>::Ref             now;
+    struct tm                   time;
+    Ptr<time_duration>::Ref     duration;
+    Ptr<UniqueId>::Ref          entryId;
+
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
+
+    // first schedule (upload) a playlist, for 15 seconds from now
+    now   = TimeConversion::now();
+    *now += seconds(10);
+    TimeConversion::ptimeToTm(now, time);
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["playlistId"] = "0000000000000001";
+    parameters["playtime"] = &time;
+
+    result.clear();
+    xmlRpcClient.execute("uploadPlaylist", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+                                                == XmlRpcValue::TypeString);
+    entryId.reset(new UniqueId(std::string(result["scheduleEntryId"] )));
+
+    // wait 10 seconds, so that what we've scheduled is the currently playing
+    // entry
+    duration.reset(new time_duration(seconds(10)));
+    TimeConversion::sleep(duration);
+
+    // now try to remove what we've scheduled, this should fail
+    parameters["scheduleEntryId"] = std::string(*entryId);
+
+    result.clear();
+    xmlRpcClient.execute("removeFromSchedule", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
+}

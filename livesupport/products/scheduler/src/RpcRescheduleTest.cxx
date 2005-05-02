@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRescheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
 #include <XmlRpcValue.h>
 
 #include "SchedulerDaemon.h"
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "RpcRescheduleTest.h"
 
@@ -227,4 +228,64 @@ RpcRescheduleTest :: negativeTest(void)
 
     xmlRpcClient.close();
 }
+
+
+/*------------------------------------------------------------------------------
+ *  A test to see if the currently playing entry can be rescheduled (should not)
+ *----------------------------------------------------------------------------*/
+void
+RpcRescheduleTest :: currentlyPlayingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    XmlRpc::XmlRpcValue         parameters;
+    XmlRpc::XmlRpcValue         result;
+    Ptr<ptime>::Ref             now;
+    struct tm                   time;
+    Ptr<time_duration>::Ref     duration;
+    Ptr<UniqueId>::Ref          entryId;
+
+    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
+                                         getXmlRpcPort(),
+                                         "/RPC2",
+                                         false);
+
+    // first schedule (upload) a playlist, for 10 seconds from now
+    now   = TimeConversion::now();
+    *now += seconds(10);
+    TimeConversion::ptimeToTm(now, time);
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["playlistId"] = "0000000000000001";
+    parameters["playtime"] = &time;
+
+    result.clear();
+    xmlRpcClient.execute("uploadPlaylist", parameters, result);
+    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("scheduleEntryId"));
+    CPPUNIT_ASSERT(result["scheduleEntryId"].getType() 
+                                                == XmlRpcValue::TypeString);
+    entryId.reset(new UniqueId(std::string(result["scheduleEntryId"] )));
+
+    // wait 10 seconds, so that what we've scheduled is the currently playing
+    // entry
+    duration.reset(new time_duration(seconds(10)));
+    TimeConversion::sleep(duration);
+
+    // now try to reschedule it, should faile
+    parameters["sessionId"]       = sessionId->getId();
+    parameters["scheduleEntryId"] = std::string(*entryId);
+    time.tm_year = 2001;
+    time.tm_mon  = 11;
+    time.tm_mday = 12;
+    time.tm_hour =  8;
+    time.tm_min  =  0;
+    time.tm_sec  =  0;
+    parameters["playtime"] = &time;
+
+    result.clear();
+    xmlRpcClient.execute("reschedule", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+
+    xmlRpcClient.close();
+}
+
 

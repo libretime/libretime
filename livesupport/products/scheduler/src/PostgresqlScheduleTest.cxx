@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlScheduleTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <string>
 #include <iostream>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Db/ConnectionManagerFactory.h"
 #include "SchedulerDaemon.h"
 #include "PostgresqlSchedule.h"
@@ -494,6 +495,49 @@ PostgresqlScheduleTest :: rescheduleTest(void)
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the return of the currently playing entry
+ *----------------------------------------------------------------------------*/
+void
+PostgresqlScheduleTest :: currentlyPlayingTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // create a 1 hour long playlist
+    Ptr<UniqueId>::Ref      playlistId = UniqueId::generateId();
+    Ptr<time_duration>::Ref playlength(new time_duration(1, 0, 0));
+    Ptr<Playlist>::Ref      playlist(new Playlist(playlistId, playlength));
+
+    Ptr<ptime>::Ref             from;
+    Ptr<ptime>::Ref             to;
+    Ptr<time_duration>::Ref     duration;
+
+    Ptr<UniqueId>::Ref      entryId;
+
+    Ptr<ScheduleEntry>::Ref entry;
+
+    // at the very first, see if null is returned if nothing is playing
+    // currently
+    entry = schedule->getCurrentlyPlaying();
+    CPPUNIT_ASSERT(!entry.get());
+
+    // schedule our playlist for 10 seconds from now
+    from   = TimeConversion::now();
+    *from += seconds(10);
+    entryId = schedule->schedulePlaylist(playlist, from);
+
+    // wait 10 seconds, so that what we've scheduled is the currently
+    // playing entry
+    duration.reset(new time_duration(seconds(10)));
+    TimeConversion::sleep(duration);
+
+    // now see if the entry returned for currently playing is indeed
+    // what we've scheduled
+    entry = schedule->getCurrentlyPlaying();
+    CPPUNIT_ASSERT(entry.get());
+    CPPUNIT_ASSERT(entry->getId()->getId() == entryId->getId());
 }
 
 

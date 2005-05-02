@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 #include <odbc++/preparedstatement.h>
 #include <odbc++/resultset.h>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Db/Conversion.h"
 #include "PostgresqlSchedule.h"
 
@@ -132,6 +133,16 @@ const std::string PostgresqlSchedule::getScheduleEntriesStmt =
     "SELECT id, playlist, starts, ends FROM schedule WHERE "
     "(? < ends) AND (starts < ?) "
     "ORDER BY starts";
+
+/*------------------------------------------------------------------------------
+ *  The SQL statement for getting the currently playing schedule entry.
+ *  The parameters for this call are: from
+ *  and returns the properties: id, playlist, starts, ends for the next
+ *  schedule entry after the specified timepoint
+ *----------------------------------------------------------------------------*/
+const std::string PostgresqlSchedule::getCurrentlyPlayingStmt =
+    "SELECT id, playlist, starts, ends FROM schedule "
+    " WHERE starts <= ? AND ? < ends";
 
 /*------------------------------------------------------------------------------
  *  The SQL statement for querying the next scheduled entry from the
@@ -418,6 +429,52 @@ PostgresqlSchedule :: getScheduleEntries(
 
 
 /*------------------------------------------------------------------------------
+ *  Get the currently playing entry
+ *----------------------------------------------------------------------------*/
+Ptr<ScheduleEntry>::Ref
+PostgresqlSchedule :: getCurrentlyPlaying(void)                 throw ()
+{
+    Ptr<Connection>::Ref        conn;
+    Ptr<ScheduleEntry>::Ref     result;
+    Ptr<ptime>::Ref             now = TimeConversion::now();
+
+    try {
+        conn = cm->getConnection();
+        Ptr<Timestamp>::Ref         timestamp;
+        Ptr<PreparedStatement>::Ref pstmt(conn->prepareStatement(
+                                            getCurrentlyPlayingStmt));
+        timestamp = Conversion::ptimeToTimestamp(now);
+        pstmt->setTimestamp(1, *timestamp);
+        pstmt->setTimestamp(2, *timestamp);
+
+        Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
+        if (rs->next()) {
+            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(1)));
+            Ptr<UniqueId>::Ref  playlistId(new UniqueId(rs->getLong(2)));
+
+            *timestamp = rs->getTimestamp(3);
+            Ptr<ptime>::Ref startTime = Conversion::timestampToPtime(timestamp);
+
+            *timestamp = rs->getTimestamp(4);
+            Ptr<ptime>::Ref endTime = Conversion::timestampToPtime(timestamp);
+
+            result.reset(new ScheduleEntry(id, playlistId, startTime, endTime));
+        }
+
+        cm->returnConnection(conn);
+    } catch (std::exception &e) {
+        if (conn) {
+            cm->returnConnection(conn);
+        }
+        // TODO: report error
+        return result;
+    }
+
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
  *  Get the next schedule entry after a specified timepoint
  *----------------------------------------------------------------------------*/
 Ptr<ScheduleEntry>::Ref
@@ -437,7 +494,7 @@ PostgresqlSchedule :: getNextEntry(Ptr<ptime>::Ref  fromTime)
 
         Ptr<ResultSet>::Ref     rs(pstmt->executeQuery());
         if (rs->next()) {
-            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(2)));
+            Ptr<UniqueId>::Ref  id(new UniqueId(rs->getLong(1)));
             Ptr<UniqueId>::Ref  playlistId(new UniqueId(rs->getLong(2)));
 
             *timestamp = rs->getTimestamp(3);

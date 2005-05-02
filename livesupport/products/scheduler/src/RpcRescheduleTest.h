@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RpcRescheduleTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  Unit test to test the removeFromSchedule XML-RPC call.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see SchedulerDaemon
  */
 class RpcRescheduleTest : public BaseTestMethod
@@ -72,6 +72,7 @@ class RpcRescheduleTest : public BaseTestMethod
     CPPUNIT_TEST_SUITE(RpcRescheduleTest);
     CPPUNIT_TEST(simpleTest);
     CPPUNIT_TEST(negativeTest);
+    CPPUNIT_TEST(currentlyPlayingTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -98,6 +99,15 @@ class RpcRescheduleTest : public BaseTestMethod
          */
         void
         negativeTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to see if the currently playing entry can be reschuled
+         *  (should not)
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        currentlyPlayingTest(void)          throw (CPPUNIT_NS::Exception);
 
     public:
         

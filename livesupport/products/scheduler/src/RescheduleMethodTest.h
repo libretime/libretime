@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,13 +65,14 @@ using namespace LiveSupport::Authentication;
  *  Unit test for the RescheduleMethod class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see RescheduleMethod
  */
 class RescheduleMethodTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(RescheduleMethodTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(currentlyPlayingTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -101,6 +102,15 @@ class RescheduleMethodTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to see if rescheduling the currently playing entry works.
+         *  (should not)
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        currentlyPlayingTest(void)              throw (CPPUNIT_NS::Exception);
 
     public:
         

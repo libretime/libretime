@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PostgresqlSchedule.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class PostgresqlSchedule : public Configurable,
                            public ScheduleInterface
@@ -136,6 +136,12 @@ class PostgresqlSchedule : public Configurable,
          *  The SQL statement for getting the schedules for a time interval
          */
         static const std::string    getScheduleEntriesStmt;
+
+        /**
+         *  The SQL statement for getting the currently playing schedule
+         *  entry.
+         */
+        static const std::string    getCurrentlyPlayingStmt;
 
         /**
          *  The SQL statement for getting the next schedule entry after a
@@ -284,6 +290,15 @@ class PostgresqlSchedule : public Configurable,
         getScheduleEntries(Ptr<ptime>::Ref  fromTime,
                            Ptr<ptime>::Ref  toTime)
                                                             throw ();
+
+        /**
+         *  Return the schedule entry that is being played at the moment.
+         *
+         *  @return the schedule entry that is being played at the monent,
+         *          or a reference to null, if nothing is playing currently.
+         */
+        virtual Ptr<ScheduleEntry>::Ref
+        getCurrentlyPlaying(void)                           throw ();
 
         /**
          *  Return the next schedule entry, after (but not including)

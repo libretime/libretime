@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/RescheduleMethod.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,11 +89,12 @@ using namespace LiveSupport::Core;
  *     <li>1303 - missing playtime argument </li>
  *     <li>1304 - schedule entry not found </li>
  *     <li>1305 - could not reschedule entry </li>
+ *     <li>1306 - the entry to be rescheduled is currently playing </li>
  *     <li>1320 - missing session ID argument </li>
  *  </ul>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.8 $
  */
 class RescheduleMethod : public XmlRpc::XmlRpcServerMethod
 {
