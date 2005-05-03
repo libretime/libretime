@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.4 $</li>
+  <li>Version: $Revision: 1.5 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/release.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -33,6 +33,8 @@ The release process boils down to the following steps:<br>
   </li>
   <li>creating release tarballs</li>
   <li>testing the tarballs</li>
+  <li>creating Debian packages<br>
+  </li>
   <li>tagging the sources</li>
   <li>publishing the tarballs</li>
   <li>announcing the release<br>
@@ -88,6 +90,31 @@ the tarballs, follow the procedure described in the LiveSupport <a
 <br>
 Do not publish tarballs that have not been tested, or are known to be
 broken.<br>
+<h1>Creating Debian packages</h1>
+After the source tarballs have been tested, Debian source and binary
+packages can be created. To do so, upload the source tarballs to a
+Debian system, and do the following:<br>
+<br>
+<pre><code>tar xfj livesupport-&lt;ls-version&gt;.tar.bz2<br>tar xfj livesupport-libraries-&lt;ls-version&gt;.tar.bz2<br>cd livesupport-&lt;ls-version&gt;<br>./bin/createDebianPackages.sh -d .. -v &lt;ls-version&gt; -m "Package Maintainer &lt;maintainer@foo.bar&gt;" -o ..<br>cd ..<br></code></pre>
+<br>
+The above command will create the Debain source package files next to
+the original source tarballs. The script will generate the following
+files, making up the Debian source package:<br>
+<br>
+<pre><code>livesupport_&lt;ls-version&gt;-1.dsc<br></code><code>livesupport_&lt;ls-version&gt;-1.diff.gz<br></code><code>livesupport_&lt;ls-version&gt;.orig.tar.gz<br><br></code></pre>
+Based on the source packages, the Debian package management system can
+build the binaries for the current target platform, provided all the
+necessary packages required to build are installed on the system. For a
+list of the necessary packages, please consult the debian/control file
+in extracted debianized source tree generated below.<br>
+Building is best done
+in an empty directory as follows:<br>
+<br>
+<pre><code>rm -rf debian_build<br>mkdir debian_build<br>cd debian_build<br></code>dpkg-source -x ../livesupport_&lt;ls_version&gt;-1.dsc<br>cd livesupport-&lt;ls-version&gt;<br>dpkg-buildpackage -rfakeroot<br>cd ../..<br><br></pre>
+The above commands will result in the following debian packages:<br>
+<br>
+<pre><code>livesupport-libs_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>livesupport-station_&lt;ls-version&gt;-1_&lt;arch&gt;.deb<br></code><code>livesupport-studio_&lt;ls-version&gt;-1_&lt;arch&gt;.deb</code><br></pre>
+<pre><code></code><code></code></pre>
 <h1>Tagging the sources</h1>
 After the tarballs have been tested, the release can be finalized. As a
 first step, the current state of the LiveSupport version control
@@ -99,12 +126,17 @@ directory:<br>
 <pre><code>cvs tag livesupport_&lt;ls-version&gt;<br></code></pre>
 <br>
 This will tag the current state of the repository with the tag <code>livesupport_&lt;ls-version&gt;</code>,
-enabling later retrieval of this specific state.<br>
+enabling later retrieval of this specific state. Please note that since
+CVS does not support dots (<code>'.'</code>) in tags, the dots in the
+version number are replaced by underscore (<code>'_'</code>) when
+tagging. Thus, <code>livesupport-0.9.1</code> is tagged as <code>livesupport-0_9_1</code>,
+for example.<br>
 <h1>Publishing the tarballs</h1>
 To make the release available to the public, the created tarballs have
 to be published. This is done by making the files accessible under the
-URL <code></code><code>http://livesupport.campware.org/look/campware/download/</code>
-. Currently, only MDLF support staff have access to publish into this
+LiveSupport project page on SourceForge: <code>http://sourceforge.net/projects/livesupport</code><span
+ style="font-family: monospace;"></span><code></code>. Currently, only
+MDLF support staff have access to publish into this
 space, so after creating the tarballs, one should contact them
 personally to publish the files.<br>
 <h1>Announcing the release</h1>
