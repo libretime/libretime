@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     nowPlayingWidget = Gtk::manage(new Gtk::Label("now playing"));
     nowPlayingBin = Gtk::manage(widgetFactory->createDarkBlueBin());
     nowPlayingBin->add(*nowPlayingWidget);
-    timeBin->set_size_request(-1, 104);
+    nowPlayingBin->set_size_request(-1, 104);
 
     // set up the VU meter widget
     vuMeterWidget = Gtk::manage(new Gtk::Label("VU meter"));
@@ -331,7 +331,7 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
  *  The event when the Live Mode button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onLiveModeButtonClicked(void)                  throw ()
+MasterPanelWindow :: updateLiveModeWindow(void)                     throw ()
 {
     if (!liveModeWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -343,16 +343,12 @@ MasterPanelWindow :: onLiveModeButtonClicked(void)                  throw ()
         }
 
         liveModeWindow.reset(new LiveModeWindow(gLiveSupport, bundle));
-        liveModeWindow->show();
-        liveModeWindow->showContents();
-        return;
     }
-
+    
+    liveModeWindow->showContents();
+    
     if (!liveModeWindow->is_visible()) {
         liveModeWindow->show();
-        liveModeWindow->showContents();
-    } else {
-        liveModeWindow->hide();
     }
 }
 
@@ -361,7 +357,7 @@ MasterPanelWindow :: onLiveModeButtonClicked(void)                  throw ()
  *  The event when the upload file button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
+MasterPanelWindow :: onUploadFileButtonClicked(void)                throw ()
 {
     if (!uploadFileWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -389,7 +385,7 @@ MasterPanelWindow :: onUploadFileButtonClicked(void)                 throw ()
  *  The event when the Scratchpad button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onScratchpadButtonClicked(void)                throw ()
+MasterPanelWindow :: updateScratchpadWindow(void)                   throw ()
 {
     if (!scratchpadWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -401,16 +397,12 @@ MasterPanelWindow :: onScratchpadButtonClicked(void)                throw ()
         }
 
         scratchpadWindow.reset(new ScratchpadWindow(gLiveSupport, bundle));
-        scratchpadWindow->show();
-        scratchpadWindow->showContents();
-        return;
     }
+
+    scratchpadWindow->showContents();
 
     if (!scratchpadWindow->is_visible()) {
         scratchpadWindow->show();
-        scratchpadWindow->showContents();
-    } else {
-        scratchpadWindow->hide();
     }
 }
 
@@ -419,7 +411,7 @@ MasterPanelWindow :: onScratchpadButtonClicked(void)                throw ()
  *  The event when the Simple Playlist Management button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onSimplePlaylistMgmtButtonClicked(void)        throw ()
+MasterPanelWindow :: updateSimplePlaylistMgmtWindow(void)           throw ()
 {
     if (!simplePlaylistMgmtWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -432,14 +424,12 @@ MasterPanelWindow :: onSimplePlaylistMgmtButtonClicked(void)        throw ()
 
         simplePlaylistMgmtWindow.reset(
                 new SimplePlaylistManagementWindow(gLiveSupport, bundle));
-        simplePlaylistMgmtWindow->show();
-        return;
     }
+    
+    simplePlaylistMgmtWindow->showContents();
     
     if (!simplePlaylistMgmtWindow->is_visible()) {
         simplePlaylistMgmtWindow->show();
-    } else {
-        simplePlaylistMgmtWindow->hide();
     }
 }
 
@@ -448,7 +438,9 @@ MasterPanelWindow :: onSimplePlaylistMgmtButtonClicked(void)        throw ()
  *  The event when the Scheduler button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onSchedulerButtonClicked(void)                 throw ()
+MasterPanelWindow :: updateSchedulerWindow(
+                        Ptr<boost::posix_time::ptime>::Ref time)
+                                                                    throw ()
 {
     if (!schedulerWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -460,14 +452,16 @@ MasterPanelWindow :: onSchedulerButtonClicked(void)                 throw ()
         }
 
         schedulerWindow.reset(new SchedulerWindow(gLiveSupport, bundle));
-        schedulerWindow->show();
-        return;
     }
+    
+    if (time.get()) {
+        schedulerWindow->setTime(time);
+    }
+    
+    schedulerWindow->showContents();
 
     if (!schedulerWindow->is_visible()) {
         schedulerWindow->show();
-    } else {
-        schedulerWindow->hide();
     }
 }
 
@@ -476,7 +470,7 @@ MasterPanelWindow :: onSchedulerButtonClicked(void)                 throw ()
  *  The event when the Search button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: onSearchButtonClicked(void)                    throw ()
+MasterPanelWindow :: updateSearchWindow(void)                       throw ()
 {
     if (!searchWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -488,14 +482,10 @@ MasterPanelWindow :: onSearchButtonClicked(void)                    throw ()
         }
 
         searchWindow.reset(new SearchWindow(gLiveSupport, bundle));
-        searchWindow->show();
-        return;
     }
 
     if (!searchWindow->is_visible()) {
         searchWindow->show();
-    } else {
-        searchWindow->hide();
     }
 }
 

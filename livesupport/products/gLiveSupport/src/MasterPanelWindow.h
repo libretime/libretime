@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -286,35 +286,76 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  pressed.
          */
         virtual void
-        onLiveModeButtonClicked(void)                       throw ();
+        onLiveModeButtonClicked(void)                       throw ()
+        {
+            if (!liveModeWindow ||
+                    liveModeWindow && !liveModeWindow->is_visible()) {
+                updateLiveModeWindow();
+            } else {
+                liveModeWindow->hide();
+            }
+        }
 
         /**
          *  Function to catch the event of the Scratchpad button being
          *  pressed.
          */
         virtual void
-        onScratchpadButtonClicked(void)                     throw ();
+        onScratchpadButtonClicked(void)                     throw ()
+        {
+            if (!scratchpadWindow ||
+                    scratchpadWindow && !scratchpadWindow->is_visible()) {
+                updateScratchpadWindow();
+            } else {
+                scratchpadWindow->hide();
+            }
+        }
 
         /**
          *  Function to catch the event of the Simple Playlist
          *  Management button being pressed.
          */
         virtual void
-        onSimplePlaylistMgmtButtonClicked(void)         throw ();
+        onSimplePlaylistMgmtButtonClicked(void)         throw ()
+        {
+            if (!simplePlaylistMgmtWindow ||
+                    simplePlaylistMgmtWindow &&
+                                 !simplePlaylistMgmtWindow->is_visible()) {
+                updateSimplePlaylistMgmtWindow();
+            } else {
+                simplePlaylistMgmtWindow->hide();
+            }
+        }
 
         /**
          *  Function to catch the event of the Scheduler button
          *  button being pressed.
          */
         virtual void
-        onSchedulerButtonClicked(void)                  throw ();
+        onSchedulerButtonClicked(void)                  throw ()
+        {
+            if (!schedulerWindow ||
+                    schedulerWindow && !schedulerWindow->is_visible()) {
+                updateSchedulerWindow();
+            } else {
+                schedulerWindow->hide();
+            }
+        }
 
         /**
          *  Function to catch the event of the Search button
          *  button being pressed.
          */
         virtual void
-        onSearchButtonClicked(void)                             throw ();
+        onSearchButtonClicked(void)                             throw ()
+        {
+            if (!searchWindow ||
+                    searchWindow && !searchWindow->is_visible()) {
+                updateSearchWindow();
+            } else {
+                searchWindow->hide();
+            }
+        }
 
 
     public:
@@ -364,68 +405,35 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Update the Live Mode window.
          */
         void
-        updateLiveModeWindow(void)                              throw ()
-        {
-            // this will create, open and display the window.
-            onLiveModeButtonClicked();
-        }
+        updateLiveModeWindow(void)                              throw ();
 
         /**
          *  Update the Scratchpad window.
          */
         void
-        updateScratchpadWindow(void)                            throw ()
-        {
-            // this will create, open and display the window.
-            onScratchpadButtonClicked();
-        }
+        updateScratchpadWindow(void)                            throw ();
 
         /**
          *  Update the Simple Playlist Management Window
          */
         void
-        updateSimplePlaylistMgmtWindow(void)                    throw ()
-        {
-            // this will create, open and display the window.
-            onSimplePlaylistMgmtButtonClicked();
-            simplePlaylistMgmtWindow->showContents();
-        }
+        updateSimplePlaylistMgmtWindow(void)                    throw ();
 
         /**
-         *  Update the Scheduler Window
-         */
-        void
-        updateSchedulerWindow(void)                             throw ()
-        {
-            // this will create, open and display the window.
-            onSchedulerButtonClicked();
-            schedulerWindow->showContents();
-        }
-
-        /**
-         *  Update the Scheduler Window to display a new time.
+         *  Update the Scheduler Window, optionally to display a new time.
          *
          *  @param time the time to display in the scheduler window.
          */
         void
-        updateSchedulerWindow(Ptr<boost::posix_time::ptime>::Ref    time)
-                                                                    throw ()
-        {
-            // this will create, open and display the window.
-            onSchedulerButtonClicked();
-            schedulerWindow->setTime(time);
-            schedulerWindow->showContents();
-        }
+        updateSchedulerWindow(Ptr<boost::posix_time::ptime>::Ref time =
+                                        Ptr<boost::posix_time::ptime>::Ref())
+                                                                throw ();
 
         /**
          *  Update the Search Window
          */
         void
-        updateSearchWindow(void)                                throw ()
-        {
-            // this will create, open and display the window.
-            onSearchButtonClicked();
-        }
+        updateSearchWindow(void)                                throw ();
 };
 
 /* ================================================= external data structures */

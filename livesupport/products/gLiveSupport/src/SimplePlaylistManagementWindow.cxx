@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -154,6 +154,10 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
         title.reset(new Glib::ustring(nameEntry->get_text()));
 
         playlist = gLiveSupport->getEditedPlaylist();
+        if (!playlist) {
+            return;
+        }
+        
         playlist->setTitle(title);
 
         playlist = gLiveSupport->savePlaylist();
@@ -197,23 +201,25 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
     Playlist::const_iterator                end;
 
     playlist = gLiveSupport->getEditedPlaylist();
-    it  = playlist->begin();
-    end = playlist->end();
-    entriesModel->clear();
-    while (it != end) {
-        Ptr<PlaylistElement>::Ref  playlistElem  = it->second;
-        Ptr<Playable>::Ref         playable      = playlistElem->getPlayable();
-        Gtk::TreeModel::Row        row           = *(entriesModel->append());
-
-        row[modelColumns.idColumn]    = playable->getId();
-        row[modelColumns.startColumn] =
-                          to_simple_string(*playlistElem->getRelativeOffset());
-        row[modelColumns.titleColumn] = *playable->getTitle();
-        row[modelColumns.lengthColumn]   =
-                          to_simple_string(*playable->getPlaylength());
-
-        it++;
+    
+    if (playlist) {
+        it  = playlist->begin();
+        end = playlist->end();
+        entriesModel->clear();
+        while (it != end) {
+            Ptr<PlaylistElement>::Ref  playlistElem  = it->second;
+            Ptr<Playable>::Ref         playable      = playlistElem->getPlayable();
+            Gtk::TreeModel::Row        row           = *(entriesModel->append());
+    
+            row[modelColumns.idColumn]    = playable->getId();
+            row[modelColumns.startColumn] =
+                              to_simple_string(*playlistElem->getRelativeOffset());
+            row[modelColumns.titleColumn] = *playable->getTitle();
+            row[modelColumns.lengthColumn]   =
+                              to_simple_string(*playable->getPlaylength());
+    
+            it++;
+        }
     }
 }
-
 
