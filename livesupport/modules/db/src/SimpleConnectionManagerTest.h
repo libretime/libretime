@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/SimpleConnectionManagerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,13 +63,14 @@ using namespace LiveSupport::Core;
  *  Unit test for the SimpleConnectionManager class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see SimpleConnectionManager
  */
 class SimpleConnectionManagerTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(SimpleConnectionManagerTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(bigIntTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -81,6 +82,14 @@ class SimpleConnectionManagerTest : public BaseTestMethod
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to handle large integers.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        bigIntTest(void)                        throw (CPPUNIT_NS::Exception);
 
     public:
         

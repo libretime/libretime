@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/db/src/SimpleConnectionManagerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,7 @@
 #include <string>
 #include <iostream>
 #include <odbc++/resultset.h>
+#include <odbc++/preparedstatement.h>
 
 #include "SimpleConnectionManager.h"
 #include "SimpleConnectionManagerTest.h"
@@ -113,11 +114,98 @@ SimpleConnectionManagerTest :: firstTest(void)
         CPPUNIT_ASSERT(rs->next());
         CPPUNIT_ASSERT(rs->getInt(1) == 1);
 
+        rs.reset();
+        stmt->close();
+        stmt.reset();
+        scm->returnConnection(connection);
+
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     } catch (std::runtime_error &e) {
         CPPUNIT_FAIL(e.what());
     } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test to handle large integers.
+ *----------------------------------------------------------------------------*/
+void
+SimpleConnectionManagerTest :: bigIntTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    long long   testValue = 0x7fffffffffffffffLL;
+    std::string createStmt = "CREATE TABLE testTable\n"
+                             "(\n"
+                             "  id    BIGINT    NOT NULL\n"
+                             ");";
+    bool        b;
+
+    try {
+        xmlpp::DomParser        parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                                             configFileName);
+        const xmlpp::Element  * root     = document->get_root_node();
+        Ptr<SimpleConnectionManager>::Ref   scm(new SimpleConnectionManager());
+
+        scm->configure(*root);
+
+        Ptr<Connection>::Ref  connection = scm->getConnection();
+        CPPUNIT_ASSERT(connection);
+
+        // simply see if selecting the highest 63 bit number works...
+        Ptr<PreparedStatement>::Ref   pstmt(connection->prepareStatement(
+                                                                "SELECT ?"));
+        pstmt->setLong(1, testValue);
+        Ptr<ResultSet>::Ref rs(pstmt->executeQuery());
+        CPPUNIT_ASSERT(rs->next());
+        CPPUNIT_ASSERT(rs->getLong(1) == testValue);
+        rs.reset();
+        pstmt->close();
+        pstmt.reset();
+
+        // so far, so good. now create a table with a BIGINT column
+        // and try the same
+        Ptr<Statement>::Ref     stmt(connection->createStatement());
+        stmt->execute(createStmt);
+        stmt->close();
+        stmt.reset();
+
+        pstmt.reset(connection->prepareStatement("INSERT INTO testTable "
+                                                 " VALUES(?)"));
+        pstmt->setLong(1, testValue);
+        CPPUNIT_ASSERT(pstmt->executeUpdate() == 1);
+        pstmt->close();
+        pstmt.reset();
+
+        stmt.reset(connection->createStatement());
+        rs.reset(stmt->executeQuery("SELECT * FROM testTable"));
+        CPPUNIT_ASSERT(rs->next());
+//std::cerr << std::endl;
+//std::cerr << "rs->getLong: " << rs->getLong(1) << std::endl;
+//std::cerr << "testValue:   " << testValue << std::endl;
+        b = rs->getLong(1) == testValue;
+        CPPUNIT_ASSERT(b);
+        rs.reset();
+        stmt->close();
+        stmt.reset();
+
+        stmt.reset(connection->createStatement());
+        stmt->executeUpdate("DROP TABLE testTable");
+        stmt->close();
+        stmt.reset();
+
+        scm->returnConnection(connection);
+        
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (std::runtime_error &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(e.what());
+    } catch (SQLException &e) {
         CPPUNIT_FAIL(e.what());
     }
 }
