@@ -118,10 +118,6 @@
         />
     </schedulerClientFactory>
 
-    <audioPlayer>
-        <helixPlayer dllPath = "ls_install_dir/lib/helix"/>
-    </audioPlayer>
-
     <outputPlayer>
         <audioPlayer>
             <helixPlayer dllPath = "ls_install_dir/lib/helix"
