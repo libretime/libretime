@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -620,13 +620,13 @@ ScratchpadWindow :: onPlayItem(void)                            throw ()
             Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
 
             try {
-                gLiveSupport->playAudio(playable);
+                gLiveSupport->playOutputAudio(playable);
             } catch (XmlRpcException &e) {
-                std::cerr << "GLiveSupport::playAudio() error:" << std::endl
-                          << e.what() << std::endl;
+                std::cerr << "GLiveSupport::playOutputAudio() error:"
+                          << std::endl << e.what() << std::endl;
             } catch (std::exception &e) {
-                std::cerr << "GLiveSupport::playAudio() error:" << std::endl
-                          << e.what() << std::endl;
+                std::cerr << "GLiveSupport::playOutputAudio() error:"
+                          << std::endl << e.what() << std::endl;
             }
         }
     }
@@ -671,9 +671,9 @@ void
 ScratchpadWindow :: onPauseButtonClicked(void)                  throw ()
 {
     try {
-        gLiveSupport->pauseAudio();
+        gLiveSupport->pauseOutputAudio();
     } catch (std::logic_error &e) {
-        std::cerr << "GLiveSupport::pauseAudio() error:" << std::endl
+        std::cerr << "GLiveSupport::pauseOutputAudio() error:" << std::endl
                     << e.what() << std::endl;
     }
 }
@@ -686,12 +686,12 @@ void
 ScratchpadWindow :: onStopButtonClicked(void)                   throw ()
 {
     try {
-        gLiveSupport->stopAudio();
+        gLiveSupport->stopOutputAudio();
     } catch (XmlRpcException &e) {
-        std::cerr << "GLiveSupport::stopAudio() error:" << std::endl
+        std::cerr << "GLiveSupport::stopOutputAudio() error:" << std::endl
                     << e.what() << std::endl;
     } catch (std::logic_error &e) {
-        std::cerr << "GLiveSupport::stopAudio() error:" << std::endl
+        std::cerr << "GLiveSupport::stopOutputAudio() error:" << std::endl
                     << e.what() << std::endl;
     }
 }

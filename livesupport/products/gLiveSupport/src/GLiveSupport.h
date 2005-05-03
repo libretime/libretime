@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,7 +90,8 @@ class MasterPanelWindow;
  *                                         authenticationClientFactory,
  *                                         storageClientFactory,
  *                                         schedulerClientFactory,
- *                                         audioPlayer) >
+ *                                         outputPlayer,
+ *                                         cuePlayer) >
  *  </code></pre>
  *
  *  For a description of the <code>resourceBundle</code>,
@@ -99,8 +100,8 @@ class MasterPanelWindow;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.28 $
+ *  @author $Author: maroy $
+ *  @version $Revision: 1.29 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -153,9 +154,14 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<SchedulerClientInterface>::Ref          scheduler;
 
         /**
-         *  The audio player.
+         *  The output audio player.
          */
-        Ptr<AudioPlayerInterface>::Ref              audioPlayer;
+        Ptr<AudioPlayerInterface>::Ref              outputPlayer;
+
+        /**
+         *  The cue audio player.
+         */
+        Ptr<AudioPlayerInterface>::Ref              cuePlayer;
 
         /**
          *  The session id for the user.
@@ -193,9 +199,14 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<Playable>::Ref              itemPlayingNow;
 
         /**
-         *  True if the audio player has been paused.
+         *  True if the output audio player has been paused.
          */
-        bool                            audioPlayerIsPaused;
+        bool                            outputPlayerIsPaused;
+
+        /**
+         *  True if the cue audio player has been paused.
+         */
+        bool                            cuePlayerIsPaused;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -238,8 +249,11 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual
         ~GLiveSupport(void)                                  throw ()
         {
-            if (audioPlayer.get()) {
-                audioPlayer->deInitialize();
+            if (outputPlayer.get()) {
+                outputPlayer->deInitialize();
+            }
+            if (cuePlayer.get()) {
+                cuePlayer->deInitialize();
             }
         }
 
@@ -573,7 +587,7 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
          
         /**
-         *  Play a Playable object using the audio player.
+         *  Play a Playable object using the output audio player.
          *
          *  @param playable the Playable object to play.
          *  @exception XmlRpcException in case of storage server errors.
@@ -582,30 +596,66 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception std::runtime_error in case of audio player errors.
          */
         virtual void
-        playAudio(Ptr<Playable>::Ref   playable)
+        playOutputAudio(Ptr<Playable>::Ref   playable)
                                                 throw (XmlRpcException,
                                                        std::invalid_argument,
                                                        std::logic_error,
                                                        std::runtime_error);
 
         /**
-         *  Stop the audio player.
+         *  Stop the output audio player.
          *
          *  @exception XmlRpcException in case of storage server errors.
          *  @exception std::logic_error in case of audio player errors.
          */
         virtual void
-        stopAudio(void)
+        stopOutputAudio(void)
                                                 throw (XmlRpcException,
                                                        std::logic_error);
 
         /**
-         *  Pause the audio player.
+         *  Pause the output audio player.
          *
          *  @exception std::logic_error in case of audio player errors.
          */
         virtual void
-        pauseAudio(void)
+        pauseOutputAudio(void)
+                                                throw (std::logic_error);
+
+        /**
+         *  Play a Playable object using the cue audio player.
+         *
+         *  @param playable the Playable object to play.
+         *  @exception XmlRpcException in case of storage server errors.
+         *  @exception std::invalid_argument in case of audio player errors.
+         *  @exception std::logic_error in case of audio player errors.
+         *  @exception std::runtime_error in case of audio player errors.
+         */
+        virtual void
+        playCueAudio(Ptr<Playable>::Ref   playable)
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument,
+                                                       std::logic_error,
+                                                       std::runtime_error);
+
+        /**
+         *  Stop the cue audio player.
+         *
+         *  @exception XmlRpcException in case of storage server errors.
+         *  @exception std::logic_error in case of audio player errors.
+         */
+        virtual void
+        stopCueAudio(void)
+                                                throw (XmlRpcException,
+                                                       std::logic_error);
+
+        /**
+         *  Pause the cue audio player.
+         *
+         *  @exception std::logic_error in case of audio player errors.
+         */
+        virtual void
+        pauseCueAudio(void)
                                                 throw (std::logic_error);
 
         /**

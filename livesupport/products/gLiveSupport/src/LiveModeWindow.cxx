@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -238,12 +238,12 @@ LiveModeWindow :: onCueMenuOption(void)                             throw ()
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
 
         try {
-            gLiveSupport->playAudio(playable);
+            gLiveSupport->playOutputAudio(playable);
         } catch (XmlRpcException &e) {
-            std::cerr << "GLiveSupport::playAudio() error:" << std::endl
+            std::cerr << "GLiveSupport::playOutputAudio() error:" << std::endl
                         << e.what() << std::endl;
         } catch (std::exception &e) {
-            std::cerr << "GLiveSupport::playAudio() error:" << std::endl
+            std::cerr << "GLiveSupport::playOutputAudio() error:" << std::endl
                         << e.what() << std::endl;
         }
     }

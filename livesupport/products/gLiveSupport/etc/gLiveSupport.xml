@@ -7,7 +7,8 @@
                                        authenticationClientFactory,
                                        storageClientFactory,
                                        schedulerClientFactory,
-                                       audioPlayer) >
+                                       outputPlayer,
+                                       cuePlayer) >
 
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
@@ -72,10 +73,16 @@
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcPort    NMTOKEN     #REQUIRED >
 <!ATTLIST schedulerDaemonXmlRpcClient xmlRpcUri     CDATA       #REQUIRED >
 
+<!ELEMENT outputPlayer  (audioPlayer) >
+<!ELEMENT cuePlayer     (audioPlayer) >
+
 <!ELEMENT audioPlayer   (helixPlayer) >
 
 <!ELEMENT helixPlayer   EMPTY >
-<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+<!ATTLIST helixPlayer   dllPath              CDATA     #REQUIRED >
+<!ATTLIST helixPlayer   audioDevice          CDATA     #IMPLIED  >
+<!ATTLIST helixPlayer   audioStreamTimeout   NMTOKEN   #IMPLIED >
+<!ATTLIST helixPlayer   fadeLookAheatTime    NMTOKEN   #IMPLIED >
 
 ]>
 <gLiveSupport>
@@ -111,9 +118,21 @@
         />
     </schedulerClientFactory>
 
-    <audioPlayer>
-        <helixPlayer dllPath = "../../usr/lib/helix"/>
-    </audioPlayer>
+    <outputPlayer>
+        <audioPlayer>
+            <helixPlayer dllPath     = "../../usr/lib/helix"
+                         audioDevice = "/dev/dsp"
+            />
+        </audioPlayer>
+    </outputPlayer>
+
+    <cuePlayer>
+        <audioPlayer>
+            <helixPlayer dllPath     = "../../usr/lib/helix"
+                         audioDevice = "/dev/dsp"
+            />
+        </audioPlayer>
+    </cuePlayer>
 
 </gLiveSupport>
 
