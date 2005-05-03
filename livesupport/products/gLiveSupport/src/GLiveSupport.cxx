@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.35 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -582,8 +582,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
-    liveModeContents->push_back(playable);
-    masterPanel->updateLiveModeWindow();
+    masterPanel->updateLiveModeWindow(playable);
     addToScratchPad(playable);
 }
 

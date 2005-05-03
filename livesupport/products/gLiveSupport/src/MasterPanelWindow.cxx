@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.27 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -332,7 +332,8 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
  *  The event when the Live Mode button has been clicked.
  *----------------------------------------------------------------------------*/
 void
-MasterPanelWindow :: updateLiveModeWindow(void)                     throw ()
+MasterPanelWindow :: updateLiveModeWindow(Ptr<Playable>::Ref    playable)
+                                                                    throw ()
 {
     if (!liveModeWindow.get()) {
         Ptr<ResourceBundle>::Ref    bundle;
@@ -346,7 +347,9 @@ MasterPanelWindow :: updateLiveModeWindow(void)                     throw ()
         liveModeWindow.reset(new LiveModeWindow(gLiveSupport, bundle));
     }
     
-    liveModeWindow->showContents();
+    if (playable) {
+        liveModeWindow->addItem(playable);
+    }
     
     if (!liveModeWindow->is_visible()) {
         liveModeWindow->show();

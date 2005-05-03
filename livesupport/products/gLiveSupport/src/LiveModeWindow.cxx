@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,9 +88,6 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
-    
-    treeView->columns_autosize();
-    
 
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
@@ -138,47 +135,28 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     set_default_size(530, 300);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
-    set_resizable(true);
     
-    showContents();
     show_all_children();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Show all audio clips
+ *  Add a new item to the Live Mode Window.
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: showContents(void)                                throw ()
+LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
 {
-    Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
-    GLiveSupport::PlayableList::iterator    it;
-    GLiveSupport::PlayableList::iterator    end;
-    Ptr<Playable>::Ref                      playable;
-    Gtk::TreeModel::Row                     row;
-
-    liveModeContents = gLiveSupport->getLiveModeContents();
-    it  = liveModeContents->begin();
-    end = liveModeContents->end();
-    treeModel->clear();
-    int     rowNumber = 0;
+    int                     rowNumber = treeModel->children().size();
+    Gtk::TreeModel::Row     row       = *(treeModel->append());
     
-    while (it != end) {
-        playable  = *it;
-        row       = *(treeModel->append());
-
-        row[modelColumns.playableColumn]  = playable;
-        row[modelColumns.titleColumn]     = *playable->getTitle();
-        Ptr<Glib::ustring>::Ref 
-                            creator = playable->getMetadata("dc:creator");
-        row[modelColumns.creatorColumn]   = creator ? *creator : "";
-        row[modelColumns.lengthColumn]    = to_simple_string(
-                                                *playable->getPlaylength() );
-        row[modelColumns.rowNumberColumn] = rowNumber;
-
-        ++it;
-        ++rowNumber;
-    }
+    row[modelColumns.playableColumn]  = playable;
+    row[modelColumns.titleColumn]     = *playable->getTitle();
+    Ptr<Glib::ustring>::Ref 
+                        creator = playable->getMetadata("dc:creator");
+    row[modelColumns.creatorColumn]   = creator ? *creator : "";
+    row[modelColumns.lengthColumn]    = to_simple_string(
+                                            *playable->getPlaylength() );
+    row[modelColumns.rowNumberColumn] = rowNumber;
 }
 
 
@@ -258,36 +236,17 @@ LiveModeWindow :: onUpMenuOption(void)                              throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
-    Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
 
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-        Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
-        GLiveSupport::PlayableList::iterator    it;
-        GLiveSupport::PlayableList::iterator    end;
-
-        liveModeContents = gLiveSupport->getLiveModeContents();
-        it  = liveModeContents->begin();
-        end = liveModeContents->end();
-        while (it != end) {
-            Ptr<Playable>::Ref      p= *it;
-
-            if (*p->getId() == *playable->getId()) {
-                // move one up, and insert the same before that
-                if (it == liveModeContents->begin()) {
-                    break;
-                }
-                liveModeContents->insert(--it, playable);
-                // move back to what we've found, and erase it
-                liveModeContents->erase(++it);
-
-                showContents();
-                break;
-            }
-
-            it++;
-        }
+    if (iter && iter != treeModel->children().begin()) {
+        Gtk::TreeModel::iterator    previous = iter;
+        --previous;
+        
+        int     rowNumber = (*previous)[modelColumns.rowNumberColumn];
+        (*iter)    [modelColumns.rowNumberColumn] = rowNumber;
+        (*previous)[modelColumns.rowNumberColumn] = ++rowNumber;
+        
+        treeModel->iter_swap(previous, iter);
     }
 }
 
@@ -300,38 +259,18 @@ LiveModeWindow :: onDownMenuOption(void)                            throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
-    Gtk::TreeModel::iterator iter = refSelection->get_selected();
-    
+    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
+
     if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+        Gtk::TreeModel::iterator    next = iter;
+        ++next;
+        if (next != treeModel->children().end()) {
+        
+            int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
+            (*next)[modelColumns.rowNumberColumn] = rowNumber;
+            (*iter)[modelColumns.rowNumberColumn] = ++rowNumber;
 
-        Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
-        GLiveSupport::PlayableList::iterator    it;
-        GLiveSupport::PlayableList::iterator    end;
-
-        liveModeContents = gLiveSupport->getLiveModeContents();
-        it  = liveModeContents->begin();
-        end = liveModeContents->end();
-        while (it != end) {
-            Ptr<Playable>::Ref      p= *it;
-
-            if (*p->getId() == *playable->getId()) {
-                // move two down, and insert the same before that
-                ++it;
-                if (it == end) {
-                    break;
-                }
-                liveModeContents->insert(++it, playable);
-                // move back to what we've found, and erase it
-                --it;
-                --it;
-                liveModeContents->erase(--it);
-
-                showContents();
-                break;
-            }
-
-            it++;
+            treeModel->iter_swap(iter, next);
         }
     }
 }
@@ -345,39 +284,16 @@ LiveModeWindow :: onRemoveMenuOption(void)                          throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();
-    Gtk::TreeModel::iterator iter = refSelection->get_selected();
-    
+    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
+
     if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-        removeItem(playable->getId());
-        showContents();
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Remove an item from the Scratchpad
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: removeItem(Ptr<const UniqueId>::Ref    id)        throw ()
-{
-    Ptr<GLiveSupport::PlayableList>::Ref    liveModeContents;
-    GLiveSupport::PlayableList::iterator    it;
-    GLiveSupport::PlayableList::iterator    end;
-
-    liveModeContents = gLiveSupport->getLiveModeContents();
-    it  = liveModeContents->begin();
-    end = liveModeContents->end();
-    while (it != end) {
-        Ptr<Playable>::Ref      playable = *it;
-
-        if (*playable->getId() == *id) {
-            liveModeContents->erase(it);
-            break;
+        Gtk::TreeModel::iterator    later = iter;
+        int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
+        for (++later; later != treeModel->children().end(); ++later) {
+            (*later)[modelColumns.rowNumberColumn] = rowNumber++;
         }
-
-        it++;
+        
+        treeModel->erase(iter);
     }
 }
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.29 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,8 +100,8 @@ class MasterPanelWindow;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.29 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.30 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -184,11 +184,6 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<PlayableList>::Ref          scratchpadContents;
 
         /**
-         *  The contents of the Live Mode, stored as a list.
-         */
-        Ptr<PlayableList>::Ref          liveModeContents;
-
-        /**
          *  The one and only playlist that may be edited at any one time.
          */
         Ptr<Playlist>::Ref              editedPlaylist;
@@ -240,7 +235,6 @@ class GLiveSupport : public LocalizedConfigurable,
         GLiveSupport(void)                                  throw ()
         {
             scratchpadContents.reset(new PlayableList());
-            liveModeContents.  reset(new PlayableList());
         }
 
         /**
@@ -456,17 +450,6 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         addToLiveMode(Ptr<Playable>::Ref  playable)             throw ();
         
-        /**
-         *  Return the Live Mode contents.
-         *
-         *  @return the list holding the Live Mode contents.
-         */
-        Ptr<PlayableList>::Ref
-        getLiveModeContents(void)                               throw ()
-        {
-            return liveModeContents;
-        }
-
         /**
          *  Return the currently edited playlist.
          *

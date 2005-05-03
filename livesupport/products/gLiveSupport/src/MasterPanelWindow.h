@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -405,7 +405,9 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Update the Live Mode window.
          */
         void
-        updateLiveModeWindow(void)                              throw ();
+        updateLiveModeWindow(Ptr<Playable>::Ref     playable
+                                                    = Ptr<Playable>::Ref())
+                                                                throw ();
 
         /**
          *  Update the Scratchpad window.

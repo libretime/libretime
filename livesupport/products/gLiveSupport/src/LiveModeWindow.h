@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.3 $
+         *  @version $Revision: 1.4 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -201,14 +201,6 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         virtual void
         onRemoveMenuOption(void)                                throw ();
 
-        /**
-         *  Remove an item from the Live Mode.
-         *
-         *  @param id the id of the item to remove.
-         */
-        void
-        removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
-
 
     public:
         /**
@@ -228,10 +220,10 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         ~LiveModeWindow(void)                                   throw ();
 
         /**
-         *  Update the window contents, with the contents of the LiveMode.
+         *  Add a new item to the Live Mode Window.
          */
         void
-        showContents(void)                                      throw ();
+        addItem(Ptr<Playable>::Ref  playable)                   throw ();
 };
 
 /* ================================================= external data structures */
