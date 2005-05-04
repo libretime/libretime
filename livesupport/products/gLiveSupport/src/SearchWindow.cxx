@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -414,7 +414,7 @@ SearchWindow :: onAddToScratchpad(void)                         throw ()
     Gtk::TreeModel::iterator iter = refSelection->get_selected();
     if (iter) {
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-        gLiveSupport->addToScratchPad(playable);
+        gLiveSupport->addToScratchpad(playable);
     }
 }
 

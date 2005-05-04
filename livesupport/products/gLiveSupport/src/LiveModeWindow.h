@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.4 $
+         *  @version $Revision: 1.5 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -201,6 +201,28 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         virtual void
         onRemoveMenuOption(void)                                throw ();
 
+        /**
+         *  Signal handler for the "rows reordered" event.
+         */
+        void
+        onRowsReordered(const Gtk::TreeModel::Path &      path,
+                        const Gtk::TreeModel::iterator&   iter,
+                        int*                              newToOldMapping)
+                                                                throw ()
+        {
+//            std::cerr << "rows changed: " << path.to_string() << "; "
+//                      << "iter: " << (iter ? "true" : "false") << "\n";
+        }
+
+        /**
+         *  Signal handler for the "row deleted" event.
+         */
+        void
+        onRowDeleted(const Gtk::TreeModel::Path &   path)       throw ()
+        {
+//            std::cerr << "rows deleted: " << path.to_string() << ";\n";
+        }
+
 
     public:
         /**
@@ -224,6 +246,12 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          */
         void
         addItem(Ptr<Playable>::Ref  playable)                   throw ();
+
+        /**
+         *  "Pop" the first item from the top of the Live Mode Window.
+         */
+        Ptr<Playable>::Ref
+        popTop(void)                                            throw ();
 };
 
 /* ================================================= external data structures */

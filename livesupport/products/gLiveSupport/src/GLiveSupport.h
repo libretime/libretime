@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,14 +101,15 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
  *  @see SchedulerClientFactory
  */
 class GLiveSupport : public LocalizedConfigurable,
-                     public boost::enable_shared_from_this<GLiveSupport>
+                     public boost::enable_shared_from_this<GLiveSupport>,
+                     public AudioPlayerEventListener
 {
     public:
         /**
@@ -118,7 +119,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  const std::string, the names of the locales for the languages.
          */
         typedef std::map<const Glib::ustring,
-                         const std::string>                 LanguageMap;
+                         const std::string>         LanguageMap;
 
         /**
          *  The type of the list for storing the Scratchpad contents.
@@ -131,7 +132,7 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  The name of the configuration XML elmenent used by Playlist.
          */
-        static const std::string    configElementNameStr;
+        static const std::string                    configElementNameStr;
 
         /**
          *  The authentication client used by the application.
@@ -189,9 +190,16 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<Playlist>::Ref              editedPlaylist;
 
         /**
-         *  The playlist or audio clip that is being played (may be null).
+         *  The playlist or audio clip that is being played on the
+         *  live mode output sound card (may be null).
          */
-        Ptr<Playable>::Ref              itemPlayingNow;
+        Ptr<Playable>::Ref              outputItemPlayingNow;
+
+        /**
+         *  The playlist or audio clip that is being played on the
+         *  cue (preview) sound card (may be null).
+         */
+        Ptr<Playable>::Ref              cueItemPlayingNow;
 
         /**
          *  True if the output audio player has been paused.
@@ -429,7 +437,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param playable the audio clip or playlist to be added
          */
         void
-        addToScratchPad(Ptr<Playable>::Ref  playable)           throw ();
+        addToScratchpad(Ptr<Playable>::Ref  playable)           throw ();
         
         /**
          *  Return the Scratchpad contents.
@@ -665,6 +673,11 @@ class GLiveSupport : public LocalizedConfigurable,
                Ptr<SearchCriteria>::Ref     criteria)
                                                 throw (XmlRpcException);
 
+        /**
+         *  Event handler for the "output audio player has stopped" event.
+         */
+        virtual void
+        onStop(void)                            throw ();
 };
 
 /* ================================================= external data structures */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     timeBin->set_size_request(153, 104);
 
     // set up the now playing widget
-    nowPlayingWidget = Gtk::manage(new Gtk::Label("now playing"));
+    nowPlayingWidget = Gtk::manage(new Gtk::Label(""));
     nowPlayingBin = Gtk::manage(widgetFactory->createDarkBlueBin());
     nowPlayingBin->add(*nowPlayingWidget);
     nowPlayingBin->set_size_request(-1, 104);
@@ -532,6 +532,8 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
         searchWindow->hide();
         searchWindow.reset();
     }
+    
+    gLiveSupport->stopCueAudio();
 }
 
 
@@ -542,5 +544,20 @@ void
 MasterPanelWindow :: showLoggedInUI(void)                           throw ()
 {
     show_all();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the next item from the top of the Live Mode window.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+MasterPanelWindow :: getNextItemToPlay()                            throw ()
+{
+    if (liveModeWindow) {
+        return liveModeWindow->popTop();
+    } else {
+        Ptr<Playable>::Ref      nullPointer;
+        return nullPointer;
+    }
 }
 

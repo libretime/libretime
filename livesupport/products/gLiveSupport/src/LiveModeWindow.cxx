@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,8 +72,14 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 {
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
     
-    // Create the Tree model:
+    // Create the tree model:
     treeModel = Gtk::ListStore::create(modelColumns);
+    treeModel->signal_rows_reordered().connect(sigc::mem_fun(*this,
+                                            &LiveModeWindow::onRowsReordered));
+    treeModel->signal_row_deleted().connect(sigc::mem_fun(*this,
+                                            &LiveModeWindow::onRowDeleted));
+    
+    // ... and the tree view:
     treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
 
     // Add the TreeView's view columns:
@@ -157,6 +163,24 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
     row[modelColumns.lengthColumn]    = to_simple_string(
                                             *playable->getPlaylength() );
     row[modelColumns.rowNumberColumn] = rowNumber;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  "Pop" the first item from the top of the Live Mode Window.
+ *----------------------------------------------------------------------------*/
+Ptr<Playable>::Ref
+LiveModeWindow :: popTop(void)                                      throw ()
+{
+    Ptr<Playable>::Ref          playable;
+    Gtk::TreeModel::iterator    iter = treeModel->children().begin();
+    
+    if (iter) {
+        playable = (*iter)[modelColumns.playableColumn];
+        treeModel->erase(iter);
+    }
+    
+    return playable;
 }
 
 

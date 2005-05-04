@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -436,6 +436,31 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          */
         void
         updateSearchWindow(void)                                throw ();
+
+        /**
+         *  Get the next item from the top of the Live Mode window.
+         *  The item is removed from the Live Mode window.
+         *
+         *  @return the item at the top of the Live Mode window, a 0 pointer
+         *          if there is no Live Mode window, or it is empty.
+         */
+        Ptr<Playable>::Ref
+        getNextItemToPlay()                                     throw ();
+
+        /**
+         *  Set the "now playing" display.
+         */
+        void
+        setNowPlaying(Ptr<Playable>::Ref    playable)           throw ()
+        {
+            Gtk::Label *    label = dynamic_cast<Gtk::Label *>(
+                                                        nowPlayingWidget );
+            if (playable) {
+                label->set_text(*playable->getTitle());
+            } else {
+                label->set_text("");
+            }
+        }
 };
 
 /* ================================================= external data structures */

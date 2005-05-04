@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -222,11 +222,12 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
 
     outputPlayer = apf->getAudioPlayer();
     outputPlayer->initialize();
+    outputPlayer->attachListener(this);
 
     // configure the cuePlayer AudioPlayerFactory
     nodes = element.get_children(cuePlayerElementName);
     if (nodes.size() < 1) {
-        throw std::invalid_argument("no outputPlayer element");
+        throw std::invalid_argument("no cuePlayer element");
     }
     elem  = (xmlpp::Element*) *(nodes.begin());
     nodes = elem->get_children(AudioPlayerFactory::getConfigElementName());
@@ -548,7 +549,7 @@ GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref  audioClip)
 {
     storage->storeAudioClip(sessionId, audioClip);
 
-    addToScratchPad(audioClip);
+    addToScratchpad(audioClip);
 }
 
 
@@ -557,7 +558,7 @@ GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref  audioClip)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: addToScratchPad(Ptr<Playable>::Ref  playable)
+GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
     PlayableList::iterator  it;
@@ -582,8 +583,35 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
-    masterPanel->updateLiveModeWindow(playable);
-    addToScratchPad(playable);
+    if (outputItemPlayingNow) {
+        masterPanel->updateLiveModeWindow(playable);
+    } else {
+        playOutputAudio(playable);
+        masterPanel->setNowPlaying(playable);
+    }
+    
+    addToScratchpad(playable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the "output audio player has stopped" event.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: onStop(void)                                throw ()
+{
+    Ptr<Playable>::Ref      playable;
+    masterPanel->setNowPlaying(playable);   // reset to empty
+    
+    playable = masterPanel->getNextItemToPlay();
+    
+    if (playable) {
+        playOutputAudio(playable);
+        masterPanel->setNowPlaying(playable);
+    } else {
+        stopOutputAudio();
+    }
 }
 
 
@@ -665,12 +693,7 @@ GLiveSupport :: savePlaylist(void)
 
     Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId,
                                                     editedPlaylist->getId());
-
-    // add the saved playlist to the Scratchpad, and update it
-    // TODO: if already in the Scratchpad, don't add, just pop it to the front
-    scratchpadContents->push_front(playlist);
-    masterPanel->updateScratchpadWindow();   
-
+    addToScratchpad(playlist);
     editedPlaylist.reset();
 
     return playlist;
@@ -737,20 +760,22 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
                                                         std::logic_error,
                                                         std::runtime_error)
 {
-    stopOutputAudio();        // stop the audio player and release old resources
+    if (outputItemPlayingNow) {
+        stopOutputAudio();   // stop the audio player and release old resources
+    }
     
     switch (playable->getType()) {
         case Playable::AudioClipType:
-            itemPlayingNow = storage->acquireAudioClip(sessionId, 
-                                                       playable->getId());
-            outputPlayer->open(*itemPlayingNow->getUri());
+            outputItemPlayingNow = storage->acquireAudioClip(sessionId, 
+                                                             playable->getId());
+            outputPlayer->open(*outputItemPlayingNow->getUri());
             outputPlayer->start();
             break;
 
         case Playable::PlaylistType:
-            itemPlayingNow = storage->acquirePlaylist(sessionId, 
-                                                      playable->getId());
-            outputPlayer->openAndStart(itemPlayingNow->getPlaylist());
+            outputItemPlayingNow = storage->acquirePlaylist(sessionId, 
+                                                            playable->getId());
+            outputPlayer->openAndStart(outputItemPlayingNow->getPlaylist());
             break;
 
         default:        // this never happens
@@ -758,9 +783,8 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
     }
     
     outputPlayerIsPaused = false;
-    cuePlayerIsPaused    = false;
 }
-
+    
 
 /*------------------------------------------------------------------------------
  *  Pause the output audio player.
@@ -792,17 +816,17 @@ GLiveSupport :: stopOutputAudio(void)
 {
     outputPlayer->close();
 
-    if (itemPlayingNow) {
-        switch (itemPlayingNow->getType()) {
+    if (outputItemPlayingNow) {
+        switch (outputItemPlayingNow->getType()) {
             case Playable::AudioClipType:
                 storage->releaseAudioClip(sessionId, 
-                                          itemPlayingNow->getAudioClip());
-                itemPlayingNow.reset();
+                                          outputItemPlayingNow->getAudioClip());
+                outputItemPlayingNow.reset();
                 break;
             case Playable::PlaylistType:
                 storage->releasePlaylist(sessionId, 
-                                         itemPlayingNow->getPlaylist());
-                itemPlayingNow.reset();
+                                         outputItemPlayingNow->getPlaylist());
+                outputItemPlayingNow.reset();
                 break;
             default:    // this never happens
                 break;
@@ -824,20 +848,22 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
                                                         std::logic_error,
                                                         std::runtime_error)
 {
-    stopCueAudio();        // stop the audio player and release old resources
+    if (cueItemPlayingNow) {
+        stopCueAudio();    // stop the audio player and release old resources
+    }
     
     switch (playable->getType()) {
         case Playable::AudioClipType:
-            itemPlayingNow = storage->acquireAudioClip(sessionId, 
-                                                       playable->getId());
-            cuePlayer->open(*itemPlayingNow->getUri());
+            cueItemPlayingNow = storage->acquireAudioClip(sessionId, 
+                                                          playable->getId());
+            cuePlayer->open(*cueItemPlayingNow->getUri());
             cuePlayer->start();
             break;
 
         case Playable::PlaylistType:
-            itemPlayingNow = storage->acquirePlaylist(sessionId, 
-                                                      playable->getId());
-            cuePlayer->openAndStart(itemPlayingNow->getPlaylist());
+            cueItemPlayingNow = storage->acquirePlaylist(sessionId, 
+                                                         playable->getId());
+            cuePlayer->openAndStart(cueItemPlayingNow->getPlaylist());
             break;
 
         default:        // this never happens
@@ -878,17 +904,17 @@ GLiveSupport :: stopCueAudio(void)
 {
     cuePlayer->close();
 
-    if (itemPlayingNow) {
-        switch (itemPlayingNow->getType()) {
+    if (cueItemPlayingNow) {
+        switch (cueItemPlayingNow->getType()) {
             case Playable::AudioClipType:
                 storage->releaseAudioClip(sessionId, 
-                                          itemPlayingNow->getAudioClip());
-                itemPlayingNow.reset();
+                                          cueItemPlayingNow->getAudioClip());
+                cueItemPlayingNow.reset();
                 break;
             case Playable::PlaylistType:
                 storage->releasePlaylist(sessionId, 
-                                         itemPlayingNow->getPlaylist());
-                itemPlayingNow.reset();
+                                         cueItemPlayingNow->getPlaylist());
+                cueItemPlayingNow.reset();
                 break;
             default:    // this never happens
                 break;
