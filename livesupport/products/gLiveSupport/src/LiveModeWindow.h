@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +85,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.5 $
+         *  @version $Revision: 1.6 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -221,6 +221,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         onRowDeleted(const Gtk::TreeModel::Path &   path)       throw ()
         {
 //            std::cerr << "rows deleted: " << path.to_string() << ";\n";
+            treeView->columns_autosize();
         }
 
 

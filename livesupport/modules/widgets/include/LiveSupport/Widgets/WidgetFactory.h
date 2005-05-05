@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,6 @@
 #include "LiveSupport/Widgets/ComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 #include "LiveSupport/Widgets/EntryBin.h"
-#include "LiveSupport/Widgets/ZebraTreeView.h"
 
 
 namespace LiveSupport {
@@ -69,6 +68,7 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 class WhiteWindow;
+class ZebraTreeView;
 
 /**
  *  A factory to provide access to LiveSupport Widgets.
@@ -89,7 +89,7 @@ class WhiteWindow;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 class WidgetFactory :
                         virtual public Configurable

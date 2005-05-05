@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,8 +36,10 @@
 #include <gtkmm/entry.h>
 
 #include "LiveSupport/Widgets/Colors.h"
-#include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "MessageWindow.h"
+
+#include "LiveSupport/Widgets/WidgetFactory.h"
 
 
 using namespace LiveSupport::Core;

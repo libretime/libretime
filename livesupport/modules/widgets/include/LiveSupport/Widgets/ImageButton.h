@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ImageButton.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,8 +59,8 @@ namespace Widgets {
  *  The button is fixed in size, which is determined by the images used
  *  to represent it.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  */
 class ImageButton : public Gtk::Button
 {
@@ -241,6 +241,19 @@ class ImageButton : public Gtk::Button
          */
         virtual
         ~ImageButton(void)                                  throw ();
+
+        /**
+         *  Return the passive image of this button.
+         *  This is used by ZebraTreeView::addColumn(), but should be
+         *  removed later.
+         *
+         *  @return a pointer to the image.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>
+        getPassiveImage(void)                               throw ()
+        {
+            return passiveImage;
+        }
 };
 
 

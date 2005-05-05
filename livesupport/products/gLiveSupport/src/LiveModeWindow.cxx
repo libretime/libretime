@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 #include <stdexcept>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SchedulePlaylistWindow.h"
 #include "LiveModeWindow.h"
 
@@ -62,7 +63,7 @@ using namespace LiveSupport::GLiveSupport;
  *  Constructor.
  *----------------------------------------------------------------------------*/
 LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
-                                      Ptr<ResourceBundle>::Ref    bundle)
+                                  Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
           : WhiteWindow(WidgetFactory::liveModeWindowTitleImage,
                         Colors::White,
@@ -84,6 +85,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // Add the TreeView's view columns:
     try {
+        treeView->appendColumn("", WidgetFactory::hugePlayButton, 82);
         treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
                                modelColumns.titleColumn, 200);
         treeView->appendColumn(*getResourceUstring("creatorColumnLabel"),
@@ -138,7 +140,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // show
     set_name("liveModeWindow");
-    set_default_size(530, 300);
+    set_default_size(610, 500);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
