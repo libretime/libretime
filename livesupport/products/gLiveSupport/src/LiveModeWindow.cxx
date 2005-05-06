@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,7 +37,6 @@
 #include <stdexcept>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
-#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SchedulePlaylistWindow.h"
 #include "LiveModeWindow.h"
 

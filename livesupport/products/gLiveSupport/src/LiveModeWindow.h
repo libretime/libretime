@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 #include "GLiveSupport.h"
 
@@ -72,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -85,7 +86,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.6 $
+         *  @version $Revision: 1.7 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
