@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,8 +94,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST user password   CDATA      #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.10 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.11 $
  */
 class TestAuthenticationClient :
                     virtual public Configurable,
@@ -227,13 +227,14 @@ class TestAuthenticationClient :
          *
          *  @param  sessionId the ID of the current session (from login())
          *  @param  key       the name of the item
-         *  @exception XmlRpcException invalid session ID 
-         *                             or key does not match anything stored
+         *  @exception XmlRpcException invalid session ID
+         *  @exception std::invalid_argument no such preference key found
          */
         virtual Ptr<Glib::ustring>::Ref
         loadPreferencesItem(Ptr<SessionId>::Ref             sessionId,
                             const Glib::ustring &           key)
-                                                throw (XmlRpcException);
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument);
 
         /**
          *  Store a `user preferences' item on the server.

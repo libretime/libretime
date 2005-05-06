@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -215,7 +215,8 @@ Ptr<Glib::ustring>::Ref
 TestAuthenticationClient :: loadPreferencesItem(
                                 Ptr<SessionId>::Ref     sessionId,
                                 const Glib::ustring &   key)
-                                                throw (XmlRpcException)
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument)
 {
     if (!sessionId 
         || sessionIdList.find(sessionId->getId()) == sessionIdList.end()) {
@@ -225,10 +226,10 @@ TestAuthenticationClient :: loadPreferencesItem(
     PreferencesType::iterator   it;
 
     if ((it = preferences.find(key)) == preferences.end()) {
-        throw XmlRpcException("no such user preferences item");
+        throw std::invalid_argument("no such user preferences item");
     }
+    
     Ptr<Glib::ustring>::Ref     value(new Glib::ustring(*it->second));
-
     return value;
 }
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/include/LiveSupport/Authentication/AuthenticationClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace LiveSupport::Core;
 /**
  *  An interface for authentication clients.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.10 $
  */
 class AuthenticationClientInterface
 {
@@ -135,6 +135,8 @@ class AuthenticationClientInterface
          *  @param  sessionId the ID of the current session (from login())
          *  @param  key       the name of the item
          *
+         *  @exception std::invalid_argument
+         *                    no such preference key found
          *  @exception XmlRpcInvalidArgumentException
          *                    bad sessionId argument
          *  @exception XmlRpcCommunicationException
@@ -149,7 +151,8 @@ class AuthenticationClientInterface
         virtual Ptr<Glib::ustring>::Ref
         loadPreferencesItem(Ptr<SessionId>::Ref             sessionId,
                             const Glib::ustring &           key)
-                                                throw (XmlRpcException)
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument)
                                                                         = 0;
 
         /**

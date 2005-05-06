@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,8 +92,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST location path     CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.8 $
  */
 class WebAuthenticationClient :
                     virtual public Configurable,
@@ -212,6 +212,8 @@ class WebAuthenticationClient :
          *  @param  sessionId the ID of the current session (from login())
          *  @param  key       the name of the item
          *
+         *  @exception std::invalid_argument
+         *                    no such preference key found
          *  @exception XmlRpcInvalidArgumentException
          *                    bad sessionId argument
          *  @exception XmlRpcCommunicationException
@@ -224,7 +226,8 @@ class WebAuthenticationClient :
         virtual Ptr<Glib::ustring>::Ref
         loadPreferencesItem(Ptr<SessionId>::Ref             sessionId,
                             const Glib::ustring &           key)
-                                                throw (XmlRpcException);
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument);
 
         /**
          *  Store a `user preferences' item on the server.

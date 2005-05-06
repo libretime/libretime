@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/TestAuthenticationClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -193,7 +193,9 @@ TestAuthenticationClientTest :: preferencesTest(void)
     try {
         prefValue = tac->loadPreferencesItem(sessionId, "eye_color");
         CPPUNIT_FAIL("Retrieved non-existent user preferences item.");
+    } catch (std::invalid_argument &e) {
     } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
     }
 
     // check normal save and load
@@ -260,7 +262,9 @@ TestAuthenticationClientTest :: preferencesTest(void)
     try {
         newPrefValue = tac->loadPreferencesItem(sessionId, "hour");
         CPPUNIT_FAIL("Allowed to load preference after it was deleted");
+    } catch (std::invalid_argument &e) {
     } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
     }
     
     // and log out

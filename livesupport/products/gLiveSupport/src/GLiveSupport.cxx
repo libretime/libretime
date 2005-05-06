@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -467,8 +467,11 @@ GLiveSupport :: loadScratchpadContents(void)                throw ()
         std::cerr << "error loading user preferences: " << e.what()
                   << std::endl;
         return;
+    } catch (std::invalid_argument &e) {
+        // no scratchpad stored for this user yet; no problem
+        return;
     }
-
+    
     // just store this as a space-delimited list of ids
     std::istringstream          prefsString(prefsUstring->raw());
     Ptr<Playable>::Ref          playable;

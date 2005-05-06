@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/authentication/src/WebAuthenticationClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -173,6 +173,16 @@ static const std::string    preferencesValueParamName = "value";
  *  The name of the return parameter for the save method
  *----------------------------------------------------------------------------*/
 static const std::string    preferencesStatusParamName = "status";
+
+/*------------------------------------------------------------------------------
+ *  The name of the fault code parameter
+ *----------------------------------------------------------------------------*/
+static const std::string    faultCodeParamName = "faultCode";
+
+/*------------------------------------------------------------------------------
+ *  The fault code for the "invalid preference key" error
+ *----------------------------------------------------------------------------*/
+static const int            invalidPreferenceKeyFaultCode = 849;
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~  authentication server constants: resetStorage */
@@ -423,7 +433,8 @@ Ptr<Glib::ustring>::Ref
 WebAuthenticationClient :: loadPreferencesItem(
                                 Ptr<SessionId>::Ref             sessionId,
                                 const Glib::ustring &           key)
-                                                throw (XmlRpcException)
+                                                throw (XmlRpcException,
+                                                       std::invalid_argument)
 {
     if (!sessionId) {
         throw Core::XmlRpcInvalidArgumentException("Missing session ID.");
@@ -447,14 +458,22 @@ WebAuthenticationClient :: loadPreferencesItem(
                                           "Could not execute XML-RPC method.");
     }
     xmlRpcClient.close();
-
+    
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method "
-             << loadPreferencesMethodName 
-             << " returned fault response:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
+                << loadPreferencesMethodName 
+                << " returned fault response:\n"
+                << result;
+        if (result.hasMember(faultCodeParamName) 
+                && result[faultCodeParamName].getType() 
+                                            == XmlRpcValue::TypeInt
+                && int(result[faultCodeParamName]) 
+                                            == invalidPreferenceKeyFaultCode) {
+            throw std::invalid_argument(eMsg.str());
+        } else {
+            throw Core::XmlRpcMethodFaultException(eMsg.str());
+        }
     }
 
     if (! result.hasMember(preferencesValueParamName)
