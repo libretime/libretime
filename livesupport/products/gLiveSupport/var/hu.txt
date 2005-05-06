@@ -179,10 +179,6 @@ hu:table
     {
         windowTitle:string            { "LiveSupport Élő adás ablak" }
         
-        titleColumnLabel:string       { "Cím" }
-        creatorColumnLabel:string     { "Előadó" }
-        lengthColumnLabel:string      { "Hossz" }
-        
         cueMenuItem:string            { "Bele_hallgatni" }
         upMenuItem:string             { "_Fel" }
         downMenuItem:string           { "_Le" }

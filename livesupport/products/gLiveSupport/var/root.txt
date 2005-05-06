@@ -181,10 +181,6 @@ root:table
     {
         windowTitle:string            { "LiveSupport Live Mode Window" }
         
-        titleColumnLabel:string       { "Title" }
-        creatorColumnLabel:string     { "Creator" }
-        lengthColumnLabel:string      { "Length" }
-        
         cueMenuItem:string            { "_Cue" }
         upMenuItem:string             { "Move _Up" }
         downMenuItem:string           { "Move D_own" }

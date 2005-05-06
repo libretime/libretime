@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -86,7 +86,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.7 $
+         *  @version $Revision: 1.8 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -97,25 +97,20 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
                 Gtk::TreeModelColumn<Ptr<Playable>::Ref>    playableColumn;
 
                 /**
+                 *  The column for the big row number display.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>         numberColumn;
+
+                /**
                  *  The column for the play button.
                  */
                 Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >
                                                             playButtonColumn;
 
                 /**
-                 *  The column for the title of the audio clip or playlist.
+                 *  The column for the title, creator, etc.
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         titleColumn;
-
-                /**
-                 *  The column for the creator of the audio clip or playlist.
-                 */
-                Gtk::TreeModelColumn<Glib::ustring>         creatorColumn;
-
-                /**
-                 *  The column for the length of the audio clip or playlist.
-                 */
-                Gtk::TreeModelColumn<Glib::ustring>         lengthColumn;
+                Gtk::TreeModelColumn<Glib::ustring>         infoColumn;
 
                 /**
                  *  Constructor.
@@ -123,10 +118,9 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
                 ModelColumns(void)                              throw ()
                 {
                     add(playableColumn);
+                    add(numberColumn);
                     add(playButtonColumn);
-                    add(titleColumn);
-                    add(creatorColumn);
-                    add(lengthColumn);
+                    add(infoColumn);
                 }
         };
 

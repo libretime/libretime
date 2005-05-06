@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <glibmm.h>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
@@ -81,16 +82,13 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     
     // ... and the tree view:
     treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
+    treeView->set_headers_visible(false);
 
     // Add the TreeView's view columns:
     try {
+        treeView->appendCenteredColumn("", modelColumns.numberColumn, 50);
         treeView->appendColumn("", WidgetFactory::hugePlayButton, 82);
-        treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                               modelColumns.titleColumn, 200);
-        treeView->appendColumn(*getResourceUstring("creatorColumnLabel"),
-                               modelColumns.creatorColumn, 200);
-        treeView->appendColumn(*getResourceUstring("lengthColumnLabel"),
-                               modelColumns.lengthColumn, 120);
+        treeView->appendColumn("", modelColumns.infoColumn, 200);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -157,12 +155,46 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
     Gtk::TreeModel::Row     row       = *(treeModel->append());
     
     row[modelColumns.playableColumn]  = playable;
-    row[modelColumns.titleColumn]     = *playable->getTitle();
+
+    Ptr<Glib::ustring>::Ref     numberString(new Glib::ustring);
+    
+    numberString->append("<span size=\"larger\" weight=\"ultrabold\">");
+    std::stringstream   numberStr;
+    numberStr << (rowNumber + 2);
+    numberString->append(numberStr.str());
+    numberString->append("</span>");
+    
+    row[modelColumns.numberColumn] = *numberString;
+
+    Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
+    
+    infoString->append("<span size=\"larger\" weight=\"bold\">");
+    infoString->append(Glib::Markup::escape_text(*playable->getTitle()));
+    infoString->append("</span>");
+
+    // TODO: rewrite this using the Core::Metadata class
+
     Ptr<Glib::ustring>::Ref 
                         creator = playable->getMetadata("dc:creator");
-    row[modelColumns.creatorColumn]   = creator ? *creator : "";
-    row[modelColumns.lengthColumn]    = to_simple_string(
-                                            *playable->getPlaylength() );
+    if (creator) {
+        infoString->append("\n<span weight=\"bold\">");
+        infoString->append(Glib::Markup::escape_text(*creator));
+        infoString->append("</span>");
+    }
+
+    Ptr<Glib::ustring>::Ref 
+                        album = playable->getMetadata("dc:source");
+    if (album) {
+        infoString->append("\n<span weight=\"bold\">");
+        infoString->append(Glib::Markup::escape_text(*album));
+        infoString->append("</span>");
+    }
+
+    infoString->append("\nduration: ");
+    infoString->append(to_simple_string(*playable->getPlaylength()));
+
+    row[modelColumns.infoColumn] = *infoString;
+    
     row[modelColumns.rowNumberColumn] = rowNumber;
 }
 
