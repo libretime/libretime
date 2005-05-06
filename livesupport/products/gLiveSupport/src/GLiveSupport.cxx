@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -602,7 +602,7 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: onStop(void)                                throw ()
+GLiveSupport :: onStop(void)                        throw ()
 {
     Ptr<Playable>::Ref      playable;
     masterPanel->setNowPlaying(playable);   // reset to empty
@@ -758,31 +758,45 @@ GLiveSupport :: deletePlayable(Ptr<Playable>::Ref   playable)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
-                                                throw (XmlRpcException,
-                                                        std::invalid_argument,
-                                                        std::logic_error,
-                                                        std::runtime_error)
+                                                    throw (std::logic_error)
 {
-    if (outputItemPlayingNow) {
-        stopOutputAudio();   // stop the audio player and release old resources
-    }
+    try {
+        if (outputItemPlayingNow) {
+            stopOutputAudio();      // stop the audio player and
+        }                           // release old resources
+        
+        switch (playable->getType()) {
+            case Playable::AudioClipType:
+                outputItemPlayingNow = storage->acquireAudioClip(sessionId, 
+                                                                 playable->getId());
+                outputPlayer->open(*outputItemPlayingNow->getUri());
+                outputPlayer->start();
+                break;
     
-    switch (playable->getType()) {
-        case Playable::AudioClipType:
-            outputItemPlayingNow = storage->acquireAudioClip(sessionId, 
-                                                             playable->getId());
-            outputPlayer->open(*outputItemPlayingNow->getUri());
-            outputPlayer->start();
-            break;
-
-        case Playable::PlaylistType:
-            outputItemPlayingNow = storage->acquirePlaylist(sessionId, 
-                                                            playable->getId());
-            outputPlayer->openAndStart(outputItemPlayingNow->getPlaylist());
-            break;
-
-        default:        // this never happens
-            break;
+            case Playable::PlaylistType:
+                outputItemPlayingNow = storage->acquirePlaylist(sessionId, 
+                                                                playable->getId());
+                outputPlayer->openAndStart(outputItemPlayingNow->getPlaylist());
+                break;
+    
+            default:        // this never happens
+                break;
+        }
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
+    } catch (std::invalid_argument &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
+    } catch (std::runtime_error &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
     }
     
     outputPlayerIsPaused = false;
@@ -814,26 +828,32 @@ GLiveSupport :: pauseOutputAudio(void)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: stopOutputAudio(void)
-                                                    throw (XmlRpcException,
-                                                           std::logic_error)
+                                                    throw (std::logic_error)
 {
-    outputPlayer->close();
-
-    if (outputItemPlayingNow) {
-        switch (outputItemPlayingNow->getType()) {
-            case Playable::AudioClipType:
-                storage->releaseAudioClip(sessionId, 
-                                          outputItemPlayingNow->getAudioClip());
-                outputItemPlayingNow.reset();
-                break;
-            case Playable::PlaylistType:
-                storage->releasePlaylist(sessionId, 
-                                         outputItemPlayingNow->getPlaylist());
-                outputItemPlayingNow.reset();
-                break;
-            default:    // this never happens
-                break;
+    try {
+        outputPlayer->close();
+    
+        if (outputItemPlayingNow) {
+            switch (outputItemPlayingNow->getType()) {
+                case Playable::AudioClipType:
+                    storage->releaseAudioClip(sessionId, 
+                                              outputItemPlayingNow->getAudioClip());
+                    outputItemPlayingNow.reset();
+                    break;
+                case Playable::PlaylistType:
+                    storage->releasePlaylist(sessionId, 
+                                             outputItemPlayingNow->getPlaylist());
+                    outputItemPlayingNow.reset();
+                    break;
+                default:    // this never happens
+                    break;
+            }
         }
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
     }
 
     outputPlayerIsPaused = false;
@@ -846,31 +866,45 @@ GLiveSupport :: stopOutputAudio(void)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
-                                                throw (XmlRpcException,
-                                                        std::invalid_argument,
-                                                        std::logic_error,
-                                                        std::runtime_error)
+                                                throw (std::logic_error)
 {
-    if (cueItemPlayingNow) {
-        stopCueAudio();    // stop the audio player and release old resources
-    }
+    try {
+        if (cueItemPlayingNow) {
+            stopCueAudio();     // stop the audio player and
+        }                       // release old resources
+        
+        switch (playable->getType()) {
+            case Playable::AudioClipType:
+                cueItemPlayingNow = storage->acquireAudioClip(sessionId, 
+                                                              playable->getId());
+                cuePlayer->open(*cueItemPlayingNow->getUri());
+                cuePlayer->start();
+                break;
     
-    switch (playable->getType()) {
-        case Playable::AudioClipType:
-            cueItemPlayingNow = storage->acquireAudioClip(sessionId, 
-                                                          playable->getId());
-            cuePlayer->open(*cueItemPlayingNow->getUri());
-            cuePlayer->start();
-            break;
-
-        case Playable::PlaylistType:
-            cueItemPlayingNow = storage->acquirePlaylist(sessionId, 
-                                                         playable->getId());
-            cuePlayer->openAndStart(cueItemPlayingNow->getPlaylist());
-            break;
-
-        default:        // this never happens
-            break;
+            case Playable::PlaylistType:
+                cueItemPlayingNow = storage->acquirePlaylist(sessionId, 
+                                                             playable->getId());
+                cuePlayer->openAndStart(cueItemPlayingNow->getPlaylist());
+                break;
+    
+            default:        // this never happens
+                break;
+        }
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
+    } catch (std::invalid_argument &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
+    } catch (std::runtime_error &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
     }
     
     cuePlayerIsPaused = false;
@@ -902,26 +936,32 @@ GLiveSupport :: pauseCueAudio(void)
 void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: stopCueAudio(void)
-                                                    throw (XmlRpcException,
-                                                           std::logic_error)
+                                                    throw (std::logic_error)
 {
-    cuePlayer->close();
-
-    if (cueItemPlayingNow) {
-        switch (cueItemPlayingNow->getType()) {
-            case Playable::AudioClipType:
-                storage->releaseAudioClip(sessionId, 
-                                          cueItemPlayingNow->getAudioClip());
-                cueItemPlayingNow.reset();
-                break;
-            case Playable::PlaylistType:
-                storage->releasePlaylist(sessionId, 
-                                         cueItemPlayingNow->getPlaylist());
-                cueItemPlayingNow.reset();
-                break;
-            default:    // this never happens
-                break;
+    try {
+        cuePlayer->close();
+    
+        if (cueItemPlayingNow) {
+            switch (cueItemPlayingNow->getType()) {
+                case Playable::AudioClipType:
+                    storage->releaseAudioClip(sessionId, 
+                                              cueItemPlayingNow->getAudioClip());
+                    cueItemPlayingNow.reset();
+                    break;
+                case Playable::PlaylistType:
+                    storage->releasePlaylist(sessionId, 
+                                             cueItemPlayingNow->getPlaylist());
+                    cueItemPlayingNow.reset();
+                    break;
+                default:    // this never happens
+                    break;
+            }
         }
+    } catch (XmlRpcException &e) {
+        Ptr<Glib::ustring>::Ref     eMsg 
+                                    = getResourceUstring("audioErrorMsg");
+        eMsg->append(e.what());
+        displayMessageWindow(eMsg);
     }
 
     cuePlayerIsPaused = false;

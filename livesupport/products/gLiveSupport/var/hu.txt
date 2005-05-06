@@ -16,6 +16,7 @@ hu:table
     schedulerNotReachableMsg:string     { "Az időzítő szerver nem elérhető" }
     storageNotReachableMsg:string       { "A tároló szerver nem elérhető" }
     authenticationNotReachableMsg:string  { "A beléptető szerver nem elérhető" }
+    audioErrorMsg                       { "Hiba történt a lejátszáskor: " }
 
     loginWindow:table
     {

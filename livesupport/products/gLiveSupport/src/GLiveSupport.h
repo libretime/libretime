@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,7 +101,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -588,10 +588,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         playOutputAudio(Ptr<Playable>::Ref   playable)
-                                                throw (XmlRpcException,
-                                                       std::invalid_argument,
-                                                       std::logic_error,
-                                                       std::runtime_error);
+                                                throw (std::logic_error);
 
         /**
          *  Stop the output audio player.
@@ -601,8 +598,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         stopOutputAudio(void)
-                                                throw (XmlRpcException,
-                                                       std::logic_error);
+                                                throw (std::logic_error);
 
         /**
          *  Pause the output audio player.
@@ -624,10 +620,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         playCueAudio(Ptr<Playable>::Ref   playable)
-                                                throw (XmlRpcException,
-                                                       std::invalid_argument,
-                                                       std::logic_error,
-                                                       std::runtime_error);
+                                                throw (std::logic_error);
 
         /**
          *  Stop the cue audio player.
@@ -637,8 +630,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         stopCueAudio(void)
-                                                throw (XmlRpcException,
-                                                       std::logic_error);
+                                                throw (std::logic_error);
 
         /**
          *  Pause the cue audio player.

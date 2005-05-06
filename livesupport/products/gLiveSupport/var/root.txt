@@ -17,6 +17,7 @@ root:table
     storageNotReachableMsg:string       { "Storage server not available" }
     authenticationNotReachableMsg:string
                                       { "Authentication server not available" }
+    audioErrorMsg                       { "Audio player error: " }
 
     loginWindow:table
     {
