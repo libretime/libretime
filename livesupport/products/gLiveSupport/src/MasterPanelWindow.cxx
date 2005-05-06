@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -558,6 +558,38 @@ MasterPanelWindow :: getNextItemToPlay()                            throw ()
     } else {
         Ptr<Playable>::Ref      nullPointer;
         return nullPointer;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the "now playing" display.
+ *----------------------------------------------------------------------------*/
+void
+MasterPanelWindow :: setNowPlaying(Ptr<Playable>::Ref    playable)
+                                                                    throw ()
+{
+    Gtk::Label *    label = dynamic_cast<Gtk::Label *>(
+                                                nowPlayingWidget );
+    if (playable) {
+        Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
+    
+        infoString->append("<span size=\"larger\" weight=\"bold\">");
+        infoString->append(Glib::Markup::escape_text(*playable->getTitle()));
+        infoString->append("</span>        ");
+
+        // TODO: rewrite this using the Core::Metadata class
+
+        Ptr<Glib::ustring>::Ref 
+                        creator = playable->getMetadata("dc:creator");
+        if (creator) {
+            infoString->append("<span size=\"larger\" weight=\"bold\">");
+            infoString->append(Glib::Markup::escape_text(*creator));
+            infoString->append("</span>");
+        }
+        label->set_markup(*infoString);
+    } else {
+        label->set_text("");
     }
 }
 

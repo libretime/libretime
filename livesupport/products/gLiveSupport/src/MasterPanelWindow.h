@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -91,7 +91,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -451,16 +451,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
          *  Set the "now playing" display.
          */
         void
-        setNowPlaying(Ptr<Playable>::Ref    playable)           throw ()
-        {
-            Gtk::Label *    label = dynamic_cast<Gtk::Label *>(
-                                                        nowPlayingWidget );
-            if (playable) {
-                label->set_text(*playable->getTitle());
-            } else {
-                label->set_text("");
-            }
-        }
+        setNowPlaying(Ptr<Playable>::Ref    playable)           throw ();
 };
 
 /* ================================================= external data structures */
