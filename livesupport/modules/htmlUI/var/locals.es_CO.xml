@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-	<status />
 	<Id>es_CO</Id>
+	<status>checked</status>
 	<item>
 		<key>Are you sure to delete file &quot;$1&quot;?</key>
-		<value />
+		<value>¿Desea borrar el archivo &quot;$1&quot;?</value>
 	</item>
 	<item>
 		<key>Are you sure to remove playlist &quot;$1&quot;?</key>
-		<value />
+		<value>¿Desea remover la lista de reproducción &quot;$1&quot;?</value>
 	</item>
 	<item>
 		<key>Are you sure to delete active Playlist?</key>
-		<value />
+		<value>¿Desea eliminar la lista de reproducción abierta?</value>
 	</item>
 	<item>
 		<key>Are you sure to logout $1?</key>
-		<value />
+		<value>¿Desea salir del sitio $1?</value>
 	</item>
 	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
-		<value />
+		<value>No se puede asignar &quot;$1&quot; al valor&quot;$2&quot;.</value>
 	</item>
 	<item>
 		<key>$1 uses an unsupported file type.</key>
-		<value />
+		<value>$1 utiliza un tipo de archivo no soportado.</value>
+	</item>
+	<item>
+		<key>$1 must be $2</key>
+		<value>$1 debe ser $2.</value>
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
@@ -211,8 +215,8 @@
 		<value>Incapaz de revertir al estado bloqueada</value>
 	</item>
 	<item>
-		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
-		<value>Incapaz de asignar &quot;$1&quot; a &quot;$2&quot; idioma &quot;$3&quot;.</value>
+		<key>Upload of file $1 was incomplete.</key>
+		<value>No pudo completarse la subida del archivo $1.</value>
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
@@ -399,16 +403,16 @@
 		<value>Duración</value>
 	</item>
 	<item>
-		<key>Edit</key>
-		<value>Editar</value>
+		<key>Edit File</key>
+		<value>Editar archivo</value>
+	</item>
+	<item>
+		<key>Edit Playlist</key>
+		<value>Editar lista de reproducción</value>
 	</item>
 	<item>
 		<key>Edit Metadata</key>
 		<value>Editar metadatos</value>
-	</item>
-	<item>
-		<key>Edit Playlist</key>
-		<value />
 	</item>
 	<item>
 		<key>Encoded by</key>
@@ -483,12 +487,12 @@
 		<value>Insertar lista de reproducción aquí</value>
 	</item>
 	<item>
-		<key>Item</key>
-		<value>Elemento</value>
+		<key>Insert Playlist after previous</key>
+		<value>Insertar lista de reproducción después de la previa</value>
 	</item>
 	<item>
-		<key>Insert Playlist after previous</key>
-		<value />
+		<key>Item</key>
+		<value>Elemento</value>
 	</item>
 	<item>
 		<key>Label</key>
@@ -719,19 +723,19 @@
 		<value>Resetear</value>
 	</item>
 	<item>
-		<key>Retype Password</key>
-		<value>Reescribir la clave</value>
+		<key>Reset Criteria</key>
+		<value>Reinicializar criterios</value>
 	</item>
 	<item>
-		<key>Reset Criteria</key>
-		<value />
+		<key>Retype Password</key>
+		<value>Reescribir la clave</value>
 	</item>
 	<item>
 		<key>Revert to Saved</key>
 		<value>Revertir a lo guardado</value>
 	</item>
 	<item>
-		<key>Rows Per Page</key>
+		<key>Rows per Page</key>
 		<value>Filas por página</value>
 	</item>
 	<item>
@@ -747,8 +751,8 @@
 		<value>Guardar y cerrar</value>
 	</item>
 	<item>
-		<key>Save and Close this Playlist</key>
-		<value>Guardar y cerrar esta lista de reproducción</value>
+		<key>Scheduler</key>
+		<value>Organizador de eventos</value>
 	</item>
 	<item>
 		<key>Scheduler Navigation</key>

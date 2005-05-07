@@ -1,122 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-    <Id>es_CO</Id>
-    <status>checked</status>
-    <item>
-        <key>collect expressions</key>
-    </item>
-    <item>
-        <key>localizer</key>
-    </item>
-    <item>
-        <key>$1 file already exist in $2</key>
-    </item>
-    <item>
-        <key>edit &quot;$1&quot;</key>
-    </item>
-    <item>
-        <key>edit &apos;$1&apos;</key>
-    </item>
-    <item>
-        <key>create new language file $1</key>
-    </item>
-    <item>
-        <key>create new language file in</key>
-    </item>
-    <item>
-        <key>delete</key>
-    </item>
-    <item>
-        <key>edit</key>
-    </item>
-    <item>
-        <key>entrys:</key>
-    </item>
-    <item>
-        <key>$1 and $2 files already exist in $3</key>
-    </item>
-    <item>
-        <key>ok</key>
-    </item>
-    <item>
-        <key>add new fields:</key>
-    </item>
-    <item>
-        <key>name</key>
-    </item>
-    <item>
-        <key>native name</key>
-    </item>
-    <item>
-        <key>code</key>
-    </item>
-    <item>
-        <key>source:</key>
-    </item>
-    <item>
-        <key>target:</key>
-    </item>
-    <item>
-        <key>manage languages</key>
-    </item>
-    <item>
-        <key>choose language</key>
-    </item>
-    <item>
-        <key>key:</key>
-    </item>
-    <item>
-        <key>cannot open $1</key>
-    </item>
-    <item>
-        <key>key &quot;$1&quot; already exists in $2-file</key>
-    </item>
-    <item>
-        <key>show only untranslated</key>
-    </item>
-    <item>
-        <key>cannot read $1</key>
-    </item>
-    <item>
-        <key>translate from:</key>
-    </item>
-    <item>
-        <key>really delete this entry?</key>
-    </item>
-    <item>
-        <key>fully translated</key>
-    </item>
-    <item>
-        <key>after</key>
-    </item>
-    <item>
-        <key>go</key>
-    </item>
-    <item>
-        <key>back</key>
-    </item>
-    <item>
-        <key>and select file type</key>
-    </item>
-    <item>
-        <key>and enter a positive integer value</key>
-    </item>
-    <item>
-        <key>save to file</key>
-    </item>
-    <item>
-        <key>add new language</key>
-    </item>
-    <item>
-        <key>create language files</key>
-    </item>
-    <item>
-        <key>at begin</key>
-    </item>
-    <item>
-        <key>at end</key>
-    </item>
-    <item>
-        <key>key</key>
-    </item>
+	<Id>es_CO</Id>
+	<status>checked</status>
+	<item>
+		<key>collect expressions</key>
+		<value>recoger expresiones</value>
+	</item>
+	<item>
+		<key>localizer</key>
+		<value>localizador</value>
+	</item>
+	<item>
+		<key>$1 file already exist in $2</key>
+		<value>el archivo $1 ya existe en $2</value>
+	</item>
+	<item>
+		<key>edit &quot;$1&quot;</key>
+		<value>editar &quot;$1&quot;</value>
+	</item>
+	<item>
+		<key>edit &apos;$1&apos;</key>
+		<value>editar &apos;$1&apos;</value>
+	</item>
+	<item>
+		<key>create new language file $1</key>
+		<value>crear nuevo archivo de idioma $1</value>
+	</item>
+	<item>
+		<key>create new language file in</key>
+		<value>crear nuevo archivo de idioma en</value>
+	</item>
+	<item>
+		<key>delete</key>
+		<value>eliminar</value>
+	</item>
+	<item>
+		<key>edit</key>
+		<value>editar</value>
+	</item>
+	<item>
+		<key>entrys:</key>
+		<value>entradas:</value>
+	</item>
+	<item>
+		<key>$1 and $2 files already exist in $3</key>
+		<value>los archivos $1 y $2 ya existen en $3</value>
+	</item>
+	<item>
+		<key>ok</key>
+		<value>ok</value>
+	</item>
+	<item>
+		<key>add new fields:</key>
+		<value>adicionar nuevos campos:</value>
+	</item>
+	<item>
+		<key>name</key>
+		<value>nombre</value>
+	</item>
+	<item>
+		<key>native name</key>
+		<value>nombre nativo</value>
+	</item>
+	<item>
+		<key>code</key>
+		<value>código</value>
+	</item>
+	<item>
+		<key>source:</key>
+		<value>fuente:</value>
+	</item>
+	<item>
+		<key>target:</key>
+		<value>objetivo:</value>
+	</item>
+	<item>
+		<key>manage languages</key>
+		<value>administrar idiomas</value>
+	</item>
+	<item>
+		<key>choose language</key>
+		<value>escoger idioma</value>
+	</item>
+	<item>
+		<key>key:</key>
+		<value>clave</value>
+	</item>
+	<item>
+		<key>cannot open $1</key>
+		<value>no puedo abrir $1</value>
+	</item>
+	<item>
+		<key>key &quot;$1&quot; already exists in $2-file</key>
+		<value>la clave &quot;$1&quot; ya existe en el archivo $2</value>
+	</item>
+	<item>
+		<key>show only untranslated</key>
+		<value>mostrar sólo aquellos sin traducir</value>
+	</item>
+	<item>
+		<key>cannot read $1</key>
+		<value>no puedo leer $1</value>
+	</item>
+	<item>
+		<key>translate from:</key>
+		<value>traducir de:</value>
+	</item>
+	<item>
+		<key>really delete this entry?</key>
+		<value>¿desea eliminar esta entrada?</value>
+	</item>
+	<item>
+		<key>fully translated</key>
+		<value>procesado completamente</value>
+	</item>
+	<item>
+		<key>after</key>
+		<value>después</value>
+	</item>
+	<item>
+		<key>go</key>
+		<value>ir</value>
+	</item>
+	<item>
+		<key>back</key>
+		<value>regresar</value>
+	</item>
+	<item>
+		<key>and select file type</key>
+		<value>y seleccionar tipo de archivo</value>
+	</item>
+	<item>
+		<key>and enter a positive integer value</key>
+		<value>y entrar un valor de entero positivo</value>
+	</item>
+	<item>
+		<key>save to file</key>
+		<value>guardar en archivo</value>
+	</item>
+	<item>
+		<key>add new language</key>
+		<value>añadir nuevo idioma</value>
+	</item>
+	<item>
+		<key>create language files</key>
+		<value>crear archivos de idioma</value>
+	</item>
+	<item>
+		<key>at begin</key>
+		<value>al comienzo</value>
+	</item>
+	<item>
+		<key>at end</key>
+		<value>al final</value>
+	</item>
+	<item>
+		<key>key</key>
+		<value>clave</value>
+	</item>
 </language>
