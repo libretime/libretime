@@ -21,6 +21,12 @@ form { font-size: 12px;
     margin: 0;
     padding: 0;
     padding-left: 25px;
+    text-align: center;
+    color: #000;
+}
+
+.copyright a{
+    color: blue;
 }
 
 .clearer {

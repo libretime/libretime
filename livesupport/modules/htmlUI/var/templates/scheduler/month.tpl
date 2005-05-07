@@ -1,7 +1,6 @@
 {$SCHEDULER->buildMonth()}
 {$SCHEDULER->buildWeek()}
 
-
 <!-- start scheduler -->
 <div class="content">
 <div class="container_elements">
@@ -37,5 +36,6 @@
         </tr>
         {/if}
     {/foreach}
+    </table>
 </div>
 </div>
