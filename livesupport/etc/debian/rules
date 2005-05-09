@@ -108,13 +108,16 @@ install-arch:
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallGLiveSupport.sh \
 		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml* \
-		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
+		  $(CURDIR)/debian/livesupport/opt/livesupport/etc/gtk-2.0 \
+		  $(CURDIR)/debian/livesupport/opt/livesupport/etc/pango \
+		$(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/widgets \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/var/gLiveSupport*.res \
-		$(CURDIR)/debian/livesupport.png \
 		$(CURDIR)/debian/livesupport-studio/opt/livesupport/var
+	cp -a	$(CURDIR)/debian/livesupport.png \
+		$(CURDIR)/debian/livesupport-studio/opt/livesupport/var		
 	mkdir -p $(CURDIR)/debian/livesupport-studio/usr/share/applications
-	cp -a $(CURDIR)debian/livesupport-studio.desktop \
+	cp -a $(CURDIR)/debian/livesupport-studio.desktop \
 		$(CURDIR)/debian/livesupport-studio/usr/share/applications/
 	dh_desktop -plivesupport-studio    
 	dh_installmenu 
