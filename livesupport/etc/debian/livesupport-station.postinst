@@ -31,7 +31,7 @@ case "$1" in
                                                 --apache-group $apache_group \
                                                 --www-root $apache_docroot
         # register and start the livesupport scheduler deamon
-        update-rc.d livesupport-station defaults 40 || true
+        update-rc.d livesupport-station defaults 92 || true
         if command -v invoke-rc.d >/dev/null 2>&1 ; then
             invoke-rc.d livesupport-station start || true
         else
