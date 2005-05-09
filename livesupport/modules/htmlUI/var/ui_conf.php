@@ -35,7 +35,6 @@ define('UI_STATIONINFO_SESSNAME',       'STATIONINFO');
 define('UI_BROWSE_SESSNAME',            'L_BROWSE');
 define('UI_SEARCH_SESSNAME',            'L_SEARCH');
 define('UI_PLAYLIST_SESSNAME',          'PLAYLIST');
-define('UI_MDATA_REC_SESSNAME',         'MDATAREC');
 
 ## Metadata Keys
 define('UI_MDATA_KEY_TITLE',            'dc:title');
@@ -79,7 +78,7 @@ define('UI_FILETYPE_AUDIOCLIP',         'audioClip');
 define('UI_FILETYPE_WEBSTREAM',         'webstream');
 
 ## Playlist elements
-define('UI_PL_ELEM_PLAYLIST',           'playlistElement'); 
+define('UI_PL_ELEM_PLAYLIST',           'playlistElement');
 define('UI_PL_ELEM_FADEINFO',           'fadeInfo');
 define('UI_PL_ELEM_FADEIN',             'fadeIn');
 define('UI_PL_ELEM_FADEOUT',            'fadeOut');

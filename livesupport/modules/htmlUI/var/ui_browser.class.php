@@ -14,7 +14,6 @@ class uiBrowser extends uiBase {
     function uiBrowser(&$config)
     {
         $this->uiBase($config);
-        $this->mdatarecords =& $_SESSION[UI_MDATA_REC_SESSNAME];
     }
 
       /**

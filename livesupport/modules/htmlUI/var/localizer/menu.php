@@ -1,5 +1,7 @@
 <?php
 require_once('require.inc.php');
+include_once dirname(__FILE__).'/auth.inc.php';
+
 include_once('header.html');
 
 loadLanguageFiles('', 'locals');
