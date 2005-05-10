@@ -22,18 +22,27 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-# Run this script to install pear packages needed by LiveSupport into the
-# development system usr environment.
-# To read more about pear, see http://pear.php.net/
+# Run this script to install PEAR packages needed by LiveSupport locally
+# into the Livesupport usr environment.
+# To read more about PEAR, see http://pear.php.net/
 #-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#  Determine directories, files
+#-------------------------------------------------------------------------------
+reldir=`dirname $0`/..
+basedir=`cd $reldir; pwd;`
+bindir=$basedir/bin
+etcdir=$basedir/etc
+srcdir=$basedir/src
+
 description="PEAR packages needed by LiveSupport"
 
-#PEAR-1.4.0a11
-packages="
+packages4install="
 Archive_Tar-1.3.1
 Console_Getopt-1.2
 XML_RPC-1.3.0RC1
@@ -50,21 +59,81 @@ XML_Beautifier-1.1
 XML_Serializer-0.15.0
 "
 
-reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd;`
-etcdir=$basedir/etc
-srcdir=$basedir/src
+packages_required="
+DB
+Calendar
+File
+File_Find
+HTML_Common
+HTML_QuickForm
+XML_Beautifier
+XML_Parser
+XML_RPC
+XML_Serializer
+XML_Util
+"
 
-dest_usrdir=`cd $basedir/../../usr; pwd;`
-destdir=$dest_usrdir/lib/php
-mkdir -p $destdir
-mkdir -p $destdir/etc
+#-------------------------------------------------------------------------------
+#  Print the usage information for this script.
+#-------------------------------------------------------------------------------
+printUsage()
+{
+    echo "LiveSupport PEAR packages install script.";
+    echo " parameters:";
+    echo "";
+    echo "  -d, --directory  The LiveSupport installation directory, required.";
+    echo "  -h, --help       Print this message and exit.";
+    echo "";
+}
 
-echo "configuring $description (with destdir: $destdir)"
+
+#-------------------------------------------------------------------------------
+#  Process command line parameters
+#-------------------------------------------------------------------------------
+CMD=${0##*/}
+
+opts=$(getopt -o d:h -l directory:,help -n $CMD -- "$@") || exit 1
+eval set -- "$opts"
+while true; do
+    case "$1" in
+        -d|--directory)
+            installdir=$2;
+            shift; shift;;
+        -h|--help)
+            printUsage;
+            exit 0;;
+        --)
+            shift;
+            break;;
+        *)
+            echo "Unrecognized option $1.";
+            printUsage;
+            exit 1;
+    esac
+done
+
+if [ "x$installdir" == "x" ]; then
+    echo "Required parameter install directory not specified.";
+    printUsage;
+    exit 1;
+fi
+
+#-------------------------------------------------------------------------------
+#  Customize the configuration file with the appropriate values
+#-------------------------------------------------------------------------------
+rootdir=`cd $installdir; pwd;`
+destdir=$rootdir/usr/lib/php
 
 configtemplate=$etcdir/pear.conf.template
 configfile=$destdir/etc/pear.conf
 pearcmd="pear -c $configtemplate"
+
+echo "Configuring $description"
+echo " (with destdir: $destdir)"
+
+mkdir -p $destdir
+mkdir -p $destdir/etc
+
 cp $configtemplate $configfile
 
 $pearcmd config-set php_dir $destdir/php || exit 1
@@ -75,13 +144,49 @@ $pearcmd config-set cache_dir $destdir/php/cache || exit 1
 $pearcmd config-set test_dir $destdir/php/tests || exit 1
 #$pearcmd config-show; exit
 
-echo "installing $description (with destdir: $destdir)"
+#-------------------------------------------------------------------------------
+#   Install the packages
+#-------------------------------------------------------------------------------
+echo "Installing $description to directory:"
+echo " $destdir"
 cd $srcdir
-for i in $packages
-do echo $i
-    $pearcmd install $i.tgz || \
-        { echo "*** ERROR installing $i"; exit 1; }
+for i in $packages4install
+do echo -n " "
+    $pearcmd install $i.tgz
 done
 
-echo "PEAR packages install finished OK"
+#-------------------------------------------------------------------------------
+#  Function to check for a PEAR module
+#
+#  @param $1 the name of the PEAR module
+#  @return 0 if the module is available, non-0 otherwise
+#-------------------------------------------------------------------------------
+check_pear_module() {
+    test_result=`$pearcmd info $1`
+#    test_result=`pear info $1`
+    if [ $? = 0 ]; then
+#        echo "PEAR module $1 found...";
+        echo "OK"
+        return 0;
+    else
+#        echo "PEAR module $1 not found...";
+        echo "NOT found ...";
+        return 1;
+    fi
+}
+
+#-------------------------------------------------------------------------------
+#  Check PEAR packages
+#  (because pear install returns exicode 1 even if package already exists)
+#-------------------------------------------------------------------------------
+
+for i in $packages_required
+do echo -n " checking PEAR module $i: "
+    check_pear_module $i || exit 1;
+done
+
+#-------------------------------------------------------------------------------
+#  Say goodbye
+#-------------------------------------------------------------------------------
+echo "Install of $description finished OK."
 exit 0

@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.10 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -213,6 +213,12 @@ $bindir/preInstall.sh --apache-group $apache_group || exit 1;
 #   Copy the files
 #-------------------------------------------------------------------------------
 $bindir/copyInstall.sh --directory $installdir || exit 1;
+
+
+#-------------------------------------------------------------------------------
+#   Install PEAR packages (locally in the LiveSupport)
+#-------------------------------------------------------------------------------
+$toolsdir/pear/bin/install.sh -d $installdir || exit 1;
 
 
 #-------------------------------------------------------------------------------
