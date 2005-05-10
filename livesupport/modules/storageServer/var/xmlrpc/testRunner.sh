@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.25 $
+#   Version  : $Revision: 1.26 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -153,7 +153,8 @@ downloadMeta() {
 
 deleteAudioClip() {
     echo -n "# deleteAudioClip: "
-    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
+# disabled:
+#    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
 }
 
 updateAudioClipMetadata() {
@@ -264,7 +265,8 @@ existsPlaylist() {
 deletePlaylist() {
     if [ "$EXISTS" != "FALSE" ]; then
         echo -n "# deletePlaylist (${PLID}): "
-        $XR_CLI deletePlaylist $SESSID $PLID || exit $?
+# disabled:
+#        $XR_CLI deletePlaylist $SESSID $PLID || exit $?
         echo "#  status: $?"
     fi
 }
@@ -329,7 +331,9 @@ searchTest() {
     storeAudioClip
     GUNID=$RGUNID
     searchMetadata
-    OK="AC(1): $GUNID | PL(0): "
+# patch after delete methods disabled:
+#    OK="AC(1): $GUNID | PL(0): "
+    OK="AC(2): $GUNID, $GUNID0 | PL(0): "
     if [ "$RES" == "$OK" ]; then
         echo "match: OK"
     else
@@ -393,6 +397,7 @@ storageTest(){
     login
     storeAudioClip
     GUNID=$RGUNID
+    GUNID0=$RGUNID
     existsAudioClip
     accessRawAudioData
     downloadRAD

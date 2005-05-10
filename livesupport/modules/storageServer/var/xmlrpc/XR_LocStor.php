@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -660,7 +660,7 @@ class XR_LocStor extends LocStor{
 
     /* --------------------------------------------------------------- delete */
     /**
-     *  Delete existing audio clip
+     *  Delete existing audio clip - DISABLED now!
      *
      *  The XML-RPC name of this method is "locstor.deleteAudioClip".
      *
@@ -692,6 +692,9 @@ class XR_LocStor extends LocStor{
      */
     function xr_deleteAudioClip($input)
     {
+        return new XML_RPC_Response(0, 805,
+            "xr_deleteAudioClip: method disabled"
+        );
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         $res = $this->deleteAudioClip($r['sessid'], $r['gunid']);
@@ -848,7 +851,7 @@ class XR_LocStor extends LocStor{
     }
 
     /**
-     *  Delete a Playlist metafile.
+     *  Delete a Playlist metafile - DISABLED now!
      *
      *  The XML-RPC name of this method is "locstor.deletePlaylist".
      *
@@ -880,6 +883,9 @@ class XR_LocStor extends LocStor{
      */
     function xr_deletePlaylist($input)
     {
+        return new XML_RPC_Response(0, 805,
+            "xr_deletePlaylist: method disabled"
+        );
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
         $res = $this->deletePlaylist($r['sessid'], $r['plid']);
