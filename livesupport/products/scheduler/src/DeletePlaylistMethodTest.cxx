@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,69 +118,6 @@ DeletePlaylistMethodTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Just a very simple smoke test
- *----------------------------------------------------------------------------*/
-void
-DeletePlaylistMethodTest :: firstTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    Ptr<OpenPlaylistForEditingMethod>::Ref
-                            openMethod  (new OpenPlaylistForEditingMethod);
-    Ptr<SavePlaylistMethod>::Ref
-                            saveMethod  (new SavePlaylistMethod);
-    Ptr<DeletePlaylistMethod>::Ref 
-                            deleteMethod(new DeletePlaylistMethod);
-    XmlRpc::XmlRpcValue     parameter;
-    XmlRpc::XmlRpcValue     rootParameter;
-    rootParameter.setSize(1);
-    XmlRpc::XmlRpcValue     result;
-
-    // set up a structure for the parameters
-    parameter["sessionId"]  = sessionId->getId();
-    parameter["playlistId"] = "0000000000000001";
-    rootParameter[0] = parameter;
-
-    result.clear();
-    try {
-       openMethod->execute(rootParameter, result);
-    } catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
-    }
-
-    result.clear();
-    try {
-        deleteMethod->execute(rootParameter, result);
-        CPPUNIT_FAIL("allowed to delete locked playlist");
-    } catch (XmlRpc::XmlRpcException &e) {
-        CPPUNIT_ASSERT(e.getCode() == 904);   // playlist is locked
-    }
-
-    result.clear();
-    try {
-        saveMethod->execute(rootParameter, result);
-    } catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
-    }
-
-    result.clear();
-    try {
-        deleteMethod->execute(rootParameter, result);
-    } catch (XmlRpc::XmlRpcException &e) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method returned error: " << e.getCode()
-             << " - " << e.getMessage();
-        CPPUNIT_FAIL(eMsg.str());
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  A very simple negative test
  *----------------------------------------------------------------------------*/
 void
@@ -193,7 +130,6 @@ DeletePlaylistMethodTest :: negativeTest(void)
     rootParameter.setSize(1);
     XmlRpc::XmlRpcValue             result;
 
-    // set up a structure for the parameters
     parameter["sessionId"]  = sessionId->getId();
     parameter["playlistId"] = "0000000000009999";
     rootParameter[0] = parameter;
@@ -205,5 +141,20 @@ DeletePlaylistMethodTest :: negativeTest(void)
     } catch (XmlRpc::XmlRpcException &e) {
         CPPUNIT_ASSERT(e.getCode() == 903);   // playlist not found
     }
+    
+    parameter.clear();
+    rootParameter.clear();
+    parameter["sessionId"]  = sessionId->getId();
+    parameter["playlistId"] = "0000000000000001";
+    rootParameter[0] = parameter;
+
+    result.clear();
+    try {
+        method->execute(rootParameter, result);
+        CPPUNIT_FAIL("allowed disabled deletePlaylist method");
+    } catch (XmlRpc::XmlRpcException &e) {
+        CPPUNIT_ASSERT(e.getCode() == 905);   // method disabled
+    }
+    
 }
 

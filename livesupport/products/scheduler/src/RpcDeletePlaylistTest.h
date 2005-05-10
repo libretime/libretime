@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/RpcDeletePlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,13 +65,12 @@ using namespace LiveSupport::Core;
  *
  *  @author  $Author: maroy, fgerlits
  $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see DeletePlaylistMethod
  */
 class RpcDeletePlaylistTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(RpcDeletePlaylistTest);
-    CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -83,14 +82,6 @@ class RpcDeletePlaylistTest : public BaseTestMethod
         Ptr<SessionId>::Ref                     sessionId;
 
     protected:
-
-        /**
-         *  A simple test.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
 
         /**
          *  A simple negative test.

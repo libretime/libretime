@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/RpcDeletePlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,45 +106,6 @@ RpcDeletePlaylistTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Just a very simple smoke test
- *----------------------------------------------------------------------------*/
-void
-RpcDeletePlaylistTest :: firstTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    XmlRpc::XmlRpcClient    xmlRpcClient(getXmlRpcHost().c_str(),
-                                         getXmlRpcPort(),
-                                         "/RPC2",
-                                         false);
-    XmlRpc::XmlRpcValue     parameters;
-    XmlRpc::XmlRpcValue     result;
-
-    parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = "0000000000000001";
-
-    result.clear();
-    xmlRpcClient.execute("openPlaylistForEditing", parameters, result);
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-
-    result.clear();
-    xmlRpcClient.execute("deletePlaylist", parameters, result);
-    CPPUNIT_ASSERT(xmlRpcClient.isFault());
-    CPPUNIT_ASSERT(result.hasMember("faultCode"));
-    CPPUNIT_ASSERT(int(result["faultCode"]) == 904);   // playlist is locked
-
-    result.clear();
-    xmlRpcClient.execute("savePlaylist", parameters, result);
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-
-    result.clear();
-    xmlRpcClient.execute("deletePlaylist", parameters, result);
-    CPPUNIT_ASSERT(!xmlRpcClient.isFault());
-
-    xmlRpcClient.close();
-}
-
-
-/*------------------------------------------------------------------------------
  *  A very simple negative test
  *----------------------------------------------------------------------------*/
 void
@@ -159,13 +120,23 @@ RpcDeletePlaylistTest :: negativeTest(void)
     XmlRpc::XmlRpcValue             result;
 
     parameters["sessionId"]  = sessionId->getId();
-    parameters["playlistId"] = "9999";
+    parameters["playlistId"] = "0000000000009999";
 
     result.clear();
     xmlRpcClient.execute("deletePlaylist", parameters, result);
     CPPUNIT_ASSERT(xmlRpcClient.isFault());
     CPPUNIT_ASSERT(result.hasMember("faultCode"));
     CPPUNIT_ASSERT(int(result["faultCode"]) == 903);   // playlist not found
+
+    parameters.clear();
+    parameters["sessionId"]  = sessionId->getId();
+    parameters["playlistId"] = "0000000000000001";
+
+    result.clear();
+    xmlRpcClient.execute("deletePlaylist", parameters, result);
+    CPPUNIT_ASSERT(xmlRpcClient.isFault());
+    CPPUNIT_ASSERT(result.hasMember("faultCode"));
+    CPPUNIT_ASSERT(int(result["faultCode"]) == 905);   // method disabled
 
     xmlRpcClient.close();
 }

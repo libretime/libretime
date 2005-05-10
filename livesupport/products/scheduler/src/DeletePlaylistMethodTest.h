@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/Attic/DeletePlaylistMethodTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,13 +66,12 @@ using namespace LiveSupport::Authentication;
  *
  *  @author  $Author: maroy, fgerlits
  $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see DeletePlaylistMethod
  */
 class DeletePlaylistMethodTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(DeletePlaylistMethodTest);
-    CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -90,14 +89,6 @@ class DeletePlaylistMethodTest : public BaseTestMethod
 
 
     protected:
-
-        /**
-         *  A simple test.
-         *
-         *  @exception CPPUNIT_NS::Exception on test failures.
-         */
-        void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
 
         /**
          *  A simple negative test.
