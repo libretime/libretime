@@ -1,5 +1,5 @@
 DirectoryIndex index.php
-Options +FollowSymLinks
+Options +FollowSymLinks -Indexes
 
 <IfModule mod_mime.c>
     <IfModule mod_php4.c>
