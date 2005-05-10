@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -186,6 +186,42 @@ static const std::string    cueStopButtonPassiveName
  */
 static const std::string    cueStopButtonRollName 
                             = "imageButton/cueStopRoll.png";
+
+/**
+ *  The name of the passive image for the master panel play button.
+ */
+static const std::string    masterPlayButtonPassiveName 
+                            = "imageButton/masterPlay.gif";
+
+/**
+ *  The name of the rollover image for the master panel play button.
+ */
+static const std::string    masterPlayButtonRollName 
+                            = "imageButton/masterPlayRoll.gif";
+
+/**
+ *  The name of the passive image for the master panel pause button.
+ */
+static const std::string    masterPauseButtonPassiveName 
+                            = "imageButton/masterPause.gif";
+
+/**
+ *  The name of the rollover image for the master panel pause button.
+ */
+static const std::string    masterPauseButtonRollName 
+                            = "imageButton/masterPauseRoll.gif";
+
+/**
+ *  The name of the passive image for the master panel stop button.
+ */
+static const std::string    masterStopButtonPassiveName 
+                            = "imageButton/masterStop.gif";
+
+/**
+ *  The name of the rollover image for the master panel stop button.
+ */
+static const std::string    masterStopButtonRollName 
+                            = "imageButton/masterStopRoll.gif";
 
 /**
  *  The name of the combo box left image.
@@ -412,6 +448,21 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
         case cueStopButton:
             passiveImage = loadImage(cueStopButtonPassiveName);
             rollImage    = loadImage(cueStopButtonRollName);
+            break;
+
+        case masterPlayButton:
+            passiveImage = loadImage(masterPlayButtonPassiveName);
+            rollImage    = loadImage(masterPlayButtonRollName);
+            break;
+
+        case masterPauseButton:
+            passiveImage = loadImage(masterPauseButtonPassiveName);
+            rollImage    = loadImage(masterPauseButtonRollName);
+            break;
+
+        case masterStopButton:
+            passiveImage = loadImage(masterStopButtonPassiveName);
+            rollImage    = loadImage(masterStopButtonRollName);
             break;
 
         default:

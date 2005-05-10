@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     timeBin->set_size_request(153, 104);
 
     // set up the now playing widget
-    nowPlayingWidget = Gtk::manage(new Gtk::Label(""));
+    nowPlayingWidget = Gtk::manage(new NowPlaying(gLiveSupport, bundle));
     nowPlayingBin = Gtk::manage(widgetFactory->createDarkBlueBin());
     nowPlayingBin->add(*nowPlayingWidget);
     nowPlayingBin->set_size_request(-1, 104);
@@ -121,22 +121,22 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     // set up the main window, and show everything
     // all the localized widgets were set up in changeLanguage()
     set_border_width(10);
-    layout->attach(*timeBin,         0, 1, 0, 2,
+    layout->attach(*timeBin,            0, 1, 0, 2,
                     Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                     0, 0);
-    layout->attach(*nowPlayingBin,   1, 2, 0, 2,
+    layout->attach(*nowPlayingBin,      1, 2, 0, 2,
                    Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                    5, 0);
-    layout->attach(*vuMeterBin,      2, 3, 0, 1,
+    layout->attach(*vuMeterBin,         2, 3, 0, 1,
                     Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                     0, 0);
-    layout->attach(*nextPlayingBin,  2, 3, 1, 2,
+    layout->attach(*nextPlayingBin,     2, 3, 1, 2,
                     Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                     0, 0);
-    layout->attach(*radioLogoWidget, 3, 4, 0, 2,
+    layout->attach(*radioLogoWidget,    3, 4, 0, 2,
                     Gtk::SHRINK|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                     5, 0);
-    layout->attach(*bottomBar,       0, 4, 2, 3,
+    layout->attach(*bottomBar,          0, 4, 2, 3,
                     Gtk::EXPAND|Gtk::FILL, Gtk::SHRINK|Gtk::FILL,
                     0, 0);
     add(*layout);
@@ -569,27 +569,6 @@ void
 MasterPanelWindow :: setNowPlaying(Ptr<Playable>::Ref    playable)
                                                                     throw ()
 {
-    Gtk::Label *    label = dynamic_cast<Gtk::Label *>(
-                                                nowPlayingWidget );
-    if (playable) {
-        Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
-    
-        infoString->append("<span size=\"larger\" weight=\"bold\">");
-        infoString->append(Glib::Markup::escape_text(*playable->getTitle()));
-        infoString->append("</span>        ");
-
-        // TODO: rewrite this using the Core::Metadata class
-
-        Ptr<Glib::ustring>::Ref 
-                        creator = playable->getMetadata("dc:creator");
-        if (creator) {
-            infoString->append("<span size=\"larger\" weight=\"bold\">");
-            infoString->append(Glib::Markup::escape_text(*creator));
-            infoString->append("</span>");
-        }
-        label->set_markup(*infoString);
-    } else {
-        label->set_text("");
-    }
+    nowPlayingWidget->setPlayable(playable);
 }
 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.33 $
+#   Version  : $Revision: 1.34 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -181,6 +181,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 #-------------------------------------------------------------------------------
 G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/MasterPanelWindow.o \
+                     ${TMP_DIR}/NowPlaying.o \
                      ${TMP_DIR}/MasterPanelUserInfoWidget.o \
                      ${TMP_DIR}/LoginWindow.o \
                      ${TMP_DIR}/AudioClipListWindow.o \

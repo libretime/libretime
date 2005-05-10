@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 
 #include "GLiveSupport.h"
+#include "NowPlaying.h"
 #include "MasterPanelUserInfoWidget.h"
 #include "LiveModeWindow.h"
 #include "UploadFileWindow.h"
@@ -91,7 +92,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -130,7 +131,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The 'now playing' display.
          */
-        Gtk::Widget               * nowPlayingWidget;
+        NowPlaying                * nowPlayingWidget;
 
         /**
          *  The container for the VU meter widget
