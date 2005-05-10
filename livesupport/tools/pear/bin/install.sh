@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -39,6 +39,7 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 srcdir=$basedir/src
+installdir=$basedir/../..
 
 description="PEAR packages needed by LiveSupport"
 
@@ -81,7 +82,7 @@ printUsage()
     echo "LiveSupport PEAR packages install script.";
     echo " parameters:";
     echo "";
-    echo "  -d, --directory  The LiveSupport installation directory, required.";
+    echo "  -d, --directory  The LiveSupport installation directory";
     echo "  -h, --help       Print this message and exit.";
     echo "";
 }
@@ -92,7 +93,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:h -l directory:,help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o dh -l directory,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -111,12 +112,6 @@ while true; do
             exit 1;
     esac
 done
-
-if [ "x$installdir" == "x" ]; then
-    echo "Required parameter install directory not specified.";
-    printUsage;
-    exit 1;
-fi
 
 #-------------------------------------------------------------------------------
 #  Customize the configuration file with the appropriate values
