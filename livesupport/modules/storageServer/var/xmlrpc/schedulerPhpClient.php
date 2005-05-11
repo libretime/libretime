@@ -23,15 +23,15 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/schedulerPhpClient.php,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ================================================================= includes */
+include_once "../conf.php";
 require_once 'DB.php';
 include_once "../xmlrpc/XML/RPC.php";
-include_once "../conf.php";
 
 /* ================================================== method definition array */
 /**

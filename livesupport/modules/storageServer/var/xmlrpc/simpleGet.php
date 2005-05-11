@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/simpleGet.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,8 +54,8 @@
  *
  */
 
-require_once 'DB.php';
 require_once '../conf.php';
+require_once 'DB.php';
 require_once '../LocStor.php';
 
 $dbc = DB::connect($config['dsn'], TRUE);
