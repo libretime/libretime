@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,6 +81,7 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
                                         &NowPlaying::onStopButtonClicked ));
 
     isActive = false;
+    isPaused = false;
 
     label = Gtk::manage(new Gtk::Label);
     label->set_ellipsize(Pango::ELLIPSIZE_END);
@@ -101,6 +102,7 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             stopButton->show();
             pauseButton->show();
             isActive = true;
+            isPaused = false;
         }
     
         Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
@@ -124,7 +126,11 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         label->set_text("");
         if (isActive) {
             remove(*stopButton);
-            remove(*pauseButton);
+            if (isPaused) {
+                remove(*playButton);
+            } else {
+                remove(*pauseButton);
+            }
             isActive = false;
         }
         this->playable.reset();
@@ -142,7 +148,9 @@ NowPlaying :: onPlayButtonClicked(void)                             throw ()
 
     remove(*playButton);
     pack_end(*pauseButton, Gtk::PACK_SHRINK, 2);
-    pauseButton->show();   
+    pauseButton->show();
+    
+    isPaused = false;
 }
 
 
@@ -157,6 +165,8 @@ NowPlaying :: onPauseButtonClicked(void)                            throw ()
     remove(*pauseButton);
     pack_end(*playButton, Gtk::PACK_SHRINK, 2);
     playButton->show();   
+    
+    isPaused = true;
 }
 
 
