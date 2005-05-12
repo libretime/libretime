@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -592,8 +592,6 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
         playOutputAudio(playable);
         masterPanel->setNowPlaying(playable);
     }
-    
-    addToScratchpad(playable);
 }
 
 
