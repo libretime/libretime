@@ -22,7 +22,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see ObjClasses
  *  Original author Tom Hlava
  */
@@ -276,7 +276,8 @@ class M2tree{
     function getObjId($name, $parId=NULL)
     {
         if($name=='' && is_null($parId)) $name = $this->rootNodeName;
-        $parcond = (is_null($parId) ? "parid is null" : "parid='$parId'");
+        $parcond = (is_null($parId) ? "parid is null" :
+            "parid='$parId' AND level=1");
         $r = $this->dbc->getOne("
             SELECT id FROM {$this->treeTable} t
             LEFT JOIN {$this->structTable} s ON id=objid
