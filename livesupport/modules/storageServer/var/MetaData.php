@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -295,6 +295,10 @@ class MetaData{
         $catNs = $a['namespace'];
         $cat   = $a['localPart'];
         $objns = (is_null($value) ? '_blank' : '_L' );
+        if(!is_null($value)){
+            $transTbl = get_html_translation_table();
+            $value = strtr($value, $transTbl);
+        }
         $nid= $this->storeRecord('_I', $parid, $catNs, $cat, $predxml,
             $objns, $value);
         if(PEAR::isError($nid)) return $nid;
