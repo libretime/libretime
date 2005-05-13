@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Add the TreeView's view columns:
     try {
         treeView->appendCenteredColumn("", modelColumns.numberColumn, 50);
-        treeView->appendColumn("", WidgetFactory::hugePlayButton, 82);
+//        treeView->appendColumn("", WidgetFactory::hugePlayButton, 82);
         treeView->appendColumn("", modelColumns.infoColumn, 200);
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -137,7 +137,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // show
     set_name("liveModeWindow");
-    set_default_size(610, 500);
+    set_default_size(400, 500);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     

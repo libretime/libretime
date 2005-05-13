@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject,
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.4 $
+         *  @version $Revision: 1.5 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -341,7 +341,7 @@ class ScratchpadWindow : public WhiteWindow,
         removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
 
         /**
-         *  Event handler for the "output audio player has stopped" event.
+         *  Event handler for the "cue audio player has stopped" event.
          */
         virtual void
         onStop(void)                                            throw ();

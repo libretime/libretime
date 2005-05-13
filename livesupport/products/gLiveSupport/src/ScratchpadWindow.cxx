@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,13 +74,13 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
+    playButton  = Gtk::manage(widgetFactory->createButton(
+                                            WidgetFactory::smallPlayButton));
+    pauseButton = Gtk::manage(widgetFactory->createButton(
+                                            WidgetFactory::smallPauseButton));
+    stopButton  = Gtk::manage(widgetFactory->createButton(
+                                            WidgetFactory::smallStopButton));
     try {
-        playButton  = Gtk::manage(widgetFactory->createButton(
-                                WidgetFactory::smallPlayButton));
-        pauseButton = Gtk::manage(widgetFactory->createButton(
-                                WidgetFactory::smallPauseButton));
-        stopButton  = Gtk::manage(widgetFactory->createButton(
-                                WidgetFactory::smallStopButton));
         clearListButton = Gtk::manage(widgetFactory->createButton(
                                 *getResourceUstring("clearListButtonLabel")));
         removeButton = Gtk::manage(widgetFactory->createButton(
@@ -739,7 +739,7 @@ ScratchpadWindow :: onStopButtonClicked(void)                   throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the "output audio player has stopped" event.
+ *  Event handler for the "cue audio player has stopped" event.
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onStop(void)                                throw ()
