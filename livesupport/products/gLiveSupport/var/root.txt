@@ -56,7 +56,7 @@ root:table
         addToPlaylistMenuItem:string    { "_Add To Playlist" }
         schedulePlaylistMenuItem:string { "_Schedule Playlist" }
         deleteMenuItem:string           { "_Delete" }
-        playMenuItem:string             { "_Play" }
+        playMenuItem:string             { "_Preview" }
         addToLiveModeMenuItem:string    { "Add To _Live Mode" }
     }
 
@@ -182,10 +182,12 @@ root:table
     {
         windowTitle:string            { "LiveSupport Live Mode Window" }
         
-        cueMenuItem:string            { "_Cue" }
+        cueMenuItem:string            { "_Preview" }
         upMenuItem:string             { "Move _Up" }
         downMenuItem:string           { "Move D_own" }
         removeMenuItem:string         { "_Remove" }
+        
+        cuePlayerLabel:string         { "Preview" }
     }
 }
 

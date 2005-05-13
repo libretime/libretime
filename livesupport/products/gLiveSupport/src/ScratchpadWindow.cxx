@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,9 +118,9 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-    vBox.pack_start(topButtonBox, Gtk::PACK_SHRINK);
-    vBox.pack_start(scrolledWindow);
-    vBox.pack_start(bottomButtonBox, Gtk::PACK_SHRINK);
+    vBox.pack_start(topButtonBox, Gtk::PACK_SHRINK, 5);
+    vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
+    vBox.pack_start(bottomButtonBox, Gtk::PACK_SHRINK, 5);
 
     audioButtonBox = Gtk::manage(new CuePlayer(
                                     gLiveSupport, treeView, modelColumns ));

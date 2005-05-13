@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,6 +52,7 @@
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
+#include "CuePlayer.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -73,7 +74,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -86,7 +87,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.9 $
+         *  @version $Revision: 1.10 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -142,7 +143,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The tree view, now only showing rows.
          */
-        ZebraTreeView             * treeView;
+        ZebraTreeView *             treeView;
 
         /**
          *  The tree model, as a GTK reference.
@@ -153,7 +154,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  The right-click context menu,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Gtk::Menu                 * contextMenu;
+        Gtk::Menu *                 contextMenu;
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.
@@ -162,12 +163,6 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          */
         virtual void
         onEntryClicked(GdkEventButton     * event)              throw ();
-
-        /**
-         *  Signal handler for the cue menu option selected.
-         */
-        virtual void
-        onCueMenuOption(void)                                   throw ();
 
         /**
          *  Signal handler for the "up" menu option selected from
@@ -229,7 +224,9 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Virtual destructor.
          */
         virtual
-        ~LiveModeWindow(void)                                   throw ();
+        ~LiveModeWindow(void)                                   throw ()
+        {
+        }
 
         /**
          *  Add a new item to the Live Mode Window.

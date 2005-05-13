@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
             LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
-    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     // Create the tree model:
     treeModel = Gtk::ListStore::create(modelColumns);
@@ -81,7 +81,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                             &LiveModeWindow::onRowDeleted));
     
     // ... and the tree view:
-    treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
+    treeView = Gtk::manage(wf->createTreeView(treeModel));
     treeView->set_headers_visible(false);
 
     // Add the TreeView's view columns:
@@ -104,7 +104,33 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-    vBox.pack_start(scrolledWindow);
+    // Create the play etc buttons:
+    Gtk::HBox *         buttonBox = Gtk::manage(new Gtk::HBox);
+    ImageButton *       outputPlayButton = Gtk::manage(wf->createButton(
+                                        WidgetFactory::hugePlayButton ));
+    Gtk::VBox *         cueAudioBox = Gtk::manage(new Gtk::VBox);
+    Gtk::HBox *         cueAudioLabelBox = Gtk::manage(new Gtk::HBox);
+    Gtk::Label *        cueAudioLabel;
+    try {
+        cueAudioLabel = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring("cuePlayerLabel") ));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    Gtk::HBox *         cueAudioButtonsBox = Gtk::manage(new Gtk::HBox);
+    CuePlayer *         cueAudioButtons = Gtk::manage(new CuePlayer(
+                                    gLiveSupport, treeView, modelColumns ));
+    buttonBox->pack_start(*outputPlayButton, Gtk::PACK_EXPAND_PADDING, 10);
+    buttonBox->pack_start(*cueAudioBox,      Gtk::PACK_EXPAND_PADDING, 10);
+    cueAudioBox->pack_start(*cueAudioLabelBox,   Gtk::PACK_SHRINK, 6);
+    cueAudioLabelBox->pack_start(*cueAudioLabel, Gtk::PACK_EXPAND_PADDING, 1);
+    cueAudioBox->pack_start(*cueAudioButtonsBox, Gtk::PACK_SHRINK, 0);
+    cueAudioButtonsBox->pack_start(*cueAudioButtons, 
+                                                 Gtk::PACK_EXPAND_PADDING, 1);
+
+    vBox.pack_start(*buttonBox,     Gtk::PACK_SHRINK, 5);
+    vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
     add(vBox);
 
     // create the right-click entry context menu for audio clips
@@ -114,8 +140,8 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     try {
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("cueMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onCueMenuOption)));
+                                  sigc::mem_fun(*cueAudioButtons,
+                                        &CuePlayer::onPlayItem)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("upMenuItem"),
                                   sigc::mem_fun(*this,
@@ -206,22 +232,15 @@ Ptr<Playable>::Ref
 LiveModeWindow :: popTop(void)                                      throw ()
 {
     Ptr<Playable>::Ref          playable;
+/*  disabled for testing
     Gtk::TreeModel::iterator    iter = treeModel->children().begin();
     
     if (iter) {
         playable = (*iter)[modelColumns.playableColumn];
         treeModel->erase(iter);
     }
-    
+*/    
     return playable;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Destructor.
- *----------------------------------------------------------------------------*/
-LiveModeWindow :: ~LiveModeWindow (void)                            throw ()
-{
 }
 
 
@@ -254,32 +273,6 @@ LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
             Ptr<Playable>::Ref  playable =
                                         (*iter)[modelColumns.playableColumn];
             contextMenu->popup(event->button, event->time);
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Signal handler for the cue menu option selected.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onCueMenuOption(void)                             throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-    Gtk::TreeModel::iterator iter = refSelection->get_selected();
-    
-    if (iter) {
-        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-        try {
-            gLiveSupport->playOutputAudio(playable);
-        } catch (XmlRpcException &e) {
-            std::cerr << "GLiveSupport::playOutputAudio() error:" << std::endl
-                        << e.what() << std::endl;
-        } catch (std::exception &e) {
-            std::cerr << "GLiveSupport::playOutputAudio() error:" << std::endl
-                        << e.what() << std::endl;
         }
     }
 }

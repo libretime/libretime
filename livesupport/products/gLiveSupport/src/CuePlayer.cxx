@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/CuePlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,8 +82,8 @@ CuePlayer :: CuePlayer(Ptr<GLiveSupport>::Ref                   gLiveSupport,
     stopButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &CuePlayer::onStopButtonClicked ));
 
-    pack_end(*stopButton, Gtk::PACK_SHRINK, 5);
-    pack_end(*playButton, Gtk::PACK_SHRINK);
+    pack_end(*stopButton, Gtk::PACK_SHRINK, 3);
+    pack_end(*playButton, Gtk::PACK_SHRINK, 3);
 
     audioState = waitingState;
     
@@ -131,7 +131,7 @@ CuePlayer :: onPlayItem(void)                                       throw ()
             
             audioState = playingState;
             remove(*playButton);
-            pack_end(*pauseButton, Gtk::PACK_SHRINK);
+            pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
             pauseButton->show();
         }
     }
@@ -153,7 +153,7 @@ CuePlayer :: onPlayButtonClicked(void)                              throw ()
                 gLiveSupport->pauseCueAudio();      // ie, restart
                 audioState = playingState;
                 remove(*playButton);
-                pack_end(*pauseButton, Gtk::PACK_SHRINK);
+                pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
                 pauseButton->show();
             } catch (std::logic_error &e) {
                 std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
@@ -179,7 +179,7 @@ CuePlayer :: onPauseButtonClicked(void)                             throw ()
         gLiveSupport->pauseCueAudio();
         audioState = pausedState;
         remove(*pauseButton);
-        pack_end(*playButton, Gtk::PACK_SHRINK);
+        pack_end(*playButton, Gtk::PACK_SHRINK, 3);
         playButton->show();
     } catch (std::logic_error &e) {
         std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
@@ -225,7 +225,7 @@ CuePlayer :: onStop(void)                                           throw ()
             return;
     }
     audioState = waitingState;
-    pack_end(*playButton, Gtk::PACK_SHRINK);
+    pack_end(*playButton, Gtk::PACK_SHRINK, 3);
     playButton->show();
 }
 

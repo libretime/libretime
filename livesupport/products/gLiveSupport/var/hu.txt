@@ -55,7 +55,7 @@ hu:table
         addToPlaylistMenuItem:string    { "_Hozzáad Playlisthez" }
         schedulePlaylistMenuItem:string { "_Playlist időzítése" }
         deleteMenuItem:string           { "_Töröl" }
-        playMenuItem:string             { "Le_játszâs" }
+        playMenuItem:string             { "_Belehallgatni" }
         addToLiveModeMenuItem:string    { "Élő _adásba" }
     }
 
@@ -180,10 +180,12 @@ hu:table
     {
         windowTitle:string            { "LiveSupport Élő adás ablak" }
         
-        cueMenuItem:string            { "Bele_hallgatni" }
+        cueMenuItem:string            { "_Belehallgatni" }
         upMenuItem:string             { "_Fel" }
         downMenuItem:string           { "_Le" }
         removeMenuItem:string         { "_Eltávolít" }
+
+        cuePlayerLabel:string         { "Belehallgatni" }
     }
 }
 
