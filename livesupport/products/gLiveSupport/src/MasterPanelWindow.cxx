@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.31 $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -532,8 +532,6 @@ MasterPanelWindow :: showAnonymousUI(void)                          throw ()
         searchWindow->hide();
         searchWindow.reset();
     }
-    
-    gLiveSupport->stopCueAudio();
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,6 +114,7 @@ MasterPanelUserInfoWidget :: ~MasterPanelUserInfoWidget (void)      throw ()
 void
 MasterPanelUserInfoWidget :: onLogoutButtonClicked (void)           throw ()
 {
+    gLiveSupport->stopCueAudio();
     gLiveSupport->logout();
 
     loggedIn = false;

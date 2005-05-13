@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,9 +72,11 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
-class ScratchpadWindow : public WhiteWindow, public LocalizedObject
+class ScratchpadWindow : public WhiteWindow,
+                         public LocalizedObject,
+                         public AudioPlayerEventListener
 {
     private:
 
@@ -85,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.3 $
+         *  @version $Revision: 1.4 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -151,6 +153,16 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
          *  The box containing the box containing the audio buttons.
          */
         Gtk::HBox                   topButtonBox;
+
+        /**
+         *  The possible states of the (cue) audio player.
+         */
+        enum AudioState { waitingState, playingState, pausedState };
+
+        /**
+         *  The current state of the player.
+         */
+        AudioState                  audioState;
 
         /**
          *  The box containing the audio buttons.
@@ -327,6 +339,12 @@ class ScratchpadWindow : public WhiteWindow, public LocalizedObject
          */
         void
         removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
+
+        /**
+         *  Event handler for the "output audio player has stopped" event.
+         */
+        virtual void
+        onStop(void)                                            throw ();
 };
 
 /* ================================================= external data structures */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,7 +101,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.32 $
+ *  @version $Revision: 1.33 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -640,6 +640,27 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual void
         pauseCueAudio(void)
                                                 throw (std::logic_error);
+
+        /**
+         *  Attach a listener for the cue audio player (the listener
+         *  will be notified when the cue audio player has stopped playing).
+         *
+         *  @param listener the event listener to register.
+         */
+        void
+        attachCueAudioListener(AudioPlayerEventListener *   listener)
+                                                throw ();
+
+        /**
+         *  Detach the listener for the cue audio player.
+         *
+         *  @param listener the event listener to unregister.
+         *  @exception std::invalid_argument if the supplied event listener 
+         *             has not been previously registered.
+         */
+        void
+        detachCueAudioListener(AudioPlayerEventListener *   listener)
+                                                throw (std::invalid_argument);
 
         /**
          *  Search in the local storage.

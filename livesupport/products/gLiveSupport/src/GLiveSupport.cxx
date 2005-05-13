@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -568,12 +568,15 @@ GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
     for (it = scratchpadContents->begin(); it != scratchpadContents->end();
                                                                      ++it) {
         Ptr<Playable>::Ref  listElement = *it;
-        if (*listElement->getId() == *playable->getId()) {
+        if (*listElement->getId() == *playable->getId()) {      // found
             scratchpadContents->erase(it);
-            break;
+            scratchpadContents->push_front(listElement);
+            masterPanel->updateScratchpadWindow();   
+            return;
         }
     }
-    scratchpadContents->push_front(playable);
+    
+    scratchpadContents->push_front(playable);                   // not found
     masterPanel->updateScratchpadWindow();   
 }
 
@@ -963,6 +966,30 @@ GLiveSupport :: stopCueAudio(void)
     }
 
     cuePlayerIsPaused = false;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Attach a listener for the cue audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: attachCueAudioListener(AudioPlayerEventListener *   listener)
+                                                throw ()
+{
+    cuePlayer->attachListener(listener);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Detach the listener for the cue audio player.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: detachCueAudioListener(AudioPlayerEventListener *   listener)
+                                                throw (std::invalid_argument)
+{
+    cuePlayer->detachListener(listener);
 }
 
 
