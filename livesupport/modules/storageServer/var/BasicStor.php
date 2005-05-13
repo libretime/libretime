@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.50 $
+    Version  : $Revision: 1.51 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.50 $
+ *  @version $Revision: 1.51 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -123,6 +123,7 @@ class BasicStor extends Alib{
     {
         $name   = "$fileName";
         $id = $this->addObj($name , $ftype, $parid);
+        if($this->dbc->isError($id)) return $id;
         $ac =&  StoredFile::insert(
             $this, $id, $name, $mediaFileLP, $mdataFileLP, $mdataLoc,
             $gunid, $ftype
@@ -663,10 +664,11 @@ class BasicStor extends Alib{
      *  @param lang string, optional xml:lang value for select language version
      *  @param mid int, metadata record id (OPTIONAL on unique elements)
      *  @param container string, container element name for insert
+     *  @param regen boolean, optional flag, if true, regenerate XML file
      *  @return boolean
      */
-    function bsSetMetadataValue(
-        $id, $category, $value, $lang=NULL, $mid=NULL, $container='metadata')
+    function bsSetMetadataValue($id, $category, $value,
+        $lang=NULL, $mid=NULL, $container='metadata', $regen=TRUE)
     {
         $ac =& StoredFile::recall($this, $id);
         if($this->dbc->isError($ac)) return $ac;
@@ -680,9 +682,37 @@ class BasicStor extends Alib{
         $res = $ac->md->setMetadataValue(
             $category, $value, $lang, $mid, $container);
         if($this->dbc->isError($res)) return $res;
-        $r = $ac->md->regenerateXmlFile();
-        if($this->dbc->isError($r)) return $r;
+        if($regen){
+            $r = $ac->md->regenerateXmlFile();
+            if($this->dbc->isError($r)) return $r;
+        }
         return $res;
+    }
+
+    /**
+     *  Set metadata values in 'batch' mode
+     *
+     *  @param id int, virt.file's local id
+     *  @param values hasharray, array of key/value pairs
+     *      (e.g. 'dc:title'=>'New title')
+     *  @param lang string, optional xml:lang value for select language version
+     *  @param container string, container element name for insert
+     *  @param regen boolean, optional flag, if true, regenerate XML file
+     *  @return boolean
+     */
+    function bsSetMetadataBatch(
+        $id, $values, $lang=NULL, $container='metadata', $regen=TRUE)
+    {
+        if(!is_array($values)) $values = array($values);
+        foreach($values as $category=>$oneValue){
+            $res = $this->bsSetMetadataValue($id, $category, $oneValue,
+                $lang, NULL, $container, FALSE);
+            if($this->dbc->isError($res)) return $res;
+        }
+        $res = $this->bsSetMetadataValue($id, 'ls:mtime', date('U'),
+            $lang, NULL, $container, TRUE);
+        if($this->dbc->isError($res)) return $res;
+        return TRUE;
     }
 
     /**

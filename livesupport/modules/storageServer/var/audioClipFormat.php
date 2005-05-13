@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/audioClipFormat.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ $audioClipFormat = array(
                 'dcterms:isPartOf', 'dc:date',
                 'dc:publisher',
                 // extra
-                'dcterms:alternative',
+                'dcterms:alternative', 'ls:filename', 'ls:mtime',
                 // added lately by sebastian
                 'ls:mood',
             ),
@@ -86,7 +86,8 @@ $audioClipFormat = array(
     ),
     'dcterms:extent'=>array(
         'type'=>'Time',
-        'regexp'=>'^\d{2}:\d{2}:\d{2}.\d{6}$',
+//        'regexp'=>'^\d{2}:\d{2}:\d{2}.\d{6}$',
+        'regexp'=>'^((\d{1,2}:)?\d{1,2}:)?\d{1,20}(.\d{1,6})?$',
     ),
     'dc:creator'=>array(
         'type'=>'Text',
@@ -341,6 +342,14 @@ $audioClipFormat = array(
         'type'=>'Text',
         'area'=>'Talk',
         'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    
+    'ls:filename'=>array(
+        'type'=>'Text',
+        'attrs'=>array('implied'=>array('xml:lang')),
+    ),
+    'ls:mtime'=>array(
+        'type'=>'Int',
     ),
 /*
     ''=>array(
