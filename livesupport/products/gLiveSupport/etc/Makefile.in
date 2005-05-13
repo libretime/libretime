@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.34 $
+#   Version  : $Revision: 1.35 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -194,7 +194,8 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/SearchWindow.o \
                      ${TMP_DIR}/BrowseEntry.o \
                      ${TMP_DIR}/BrowseItem.o \
-                     ${TMP_DIR}/LiveModeWindow.o
+                     ${TMP_DIR}/LiveModeWindow.o \
+                     ${TMP_DIR}/CuePlayer.o
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \

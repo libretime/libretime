@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
 #include "LiveSupport/Widgets/AdvancedSearchEntry.h"
 #include "GLiveSupport.h"
 #include "BrowseEntry.h"
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -96,7 +96,8 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
 
         /**
          *  Construct the simple search view.
-         *  If you enter a string in theGtk::VBox simple search view and press Enter
+         *  If you enter a string in theGtk::VBox simple search view and 
+         *  press Enter
          *  (or the Search button), the local storage will be searched for
          *  items (both audio clips and playlists) where either the title
          *  (dc:title), the creator (dc:creator) or the album (dc:source)
@@ -180,20 +181,15 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.11 $
+         *  @version $Revision: 1.12 $
          */
-        class ModelColumns : public ZebraTreeModelColumnRecord
+        class ModelColumns : public PlayableTreeModelColumnRecord
         {
             public:
                 /**
                  *  The column for the type of the entry in the list
                  */
                 Gtk::TreeModelColumn<Glib::ustring>         typeColumn;
-
-                /**
-                 *  The column for the playable object shown in the row.
-                 */
-                Gtk::TreeModelColumn<Ptr<Playable>::Ref>    playableColumn;
 
                 /**
                  *  The column for the title of the audio clip or playlist.
@@ -216,7 +212,6 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
                 ModelColumns(void)                              throw ()
                 {
                     add(typeColumn);
-                    add(playableColumn);
                     add(titleColumn);
                     add(creatorColumn);
                     add(lengthColumn);

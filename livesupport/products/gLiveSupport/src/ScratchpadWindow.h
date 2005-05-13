@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,8 @@
 #include "LiveSupport/Core/LocalizedObject.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
+#include "CuePlayer.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -72,11 +73,10 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class ScratchpadWindow : public WhiteWindow,
-                         public LocalizedObject,
-                         public AudioPlayerEventListener
+                         public LocalizedObject
 {
     private:
 
@@ -87,16 +87,11 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.5 $
+         *  @version $Revision: 1.6 $
          */
-        class ModelColumns : public ZebraTreeModelColumnRecord
+        class ModelColumns : public PlayableTreeModelColumnRecord
         {
             public:
-                /**
-                 *  The column for the playable object shown in the row.
-                 */
-                Gtk::TreeModelColumn<Ptr<Playable>::Ref>    playableColumn;
-
                 /**
                  *  The column for the type of the entry in the list
                  */
@@ -112,7 +107,6 @@ class ScratchpadWindow : public WhiteWindow,
                  */
                 ModelColumns(void)                              throw ()
                 {
-                    add(playableColumn);
                     add(typeColumn);
                     add(titleColumn);
                 }
@@ -142,7 +136,7 @@ class ScratchpadWindow : public WhiteWindow,
         /**
          *  The tree view, now only showing rows.
          */
-        ZebraTreeView             * treeView;
+        ZebraTreeView *             treeView;
 
         /**
          *  The tree model, as a GTK reference.
@@ -155,34 +149,9 @@ class ScratchpadWindow : public WhiteWindow,
         Gtk::HBox                   topButtonBox;
 
         /**
-         *  The possible states of the (cue) audio player.
-         */
-        enum AudioState { waitingState, playingState, pausedState };
-
-        /**
-         *  The current state of the player.
-         */
-        AudioState                  audioState;
-
-        /**
          *  The box containing the audio buttons.
          */
-        Gtk::HBox                   audioButtonBox;
-
-        /**
-         *  The play button.
-         */
-        ImageButton               * playButton;
-
-        /**
-         *  The pause button.
-         */
-        ImageButton               * pauseButton;
-
-        /**
-         *  The stop button.
-         */
-        ImageButton               * stopButton;
+        CuePlayer *                 audioButtonBox;
 
         /**
          *  The box containing the close button.
@@ -192,42 +161,24 @@ class ScratchpadWindow : public WhiteWindow,
         /**
          *  The "clear list" button.
          */
-        Button                    * clearListButton;
+        Button *                    clearListButton;
 
         /**
          *  The "delete selected item" button.
          */
-        Button                    * removeButton;
+        Button *                    removeButton;
 
         /**
          *  The right-click context menu for audio clips,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Gtk::Menu                 * audioClipMenu;
+        Gtk::Menu *                 audioClipMenu;
 
         /**
          *  The right-click context menu for playlists,
          *  that comes up when right-clicking an entry in the entry list.
          */
-        Gtk::Menu                 * playlistMenu;
-
-        /**
-         *  Signal handler for the play button clicked.
-         */
-        virtual void
-        onPlayButtonClicked(void)                               throw ();
-
-        /**
-         *  Signal handler for the pause button clicked.
-         */
-        virtual void
-        onPauseButtonClicked(void)                              throw ();
-
-        /**
-         *  Signal handler for the stop button clicked.
-         */
-        virtual void
-        onStopButtonClicked(void)                               throw ();
+        Gtk::Menu *                 playlistMenu;
 
         /**
          *  Signal handler for the clear list button clicked.
@@ -286,13 +237,6 @@ class ScratchpadWindow : public WhiteWindow,
         onSchedulePlaylist(void)                                throw ();
 
         /**
-         *  Signal handler for the "play item" menu item selected
-         *  from the entry context menu.
-         */
-        virtual void
-        onPlayItem(void)                                        throw ();
-
-        /**
          *  Signal handler for the "add to live mode" menu item selected from
          *  the entry context menu.
          */
@@ -324,7 +268,9 @@ class ScratchpadWindow : public WhiteWindow,
          *  Virtual destructor.
          */
         virtual
-        ~ScratchpadWindow(void)                                 throw ();
+        ~ScratchpadWindow(void)                                 throw ()
+        {
+        }
 
         /**
          *  Update the window contents, with the contents of the Scratchpad.
@@ -339,12 +285,6 @@ class ScratchpadWindow : public WhiteWindow,
          */
         void
         removeItem(Ptr<const UniqueId>::Ref     id)             throw ();
-
-        /**
-         *  Event handler for the "cue audio player has stopped" event.
-         */
-        virtual void
-        onStop(void)                                            throw ();
 };
 
 /* ================================================= external data structures */
