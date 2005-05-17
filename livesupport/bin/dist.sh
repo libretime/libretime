@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -225,7 +225,7 @@ rm -rf `find $ls_tmpdir -name CVS -type d`
 #  Create the tarball
 #-------------------------------------------------------------------------------
 cd $tmpdir
-tar cfj $basedir/$tarball livesupport-$version
+tar cfj $tarball livesupport-$version
 cd $basedir
 
 
@@ -301,7 +301,7 @@ rm -rf `find $ls_tmpdir -name CVS -type d`
 #  Create the libraries tarball
 #-------------------------------------------------------------------------------
 cd $tmpdir
-tar cfj $basedir/$tarball_libs livesupport-$version
+tar cfj $tarball_libs livesupport-$version
 cd $basedir
 
 
