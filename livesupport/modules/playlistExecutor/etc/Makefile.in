@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.7 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -86,6 +86,7 @@ TEST_XSLT    = ../etc/testResultToHtml.xsl
 PLAYLIST_EXECUTOR_LIB      = livesupport_playlist_executor
 PLAYLIST_EXECUTOR_LIB_FILE = ${LIB_DIR}/lib${PLAYLIST_EXECUTOR_LIB}.a
 TEST_RUNNER      = ${TMP_DIR}/testRunner
+TWOTEST_RUNNER   = ${TMP_DIR}/twoTestRunner
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -132,6 +133,9 @@ TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
                    ${HELIX_LIBS} ${TAGLIB_LIBS} \
                    -lcppunit -ldl -lm -lxmlrpc++
 
+TWOTEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                      ${TMP_DIR}/TwoHelixPlayersTest.o
+
 
 #-------------------------------------------------------------------------------
 #   Targets
@@ -147,7 +151,7 @@ doc:
 
 clean:
 	${RM} ${PLAYLIST_EXECUTOR_LIB_OBJS} ${PLAYLIST_EXECUTOR_LIB_FILE}
-	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER}
+	${RM} ${TEST_RUNNER_OBJS} ${TWOTEST_RUNNER_OBJS} ${TEST_RUNNER}
 	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
 docclean:
@@ -162,6 +166,9 @@ distclean: clean docclean
 
 check: all ${TEST_RUNNER}
 	${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
+
+check_two: all ${TWOTEST_RUNNER}
+	${TWOTEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
 
 #-------------------------------------------------------------------------------
@@ -178,6 +185,9 @@ ${DOXYGEN_DIR}:
 
 ${TEST_RUNNER}: ${CORE_LIB_FILE} ${TEST_RUNNER_OBJS} ${PLAYLIST_EXECUTOR_LIB_FILE}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
+
+${TWOTEST_RUNNER}: ${CORE_LIB_FILE} ${TWOTEST_RUNNER_OBJS} ${PLAYLIST_EXECUTOR_LIB_FILE}
+	${CXX} ${LDFLAGS} -o $@ ${TWOTEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}

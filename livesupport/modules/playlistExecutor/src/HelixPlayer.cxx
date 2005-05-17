@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -132,7 +132,7 @@ HelixPlayer :: configure(const xmlpp::Element   &  element)
     dllPath = attribute->get_value();
 
     if ((attribute = element.get_attribute(audioDeviceName))) {
-        setAudioDevice(attribute->get_value());
+        audioDevice = attribute->get_value();
     }
 
     if ((attribute = element.get_attribute(audioStreamTimeoutName))) {
@@ -160,6 +160,8 @@ HelixPlayer :: initialize(void)                 throw (std::exception)
     if (initialized) {
         return;
     }
+
+    setAudioDevice();
 
     // open the Helix Client Core shared object
     std::string     staticLibPath(dllPath);
@@ -254,6 +256,8 @@ HelixPlayer :: deInitialize(void)                       throw ()
         eventHandlerThread->stop();
         eventHandlerThread->join();
 
+        setAudioDevice();
+
         // release Helix resources
         clientContext->Release();
 
@@ -325,6 +329,8 @@ void
 HelixPlayer :: open(const std::string   fileUrl)
                                                 throw (std::invalid_argument)
 {
+    setAudioDevice();
+
     playlength = 0UL;
     // the only way to check if this is a valid URL is to see if the
     // source count increases for the player.
@@ -344,6 +350,8 @@ HelixPlayer :: open(const std::string   fileUrl)
 Ptr<time_duration>::Ref
 HelixPlayer :: getPlaylength(void)                      throw ()
 {
+    setAudioDevice();
+
     Ptr<time_duration>::Ref   length;
 
     // only bother if there is something to check for.
@@ -371,6 +379,8 @@ HelixPlayer :: getPlaylength(void)                      throw ()
 void
 HelixPlayer :: start(void)                      throw (std::logic_error)
 {
+    setAudioDevice();
+
     if (player->GetSourceCount() == 0) {
         throw std::logic_error("HelixPlayer::open() not called yet");
     }
@@ -385,6 +395,8 @@ HelixPlayer :: start(void)                      throw (std::logic_error)
 void
 HelixPlayer :: pause(void)                      throw (std::logic_error)
 {
+    setAudioDevice();
+
     if (player->GetSourceCount() == 0) {
         throw std::logic_error("HelixPlayer::open() not called yet");
     }
@@ -399,6 +411,8 @@ HelixPlayer :: pause(void)                      throw (std::logic_error)
 bool
 HelixPlayer :: isPlaying(void)                  throw ()
 {
+    setAudioDevice();
+
     if (playing) {
         playing = !player->IsDone();
     }
@@ -416,6 +430,9 @@ HelixPlayer :: stop(void)                       throw (std::logic_error)
     if (!isPlaying()) {
         throw std::logic_error("HelixPlayer is not yet playing, can't stop it");
     }
+
+    setAudioDevice();
+
     player->Stop();
 
     playing = false;
@@ -429,6 +446,8 @@ HelixPlayer :: stop(void)                       throw (std::logic_error)
 void
 HelixPlayer :: close(void)                       throw ()
 {
+    setAudioDevice();
+
     if (isPlaying()) {
         stop();
     } else {
@@ -444,6 +463,8 @@ HelixPlayer :: close(void)                       throw ()
 unsigned int
 HelixPlayer :: getVolume(void)                                  throw ()
 {
+    setAudioDevice();
+
     IHXAudioPlayer    * audioPlayer = 0;
     player->QueryInterface(IID_IHXAudioPlayer, (void**) &audioPlayer);
     if (!audioPlayer) {
@@ -462,6 +483,8 @@ HelixPlayer :: getVolume(void)                                  throw ()
 void
 HelixPlayer :: setVolume(unsigned int   volume)                 throw ()
 {
+    setAudioDevice();
+
     IHXAudioPlayer    * audioPlayer = 0;
     player->QueryInterface(IID_IHXAudioPlayer, (void**) &audioPlayer);
     if (!audioPlayer) {
@@ -496,6 +519,8 @@ HelixPlayer :: openAndStart(Ptr<Playlist>::Ref  playlist)
     if (!playlist || !playlist->getUri()) {
         throw std::invalid_argument("no playlist SMIL file found");
     }
+
+    setAudioDevice();
 
     open(*playlist->getUri());      // may throw invalid_argument
 
@@ -679,5 +704,18 @@ HelixPlayer :: setAudioDevice(const std::string &deviceName)
 {
     return (setenv("AUDIO", deviceName.c_str(), 1) == 0);
                                              // 1 = overwrite if exists
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the audio device, based on the audioDevice property, if it's
+ *  not empty.
+ *----------------------------------------------------------------------------*/
+void
+HelixPlayer :: setAudioDevice(void)                                 throw ()
+{
+    if (!audioDevice.empty()) {
+        setAudioDevice(audioDevice);
+    }
 }
 

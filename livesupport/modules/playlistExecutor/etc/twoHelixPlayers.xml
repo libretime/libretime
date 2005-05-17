@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE twoHelixPlayers [
+
+<!ELEMENT twoHelixPlayers    (helixPlayer,helixPlayer) >
+
+<!ELEMENT helixPlayer   EMPTY >
+<!ATTLIST helixPlayer   dllPath              CDATA     #REQUIRED >
+<!ATTLIST helixPlayer   audioDevice          CDATA     #IMPLIED  >
+<!ATTLIST helixPlayer   audioStreamTimeout   NMTOKEN   #IMPLIED  >
+<!ATTLIST helixPlayer   fadeLookAheadTime    NMTOKEN   #IMPLIED  >
+]>
+<twoHelixPlayers>
+    <helixPlayer dllPath            = "../../usr/lib/helix"
+                 audioDevice        = "/dev/dsp"
+                 audioStreamTimeout = "6"
+                 fadeLookAheadTime  = "2510"
+    />
+    <helixPlayer dllPath            = "../../usr/lib/helix"
+                 audioDevice        = "/dev/dsp1"
+                 audioStreamTimeout = "6"
+                 fadeLookAheadTime  = "2510"
+    />
+</twoHelixPlayers>
