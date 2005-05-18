@@ -121,7 +121,7 @@
     <outputPlayer>
         <audioPlayer>
             <helixPlayer dllPath = "ls_install_dir/lib/helix"
-                         audioDevice = "/dev/dsp"
+                         audioDevice = "ls_output_dsp"
             />
         </audioPlayer>
     </outputPlayer>
@@ -129,7 +129,7 @@
     <cuePlayer>
         <audioPlayer>
             <helixPlayer dllPath = "ls_install_dir/lib/helix"
-                         audioDevice = "/dev/dsp"
+                         audioDevice = "ls_cue_dsp"
             />
         </audioPlayer>
     </cuePlayer>

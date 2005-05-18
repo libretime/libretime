@@ -120,7 +120,9 @@
     </playLogFactory>
 
     <audioPlayer>
-        <helixPlayer dllPath = "ls_install_dir/lib/helix"/>
+        <helixPlayer dllPath = "ls_install_dir/lib/helix"
+                     audioDevice = "ls_output_dsp"
+		/>
     </audioPlayer>
 
     <xmlRpcDaemon xmlRpcHost  = "ls_scheduler_host"
