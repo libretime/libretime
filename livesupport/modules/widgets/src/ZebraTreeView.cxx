@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
 #endif
 
 #include <iostream>
+#include <sstream>
 
 #include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
 
@@ -197,4 +198,72 @@ ZebraTreeView :: appendCenteredColumn(
     
     return append_column(*viewColumn);
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Add a centered line number column to the TreeView.
+ *----------------------------------------------------------------------------*/
+int 
+ZebraTreeView :: appendLineNumberColumn(
+                    const Glib::ustring&        title, 
+                    int                         offset,
+                    int                         minimumWidth)
+                                                                throw ()
+{
+    // a standard cell renderer; can be replaced with a ZebraCellRenderer
+    Gtk::CellRendererText*  renderer = Gtk::manage(new Gtk::CellRendererText);
+    
+    // center the text in the column
+    renderer->property_xalign() = 0.5;
+
+    // the constructor packs the renderer into the TreeViewColumn
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
+                                Gtk::TreeViewColumn(title, *renderer) );
+                                
+    // this cell data function will do the blue-gray zebra stripes
+    // and fill in the line number from the model.rowNumberColumn
+    viewColumn->set_cell_data_func(
+        *renderer,
+        sigc::bind<int>(
+            sigc::mem_fun(*this, &ZebraTreeView::lineNumberCellDataFunction),
+            offset ));
+    
+    // set the minimum width of the column
+    if (minimumWidth) {
+        viewColumn->set_min_width(minimumWidth);
+    }
+    
+    return append_column(*viewColumn);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  The callback function for the line number column(s).
+ *----------------------------------------------------------------------------*/
+void 
+ZebraTreeView :: lineNumberCellDataFunction(
+                                Gtk::CellRenderer*                  cell,
+                                const Gtk::TreeModel::iterator&     iter,
+                                int                                 offset)
+                                                                throw ()
+{
+    ZebraTreeModelColumnRecord  model;
+    int                         rowNumber = (*iter)[model.rowNumberColumn];
+    
+    Colors::ColorName   colorName =  rowNumber % 2 ? Colors::Gray
+                                                   : Colors::LightBlue;
+    cell->property_cell_background_gdk() = Colors::getColor(colorName);
+    cell->property_cell_background_gdk() = Colors::getColor(colorName);
+
+    Glib::ustring       numberString;
+    numberString.append("<span size=\"larger\" weight=\"ultrabold\">");
+    std::stringstream   numberStr;
+    numberStr << (rowNumber + offset);
+    numberString.append(numberStr.str());
+    numberString.append("</span>");
+    Gtk::CellRendererText *     textCell 
+                                = dynamic_cast<Gtk::CellRendererText*>(cell);
+    textCell->property_markup() = numberString;
+}
+
 

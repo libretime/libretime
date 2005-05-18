@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -593,7 +593,7 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
         masterPanel->updateLiveModeWindow(playable);
     } else {
         playOutputAudio(playable);
-        masterPanel->setNowPlaying(playable);
+        setNowPlaying(playable);
     }
 }
 
@@ -603,19 +603,31 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: onStop(void)                        throw ()
+GLiveSupport :: onStop(void)                                throw ()
 {
     Ptr<Playable>::Ref      playable;
-    masterPanel->setNowPlaying(playable);   // reset to empty
+    setNowPlaying(playable);            // reset to empty
     
     playable = masterPanel->getNextItemToPlay();
     
     if (playable) {
         playOutputAudio(playable);
-        masterPanel->setNowPlaying(playable);
+        setNowPlaying(playable);
     } else {
         stopOutputAudio();
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Display the playable item on the master panel as "now playing".
+ *----------------------------------------------------------------------------*/
+inline void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: setNowPlaying(Ptr<Playable>::Ref    playable)
+                                                            throw ()
+{
+    masterPanel->setNowPlaying(playable);
 }
 
 

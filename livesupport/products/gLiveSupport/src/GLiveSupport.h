@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,7 +101,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.33 $
+ *  @version $Revision: 1.34 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -691,6 +691,13 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         onStop(void)                            throw ();
+
+        /**
+         *  Display the playable item on the master panel as "now playing".
+         */
+        void
+        setNowPlaying(Ptr<Playable>::Ref    playable)
+                                                throw ();
 };
 
 /* ================================================= external data structures */

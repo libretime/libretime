@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // Add the TreeView's view columns:
     try {
-        treeView->appendCenteredColumn("", modelColumns.numberColumn, 50);
+        treeView->appendLineNumberColumn("", 2 /* offset */, 50);
 //        treeView->appendColumn("", WidgetFactory::hugePlayButton, 82);
         treeView->appendColumn("", modelColumns.infoColumn, 200);
     } catch (std::invalid_argument &e) {
@@ -132,6 +132,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     vBox.pack_start(*buttonBox,     Gtk::PACK_SHRINK, 5);
     vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
     add(vBox);
+
+    // connect the signal handler for the output play button
+    outputPlayButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                &LiveModeWindow::onOutputPlayButtonClicked ));
 
     // create the right-click entry context menu for audio clips
     contextMenu = Gtk::manage(new Gtk::Menu());
@@ -180,17 +184,8 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
     int                     rowNumber = treeModel->children().size();
     Gtk::TreeModel::Row     row       = *(treeModel->append());
     
+    row[modelColumns.rowNumberColumn] = rowNumber;
     row[modelColumns.playableColumn]  = playable;
-
-    Ptr<Glib::ustring>::Ref     numberString(new Glib::ustring);
-    
-    numberString->append("<span size=\"larger\" weight=\"ultrabold\">");
-    std::stringstream   numberStr;
-    numberStr << (rowNumber + 2);
-    numberString->append(numberStr.str());
-    numberString->append("</span>");
-    
-    row[modelColumns.numberColumn] = *numberString;
 
     Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
     
@@ -220,8 +215,6 @@ LiveModeWindow :: addItem(Ptr<Playable>::Ref  playable)             throw ()
     infoString->append(to_simple_string(*playable->getPlaylength()));
 
     row[modelColumns.infoColumn] = *infoString;
-    
-    row[modelColumns.rowNumberColumn] = rowNumber;
 }
 
 
@@ -241,6 +234,25 @@ LiveModeWindow :: popTop(void)                                      throw ()
     }
 */    
     return playable;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the output play button clicked.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onOutputPlayButtonClicked(void)                   throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
+                                                    treeView->get_selection();
+    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
+
+    if (iter) {
+        Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+        gLiveSupport->playOutputAudio(playable);
+        gLiveSupport->setNowPlaying(playable);
+        removeItem(iter);
+    }
 }
 
 
@@ -270,8 +282,6 @@ LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
         }
 
         if (iter) {
-            Ptr<Playable>::Ref  playable =
-                                        (*iter)[modelColumns.playableColumn];
             contextMenu->popup(event->button, event->time);
         }
     }
@@ -337,13 +347,25 @@ LiveModeWindow :: onRemoveMenuOption(void)                          throw ()
     Gtk::TreeModel::iterator        iter = refSelection->get_selected();
 
     if (iter) {
-        Gtk::TreeModel::iterator    later = iter;
-        int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
-        for (++later; later != treeModel->children().end(); ++later) {
-            (*later)[modelColumns.rowNumberColumn] = rowNumber++;
-        }
-        
-        treeModel->erase(iter);
+        removeItem(iter);
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove an item from the window.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: removeItem(const Gtk::TreeModel::iterator &   iter)
+                                                                    throw ()
+{
+    Gtk::TreeModel::iterator    later = iter;
+
+    int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
+    for (++later; later != treeModel->children().end(); ++later) {
+        (*later)[modelColumns.rowNumberColumn] = rowNumber++;
+    }
+    
+    treeModel->erase(iter);
 }
 

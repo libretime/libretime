@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  3) connected with a TreeModelColumn using set_renderer(). 
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class ZebraTreeView : public Gtk::TreeView
 {
@@ -106,12 +106,30 @@ class ZebraTreeView : public Gtk::TreeView
 
         /**
          *  The callback function to set the colors of the rows.
+         *
+         *  @param  cell    the cell renderer of the column.
+         *  @param  iter    points to the current row in the model.
          */
         void 
         cellDataFunction(Gtk::CellRenderer*               cell,
                          const Gtk::TreeModel::iterator&  iter)
                                                                 throw ();
 
+        /**
+         *  The callback function for the line number columns.
+         *  It reads the line number from the rowNumberColumn of the model.
+         *
+         *  @param  cell    the cell renderer of the column.
+         *  @param  iter    points to the current row in the model.
+         *  @param  offset  the line number of the first row, set by the
+         *                  call to appendLineNumberColumn()
+         */
+        void 
+        lineNumberCellDataFunction(
+                        Gtk::CellRenderer*               cell,
+                        const Gtk::TreeModel::iterator&  iter,
+                        int                              offset)
+                                                                throw ();
     protected:
 
     public:
@@ -173,6 +191,22 @@ class ZebraTreeView : public Gtk::TreeView
                      const Glib::ustring&                       title, 
                      const Gtk::TreeModelColumn<Glib::ustring>& modelColumn,
                      int   minimumWidth = 0)
+                                                                throw ();
+
+        /**
+         *  Add a centered line number column to the TreeView.
+         *
+         *  @param title    the title of the column
+         *  @param offset   the line number of the first row
+         *  @param minimumWidth the minimum width of the column, in pixels
+         *                      (optional)
+         *  @return the number of columns after adding this one
+         */
+        int 
+        appendLineNumberColumn(
+                     const Glib::ustring&   title, 
+                     int                    offset = 0,
+                     int                    minimumWidth = 0)
                                                                 throw ();
 
 };

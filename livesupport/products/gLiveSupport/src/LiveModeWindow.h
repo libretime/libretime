@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -87,16 +87,11 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.10 $
+         *  @version $Revision: 1.11 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
             public:
-                /**
-                 *  The column for the big row number display.
-                 */
-                Gtk::TreeModelColumn<Glib::ustring>         numberColumn;
-
                 /**
                  *  The column for the play button.
                  */
@@ -113,7 +108,6 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
                  */
                 ModelColumns(void)                              throw ()
                 {
-                    add(numberColumn);
 //                    add(playButtonColumn);
                     add(infoColumn);
                 }
@@ -157,25 +151,31 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         Gtk::Menu *                 contextMenu;
 
         /**
+         *  Signal handler for the output play button clicked.
+         */
+        void
+        onOutputPlayButtonClicked(void)                         throw ();
+
+        /**
          *  Signal handler for the mouse clicked on one of the entries.
          *
          *  @param event the button event recieved
          */
-        virtual void
+        void
         onEntryClicked(GdkEventButton     * event)              throw ();
 
         /**
          *  Signal handler for the "up" menu option selected from
          *  the context menu.
          */
-        virtual void
+        void
         onUpMenuOption(void)                                    throw ();
 
         /**
          *  Signal handler for the "down" menu option selected from
          *  the context menu.
          */
-        virtual void
+        void
         onDownMenuOption(void)                                  throw ();
 
         /**
@@ -185,6 +185,14 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         virtual void
         onRemoveMenuOption(void)                                throw ();
 
+        /**
+         *  Remove an item from the window.
+         *
+         *  @param  iter    points to the row to be removed
+         */
+        void
+        removeItem(const Gtk::TreeModel::iterator &   iter)     throw ();
+        
         /**
          *  Signal handler for the "rows reordered" event.
          */
