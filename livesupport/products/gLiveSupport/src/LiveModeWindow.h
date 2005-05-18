@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -87,7 +87,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.11 $
+         *  @version $Revision: 1.12 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -95,8 +95,8 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
                 /**
                  *  The column for the play button.
                  */
-//                Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >
-//                                                            playButtonColumn;
+//              Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >
+//                                                          playButtonColumn;
 
                 /**
                  *  The column for the title, creator, etc.
@@ -108,7 +108,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
                  */
                 ModelColumns(void)                              throw ()
                 {
-//                    add(playButtonColumn);
+//                  add(playButtonColumn);
                     add(infoColumn);
                 }
         };
@@ -151,10 +151,11 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         Gtk::Menu *                 contextMenu;
 
         /**
-         *  Signal handler for the output play button clicked.
+         *  Signal handler for the output play button clicked
+         *  or the output play menu option selected.
          */
         void
-        onOutputPlayButtonClicked(void)                         throw ();
+        onOutputPlay(void)                                      throw ();
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.

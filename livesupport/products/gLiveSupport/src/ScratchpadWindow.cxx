@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,7 +157,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onDeleteItem)));
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("playMenuItem"),
+                                *getResourceUstring("cueMenuItem"),
                                 sigc::mem_fun(*audioButtonBox,
                                         &CuePlayer::onPlayItem)));
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
@@ -202,7 +202,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onDeleteItem)));
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("playMenuItem"),
+                                *getResourceUstring("cueMenuItem"),
                                 sigc::mem_fun(*audioButtonBox,
                                     &CuePlayer::onPlayItem)));
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(

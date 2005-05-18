@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -135,7 +135,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // connect the signal handler for the output play button
     outputPlayButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &LiveModeWindow::onOutputPlayButtonClicked ));
+                                            &LiveModeWindow::onOutputPlay ));
 
     // create the right-click entry context menu for audio clips
     contextMenu = Gtk::manage(new Gtk::Menu());
@@ -158,6 +158,10 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                  *getResourceUstring("removeMenuItem"),
                                   sigc::mem_fun(*this,
                                         &LiveModeWindow::onRemoveMenuOption)));
+        contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                 *getResourceUstring("playMenuItem"),
+                                  sigc::mem_fun(*this,
+                                        &LiveModeWindow::onOutputPlay)));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -241,7 +245,7 @@ LiveModeWindow :: popTop(void)                                      throw ()
  *  Signal handler for the output play button clicked.
  *----------------------------------------------------------------------------*/
 void
-LiveModeWindow :: onOutputPlayButtonClicked(void)                   throw ()
+LiveModeWindow :: onOutputPlay(void)                                throw ()
 {
     Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
                                                     treeView->get_selection();

@@ -51,11 +51,11 @@ hu:table
 
         upMenuItem:string               { "_Fel" }
         downMenuItem:string             { "_Le" }
-        removeMenuItem:string           { "_Eltávolít" }
-        addToPlaylistMenuItem:string    { "_Hozzáad Playlisthez" }
+        removeMenuItem:string           { "_Eltávolítani" }
+        addToPlaylistMenuItem:string    { "Playlisthez _hozzáadni" }
         schedulePlaylistMenuItem:string { "_Playlist időzítése" }
-        deleteMenuItem:string           { "_Töröl" }
-        playMenuItem:string             { "_Belehallgatni" }
+        deleteMenuItem:string           { "_Törölni" }
+        cueMenuItem:string              { "_Belehallgatni" }
         addToLiveModeMenuItem:string    { "Élő _adásba" }
     }
 
@@ -183,7 +183,8 @@ hu:table
         cueMenuItem:string            { "_Belehallgatni" }
         upMenuItem:string             { "_Fel" }
         downMenuItem:string           { "_Le" }
-        removeMenuItem:string         { "_Eltávolít" }
+        removeMenuItem:string         { "_Eltávolítani" }
+        playMenuItem:string           { "Le_játszani" }
 
         cuePlayerLabel:string         { "Belehallgatni" }
     }
