@@ -50,7 +50,8 @@ $ui_fmask = array(
             'type'      => 'text',
             'label'     => 'Station URL',
             'default'   => 'http://',
-            'required'  => TRUE
+            'required'  => TRUE,
+            'attributes'=> array('maxlength' => 256)
         ),
         array(
             'rule'      => 'regex',
@@ -334,6 +335,7 @@ $ui_fmask = array(
             'rule'      => 'regex',
             'format'    => UI_REGEX_URL,
             'rulemsg'   => 'URL seems invalid',
+            'attributes'=> array('maxlength' => 256)
         ),
         array(
             'element'   => 'length',

@@ -316,7 +316,8 @@ $mask = array(
                 'element'   => 'ls:audiofileinfourl',
                 'type'      => 'text',
                 'label'     => 'Audio file information web page',
-                'id3'       => 'Audio file information web page'
+                'id3'       => 'Audio file information web page',
+                'attributes'=> array('maxlength' => 256)
             ),
             array(
                 'rule'      => 'regex',
@@ -328,7 +329,8 @@ $mask = array(
                 'element'   => 'ls:artisturl',
                 'type'      => 'text',
                 'label'     => 'Artist web page',
-                'id3'       => 'Artist web page'
+                'id3'       => 'Artist web page',
+                'attributes'=> array('maxlength' => 256)
             ),
             array(
                 'rule'      => 'regex',
@@ -340,7 +342,8 @@ $mask = array(
                 'element'   => 'ls:audiosourceurl',
                 'type'      => 'text',
                 'label'     => 'Audio source web page',
-                'id3'       => 'Audio source web page'
+                'id3'       => 'Audio source web page',
+                'attributes'=> array('maxlength' => 256)
             ),
             array(
                 'rule'      => 'regex',
@@ -352,7 +355,8 @@ $mask = array(
                 'element'   => 'ls:radiostationurl',
                 'type'      => 'text',
                 'label'     => 'Radio station web page',
-                'id3'       => 'Radio station web page'
+                'id3'       => 'Radio station web page',
+                'attributes'=> array('maxlength' => 256)
             ),
             array(
                 'rule'      => 'regex',
@@ -364,7 +368,8 @@ $mask = array(
                 'element'   => 'ls:buycdurl',
                 'type'      => 'text',
                 'label'     => 'Buy CD web page',
-                'id3'       => 'Buy CD webpage'
+                'id3'       => 'Buy CD webpage',
+                'attributes'=> array('maxlength' => 256)
             ),
             array(
                 'rule'      => 'regex',
