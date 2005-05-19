@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/CuePlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -121,10 +121,7 @@ CuePlayer :: onPlayItem(void)                                       throw ()
 
             try {
                 gLiveSupport->playCueAudio(playable);
-            } catch (XmlRpcException &e) {
-                std::cerr << "GLiveSupport::playCueAudio() error:"
-                          << std::endl << e.what() << std::endl;
-            } catch (std::exception &e) {
+            } catch (std::logic_error &e) {
                 std::cerr << "GLiveSupport::playCueAudio() error:"
                           << std::endl << e.what() << std::endl;
             }
@@ -197,9 +194,6 @@ CuePlayer :: onStopButtonClicked(void)                              throw ()
     if (audioState != waitingState) {
         try {
             gLiveSupport->stopCueAudio();
-        } catch (XmlRpcException &e) {
-            std::cerr << "GLiveSupport::stopCueAudio() error:" << std::endl
-                        << e.what() << std::endl;
         } catch (std::logic_error &e) {
             std::cerr << "GLiveSupport::stopCueAudio() error:" << std::endl
                         << e.what() << std::endl;

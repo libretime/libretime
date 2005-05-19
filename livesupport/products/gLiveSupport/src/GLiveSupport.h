@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -101,7 +101,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -235,12 +235,30 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         loadScratchpadContents(void)                        throw ();
 
+        /**
+         *  Release the resources used by the output audio player.
+         *
+         *  @exception std::logic_error in case of audio player errors.
+         */
+        virtual void
+        releaseOutputAudio(void)                throw (std::logic_error);
+
+        /**
+         *  Release the resources used by the cue audio player.
+         *
+         *  @exception std::logic_error in case of audio player errors.
+         */
+        virtual void
+        releaseCueAudio(void)                   throw (std::logic_error);
+
 
     public:
         /**
          *  Constructor.
          */
         GLiveSupport(void)                                  throw ()
+                : outputPlayerIsPaused(false),
+                  cuePlayerIsPaused(false)
         {
             scratchpadContents.reset(new PlayableList());
         }
@@ -581,10 +599,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Play a Playable object using the output audio player.
          *
          *  @param playable the Playable object to play.
-         *  @exception XmlRpcException in case of storage server errors.
-         *  @exception std::invalid_argument in case of audio player errors.
          *  @exception std::logic_error in case of audio player errors.
-         *  @exception std::runtime_error in case of audio player errors.
          */
         virtual void
         playOutputAudio(Ptr<Playable>::Ref   playable)
@@ -593,7 +608,6 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  Stop the output audio player.
          *
-         *  @exception XmlRpcException in case of storage server errors.
          *  @exception std::logic_error in case of audio player errors.
          */
         virtual void
