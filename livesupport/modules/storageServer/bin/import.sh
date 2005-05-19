@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/bin/Attic/import.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -70,12 +70,13 @@ while true; do
     case "$1" in
         -d|--directory)
             srcdir=$2;
+            srcabsdir=`cd "$srcdir"; pwd`
             shift; shift;;
         -l|--list)
             filelist=$2;
-            filelistbasename=`basename $filelist`
-            filelistdir=`dirname $filelist`
-            filelistabsdir=`cd $filelistdir; pwd`
+            filelistbasename=`basename "$filelist"`
+            filelistdir=`dirname "$filelist"`
+            filelistabsdir=`cd "$filelistdir"; pwd`
             filelistpathname=$filelistabsdir/$filelistbasename
             shift; shift;;
         -h|--help)
@@ -91,7 +92,7 @@ while true; do
     esac
 done
 
-if [ "x$srcdir" == "x" -a "x$filelist" == "x" ]; then
+if [ "x$srcabsdir" == "x" -a "x$filelist" == "x" ]; then
     echo "Directory or filelist option required.";
     printUsage;
     exit 1;
@@ -104,11 +105,13 @@ fi
 cd $phpdir
 
 if [ -f "$filelistpathname" ]; then
-    cat $filelistpathname | php -q import.php || exit 1
+    cat "$filelistpathname" | php -q import.php || exit 1
 fi
 
-if [ -d "$srcdir" ]; then
-    find "$srcdir" -type f | php -q import.php || exit 1
+if [ -d "$srcabsdir" ]; then
+    find "$srcabsdir" -type f | php -q import.php || exit 1
+else
+    echo "Warning: not a directory: $srcabsdir"
 fi
 
 #-------------------------------------------------------------------------------

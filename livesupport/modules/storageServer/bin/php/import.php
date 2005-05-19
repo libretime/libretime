@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/bin/php/Attic/import.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,7 @@ require_once '../../var/GreenBox.php';
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
+if(PEAR::isError($dbc)){ echo "ERROR: ".$dbc->getMessage()." ".$dbc->getUserInfo()."\n"; exit(1); }
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox($dbc, $config);
 
