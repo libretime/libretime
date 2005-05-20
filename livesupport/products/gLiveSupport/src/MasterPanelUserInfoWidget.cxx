@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,11 +64,10 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
                                         Ptr<GLiveSupport>::Ref    gLiveSupport,
                                         Ptr<ResourceBundle>::Ref  bundle)
                                                                     throw ()
-                        : LocalizedObject(bundle)
+                        : LocalizedObject(bundle),
+                          gLiveSupport(gLiveSupport),
+                          loggedIn(false)
 {
-    this->gLiveSupport = gLiveSupport;
-    loggedIn           = false;
-
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
     logInOutButton = Gtk::manage(wf->createButton(""));
@@ -253,6 +252,8 @@ MasterPanelUserInfoWidget :: updateStrings(void)
 void
 MasterPanelUserInfoWidget :: onCloseButtonClicked (void)            throw ()
 {
+    gLiveSupport->stopOutputAudio();
+
     // get the topmost container, should be the application window itself
     Gtk::Container    * container = get_parent();
     while (container->get_parent()) {
