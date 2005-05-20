@@ -5,10 +5,8 @@ Options +FollowSymLinks -Indexes
     <IfModule mod_php4.c>
         AddType application/x-httpd-php .php
 
-        php_flag magic_quotes_gpc Off
-        php_flag track_vars On
-        php_flag register_globals On
-#        php_value include_path .
+        php_flag magic_quotes_gpc On
+        php_flag register_globals Off
     </IfModule>
 
 </IfModule>
