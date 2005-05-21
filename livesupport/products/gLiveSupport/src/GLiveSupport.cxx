@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.43 $
+    Version  : $Revision: 1.44 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -601,7 +601,7 @@ GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
 /*------------------------------------------------------------------------------
  *  Display the playable item on the master panel as "now playing".
  *----------------------------------------------------------------------------*/
-inline void
+void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: setNowPlaying(Ptr<Playable>::Ref    playable)
                                                             throw ()
