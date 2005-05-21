@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -89,7 +89,7 @@ class ZebraTreeView;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -116,7 +116,8 @@ class WidgetFactory :
         typedef enum { resizeImage,
                        scratchpadWindowTitleImage,
                        searchWindowTitleImage,
-                       liveModeWindowTitleImage }
+                       liveModeWindowTitleImage,
+                       playlistsWindowTitleImage }
                                                     ImageType;
 
 

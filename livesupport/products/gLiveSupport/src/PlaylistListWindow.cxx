@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,10 +63,12 @@ PlaylistListWindow :: PlaylistListWindow (
                                     Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-                    : LocalizedObject(bundle)
+                    : WhiteWindow(WidgetFactory::liveModeWindowTitleImage,
+                        Colors::White,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+                      LocalizedObject(bundle),
+                      gLiveSupport(gLiveSupport)
 {
-    this->gLiveSupport = gLiveSupport;
-
     // get localized resources
     try {
         set_title(*getResourceUstring("windowTitle"));

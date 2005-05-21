@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/Attic/PlaylistListWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -83,10 +84,10 @@ using namespace LiveSupport::Core;
  *  +---------------------------------------------------------------+
  *  </pre></code>
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.6 $
  */
-class PlaylistListWindow : public Gtk::Window, public LocalizedObject
+class PlaylistListWindow : public WhiteWindow, public LocalizedObject
 {
     private:
 
@@ -119,8 +120,8 @@ class PlaylistListWindow : public Gtk::Window, public LocalizedObject
          *  The model columns, for the playlist window.
          *  Lists one playlist per row.
          *
-         *  @author $Author: maroy $
-         *  @version $Revision: 1.5 $
+         *  @author $Author: fgerlits $
+         *  @version $Revision: 1.6 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {

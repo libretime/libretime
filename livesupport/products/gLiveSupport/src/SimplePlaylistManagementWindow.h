@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,12 +48,16 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
+#include "LiveSupport/Widgets/ZebraTreeModelColumnRecord.h"
+#include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
 namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 
 /* ================================================================ constants */
 
@@ -82,10 +86,10 @@ using namespace LiveSupport::Core;
  *  +----------------------------------------------+
  *  </code></pre>
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  */
-class SimplePlaylistManagementWindow : public Gtk::Window,
+class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
 {
 
@@ -95,10 +99,10 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
          *  The columns model needed by Gtk::TreeView.
          *  Lists one playlist entry per row.
          *
-         *  @author $Author: maroy $
-         *  @version $Revision: 1.3 $
+         *  @author $Author: fgerlits $
+         *  @version $Revision: 1.4 $
          */
-        class ModelColumns : public Gtk::TreeModel::ColumnRecord
+        class ModelColumns : public ZebraTreeModelColumnRecord
         {
             public:
                 /**
@@ -145,11 +149,6 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
         ModelColumns                modelColumns;
 
         /**
-         *  The layout used in the window.
-         */
-        Gtk::Table                * layout;
-
-        /**
          *  The label for the name entry.
          */
         Gtk::Label                * nameLabel;
@@ -162,27 +161,27 @@ class SimplePlaylistManagementWindow : public Gtk::Window,
         /**
          *  A scrolled window, so that the entry list can be scrolled.
          */
-        Gtk::ScrolledWindow           * entriesScrolledWindow;
+        Gtk::ScrolledWindow       * entriesScrolledWindow;
 
         /**
          *  The entry tree view, now only showing rows.
          */
-        Gtk::TreeView                 * entriesView;
+        ZebraTreeView             * entriesView;
 
         /**
          *  The entry tree model, as a GTK reference.
          */
-        Glib::RefPtr<Gtk::ListStore>        entriesModel;
+        Glib::RefPtr<Gtk::ListStore>    entriesModel;
 
         /**
          *  The save button.
          */
-        Gtk::Button               * saveButton;
+        Button                    * saveButton;
 
         /**
          *  The close button.
          */
-        Gtk::Button               * closeButton;
+        Button                    * closeButton;
 
         /**
          *  The status bar.

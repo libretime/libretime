@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 using namespace Glib;
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
 using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
@@ -62,17 +63,20 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                     Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-                    : LocalizedObject(bundle)
+          : WhiteWindow(WidgetFactory::playlistsWindowTitleImage,
+                        Colors::White,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+            LocalizedObject(bundle),
+            gLiveSupport(gLiveSupport)
 {
-    this->gLiveSupport = gLiveSupport;
-
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
     try {
-        set_title(*getResourceUstring("windowTitle"));
-        nameLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
-                                                                "nameLabel")));
-        saveButton = Gtk::manage(new Gtk::Button(
+        nameLabel = Gtk::manage(new Gtk::Label(
+                                    *getResourceUstring("nameLabel")));
+        saveButton = Gtk::manage(wf->createButton(
                                     *getResourceUstring("saveButtonLabel")));
-        closeButton = Gtk::manage(new Gtk::Button(
+        closeButton = Gtk::manage(wf->createButton(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -81,25 +85,22 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     nameEntry             = Gtk::manage(new Gtk::Entry());
     entriesScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
-    entriesView           = Gtk::manage(new Gtk::TreeView());
+    entriesModel          = Gtk::ListStore::create(modelColumns);
+    entriesView           = Gtk::manage(wf->createTreeView(entriesModel));
 
     // set up the entry scrolled window, with the entry treeview inside.
     entriesScrolledWindow->add(*entriesView);
     entriesScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC,
                                       Gtk::POLICY_AUTOMATIC);
 
-    // Create the Tree model:
-    entriesModel = Gtk::ListStore::create(modelColumns);
-    entriesView->set_model(entriesModel);
-
     // Add the TreeView's view columns:
     try {
-        entriesView->append_column(*getResourceUstring("startColumnLabel"),
-                                   modelColumns.startColumn);
-        entriesView->append_column(*getResourceUstring("titleColumnLabel"),
-                                   modelColumns.titleColumn);
-        entriesView->append_column(*getResourceUstring("lengthColumnLabel"),
-                                   modelColumns.lengthColumn);
+        entriesView->appendColumn(*getResourceUstring("startColumnLabel"),
+                                   modelColumns.startColumn, 120);
+        entriesView->appendColumn(*getResourceUstring("titleColumnLabel"),
+                                   modelColumns.titleColumn, 200);
+        entriesView->appendColumn(*getResourceUstring("lengthColumnLabel"),
+                                   modelColumns.lengthColumn, 120);
 
         statusBar = Gtk::manage(new Gtk::Label(
                                     *getResourceUstring("statusBar")));
@@ -109,17 +110,32 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     }
 
     // set up the layout
-    layout = Gtk::manage(new Gtk::Table());
+    Gtk::VBox *         mainBox = Gtk::manage(new Gtk::VBox);
+    
+    Gtk::HBox *         nameBox = Gtk::manage(new Gtk::HBox);
+    nameBox->pack_start(*nameLabel, Gtk::PACK_SHRINK, 10);
+    Gtk::Alignment *    nameEntryAlignment = Gtk::manage(new Gtk::Alignment(
+                                        Gtk::ALIGN_LEFT, Gtk::ALIGN_CENTER,
+                                        0.7));  // take up 70% of available room
+    nameEntryAlignment->add(*nameEntry);
+    nameBox->pack_start(*nameEntryAlignment, Gtk::PACK_EXPAND_WIDGET, 5);
+    mainBox->pack_start(*nameBox, Gtk::PACK_SHRINK, 5);
 
-    set_border_width(10);
-    layout->attach(*nameLabel,              0, 1, 0, 1);
-    layout->attach(*nameEntry,              1, 2, 0, 1);
-    layout->attach(*entriesScrolledWindow,  0, 2, 1, 2);
-    layout->attach(*saveButton,             1, 2, 2, 3);
-    layout->attach(*closeButton,            1, 2, 3, 4);
-    layout->attach(*statusBar,              0, 2, 4, 5);
+    mainBox->pack_start(*entriesScrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    Gtk::ButtonBox *    buttonBox = Gtk::manage(new Gtk::HButtonBox(
+                                                        Gtk::BUTTONBOX_END, 5));
+    buttonBox->pack_start(*saveButton);
+    buttonBox->pack_start(*closeButton);
+    mainBox->pack_start(*buttonBox, Gtk::PACK_SHRINK, 0);
+    
+    Gtk::Alignment *    statusBarAlignment = Gtk::manage(new Gtk::Alignment(
+                                        Gtk::ALIGN_LEFT, Gtk::ALIGN_CENTER,
+                                        0.0));  // do not expand the label
+    statusBarAlignment->add(*statusBar);
+    mainBox->pack_start(*statusBarAlignment, Gtk::PACK_SHRINK, 5);
 
-    add(*layout);
+    add(*mainBox);
 
     // Register the signal handlers
     saveButton->signal_clicked().connect(sigc::mem_fun(*this,
@@ -127,7 +143,12 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
                        &SimplePlaylistManagementWindow::onCloseButtonClicked));
 
-    // show all
+    // show
+    set_name("simplePlaylistManagementWindow");
+    set_default_size(450, 300);
+    set_modal(false);
+    property_window_position().set_value(Gtk::WIN_POS_NONE);
+
     show_all();
 }
 
@@ -196,29 +217,32 @@ SimplePlaylistManagementWindow :: onCloseButtonClicked (void)       throw ()
 void
 SimplePlaylistManagementWindow :: showContents(void)                throw ()
 {
-    Ptr<Playlist>::Ref                      playlist;
-    Playlist::const_iterator                it;
-    Playlist::const_iterator                end;
+    Ptr<Playlist>::Ref          playlist;
+    Playlist::const_iterator    it;
+    Playlist::const_iterator    end;
+    int                         rowNumber;
 
     playlist = gLiveSupport->getEditedPlaylist();
     
     if (playlist) {
-        it  = playlist->begin();
-        end = playlist->end();
         entriesModel->clear();
-        while (it != end) {
-            Ptr<PlaylistElement>::Ref  playlistElem  = it->second;
-            Ptr<Playable>::Ref         playable      = playlistElem->getPlayable();
-            Gtk::TreeModel::Row        row           = *(entriesModel->append());
+        rowNumber = 0;
+        for (it = playlist->begin(); it != playlist->end(); ++it) {
+            Ptr<PlaylistElement>::Ref  
+                                    playlistElem  = it->second;
+            Ptr<Playable>::Ref      playable      = playlistElem->getPlayable();
+            Gtk::TreeModel::Row     row           = *(entriesModel->append());
     
-            row[modelColumns.idColumn]    = playable->getId();
-            row[modelColumns.startColumn] =
-                              to_simple_string(*playlistElem->getRelativeOffset());
-            row[modelColumns.titleColumn] = *playable->getTitle();
-            row[modelColumns.lengthColumn]   =
-                              to_simple_string(*playable->getPlaylength());
-    
-            it++;
+            row[modelColumns.rowNumberColumn]
+                        = rowNumber++;
+            row[modelColumns.idColumn]
+                        = playable->getId();
+            row[modelColumns.startColumn]
+                        = to_simple_string(*playlistElem->getRelativeOffset());
+            row[modelColumns.titleColumn]
+                        = *playable->getTitle();
+            row[modelColumns.lengthColumn]
+                        = to_simple_string(*playable->getPlaylength());
         }
     }
 }
