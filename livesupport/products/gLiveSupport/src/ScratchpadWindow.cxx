@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -126,10 +126,10 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     gLiveSupport, treeView, modelColumns ));
     topButtonBox.pack_start(*audioButtonBox, Gtk::PACK_EXPAND_PADDING);
     
-    bottomButtonBox.set_border_width(5);
     bottomButtonBox.set_layout(Gtk::BUTTONBOX_END);
-    bottomButtonBox.pack_start(*clearListButton, Gtk::PACK_SHRINK);
-    bottomButtonBox.pack_start(*removeButton, Gtk::PACK_SHRINK);
+    bottomButtonBox.set_spacing(5);
+    bottomButtonBox.pack_start(*clearListButton);
+    bottomButtonBox.pack_start(*removeButton);
 
     // create the right-click entry context menu for audio clips
     audioClipMenu = Gtk::manage(new Gtk::Menu());

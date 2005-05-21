@@ -46,8 +46,8 @@ hu:table
 
         typeColumnLabel:string        { "típus" }
         titleColumnLabel:string       { "cím" }
-        clearListButtonLabel:string   { "Egész lista törlése" }
-        removeButtonLabel:string      { "Törlés" }
+        clearListButtonLabel:string   { "Lista törlése" }
+        removeButtonLabel:string      { "Kiválasztott törlése" }
 
         upMenuItem:string               { "_Fel" }
         downMenuItem:string             { "_Le" }

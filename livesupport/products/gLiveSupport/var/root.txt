@@ -48,7 +48,7 @@ root:table
         typeColumnLabel:string        { "type" }
         titleColumnLabel:string       { "title" }
         clearListButtonLabel:string   { "Clear List" }
-        removeButtonLabel:string      { "Remove Selected Item" }
+        removeButtonLabel:string      { "Remove Item" }
 
         upMenuItem:string               { "Move _Up" }
         downMenuItem:string             { "Move D_own" }
