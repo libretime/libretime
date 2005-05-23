@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -343,7 +343,7 @@ class Subjects extends ObjClasses{
             $id = $a0['id'];
             if($level < intval($a0['level'])){
                 $r = $this->dbc->query("UPDATE {$this->smembTable}
-                    SET level='$level', mid='$mid' WHERE id='{$a0['id']}'");
+                    SET level='$level', mid=$mid WHERE id='{$a0['id']}'");
                 if(PEAR::isError($r)) return $r;
             }
         }else{
