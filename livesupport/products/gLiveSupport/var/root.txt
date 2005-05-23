@@ -43,21 +43,22 @@ root:table
 
     scratchpadWindow:table
     {
-        windowTitle:string            { "LiveSupport Scratchpad" }
+        windowTitle:string                  { "LiveSupport Scratchpad" }
 
-        typeColumnLabel:string        { "type" }
-        titleColumnLabel:string       { "title" }
-        clearListButtonLabel:string   { "Clear List" }
-        removeButtonLabel:string      { "Remove Item" }
+        typeColumnLabel:string              { "type" }
+        titleColumnLabel:string             { "title" }
+        addToPlaylistButtonLabel:string     { "Add to playlist" }
+        clearListButtonLabel:string         { "Clear list" }
+        removeButtonLabel:string            { "Remove item(s)" }
 
-        upMenuItem:string               { "Move _Up" }
-        downMenuItem:string             { "Move D_own" }
-        removeMenuItem:string           { "_Remove" }
-        addToPlaylistMenuItem:string    { "_Add To Playlist" }
-        schedulePlaylistMenuItem:string { "_Schedule Playlist" }
-        deleteMenuItem:string           { "_Delete" }
-        cueMenuItem:string              { "Pre_view" }
-        addToLiveModeMenuItem:string    { "Add To _Live Mode" }
+        upMenuItem:string                   { "Move _Up" }
+        downMenuItem:string                 { "Move D_own" }
+        removeMenuItem:string               { "_Remove" }
+        addToPlaylistMenuItem:string        { "_Add To Playlist" }
+        schedulePlaylistMenuItem:string     { "_Schedule Playlist" }
+        deleteMenuItem:string               { "_Delete" }
+        cueMenuItem:string                  { "Pre_view" }
+        addToLiveModeMenuItem:string        { "Add To _Live Mode" }
     }
 
     playlistListWindow:table

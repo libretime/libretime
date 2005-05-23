@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,28 +74,35 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
     try {
+        addToPlaylistButton = Gtk::manage(widgetFactory->createButton(
+                            *getResourceUstring("addToPlaylistButtonLabel")));
         clearListButton = Gtk::manage(widgetFactory->createButton(
-                                *getResourceUstring("clearListButtonLabel")));
+                            *getResourceUstring("clearListButtonLabel")));
         removeButton = Gtk::manage(widgetFactory->createButton(
-                                *getResourceUstring("removeButtonLabel")));
+                            *getResourceUstring("removeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
 
+    addToPlaylistButton->set_name("addToPlaylistButton");
+    addToPlaylistButton->signal_clicked().connect(sigc::mem_fun(*this,
+                            &ScratchpadWindow::onAddToPlaylistButtonClicked));
+
     clearListButton->set_name("clearListButton");
     clearListButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &ScratchpadWindow::onClearListButtonClicked));
+                            &ScratchpadWindow::onClearListButtonClicked));
 
     removeButton->set_name("removeButton");
     removeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                &ScratchpadWindow::onRemoveItem));
+                            &ScratchpadWindow::onRemoveItemButtonClicked));
 
     add(vBox);
 
     // Create the Tree model:
     treeModel = Gtk::ListStore::create(modelColumns);
     treeView = Gtk::manage(widgetFactory->createTreeView(treeModel));
+    treeView->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 
     // Add the TreeView's view columns:
     try {
@@ -118,18 +125,24 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Only show the scrollbars when they are necessary:
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-    vBox.pack_start(topButtonBox, Gtk::PACK_SHRINK, 5);
-    vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
-    vBox.pack_start(bottomButtonBox, Gtk::PACK_SHRINK, 5);
-
     audioButtonBox = Gtk::manage(new CuePlayer(
                                     gLiveSupport, treeView, modelColumns ));
     topButtonBox.pack_start(*audioButtonBox, Gtk::PACK_EXPAND_PADDING);
     
+    middleButtonBox.set_layout(Gtk::BUTTONBOX_END);
+    middleButtonBox.set_spacing(5);
+    middleButtonBox.pack_start(*addToPlaylistButton);
+
     bottomButtonBox.set_layout(Gtk::BUTTONBOX_END);
     bottomButtonBox.set_spacing(5);
     bottomButtonBox.pack_start(*clearListButton);
     bottomButtonBox.pack_start(*removeButton);
+
+    // pack everything in the main box
+    vBox.pack_start(topButtonBox, Gtk::PACK_SHRINK, 5);
+    vBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
+    vBox.pack_start(middleButtonBox, Gtk::PACK_SHRINK, 5);
+    vBox.pack_start(bottomButtonBox, Gtk::PACK_SHRINK, 5);
 
     // create the right-click entry context menu for audio clips
     audioClipMenu = Gtk::manage(new Gtk::Menu());
@@ -218,7 +231,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     // show
     set_name("scratchpadWindow");
-    set_default_size(300, 300);
+    set_default_size(300, 330);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
     
@@ -272,6 +285,28 @@ ScratchpadWindow :: showContents(void)                          throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the create playlist button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onAddToPlaylistButtonClicked (void)         throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                    selection       = treeView->get_selection();
+    std::vector<Gtk::TreePath> 
+                    selectedRows    = selection->get_selected_rows();
+
+    std::vector<Gtk::TreePath>::iterator    iter;
+    for (iter = selectedRows.begin(); iter != selectedRows.end(); ++iter) {
+        Gtk::TreeIter   ti = treeModel->get_iter(*iter);
+        if (ti) {
+            Ptr<Playable>::Ref  playable = (*ti)[modelColumns.playableColumn];
+            gLiveSupport->addToPlaylist(playable->getId());
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Event handler for the clear list button getting clicked.
  *----------------------------------------------------------------------------*/
 void
@@ -285,35 +320,52 @@ ScratchpadWindow :: onClearListButtonClicked (void)             throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onRemoveItemButtonClicked(void)             throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                        selection       = treeView->get_selection();
+    std::vector<Gtk::TreePath> 
+                        selectedRows    = selection->get_selected_rows();
+
+    std::vector<Gtk::TreePath>::iterator    iter;
+    for (iter = selectedRows.begin(); iter != selectedRows.end(); ++iter) {
+        Gtk::TreeIter   ti = treeModel->get_iter(*iter);
+        if (ti) {
+            Ptr<Playable>::Ref  playable = (*ti)[modelColumns.playableColumn];
+            removeItem(playable->getId());
+        }
+    }
+    showContents();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Event handler for an entry being clicked in the list
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                      treeView->get_selection();
-        if (refSelection) {
-            Gtk::TreeModel::iterator iter = refSelection->get_selected();
-            
-            // if nothing is currently selected, select row at mouse pointer
-            if (!iter) {
-                Gtk::TreeModel::Path    path;
-                Gtk::TreeViewColumn *   column;
-                int     cell_x,
-                        cell_y;
-                if (treeView->get_path_at_pos(int(event->x), int(event->y),
-                                              path, column,
-                                              cell_x, cell_y)) {
-                    refSelection->select(path);
-                    iter = refSelection->get_selected();
-                }
-            }
+        Gtk::TreePath           currentPath;
+        Gtk::TreeViewColumn *   column;
+        int     cell_x,
+                cell_y;
+        bool foundValidRow = treeView->get_path_at_pos(
+                                            int(event->x), int(event->y),
+                                            currentPath, column,
+                                            cell_x, cell_y);
 
+        if (foundValidRow) {
+            Gtk::TreeIter   iter = treeModel->get_iter(currentPath);
             if (iter) {
-                Ptr<Playable>::Ref  playable =
-                                         (*iter)[modelColumns.playableColumn];
-
+                currentRow = *iter;
+                
+                Ptr<Playable>::Ref 
+                            playable = currentRow[modelColumns.playableColumn];
+                
                 switch (playable->getType()) {
                     case Playable::AudioClipType:
                         audioClipMenu->popup(event->button, event->time);
@@ -322,7 +374,7 @@ ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
                     case Playable::PlaylistType:
                         playlistMenu->popup(event->button, event->time);
                         break;
-
+    
                     default:
                         break;
                 }
@@ -338,18 +390,9 @@ ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
 void
 ScratchpadWindow :: onRemoveItem(void)                          throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-            removeItem(playable->getId());
-            showContents();
-        }
-    }
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    removeItem(playable->getId());
+    showContents();
 }
 
 
@@ -359,42 +402,33 @@ ScratchpadWindow :: onRemoveItem(void)                          throw ()
 void
 ScratchpadWindow :: onUpItem(void)                              throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
 
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+    Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
+    GLiveSupport::PlayableList::iterator    it;
+    GLiveSupport::PlayableList::iterator    end;
 
-            Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
-            GLiveSupport::PlayableList::iterator    it;
-            GLiveSupport::PlayableList::iterator    end;
+    scratchpadContents = gLiveSupport->getScratchpadContents();
+    it  = scratchpadContents->begin();
+    end = scratchpadContents->end();
+    while (it != end) {
+        Ptr<Playable>::Ref      p= *it;
 
-            scratchpadContents = gLiveSupport->getScratchpadContents();
-            it  = scratchpadContents->begin();
-            end = scratchpadContents->end();
-            while (it != end) {
-                Ptr<Playable>::Ref      p= *it;
-
-                if (*p->getId() == *playable->getId()) {
-                    // move one up, and insert the same before that
-                    if (it == scratchpadContents->begin()) {
-                        break;
-                    }
-                    scratchpadContents->insert(--it, playable);
-                    // move back to what we've found, and erase it
-                    scratchpadContents->erase(++it);
-
-                    showContents();
-                    break;
-                }
-
-                it++;
+        if (*p->getId() == *playable->getId()) {
+            // move one up, and insert the same before that
+            if (it == scratchpadContents->begin()) {
+                break;
             }
-        }
-    }
+            scratchpadContents->insert(--it, playable);
+            // move back to what we've found, and erase it
+            scratchpadContents->erase(++it);
 
+            showContents();
+            break;
+        }
+
+        it++;
+    }
 }
 
 
@@ -404,45 +438,36 @@ ScratchpadWindow :: onUpItem(void)                              throw ()
 void
 ScratchpadWindow :: onDownItem(void)                            throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
 
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
+    Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
+    GLiveSupport::PlayableList::iterator    it;
+    GLiveSupport::PlayableList::iterator    end;
 
-            Ptr<GLiveSupport::PlayableList>::Ref    scratchpadContents;
-            GLiveSupport::PlayableList::iterator    it;
-            GLiveSupport::PlayableList::iterator    end;
+    scratchpadContents = gLiveSupport->getScratchpadContents();
+    it  = scratchpadContents->begin();
+    end = scratchpadContents->end();
+    while (it != end) {
+        Ptr<Playable>::Ref      p= *it;
 
-            scratchpadContents = gLiveSupport->getScratchpadContents();
-            it  = scratchpadContents->begin();
-            end = scratchpadContents->end();
-            while (it != end) {
-                Ptr<Playable>::Ref      p= *it;
-
-                if (*p->getId() == *playable->getId()) {
-                    // move two down, and insert the same before that
-                    ++it;
-                    if (it == end) {
-                        break;
-                    }
-                    scratchpadContents->insert(++it, playable);
-                    // move back to what we've found, and erase it
-                    --it;
-                    --it;
-                    scratchpadContents->erase(--it);
-
-                    showContents();
-                    break;
-                }
-
-                it++;
+        if (*p->getId() == *playable->getId()) {
+            // move two down, and insert the same before that
+            ++it;
+            if (it == end) {
+                break;
             }
-        }
-    }
+            scratchpadContents->insert(++it, playable);
+            // move back to what we've found, and erase it
+            --it;
+            --it;
+            scratchpadContents->erase(--it);
 
+            showContents();
+            break;
+        }
+
+        it++;
+    }
 }
 
 
@@ -452,22 +477,14 @@ ScratchpadWindow :: onDownItem(void)                            throw ()
 void
 ScratchpadWindow :: onDeleteItem(void)                          throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
 
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-            try {
-                deleteItem(playable);
-            } catch (XmlRpcException &e) {
-                // TODO: signal error here
-            }
-            showContents();
-        }
+    try {
+        deleteItem(playable);
+    } catch (XmlRpcException &e) {
+        // TODO: signal error here
     }
+    showContents();
 }
 
 
@@ -516,17 +533,8 @@ ScratchpadWindow :: deleteItem(Ptr<Playable>::Ref    playable)
 void
 ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-            gLiveSupport->addToPlaylist(playable->getId());
-        }
-    }
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    gLiveSupport->addToPlaylist(playable->getId());
 }
 
 
@@ -537,42 +545,34 @@ ScratchpadWindow :: onAddToPlaylist(void)                       throw ()
 void
 ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    Ptr<UniqueId>::Ref  uid      = playable->getId();
 
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-            Ptr<UniqueId>::Ref  uid      = playable->getId();
+    Ptr<SessionId>::Ref                 sessionId = 
+                                            gLiveSupport->getSessionId();
+    Ptr<StorageClientInterface>::Ref    storage =
+                                            gLiveSupport->getStorage();
 
-            Ptr<SessionId>::Ref                 sessionId = 
-                                                  gLiveSupport->getSessionId();
-            Ptr<StorageClientInterface>::Ref    storage =
-                                                  gLiveSupport->getStorage();
-
-            if (!storage->existsPlaylist(sessionId, uid)) {
-                return;
-            }
-
-            Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, uid);
-
-            Ptr<ResourceBundle>::Ref    bundle;
-            try {
-                bundle = gLiveSupport->getBundle("schedulePlaylistWindow");
-            } catch (std::invalid_argument &e) {
-                std::cerr << e.what() << std::endl;
-                return;
-            }
-
-            Ptr<SchedulePlaylistWindow>::Ref    scheduleWindow;
-            scheduleWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
-                                                            bundle,
-                                                            playlist));
-
-            Gtk::Main::run(*scheduleWindow);
-        }
+    if (!storage->existsPlaylist(sessionId, uid)) {
+        return;
     }
+
+    Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, uid);
+
+    Ptr<ResourceBundle>::Ref    bundle;
+    try {
+        bundle = gLiveSupport->getBundle("schedulePlaylistWindow");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
+
+    Ptr<SchedulePlaylistWindow>::Ref    scheduleWindow;
+    scheduleWindow.reset(new SchedulePlaylistWindow(gLiveSupport,
+                                                    bundle,
+                                                    playlist));
+
+    Gtk::Main::run(*scheduleWindow);
 }
 
 
@@ -583,16 +583,7 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
 void
 ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
-        if (iter) {
-            Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
-            gLiveSupport->addToLiveMode(playable);
-        }
-    }
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    gLiveSupport->addToLiveMode(playable);
 }
 

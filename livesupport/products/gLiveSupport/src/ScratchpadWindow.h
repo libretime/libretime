@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.6 $
+         *  @version $Revision: 1.7 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -114,14 +114,29 @@ class ScratchpadWindow : public WhiteWindow,
 
 
         /**
-         *  The GLiveSupport object, holding the state of the application.
-         */
-        Ptr<GLiveSupport>::Ref      gLiveSupport;
-
-        /**
          *  The column model.
          */
         ModelColumns                modelColumns;
+
+        /**
+         *  The tree model, as a GTK reference.
+         */
+        Glib::RefPtr<Gtk::ListStore>    treeModel;
+
+        /**
+         *  The tree view, now only showing rows.
+         */
+        ZebraTreeView *             treeView;
+
+        /**
+         *  The model row at the mouse pointer, set by onEntryClicked()
+         */
+        Gtk::TreeRow                currentRow;
+
+        /**
+         *  The GLiveSupport object, holding the state of the application.
+         */
+        Ptr<GLiveSupport>::Ref      gLiveSupport;
 
         /**
          *  The main container in the window.
@@ -132,16 +147,6 @@ class ScratchpadWindow : public WhiteWindow,
          *  A scrolled window, so that the list can be scrolled.
          */
         Gtk::ScrolledWindow         scrolledWindow;
-
-        /**
-         *  The tree view, now only showing rows.
-         */
-        ZebraTreeView *             treeView;
-
-        /**
-         *  The tree model, as a GTK reference.
-         */
-        Glib::RefPtr<Gtk::ListStore>    treeModel;
 
         /**
          *  The box containing the box containing the audio buttons.
@@ -156,7 +161,17 @@ class ScratchpadWindow : public WhiteWindow,
         /**
          *  The box containing the close button.
          */
+        Gtk::HButtonBox             middleButtonBox;
+
+        /**
+         *  The box containing the close button.
+         */
         Gtk::HButtonBox             bottomButtonBox;
+
+        /**
+         *  The "add to playlist" button.
+         */
+        Button *                    addToPlaylistButton;
 
         /**
          *  The "clear list" button.
@@ -181,10 +196,22 @@ class ScratchpadWindow : public WhiteWindow,
         Gtk::Menu *                 playlistMenu;
 
         /**
+         *  Signal handler for the add to playlist button clicked.
+         */
+        virtual void
+        onAddToPlaylistButtonClicked(void)                      throw ();
+
+        /**
          *  Signal handler for the clear list button clicked.
          */
         virtual void
         onClearListButtonClicked(void)                          throw ();
+
+        /**
+         *  Signal handler for the remove item button clicked.
+         */
+        virtual void
+        onRemoveItemButtonClicked(void)                         throw ();
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.

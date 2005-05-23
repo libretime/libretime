@@ -8,7 +8,7 @@ hu:table
     liveModeButtonLabel:string              { "élő adás" }
     uploadFileButtonLabel:string            { "filefeltöltés" }
     scratchpadButtonLabel:string            { "praktikus csupor" }
-    simplePlaylistMgmtButtonLabel:string    { "playlistkezelés" }
+    simplePlaylistMgmtButtonLabel:string    { "műsorkezelés" }
     schedulerButtonLabel:string             { "időzítő" }
     searchButtonLabel:string                { "keresés" }
 
@@ -42,29 +42,30 @@ hu:table
 
     scratchpadWindow:table
     {
-        windowTitle:string            { "LiveSupport Praktikus csupor" }
+        windowTitle:string                  { "LiveSupport Praktikus csupor" }
 
-        typeColumnLabel:string        { "típus" }
-        titleColumnLabel:string       { "cím" }
-        clearListButtonLabel:string   { "Lista törlése" }
-        removeButtonLabel:string      { "Kiválasztott törlése" }
+        typeColumnLabel:string              { "típus" }
+        titleColumnLabel:string             { "cím" }
+        createPlaylistButtonLabel:string    { "Műsorhoz hozzáadni" }
+        clearListButtonLabel:string         { "Lista törlése" }
+        removeButtonLabel:string            { "Kiválasztottak törlése" }
 
-        upMenuItem:string               { "_Fel" }
-        downMenuItem:string             { "_Le" }
-        removeMenuItem:string           { "_Eltávolítani" }
-        addToPlaylistMenuItem:string    { "Playlisthez _hozzáadni" }
-        schedulePlaylistMenuItem:string { "_Playlist időzítése" }
-        deleteMenuItem:string           { "_Törölni" }
-        cueMenuItem:string              { "_Belehallgatni" }
-        addToLiveModeMenuItem:string    { "Élő _adásba" }
+        upMenuItem:string                   { "_Fel" }
+        downMenuItem:string                 { "_Le" }
+        removeMenuItem:string               { "_Eltávolítani" }
+        addToPlaylistMenuItem:string        { "Műsorhoz _hozzáadni" }
+        schedulePlaylistMenuItem:string     { "_Műsor időzítése" }
+        deleteMenuItem:string               { "_Törölni" }
+        cueMenuItem:string                  { "_Belehallgatni" }
+        addToLiveModeMenuItem:string        { "Élő _adásba" }
     }
 
     playlistListWindow:table
     {
-        windowTitle:string            { "LiveSupport Playlist ablak" }
+        windowTitle:string            { "LiveSupport Műsorszerkesztő ablak" }
 
-        listBoxLabel                  { "Playlistek" }
-        detailBoxLabel                { "Playlist részletek" }
+        listBoxLabel                  { "Műsorok" }
+        detailBoxLabel                { "Műsor adatai" }
 
         idColumnLabel:string          { "azonosító" }
         lengthColumnLabel:string      { "hossz" }
@@ -98,7 +99,7 @@ hu:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Egyszerű playlistszerkesztő ablak" }
+        windowTitle:string            { "LiveSupport Egyszerű műsorszerkesztő ablak" }
 
         startColumnLabel:string       { "kezdet" }
         titleColumnLabel:string       { "cím" }
@@ -107,7 +108,7 @@ hu:table
         saveButtonLabel:string        { "elment" }
         closeButtonLabel:string       { "bezár" }
         statusBar:string              { "állapotsor" }
-        playlistSavedMessage:string   { "playlist {0} elmentve" }
+        playlistSavedMessage:string   { "a {0} műsor elmentve" }
     }
 
     schedulerWindow:table
@@ -124,7 +125,7 @@ hu:table
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string           { "LiveSupport Playlist Időzítő Ablak" }
+        windowTitle:string           { "LiveSupport Műsoridőzítő ablak" }
 
         hourLabel:string             { "óra: " }
         minuteLabel:string           { "perc: " }
