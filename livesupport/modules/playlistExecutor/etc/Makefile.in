@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -77,9 +77,6 @@ VPATH    = ${SRC_DIR}
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
-GSTREAMER_LIBS=@GSTREAMER_LIBS@
-
 TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
@@ -103,7 +100,6 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -Wall -Wno-long-long \
                              ${LIBXMLPP_CFLAGS} \
-                             ${GSTREAMER_CFLAGS} \
                              ${HELIX_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
@@ -112,7 +108,6 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
-                     ${GSTREAMER_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
@@ -130,11 +125,8 @@ PLAYLIST_EXECUTOR_LIB_OBJS = ${TMP_DIR}/HelixPlayer.o \
                              ${TMP_DIR}/ClientContext.o \
                              ${TMP_DIR}/ErrorSink.o \
                              ${TMP_DIR}/HelixIIDs.o \
-							 ${TMP_DIR}/GstreamerPlayer.o \
                              ${TMP_DIR}/AudioPlayerFactory.o
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/GstreamerPlayerTest.o 
-DONT_TEST=         ${TMP_DIR}/GstreamerPlayerTest.o \
                    ${TMP_DIR}/HelixPlayerTest.o \
                    ${TMP_DIR}/AudioPlayerFactoryTest.o 
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
@@ -142,7 +134,6 @@ TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
                    -lcppunit -ldl -lm -lxmlrpc++
 
 TWOTEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                      ${TMP_DIR}/TwoGstreamerPlayersTest.o \
                       ${TMP_DIR}/TwoHelixPlayersTest.o
 
 
