@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -267,6 +267,12 @@ static const std::string    liveModeWindowTitleImageName
 static const std::string    playlistsWindowTitleImageName 
                             = "titleImages/playlistsWindowTitle.png";
 
+/**
+ *  The name of the image for the title of the scheduler window.
+ */
+static const std::string    schedulerWindowTitleImageName 
+                            = "titleImages/schedulerWindowTitle.png";
+
 
 /* ===============================================  local function prototypes */
 
@@ -508,6 +514,10 @@ WidgetFactory :: createImage(ImageType  imageName)              throw ()
 
         case playlistsWindowTitleImage:
             rawImage = loadImage(playlistsWindowTitleImageName);
+            break;
+
+        case schedulerWindowTitleImage:
+            rawImage = loadImage(schedulerWindowTitleImageName);
             break;
 
         default:

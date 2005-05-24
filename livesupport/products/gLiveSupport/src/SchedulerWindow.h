@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -87,10 +88,10 @@ using namespace LiveSupport::Core;
  *  +-------------------------------------------------+
  *  </pre></code>
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  */
-class SchedulerWindow : public Gtk::Window, public LocalizedObject
+class SchedulerWindow : public WhiteWindow, public LocalizedObject
 {
 
     protected:
@@ -99,8 +100,8 @@ class SchedulerWindow : public Gtk::Window, public LocalizedObject
          *  The columns model needed by Gtk::TreeView.
          *  Lists one scheduled item per row.
          *
-         *  @author $Author: maroy $
-         *  @version $Revision: 1.3 $
+         *  @author $Author: fgerlits $
+         *  @version $Revision: 1.4 $
          */
         class ModelColumns : public Gtk::TreeModel::ColumnRecord
         {

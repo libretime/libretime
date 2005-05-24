@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulerWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,12 +63,13 @@ using namespace LiveSupport::GLiveSupport;
 SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                     Ptr<ResourceBundle>::Ref    bundle)
                                                                     throw ()
-                    : LocalizedObject(bundle)
+          : WhiteWindow(WidgetFactory::schedulerWindowTitleImage,
+                        Colors::White,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+            LocalizedObject(bundle),
+            gLiveSupport(gLiveSupport)
 {
-    this->gLiveSupport = gLiveSupport;
-
     try {
-        set_title(*getResourceUstring("windowTitle"));
         closeButton = Gtk::manage(new Gtk::Button(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
@@ -134,7 +135,9 @@ SchedulerWindow :: SchedulerWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // initialize the selected date for today
     selectedDate.reset(new gregorian::date(TimeConversion::now()->date()));
 
-    add(*layout);
+    Gtk::VBox *         mainBox = Gtk::manage(new Gtk::VBox);
+    mainBox->add(*layout);
+    add(*mainBox);
 
     show_all();
 
