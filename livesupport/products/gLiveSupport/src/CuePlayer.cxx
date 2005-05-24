@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/CuePlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,21 +111,22 @@ CuePlayer :: ~CuePlayer(void)                                       throw ()
 void
 CuePlayer :: onPlayItem(void)                                       throw ()
 {
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
+    Glib::RefPtr<Gtk::TreeView::Selection> 
+                    selection       = treeView->get_selection();
+    std::vector<Gtk::TreePath> 
+                    selectedRows    = selection->get_selected_rows();
 
-    if (refSelection) {
-        Gtk::TreeModel::iterator iter = refSelection->get_selected();
+    if (selectedRows.size() == 1) {
+        Gtk::TreePath   path = selectedRows.front();
+        Gtk::TreeIter   iter = treeView->get_model()->get_iter(path);
         if (iter) {
             Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
-
             try {
                 gLiveSupport->playCueAudio(playable);
             } catch (std::logic_error &e) {
                 std::cerr << "GLiveSupport::playCueAudio() error:"
                           << std::endl << e.what() << std::endl;
             }
-            
             audioState = playingState;
             remove(*playButton);
             pack_end(*pauseButton, Gtk::PACK_SHRINK, 3);
