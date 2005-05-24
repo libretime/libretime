@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE gstreamerPlayer [
+
+<!ELEMENT gstreamerPlayer   EMPTY >
+<!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
+]>
+<gstreamerPlayer audioDevice = "plughw:0,0"
+/>

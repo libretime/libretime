@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE twoGstreamerPlayers [
+
+<!ELEMENT twoGstreamerPlayers    (gstreamerPlayer,gstreamerPlayer) >
+
+<!ELEMENT gstreamerPlayer   EMPTY >
+<!ATTLIST gstreamerPlayer   audioDevice          CDATA     #IMPLIED  >
+]>
+<twoGstreamerPlayers>
+    <gstreamerPlayer audioDevice = "plughw:0,0" />
+    <gstreamerPlayer audioDevice = "plughw:1,0" />
+</twoGstreamerPlayers>
