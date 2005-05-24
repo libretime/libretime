@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Attic/AdvancedSearchEntry.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_AdvancedSearchEntry_h
-#define LiveSupport_Widgets_AdvancedSearchEntry_h
+#ifndef LiveSupport_GLiveSupport_AdvancedSearchEntry_h
+#define LiveSupport_GLiveSupport_AdvancedSearchEntry_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -48,7 +48,7 @@
 
 
 namespace LiveSupport {
-namespace Widgets {
+namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
     
@@ -64,7 +64,7 @@ using namespace LiveSupport::Core;
  *  A Gtk::VBox with one or more search input fields in it.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.1 $
  */
 class AdvancedSearchEntry : public Gtk::VBox,
                             public LocalizedObject
@@ -123,8 +123,8 @@ class AdvancedSearchEntry : public Gtk::VBox,
 /* ====================================================== function prototypes */
 
 
-} // namespace Widgets
+} // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_AdvancedSearchEntry_h
+#endif // LiveSupport_GLiveSupport_AdvancedSearchEntry_h
 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -120,9 +120,7 @@ WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
 				   ${TMP_DIR}/ZebraTreeView.o \
 				   ${TMP_DIR}/ZebraCellRenderer.o \
 				   ${TMP_DIR}/Colors.o \
-				   ${TMP_DIR}/MessageWindow.o \
-				   ${TMP_DIR}/AdvancedSearchItem.o \
-				   ${TMP_DIR}/AdvancedSearchEntry.o
+				   ${TMP_DIR}/MessageWindow.o
 				   
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o

@@ -22,8 +22,8 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/Attic/AdvancedSearchEntry.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -35,13 +35,13 @@
 
 #include <iostream>
 
-#include "LiveSupport/Widgets/AdvancedSearchItem.h"
-
-#include "LiveSupport/Widgets/AdvancedSearchEntry.h"
+#include "AdvancedSearchItem.h"
+#include "AdvancedSearchEntry.h"
 
 
 using namespace LiveSupport::Core;
 using namespace LiveSupport::Widgets;
+using namespace LiveSupport::GLiveSupport;
 
 /* ===================================================  local data structures */
 

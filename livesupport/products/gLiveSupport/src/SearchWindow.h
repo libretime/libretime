@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,9 +50,9 @@
 #include "LiveSupport/Widgets/WhiteWindow.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/PlayableTreeModelColumnRecord.h"
-#include "LiveSupport/Widgets/AdvancedSearchEntry.h"
-#include "GLiveSupport.h"
+#include "AdvancedSearchEntry.h"
 #include "BrowseEntry.h"
+#include "GLiveSupport.h"
 
 
 namespace LiveSupport {
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -181,7 +181,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.12 $
+         *  @version $Revision: 1.13 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {

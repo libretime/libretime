@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,6 @@
 #include "LiveSupport/Widgets/WidgetFactory.h"
 #include "LiveSupport/Widgets/Notebook.h"
 #include "LiveSupport/Widgets/Button.h"
-#include "LiveSupport/Widgets/AdvancedSearchEntry.h"
 #include "LiveSupport/Widgets/ZebraTreeView.h"
 #include "SearchWindow.h"
 

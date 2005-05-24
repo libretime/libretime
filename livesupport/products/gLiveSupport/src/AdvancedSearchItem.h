@@ -23,11 +23,11 @@
  
     Author   : $Author: fgerlits $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/Attic/AdvancedSearchItem.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchItem.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_Widgets_AdvancedSearchItem_h
-#define LiveSupport_Widgets_AdvancedSearchItem_h
+#ifndef LiveSupport_GLiveSupport_AdvancedSearchItem_h
+#define LiveSupport_GLiveSupport_AdvancedSearchItem_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -54,9 +54,10 @@
 
 
 namespace LiveSupport {
-namespace Widgets {
+namespace GLiveSupport {
 
 using namespace LiveSupport::Core;
+using namespace LiveSupport::Widgets;
     
 /* ================================================================ constants */
 
@@ -203,8 +204,8 @@ class AdvancedSearchItem : public Gtk::HBox,
 /* ====================================================== function prototypes */
 
 
-} // namespace Widgets
+} // namespace GLiveSupport
 } // namespace LiveSupport
 
-#endif // LiveSupport_Widgets_AdvancedSearchItem_h
+#endif // LiveSupport_GLiveSupport_AdvancedSearchItem_h
 
