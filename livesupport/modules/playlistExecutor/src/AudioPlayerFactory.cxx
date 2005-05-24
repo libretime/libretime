@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ AudioPlayerFactory :: configure(const xmlpp::Element & element)
 
     audioPlayer.reset();
 
-    // try to look for a SimpleConnectionManager configuration element
+    // try to look for a HelixPlayer configuration element
     xmlpp::Node::NodeList   nodes = element.get_children(
                                         HelixPlayer::getConfigElementName());
     if (nodes.size() >= 1) {
