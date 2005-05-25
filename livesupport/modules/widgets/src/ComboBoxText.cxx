@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -447,6 +447,44 @@ ComboBoxText :: set_active_text(const Glib::ustring   & text)       throw ()
     menu->activate_item(item);
 
     label->set_text(text);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Set the first item in the combo box to be the active text.
+ *----------------------------------------------------------------------------*/
+void
+ComboBoxText :: set_active(int  index)                              throw ()
+{
+    menu->set_active(index);
+    onMenuItemSelected();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a new entry, together with an (invisible) key.
+ *----------------------------------------------------------------------------*/
+void
+ComboBoxText :: appendPair(Ptr<const Glib::ustring>::Ref  text,
+                           Ptr<const Glib::ustring>::Ref  key)       throw ()
+{
+    append_text(*text);
+    keyMap[*text] = key;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the key corresponding to the selected item.
+ *----------------------------------------------------------------------------*/
+Ptr<const Glib::ustring>::Ref
+ComboBoxText :: getActiveKey(void)                  throw (std::logic_error)
+{
+    KeyMapType::const_iterator  it = keyMap.find(get_active_text());
+    if (it != keyMap.end()) {
+        return it->second;
+    } else {
+        throw std::logic_error("no active key found in OperatorComboBoxText");
+    }
 }
 
 

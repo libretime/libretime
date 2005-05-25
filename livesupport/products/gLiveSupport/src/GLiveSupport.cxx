@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.44 $
+    Version  : $Revision: 1.45 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -239,6 +239,21 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
 
     cuePlayer = apf->getAudioPlayer();
     cuePlayer->initialize();
+
+    // configure the MetadataTypeContainer
+    nodes = element.get_children(MetadataTypeContainer::getConfigElementName());
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no metadataTypeContainer element");
+    }
+    Ptr<ResourceBundle>::Ref  metadataBundle;
+    try {
+        metadataBundle = getBundle("metadataTypes");
+    } catch (std::invalid_argument &e) {
+        throw std::invalid_argument(e.what());
+    }
+    metadataTypeContainer.reset(new MetadataTypeContainer(metadataBundle));
+    metadataTypeContainer->configure( 
+                                *((const xmlpp::Element*) *(nodes.begin())) );
 }
 
 
@@ -375,6 +390,8 @@ GLiveSupport :: changeLanguage(Ptr<const std::string>::Ref  locale)
                                                  throw (std::invalid_argument)
 {
     changeLocale(*locale);
+
+    metadataTypeContainer->setBundle(getBundle());
 
     if (masterPanel.get()) {
         masterPanel->changeLanguage(getBundle());

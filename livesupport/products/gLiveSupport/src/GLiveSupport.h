@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedConfigurable.h"
+#include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Authentication/AuthenticationClientInterface.h"
 #include "LiveSupport/Storage/StorageClientInterface.h"
 #include "LiveSupport/SchedulerClient/SchedulerClientInterface.h"
@@ -101,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.35 $
+ *  @version $Revision: 1.36 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -175,6 +176,11 @@ class GLiveSupport : public LocalizedConfigurable,
         Ptr<LanguageMap>::Ref           supportedLanguages;
 
         /**
+         *  The container for all the possible metadata types.
+         */
+        Ptr<MetadataTypeContainer>::Ref metadataTypeContainer;
+
+        /**
          *  The master panel window.
          */
         Ptr<MasterPanelWindow>::Ref     masterPanel;
@@ -227,13 +233,13 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Store the contents of the Scratchpad as a user preference.
          */
         void
-        storeScratchpadContents(void)                       throw ();
+        storeScratchpadContents(void)                           throw ();
 
         /**
          *  Load the contents of the Scratchpad as a user preference.
          */
         void
-        loadScratchpadContents(void)                        throw ();
+        loadScratchpadContents(void)                            throw ();
 
         /**
          *  Release the resources used by the output audio player.
@@ -256,7 +262,7 @@ class GLiveSupport : public LocalizedConfigurable,
         /**
          *  Constructor.
          */
-        GLiveSupport(void)                                  throw ()
+        GLiveSupport(void)                                      throw ()
                 : outputPlayerIsPaused(false),
                   cuePlayerIsPaused(false)
         {
@@ -267,7 +273,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Virtual destructor.
          */
         virtual
-        ~GLiveSupport(void)                                  throw ()
+        ~GLiveSupport(void)                                     throw ()
         {
             if (outputPlayer.get()) {
                 outputPlayer->deInitialize();
@@ -284,7 +290,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                          throw ()
+        getConfigElementName(void)                              throw ()
         {
             return configElementNameStr;
         }
@@ -313,7 +319,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *         false otherwise
          */
         bool
-        checkConfiguration(void)                            throw ();
+        checkConfiguration(void)                                throw ();
 
         /**
          *  Display a message window.
@@ -322,14 +328,15 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @param message the message to display
          */
         void
-        displayMessageWindow(Ptr<Glib::ustring>::Ref    message)    throw ();
+        displayMessageWindow(Ptr<Glib::ustring>::Ref    message)
+                                                                throw ();
 
         /**
          *  Show the main window, and run the application.
          *  This call will only return after the main window has been closed.
          */
         void
-        show(void)                                          throw ();
+        show(void)                                              throw ();
 
         /**
          *  Change the language of the application.
@@ -356,7 +363,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         bool
         login(const std::string & login,
-              const std::string & password)          throw ();
+              const std::string & password)                     throw ();
 
         /**
          *  Return the session id for the user.
@@ -368,7 +375,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see #login
          */
         Ptr<SessionId>::Ref
-        getSessionId(void) const                            throw ()
+        getSessionId(void) const                                throw ()
         {
             return sessionId;
         }
@@ -380,7 +387,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @see #logout
          */
         void
-        logout(void)                                    throw ();
+        logout(void)                                            throw ();
 
         /**
          *  Accessor function to the scheduler client held by this object.
@@ -388,7 +395,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the scheduler client held by this object.
          */
         Ptr<SchedulerClientInterface>::Ref
-        getScheduler(void)                              throw ()
+        getScheduler(void)                                      throw ()
         {
             return scheduler;
         }
@@ -399,7 +406,7 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the storage client held by this object.
          */
         Ptr<StorageClientInterface>::Ref
-        getStorage(void)                                throw ()
+        getStorage(void)                                        throw ()
         {
             return storage;
         }
@@ -410,9 +417,20 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @return the map of supported languages.
          */
         Ptr<const LanguageMap>::Ref
-        getSupportedLanguages(void) const               throw ()
+        getSupportedLanguages(void) const                       throw ()
         {
             return supportedLanguages;
+        }
+
+        /**
+         *  Return a container with all supported metadata types.
+         *
+         *  @return the metadata type container
+         */
+        Ptr<MetadataTypeContainer>::Ref
+        getMetadataTypeContainer(void) const                    throw ()
+        {
+            return metadataTypeContainer;
         }
 
         /**
@@ -593,7 +611,7 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         deletePlayable(Ptr<Playable>::Ref   playable)
-                                                    throw (XmlRpcException);
+                                                throw (XmlRpcException);
          
         /**
          *  Play a Playable object using the output audio player.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -166,9 +166,11 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
     // the three main components of the window    
-    advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(getBundle()));
-    Gtk::Box *          searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
-                                                        Gtk::BUTTONBOX_END ));
+    advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(
+                                    gLiveSupport->getMetadataTypeContainer(),
+                                    getBundle() ));
+    Gtk::Box *  searchButtonBox = Gtk::manage(new Gtk::HButtonBox(
+                                    Gtk::BUTTONBOX_END ));
     
     // set up the callback function for the entry field
     advancedSearchEntry->connectCallback(sigc::mem_fun(

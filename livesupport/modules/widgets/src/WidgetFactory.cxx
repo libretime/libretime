@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -33,6 +33,7 @@
 #include "configure.h"
 #endif
 
+#include <unicode/resbund.h>
 #include <gtkmm/entry.h>
 
 #include "LiveSupport/Widgets/Colors.h"
@@ -283,7 +284,7 @@ static const std::string    schedulerWindowTitleImageName
  *  Return the singleton instance to WidgetFactory
  *----------------------------------------------------------------------------*/
 Ptr<WidgetFactory>::Ref
-WidgetFactory :: getInstance(void)                   throw ()
+WidgetFactory :: getInstance(void)                                  throw ()
 {
     if (!singleton.get()) {
         singleton.reset(new WidgetFactory());
@@ -355,7 +356,7 @@ WidgetFactory :: loadImage(const std::string    imageName)
  *----------------------------------------------------------------------------*/
 Button *
 WidgetFactory :: createButton(const Glib::ustring & label,
-                              ButtonType            type)       throw ()
+                              ButtonType            type)           throw ()
 {
     switch (type) {
         case pushButton:
@@ -374,7 +375,7 @@ WidgetFactory :: createButton(const Glib::ustring & label,
  *  Create a combo box
  *----------------------------------------------------------------------------*/
 ComboBoxText *
-WidgetFactory :: createComboBoxText(void)                       throw ()
+WidgetFactory :: createComboBoxText(void)                           throw ()
 {
     return new ComboBoxText(comboBoxLeftImage,
                             comboBoxCenterImage,
@@ -383,10 +384,40 @@ WidgetFactory :: createComboBoxText(void)                       throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Create a metadata combo box
+ *----------------------------------------------------------------------------*/
+MetadataComboBoxText *
+WidgetFactory :: createMetadataComboBoxText(
+                        Ptr<MetadataTypeContainer>::Ref     metadataTypes)
+                                                                    throw ()
+{
+    return new MetadataComboBoxText(comboBoxLeftImage,
+                                    comboBoxCenterImage,
+                                    comboBoxRightImage,
+                                    metadataTypes);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a comparison operator combo box
+ *----------------------------------------------------------------------------*/
+OperatorComboBoxText *
+WidgetFactory :: createOperatorComboBoxText(
+                        Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ()
+{
+    return new OperatorComboBoxText(comboBoxLeftImage,
+                                    comboBoxCenterImage,
+                                    comboBoxRightImage,
+                                    bundle);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Create a blue bin
  *----------------------------------------------------------------------------*/
 BlueBin *
-WidgetFactory :: createBlueBin(void)                            throw ()
+WidgetFactory :: createBlueBin(void)                                throw ()
 {
     return new BlueBin(Colors::LightBlue, blueBinImages);
 }
@@ -396,7 +427,7 @@ WidgetFactory :: createBlueBin(void)                            throw ()
  *  Create a dark blue bin
  *----------------------------------------------------------------------------*/
 BlueBin *
-WidgetFactory :: createDarkBlueBin(void)                        throw ()
+WidgetFactory :: createDarkBlueBin(void)                            throw ()
 {
     return new BlueBin(Colors::MasterPanelCenterBlue, darkBlueBinImages);
 }
@@ -406,7 +437,7 @@ WidgetFactory :: createDarkBlueBin(void)                        throw ()
  *  Create an entry bin
  *----------------------------------------------------------------------------*/
 EntryBin *
-WidgetFactory :: createEntryBin(void)                           throw ()
+WidgetFactory :: createEntryBin(void)                               throw ()
 {
     return new EntryBin(Colors::LightBlue, entryBinImages);
 }
@@ -416,7 +447,7 @@ WidgetFactory :: createEntryBin(void)                           throw ()
  *  Create a stock button
  *----------------------------------------------------------------------------*/
 ImageButton *
-WidgetFactory :: createButton(ImageButtonType    type)          throw ()
+WidgetFactory :: createButton(ImageButtonType    type)              throw ()
 {
     Glib::RefPtr<Gdk::Pixbuf>   passiveImage;
     Glib::RefPtr<Gdk::Pixbuf>   rollImage;
@@ -489,7 +520,7 @@ WidgetFactory :: createButton(ImageButtonType    type)          throw ()
  *  Create a resize image
  *----------------------------------------------------------------------------*/
 Gtk::Image *
-WidgetFactory :: createImage(ImageType  imageName)              throw ()
+WidgetFactory :: createImage(ImageType  imageName)                  throw ()
 {
     Glib::RefPtr<Gdk::Pixbuf>   rawImage;
     
@@ -533,7 +564,7 @@ WidgetFactory :: createImage(ImageType  imageName)              throw ()
  *----------------------------------------------------------------------------*/
 ZebraTreeView *
 WidgetFactory :: createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
-                                                                throw ()
+                                                                    throw ()
 {
     return new ZebraTreeView(treeModel);
 }
@@ -544,7 +575,7 @@ WidgetFactory :: createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
  *----------------------------------------------------------------------------*/
 WhiteWindow *
 WidgetFactory :: createMessageWindow(Ptr<Glib::ustring>::Ref    message)
-                                                                throw ()
+                                                                    throw ()
 {
     return new MessageWindow(message);
 }

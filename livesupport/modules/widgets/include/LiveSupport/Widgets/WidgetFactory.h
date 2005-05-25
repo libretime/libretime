@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,12 +44,15 @@
 #include <gtkmm/image.h>
 
 #include "LiveSupport/Core/Configurable.h"
+#include "LiveSupport/Core/MetadataTypeContainer.h"
 
 #include "LiveSupport/Widgets/CornerImages.h"
 #include "LiveSupport/Widgets/ButtonImages.h"
 #include "LiveSupport/Widgets/Button.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 #include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/MetadataComboBoxText.h"
+#include "LiveSupport/Widgets/OperatorComboBoxText.h"
 #include "LiveSupport/Widgets/BlueBin.h"
 #include "LiveSupport/Widgets/EntryBin.h"
 
@@ -89,7 +92,7 @@ class ZebraTreeView;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -186,7 +189,7 @@ class WidgetFactory :
         /**
          *  The default constructor.
          */
-        WidgetFactory(void)              throw ()
+        WidgetFactory(void)                     throw ()
         {
         }
 
@@ -207,7 +210,7 @@ class WidgetFactory :
          *  A virtual destructor, as this class has virtual functions.
          */
         virtual
-        ~WidgetFactory(void)             throw ()
+        ~WidgetFactory(void)                                        throw ()
         {
         }
 
@@ -218,7 +221,7 @@ class WidgetFactory :
          *  @return the name of the expected XML configuration element.
          */
         static const std::string
-        getConfigElementName(void)                  throw ()
+        getConfigElementName(void)                                  throw ()
         {
             return configElementNameStr;
         }
@@ -229,7 +232,7 @@ class WidgetFactory :
          *  @return the singleton instance of this object.
          */
         static Ptr<WidgetFactory>::Ref
-        getInstance()                                   throw ();
+        getInstance()                                               throw ();
 
         /**
          *  Configure the object based on the XML element supplied.
@@ -268,18 +271,44 @@ class WidgetFactory :
          *  @return a button of the requested type, or 0
          */
         ImageButton *
-        createButton(ImageButtonType    type)               throw ();
+        createButton(ImageButtonType    type)                       throw ();
 
         /**
-         *  Create a combo box, that holds text entries.
+         *  Create a combo box that holds text entries.
          *  It is the reponsibility of the caller to dispose of the created
          *  object properly.
          *
          *  @return a combo box, that holds text entries.
          */
         ComboBoxText *
-        createComboBoxText(void)                            throw ();
+        createComboBoxText(void)                                    throw ();
         
+        /**
+         *  Create a metadata combo box that holds metadata types.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @param  metadataTypes   a container of metadata types to display.
+         *  @return a combo box, that holds metadata types.
+         */
+        MetadataComboBoxText *
+        createMetadataComboBoxText(
+                        Ptr<MetadataTypeContainer>::Ref  metadataTypes)
+                                                                    throw ();
+
+        /**
+         *  Create a combo box that holds comparison operators.
+         *  It is the reponsibility of the caller to dispose of the created
+         *  object properly.
+         *
+         *  @param bundle   a localization bundle.
+         *  @return a combo box, that holds comparison operators.
+         */
+        OperatorComboBoxText *
+        createOperatorComboBoxText(
+                        Ptr<ResourceBundle>::Ref    bundle)
+                                                                    throw ();
+
         /**
          *  Create and return a blue singular container.
          *  It is the reponsibility of the caller to dispose of the created
@@ -288,7 +317,7 @@ class WidgetFactory :
          *  @return a blue singular container.
          */
         BlueBin *
-        createBlueBin(void)                                 throw ();
+        createBlueBin(void)                                         throw ();
 
         /**
          *  Create and return a dark blue singular container.
@@ -298,7 +327,7 @@ class WidgetFactory :
          *  @return a dark blue singular container.
          */
         BlueBin *
-        createDarkBlueBin(void)                             throw ();
+        createDarkBlueBin(void)                                     throw ();
 
         /**
          *  Create and return a singular container holding a text entry.
@@ -308,7 +337,7 @@ class WidgetFactory :
          *  @return a singular container holding a text entry.
          */
         EntryBin *
-        createEntryBin(void)                                throw ();
+        createEntryBin(void)                                        throw ();
 
         /**
          *  Return the images for the white window.
@@ -316,7 +345,7 @@ class WidgetFactory :
          *  @return the corner images for the white window.
          */
         Ptr<CornerImages>::Ref
-        getWhiteWindowCorners(void)                         throw ()
+        getWhiteWindowCorners(void)                                 throw ()
         {
             return whiteWindowImages;
         }
@@ -329,7 +358,7 @@ class WidgetFactory :
          *  @return the container holding the requested image.
          */
         Gtk::Image *
-        createImage(ImageType   imageName)                  throw ();
+        createImage(ImageType   imageName)                          throw ();
 
         /**
          *  Create and return a ZebraTreeView instance.
@@ -340,7 +369,7 @@ class WidgetFactory :
          */
         ZebraTreeView *
         createTreeView(Glib::RefPtr<Gtk::TreeModel> treeModel)
-                                                            throw ();
+                                                                    throw ();
 
         /**
          *  Create a window with a single line of text, and an OK button.
@@ -351,7 +380,7 @@ class WidgetFactory :
          *  @param message the message to include in the window.
          */
         WhiteWindow *
-        createMessageWindow(Ptr<Glib::ustring>::Ref message)    throw ();
+        createMessageWindow(Ptr<Glib::ustring>::Ref message)        throw ();
 };
 
 

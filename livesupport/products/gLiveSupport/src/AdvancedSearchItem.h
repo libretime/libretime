@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchItem.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,8 +47,10 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Core/MetadataTypeContainer.h"
 #include "LiveSupport/Core/SearchCriteria.h"
-#include "LiveSupport/Widgets/ComboBoxText.h"
+#include "LiveSupport/Widgets/MetadataComboBoxText.h"
+#include "LiveSupport/Widgets/OperatorComboBoxText.h"
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/ImageButton.h"
 
@@ -71,9 +73,9 @@ using namespace LiveSupport::Widgets;
  *  A single search input field.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
-class AdvancedSearchItem : public Gtk::HBox,
+class AdvancedSearchItem : public Gtk::HBox, 
                            public LocalizedObject
 {
     private:
@@ -86,24 +88,14 @@ class AdvancedSearchItem : public Gtk::HBox,
                                 MapVector;
 
         /**
-         *  The list of possible metadata field names.
-         */
-        Ptr<MapVector>::Ref  metadataTypes;
-    
-        /**
-         *  The list of possible comparison operators.
-         */
-        Ptr<MapVector>::Ref  operatorTypes;
-           
-        /**
          *  The metadata field.
          */
-        ComboBoxText *          metadataEntry;
+        MetadataComboBoxText *  metadataEntry;
 
         /**
          *  The operator field.
          */
-        ComboBoxText *          operatorEntry;
+        OperatorComboBoxText *  operatorEntry;
 
         /**
          *  The "search for this value" field.
@@ -120,41 +112,19 @@ class AdvancedSearchItem : public Gtk::HBox,
          */
         ImageButton *           closeButton;
         
-        /**
-         *  Default constructor.
-         */
-        AdvancedSearchItem(void)                               throw ();
-
-        /**
-         *  Read the localized metadata field names.
-         *
-         *  @exception std::invalid_argument if some keys are not found in
-         *                                   the resource bundle
-         */
-        void
-        readMetadataTypes(void)                 throw (std::invalid_argument);
-
-        /**
-         *  Read the localized comparison operator names.
-         *
-         *  @exception std::invalid_argument if some keys are not found in
-         *                                   the resource bundle
-         */
-        void
-        readOperatorTypes(void)                 throw (std::invalid_argument);
-
 
     public:
     
         /**
-         *  Constructor with localization parameter.
+         *  Constructor.
          *
-         *  @param isFirst  true if this is the first search condition
-         *                  (so it does not need a Close button)
-         *  @param bundle   the resource bundle for localization
+         *  @param isFirst        true if this is the first search condition
+         *                            (so it does not need a Close button)
+         *  @param metadataTypes  container holding all known metadata types
          */
-        AdvancedSearchItem(bool                        isFirst,
-                           Ptr<ResourceBundle>::Ref    bundle)
+        AdvancedSearchItem(bool                             isFirst,
+                           Ptr<MetadataTypeContainer>::Ref  metadataTypes,
+                           Ptr<ResourceBundle>::Ref         bundle)
                                                                 throw ();
 
         /**

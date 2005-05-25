@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,12 +57,17 @@ using namespace LiveSupport::GLiveSupport;
 /*------------------------------------------------------------------------------
  *  Constructor.
  *----------------------------------------------------------------------------*/
-AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<ResourceBundle>::Ref    bundle)
-                                                                throw ()
-          : LocalizedObject(bundle)
+AdvancedSearchEntry :: AdvancedSearchEntry(
+                                Ptr<MetadataTypeContainer>::Ref  metadataTypes,
+                                Ptr<ResourceBundle>::Ref         bundle)
+                                                                    throw ()
+          : LocalizedObject(bundle),
+            metadataTypes(metadataTypes)
 {
     AdvancedSearchItem *    searchOptionsBox = Gtk::manage(new 
-                                AdvancedSearchItem(true, getBundle()) );
+                                    AdvancedSearchItem(true, 
+                                                       metadataTypes,
+                                                       getBundle() ));
     pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
 
     searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
@@ -74,10 +79,12 @@ AdvancedSearchEntry :: AdvancedSearchEntry(Ptr<ResourceBundle>::Ref    bundle)
  *  Add a new search condition entrys item.
  *----------------------------------------------------------------------------*/
 void
-AdvancedSearchEntry :: onAddNewCondition(void)                  throw ()
+AdvancedSearchEntry :: onAddNewCondition(void)                      throw ()
 {
     AdvancedSearchItem *    searchOptionsBox = Gtk::manage(new 
-                                AdvancedSearchItem(false, getBundle()) );
+                                    AdvancedSearchItem(false, 
+                                                       metadataTypes,
+                                                       getBundle() ));
     pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
 
     searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
@@ -91,7 +98,7 @@ AdvancedSearchEntry :: onAddNewCondition(void)                  throw ()
  *  Return the current state of the search fields.
  *----------------------------------------------------------------------------*/
 Ptr<SearchCriteria>::Ref
-AdvancedSearchEntry :: getSearchCriteria(void)                  throw ()
+AdvancedSearchEntry :: getSearchCriteria(void)                      throw ()
 {
     Ptr<SearchCriteria>::Ref    criteria(new SearchCriteria("all", "and"));
 
@@ -112,8 +119,8 @@ AdvancedSearchEntry :: getSearchCriteria(void)                  throw ()
  *  Connect a callback to the "enter key pressed" event.
  *----------------------------------------------------------------------------*/
 void
-AdvancedSearchEntry :: connectCallback(const sigc::slot<void> &     callback)
-                                                                throw ()
+AdvancedSearchEntry :: connectCallback(const sigc::slot<void> &  callback)
+                                                                    throw ()
 {
     Gtk::Box_Helpers::BoxList                       children = this->children();
     Gtk::Box_Helpers::BoxList::type_base::iterator  it;

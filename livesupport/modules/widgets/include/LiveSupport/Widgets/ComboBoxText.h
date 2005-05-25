@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ComboBoxText.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,6 +39,9 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <map>
+#include <exception>
 
 #include <gtkmm/label.h>
 #include <gtkmm/menu.h>
@@ -64,7 +67,7 @@ using namespace LiveSupport::Core;
  *  A combo box holding text entries.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class ComboBoxText : public Gtk::ComboBoxText
 {
@@ -115,9 +118,20 @@ class ComboBoxText : public Gtk::ComboBoxText
         Glib::RefPtr<Gdk::Pixbuf>       rightImage;
 
         /**
+         *  A map type for storing { text, key } pairs.
+         */
+        typedef std::map<const Glib::ustring, Ptr<const Glib::ustring>::Ref>
+                                        KeyMapType;
+
+        /**
+         *  A map containing { text, key } pairs.
+         */
+        KeyMapType                      keyMap;
+
+        /**
          *  Default constructor.
          */
-        ComboBoxText(void)                                   throw ()
+        ComboBoxText(void)                                          throw ()
         {
         }
 
@@ -131,7 +145,7 @@ class ComboBoxText : public Gtk::ComboBoxText
         void
         onMenuPosition(int    & x,
                        int    & y,
-                       bool   & pushIn)                     throw ();
+                       bool   & pushIn)                             throw ();
 
         /**
          *  Event handler for the combo box being clicked.
@@ -140,13 +154,13 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @return true if the the event was handled, false otherwise.
          */
         bool
-        onBoxClicked(GdkEventButton     * event)            throw ();
+        onBoxClicked(GdkEventButton     * event)                    throw ();
 
         /**
          *  Event handler for the menu item selected.
          */
         void
-        onMenuItemSelected(void)                            throw ();
+        onMenuItemSelected(void)                                    throw ();
 
 
     protected:
@@ -158,7 +172,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          */
         virtual void
         on_size_request(Gtk::Requisition* requisition)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Handle the size allocate event.
@@ -167,31 +181,31 @@ class ComboBoxText : public Gtk::ComboBoxText
          */
         virtual void
         on_size_allocate(Gtk::Allocation& allocation)
-                                                                throw ();
+                                                                    throw ();
 
         /**
          *  Handle the map event.
          */
         virtual void
-        on_map()                                            throw ();
+        on_map()                                                    throw ();
 
         /**
          *  Handle the unmap event.
          */
         virtual void
-        on_unmap()                                          throw ();
+        on_unmap()                                                  throw ();
 
         /**
          *  Handle the realize event.
          */
         virtual void
-        on_realize()                                        throw ();
+        on_realize()                                                throw ();
 
         /**
          *  Handle the unrealize event.
          */
         virtual void
-        on_unrealize()                                      throw ();
+        on_unrealize()                                              throw ();
 
         /**
          *  Handle the expose event.
@@ -200,7 +214,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @return true if something was drawn (?)
          */
         virtual bool
-        on_expose_event(GdkEventExpose* event)              throw ();
+        on_expose_event(GdkEventExpose* event)                      throw ();
 
         /**
          *  Execute a function on all children of this container.
@@ -214,7 +228,7 @@ class ComboBoxText : public Gtk::ComboBoxText
         forall_vfunc(gboolean      includeInternals,
                      GtkCallback   callback,
                      gpointer      callbackData)
-                                                            throw ();
+                                                                    throw ();
 
         /**
          *  Handle the add event.
@@ -222,7 +236,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @param child the child being added to the widget.
          */
         virtual void
-        on_add(Gtk::Widget* child)                          throw ();
+        on_add(Gtk::Widget* child)                                  throw ();
 
         /**
          *  Handle the remove event.
@@ -230,7 +244,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @param child the child to remove from the widget.
          */
         virtual void
-        on_remove(Gtk::Widget* child)                       throw ();
+        on_remove(Gtk::Widget* child)                               throw ();
 
         /**
          *  Tell what kind of children this container accepts.
@@ -238,7 +252,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @return the type of children this container accepts.
          */
         virtual GtkType
-        child_type_vfunc() const                            throw ();
+        child_type_vfunc() const                                    throw ();
 
         /**
          *  A signal object to notify people that the selection has changed.
@@ -262,7 +276,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  A virtual destructor.
          */
         virtual
-        ~ComboBoxText(void)                                  throw ();
+        ~ComboBoxText(void)                                         throw ();
 
         /**
          *  Append a new text entry to the combo box menu.
@@ -270,7 +284,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @param text the text entry to append.
          */
         void
-        append_text(const Glib::ustring &text)              throw ();
+        append_text(const Glib::ustring &text)                      throw ();
 
         /**
          *  Return the active text.
@@ -278,7 +292,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @return the active text of the combo box.
          */
         Glib::ustring
-        get_active_text(void) const                         throw ();
+        get_active_text(void) const                                 throw ();
 
         /**
          *  Insert a new text entry at a given position.
@@ -288,7 +302,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          */
         void
         insert_text(int                     position,
-                    const Glib::ustring   & text)           throw ();
+                    const Glib::ustring   & text)                   throw ();
 
         /**
          *  Set the active text.
@@ -296,8 +310,38 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @param text the text to select as active.
          */
         void
-        set_active_text(const Glib::ustring   & text)       throw ();
-        
+        set_active_text(const Glib::ustring   & text)               throw ();
+
+
+        /**
+         *  Set the active text.
+         *
+         *  @param index the number of the menu item to select as active.
+         */
+        void
+        set_active(int  index)                                      throw ();
+
+        /**
+         *  Add a new entry, together with an (invisible) key.
+         *
+         *  @param text the text to be displayed
+         *  @param key  the key corresponding to this text
+         *  @see   getActiveKey()
+         */
+        void
+        appendPair(Ptr<const Glib::ustring>::Ref  text,
+                   Ptr<const Glib::ustring>::Ref  key)
+                                                                    throw ();
+
+        /**
+         *  Get the key corresponding to the selected item.
+         *
+         *  @return the key corresponding to the currently active (selected)
+         *          text
+         */
+        Ptr<const Glib::ustring>::Ref
+        getActiveKey(void)                          throw (std::logic_error);
+
         /**
          *  Accessor for the selectionChanged signal.
          *  This signal is emitted by onMenuItemSelected() when the active
@@ -310,8 +354,7 @@ class ComboBoxText : public Gtk::ComboBoxText
          *  @return the signal object (a protected member of this class)
          */
         sigc::signal<void>
-        signalSelectionChanged(void)                        throw ();
-
+        signalSelectionChanged(void)                                throw ();
 };
 
 

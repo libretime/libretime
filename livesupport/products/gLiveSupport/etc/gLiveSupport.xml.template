@@ -8,7 +8,8 @@
                                        storageClientFactory,
                                        schedulerClientFactory,
                                        outputPlayer,
-                                       cuePlayer) >
+                                       cuePlayer,
+                                       metadataTypeContainer) >
 
 <!ELEMENT resourceBundle    EMPTY >
 <!ATTLIST resourceBundle    path    CDATA   #REQUIRED >
@@ -84,7 +85,14 @@
 <!ATTLIST helixPlayer   audioStreamTimeout   NMTOKEN   #IMPLIED >
 <!ATTLIST helixPlayer   fadeLookAheatTime    NMTOKEN   #IMPLIED >
 
+<!ELEMENT metadataTypeContainer (metadataType+) >
+
+<!ELEMENT metadataType EMPTY >
+<!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
+<!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
+<!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
 ]>
+
 <gLiveSupport>
     <resourceBundle path   = "ls_install_dir/var/gLiveSupport"
                     locale = "en"
@@ -134,5 +142,142 @@
         </audioPlayer>
     </cuePlayer>
 
+    <metadataTypeContainer>
+        <metadataType dcName          = "dc:title"
+                      id3Tag          = "Title"
+                      localizationKey = "title"
+        />
+        <metadataType dcName          = "dc:creator"
+                      id3Tag          = "Artist"
+                      localizationKey = "creator"
+        />
+        <metadataType dcName          = "dc:type"
+                      id3Tag          = "Genre"
+                      localizationKey = "genre"
+        />
+        <metadataType dcName          = "dc:format"
+                      localizationKey = "file_format"
+        />
+        <metadataType dcName          = "dcterms:extent"
+                      localizationKey = "length"
+        />
+        <metadataType dcName          = "dc:source"
+                      id3Tag          = "Album"
+                      localizationKey = "album"
+        />
+        <metadataType dcName          = "ls:year"
+                      id3Tag          = "Year"
+                      localizationKey = "year"
+        />
+        <metadataType dcName          = "ls:bpm"
+                      id3Tag          = "BPM"
+                      localizationKey = "bpm"
+        />
+        <metadataType dcName          = "ls:rating"
+                      id3Tag          = "Rating"
+                      localizationKey = "rating"
+        />
+        <metadataType dcName          = "ls:encoded_by"
+                      id3Tag          = "Encoded by"
+                      localizationKey = "encoded_by"
+        />
+        <metadataType dcName          = "ls:track_num"
+                      id3Tag          = "Track"
+                      localizationKey = "track_number"
+        />
+        <metadataType dcName          = "ls:disc_num"
+                      id3Tag          = "Disk"
+                      localizationKey = "disc_number"
+        />
+        <metadataType dcName          = "ls:mood"
+                      id3Tag          = "Mood"
+                      localizationKey = "mood"
+        />
+        <metadataType dcName          = "dc:publisher"
+                      id3Tag          = "Label"
+                      localizationKey = "publishing_label"
+        />
+        <metadataType dcName          = "ls:composer"
+                      id3Tag          = "Composer"
+                      localizationKey = "composer"
+        />
+        <metadataType dcName          = "ls:bitrate"
+                      id3Tag          = "Bitrate"
+                      localizationKey = "bitrate"
+        />
+        <metadataType dcName          = "ls:channels"
+                      id3Tag          = "Channels"
+                      localizationKey = "channels"
+        />  <!-- one of "", "Mono", "Stereo" or "5.1" -->
+        <metadataType dcName          = "ls:samplerate"
+                      id3Tag          = "Samplerate"
+                      localizationKey = "sample_rate"
+        />
+        <metadataType dcName          = "ls:encoder"
+                      id3Tag          = "Encoder"
+                      localizationKey = "encoding_software"
+        />
+        <metadataType dcName          = "ls:crc"
+                      id3Tag          = "CRC"
+                      localizationKey = "checksum"
+        />
+        <metadataType dcName          = "ls:lyrics"
+                      id3Tag          = "Lyrics"
+                      localizationKey = "lyrics"
+        />
+        <metadataType dcName          = "ls:orchestra"
+                      id3Tag          = "Orchestra or band" <!-- ??? -->
+                      localizationKey = "orchestra_or_band"
+        />
+        <metadataType dcName          = "ls:conductor"
+                      id3Tag          = "Conductor"
+                      localizationKey = "conductor"
+        />
+        <metadataType dcName          = "ls:lyricist"
+                      id3Tag          = "Lyricist"
+                      localizationKey = "lyricist"
+        />
+        <metadataType dcName          = "ls:originallyricist"
+                      id3Tag          = "Original lyricist"
+                      localizationKey = "original_lyricist"
+        />
+        <metadataType dcName          = "ls:radiostationname"
+                      id3Tag          = "Radio station name"
+                      localizationKey = "radio_station_name"
+        />
+        <metadataType dcName          = "ls:audiofileinfourl"
+                      id3Tag          = "Audio file information web page"
+                      localizationKey = "audio_file_info_url"
+        />
+        <metadataType dcName          = "ls:artisturl"
+                      id3Tag          = "Artist web page"
+                      localizationKey = "artist_url"
+        />
+        <metadataType dcName          = "ls:audiosourceurl"
+                      id3Tag          = "Audio source web page"
+                      localizationKey = "audio_source_url"
+        />
+        <metadataType dcName          = "ls:buycdurl"
+                      id3Tag          = "Buy CD web page"
+                      localizationKey = "buy_cd_url"
+        />
+        <metadataType dcName          = "ls:isrcnumber"
+                      id3Tag          = "ISRC number"
+                      localizationKey = "isrc_number"
+        />
+        <metadataType dcName          = "ls:catalognumber"
+                      id3Tag          = "Catalog"
+                      localizationKey = "catalog_number"
+        />
+        <metadataType dcName          = "ls:originalartist"
+                      id3Tag          = "Original Artist"
+                      localizationKey = "original_artist"
+        />
+        <metadataType dcName          = "dc:rights"
+                      id3Tag          = "Copyright"
+                      localizationKey = "copyright"
+        />
+        <!-- TODO: finish; the above are only the Main and Music tabs -->
+    </metadataTypeContainer>
 </gLiveSupport>
 

@@ -22,12 +22,12 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.h,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/OperatorComboBoxText.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef LiveSupport_GLiveSupport_AdvancedSearchEntry_h
-#define LiveSupport_GLiveSupport_AdvancedSearchEntry_h
+#ifndef LiveSupport_Widgets_OperatorComboBoxText_h
+#define LiveSupport_Widgets_OperatorComboBoxText_h
 
 #ifndef __cplusplus
 #error This is a C++ include file
@@ -40,16 +40,12 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/box.h>
-
-#include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
-#include "LiveSupport/Core/MetadataTypeContainer.h"
-#include "LiveSupport/Core/SearchCriteria.h"
+#include "LiveSupport/Widgets/ComboBoxText.h"
 
 
 namespace LiveSupport {
-namespace GLiveSupport {
+namespace Widgets {
 
 using namespace LiveSupport::Core;
     
@@ -62,63 +58,30 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  A Gtk::VBox with one or more search input fields in it.
+ *  A combo box holding all possible search operator entries.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.1 $
  */
-class AdvancedSearchEntry : public Gtk::VBox, 
-                            public LocalizedObject
+class OperatorComboBoxText : public ComboBoxText,
+                             public LocalizedObject
 {
-    private:
-    
-        /**
-         *  A container holding all known metadata types.
-         */
-        Ptr<MetadataTypeContainer>::Ref     metadataTypes;
-        
-        
     public:
-    
         /**
          *  Constructor.
          *
-         *  @param metadataTypes    container holding all known metadata types
          */
-        AdvancedSearchEntry(Ptr<MetadataTypeContainer>::Ref metadataTypes,
-                            Ptr<ResourceBundle>::Ref        bundle)
-                                                                throw ();
+        OperatorComboBoxText(Glib::RefPtr<Gdk::Pixbuf>  leftImage, 
+                             Glib::RefPtr<Gdk::Pixbuf>  centerImage, 
+                             Glib::RefPtr<Gdk::Pixbuf>  rightImage,
+                             Ptr<ResourceBundle>::Ref   bundle)
+                                                                    throw ();
 
         /**
          *  A virtual destructor.
          */
         virtual
-        ~AdvancedSearchEntry(void)                              throw ()
-        {
-        }
-
-        /**
-         *  Add a new search condition entry item.
-         */
-        void
-        onAddNewCondition(void)                                 throw ();
-
-        /**
-         *  Return the current state of the search fields.
-         *
-         *  @return a new LiveSupport::Storage::SearchCriteria instance,
-         *          which contains the data entered by the user
-         */
-        Ptr<SearchCriteria>::Ref
-        getSearchCriteria(void)                                 throw ();
-
-        /**
-         *  Connect a callback to the "enter key pressed" event.
-         *
-         *  @param callback the function to execute when enter is pressed.
-         */
-        void
-        connectCallback(const sigc::slot<void> &    callback)   throw ();
+        ~OperatorComboBoxText(void)                                 throw ();
 };
 
 
@@ -128,8 +91,8 @@ class AdvancedSearchEntry : public Gtk::VBox,
 /* ====================================================== function prototypes */
 
 
-} // namespace GLiveSupport
+} // namespace Widgets
 } // namespace LiveSupport
 
-#endif // LiveSupport_GLiveSupport_AdvancedSearchEntry_h
+#endif // LiveSupport_Widgets_OperatorComboBoxText_h
 
