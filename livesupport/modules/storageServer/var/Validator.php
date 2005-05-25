@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Validator.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,8 +39,6 @@ define('VAL_CONTENT', 118);
 define('VAL_NOREQA', 119);
 define('VAL_ATTRIB', 120);
 define('VAL_PREDXML', 121);
-
-#require_once "";
 
 /**
  *  Simple XML validator against structure stored in PHP hash-array hierarchy.

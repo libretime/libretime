@@ -23,13 +23,13 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
 require_once "RawMediaData.php";
 require_once "MetaData.php";
-require_once "../../../getid3/var/getid3.php";
+require_once dirname(__FILE__)."/../../getid3/var/getid3.php";
  
 /**
  *  StoredFile class

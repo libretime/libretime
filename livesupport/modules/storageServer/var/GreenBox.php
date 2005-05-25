@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.60 $
+    Version  : $Revision: 1.61 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.60 $
+ *  @version $Revision: 1.61 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -684,7 +684,7 @@ class GreenBox extends BasicStor{
      */
     function loadPref($sessid, $key)
     {
-        require_once '../../../storageServer/var/Prefs.php';
+        require_once 'Prefs.php';
         $pr =& new Prefs($this);
         $res = $pr->loadPref($sessid, $key);
         return $res;
@@ -700,7 +700,7 @@ class GreenBox extends BasicStor{
      */
     function savePref($sessid, $key, $value)
     {
-        require_once '../../../storageServer/var/Prefs.php';
+        require_once 'Prefs.php';
         $pr =& new Prefs($this);
         $res = $pr->savePref($sessid, $key, $value);
         return $res;
@@ -715,7 +715,7 @@ class GreenBox extends BasicStor{
      */
     function delPref($sessid, $key)
     {
-        require_once '../../../storageServer/var/Prefs.php';
+        require_once 'Prefs.php';
         $pr =& new Prefs($this);
         $res = $pr->delPref($sessid, $key);
         return $res;
@@ -731,7 +731,7 @@ class GreenBox extends BasicStor{
      */
     function loadGroupPref($sessid, $group, $key)
     {
-        require_once '../../../storageServer/var/Prefs.php';
+        require_once 'Prefs.php';
         $pr =& new Prefs($this);
         $res = $pr->loadGroupPref($sessid, $group, $key);
         return $res;
@@ -748,7 +748,7 @@ class GreenBox extends BasicStor{
      */
     function saveGroupPref($sessid, $group, $key, $value)
     {
-        require_once '../../../storageServer/var/Prefs.php';
+        require_once 'Prefs.php';
         $pr =& new Prefs($this);
         $res = $pr->saveGroupPref($sessid, $group, $key, $value);
         return $res;
@@ -764,7 +764,7 @@ class GreenBox extends BasicStor{
      */
     function delGroupPref($sessid, $group, $key)
     {
-        require_once '../../../storageServer/var/Prefs.php';
+        require_once 'Prefs.php';
         $pr =& new Prefs($this);
         $res = $pr->delGroupPref($sessid, $group, $key);
         return $res;

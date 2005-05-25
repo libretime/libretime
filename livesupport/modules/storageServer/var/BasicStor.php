@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.51 $
+    Version  : $Revision: 1.52 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@ define('GBERR_LOCK', 52);
 
 define('GBERR_NOTIMPL', 69);
 
-require_once "../../../alib/var/alib.php";
+require_once dirname(__FILE__)."/../../alib/var/alib.php";
 require_once "StoredFile.php";
 require_once "Transport.php";
 
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.51 $
+ *  @version $Revision: 1.52 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1253,7 +1253,7 @@ class BasicStor extends Alib{
             $tr->resetData();
         }
         $rootHD = $this->getObjId('root', $this->storId);
-        include"../tests/sampleData.php";
+        include dirname(__FILE__)."/tests/sampleData.php";
         $res = array(
             'audioclips'=>array(), 'playlists'=>array(), 'webstreams'=>array()
         );
