@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o dh -l directory,help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:h -l directory:,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
