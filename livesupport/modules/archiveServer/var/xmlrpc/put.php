@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/put.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,9 +55,9 @@
  *  @see XR_LocStor
  */
 
-require_once '../conf.php';
+require_once dirname(__FILE__).'/../conf.php';
 require_once 'DB.php';
-require_once '../Archive.php';
+require_once dirname(__FILE__).'/../Archive.php';
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);

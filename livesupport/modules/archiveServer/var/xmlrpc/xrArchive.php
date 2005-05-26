@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xrArchive.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,8 +51,8 @@ header("Content-type: text/xml");
 
 /* ================================================================= includes */
 require_once 'DB.php';
-require_once "../../../storageServer/var/xmlrpc/XML/RPC/Server.php";
-require_once '../conf.php';
+require_once dirname(__FILE__)."/../../../storageServer/var/xmlrpc/XML/RPC/Server.php";
+require_once dirname(__FILE__).'/../conf.php';
 require_once 'XR_Archive.php';
 
 /* ============================================ setting default error handler */

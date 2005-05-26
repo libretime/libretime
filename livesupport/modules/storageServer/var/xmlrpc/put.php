@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/put.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,9 +55,9 @@
  *  @see XR_LocStor
  */
 
-require_once '../conf.php';
+require_once dirname(__FILE__).'/../conf.php';
 require_once 'DB.php';
-require_once '../LocStor.php';
+require_once dirname(__FILE__).'/../LocStor.php';
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);

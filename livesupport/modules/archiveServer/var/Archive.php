@@ -23,11 +23,11 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/Archive.php,v $
 
 ------------------------------------------------------------------------------*/
-require_once "../../../storageServer/var/LocStor.php";
+require_once dirname(__FILE__)."/../../storageServer/var/LocStor.php";
 
 /**
  *  Extension to StorageServer to act as ArchiveServer

@@ -23,12 +23,12 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
 
-include_once "../../../storageServer/var/xmlrpc/XML/RPC.php";
+include_once dirname(__FILE__)."/../../../storageServer/var/xmlrpc/XML/RPC.php";
 
 $pars = $argv;
 array_shift($pars);

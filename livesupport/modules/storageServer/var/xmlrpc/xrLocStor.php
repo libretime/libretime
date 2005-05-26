@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,7 +51,7 @@ ini_set("error_append_string", "</string></value>
 header("Content-type: text/xml");
 
 /* ================================================================= includes */
-require_once '../conf.php';
+require_once dirname(__FILE__).'/../conf.php';
 require_once 'DB.php';
 require_once "XML/RPC/Server.php";
 require_once 'XR_LocStor.php';
