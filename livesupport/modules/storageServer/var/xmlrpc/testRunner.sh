@@ -23,7 +23,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.27 $
+#   Version  : $Revision: 1.28 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/testRunner.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -106,7 +106,7 @@ accessRawAudioData() {
     if [ $DEBUG_I ]; then echo $URL; fi
     if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# releaseRawAudioData: "
-    $XR_CLI releaseRawAudioData $SESSID $TOKEN || exit $?
+    $XR_CLI releaseRawAudioData $TOKEN || exit $?
 }
 
 downloadRAD() {
@@ -213,7 +213,7 @@ accessPlaylist() {
     echo "#  status: $?"
     if [ $DEBUG_I ]; then echo -n "Press enter ..."; read KEY; fi
     echo -n "# releasePlaylist: "
-    $XR_CLI releasePlaylist $SESSID $TOKEN || exit $?
+    $XR_CLI releasePlaylist $TOKEN || exit $?
 }
 
 editPlaylist() {

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -82,7 +82,7 @@ $infos = array(
     "accessRawAudioData"        => array('m'=>"locstor.accessRawAudioData",
         'p'=>array('sessid', 'gunid'), 'r'=>array('url', 'token')),
     "releaseRawAudioData"       => array('m'=>"locstor.releaseRawAudioData",
-        'p'=>array('sessid', 'token'), 'r'=>'status'),
+        'p'=>array('token'), 'r'=>'status'),
     "downloadRawAudioDataOpen"  =>
         array('m'=>"locstor.downloadRawAudioDataOpen",
             'p'=>array('sessid', 'gunid'), 'r'=>array('url', 'token')),
@@ -122,7 +122,7 @@ $infos = array(
     "accessPlaylist"    => array('m'=>"locstor.accessPlaylist",
         'p'=>array('sessid', 'plid'), 'r'=>array('url', 'token')),
     "releasePlaylist"   => array('m'=>"locstor.releasePlaylist",
-        'p'=>array('sessid', 'token'), 'r'=>'plid'),
+        'p'=>array('token'), 'r'=>'plid'),
     "existsPlaylist"    => array('m'=>"locstor.existsPlaylist",
         'p'=>array('sessid', 'plid'), 'r'=>'exists'),
     "playlistIsAvailable"   => array('m'=>"locstor.playlistIsAvailable",

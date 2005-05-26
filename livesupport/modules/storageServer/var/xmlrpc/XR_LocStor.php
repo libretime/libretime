@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -425,7 +425,6 @@ class XR_LocStor extends LocStor{
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
      *  <ul>
-     *      <li> sessid  :  string  -  session id </li>
      *      <li> token   :  string  -  access token
      *              returned by locstor.accessRawAudioData</li>
      *  </ul>
@@ -453,7 +452,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->releaseRawAudioData($r['sessid'], $r['token']);
+        $res = $this->releaseRawAudioData(NULL, $r['token']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_releaseRawAudioData: ".$res->getMessage().
@@ -957,7 +956,6 @@ class XR_LocStor extends LocStor{
      *  The input parameters are an XML-RPC struct with the following
      *  fields:
      *  <ul>
-     *      <li> sessid  :  string  -  session id </li>
      *      <li> token   :  string  -  playlist token
      *              returned by locstor.accessPlaylist</li>
      *  </ul>
@@ -985,7 +983,7 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->releasePlaylist($r['sessid'], $r['token']);
+        $res = $this->releasePlaylist(NULL, $r['token']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_releasePlaylist: ".$res->getMessage().
