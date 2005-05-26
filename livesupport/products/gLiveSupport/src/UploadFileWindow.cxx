@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -239,14 +239,18 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
         fileURI.reset(new std::string("file://"));
         *fileURI += *fileName;
 
-        playlength = gLiveSupport->getPlaylength(fileURI);
+        try {
+            playlength = gLiveSupport->getPlaylength(fileURI);
+        } catch (std::invalid_argument &e) {
+            playlength.reset(new time_duration(0,0,0,0));
+        }
 
         // display the new play length
         std::ostringstream  lengthStr;
         lengthStr << std::setfill('0')
-                  << std::setw(2) << playlength->hours() << ":"
-                  << std::setw(2) << playlength->minutes() << ":"
-                  << std::setw(2) << playlength->seconds();
+                    << std::setw(2) << playlength->hours() << ":"
+                    << std::setw(2) << playlength->minutes() << ":"
+                    << std::setw(2) << playlength->seconds();
         lengthValueLabel->set_text(lengthStr.str());
     }
 }
