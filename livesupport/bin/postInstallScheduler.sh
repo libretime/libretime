@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: mash $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallScheduler.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -224,6 +224,7 @@ install_bin=$installdir/bin
 install_etc=$installdir/etc
 install_lib=$installdir/lib
 install_tmp=$installdir/tmp
+install_usr=$installdir/usr
 install_var=$installdir/var
 
 
@@ -386,6 +387,10 @@ cat $install_var/storageServer/var/conf.php.template \
 cat $install_var/archiveServer/var/conf.php.template \
     | sed -e "$replace_sed_string" \
     > $install_var/archiveServer/var/conf.php
+
+cat $install_usr/storageAdmin/bin/php/conf.php.template \
+    | sed -e "$replace_sed_string" \
+    > $install_usr/storageAdmin/bin/php/conf.php
 
 cat $install_etc/scheduler.xml.template \
     | sed -e "$replace_sed_string" \
