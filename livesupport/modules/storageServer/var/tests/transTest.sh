@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/tests/transTest.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -78,7 +78,9 @@ storeClose() {
 
 deleteAudioClip() {
     echo -n "# deleteAudioClip: "
-    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
+# disabled:
+#    $XR_CLI deleteAudioClip $SESSID $GUNID || exit $?
+    $XR_CLI deleteAudioClip $SESSID $GUNID
 }
 
 uploadToArchive() {
