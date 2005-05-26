@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace Core;
  *  An interface for storage clients.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class StorageClientInterface
 {
@@ -388,9 +388,9 @@ class StorageClientInterface
          *                             call.
          */
         virtual Ptr<std::vector<Glib::ustring> >::Ref
-        browse(Ptr<SessionId>::Ref      sessionId,
-               Ptr<Glib::ustring>::Ref  metadata,
-               Ptr<SearchCriteria>::Ref searchCriteria) 
+        browse(Ptr<SessionId>::Ref                  sessionId,
+               Ptr<const Glib::ustring>::Ref        metadata,
+               Ptr<SearchCriteria>::Ref             searchCriteria) 
                                                 throw (XmlRpcException)
                                                                         = 0;
 

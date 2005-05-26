@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -2130,9 +2130,9 @@ WebStorageClient :: search(Ptr<SessionId>::Ref      sessionId,
  *  Browse for metadata values.
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Glib::ustring> >::Ref
-WebStorageClient :: browse(Ptr<SessionId>::Ref      sessionId,
-                           Ptr<Glib::ustring>::Ref  metadataType,
-                           Ptr<SearchCriteria>::Ref searchCriteria) 
+WebStorageClient :: browse(Ptr<SessionId>::Ref              sessionId,
+                           Ptr<const Glib::ustring>::Ref    metadataType,
+                           Ptr<SearchCriteria>::Ref         searchCriteria) 
                                                 throw (XmlRpcException)
 {
     XmlRpcValue     parameters;

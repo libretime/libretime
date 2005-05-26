@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,20 +62,17 @@ BrowseEntry :: BrowseEntry(
                                                         throw ()
           : LocalizedObject(bundle)
 {
-    browseItemOne   = Gtk::manage(new BrowseItem(
-                            gLiveSupport, 
-                            *getResourceUstring("genreMetadataDisplay"),
-                            bundle ));
-    browseItemTwo   = Gtk::manage(new BrowseItem(
-                            gLiveSupport, 
-                            *getResourceUstring("creatorMetadataDisplay"),
-                            bundle ));
-    browseItemThree = Gtk::manage(new BrowseItem(
-                            gLiveSupport, 
-                            *getResourceUstring("albumMetadataDisplay"),
-                            bundle ));
-    
-    
+    browseItemOne   = Gtk::manage(new BrowseItem(gLiveSupport, 
+                                                 bundle,
+                                                 4 /* Genre */));
+    browseItemTwo   = Gtk::manage(new BrowseItem(gLiveSupport, 
+                                                 bundle,
+                                                 1 /* Creator */));
+    browseItemThree = Gtk::manage(new BrowseItem(gLiveSupport, 
+                                                 bundle,
+                                                 2 /* Album */));
+    // TODO: change hard-coded indices to stuff read from config
+
     browseItemOne->signalSelectionChanged().connect(
         sigc::bind<BrowseItem*>(
             sigc::mem_fun(*browseItemTwo, &BrowseItem::onParentChangedShow),

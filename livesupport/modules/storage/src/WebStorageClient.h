@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -532,9 +532,9 @@ class WebStorageClient :
          *                             call.
          */
         virtual Ptr<std::vector<Glib::ustring> >::Ref
-        browse(Ptr<SessionId>::Ref      sessionId,
-               Ptr<Glib::ustring>::Ref  metadataType,
-               Ptr<SearchCriteria>::Ref searchCriteria) 
+        browse(Ptr<SessionId>::Ref              sessionId,
+               Ptr<const Glib::ustring>::Ref    metadataType,
+               Ptr<SearchCriteria>::Ref         searchCriteria) 
                                                 throw (XmlRpcException);
 
         /**

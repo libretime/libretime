@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.36 $
+ *  @version $Revision: 1.37 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -714,8 +714,8 @@ class GLiveSupport : public LocalizedConfigurable,
          *  @exception XmlRpcException passed on from Storage::browse()
          */
         Ptr<std::vector<Glib::ustring> >::Ref
-        browse(Ptr<Glib::ustring>::Ref      metadata,
-               Ptr<SearchCriteria>::Ref     criteria)
+        browse(Ptr<const Glib::ustring>::Ref        metadata,
+               Ptr<SearchCriteria>::Ref             criteria)
                                                 throw (XmlRpcException);
 
         /**

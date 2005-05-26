@@ -151,17 +151,6 @@ root:table
         creatorColumnLabel:string     { "Creator" }
         lengthColumnLabel:string      { "Length" }
         
-        genreMetadataDisplay:string       { "Genre" }
-        genreMetadataSearchKey:string     { "dc:type" }
-        creatorMetadataDisplay:string     { "Creator" }
-        creatorMetadataSearchKey:string   { "dc:creator" }
-        albumMetadataDisplay:string       { "Album" }
-        albumMetadataSearchKey:string     { "dc:source" }
-        titleMetadataDisplay:string       { "Title" }
-        titleMetadataSearchKey:string     { "dc:title" }
-        lengthMetadataDisplay:string      { "Length" }
-        lengthMetadataSearchKey:string    { "dcterms:extent" }
-        
         partialOperatorDisplay:string     { "contains" }
         partialOperatorSearchKey:string   { "partial" }
         prefixOperatorDisplay:string      { "starts with" }

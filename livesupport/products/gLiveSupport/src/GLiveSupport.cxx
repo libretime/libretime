@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.45 $
+    Version  : $Revision: 1.46 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1071,8 +1071,8 @@ GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
  *----------------------------------------------------------------------------*/
 Ptr<std::vector<Glib::ustring> >::Ref
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: browse(Ptr<Glib::ustring>::Ref      metadata,
-                       Ptr<SearchCriteria>::Ref     criteria)
+GLiveSupport :: browse(Ptr<const Glib::ustring>::Ref    metadata,
+                       Ptr<SearchCriteria>::Ref         criteria)
                                                 throw (XmlRpcException)
 {
     return storage->browse(sessionId, metadata, criteria);

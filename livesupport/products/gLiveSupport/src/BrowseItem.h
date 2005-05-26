@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseItem.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,7 +80,7 @@ using namespace LiveSupport::Widgets;
  *  this one.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class BrowseItem : public Gtk::VBox,
                    public LocalizedObject
@@ -95,19 +95,9 @@ class BrowseItem : public Gtk::VBox,
                                 MapVector;
 
         /**
-         *  The list of possible metadata field names.
-         */
-        Ptr<MapVector>::Ref     metadataTypes;
-    
-        /**
-         *  The list of possible comparison operators.
-         */
-        Ptr<MapVector>::Ref     operatorTypes;
-           
-        /**
          *  The metadata field.
          */
-        ComboBoxText *          metadataEntry;
+        MetadataComboBoxText *  metadataEntry;
         
         /**
          *  The selection field.
@@ -119,7 +109,7 @@ class BrowseItem : public Gtk::VBox,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.2 $
+         *  @version $Revision: 1.3 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -149,8 +139,7 @@ class BrowseItem : public Gtk::VBox,
         Glib::RefPtr<Gtk::ListStore>    treeModel;
 
         /**
-         *  This is pretty lame, but we store the localized version of the 
-         *  "--- all ---" string here.
+         *  The localized version of the "--- all ---" string.
          */
         Glib::ustring                   allString;
 
@@ -168,24 +157,6 @@ class BrowseItem : public Gtk::VBox,
          *  Default constructor.
          */
         BrowseItem(void)                               throw ();
-
-        /**
-         *  Read the localized metadata field names.
-         *
-         *  @exception std::invalid_argument if some keys are not found in
-         *                                   the resource bundle
-         */
-        void
-        readMetadataTypes(void)                 throw (std::invalid_argument);
-
-        /**
-         *  Read the localized comparison operator names.
-         *
-         *  @exception std::invalid_argument if some keys are not found in
-         *                                   the resource bundle
-         */
-        void
-        readOperatorTypes(void)                 throw (std::invalid_argument);
 
         /**
          *  Emit the "selection changed" signal.
@@ -210,14 +181,15 @@ class BrowseItem : public Gtk::VBox,
         /**
          *  Constructor with parent and localization parameter.
          *
-         *  @param isFirst  true if this is the first search condition
-         *                  (so it does not need a Close button)
-         *  @param bundle   the resource bundle for localization
+         *  @param gLiveSupport the main program object
+         *  @param bundle       the resource bundle for localization
+         *  @param defaultIndex the index of the metadata entry to display
+         *                      initially
          */
         BrowseItem(
             Ptr<LiveSupport::GLiveSupport::GLiveSupport>::Ref   gLiveSupport,
-            const Glib::ustring &                               metadata,
-            Ptr<ResourceBundle>::Ref                            bundle)
+            Ptr<ResourceBundle>::Ref                            bundle,
+            int                                                 defaultIndex)
                                                        throw ();
 
         /**
