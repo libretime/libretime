@@ -226,7 +226,7 @@
                       localizationKey = "lyrics"
         />
         <metadataType dcName          = "ls:orchestra"
-                      id3Tag          = "Orchestra or band" <!-- ??? -->
+                      id3Tag          = "Orchestra or band"
                       localizationKey = "orchestra_or_band"
         />
         <metadataType dcName          = "ls:conductor"
