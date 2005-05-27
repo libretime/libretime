@@ -192,41 +192,41 @@ hu:table
 
     metadataTypes:table
     {
-        title:string                { "Title" }
-        creator:string              { "Creator" }
-        album:string                { "Album" }
-        year:string                 { "Year" }
-        genre:string                { "Genre" }
-        description:string          { "Description" }
-        format:string               { "Format" }
-        length:string               { "Length" }
-        bpm:string                  { "BPM" }
-        rating:string               { "Rating" }
-        encoded_by:string           { "Encoded by" }
-        track_number:string         { "Track number" }
-        disc_number:string          { "Disc number" }
-        mood:string                 { "Mood" }
-        publishing_label:string     { "Publishing label" }
-        composer:string             { "Composer" }
-        bitrate:string              { "Bitrate" }
-        channels:string             { "Channels" }
-        sample_rate:string          { "Sample rate" }
-        encoding_software:string    { "Encoding software" }
-        checksum:string             { "Checksum" }
-        lyrics:string               { "Lyrics" }
-        orchestra_or_band:string    { "Orchestra or band" }
-        conductor:string            { "Conductor" }
-        lyricist:string             { "Lyricist" }
-        original_lyricist:string    { "Original lyricist" }
-        radio_station_name:string   { "Radio station name" }
-        audio_file_info_url:string  { "File info web page" }
-        artist_url:string           { "Artist web page" }
-        audio_source_url:string     { "Source web page" }
-        buy_cd_url:string           { "Buy CD web page" }
-        isrc_number:string          { "ISRC number" }
-        catalog_number:string       { "Catalog number" }
-        original_artist:string      { "Original artist" }
-        copyright:string            { "Copyright" }
+        title:string                { "Cím" }
+        creator:string              { "Előadó" }
+        album:string                { "Lemez" }
+        year:string                 { "Év" }
+        genre:string                { "Műfaj" }
+        description:string          { "Megjegyzés" }
+        format:string               { "Típus" }
+        length:string               { "Hossz" }
+        bpm:string                  { "Tempó (BPM)" }
+        rating:string               { "Értékelés" }
+        encoded_by:string           { "Rögzítő neve" }
+        track_number:string         { "Hányadik szám" }
+        disc_number:string          { "Hányadik lemez" }
+        mood:string                 { "Hangulat" }
+        publishing_label:string     { "Kiadó" }
+        composer:string             { "Zeneszerző" }
+        bitrate:string              { "Bitek száma mp-ként" }
+        channels:string             { "Csatornák száma" }
+        sample_rate:string          { "Mintavételi gyakoriság" }
+        encoding_software:string    { "Rögzítő szoftver" }
+        checksum:string             { "Ellenőrző összeg" }
+        lyrics:string               { "Dalszöveg" }
+        orchestra_or_band:string    { "Zenekar vagy együttes" }
+        conductor:string            { "Karmester" }
+        lyricist:string             { "Szövegíró" }
+        original_lyricist:string    { "Eredeti szövegíró" }
+        radio_station_name:string   { "Rádióadó" }
+        audio_file_info_url:string  { "Zeneszám honlapja" }
+        artist_url:string           { "Előadó honlapja" }
+        audio_source_url:string     { "Forrás honlapja" }
+        buy_cd_url:string           { "CD-bolt honlapja" }
+        isrc_number:string          { "ISRC-szám" }
+        catalog_number:string       { "Katalógusszám" }
+        original_artist:string      { "Eredeti előadó" }
+        copyright:string            { "Szerzői jog tulajdonosa" }
     }
 }
 
