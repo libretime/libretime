@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,10 +64,10 @@ AdvancedSearchEntry :: AdvancedSearchEntry(
           : LocalizedObject(bundle),
             metadataTypes(metadataTypes)
 {
-    AdvancedSearchItem *    searchOptionsBox = Gtk::manage(new 
-                                    AdvancedSearchItem(true, 
-                                                       metadataTypes,
-                                                       getBundle() ));
+    AdvancedSearchItem * searchOptionsBox = Gtk::manage(new AdvancedSearchItem(
+                                                                true, 
+                                                                metadataTypes,
+                                                                getBundle() ));
     pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
 
     searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 

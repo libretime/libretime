@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -165,7 +165,7 @@ SearchWindow :: constructAdvancedSearchView(void)               throw ()
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
 
-    // the three main components of the window    
+    // the three main components of the window
     advancedSearchEntry = Gtk::manage(new AdvancedSearchEntry(
                                     gLiveSupport->getMetadataTypeContainer(),
                                     getBundle() ));
