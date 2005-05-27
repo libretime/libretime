@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.46 $
+    Version  : $Revision: 1.47 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -391,7 +391,7 @@ GLiveSupport :: changeLanguage(Ptr<const std::string>::Ref  locale)
 {
     changeLocale(*locale);
 
-    metadataTypeContainer->setBundle(getBundle());
+    metadataTypeContainer->setBundle(getBundle("metadataTypes"));
 
     if (masterPanel.get()) {
         masterPanel->changeLanguage(getBundle());
