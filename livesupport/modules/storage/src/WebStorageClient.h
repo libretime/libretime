@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -346,15 +346,13 @@ class WebStorageClient :
          *  The <code>uri</code> field of the playlist is erased (set to
          *  a null pointer).
          *
-         *  @param sessionId the session ID from the authentication client
          *  @param playlist the playlist to release.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                             call or the playlist has no uri field,
          *                             or the file does not exist, etc.
          */
         virtual void
-        releasePlaylist(Ptr<SessionId>::Ref  sessionId,
-                        Ptr<Playlist>::Ref   playlist) const
+        releasePlaylist(Ptr<Playlist>::Ref   playlist) const
                                             throw (XmlRpcException);
 
         /**
@@ -466,15 +464,13 @@ class WebStorageClient :
          *  accessible, and the <code>uri</code> and <code>token</code> fields
          *  of the audioClip are erased (set to null pointers).
          *
-         *  @param sessionId the session ID from the authentication client
          *  @param audioClip the id of the audio clip to release.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
          *                  call or  the audio clip has no uri field, 
          *                  or the file does not exist, etc. 
          */
         virtual void
-        releaseAudioClip(Ptr<SessionId>::Ref sessionId,
-                         Ptr<AudioClip>::Ref audioClip) const
+        releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                                 throw (XmlRpcException);
 
         /**

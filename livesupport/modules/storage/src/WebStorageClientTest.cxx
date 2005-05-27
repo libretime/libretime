@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.42 $
+    Version  : $Revision: 1.43 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -350,7 +350,7 @@ WebStorageClientTest :: playlistTest(void)
     ifs.close();
 
     try {
-        wsc->releasePlaylist(sessionId, newPlaylist);
+        wsc->releasePlaylist(newPlaylist);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -488,7 +488,7 @@ WebStorageClientTest :: audioClipTest(void)
 //  sleep(30);
 
     try {
-        wsc->releaseAudioClip(sessionId, newAudioClip);
+        wsc->releaseAudioClip(newAudioClip);
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }

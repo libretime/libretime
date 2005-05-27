@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -593,11 +593,6 @@ static const std::string    acquireAudioClipTokenParamName = "token";
  *----------------------------------------------------------------------------*/
 static const std::string    releaseAudioClipMethodName 
                             = "locstor.releaseRawAudioData";
-
-/*------------------------------------------------------------------------------
- *  The name of the session ID parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    releaseAudioClipSessionIdParamName = "sessid";
 
 /*------------------------------------------------------------------------------
  *  The name of the token parameter in the input structure
@@ -1286,8 +1281,7 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
-                                    Ptr<Playlist>::Ref  playlist) const
+WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
                                                 throw (Core::XmlRpcException)
 {
     if (! playlist->getUri()) {
@@ -1309,7 +1303,7 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         if (plElement->getType() == PlaylistElement::AudioClipType) {
             try {
-                releaseAudioClip(sessionId, it->second->getAudioClip());
+                releaseAudioClip(it->second->getAudioClip());
             }
             catch (XmlRpcException &e) {
                 eMsg += e.what();
@@ -1318,7 +1312,7 @@ WebStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
             ++it;
         } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             try {
-                releasePlaylist(sessionId, it->second->getPlaylist());
+                releasePlaylist(it->second->getPlaylist());
             }
             catch (XmlRpcException &e) {
                 eMsg += e.what();
@@ -1809,8 +1803,7 @@ WebStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
-                                     Ptr<AudioClip>::Ref audioClip) const
+WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                                 throw (Core::XmlRpcException)
 {
     XmlRpcValue     parameters;
@@ -1820,8 +1813,6 @@ WebStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
                               storageServerPath.c_str(), false);
 
     parameters.clear();
-    parameters[releaseAudioClipSessionIdParamName] 
-            = sessionId->getId();
     parameters[releaseAudioClipTokenParamName] 
             = *audioClip->getToken();
     

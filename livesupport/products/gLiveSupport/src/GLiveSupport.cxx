@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.47 $
+    Version  : $Revision: 1.48 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -425,6 +425,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: logout(void)                                throw ()
 {
     if (sessionId.get() != 0) {
+        stopCueAudio();
         storeScratchpadContents();
         scratchpadContents->clear();
         authentication->logout(sessionId);
@@ -657,7 +658,7 @@ GLiveSupport :: releaseEditedPlaylist(void)
 {
     if (editedPlaylist.get()) {
         if (editedPlaylist->isLocked()) {
-            storage->releasePlaylist(sessionId, editedPlaylist);
+            storage->releasePlaylist(editedPlaylist);
         }
         editedPlaylist.reset();
     }
@@ -871,12 +872,12 @@ GLiveSupport :: releaseOutputAudio(void)
         try {
             switch (outputItemPlayingNow->getType()) {
                 case Playable::AudioClipType:
-                    storage->releaseAudioClip(sessionId, 
+                    storage->releaseAudioClip(
                                         outputItemPlayingNow->getAudioClip());
                     outputItemPlayingNow.reset();
                     break;
                 case Playable::PlaylistType:
-                    storage->releasePlaylist(sessionId, 
+                    storage->releasePlaylist(
                                         outputItemPlayingNow->getPlaylist());
                     outputItemPlayingNow.reset();
                     break;
@@ -990,13 +991,11 @@ GLiveSupport :: releaseCueAudio(void)
         try {
             switch (cueItemPlayingNow->getType()) {
                 case Playable::AudioClipType:
-                    storage->releaseAudioClip(sessionId, 
-                                              cueItemPlayingNow->getAudioClip());
+                    storage->releaseAudioClip(cueItemPlayingNow->getAudioClip());
                     cueItemPlayingNow.reset();
                     break;
                 case Playable::PlaylistType:
-                    storage->releasePlaylist(sessionId, 
-                                             cueItemPlayingNow->getPlaylist());
+                    storage->releasePlaylist(cueItemPlayingNow->getPlaylist());
                     cueItemPlayingNow.reset();
                     break;
                 default:    // this never happens

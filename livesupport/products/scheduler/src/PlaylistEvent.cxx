@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEvent.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,7 +117,7 @@ PlaylistEvent :: deInitialize(void)                throw ()
     }
 
     try {
-        storage->releasePlaylist(sessionId, playlist);
+        storage->releasePlaylist(playlist);
     } catch (XmlRpcException &e) {
         std::cerr << e.what() << std::endl;
         // TODO: handle error?

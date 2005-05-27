@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.26 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -343,7 +343,7 @@ TestStorageClientTest :: acquireAudioClipTest(void)
     CPPUNIT_ASSERT(*(audioClip->getUri()) == audioClipUri);
     
     try {
-        tsc->releaseAudioClip(dummySessionId, audioClip);
+        tsc->releaseAudioClip(audioClip);
     } catch (XmlRpcException &e) {
         std::string     eMsg = "could not release audio clip:\n";
         eMsg += e.what();
@@ -388,7 +388,7 @@ TestStorageClientTest :: acquirePlaylistTest(void)
 
     string  savedTempFilePath = playlist->getUri()->substr(7);
     try {
-        tsc->releasePlaylist(dummySessionId, playlist);
+        tsc->releasePlaylist(playlist);
     } catch (XmlRpcException &e) {
         std::string     eMsg = "could not release playlist:\n";
         eMsg += e.what();

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.37 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -487,14 +487,9 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
  *  Release a playlist.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
-                                     Ptr<Playlist>::Ref  playlist) const
+TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
                                                 throw (XmlRpcException)
 {
-    if (!sessionId) {
-        throw XmlRpcException("missing session ID argument");
-    }
-
     if (! playlist->getUri()) {
         throw XmlRpcInvalidArgumentException("playlist URI not found");
     }
@@ -514,7 +509,7 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
         Ptr<PlaylistElement>::Ref   plElement = it->second;
         if (plElement->getType() == PlaylistElement::AudioClipType) {
             try {
-                releaseAudioClip(sessionId, it->second->getAudioClip());
+                releaseAudioClip(it->second->getAudioClip());
             }
             catch (XmlRpcException &e) {
                 eMsg += e.what();
@@ -523,7 +518,7 @@ TestStorageClient :: releasePlaylist(Ptr<SessionId>::Ref sessionId,
             ++it;
         } else if (plElement->getType() == PlaylistElement::PlaylistType) {
             try {
-                releasePlaylist(sessionId, it->second->getPlaylist());
+                releasePlaylist(it->second->getPlaylist());
             }
             catch (XmlRpcException &e) {
                 eMsg += e.what();
@@ -680,14 +675,9 @@ TestStorageClient :: acquireAudioClip(Ptr<SessionId>::Ref sessionId,
  *  Release an audio clip.
  *----------------------------------------------------------------------------*/
 void
-TestStorageClient :: releaseAudioClip(Ptr<SessionId>::Ref sessionId,
-                                      Ptr<AudioClip>::Ref audioClip) const
+TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
                                                 throw (XmlRpcException)
 {
-    if (!sessionId) {
-        throw XmlRpcException("missing session ID argument");
-    }
-
     if (!audioClip->getUri()) {
         throw XmlRpcException("audio clip does not have a URI field");
     }
