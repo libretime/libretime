@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallScheduler.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -396,6 +396,19 @@ cat $install_etc/scheduler.xml.template \
     | sed -e "$replace_sed_string" \
     > $install_etc/scheduler.xml
 
+
+#-------------------------------------------------------------------------------
+#  Setup working directories
+#-------------------------------------------------------------------------------
+echo "Setting up working directories..."
+
+mkdir -p $install_var/storageServer/var/stor/buffer
+mkdir -p $install_var/storageServer/var/access
+mkdir -p $install_var/storageServer/var/trans
+
+mkdir -p $install_var/archiveServer/var/stor/buffer
+mkdir -p $install_var/archiveServer/var/access
+mkdir -p $install_var/archiveServer/var/trans
 
 #-------------------------------------------------------------------------------
 #  Setup directory permissions
