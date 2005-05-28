@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,7 @@
 #include "configure.h"
 #endif
 
-#include <gtkmm/treemodel.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/label.h>
 #include <gtkmm/table.h>
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  3) connected with a TreeModelColumn using set_renderer(). 
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class ZebraTreeView : public Gtk::TreeView
 {
@@ -209,6 +209,34 @@ class ZebraTreeView : public Gtk::TreeView
                      int                    minimumWidth = 0)
                                                                 throw ();
 
+        /**
+         *  Signal handler for the "up" menu option selected from
+         *  the context menu.
+         */
+        void
+        onUpMenuOption(void)                                    throw ();
+
+        /**
+         *  Signal handler for the "down" menu option selected from
+         *  the context menu.
+         */
+        void
+        onDownMenuOption(void)                                  throw ();
+
+        /**
+         *  Signal handler for the "remove" menu option selected from
+         *  the context menu.
+         */
+        void
+        onRemoveMenuOption(void)                                throw ();
+
+        /**
+         *  Remove an item from the window.
+         *
+         *  @param  iter    points to the row to be removed
+         */
+        void
+        removeItem(const Gtk::TreeModel::iterator &   iter)     throw ();
 };
 
 

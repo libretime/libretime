@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,16 +148,16 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                         &CuePlayer::onPlayItem)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("upMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onUpMenuOption)));
+                                  sigc::mem_fun(*treeView,
+                                        &ZebraTreeView::onUpMenuOption)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("downMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onDownMenuOption)));
+                                  sigc::mem_fun(*treeView,
+                                        &ZebraTreeView::onDownMenuOption)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("removeMenuItem"),
-                                  sigc::mem_fun(*this,
-                                        &LiveModeWindow::onRemoveMenuOption)));
+                                  sigc::mem_fun(*treeView,
+                                        &ZebraTreeView::onRemoveMenuOption)));
         contextMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                  *getResourceUstring("playMenuItem"),
                                   sigc::mem_fun(*this,
@@ -255,7 +255,7 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
         Ptr<Playable>::Ref  playable = (*iter)[modelColumns.playableColumn];
         gLiveSupport->playOutputAudio(playable);
         gLiveSupport->setNowPlaying(playable);
-        removeItem(iter);
+        treeView->removeItem(iter);
     }
 }
 
@@ -289,87 +289,5 @@ LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
             contextMenu->popup(event->button, event->time);
         }
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Up menu item selected from the entry conext menu
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onUpMenuOption(void)                              throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
-
-    if (iter && iter != treeModel->children().begin()) {
-        Gtk::TreeModel::iterator    previous = iter;
-        --previous;
-        
-        int     rowNumber = (*previous)[modelColumns.rowNumberColumn];
-        (*iter)    [modelColumns.rowNumberColumn] = rowNumber;
-        (*previous)[modelColumns.rowNumberColumn] = ++rowNumber;
-        
-        treeModel->iter_swap(previous, iter);
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Down menu item selected from the entry conext menu
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onDownMenuOption(void)                            throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
-
-    if (iter) {
-        Gtk::TreeModel::iterator    next = iter;
-        ++next;
-        if (next != treeModel->children().end()) {
-        
-            int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
-            (*next)[modelColumns.rowNumberColumn] = rowNumber;
-            (*iter)[modelColumns.rowNumberColumn] = ++rowNumber;
-
-            treeModel->iter_swap(iter, next);
-        }
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Remove menu item selected from the entry conext menu
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: onRemoveMenuOption(void)                          throw ()
-{
-    Glib::RefPtr<Gtk::TreeView::Selection> refSelection =
-                                                    treeView->get_selection();
-    Gtk::TreeModel::iterator        iter = refSelection->get_selected();
-
-    if (iter) {
-        removeItem(iter);
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Remove an item from the window.
- *----------------------------------------------------------------------------*/
-void
-LiveModeWindow :: removeItem(const Gtk::TreeModel::iterator &   iter)
-                                                                    throw ()
-{
-    Gtk::TreeModel::iterator    later = iter;
-
-    int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
-    for (++later; later != treeModel->children().end(); ++later) {
-        (*later)[modelColumns.rowNumberColumn] = rowNumber++;
-    }
-    
-    treeModel->erase(iter);
 }
 

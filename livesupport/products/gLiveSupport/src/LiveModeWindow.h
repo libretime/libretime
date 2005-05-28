@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -87,7 +87,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.12 $
+         *  @version $Revision: 1.13 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -165,35 +165,6 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
         void
         onEntryClicked(GdkEventButton     * event)              throw ();
 
-        /**
-         *  Signal handler for the "up" menu option selected from
-         *  the context menu.
-         */
-        void
-        onUpMenuOption(void)                                    throw ();
-
-        /**
-         *  Signal handler for the "down" menu option selected from
-         *  the context menu.
-         */
-        void
-        onDownMenuOption(void)                                  throw ();
-
-        /**
-         *  Signal handler for the "remove" menu option selected from
-         *  the context menu.
-         */
-        virtual void
-        onRemoveMenuOption(void)                                throw ();
-
-        /**
-         *  Remove an item from the window.
-         *
-         *  @param  iter    points to the row to be removed
-         */
-        void
-        removeItem(const Gtk::TreeModel::iterator &   iter)     throw ();
-        
         /**
          *  Signal handler for the "rows reordered" event.
          */

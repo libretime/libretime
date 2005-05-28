@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -267,3 +267,90 @@ ZebraTreeView :: lineNumberCellDataFunction(
 }
 
 
+/*------------------------------------------------------------------------------
+ *  Event handler for the Up menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onUpMenuOption(void)                               throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
+    Gtk::TreeModel::iterator                iter = selection->get_selected();
+    Glib::RefPtr<Gtk::ListStore>            treeModel
+                    = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
+    ZebraTreeModelColumnRecord              modelColumns;
+
+    if (iter && iter != treeModel->children().begin()) {
+        Gtk::TreeModel::iterator    previous = iter;
+        --previous;
+        
+        int     rowNumber = (*previous)[modelColumns.rowNumberColumn];
+        (*iter)    [modelColumns.rowNumberColumn] = rowNumber;
+        (*previous)[modelColumns.rowNumberColumn] = ++rowNumber;
+        
+        treeModel->iter_swap(previous, iter);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Down menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onDownMenuOption(void)                             throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
+    Gtk::TreeModel::iterator                iter = selection->get_selected();
+    Glib::RefPtr<Gtk::ListStore>            treeModel
+                    = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
+    ZebraTreeModelColumnRecord              modelColumns;
+
+    if (iter) {
+        Gtk::TreeModel::iterator    next = iter;
+        ++next;
+        if (next != treeModel->children().end()) {
+        
+            int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
+            (*next)[modelColumns.rowNumberColumn] = rowNumber;
+            (*iter)[modelColumns.rowNumberColumn] = ++rowNumber;
+
+            treeModel->iter_swap(iter, next);
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu item selected from the entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: onRemoveMenuOption(void)                           throw ()
+{
+    Glib::RefPtr<Gtk::TreeView::Selection>  selection = get_selection();
+    Gtk::TreeModel::iterator                iter = selection->get_selected();
+
+    if (iter) {
+        removeItem(iter);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Remove an item from the window.
+ *----------------------------------------------------------------------------*/
+void
+ZebraTreeView :: removeItem(const Gtk::TreeModel::iterator &   iter)
+                                                                    throw ()
+{
+    Glib::RefPtr<Gtk::ListStore>            treeModel
+                    = Glib::RefPtr<Gtk::ListStore>::cast_dynamic(get_model());
+    ZebraTreeModelColumnRecord              modelColumns;
+
+    Gtk::TreeModel::iterator    later = iter;
+
+    int     rowNumber = (*iter)[modelColumns.rowNumberColumn];
+    for (++later; later != treeModel->children().end(); ++later) {
+        (*later)[modelColumns.rowNumberColumn] = rowNumber++;
+    }
+    
+    treeModel->erase(iter);
+}
