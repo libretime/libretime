@@ -156,7 +156,7 @@
                       localizationKey = "genre"
         />
         <metadataType dcName          = "dc:format"
-                      localizationKey = "file_format"
+                      localizationKey = "format"
         />
         <metadataType dcName          = "dcterms:extent"
                       localizationKey = "length"
