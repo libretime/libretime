@@ -4,6 +4,7 @@
 function SearchForm_displayRow(row)
 {
     document.getElementById('searchRow_' + row).style.display = 'inline';
+    document.forms['search'].elements['row_' + Number(row) + '[active]'].value = 1
 }
 
 function SearchForm_addRow()
@@ -25,6 +26,7 @@ function SearchForm_hideRow(row)
     document.forms['search'].elements['row_' + Number(row) + '[0]'].options[0].selected = true;
     document.forms['search'].elements['row_' + Number(row) + '[1]'].options[0].selected = true;
     document.forms['search'].elements['row_' + Number(row) + '[2]'].value = '';
+    document.forms['search'].elements['row_' + Number(row) + '[active]'].value = 0
 }
 
 function SearchForm_dropRow(row)

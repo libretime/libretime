@@ -47,7 +47,7 @@
             <div class="whatplaying">
                 {if $_nowplaying}
                     <div class="nowplaying">Now Playing: {$_nowplaying.title}</div>
-                    <div class="scala">      
+                    <div class="scala">
                         <div class="scala_in" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
                     </div>
                     <div class="time">
@@ -65,45 +65,5 @@
         <!-- end header right -->
     <!-- end header -->
 
-{assign var='_nowplaying'  value=NULL}
-{assign var='_nextplaying' value=NULL}
-
-
-{*
-<!-- old template -->
-<div id="statusbar">
-
-    <div class="statusbaritem">
-        server time
-        <br>
-        <span id=servertime style="position:relative;"></span>
-    </div>
-
-    <div class="statusbaritem">
-        local  time
-        <br>
-        <span id=localtime style="position:relative;"></span>
-    </div>
-
-    <div class="statusbaritem">
-        <img src="{$STATIONPREFS.stationLogoPath}" width="30" height="50">
-    </div>
-
-    <div class="statusbaritem">
-        {$STATIONPREFS.stationName}
-        <br>
-        {$STATIONPREFS.frequency}
-    </div>
-
-    <div class="statusbaritem">
-        {$SCHEDULER->getNowNextClip()}
-        <br>
-        {$STATIONPREFS.frequency}
-    </div>
-
-    <div class="statusbaritem">
-        {include file="userinfo.tpl"}
-    </div>
-
-</div>
-*}
+{assign var='_nowplaying'  value=null}
+{assign var='_nextplaying' value=null}

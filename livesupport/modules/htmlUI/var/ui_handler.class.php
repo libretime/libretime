@@ -65,7 +65,7 @@ class uiHandler extends uiBase {
         }
         $this->sessid = $sessid;
         $this->langid = $formdata['langid'];
-        $this->redirUrl = UI_BROWSER.'?popup[]=_clear_parent&popup[]=_close';
+        $this->redirUrl = UI_BROWSER.'?popup[]=_2SCHEDULER&popup[]=_close';
         return TRUE;
      }
 

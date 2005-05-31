@@ -43,18 +43,33 @@ class uiSearch
                 }
             };
         };
+
         for($n = 1; $n <= UI_SEARCH_MAX_ROWS; $n++) {
             unset ($group);
+
+            if ($n > 1 && $n > $this->criteria['counter'])
+                 $activerow = FALSE;
+            else $activerow = TRUE;
+
             $form->addElement('static', 's1', NULL, "<div id='searchRow_$n'>");
-            if ($n > 1 && $n > $this->criteria['counter']) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {display:none; height : 0px;}</style>");
+
+            if ($activerow===FALSE) $form->addElement('static', 's1_style', NULL, "<style type='text/css'>#searchRow_$n {display:none; height:0px}</style>");
+
             $sel = &$form->createElement('hierselect', "row_$n", NULL);
             $sel->setOptions(array($col1, $col2));
             $group[] = &$sel;
             $group[] = &$form->createElement('text', "row_$n".'[2]', NULL);
-            $group[] = &$form->createElement('button', "dropRow_$n", 'Drop', array('onClick' => "SearchForm_dropRow('$n')", 'class' => UI_BUTTON_STYLE));
+
+            if ($activerow) $group[] = &$form->createElement('hidden', "row_$n".'[active]', TRUE);
+            else            $group[] = &$form->createElement('hidden', "row_$n".'[active]', FALSE);
+
+            if ($n === 1)   $group[] = &$form->createElement('button', "addRow", tra('+'), array('onClick' => "SearchForm_addRow('$n')", 'class' => UI_BUTTON_STYLE));
+            else            $group[] = &$form->createElement('button', "dropRow_$n", tra('-'), array('onClick' => "SearchForm_dropRow('$n')", 'class' => UI_BUTTON_STYLE));
+
             $form->addGroup($group);
             $form->addElement('static', 's2', NULL, "</div id='searchRow_$n'>");
         }
+
         $this->Base->_parseArr2Form($form, $mask2['search']);
         $form->setConstants($this->criteria['form']);
         $form->validate();
@@ -68,6 +83,8 @@ class uiSearch
 
     function newSearch(&$formdata)
     {
+        #print_r($formdata);
+
         $this->results                  = NULL;
         $this->criteria['conditions']   = NULL;
         $this->criteria['offset']       = NULL;
@@ -83,7 +100,7 @@ class uiSearch
         $this->criteria['form']['limit']    = $formdata['limit'];
 
         foreach ($formdata as $key=>$val) {
-            if (is_array($val) && strlen($val[2])) {
+            if (is_array($val) && $val['active']) {
                 $this->criteria['counter']++;
                 $this->criteria['conditions'][$key] = array('cat' => $this->Base->_formElementDecode($val[0]),
                                                             'op'  => $val[1],
@@ -132,7 +149,7 @@ class uiSearch
                                                       'op'      => constant('UI_SIMPLESEARCH_OP'.$n),
                                                       'val'     => stripslashes($formdata['criterium'])
                                                );
-            $this->criteria['form']['row_'.$n]       = array(0     => $this->Base->_formElementEncode(constant('UI_SIMPLESEARCH_CAT'.$n)),
+            $this->criteria['form']['row_'.$n]= array(0     => $this->Base->_formElementEncode(constant('UI_SIMPLESEARCH_CAT'.$n)),
                                                       1     => constant('UI_SIMPLESEARCH_OP'.$n),
                                                       2     => stripslashes($formdata['criterium'])
                                                );

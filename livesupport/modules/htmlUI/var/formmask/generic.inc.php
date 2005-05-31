@@ -419,11 +419,11 @@ $ui_fmask = array(
             'groupit'   => TRUE,
         ),
         array(
-            'element'   => 'addrow',
-            'type'      => 'button',
-            'label'     => 'Add Criteria',
-            'attributes'  => array('class' => 'button_wide', 'onClick' => 'SearchForm_addRow()'),
-            'groupit'   => TRUE,
+            'element'   => 'spacer',
+            'type'      => 'static',
+            'text'      => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
         ),
         array(
             'element'   => 'submit',
@@ -432,7 +432,7 @@ $ui_fmask = array(
             'groupit'   => TRUE,
             'attributes'  => array('class' => 'button_wide')
         ),
-        array('group'   => array('clear', 'addrow', 'submit')
+        array('group'   => array('clear', 'spacer', 'submit')
         ),
     ),
 

@@ -72,9 +72,10 @@ function S_htmlspecialchars($param)
  *
  *  @param void array, array of strings to be outputted translated
  */
-function S_tra($param)
-{
+function S_tra($in)
+{       
     global $uiBrowser;
+    foreach($in as $val) $param[] = $val;
 
     echo tra($param[0], $param[1], $param[2], $param[3], $param[4], $param[5], $param[6], $param[7], $param[8], $param[9]);
 }

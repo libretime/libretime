@@ -31,6 +31,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/_redirector.tpl');
             break;
 
+            case "_2SCHEDULER":
+                $Smarty->assign('target', 'SCHEDULER');
+                $Smarty->display('popup/_redirector.tpl');
+            break;
+
             case "login":
                 $Smarty->assign('dynform', $uiBrowser->login($ui_fmask));
                 $Smarty->display('popup/login.tpl');

@@ -1,7 +1,11 @@
 <!-- start playlist editor -->
     <div class="container_elements" style="width: 607px;">
 
-                <h1>##Playlist Editor##: <a href="{$UI_BROWSER}?act=PL.editMetaData" style="color: #666666">{$PL->title}</a></h1>
+                <div style="width: 574px;">
+                    <div style="float: left;"><h1>##Playlist Editor## </h1></div>
+                    <div style="float: right;"><h1><a href="{$UI_BROWSER}?act=PL.editMetaData" style="color: #666666">{$PL->title} &nbsp; {getHour time=$PL->duration}##h##&nbsp;{getMinute time=$PL->duration}##m##&nbsp;{getSecond time=$PL->duration}##s##</a></h1></div>
+                </div>
+
                 <div class="head" style="width: 574px;">
                     <div class="left">&nbsp;</div>
                     <div class="right">&nbsp;</div>

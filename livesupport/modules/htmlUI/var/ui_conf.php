@@ -6,6 +6,7 @@ define('UI_ERROR',   TRUE);
 define('UI_DEFAULT_LANGID', 'en_GB');
 #define('UI_TIMEZONE', ' +100');
 define('UI_TIMEZONEOFFSET', date('Z'));
+  
 
 ## Basic scripts
 define('UI_HANDLER', 'ui_handler.php');
@@ -70,6 +71,7 @@ define('UI_BROWSE_DEFAULT_LIMIT',       10);
 
 ## Scheduler / Calendar
 define('UI_SCHEDULER_FIRSTWEEKDAY',     1);
+define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
 define('UI_SCHEDULER_PAUSE_PL2PL',      '5 seconds');
 
 ## File types

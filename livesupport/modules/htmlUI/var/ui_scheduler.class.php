@@ -9,7 +9,7 @@ class uiScheduler extends uiCalendar
         $this->scheduleNext   =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
 
         if (!is_array($this->curr)) {
-            $this->curr['view']      = 'month';
+            $this->curr['view']      = UI_SCHEDULER_DEFAULT_VIEW;
             $this->curr['year']      = strftime("%Y");
             $this->curr['month']     = strftime("%m");
             $this->curr['week']      = strftime("%V");
@@ -103,7 +103,7 @@ class uiScheduler extends uiCalendar
 
         ## search for previous entry
         if (count($week[$this->scheduleAt['day']]) >= 1) {
-            foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) { 
+            foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
                 if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
                     $prev = TRUE;
                     list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second'])
@@ -370,14 +370,15 @@ class uiScheduler extends uiCalendar
         $datetime    = strftime('%Y-%m-%dT%H:%M:%S');
         $xmldatetime = str_replace('-', '', $datetime);
         $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
-        if(!is_array($pl) || !count($pl))
-            return FALSE;
+
+        if(!is_array($pl) || !count($pl)) return FALSE;
 
         $pl = current($pl);
-        $offset = strftime('%H:%M:%S', $this->_strtotime($datetime) - $this->_datetime2timestamp($pl['start']) - UI_TIMEZONEOFFSET);
+        $offset = strftime('%H:%M:%S', time() - $this->_datetime2timestamp($pl['start']) - 3600);   ##  subtract 3600 sec. becausefor some reason strftime('%H:%M:%S', 0) is 01:00:00
         $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);
-        if(!$clip['gunid'])
-            return FALSE;
+
+        if (!$clip['gunid']) return FALSE;
+
         return array(
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE),
                 'duration'  => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION),

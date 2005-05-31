@@ -39,4 +39,4 @@ onClick="return contextmenu('{$i.id}'
     {$moreContextAfter}
 )"
 
-{assign var="_PL_activeId" value=NULL}
+{assign var="_PL_activeId" value=null}
