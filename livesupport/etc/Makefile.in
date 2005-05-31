@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.5 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -84,6 +84,8 @@ GTK_DIR           = ${TOOLS_DIR}/gtk+
 GTK_VERSION       = gtk+-2.6.1
 GTKMM_DIR         = ${TOOLS_DIR}/gtkmm
 GTKMM_VERSION     = gtkmm-2.5.5
+GSTREAMER_DIR     = ${TOOLS_DIR}/gstreamer
+GSTREAMER_VERSION = gstreamer-0.8.10
 ICU_DIR           = ${TOOLS_DIR}/icu
 ICU_VERSION       = icu-3.0
 CURL_DIR          = ${TOOLS_DIR}/curl
@@ -177,6 +179,7 @@ ${TMP_DIR}/tools_setup.stamp:
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
 	${GTK_DIR}/${GTK_VERSION}/bin/install.sh
 	${GTKMM_DIR}/${GTKMM_VERSION}/bin/install.sh
+	${GSTREAMER_DIR}/${GSTREAMER_VERSION}/bin/install.sh
 	${LIBXMLXX_DIR}/${LIBXMLXX_VERSION}/bin/install.sh
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh

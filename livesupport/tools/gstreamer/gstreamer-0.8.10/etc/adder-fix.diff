@@ -1,0 +1,25 @@
+--- gst-plugins-0.8.9/gst/adder/gstadder.c	2005-05-25 13:30:00.000000000 +0200
++++ gst-plugins-0.8.9-livesupport/gst/adder/gstadder.c	2005-05-27 15:12:38.000000000 +0200
+@@ -151,21 +151,7 @@
+ 
+     if (otherpad != pad) {
+       ret = gst_pad_try_set_caps (otherpad, caps);
+-      if (GST_PAD_LINK_FAILED (ret)) {
+-        return ret;
+-      }
+-    }
+-    pads = g_list_next (pads);
+-  }
+-
+-
+-  pads = gst_element_get_pad_list (GST_ELEMENT (adder));
+-  while (pads) {
+-    GstPad *otherpad = GST_PAD (pads->data);
+-
+-    if (otherpad != pad) {
+-      ret = gst_pad_try_set_caps (otherpad, caps);
+-      if (GST_PAD_LINK_FAILED (ret)) {
++      if (ret == GST_PAD_LINK_REFUSED) {
+         return ret;
+       }
+     }
