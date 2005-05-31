@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -135,7 +135,8 @@ PLAYLIST_EXECUTOR_LIB_OBJS = ${TMP_DIR}/HelixPlayer.o \
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/GstreamerPlayerTest.o \
                    ${TMP_DIR}/HelixPlayerTest.o \
-                   ${TMP_DIR}/AudioPlayerFactoryTest.o 
+                   ${TMP_DIR}/AudioPlayerFactoryTest.o \
+                   ${TMP_DIR}/AudioPlayerFactoryGstreamerTest.o 
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
                    ${HELIX_LIBS} ${TAGLIB_LIBS} \
                    -lcppunit -ldl -lm -lxmlrpc++

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "HelixPlayer.h"
+#include "GstreamerPlayer.h"
 
 
 using namespace LiveSupport::Core;
@@ -92,20 +93,32 @@ AudioPlayerFactory :: configure(const xmlpp::Element & element)
 
     audioPlayer.reset();
 
+    xmlpp::Node::NodeList   nodes;
+
     // try to look for a HelixPlayer configuration element
-    xmlpp::Node::NodeList   nodes = element.get_children(
-                                        HelixPlayer::getConfigElementName());
+    nodes = element.get_children(HelixPlayer::getConfigElementName());
     if (nodes.size() >= 1) {
         const xmlpp::Element  * configElement =
                          dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
         Ptr<HelixPlayer>::Ref   hp(new HelixPlayer());
         hp->configure(*configElement);
         audioPlayer = hp;
+
+        return;
     }
 
-    if (!audioPlayer) {
-        throw std::invalid_argument("no audio player factories to configure");
+    nodes = element.get_children(GstreamerPlayer::getConfigElementName());
+    if (nodes.size() >= 1) {
+        const xmlpp::Element  * configElement =
+                         dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
+        Ptr<GstreamerPlayer>::Ref   gp(new GstreamerPlayer());
+        gp->configure(*configElement);
+        audioPlayer = gp;
+
+        return;
     }
+
+    throw std::invalid_argument("no audio player factories to configure");
 }
 
 

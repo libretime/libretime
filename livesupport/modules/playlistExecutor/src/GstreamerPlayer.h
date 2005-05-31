@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,39 +72,21 @@ using namespace LiveSupport::Core;
  *  This class can be configured with the following XML element.
  *
  *  <pre><code>
- *  <helixPlayer dllPath     = "../../usr/lib/helix"
- *               audioDevice = "/dev/sound/dsp"
- *  />
- *  <pre><code>
+ *  <gstreamerPlayer    audioDevice = "plughw:0,0" />
+ *  </code></pre>
  *
- *  where the dllPath is the path to the directory containing the Helix
- *  library shared objects.  The optional audioDevice argument sets the
- *  AUDIO environment variable which is read by the Helix client.
+ *  where the optional audioDevice argument specifies the audio device
+ *  (currently ALSA device) to use for playing.
  *
- *  There are two parameters which are only there because the current version
- *  of the Helix client does not handle animation tags in SMIL files properly.
- *  They will be removed from later versions.
- *  <ul>
- *      <li>audioStreamTimeOut (milliseconds) - the time to wait for each
- *          GetAudioStream() operation before a timeout occurs; 
- *          the default is 5;</li>
- *      <li>fadeLookAheadTime  (milliseconds) - each fade-in or fade-out is
- *          scheduled (using IHXAudioCrossFade::CrossFade()) this
- *          much time before it is to happen; the default is 2500. </li>
- *  </ul>
- *  
  *  The DTD for the above configuration is the following:
  *
  *  <pre><code>
- *  <!ELEMENT helixPlayer   EMPTY >
- *  <!ATTLIST helixPlayer   dllPath      CDATA   #REQUIRED >
- *  <!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
- *  <!ATTLIST helixPlayer   audioStreamTimeout   #IMPLIED >
- *  <!ATTLIST helixPlayer   fadeLookAheatTime    #IMPLIED >
- *  </pre></code>
+ *  <!ELEMENT gstreamerPlayer   EMPTY >
+ *  <!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
+ *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface

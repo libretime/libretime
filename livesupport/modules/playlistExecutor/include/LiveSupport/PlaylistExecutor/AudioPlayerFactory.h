@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,15 +81,17 @@ using namespace LiveSupport::Core;
  *  The DTD for the above XML structure is:
  *
  *  <pre><code>
- *  <!ELEMENT audioPlayer   (helixPlayer) >
+ *  <!ELEMENT audioPlayer   (helixPlayer|gstreamerPlayer) >
  *  </code></pre>
  *
- *  For the DTD and details of the helixPlayer configuration
- *  element, see the HelixPlayer documentation.
+ *  For the DTD and details of the helixPlayer or gstreamerPlayer configuration
+ *  element, see the HelixPlayer or the GstreamerPlayer documentation,
+ *  respectively.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see HelixPlayer
+ *  @see GstreamerPlayer
  */
 class AudioPlayerFactory :
                         virtual public Configurable

@@ -13,6 +13,5 @@
 <!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
 ]>
 <audioPlayer>
-    <helixPlayer dllPath = "../../usr/lib/helix"
-    />
+    <gstreamerPlayer audioDevice = "plughw:0,0" />
 </audioPlayer>

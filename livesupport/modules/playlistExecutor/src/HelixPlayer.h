@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/Attic/HelixPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,7 +83,7 @@ using namespace LiveSupport::Core;
  *  <helixPlayer dllPath     = "../../usr/lib/helix"
  *               audioDevice = "/dev/sound/dsp"
  *  />
- *  <pre><code>
+ *  </code></pre>
  *
  *  where the dllPath is the path to the directory containing the Helix
  *  library shared objects.  The optional audioDevice argument sets the
@@ -109,10 +109,10 @@ using namespace LiveSupport::Core;
  *  <!ATTLIST helixPlayer   audioDevice  CDATA   #IMPLIED  >
  *  <!ATTLIST helixPlayer   audioStreamTimeout   #IMPLIED >
  *  <!ATTLIST helixPlayer   fadeLookAheatTime    #IMPLIED >
- *  </pre></code>
+ *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 class HelixPlayer : virtual public Configurable,
                     virtual public AudioPlayerInterface,
