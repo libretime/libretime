@@ -17,16 +17,16 @@
             <!-- start item -->
                 <tr class="background-color: {cycle values='blue1, blue2'}">
                     <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                    <td {include file="library/actionhandler.tpl"}>
+                    <td {include file="library/actionhandler.tpl"} style="cursor: pointer">
                         {if $PLAYLIST.id == $i.id}
                             <b>{$i.title|truncate:30}</b>
                         {else}
                             {$i.title|truncate:30}
                         {/if}
                     </td>
-                    <td {include file="library/actionhandler.tpl"}>{$i.creator}</td>
-                    <td {include file="library/actionhandler.tpl"} style="text-align: right">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
-                    <td {include file="library/actionhandler.tpl"} style="border: 0; text-align: center">
+                    <td {include file="library/actionhandler.tpl"} style="cursor: pointer">{$i.creator}</td>
+                    <td {include file="library/actionhandler.tpl"} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
+                    <td {include file="library/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
                         <img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/mouseover.tpl"} />
                     </td>
                 </tr>

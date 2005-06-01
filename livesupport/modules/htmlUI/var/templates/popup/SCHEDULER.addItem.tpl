@@ -60,7 +60,7 @@ function SCHEDULE_snap2Next()
 
     //alert(nextD.toLocaleString());
     //alert(durationD.toLocaleString());
-    //alert (beginD.toLocaleString());
+    //alert(beginD.toLocaleString());
 
     document.forms["schedule"].elements["time[H]"].value = beginD.getHours();
     document.forms["schedule"].elements["time[i]"].value = beginD.getMinutes();

@@ -1,3 +1,5 @@
+style="cursor: pointer"
+
 {getHour time=$i.end assign="_endH"}
 
 {if $_endH == $_hour}

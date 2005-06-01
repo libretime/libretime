@@ -33,7 +33,7 @@
 
             {if is_array($_entrys[$_hour])}
                 <tr class="blue1">
-                    <td style="border-left:  1px solid #ccc;" {include file="scheduler/day_additem.tpl"}>{$_hour|string_format:"%02d"}:00</td>
+                    <td style="border-left:  1px solid #ccc; cursor: pointer" {include file="scheduler/day_additem.tpl"}>{$_hour|string_format:"%02d"}:00</td>
                     <td style="border-right: 1px solid #ccc;">
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}

@@ -1,174 +1,67 @@
-<SCRIPT LANGUAGE="JavaScript">
-<!-- Original:  Tomleung (lok_2000_tom@hotmail.com) This tag should not be removed-->
-<!--Server time ticking clock v2.0 Updated by js-x.com-->
-<!-- server time ticking clock modified for livesupport.campware.org using above script-->
-
+<script language="javascript">
 {literal}
-function twoDigit(_v)
-{
-  _v = Math.round(_v);
-  if(_v<10) _v="0"+_v;
-  return _v;
-}
-function MakeArrayday(size)
-{
-  this.length = size;
-  for(var i = 1; i <= size; i++)
-    this[i] = "";
-  return this;
-}
-function MakeArraymonth(size)
-{
-  this.length = size;
-  for(var i = 1; i <= size; i++)
-    this[i] = "";
-  return this;
+function twoDigit(i) {
+    i = Math.round(i);
+    if(i < 10) i = "0" + i;
+
+    return i;
 }
 
-var hours;
-var minutes;
-var seconds;
-var timer=null;
-function sClock()
-{
-  sinterval = 1000;      // milliseconds
-  {/literal}
-  hours   = {$smarty.now|date_format:"%H"|string_format:"%d"};
-  minutes = {$smarty.now|date_format:"%M"|string_format:"%d"};
-  seconds = {$smarty.now|date_format:"%S"|string_format:"%d"};
-  {literal}
-  if(timer){clearInterval(timer);timer=null;}
-  timer=setInterval("work();", sinterval);
+
+function pre0_myClock(y, m, d, h, i ,s, interval) {
+    pre0_clock = new Array();
+    pre0_clock['interval']  = interval;
+    pre0_clock['time']      = new Date(y, m, d, h, i ,s);
+    pre0_clock['run']       = setInterval("pre0_incClock();", pre0_clock['interval']);
 }
 
-function work()
-{
-  if (!document.layers && !document.all && !document.getElementById) return;
-  var runTime = new Date();
-  var shours = hours;
-  var sminutes = minutes;
-  var sseconds = seconds;
+function pre0_incClock() {
+    pre0_clock['time'].setTime(pre0_clock['time'].getTime() + pre0_clock['interval']);
+    document.getElementById("servertime").innerHTML = twoDigit(pre0_clock['time'].getHours()) + ":" + twoDigit(pre0_clock['time'].getMinutes()) + ":" + twoDigit(pre0_clock['time'].getSeconds());
+}
 
-  //if (shours >= 12)
-  //{
-  //  dn = "PM";              //change here for 12h format//
-  //  shours-=12;
-  //}
-  //if (!shours) shours = 12;
-  //var dn = "AM";
-  var dn= ''
 
-  sminutes=twoDigit(sminutes);
-  sseconds=twoDigit(sseconds);
-  shours  =twoDigit(shours  );
-  movingtime = ""+ shours + ":" + sminutes +":"+sseconds+"" + dn;
-  if (document.getElementById)
-    document.getElementById("servertime").innerHTML=movingtime;
-  else if (document.layers)
-  {
-    document.layers.clock.document.open();
-    document.layers.clock.document.write(movingtime);
-    document.layers.clock.document.close();
-  }
-  else if (document.all)
-    clock.innerHTML = movingtime;
+function elapsed_myClock(y, m, d, h, i, s, interval) {
+    elapsed_clock = new Array();
+    elapsed_clock['interval']  = interval;
+    elapsed_clock['time']      = new Date(y, m, d, h, i, s);
+    elapsed_clock['run']       = setInterval("elapsed_incClock();", elapsed_clock['interval']);
+}
 
-  if((seconds=seconds + sinterval/1000)>59)
-  {
-    seconds=0;
-    if(++minutes>59)
-    {
-      minutes=0;
-      if(++hours>23)
-      {
-        hours=0;
-      }
+function elapsed_incClock() {
+    elapsed_clock['time'].setTime(elapsed_clock['time'].getTime() + elapsed_clock['interval']);
+    document.getElementById("nowplaying_elapsed").innerHTML = twoDigit(elapsed_clock['time'].getHours()) + ":" + twoDigit(elapsed_clock['time'].getMinutes()) + ":" + twoDigit(elapsed_clock['time'].getSeconds());
+}
+
+
+function remaining_myClock(y, m, d, h, i, s, interval) {
+    remaining_clock = new Array();
+    remaining_clock['interval']  = interval;
+    remaining_clock['time']      = new Date(y, m, d, h, i, s);
+    remaining_clock['run']       = setInterval("remaining_incClock();", remaining_clock['interval']);
+}
+
+function remaining_incClock() {
+    remaining_clock['time'].setTime(remaining_clock['time'].getTime() - remaining_clock['interval']);
+    document.getElementById("nowplaying_remaining").innerHTML = twoDigit(remaining_clock['time'].getHours()) + ":" + twoDigit(remaining_clock['time'].getMinutes()) + ":" + twoDigit(remaining_clock['time'].getSeconds());
+
+    if (remaining_clock['time'].getHours() == 0 && remaining_clock['time'].getMinutes() == 0 && remaining_clock['time'].getSeconds() == 0) {
+        clearInterval(elapsed_clock['run']);
+        clearInterval(remaining_clock['run']);
+        document.getElementById("onair").innerHTML       = '<img src="img/el_offair.gif" alt="off air">';
+        document.getElementById("whatplaying").innerHTML = '';
     }
-  }
-}
-</script>
-
-<SCRIPT LANGUAGE="JavaScript">
-<!-- Original:  Tomleung (lok_2000_tom@hotmail.com) This tag should not be removed-->
-<!-- Local time ticking clock modified for livesupport.campware.org using above script-->
-function lMakeArrayday(size)
-{
-  this.length = size;
-  for(var i = 1; i <= size; i++)
-    this[i] = "";
-  return this;
-}
-function lMakeArraymonth(size)
-{
-  this.length = size;
-  for(var i = 1; i <= size; i++)
-    this[i] = "";
-  return this;
 }
 
-var lhours;
-var lminutes;
-var lseconds;
-var ltimer=null;
-function lClock()
-{
-  linterval = 1000;      // milliseconds
-  var tDate = new Date();
-  lhours   = tDate.getHours();
-  lminutes = tDate.getMinutes();
-  lseconds = tDate.getSeconds();
-  if(ltimer){clearInterval(ltimer);ltimer=null;}
-  ltimer=setInterval("lwork();", linterval);
-}
-
-function lwork()
-{
-  if (!document.layers && !document.all && !document.getElementById) return;
-  var runTime = new Date();
-  var shours = lhours;
-  var sminutes = lminutes;
-  var sseconds = lseconds;
-
-  //if (shours >= 12)
-  //{
-  //  dn = "PM";              //change here for 12h format//
-  //  shours-=12;
-  //}
-  //if (!shours) shours = 12;
-  //var dn = "AM";
-  var dn= ''
-
-  sminutes=twoDigit(sminutes);
-  sseconds=twoDigit(sseconds);
-  shours  =twoDigit(shours  );
-  movingtime = ""+ shours + ":" + sminutes +":"+sseconds+"" + dn;
-  if (document.getElementById)
-    document.getElementById("localtime").innerHTML=movingtime;
-  else if (document.layers)
-  {
-    document.layers.clock.document.open();
-    document.layers.clock.document.write(movingtime);
-    document.layers.clock.document.close();
-  }
-  else if (document.all)
-    clock.innerHTML = movingtime;
-
-  if((lseconds=lseconds + linterval/1000)>59)
-  {
-    lseconds=0;
-    if(++lminutes>59)
-    {
-      lminutes=0;
-      if(++lhours>23)
-      {
-        lhours=0;
-      }
-    }
-  }
-}
 {/literal}
 
-sClock();
-{* lClock(); *}
+pre0_myClock({$smarty.now|date_format:"%Y, %m, %d, %H, %M, %S"}, 1000);
+
+{if (is_array($_nowplaying.duration))}
+    elapsed_myClock  ({$smarty.now|date_format:"%Y, %m, %d"}, {$_nowplaying.elapsed.h},   {$_nowplaying.elapsed.m},   {$_nowplaying.elapsed.s|truncate:2:""},   100);
+    remaining_myClock({$smarty.now|date_format:"%Y, %m, %d"}, {$_nowplaying.remaining.h}, {$_nowplaying.remaining.m}, {$_nowplaying.remaining.s|truncate:2:""}, 100);
+{/if}
+
 </script>
+
 

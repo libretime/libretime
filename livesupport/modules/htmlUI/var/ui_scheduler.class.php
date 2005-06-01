@@ -375,15 +375,20 @@ class uiScheduler extends uiCalendar
 
         $pl = current($pl);
         $offset = strftime('%H:%M:%S', time() - $this->_datetime2timestamp($pl['start']) - 3600);   ##  subtract 3600 sec. becausefor some reason strftime('%H:%M:%S', 0) is 01:00:00
+
         $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);
 
         if (!$clip['gunid']) return FALSE;
 
+        list($duration['h'], $duration['m'], $duration['s'])    = explode(':', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION));
+        list($elapsed['h'], $elapsed['m'], $elapsed['s'])       = explode(':', $clip['elapsed']);
+        list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
+
         return array(
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE),
-                'duration'  => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION),
-                'elapsed'   => $clip['elapsed'],
-                'remaining' => $clip['remaining'],
+                'duration'  => $duration,
+                'elapsed'   => $elapsed,
+                'remaining' => $remaining,
                 'percentage'=> 100 * $this->Base->gb->_plTimeToSecs($clip['elapsed']) / ( $this->Base->gb->_plTimeToSecs($clip['elapsed']) + $this->Base->gb->_plTimeToSecs($clip['remaining']))
                );
     }
