@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.55 $
+#   Version  : $Revision: 1.56 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -67,6 +67,9 @@ LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 LIBODBCXX_CFLAGS=@LIBODBCXX_CFLAGS@
 LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
+GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
+GSTREAMER_LIBS=@GSTREAMER_LIBS@
+
 
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 
@@ -137,6 +140,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${LIBXMLPP_CFLAGS} \
 							 ${LIBODBCXX_CFLAGS} \
+							 ${GSTREAMER_CFLAGS} \
                              ${TAGLIB_CFLAGS} \
                              -I${USR_INCLUDE_DIR} \
                              -I${BOOST_INCLUDE_DIR} \
@@ -150,6 +154,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
 					 ${LIBODBCXX_LIBS} \
+					 ${GSTREAMER_LIBS} \
                      ${CURL_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
