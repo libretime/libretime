@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */
@@ -143,6 +143,11 @@ class WhiteWindow : public Gtk::Window
         Gtk::Alignment                * cornerButtonAlignment;
 
         /**
+         *  True if the window has been minimized.
+         */
+        bool                            isMaximized;
+
+        /**
          *  The close button.
          */
         ImageButton                   * minimizeButton;
@@ -185,11 +190,6 @@ class WhiteWindow : public Gtk::Window
          */
         bool
         onTitleClicked(GdkEventButton     * event)          throw ();
-
-        /**
-         *  True if the window has been minimized.
-         */
-        bool                            isMaximized;
 
         /**
          *  Signal handler for the minimize button clicked.

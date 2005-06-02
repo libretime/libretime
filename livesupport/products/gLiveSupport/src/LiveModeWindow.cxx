@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,6 +71,13 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
             LocalizedObject(bundle),
             gLiveSupport(gLiveSupport)
 {
+    try {
+        set_title(*getResourceUstring("windowTitle"));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     // Create the tree model:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,6 +64,7 @@ WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
                   isMaximized(false)
 {
     // do the image title-specific stuff
+    titleLabel = 0;
     Ptr<WidgetFactory>::Ref wf          = WidgetFactory::getInstance();
     Gtk::Image*             titleImage  = Gtk::manage(wf->createImage(title));
     titleEventBox                       = Gtk::manage(new Gtk::EventBox());
@@ -85,9 +86,10 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
                   isMaximized(false)
 {
     // do the text title-specific stuff
-    titleLabel      = Gtk::manage(new Gtk::Label(title));
+    titleLabel      = Gtk::manage(new Gtk::Label);
     titleLabel->modify_font(Pango::FontDescription(
                                         "Bitstream Vera Sans 10"));
+    set_title(title);
     titleEventBox   = Gtk::manage(new Gtk::EventBox());
     titleEventBox->add(*titleLabel);
 

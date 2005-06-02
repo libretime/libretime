@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -80,6 +80,7 @@ SearchWindow :: SearchWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     Notebook *      views = Gtk::manage(new Notebook);
     try {
+        set_title(*getResourceUstring("windowTitle"));
         views->appendPage(*simpleSearchView,   *getResourceUstring(
                                                         "simpleSearchTab"));
         views->appendPage(*advancedSearchView, *getResourceUstring(

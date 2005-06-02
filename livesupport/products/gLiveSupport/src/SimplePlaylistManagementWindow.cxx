@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,6 +72,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
     try {
+        set_title(*getResourceUstring("windowTitle"));
         nameLabel = Gtk::manage(new Gtk::Label(
                                     *getResourceUstring("nameLabel")));
         saveButton = Gtk::manage(wf->createButton(

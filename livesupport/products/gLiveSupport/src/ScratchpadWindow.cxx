@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,6 +74,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
 
     try {
+        set_title(*getResourceUstring("windowTitle"));
         addToPlaylistButton = Gtk::manage(widgetFactory->createButton(
                             *getResourceUstring("addToPlaylistButtonLabel")));
         clearListButton = Gtk::manage(widgetFactory->createButton(
