@@ -20,7 +20,7 @@
             </div>
             <!-- end station information -->
             <!-- start onair information -->
-            <div class="onair" id="onair">
+            <div class="onair" id="statusbar_indicator">
                 {if $_nowplaying}
                     <img src="img/el_onair.gif" alt="on air" />
                 {else}
@@ -31,28 +31,21 @@
             <!-- start station time -->
             <div class="stationtime">
                 <h1>##Station Time##</h1>
-                <div class="time"><span id="servertime" class="clock" style="position:relative;">{$smarty.now|date_format:"%H:%M:%S"}</span>
+                <div class="time"><span id="statusbar_servertime" class="clock" style="position:relative;">{$smarty.now|date_format:"%H:%M:%S"}</span>
                     <div class="timezone">cet</div>
                 </div>
-                {*
-                <h1>##Local Time##</h1>
-                <div class="time">
-                    <span id=localtime class="clock" style="position:relative;"></span>
-                    <div class="timezone">cet</div>
-                </div>
-                *}
             </div>
             <!-- end station time -->
             <!-- start what playing -->
-            <div class="whatplaying" id="whatplaying">
+            <div class="whatplaying" id="statusbar_whatsplaying">
                 {if $_nowplaying}
                     <div class="nowplaying">Now Playing: {$_nowplaying.title}</div>
                     <div class="scala">
-                        <div class="scala_in" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
+                        <div class="scala_in" id="statusbar_scala" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
                     </div>
                     <div class="time">
-                        <div class="left">Elapsed:    <strong id="nowplaying_elapsed">{$_nowplaying.elapsed.h}:{$_nowplaying.elapsed.m}:{$_nowplaying.elapsed.s|truncate:2:""}</strong></div>
-                        <div class="right">Remaining: <strong id="nowplaying_remaining">{$_nowplaying.remaining.h}:{$_nowplaying.remaining.m}:{$_nowplaying.remaining.s|truncate:2:""}</strong></div>
+                        <div class="left">Elapsed:    <strong id="statusbar_elapsed">{$_nowplaying.elapsed.h}:{$_nowplaying.elapsed.m}:{$_nowplaying.elapsed.s|truncate:2:""}</strong></div>
+                        <div class="right">Remaining: <strong id="statusbar_remaining">{$_nowplaying.remaining.h}:{$_nowplaying.remaining.m}:{$_nowplaying.remaining.s|truncate:2:""}</strong></div>
                     </div>
                 {/if}
                 <div class="clearer"></div>

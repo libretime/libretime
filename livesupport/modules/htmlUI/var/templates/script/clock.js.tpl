@@ -17,7 +17,7 @@ function pre0_myClock(y, m, d, h, i ,s, interval) {
 
 function pre0_incClock() {
     pre0_clock['time'].setTime(pre0_clock['time'].getTime() + pre0_clock['interval']);
-    document.getElementById("servertime").innerHTML = twoDigit(pre0_clock['time'].getHours()) + ":" + twoDigit(pre0_clock['time'].getMinutes()) + ":" + twoDigit(pre0_clock['time'].getSeconds());
+    document.getElementById("statusbar_servertime").innerHTML = twoDigit(pre0_clock['time'].getHours()) + ":" + twoDigit(pre0_clock['time'].getMinutes()) + ":" + twoDigit(pre0_clock['time'].getSeconds());
 }
 
 
@@ -30,7 +30,7 @@ function elapsed_myClock(y, m, d, h, i, s, interval) {
 
 function elapsed_incClock() {
     elapsed_clock['time'].setTime(elapsed_clock['time'].getTime() + elapsed_clock['interval']);
-    document.getElementById("nowplaying_elapsed").innerHTML = twoDigit(elapsed_clock['time'].getHours()) + ":" + twoDigit(elapsed_clock['time'].getMinutes()) + ":" + twoDigit(elapsed_clock['time'].getSeconds());
+    document.getElementById("statusbar_elapsed").innerHTML = twoDigit(elapsed_clock['time'].getHours()) + ":" + twoDigit(elapsed_clock['time'].getMinutes()) + ":" + twoDigit(elapsed_clock['time'].getSeconds());
 }
 
 
@@ -43,13 +43,13 @@ function remaining_myClock(y, m, d, h, i, s, interval) {
 
 function remaining_incClock() {
     remaining_clock['time'].setTime(remaining_clock['time'].getTime() - remaining_clock['interval']);
-    document.getElementById("nowplaying_remaining").innerHTML = twoDigit(remaining_clock['time'].getHours()) + ":" + twoDigit(remaining_clock['time'].getMinutes()) + ":" + twoDigit(remaining_clock['time'].getSeconds());
+    document.getElementById("statusbar_remaining").innerHTML = twoDigit(remaining_clock['time'].getHours()) + ":" + twoDigit(remaining_clock['time'].getMinutes()) + ":" + twoDigit(remaining_clock['time'].getSeconds());
 
     if (remaining_clock['time'].getHours() == 0 && remaining_clock['time'].getMinutes() == 0 && remaining_clock['time'].getSeconds() == 0) {
         clearInterval(elapsed_clock['run']);
         clearInterval(remaining_clock['run']);
-        document.getElementById("onair").innerHTML       = '<img src="img/el_offair.gif" alt="off air">';
-        document.getElementById("whatplaying").innerHTML = '';
+        document.getElementById("statusbar_indicator").innerHTML       = '<img src="img/el_offair.gif" alt="off air">';
+        document.getElementById("statusbar_whatsplaying").innerHTML = '';
     }
 }
 

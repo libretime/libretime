@@ -462,14 +462,18 @@ $ui_fmask = array(
                 'type'     => 'select',
                 'label'    => 'Language',
                 'options'  => array(
-                            'en_GB'        => 'English (GB)',
-                            'nl_NL'        => 'Nederlands (NL)',
+                            'ar_JO'        => 'Arabic(JO)',
+                            'am_AM'        => 'Armenian(AM)',
+                            'en_UK'        => 'English (UK)',
+                            'en_US'        => 'English (US)',
+                            'es_CO'        => 'Español (CO)',
                             'cz_CZ'        => 'Česky (CZ)',
                             'de_DE'        => 'Deutsch (DE)',
                             'hu_HU'        => 'Magyar (HU)',
+                            'nl_NL'        => 'Nederlands (NL)',
                             'sr_CS'        => 'Srpski (CS)',
-                            'es_CO'        => "Español (CO)"
-                              )
+                            'ru_RU'        => 'Russia(RU)'
+                            )
             )
     ),
 

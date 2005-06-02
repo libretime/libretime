@@ -25,7 +25,7 @@
             <form name="calendar" style="margin: 2;">
                 <select id="month" style="margin-top: 0;font-size:9px;" name="month" onChange="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&month=' +  document.forms['calendar'].month.value)">
                 {foreach from=$SCHEDULER->Year item="_Month"}
-                    <option value="{$_Month.month}">{$_Month.label.full}</option>
+                    <option value="{$_Month.month}">{tra str=$_Month.label.full}</option>
                 {/foreach}
                 </select>
                 &nbsp;&nbsp;&nbsp;
@@ -45,7 +45,7 @@
                         <tr class="blue_head">
                             <td class="week">##CW##</td>
                             {foreach from=$SCHEDULER->Week item="_Weekday"}
-                                <td>{$_Weekday.label.short|truncate:2:""}</td>
+                                <td>{tra str=$_Weekday.label.short|truncate:2:""}</td>
                             {/foreach}
                         </tr>
                         <tr>
