@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -274,6 +274,42 @@ static const std::string    playlistsWindowTitleImageName
 static const std::string    schedulerWindowTitleImageName 
                             = "titleImages/schedulerWindowTitle.png";
 
+/**
+ *  The name of the passive image for the minimize window button.
+ */
+static const std::string    windowMinimizeButtonPassiveName 
+                            = "imageButton/windowMin.png";
+
+/**
+ *  The name of the rollover image for the minimize window button.
+ */
+static const std::string    windowMinimizeButtonRollName 
+                            = "imageButton/windowMinRoll.png";
+
+/**
+ *  The name of the passive image for the maximize window button.
+ */
+static const std::string    windowMaximizeButtonPassiveName 
+                            = "imageButton/windowMax.png";
+
+/**
+ *  The name of the rollover image for the maximize window button.
+ */
+static const std::string    windowMaximizeButtonRollName 
+                            = "imageButton/windowMaxRoll.png";
+
+/**
+ *  The name of the passive image for the close window button.
+ */
+static const std::string    windowCloseButtonPassiveName 
+                            = "imageButton/windowClose.png";
+
+/**
+ *  The name of the rollover image for the close window button.
+ */
+static const std::string    windowCloseButtonRollName 
+                            = "imageButton/windowCloseRoll.png";
+
 
 /* ===============================================  local function prototypes */
 
@@ -508,6 +544,21 @@ WidgetFactory :: createButton(ImageButtonType    type)              throw ()
             rollImage    = loadImage(masterStopButtonRollName);
             break;
 
+        case windowMinimizeButton:
+            passiveImage = loadImage(windowMinimizeButtonPassiveName);
+            rollImage    = loadImage(windowMinimizeButtonRollName);
+            break;
+
+        case windowMaximizeButton:
+            passiveImage = loadImage(windowMaximizeButtonPassiveName);
+            rollImage    = loadImage(windowMaximizeButtonRollName);
+            break;
+
+        case windowCloseButton:
+            passiveImage = loadImage(windowCloseButtonPassiveName);
+            rollImage    = loadImage(windowCloseButtonRollName);
+            break;
+
         default:
             return 0;
     }
@@ -530,7 +581,6 @@ WidgetFactory :: createImage(ImageType  imageName)                  throw ()
             rawImage = loadImage(resizeImageName);
             break;
 
-        
         case scratchpadWindowTitleImage:
             rawImage = loadImage(scratchpadWindowTitleImageName);
             break;

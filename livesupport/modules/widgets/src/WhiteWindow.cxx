@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,8 @@ WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
                            Ptr<CornerImages>::Ref       cornerImages,
                            bool                         resizable)
                                                                     throw ()
-                : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
+                : Gtk::Window(Gtk::WINDOW_TOPLEVEL),
+                  isMaximized(false)
 {
     // do the image title-specific stuff
     Ptr<WidgetFactory>::Ref wf          = WidgetFactory::getInstance();
@@ -80,11 +81,13 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
                            Ptr<CornerImages>::Ref       cornerImages,
                            bool                         resizable)
                                                                     throw ()
-                : Gtk::Window(Gtk::WINDOW_TOPLEVEL)
+                : Gtk::Window(Gtk::WINDOW_TOPLEVEL),
+                  isMaximized(false)
 {
     // do the text title-specific stuff
     titleLabel      = Gtk::manage(new Gtk::Label(title));
-    titleLabel->modify_font(Pango::FontDescription("Bitstream Vera 10"));
+    titleLabel->modify_font(Pango::FontDescription(
+                                        "Bitstream Vera Sans 10"));
     titleEventBox   = Gtk::manage(new Gtk::EventBox());
     titleEventBox->add(*titleLabel);
 
@@ -121,13 +124,30 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     titleAlignment->add(*titleEventBox);
     layout->attach(*titleAlignment, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
-    // create the close button
-    closeButton = Gtk::manage(wf->createButton(WidgetFactory::deleteButton));
-    closeButtonAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
-                                                          Gtk::ALIGN_CENTER,
-                                                          0, 0));
-    closeButtonAlignment->add(*closeButton);
-    layout->attach(*closeButtonAlignment, 1, 2, 0, 1, Gtk::FILL, Gtk::SHRINK);
+    // create the minimize, maximize and close buttons
+    minimizeButton = Gtk::manage(wf->createButton(
+                                        WidgetFactory::windowMinimizeButton));
+    if (resizable) {
+        maximizeButton = Gtk::manage(wf->createButton(
+                                        WidgetFactory::windowMaximizeButton));
+    }
+    closeButton = Gtk::manage(wf->createButton(
+                                        WidgetFactory::windowCloseButton));
+    Gtk::Box *  cornerButtonBox = Gtk::manage(new Gtk::HBox);
+    if (resizable) {
+        cornerButtonBox->pack_start(*minimizeButton, Gtk::PACK_SHRINK, 5);
+        cornerButtonBox->pack_start(*maximizeButton, Gtk::PACK_SHRINK, 0);
+        cornerButtonBox->pack_start(*closeButton, Gtk::PACK_SHRINK, 5);
+    } else {
+        cornerButtonBox->pack_start(*minimizeButton, Gtk::PACK_SHRINK, 0);
+        cornerButtonBox->pack_start(*closeButton, Gtk::PACK_SHRINK, 5);
+    }
+    cornerButtonAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
+                                                           Gtk::ALIGN_CENTER,
+                                                           0, 0));
+    cornerButtonAlignment->add(*cornerButtonBox);
+    layout->attach(*cornerButtonAlignment, 1, 2, 0, 1, 
+                                           Gtk::FILL, Gtk::SHRINK);
 
     // add the child container
     childContainer = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_CENTER));
@@ -159,10 +179,14 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     titleEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
                                                 &WhiteWindow::onTitleClicked));
 
+    minimizeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                        &WhiteWindow::onMinimizeButtonClicked));
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                          &WhiteWindow::onCloseButtonClicked));
+                                        &WhiteWindow::onCloseButtonClicked));
 
     if (resizable) {
+        maximizeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                        &WhiteWindow::onMaximizeButtonClicked));
         resizeEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
         resizeEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
                                                 &WhiteWindow::onResizeClicked));
@@ -331,6 +355,32 @@ WhiteWindow :: onTitleClicked(GdkEventButton     * event)          throw ()
  *  Event handler for the close button getting clicked.
  *----------------------------------------------------------------------------*/
 void
+WhiteWindow :: onMinimizeButtonClicked (void)               throw ()
+{
+    iconify();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the maximize button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+WhiteWindow :: onMaximizeButtonClicked (void)               throw ()
+{
+    if (isMaximized) {
+        unmaximize();
+        isMaximized = false;
+    } else {
+        maximize();
+        isMaximized = true;
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the close button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
 WhiteWindow :: onCloseButtonClicked (void)                  throw ()
 {
     hide();
@@ -343,7 +393,10 @@ WhiteWindow :: onCloseButtonClicked (void)                  throw ()
 void
 WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
 {
-    titleLabel->set_label(title);
+    Gtk::Window::set_title(title);
+    if (titleLabel) {
+        titleLabel->set_label(title);
+    }
 }
 
 
@@ -353,7 +406,7 @@ WhiteWindow :: set_title(const Glib::ustring  & title)      throw ()
 Glib::ustring
 WhiteWindow :: get_title(void) const                        throw ()
 {
-    return titleLabel->get_label();
+    return titleLabel ? titleLabel->get_label() : "";
 }
 
 

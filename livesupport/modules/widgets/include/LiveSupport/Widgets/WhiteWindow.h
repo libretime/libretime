@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,7 @@
 #include <gtkmm/eventbox.h>
 #include <gtkmm/image.h>
 #include <gtkmm/window.h>
+#include <gtkmm/buttonbox.h>
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Widgets/CornerImages.h"
@@ -92,8 +93,8 @@ using namespace LiveSupport::Core;
  *  }
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.11 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.12 $
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */
@@ -136,9 +137,20 @@ class WhiteWindow : public Gtk::Window
         Gtk::Label                    * titleLabel;
 
         /**
-         *  The right alignment contaner for the close button.
+         *  The right alignment contaner for the minimize, maximize and
+         *  close buttons.
          */
-        Gtk::Alignment                * closeButtonAlignment;
+        Gtk::Alignment                * cornerButtonAlignment;
+
+        /**
+         *  The close button.
+         */
+        ImageButton                   * minimizeButton;
+
+        /**
+         *  The close button.
+         */
+        ImageButton                   * maximizeButton;
 
         /**
          *  The close button.
@@ -173,6 +185,23 @@ class WhiteWindow : public Gtk::Window
          */
         bool
         onTitleClicked(GdkEventButton     * event)          throw ();
+
+        /**
+         *  True if the window has been minimized.
+         */
+        bool                            isMaximized;
+
+        /**
+         *  Signal handler for the minimize button clicked.
+         */
+        virtual void
+        onMinimizeButtonClicked(void)                       throw ();
+
+        /**
+         *  Signal handler for the maximize button clicked.
+         */
+        virtual void
+        onMaximizeButtonClicked(void)                       throw ();
 
         /**
          *  Signal handler for the close button clicked.

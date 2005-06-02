@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ class ZebraTreeView;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -110,7 +110,9 @@ class WidgetFactory :
                        smallPlayButton, smallPauseButton, smallStopButton,
                        hugePlayButton, 
                        cuePlayButton, cueStopButton,
-                       masterPlayButton, masterPauseButton, masterStopButton }
+                       masterPlayButton, masterPauseButton, masterStopButton,
+                       windowMinimizeButton, windowMaximizeButton,
+                                             windowCloseButton }
                                                     ImageButtonType;
 
         /**
