@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -256,7 +256,7 @@ ZebraTreeView :: lineNumberCellDataFunction(
     cell->property_cell_background_gdk() = Colors::getColor(colorName);
 
     Glib::ustring       numberString;
-    numberString.append("<span font_desc='Bitstream Vera Bold 16'>");
+    numberString.append("<span font_desc='Bitstream Vera Sans Bold 16'>");
     std::stringstream   numberStr;
     numberStr << (rowNumber + offset);
     numberString.append(numberStr.str());

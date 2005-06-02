@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -79,7 +79,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Pango::Attribute    fontDescriptionAttribute = 
                             Pango::Attribute::create_attr_font_desc(
                                 Pango::FontDescription(
-                                    "Bitstream Vera Bold 24"));
+                                    "Bitstream Vera Sans Bold 24"));
     fontDescriptionAttribute.set_start_index(0);
     fontDescriptionAttribute.set_end_index(10);
     Pango::AttrList     timeWidgetAttributes;
