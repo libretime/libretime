@@ -73,7 +73,7 @@ class uiBrowser extends uiBase {
     function login(&$mask)
     {
         $form = new HTML_QuickForm('login', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
+        #$form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
         $this->_parseArr2Form($form, $mask['languages']);
         $this->_parseArr2Form($form, $mask['login']);
 

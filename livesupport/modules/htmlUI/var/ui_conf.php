@@ -1,16 +1,16 @@
 <?php
-define('UI_VERBOSE', FALSE);
-define('UI_WARNING', TRUE);
-define('UI_ERROR',   TRUE);
+define('UI_VERBOSE',                    FALSE);
+define('UI_WARNING',                    TRUE);
+define('UI_ERROR',                      TRUE);
 
-define('UI_DEFAULT_LANGID', 'en_GB');
-#define('UI_TIMEZONE', ' +100');
-define('UI_TIMEZONEOFFSET', date('Z'));
-  
+define('UI_DEFAULT_LANGID',             'en_GB');
+#define('UI_TIMEZONE',                  ' +100');
+define('UI_TIMEZONEOFFSET',             date('Z'));
+
 
 ## Basic scripts
-define('UI_HANDLER', 'ui_handler.php');
-define('UI_BROWSER', 'ui_browser.php');
+define('UI_HANDLER',                    'ui_handler.php');
+define('UI_BROWSER',                    'ui_browser.php');
 
 ## HTML Form stuff
 define('UI_FORM_STANDARD_METHOD',       'POST');

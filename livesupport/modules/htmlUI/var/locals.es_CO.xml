@@ -1,7 +1,191 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
+	<status />
 	<Id>es_CO</Id>
-	<status>checked</status>
+	<item>
+		<key>$1 must be $2</key>
+		<value />
+	</item>
+	<item>
+		<key>+</key>
+		<value />
+	</item>
+	<item>
+		<key>-</key>
+		<value />
+	</item>
+	<item>
+		<key>Access to home directory failed.</key>
+		<value />
+	</item>
+	<item>
+		<key>Nothing selected.</key>
+		<value />
+	</item>
+	<item>
+		<key>Unable to activate playlist &quot;$1&quot;</key>
+		<value />
+	</item>
+	<item>
+		<key>User or group &quot;$1&quot; already exists.</key>
+		<value />
+	</item>
+	<item>
+		<key>created at $1</key>
+		<value />
+	</item>
+	<item>
+		<key>(used by {$PL-&gt;isUSedBy($i.id)})</key>
+		<value />
+	</item>
+	<item>
+		<key>Add Group</key>
+		<value />
+	</item>
+	<item>
+		<key>Add Members</key>
+		<value />
+	</item>
+	<item>
+		<key>Add User</key>
+		<value />
+	</item>
+	<item>
+		<key>Add selected</key>
+		<value />
+	</item>
+	<item>
+		<key>Add to group</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure to discard all changes?</key>
+		<value />
+	</item>
+	<item>
+		<key>Are you sure you want to change existing metadata?</key>
+		<value />
+	</item>
+	<item>
+		<key>Back to overview</key>
+		<value />
+	</item>
+	<item>
+		<key>Change Password for &quot;{$SUBJECTS-&gt;Base-&gt;gb-&gt;getSubjName($_REQUEST.id)}&quot;</key>
+		<value />
+	</item>
+	<item>
+		<key>Change password</key>
+		<value />
+	</item>
+	<item>
+		<key>Close Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Close playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Current Members</key>
+		<value />
+	</item>
+	<item>
+		<key>Delete</key>
+		<value />
+	</item>
+	<item>
+		<key>Do you want to save changes?</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit</key>
+		<value />
+	</item>
+	<item>
+		<key>Login</key>
+		<value />
+	</item>
+	<item>
+		<key>Manage group members</key>
+		<value />
+	</item>
+	<item>
+		<key>Members</key>
+		<value />
+	</item>
+	<item>
+		<key>No group members</key>
+		<value />
+	</item>
+	<item>
+		<key>Nothing left</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove from group</key>
+		<value />
+	</item>
+	<item>
+		<key>Remove selected</key>
+		<value />
+	</item>
+	<item>
+		<key>Rows Per Page</key>
+		<value />
+	</item>
+	<item>
+		<key>Station Logo Path</key>
+		<value />
+	</item>
+	<item>
+		<key>User/Group Management</key>
+		<value />
+	</item>
+	<item>
+		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
+		<value />
+	</item>
+	<item>
+		<key>empty</key>
+		<value />
+	</item>
+	<item>
+		<key>h</key>
+		<value />
+	</item>
+	<item>
+		<key>login</key>
+		<value />
+	</item>
+	<item>
+		<key>logout</key>
+		<value />
+	</item>
+	<item>
+		<key>m</key>
+		<value />
+	</item>
+	<item>
+		<key>s</key>
+		<value />
+	</item>
+	<item>
+		<key>sign over</key>
+		<value />
+	</item>
+	<item>
+		<key>{$i.type|lower|capitalize}</key>
+		<value />
+	</item>
+	<item>
+		<key>{$o.name}</key>
+		<value />
+	</item>
+	<item>
+		<key>{$sec.header}</key>
+		<value />
+	</item>
 	<item>
 		<key>Are you sure to delete file &quot;$1&quot;?</key>
 		<value>¿Desea borrar el archivo &quot;$1&quot;?</value>
