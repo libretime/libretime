@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,6 +110,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     bottomBar = Gtk::manage(new Gtk::Table());
     bottomBar->set_size_request(-1, 30);
     buttonBar = Gtk::manage(new Gtk::Table());
+    buttonBar->set_homogeneous();
     buttonBarAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                                         Gtk::ALIGN_CENTER,
                                                         0, 0));

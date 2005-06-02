@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -161,7 +161,7 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The user info widget.
          */
-        MasterPanelUserInfoWidget     * userInfoWidget;
+        MasterPanelUserInfoWidget * userInfoWidget;
 
         /**
          *  The radio logo.
