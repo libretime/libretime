@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // TODO: remove hard-coded station logo path reference
     radioLogoWidget = Gtk::manage(new Gtk::Image("var/stationLogo.png"));
-    radioLogoWidget->set_size_request(158, 104);
+    radioLogoWidget->set_size_request(120, 104);
 
     // set up the layout, which is a button box
     layout = Gtk::manage(new Gtk::Table());
@@ -79,7 +79,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     Pango::Attribute    fontDescriptionAttribute = 
                             Pango::Attribute::create_attr_font_desc(
                                 Pango::FontDescription(
-                                    "Bitstream Vera Sans Bold 24"));
+                                    "Bitstream Vera Sans Bold 20"));
     fontDescriptionAttribute.set_start_index(0);
     fontDescriptionAttribute.set_end_index(10);
     Pango::AttrList     timeWidgetAttributes;
@@ -87,7 +87,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     timeWidget->set_attributes(timeWidgetAttributes);
     timeBin = Gtk::manage(widgetFactory->createBlueBin());
     timeBin->add(*timeWidget);
-    timeBin->set_size_request(153, 104);
+    timeBin->set_size_request(120, 104);
 
     // set up the now playing widget
     nowPlayingWidget = Gtk::manage(new NowPlaying(gLiveSupport, bundle));
@@ -99,12 +99,12 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     vuMeterWidget = Gtk::manage(new Gtk::Label("VU meter"));
     vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
-    vuMeterBin->set_size_request(400, 40);
+    vuMeterBin->set_size_request(200, 40);
     // set up the next playing widget
     nextPlayingWidget = Gtk::manage(new Gtk::Label("next playing"));
     nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
     nextPlayingBin->add(*nextPlayingWidget);
-    nextPlayingBin->set_size_request(400, 59);
+    nextPlayingBin->set_size_request(200, 59);
 
     // create the bottom bar
     bottomBar = Gtk::manage(new Gtk::Table());
