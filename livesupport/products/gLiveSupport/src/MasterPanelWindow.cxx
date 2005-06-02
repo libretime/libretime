@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.32 $
+    Version  : $Revision: 1.33 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -75,7 +75,16 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     layout = Gtk::manage(new Gtk::Table());
 
     // set up the time label
-    timeWidget = Gtk::manage(new Gtk::Label("time"));
+    timeWidget = Gtk::manage(new Gtk::Label());
+    Pango::Attribute    fontDescriptionAttribute = 
+                            Pango::Attribute::create_attr_font_desc(
+                                Pango::FontDescription(
+                                    "Bitstream Vera Bold 24"));
+    fontDescriptionAttribute.set_start_index(0);
+    fontDescriptionAttribute.set_end_index(10);
+    Pango::AttrList     timeWidgetAttributes;
+    timeWidgetAttributes.insert(fontDescriptionAttribute);
+    timeWidget->set_attributes(timeWidgetAttributes);
     timeBin = Gtk::manage(widgetFactory->createBlueBin());
     timeBin->add(*timeWidget);
     timeBin->set_size_request(153, 104);
