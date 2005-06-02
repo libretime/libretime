@@ -83,7 +83,8 @@ if (is_array($_REQUEST['popup'])){
             break;
 
             case "SCHEDULER.removeItem":
-                $Smarty->assign('scheduleId', $_REQUEST['scheduleId']);
+                $Smarty->assign('scheduleId',   $_REQUEST['scheduleId']);
+                $Smarty->assign('playlistName', $uiBrowser->_getMDataValue($_REQUEST['playlistId'], UI_MDATA_KEY_TITLE));
                 $Smarty->display('popup/SCHEDULER.removeItem.tpl');
             break;
 
