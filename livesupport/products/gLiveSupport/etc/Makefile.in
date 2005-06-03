@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.37 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.38 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -206,6 +206,7 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
 
 G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_en.res \
+                    ${TMP_DIR}/${PACKAGE_NAME}_es.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_hu.res
 
 G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
