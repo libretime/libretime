@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -204,13 +204,13 @@ static const std::string    masterPlayButtonRollName
  *  The name of the passive image for the master panel pause button.
  */
 static const std::string    masterPauseButtonPassiveName 
-                            = "imageButton/masterPause.gif";
+                            = "imageButton/masterPause.png";
 
 /**
  *  The name of the rollover image for the master panel pause button.
  */
 static const std::string    masterPauseButtonRollName 
-                            = "imageButton/masterPauseRoll.gif";
+                            = "imageButton/masterPauseRoll.png";
 
 /**
  *  The name of the passive image for the master panel stop button.
