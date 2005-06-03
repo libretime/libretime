@@ -2,6 +2,12 @@
 <languages>
 
     <language>
+        <Id>en_GB</Id>
+        <Name>English(GB)</Name>
+        <NativeName>English</NativeName>
+    </language>
+
+    <language>
         <Id>ar_JO</Id>
         <Name>Arabic(JO)</Name>
         <NativeName>Arabic</NativeName>
@@ -11,12 +17,6 @@
         <Id>am_AM</Id>
         <Name>Armenian(AM)</Name>
         <NativeName>Armenian</NativeName>
-    </language>
-
-    <language>
-        <Id>en_GB</Id>
-        <Name>English(GB)</Name>
-        <NativeName>English</NativeName>
     </language>
 
     <language>

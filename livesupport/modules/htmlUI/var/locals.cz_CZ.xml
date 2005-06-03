@@ -3,6 +3,110 @@
 	<status />
 	<Id>cz_CZ</Id>
 	<item>
+		<key>Mo</key>
+		<value />
+	</item>
+	<item>
+		<key>Tu</key>
+		<value />
+	</item>
+	<item>
+		<key>We</key>
+		<value />
+	</item>
+	<item>
+		<key>Th</key>
+		<value />
+	</item>
+	<item>
+		<key>Fr</key>
+		<value />
+	</item>
+	<item>
+		<key>Sa</key>
+		<value />
+	</item>
+	<item>
+		<key>Su</key>
+		<value />
+	</item>
+	<item>
+		<key>January</key>
+		<value />
+	</item>
+	<item>
+		<key>February</key>
+		<value />
+	</item>
+	<item>
+		<key>March</key>
+		<value />
+	</item>
+	<item>
+		<key>April</key>
+		<value />
+	</item>
+	<item>
+		<key>May</key>
+		<value />
+	</item>
+	<item>
+		<key>July</key>
+		<value />
+	</item>
+	<item>
+		<key>August</key>
+		<value />
+	</item>
+	<item>
+		<key>September</key>
+		<value />
+	</item>
+	<item>
+		<key>October</key>
+		<value />
+	</item>
+	<item>
+		<key>November</key>
+		<value />
+	</item>
+	<item>
+		<key>December</key>
+		<value />
+	</item>
+	<item>
+		<key>June</key>
+		<value />
+	</item>
+	<item>
+		<key>Monday</key>
+		<value />
+	</item>
+	<item>
+		<key>Tuesday</key>
+		<value />
+	</item>
+	<item>
+		<key>Wednesday</key>
+		<value />
+	</item>
+	<item>
+		<key>Thursday</key>
+		<value />
+	</item>
+	<item>
+		<key>Friday</key>
+		<value />
+	</item>
+	<item>
+		<key>Saturday</key>
+		<value />
+	</item>
+	<item>
+		<key>Sunday</key>
+		<value />
+	</item>
+	<item>
 		<key>$1 must be $2</key>
 		<value />
 	</item>
@@ -35,10 +139,6 @@
 		<value />
 	</item>
 	<item>
-		<key>(used by {$PL-&gt;isUSedBy($i.id)})</key>
-		<value />
-	</item>
-	<item>
 		<key>Add Group</key>
 		<value />
 	</item>
@@ -68,10 +168,6 @@
 	</item>
 	<item>
 		<key>Back to overview</key>
-		<value />
-	</item>
-	<item>
-		<key>Change Password for &quot;{$SUBJECTS-&gt;Base-&gt;gb-&gt;getSubjName($_REQUEST.id)}&quot;</key>
 		<value />
 	</item>
 	<item>
@@ -131,14 +227,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Rows Per Page</key>
-		<value />
-	</item>
-	<item>
-		<key>Station Logo Path</key>
-		<value />
-	</item>
-	<item>
 		<key>User/Group Management</key>
 		<value />
 	</item>
@@ -172,22 +260,6 @@
 	</item>
 	<item>
 		<key>sign over</key>
-		<value />
-	</item>
-	<item>
-		<key>{$i.type|lower|capitalize}</key>
-		<value />
-	</item>
-	<item>
-		<key>{$o.name}</key>
-		<value />
-	</item>
-	<item>
-		<key>{$sec.header}</key>
-		<value />
-	</item>
-	<item>
-		<key>Are you sure to delete file &quot;$1&quot;?</key>
 		<value />
 	</item>
 	<item>

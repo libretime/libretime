@@ -10,7 +10,7 @@ require_once('display.inc.php');
 require_once('data.inc.php');
 require_once('helpfunctions.inc.php');
 
-define('_DEFAULT_LANG_', 'en_UK');
+define('_DEFAULT_LANG_', 'en_GB');
 define('_PREFIX_',       'locals');
 define('_PREFIX_GLOBAL_','globals');
 define('_PREFIX_HIDE_',  '.');
