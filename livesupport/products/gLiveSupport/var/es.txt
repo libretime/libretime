@@ -1,0 +1,222 @@
+es:table
+{
+    windowTitle:string       { "Panel maestro de LiveSupport" }
+    notLoggedInMsg:string    { "No ha ingresado al sistema" }
+    loggedInMsg:string       { "Ingresó al sistema como {0}" }
+    loginButtonLabel:string  { "Accesar" }
+    logoutButtonLabel:string { "Salir" }
+    liveModeButtonLabel:string              { "Modo en vivo" }
+    uploadFileButtonLabel:string            { "Cargar archivo" }
+    scratchpadButtonLabel:string            { "scratchpad" }
+    simplePlaylistMgmtButtonLabel:string    { "editar lista de reproducción" }
+    schedulerButtonLabel:string             { "Programador" }
+    searchButtonLabel:string                { "búsqueda" }
+
+    localeNotAvailableMsg:string        { "Ubicación {0} no disponible" }
+    schedulerNotReachableMsg:string     { "El servidor del programador no está disponible" }
+    storageNotReachableMsg:string       { "El servidor de almacenamiento no está disponible" }
+    authenticationNotReachableMsg:string
+                                      { "El servidor de autenticación no está disponible" }
+    audioErrorMsg                       { "Error del reproductor de audio: " }
+
+    loginWindow:table
+    {
+        windowTitle:string          { "INGRESO" }
+
+        loginLabel:string           { "Identificador" }
+        passwordLabel:string        { "Clave de acceso" }
+        okButtonLabel:string        { "OK" }
+        cancelButtonLabel:string    { "Cancelar" }
+    }
+
+    audioClipListWindow:table
+    {
+        windowTitle:string            { "Ventana de audio clip de LiveSupport" }
+
+        idColumnLabel:string          { "id" }
+        lengthColumnLabel:string      { "duración" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "muestra" }
+
+        closeButtonLabel:string       { "cerrar" }
+    }
+
+    scratchpadWindow:table
+    {
+        windowTitle:string                  { "Scratchpad de LiveSupport " }
+
+        typeColumnLabel:string              { "tipo" }
+        titleColumnLabel:string             { "título" }
+        addToPlaylistButtonLabel:string     { "Añadir a lista de reproducción" }
+        clearListButtonLabel:string         { "Limpiar la lista" }
+        removeButtonLabel:string            { "Eliminar elemento(s)" }
+
+        upMenuItem:string                   { "Desplazar hacia arriba" }
+        downMenuItem:string                 { "Desplazar hacia abajo" }
+        removeMenuItem:string               { "Eliminar" }
+        addToPlaylistMenuItem:string        { "Añadir a lista de reproducción" }
+        schedulePlaylistMenuItem:string     { "Programar lista de reproducción" }
+        deleteMenuItem:string               { "Eliminar" }
+        cueMenuItem:string                  { "Previsualizar" }
+        addToLiveModeMenuItem:string        { "Añadir a modo en vivo" }
+    }
+
+    playlistListWindow:table
+    {
+        windowTitle:string            { "Venta de lista de reproducción de LiveSupport" }
+
+        listBoxLabel                  { "Listas de reproducción" }
+        detailBoxLabel                { "Detalles de las listas de reproducción" }
+
+        idColumnLabel:string          { "id" }
+        lengthColumnLabel:string      { "duración" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "muestra" }
+
+        closeButtonLabel:string       { "cerrar" }
+    }
+
+    uploadFileWindow:table
+    {
+        windowTitle:string            { "Cargar archivo" }
+
+        chooseFileLabel:string        { "Nombre del archivo" }
+        chooseFileButtonLabel:string  { "Navegar" }
+
+        mainSectionLabel:string       { "Principal" }
+        titleLabel:string             { "Título" }
+        creatorLabel:string           { "Creador" }
+        genreLabel:string             { "Género" }
+        fileFormatLabel:string        { "Tipo de archivo" }
+        lengthLabel:string            { "Duración" }
+
+        uploadButtonLabel:string      { "Cargar" }
+        closeButtonLabel:string       { "Cancelar" }
+        statusBar:string              { "Barra de estatus" }
+
+        fileChooserDialogTitle:string { "Seleccione un archivo" }
+        clipUploadedMessage:string    { "clip cargado {0}" }
+    }
+
+    simplePlaylistManagementWindow:table
+    {
+        windowTitle:string            { "Ventana del módulo administrativo de las listas de reproducción simples de LiveSupport" }
+
+        startColumnLabel:string       { "inicio" }
+        titleColumnLabel:string       { "título" }
+        lengthColumnLabel:string      { "duración" }
+        nameLabel:string              { "nombre" }
+        saveButtonLabel:string        { "guardar" }
+        closeButtonLabel:string       { "cerrar" }
+        statusBar:string              { "barra de estatus" }
+        playlistSavedMessage:string   { "lista de reproducción guardada {0}" }
+    }
+
+    schedulerWindow:table
+    {
+        windowTitle:string            { "Ventana del programador de LiveSupport" }
+
+        startColumnLabel:string       { "inicio" }
+        titleColumnLabel:string       { "título" }
+        endColumnLabel:string         { "fin" }
+        deleteMenuItem:string         { "eliminar" }
+
+        closeButtonLabel:string       { "cerrar" }
+
+    }
+
+    schedulePlaylistWindow:table
+    {
+        windowTitle:string            { "Ventana de las listas de reproducción programadas de LiveSupport" }
+
+        hourLabel:string              { "hora: " }
+        minuteLabel:string            { "minuto: " }
+        scheduleButtonLabel:string    { "programado" }
+        closeButtonLabel:string       { "cerrar" }
+    }
+
+    searchWindow:table
+    {
+        windowTitle:string            { "Ventana de búsqueda/navegación de LiveSupport" }
+
+        simpleSearchTab:string        { "Búsqueda" }
+        advancedSearchTab:string      { "Búsqueda avanzada" }
+        browseTab:string              { "Navegar" }
+        
+        searchByTextLabel:string      { "Buscar por" }
+        searchButtonLabel:string      { "Buscar" }
+        
+        typeColumnLabel:string        { "" }
+        titleColumnLabel:string       { "Título" }
+        creatorColumnLabel:string     { "Creador" }
+        lengthColumnLabel:string      { "Duración" }
+        
+        partialOperatorDisplay:string     { "contiene" }
+        partialOperatorSearchKey:string   { "parcial" }
+        prefixOperatorDisplay:string      { "empieza con" }
+        prefixOperatorSearchKey:string    { "prefix" }
+        =OperatorDisplay:string           { "equivale" }
+        =OperatorSearchKey:string         { "=" }
+        <=OperatorDisplay:string          { "<=" }
+        <=OperatorSearchKey:string        { "<=" }
+        >=OperatorDisplay:string          { ">=" }
+        >=OperatorSearchKey:string        { ">=" }
+        
+        allStringForBrowse                { "--- todo ---" }
+        
+        addToScratchpadMenuItem:string    { "_Añadir a Scratchpad" }
+        addToLiveModeMenuItem:string      { "Añadir a Modo en vivo" }
+    }
+
+    liveModeWindow:table
+    {
+        windowTitle:string            { "Venta Modo en vivo de LiveSupport" }
+        
+        cueMenuItem:string            { "Previsualizar" }
+        upMenuItem:string             { "Desplazar hacia arriba" }
+        downMenuItem:string           { "Desplazar hacia abajo" }
+        removeMenuItem:string         { "Eliminar" }
+        playMenuItem:string           { "Reproduccir" }
+        
+        cuePlayerLabel:string         { "Previsualizar" }
+    }
+    
+    metadataTypes:table
+    {
+        title:string                { "Título" }
+        creator:string              { "Creador" }
+        album:string                { "Álbum" }
+        year:string                 { "Año" }
+        genre:string                { "Género" }
+        description:string          { "Descripción" }
+        format:string               { "Formato" }
+        length:string               { "Duración" }
+        bpm:string                  { "BPM" }
+        rating:string               { "Calificación" }
+        encoded_by:string           { "Codificador por" }
+        track_number:string         { "Pista número" }
+        disc_number:string          { "Disco número" }
+        mood:string                 { "Clasificación" }
+        publishing_label:string     { "Disquera" }
+        composer:string             { "Compositor" }
+        bitrate:string              { "Tasa de bits" }
+        channels:string             { "Canales" }
+        sample_rate:string          { "Tasa de muestra" }
+        encoding_software:string    { "Programa para codificación" }
+        checksum:string             { "Suma de comprobación" }
+        lyrics:string               { "Letras" }
+        orchestra_or_band:string    { "Orquesta o grupo musical" }
+        conductor:string            { "Conductor" }
+        lyricist:string             { "Autor de la letra" }
+        original_lyricist:string    { "Autor original" }
+        radio_station_name:string   { "Nombre de la estación de radio" }
+        audio_file_info_url:string  { "Sitio web con información del archivo" }
+        artist_url:string           { "Sitio web del artista" }
+        audio_source_url:string     { "Sitio web de la fuente" }
+        buy_cd_url:string           { "Sitio web para comprar CD" }
+        isrc_number:string          { "número ISRC" }
+        catalog_number:string       { "número de catálogo" }
+        original_artist:string      { "Artista original" }
+        copyright:string            { "Derechos Reservados" }
+    }
+}
