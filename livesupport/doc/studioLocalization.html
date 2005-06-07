@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>LiveSupport documentation for LS Studio localization</title>
+  <meta content="$Author: fgerlits $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: fgerlits $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/studioLocalization.html,v $</li>
+</ul>
+
+<h1>Scope</h1>
+This document describes the process of adding a new language to the 
+LiveSupport Studio localization.  It is written for developers.<br>
+
+<h1>Introduction</h1>
+LiveSupport Studio (a.k.a. the C++ GUI) uses IBM's 
+<a href="http://www-306.ibm.com/software/globalization/icu/index.jsp">ICU</a>
+library for localization.  This library supports a fallback mechanism:
+if the locale is set to <b>es_GT</b> (Guatemalan Spanish), it first tries to
+read the <b>es_GT</b> table for localized strings; if there is no such table,
+it tries the <b>es</b> table; and if that is missing, too, it reads the 
+<b>root</b> table.<br>
+These tables are stored as UTF-8 text files (with Unix line breaks, i.e., a
+single 0x0A character at the end of each line) in the 
+<code>products/gLiveSupport/var</code> directory with a <code>txt</code>
+extension: e.g., <code>es_GT.txt</code>.
+Before these files can be used by the program, they need to be converted into 
+binary <i>resource bundle</i> files using ICU's <code>genrb</code> program 
+(which is in <code>usr/bin</code>, and is called by the Makefile).
+
+<h1>Modifying an existing language</h1>
+<ul>
+    <li>Edit the text file (e.g., 
+            <code>products/gLiveSupport/var/es_GT.txt</code>).</li>
+    <li>Run <code>make</code> in <code>products/gLiveSupport</code>.</li>
+</ul>
+
+<h1>Adding a new language</h1>
+<ul>
+    <li>Add the new text file to <code>products/gLiveSupport/var</code>.
+        Make sure the file is in UTF-8 encoding, has Unix line breaks,
+        and does not have a 
+        <a href="http://www.unicode.org/faq/utf_bom.html#BOM">BOM</a>
+        character at the beginning.  The file name should be 
+        <code>&lt;language-code&gt;[_&lt;country-code&gt;].txt</code>,
+        where <code>&lt;language-code&gt;</code> is the
+<a href="http://www.loc.gov/standards/iso639-2/langcodes.html">ISO 639-1</a>
+        2-letter language code in lowercase,
+        and the optional <code>&lt;country-code&gt;</code> is the
+<a href="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html">ISO 3166-1</a>
+        2-letter country code in uppercase.
+    <li>Add a new line for the new language in each of the files
+            <code>gLiveSupport.xml</code>,
+            <code>gLiveSupport.xml.template</code> and 
+            <code>Makefile.in</code>
+        in the <code>products/gLiveSupport/etc</code> directory.</li>
+    <li>Run <code>bin/autogen.sh</code> and then <code>make clean all</code>
+        in the <code>products/gLiveSupport</code> directory.
+</ul>
+<br>
+</body>
+</html>

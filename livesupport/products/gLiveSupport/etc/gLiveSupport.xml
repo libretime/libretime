@@ -102,6 +102,7 @@
         <language locale="en" name="English"/>
         <language locale="es" name="Español"/>
         <language locale="hu" name="Magyar"/>
+        <language locale="sr" name="Srpski"/>
     </supportedLanguages>
 
     <widgetFactory    path = "var/widgets/" />
