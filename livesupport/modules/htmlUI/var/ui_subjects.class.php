@@ -26,7 +26,7 @@ class uiSubjects
      */
     function getAddSubjForm($type)
     {
-        include dirname(__FILE__). '/formmask/subjects.php';
+        include dirname(__FILE__). '/formmask/subjects.inc.php';
 
         $form = new HTML_QuickForm('addSubject', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $mask[$type]);
@@ -45,7 +45,7 @@ class uiSubjects
     */
     function addSubj(&$request)
     {
-        include dirname(__FILE__). '/formmask/subjects.php';
+        include dirname(__FILE__). '/formmask/subjects.inc.php';
         $this->setRedir();
 
         if ($this->Base->_validateForm($request, $mask[$request['passwd'] ? 'addUser' : 'addGroup']) !== TRUE) {
@@ -103,7 +103,7 @@ class uiSubjects
      */
     function getChgPasswdForm($login, $su=FALSE)
     {
-        include dirname(__FILE__). '/formmask/subjects.php';
+        include dirname(__FILE__). '/formmask/subjects.inc.php';
 
         $form = new HTML_QuickForm('chgPasswd', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         if ($su === TRUE) {
@@ -222,7 +222,7 @@ class uiSubjects
             $this->Base->_retMsg('Nothing selected.');
             return FALSE;
         }
-        
+
         ## loop for multiple action
         if (is_array($request['id'])) {
             foreach ($request['id'] as $val) {

@@ -3,7 +3,7 @@
 {if $PL_editMetaData}
     {include file="playlist/metadata.tpl"}
 
-{elseif is_array($PL->get())}           {* already activated Playlist *}
+{elseif is_array($PL->getActiveArr())}           {* already activated Playlist *}
     {include file="playlist/editor.tpl"}
 
 {else}                                  {* no active Playlist *}

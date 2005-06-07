@@ -156,6 +156,7 @@ class uiBase
         }
     }
 
+
     /**
      *  _parseArr2Form
      *
@@ -343,7 +344,7 @@ class uiBase
     function _getMDataValue($id, $key, $langid=FALSE)
     {
         if ($langid===FALSE) $langid = $_SESSION['langid'];
-        
+
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid))) {
             $value = current($arr);
             return $value['value'];

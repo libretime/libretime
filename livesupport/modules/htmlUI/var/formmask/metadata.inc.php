@@ -151,7 +151,7 @@ $mask = array(
                 'element'   => 'ls:year',
                 'type'      => 'select',
                 'label'     => 'Year',
-                #'options'   => _getNumArr(1900, date('Y')+5),
+                'options'   => _getNumArr(1900, date('Y')+5),
                 'id3'       => 'Year'
             ),
             array(
@@ -209,14 +209,14 @@ $mask = array(
                 'element'   => 'ls:track_num',
                 'type'      => 'select',
                 'label'     => 'Track number',
-                #'options'   => _getNumArr(0, 99),
+                'options'   => _getNumArr(0, 99),
                 'id3'       => 'Track'
             ),
             array(
                 'element'   => 'ls:disc_num',
                 'type'      => 'select',
                 'label'     => 'Disc number',
-                #'options'   => _getNumArr(0, 20),
+                'options'   => _getNumArr(0, 20),
                 'id3'       => 'Disk'
             ),
             array(

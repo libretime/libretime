@@ -57,7 +57,8 @@ if (is_array($_REQUEST['popup'])){
             break;
 
             case "deleteItem":
-                $Smarty->assign('id', $_REQUEST['id']);
+                $Smarty->assign('id',       $_REQUEST['id']);
+                $Smarty->assign('filename', $uiBrowser->_getMDataValue($_REQUEST['id'], UI_MDATA_KEY_TITLE));
                 $Smarty->display('popup/deleteItem.tpl');
             break;
 
@@ -91,6 +92,11 @@ if (is_array($_REQUEST['popup'])){
             case "SUBJECTS.confirmRemoveSubj":
                 $Smarty->assign('lgoin', $_REQUEST['login']);
                 $Smarty->display('popup/SUBJECTS.confirmRemoveSubj.tpl');
+            break;
+
+            case "testStream":
+                $Smarty->assign('data', $uiBrowser->testStream($_REQUEST['url']));
+                $Smarty->display('popup/testStream.tpl');
             break;
         }
     }

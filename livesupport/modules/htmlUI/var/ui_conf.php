@@ -14,10 +14,10 @@ define('UI_BROWSER',                    'ui_browser.php');
 
 ## HTML Form stuff
 define('UI_FORM_STANDARD_METHOD',       'POST');
-define('UI_INPUT_STANDARD_SIZE',        20);
-define('UI_INPUT_STANDARD_MAXLENGTH',   50);
+define('UI_INPUT_STANDARD_SIZE',        50);
+define('UI_INPUT_STANDARD_MAXLENGTH',   255);
 define('UI_TEXTAREA_STANDART_ROWS',     5);
-define('UI_TEXTAREA_STANDART_COLS',     17);
+define('UI_TEXTAREA_STANDART_COLS',     32);
 define('UI_BUTTON_STYLE',               'button');
 define('UI_QFORM_REQUIRED',             '../templates/sub/form_required.tpl');
 define('UI_QFORM_REQUIREDNOTE',         '../templates/sub/form_requirednote.tpl');
@@ -110,8 +110,18 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT);
 
 ## extent config
-$config['audiofiles'] = array('.mp3' => TRUE,
-                              '.wav' => TRUE,
-                              '.ogg' => TRUE
-                        );
+$config = array_merge($config,
+    array(
+        'file_types'    => array(
+                            '.mp3',
+                            '.wav',
+                            '.ogg'
+        ),
+        'stream_types'  => array(
+                            'application/ogg',
+                            'audio/mpeg'
+        )
+    )
+);
+
 ?>

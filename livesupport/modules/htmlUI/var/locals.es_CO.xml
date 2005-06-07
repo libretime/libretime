@@ -1,81 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
 	<Id>es_CO</Id>
+	<status>checked</status>
 	<item>
 		<key>Mo</key>
-		<value />
+		<value>Lu</value>
 	</item>
 	<item>
 		<key>Tu</key>
-		<value />
+		<value>Ma</value>
 	</item>
 	<item>
 		<key>We</key>
-		<value />
+		<value>Mi</value>
 	</item>
 	<item>
 		<key>Th</key>
-		<value />
+		<value>Ju</value>
 	</item>
 	<item>
 		<key>Fr</key>
-		<value />
+		<value>Vi</value>
 	</item>
 	<item>
 		<key>Sa</key>
-		<value />
+		<value>Sa</value>
 	</item>
 	<item>
 		<key>Su</key>
-		<value />
+		<value>Do</value>
 	</item>
 	<item>
 		<key>January</key>
-		<value />
+		<value>Enero</value>
 	</item>
 	<item>
 		<key>February</key>
-		<value />
+		<value>Febrero</value>
 	</item>
 	<item>
 		<key>March</key>
-		<value />
+		<value>Marzo</value>
 	</item>
 	<item>
 		<key>April</key>
-		<value />
+		<value>Abril</value>
 	</item>
 	<item>
 		<key>May</key>
-		<value />
+		<value>Mayo</value>
 	</item>
 	<item>
 		<key>July</key>
-		<value />
+		<value>Julio</value>
 	</item>
 	<item>
 		<key>August</key>
-		<value />
+		<value>Agosto</value>
 	</item>
 	<item>
 		<key>September</key>
-		<value />
+		<value>Septiembre</value>
 	</item>
 	<item>
 		<key>October</key>
-		<value />
+		<value>Octubre</value>
 	</item>
 	<item>
 		<key>November</key>
-		<value />
+		<value>Noviembre</value>
 	</item>
 	<item>
 		<key>December</key>
-		<value />
+		<value>Diciembre</value>
 	</item>
 	<item>
 		<key>June</key>
-		<value />
+		<value>Junio</value>
 	</item>
 	<item>
 		<key>Monday</key>

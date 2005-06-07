@@ -1,6 +1,6 @@
 <?php
 require dirname(__FILE__).'/../ui_handler_init.php';
-     
+
 switch($_REQUEST['act']){
 
     case "login":

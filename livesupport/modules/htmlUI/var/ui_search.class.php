@@ -58,7 +58,7 @@ class uiSearch
             $sel = &$form->createElement('hierselect', "row_$n", NULL);
             $sel->setOptions(array($col1, $col2));
             $group[] = &$sel;
-            $group[] = &$form->createElement('text', "row_$n".'[2]', NULL);
+            $group[] = &$form->createElement('text', "row_$n".'[2]', NULL, array('size' => 25, 'maxlength' => UI_INPUT_STANDARD_MAXLENGTH));
 
             if ($activerow) $group[] = &$form->createElement('hidden', "row_$n".'[active]', TRUE);
             else            $group[] = &$form->createElement('hidden', "row_$n".'[active]', FALSE);

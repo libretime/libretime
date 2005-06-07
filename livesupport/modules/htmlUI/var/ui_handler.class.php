@@ -71,7 +71,7 @@ class uiHandler extends uiBase {
         $this->sessid = $sessid;
         $this->langid = $formdata['langid'];
         $this->redirUrl = UI_BROWSER.'?popup[]=_2SCHEDULER&popup[]=_close';
-        
+
         return TRUE;
      }
 
@@ -193,8 +193,11 @@ class uiHandler extends uiBase {
 
     function test4audioType($filename)
     {
-        if (array_key_exists(strrchr($filename, "."), $this->config['audiofiles']))
-            return TRUE;
+        foreach ($this->config['file_types'] as $t) {
+            if (preg_match('/'.str_replace('/', '\/', $t).'$/i', $filename))
+                return TRUE;
+        }
+
         return FALSE;
     }
 

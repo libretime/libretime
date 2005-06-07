@@ -6,9 +6,11 @@ function login(&$data)
     include_once dirname(__FILE__).'/../../../storageServer/var/conf.php';
     include_once dirname(__FILE__).'/../../../storageServer/var/GreenBox.php';
     $dbc = DB::connect($config['dsn'], TRUE);
+
     if (DB::isError($dbc)) {
         die($dbc->getMessage());
     }
+
     $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
     $gb =& new GreenBox($dbc, $config);
 
@@ -16,10 +18,13 @@ function login(&$data)
     if (!$data['PHP_AUTH_USER'] || !$data['PHP_AUTH_PW']) {
         return FALSE;
     }
+
     $sessid = $gb->login($data['PHP_AUTH_USER'], $data['PHP_AUTH_PW']);
-    if(!$sessid || PEAR::isError($sessid)){
+
+    if (!$sessid || PEAR::isError($sessid)){
         return FALSE;
     }
+
     setcookie($config['authCookieName'], $sessid);
 
     if ($gb->isMemberOf($gb->getSessUserId($sessid), $gb->getSubjId('Admins')) !== TRUE) {
@@ -27,9 +32,11 @@ function login(&$data)
     }
 
     $id = $gb->getObjId($data['PHP_AUTH_USER'], $gb->storId);
+
     if(PEAR::isError($id)) {
         return FALSE;
     }
+
     return TRUE;
 }
 

@@ -28,7 +28,7 @@
                         </tr>
                     <!-- end repeat after 14 columns -->
                     <!-- start item -->
-                    {foreach from=$PL->getFlat() key='pos' item='i'}
+                    {foreach from=$PL->getFlat($PL->activeId) key='pos' item='i'}
                         <!-- {$n++} -->
                         <!-- fade information -->
                         <tr onClick="return contextmenu('{$i.attrs.id}', {if $n == 1}'PL.changeFadeIn'{else}'PL.changeTransition'{/if})" style="background-color: #bbb">

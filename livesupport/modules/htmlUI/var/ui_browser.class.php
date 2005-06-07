@@ -206,9 +206,26 @@ class uiBrowser extends uiBase {
                        'url'    => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_URL) : 'http://',
                        'length' => $id ? preg_replace("/\.[0-9]{1,6}/", "", $this->_getMDataValue($id, UI_MDATA_KEY_DURATION)) : NULL
                       );
-
         $form->setConstants($const);
         $this->_parseArr2Form($form, $mask);
+
+        /*
+        $form->addGroupRule('grp',
+                             array(
+                                'url' => array(
+                                            array(tra('Missing URL'), 'required'),
+                                            array(tra('URL structure is invalid'), 'regex', UI_REGEX_URL)
+                                         )
+                             ),
+                             NULL,
+                             NULL,
+                             NULL,
+                             'client'
+        );
+        $form->_rules['grp[url]'][0][validation] = 'client';
+        $form->_rules['grp[url]'][1][validation] = 'client';
+        */
+
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
@@ -350,7 +367,6 @@ class uiBrowser extends uiBase {
     }
 
 
-
     function changeStationPrefs(&$mask)
     {
         $form = new HTML_QuickForm('changeStationPrefs', UI_STANDARD_FORM_METHOD, UI_HANDLER);
@@ -362,6 +378,67 @@ class uiBrowser extends uiBase {
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
         return $renderer->toArray();
+    }
+
+
+    /**
+     *  testStream
+     *
+     *  Test if URL seems to be valid
+     *
+     *  @param url string, full URL to test
+     *  @return array()
+     */
+    function testStream($url)
+    {
+        $parse = parse_url($url);
+        $host   = $parse["host"];
+        $port   = $parse["port"] ? $parse["port"] : 80;
+        $uri    = $parse["path"] ? $parse['path'] : '/'.($parse["query"] ? '?'.$parse["query"] : '');
+
+
+        if ($handle = @fsockopen($host, $port, $errno, $errstr, 10)) {
+            fputs($handle, "GET $uri HTTP/1.0\r\n\r\n");
+            $data = fread($handle, 1024);
+            list($header, $lost) = explode("\r\n\r\n", $data);
+            eregi("^[^\r^\n]*", $data, $piece);
+            $pieces = explode(' ', $piece[0]);
+            $protocol = $pieces[0];
+            $code     = $pieces[1];
+
+            foreach (explode("\r\n", $header) as $val) {
+                if ($type = stristr($val, "content-type:")) {
+                    $type = explode(':', $type);
+
+                    foreach ($this->config['stream_types'] as $t) {    echo $t;
+                        if (preg_match('/'.str_replace('/', '\/', $t).'/i', $type[1])) {
+                            $match = TRUE;
+                            break;
+                        }
+                    }
+
+                    $type = array(
+                                'type'  => trim($type[1]),
+                                'valid' => $match === TRUE ? TRUE : FALSE
+                            );
+                    break;
+                }
+            }
+
+            return array('connect'  => TRUE,
+                         'host'     => $host,
+                         'port'     => $port,
+                         'uri'      => $uri,
+                         'code'     => $code,
+                         'header'   => $header,
+                         'type'     => $type
+            );
+        }
+
+        return array('connect'  => FALSE,
+                     'host'     => $host,
+                     'port'     => $port,
+        );
     }
 }
 ?>

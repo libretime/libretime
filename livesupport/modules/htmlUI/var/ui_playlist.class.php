@@ -25,13 +25,18 @@ class uiPlaylist
             $this->Base->redirUrl = $this->redirectUrl;
     }
 
-    function get()
+    function getPLArray($id)
+    {
+        return $this->Base->gb->getPlaylistArray($id, $this->Base->sessid);
+    }
+
+    function getActiveArr()
     {
         if (!$this->activeId) {
             return FALSE;
         }
         #echo '<pre><div align="left">'; print_r( $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid)); echo '</div></pre>';
-        return $this->Base->gb->getPlaylistArray($this->activeId, $this->Base->sessid);
+        return $this->getPLArray($this->activeId);
     }
 
     function getActiveId()
@@ -219,20 +224,20 @@ class uiPlaylist
     }
 
 
-    function getFlat()
+    function getFlat($id)
     {
-        #print_r($this->get());
-        $this->plwalk($this->get());
-        #echo '<pre><div align="left">'; print_r($this->flat); echo '</div></pre>';
+        unset($this->flat);
+        $this->_plwalk($this->getPLArray($id));
+
         return $this->flat;
     }
 
 
-    function plwalk($arr, $parent=0, $attrs=0)
+    function _plwalk($arr, $parent=0, $attrs=0)
     {
         foreach ($arr['children'] as $node=>$sub) {
             if ($sub['elementname']===UI_PL_ELEM_PLAYLIST) {
-                $this->plwalk($sub, $node, $sub['attrs']);
+                $this->_plwalk($sub, $node, $sub['attrs']);
             }
             if ($sub['elementname']===UI_FILETYPE_AUDIOCLIP || $sub['elementname']===UI_FILETYPE_PLAYLIST) {
                 #$this->flat["$parent.$node"] = $sub['attrs'];
@@ -307,7 +312,7 @@ class uiPlaylist
 
     function getCurrElement($id)
     {
-        $arr = $this->getFlat();
+        $arr = $this->getFlat($id);
         while ($val = current($arr)) {
             if ($val['attrs']['id'] == $id) {
                 return current($arr);
@@ -319,7 +324,7 @@ class uiPlaylist
 
     function getPrevElement($id)
     {
-        $arr = $this->getFlat();
+        $arr = $this->getFlat($id);
         while ($val = current($arr)) {
             if ($val['attrs']['id'] == $id) {
                 return prev($arr);
@@ -331,7 +336,7 @@ class uiPlaylist
 
     function getNextElement($id)
     {
-        $arr = $this->getFlat();
+        $arr = $this->getFlat($id);
         while ($val = current($arr)) {
             if ($val['attrs']['id'] == $id) {
                 return next($arr);

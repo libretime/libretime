@@ -108,7 +108,7 @@
 	</item>
 	<item>
 		<key>$1 must be $2</key>
-		<value>$1 mora biti  $2</value>
+		<value>$1 mora biti  $2.</value>
 	</item>
 	<item>
 		<key>+</key>
@@ -132,7 +132,7 @@
 	</item>
 	<item>
 		<key>User or group &quot;$1&quot; already exists.</key>
-		<value>Korisnik ili grupa &quot;$1&quot; već postoji</value>
+		<value>Korisnik ili grupa &quot;$1&quot; već postoji.</value>
 	</item>
 	<item>
 		<key>created at $1</key>
@@ -160,7 +160,7 @@
 	</item>
 	<item>
 		<key>Are you sure to discard all changes?</key>
-		<value>Da li ste sigurni da želite da isključite sve promene?</value>
+		<value>Da li ste sigurni da želite da odbacite sve promene?</value>
 	</item>
 	<item>
 		<key>Are you sure you want to change existing metadata?</key>
@@ -216,7 +216,7 @@
 	</item>
 	<item>
 		<key>Nothing left</key>
-		<value>Nista nije ostalo</value>
+		<value>Ništa nije ostalo</value>
 	</item>
 	<item>
 		<key>Remove from group</key>
@@ -232,7 +232,7 @@
 	</item>
 	<item>
 		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
-		<value>Treba da imate najmanje jednu neotvorenu plej listu u Pripremi da biste je ubacili u raspored.</value>
+		<value>Treba da imate najmanje jednu neotvorenu plej listu u Pripremi da biste je stavili u raspored.</value>
 	</item>
 	<item>
 		<key>empty</key>
@@ -276,7 +276,7 @@
 	</item>
 	<item>
 		<key>Unable to set &quot;$1&quot; to value &quot;$2&quot;.</key>
-		<value>Ne možete da podesite &quot;$1&quot; na vrednost &quot;$2&quot;.</value>
+		<value>Ne možete podesiti &quot;$1&quot; na vrednost &quot;$2&quot;.</value>
 	</item>
 	<item>
 		<key>$1 uses an unsupported file type.</key>
@@ -284,7 +284,7 @@
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-		<value>Poslati fajl $1 je veći nego što LiveSupport sistem podržava.</value>
+		<value>Aploudovan fajl $1 je veći nego što LiveSupport sistem podržava.</value>
 	</item>
 	<item>
 		<key>ScratchPad</key>
@@ -292,7 +292,7 @@
 	</item>
 	<item>
 		<key>Access denied.</key>
-		<value>Pristup zabranjen</value>
+		<value>Pristup zabranjen.</value>
 	</item>
 	<item>
 		<key>Already active Playlist</key>
@@ -300,7 +300,7 @@
 	</item>
 	<item>
 		<key>Audioclip Data saved</key>
-		<value>Podaci o audio fajlu su sačuvani.</value>
+		<value>Podaci o audio klipu su sačuvani.</value>
 	</item>
 	<item>
 		<key>Cannot create Playlist</key>
@@ -328,15 +328,15 @@
 	</item>
 	<item>
 		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
-		<value>Unos se već nalazi u Pripremi i pomeren je na vrh liste.</value>
+		<value>Unos $1 se već nalazi u Pripremi i pomeren je na vrh liste.</value>
 	</item>
 	<item>
 		<key>Entry added at $1 with ScheduleId: $2</key>
-		<value>Podatak je unet  $1 sa rasporedom $2.</value>
+		<value>Podatak je unet  u $1 sa programiranim ID $2.</value>
 	</item>
 	<item>
 		<key>Entry with ScheduleId $1 removed</key>
-		<value>Unos sa rasporeda ID $1 je uklonjen</value>
+		<value>Unos sa programiranim ID $1 je uklonjen.</value>
 	</item>
 	<item>
 		<key>Error on add item to Playlist</key>
@@ -344,11 +344,11 @@
 	</item>
 	<item>
 		<key>Error saving Settings</key>
-		<value>Greška prilikom snimanja sistemskih vrednosti</value>
+		<value>Greška pri snimanju sistemskih podešavanja.</value>
 	</item>
 	<item>
 		<key>Error uploading Logo</key>
-		<value>Greška kod slanja Logoa.</value>
+		<value>Greška pri aploudu Logoa.</value>
 	</item>
 	<item>
 		<key>Error: $1</key>
@@ -356,7 +356,7 @@
 	</item>
 	<item>
 		<key>File $1 was not uploaded.</key>
-		<value>Fajl $1 nije poslat.</value>
+		<value>Fajl $1 nije aploudovan.</value>
 	</item>
 	<item>
 		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
@@ -388,7 +388,7 @@
 	</item>
 	<item>
 		<key>No Playlist is locked by You.</key>
-		<value>Ni jedna plejlista nije aktivna.</value>
+		<value>Nema aktivne plej liste.</value>
 	</item>
 	<item>
 		<key>Note: Station Preferences not setup proberly.</key>
@@ -428,7 +428,7 @@
 	</item>
 	<item>
 		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
-		<value>Dužina pripremne tabele nije podešena u sistemu, pa neće biti upotrebljena.</value>
+		<value>Dužina pripremne tabele nije podešena u sistemu, pa ne može biti upotrebljena.</value>
 	</item>
 	<item>
 		<key>Select a Value</key>
@@ -452,7 +452,7 @@
 	</item>
 	<item>
 		<key>Target is not Folder</key>
-		<value>Traženo nije direktorijum.</value>
+		<value>Traženo nije folder.</value>
 	</item>
 	<item>
 		<key>There is no playlist available to unlock.</key>
@@ -468,11 +468,11 @@
 	</item>
 	<item>
 		<key>Upload of file $1 was incomplete.</key>
-		<value>Poslati fajl  $1 nije kompletan.</value>
+		<value>Aploud fajla  $1 nije kompletan.</value>
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
-		<value>Poslati fajl $1 je veći od vrednosti u php.ini.</value>
+		<value>Aploudovan fajl $1 je veći od podešenog u php.ini.</value>
 	</item>
 	<item>
 		<key>You have an Playlist already activated, first close it</key>
@@ -528,7 +528,7 @@
 	</item>
 	<item>
 		<key>Audio source web page</key>
-		<value>Web strana sa informacijom o audio fajlu</value>
+		<value>Web strana audio izvora</value>
 	</item>
 	<item>
 		<key>BPM</key>
@@ -540,7 +540,7 @@
 	</item>
 	<item>
 		<key>Browse</key>
-		<value>Pronadji</value>
+		<value>Pregledaj</value>
 	</item>
 	<item>
 		<key>Buy CD web page</key>
@@ -648,7 +648,7 @@
 	</item>
 	<item>
 		<key>Display this Playlist</key>
-		<value>Prikaži plejlistu</value>
+		<value>Prikaži plej listu</value>
 	</item>
 	<item>
 		<key>Duration</key>
@@ -704,7 +704,7 @@
 	</item>
 	<item>
 		<key>Folder Structure</key>
-		<value>Struktura direktorijuma</value>
+		<value>Struktura foldera</value>
 	</item>
 	<item>
 		<key>Format</key>
@@ -720,7 +720,7 @@
 	</item>
 	<item>
 		<key>Go</key>
-		<value>Traži</value>
+		<value>Kreni</value>
 	</item>
 	<item>
 		<key>Group Name</key>
@@ -736,7 +736,7 @@
 	</item>
 	<item>
 		<key>Insert Playlist here</key>
-		<value>&lt;ovde unesi plej listu&gt;</value>
+		<value>&lt;Ovde unesi plej listu&gt;</value>
 	</item>
 	<item>
 		<key>Insert Playlist after previous</key>
@@ -760,7 +760,7 @@
 	</item>
 	<item>
 		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-		<value>Upiši nulu za Live Stream</value>
+		<value>Upiši nulu za Live Strim</value>
 	</item>
 	<item>
 		<key>Library Search</key>
@@ -768,7 +768,7 @@
 	</item>
 	<item>
 		<key>List Folder</key>
-		<value>Izlistaj direktorijum</value>
+		<value>Izlistaj folder</value>
 	</item>
 	<item>
 		<key>Listen to File</key>
@@ -848,11 +848,11 @@
 	</item>
 	<item>
 		<key>New Playlist using this File</key>
-		<value>Nova plej lista koristi fajl</value>
+		<value>Nova plej lista koristeći fajl</value>
 	</item>
 	<item>
 		<key>New Playlist using this file(s)</key>
-		<value>Nova plej lista koristi fajlove</value>
+		<value>Nova plej lista koristeći fajlove</value>
 	</item>
 	<item>
 		<key>New empty Playlist</key>
@@ -972,11 +972,11 @@
 	</item>
 	<item>
 		<key>Reset</key>
-		<value>Napiši organizaciju</value>
+		<value>Poništi</value>
 	</item>
 	<item>
 		<key>Reset Criteria</key>
-		<value>Poništi</value>
+		<value>Poništi kriterijum</value>
 	</item>
 	<item>
 		<key>Retype Password</key>
@@ -984,47 +984,47 @@
 	</item>
 	<item>
 		<key>Revert to Saved</key>
-		<value>Ponovo upišite lozinku</value>
-	</item>
-	<item>
-		<key>Rows per Page</key>
 		<value>Vrati na snimljenu verziju</value>
 	</item>
 	<item>
-		<key>Sample rate</key>
+		<key>Rows per Page</key>
 		<value>Redova po strani</value>
 	</item>
 	<item>
-		<key>Save Playlist</key>
+		<key>Sample rate</key>
 		<value>Brzina uzorkovanja</value>
 	</item>
 	<item>
-		<key>Save and Close</key>
+		<key>Save Playlist</key>
 		<value>Snimi plej listu</value>
 	</item>
 	<item>
-		<key>Scheduler</key>
+		<key>Save and Close</key>
 		<value>Snimi i zatvori</value>
 	</item>
 	<item>
-		<key>Scheduler Navigation</key>
+		<key>Scheduler</key>
 		<value>Raspored</value>
 	</item>
 	<item>
-		<key>Search</key>
+		<key>Scheduler Navigation</key>
 		<value>Navigacija rasporeda</value>
 	</item>
 	<item>
-		<key>Search Library</key>
+		<key>Search</key>
 		<value>Pretraži</value>
 	</item>
 	<item>
-		<key>Signed in</key>
+		<key>Search Library</key>
 		<value>Pretraži audioteku</value>
 	</item>
 	<item>
-		<key>Station Logo</key>
+		<key>Signed in</key>
 		<value>Prijavljen</value>
+	</item>
+	<item>
+		<key>Station Logo</key>
+		<value>Logo stanice</value>
 	</item>
 	<item>
 		<key>Station Name</key>
@@ -1032,126 +1032,126 @@
 	</item>
 	<item>
 		<key>Station Settings</key>
-		<value>Ime stanice</value>
-	</item>
-	<item>
-		<key>Station Time</key>
 		<value>Podešavanje stanice</value>
 	</item>
 	<item>
-		<key>Station URL</key>
+		<key>Station Time</key>
 		<value>Vreme u stanici</value>
 	</item>
 	<item>
-		<key>Stream</key>
+		<key>Station URL</key>
 		<value>URL Stanice</value>
 	</item>
 	<item>
-		<key>Stream URL</key>
+		<key>Stream</key>
 		<value>Strim</value>
 	</item>
 	<item>
-		<key>Subject</key>
+		<key>Stream URL</key>
 		<value>URL strima</value>
 	</item>
 	<item>
-		<key>Submit</key>
+		<key>Subject</key>
 		<value>Sadržaj</value>
 	</item>
 	<item>
-		<key>System Settings</key>
+		<key>Submit</key>
 		<value>Pridruži</value>
 	</item>
 	<item>
-		<key>Talk</key>
+		<key>System Settings</key>
 		<value>Sistemska podešavanja</value>
 	</item>
 	<item>
-		<key>Time</key>
+		<key>Talk</key>
 		<value>Govor</value>
 	</item>
 	<item>
-		<key>Title</key>
+		<key>Time</key>
 		<value>Vreme</value>
 	</item>
 	<item>
-		<key>Today</key>
+		<key>Title</key>
 		<value>Naslov</value>
 	</item>
 	<item>
-		<key>Track number</key>
+		<key>Today</key>
 		<value>Danas</value>
 	</item>
 	<item>
-		<key>Tree view</key>
+		<key>Track number</key>
 		<value>Redni broj snimka</value>
 	</item>
 	<item>
-		<key>Type</key>
+		<key>Tree view</key>
 		<value>Direktorijumsko stablo</value>
 	</item>
 	<item>
-		<key>User Password</key>
+		<key>Type</key>
 		<value>Tip</value>
 	</item>
 	<item>
-		<key>User/Groups</key>
+		<key>User Password</key>
 		<value>Korisnička lozinka</value>
 	</item>
 	<item>
-		<key>Username</key>
+		<key>User/Groups</key>
 		<value>Korisnik/Grupe</value>
 	</item>
 	<item>
-		<key>Week</key>
+		<key>Username</key>
 		<value>Korisničko ime</value>
 	</item>
 	<item>
-		<key>Weekly View</key>
+		<key>Week</key>
 		<value>Nedelja</value>
 	</item>
 	<item>
-		<key>Year</key>
+		<key>Weekly View</key>
 		<value>Nedeljni pregled</value>
 	</item>
 	<item>
-		<key>calendar week</key>
+		<key>Year</key>
 		<value>Godina</value>
 	</item>
 	<item>
-		<key>copy</key>
+		<key>calendar week</key>
 		<value>kalendarska nedelja</value>
 	</item>
 	<item>
-		<key>go up</key>
+		<key>copy</key>
 		<value>iskopiraj</value>
 	</item>
 	<item>
-		<key>move</key>
+		<key>go up</key>
 		<value>idi gore</value>
 	</item>
 	<item>
-		<key>move down</key>
+		<key>move</key>
 		<value>pomeri</value>
 	</item>
 	<item>
-		<key>move up</key>
+		<key>move down</key>
 		<value>pomeri dole</value>
 	</item>
 	<item>
-		<key>new&amp;nbsp;folder</key>
+		<key>move up</key>
 		<value>pomeri gore</value>
 	</item>
 	<item>
-		<key>next</key>
-		<value>novi direktorijum</value>
+		<key>new&amp;nbsp;folder</key>
+		<value>novi folder</value>
 	</item>
 	<item>
-		<key>permissions</key>
+		<key>next</key>
 		<value>sledeće</value>
 	</item>
 	<item>
-		<key>previous</key>
+		<key>permissions</key>
 		<value>dopuštene radnje</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>prethodno</value>
 	</item>
 </language>

@@ -142,61 +142,6 @@ $ui_fmask = array(
 
     ),
 
-    'addUser' => array(
-        array(
-            'element'   => 'act',
-            'type'      => 'hidden',
-            'constant'  => 'addUser'
-        ),
-        array(
-            'element'   => 'login',
-            'type'      => 'text',
-            'label'     => 'Username',
-            'required'  => TRUE
-        ),
-        array(
-            'element'   =>'pass',
-            'type'      =>'password',
-            'label'     =>'User Password',
-            'required'  =>TRUE
-        ),
-        array(
-            'element'   =>'pass2',
-            'type'      =>'password',
-            'label'     =>'Repeat Password',
-            'required'  =>TRUE
-        ),
-        array(
-            'rule'      =>'compare',
-            'element'   =>array('pass','pass2'),
-            'rulemsg'   =>'The passwords do not match'
-        ),
-        array(
-            'element'   =>'Submit',
-            'type'      =>'submit',
-            'label'     =>'Submit'
-        )
-    ),
-
-    'addGroup' => array(
-        array(
-            'element'   => 'act',
-            'type'      => 'hidden',
-            'constant'  => 'addGroup'
-        ),
-        array(
-            'element'   => 'login',
-            'type'      => 'text',
-            'label'     => 'Group Name',
-            'required'  => TRUE
-        ),
-        array(
-            'element'   =>'Submit',
-            'type'      =>'submit',
-            'label'     =>'Submit'
-        )
-    ),
-
     'login' => array(
         array(
             'element'   => 'act',
@@ -207,14 +152,16 @@ $ui_fmask = array(
             'element'   => 'login',
             'type'      => 'text',
             'label'     => 'Username',
-            'required'  => TRUE
+            'required'  => TRUE,
+            'attributes' => array('size' => 20)
         ),
         array(
             'element'   => 'pass',
             'type'      => 'password',
             'label'     => 'Password',
             'required'  => TRUE,
-            'requiredmsg' => ""
+            'requiredmsg' => "",
+            'attributes' => array('size' => 20)
         ),
         array(
             'element'   => 'cancel',
@@ -335,8 +282,28 @@ $ui_fmask = array(
             'rule'      => 'regex',
             'format'    => UI_REGEX_URL,
             'rulemsg'   => 'URL seems invalid',
-            'attributes'=> array('maxlength' => 256)
+            'attributes'=> array('maxlength' => 256),
+            #'groupit'   => TRUE
         ),
+        /*
+        array(
+            'element'   => 'test',
+            'type'      => 'button',
+            'label'     => 'Test',
+            'groupit'   => TRUE,
+            'attributes'=> array('onclick' => "popup('".UI_BROWSER."?popup[]=testStream&url=' + document.forms['addWebstream'].elements['grp[url]'].value, 'PingSTream', 400, 250)")
+        ),
+        array(
+            'group'     => array('url', 'test'),
+            'name'      => 'grp',
+            'label'     => 'Stream URL',
+        ),
+        array(
+            'grouprule',
+            'name'      => 'grprule',
+
+        ),
+        */
         array(
             'element'   => 'length',
             'type'      => 'date',
@@ -351,13 +318,20 @@ $ui_fmask = array(
             'groupit'   => TRUE
         ),
         array(
+            'element'   => 'test',
+            'type'      => 'button',
+            'label'     => 'Test',
+            'groupit'   => TRUE,
+            'attributes'=> array('onclick' => "if (validate_addWebstream(document.forms['addWebstream'])) popup('".UI_BROWSER."?popup[]=testStream&url=' + document.forms['addWebstream'].elements['url'].value, 'testStream', 400, 250)")
+        ),
+        array(
             'element'   => 'Submit',
             'type'      => 'submit',
             'label'     => 'Submit',
             'groupit'   => TRUE
         ),
         array(
-            'group'     => array('cancel', 'Submit')
+            'group'     => array('cancel', 'test', 'Submit')
         )
     ),
 
