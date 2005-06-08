@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     timeWidget->set_attributes(timeWidgetAttributes);
     timeBin = Gtk::manage(widgetFactory->createBlueBin());
     timeBin->add(*timeWidget);
-    timeBin->set_size_request(120, 104);
+    timeBin->set_size_request(140, 104);
 
     // set up the now playing widget
     nowPlayingWidget = Gtk::manage(new NowPlaying(gLiveSupport, bundle));
