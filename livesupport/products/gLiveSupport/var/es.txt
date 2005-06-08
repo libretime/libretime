@@ -8,7 +8,7 @@ es:table
     liveModeButtonLabel:string              { "Modo en vivo" }
     uploadFileButtonLabel:string            { "Cargar archivo" }
     scratchpadButtonLabel:string            { "scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "editar lista de reproducción" }
+    simplePlaylistMgmtButtonLabel:string    { "editar lista de repr." }
     schedulerButtonLabel:string             { "Programador" }
     searchButtonLabel:string                { "búsqueda" }
 

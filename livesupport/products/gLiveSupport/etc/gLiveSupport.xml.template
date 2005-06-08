@@ -99,11 +99,11 @@
     />
 
     <supportedLanguages>
-        <language locale="en"    name="English"/>
-        <language locale="es"    name="Español"/>
-        <language locale="hu"    name="Magyar"/>
-        <language locale="sr_CS" name="Српски"/>
-        <language locale="sr_YU" name="Srpski"/>
+        <language locale="en"               name="English"/>
+        <language locale="es"               name="Español"/>
+        <language locale="hu"               name="Magyar"/>
+        <language locale="sr_CS"            name="Srpski"/>
+        <language locale="sr_CS_CYRILLIC"   name="Српски"/>
     </supportedLanguages>
 
     <widgetFactory    path = "ls_install_dir/var/widgets/" />

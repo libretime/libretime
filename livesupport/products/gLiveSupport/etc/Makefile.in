@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.41 $
+#   Version  : $Revision: 1.42 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -209,7 +209,7 @@ G_LIVESUPPORT_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_es.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_hu.res \
                     ${TMP_DIR}/${PACKAGE_NAME}_sr_CS.res \
-                    ${TMP_DIR}/${PACKAGE_NAME}_sr_YU.res
+                    ${TMP_DIR}/${PACKAGE_NAME}_sr_CS_CYRILLIC.res
 
 G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 
