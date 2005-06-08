@@ -39,7 +39,7 @@
             <!-- start what playing -->
             <div class="whatplaying" id="statusbar_whatsplaying">
                 {if $_nowplaying}
-                    <div class="nowplaying">Now Playing: {$_nowplaying.title}</div>
+                    <div class="nowplaying">Now Playing: {$_nowplaying.title|truncate:33}</div>
                     <div class="scala">
                         <div class="scala_in" id="statusbar_scala" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
                     </div>
@@ -50,7 +50,7 @@
                 {/if}
                 <div class="clearer"></div>
                 {if $_nextplaying}
-                    <p>Playing Next: {$_nextplaying.title} {$_nextplaying.duration|truncate:8:""}</p>
+                    <p>Playing Next: {$_nextplaying.title|truncate:22} {$_nextplaying.duration.h}:{$_nextplaying.duration.m}:{$_nextplaying.duration.s|truncate:2:""}</p>
                 {/if}
             </div>
             <!-- end what playing -->

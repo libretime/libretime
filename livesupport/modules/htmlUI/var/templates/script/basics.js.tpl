@@ -50,19 +50,20 @@
             Pheight  = window.innerHeight;
         }
 
-        url = url + '&is_popup=1';
         screenX = (Xpos + Pwidth/2  - width/2);
         screenY = (Ypos + Pheight/2 - height/2);
-        arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
+        url     =  url  + '&is_popup=1';
+        arg     = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
 
         popupwin = window.open(url, name, arg);
         window.popupwin.focus();
      }
 
-     function hpopup(url, name)
+     function hpopup(url)
      {
         var width  = 160;
         var height = 120;
+        var name = Math.random();
         var screenX;
         var screenY;
         var Xpos;
@@ -81,10 +82,11 @@
             Pwidth   = window.innerWidth;
             Pheight  = window.innerHeight;
         }
-        url = url + '&is_popup=1';
+
         screenX = (Xpos + Pwidth/2  - width/2);
         screenY = (Ypos + Pheight/2 - height/2);
-        arg = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
+        url     =  url  + '&is_popup=1';
+        arg     = 'width='+width+', height='+height+', scrollbars=no, menubar=no, depend=yes, left='+screenX+', top='+screenY;
 
         popupwin = window.open(url, name, arg);
         //window.parent.focus();

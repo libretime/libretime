@@ -98,50 +98,6 @@ class uiHandler extends uiBase {
 
     // --- files ---
     /**
-     *  uploadFileM
-     *
-     *  Provides file upload and store it to the storage
-     *
-     *  @param filename string, name for the uploaded file
-     *  @param mediafile file uploded by HTTP, raw binary media file
-     *  @param mdatafile file uploded by HTTP, metadata XML file
-     *  @param id int, destination folder id
-     */
-    function uploadFileM(&$formdata, $id, &$mask)
-    {
-        if (!$this->_isFolder($id)) {
-            $this->_retMsg('Target is not Folder');
-            $this->redirUrl = UI_BROWSER.'?act=fileList&id='.$id;
-            return FALSE;
-        }
-        if (!$this->_validateForm($formdata, $mask)) {
-            $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
-            return FALSE;
-        }
-        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport");
-        $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
-        move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
-        chmod($ntmp, 0664);
-        if($formdata['mdatafile']['tmp_name']){
-            $mdtmp = "$ntmp.xml";
-            if(move_uploaded_file($formdata['mdatafile']['tmp_name'], $mdtmp)){
-                chmod($mdtmp, 0664);
-            }
-        }
-        $r = $this->gb->putFile($id, $formdata['mediafile']['name'], $ntmp, $mdtmp, $this->sessid);
-        @unlink($ntmp);
-        @unlink($mdtmp);
-        if(PEAR::isError($r)) {
-            $this->_retMsg($r->getMessage());
-            $this->redirUrl = UI_BROWSER."?act=uploadFileM&id=".$id;
-            return FALSE;
-        }
-        $this->redirUrl = UI_BROWSER."?act=fileList&id=".$id;
-        return $r;
-    }
-
-
-    /**
      *  uploadFile
      *
      *  Provides file upload and store it to the storage
@@ -213,6 +169,13 @@ class uiHandler extends uiBase {
         $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
         $this->_setMDataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
+        // some data from raw audio
+        if ($ia['audio']['channels'])   $this->_setMDataValue($id, UI_MDATA_KEY_CHANNELS,   $ia['audio']['channels']);
+        if ($ia['audio']['sample_rate'])$this->_setMDataValue($id, UI_MDATA_KEY_SAMPLERATE, $ia['audio']['sample_rate']);
+        if ($ia['audio']['bitrate'])    $this->_setMDataValue($id, UI_MDATA_KEY_BITRATE,    $ia['audio']['bitrate']);
+        if ($ia['audio']['codec'])      $this->_setMDataValue($id, UI_MDATA_KEY_ENCODER,    $ia['audio']['codec']);
+
+        // from id3 Tags
         foreach ($mask['pages'] as $key=>$val) {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if ($v['id3'] != FALSE) {

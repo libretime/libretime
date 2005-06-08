@@ -58,15 +58,7 @@ $mask = array(
             'element'  => 'target_langid',
             'type'     => 'select',
             'label'    => 'Language',
-            'options'  => array(
-                            'en_GB'        => 'English (GB)',
-                            'nl_NL'        => 'Nederlands (NL)',
-                            'cz_CZ'        => 'Česky (CZ)',
-                            'de_DE'        => 'Deutsch (DE)',
-                            'hu_HU'        => 'Magyar (HU)',
-                            'sr_CS'        => 'Srpski (CS)',
-                            'es_CO'        => "Español (CO)"
-                          ),
+            'options'  => _getLanguages(),
             'attributes'=> array('onChange' => 'MData_switchLang()')
         )
     ),
@@ -249,18 +241,18 @@ $mask = array(
                 'type'      => 'select',
                 'label'     => 'Channels',
                 'options'   => array(
-                                ''       => '',
-                                'mono'   => 'Mono',
-                                'stereo' => 'Stereo',
-                                '5.1'    => '5.1'
+                                ''  => '',
+                                1   => 'Mono',
+                                2   => 'Stereo',
+                                6   => '5.1'
                                ),
                 'id3'       => 'Channels'
             ),
             array(
                 'element'   => 'ls:samplerate',
-                'type'      => 'select',
+                'type'      => 'text',
                 'label'     => 'Sample rate',
-                'options'   => array(),                ## vervollst�ndigen!
+                'rule'      => 'numeric',
                 'id3'       => 'Samplerate'
             ),
             array(

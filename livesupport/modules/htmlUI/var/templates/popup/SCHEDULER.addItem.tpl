@@ -1,6 +1,6 @@
 {include file="popup/header.tpl"}
-
-{if $SCHEDULER->copyPlFromSP()}
+              
+{if $SCHEDULER->getPLtoSchedule($_REQUEST.playlistId)}
     {assign var="dynform" value=$SCHEDULER->getScheduleForm()}
     <table height="100%" width="100%">
         <tr>
@@ -32,7 +32,7 @@ function SCHEDULE_submit()
 function SCHEDULE_snap2Hour()
 {
 {/literal}
-    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->scheduleAt.hour|string_format:'%d'}";
+    document.forms["schedule"].elements["time[H]"].value = "{$SCHEDULER->scheduleAtTime.hour|string_format:'%d'}";
     document.forms["schedule"].elements["time[i]"].value = "0";
     document.forms["schedule"].elements["time[s]"].value = "0";
 {literal}

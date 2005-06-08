@@ -44,6 +44,10 @@ define('UI_MDATA_KEY_DURATION',         'dcterms:extent');
 define('UI_MDATA_KEY_URL',              'ls:url');
 define('UI_MDATA_KEY_FORMAT',           'dc:format');
 define('UI_MDATA_KEY_DESCRIPTION',      'dc:description');
+define('UI_MDATA_KEY_CHANNELS',         'ls:channels');
+define('UI_MDATA_KEY_SAMPLERATE',       'ls:samplerate');
+define('UI_MDATA_KEY_BITRATE',          'ls:bitrate');
+define('UI_MDATA_KEY_ENCODER',          'ls:encoder');
 define('UI_MDATA_VALUE_FORMAT_FILE',    'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM',  'live stream');
 
@@ -89,6 +93,33 @@ define('UI_PL_ELEM_FADEOUT',            'fadeOut');
 
 ## LS stuff
 require_once dirname(__FILE__).'/../../storageServer/var/conf.php';
+## extent config
+$config = array_merge($config,
+    array(
+        'file_types'    => array(
+                            '.mp3',
+                            '.wav',
+                            '.ogg'
+        ),
+        'stream_types'  => array(
+                            'application/ogg',
+                            'audio/mpeg'
+        ),
+        'languages'     => array(
+                            'ar_JO'        => 'Arabic(JO)',
+                            'am_AM'        => 'Armenian(AM)',
+                            'en_GB'        => 'English (GB)',
+                            'en_US'        => 'English (US)',
+                            'es_CO'        => 'Español (CO)',
+                            'cz_CZ'        => 'Česky (CZ)',
+                            'de_DE'        => 'Deutsch (DE)',
+                            'hu_HU'        => 'Magyar (HU)',
+                            'nl_NL'        => 'Nederlands (NL)',
+                            'sr_CS'        => 'Srpski (CS)',
+                            'ru_RU'        => 'Russia(RU)'
+        ),
+    )
+);
 require_once dirname(__FILE__).'/ui_base.inc.php';
 require_once dirname(__FILE__).'/ui_scratchpad.class.php';
 require_once dirname(__FILE__).'/ui_playlist.class.php';
@@ -108,20 +139,4 @@ require_once 'HTML/QuickForm.php';
 #PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'errCallBack');
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT);
-
-## extent config
-$config = array_merge($config,
-    array(
-        'file_types'    => array(
-                            '.mp3',
-                            '.wav',
-                            '.ogg'
-        ),
-        'stream_types'  => array(
-                            'application/ogg',
-                            'audio/mpeg'
-        )
-    )
-);
-
 ?>

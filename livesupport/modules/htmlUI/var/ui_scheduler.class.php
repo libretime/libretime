@@ -4,7 +4,7 @@ class uiScheduler extends uiCalendar
     function uiScheduler(&$uiBase)
     {
         $this->curr           =& $_SESSION[UI_CALENDAR_SESSNAME]['current'];
-        $this->scheduleAt     =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleAt'];
+        $this->scheduleAtTime =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleAtTime'];
         $this->schedulePrev   =& $_SESSION[UI_CALENDAR_SESSNAME]['schedulePrev'];
         $this->scheduleNext   =& $_SESSION[UI_CALENDAR_SESSNAME]['scheduleNext'];
 
@@ -44,32 +44,23 @@ class uiScheduler extends uiCalendar
     function set($arr)
     {
         extract($arr);
-        #print_r($arr);
-        if (isset($view))  $this->curr['view'] = $view;
 
-        if (is_numeric($year))  $this->curr['year']  = $year;
-        if (is_numeric($month)) $this->curr['month'] = sprintf('%02d', $month);
-        if (is_numeric($day))   $this->curr['day']   = sprintf('%02d', $day);
-        if (is_numeric($hour))  $this->curr['hour']  = sprintf('%02d', $hour);
+        if (isset($view))       $this->curr['view']         = $view;
+        if (isset($today))      list($year, $month, $day)   = explode("-", strftime("%Y-%m-%d"));
+        if (is_numeric($year))  $this->curr['year']         = sprintf('%04d', $year);
+        if (is_numeric($month)) $this->curr['month']        = sprintf('%02d', $month);
+        if (is_numeric($day))   $this->curr['day']          = sprintf('%02d', $day);
+        if (is_numeric($hour))  $this->curr['hour']         = sprintf('%02d', $hour);
 
         $stampNow    = $this->_datetime2timestamp($this->curr['year'].$this->curr['month'].$this->curr['day'].'T'.$this->curr['hour'].':00:00');
         $stampTarget = $stampNow;
 
-        if ($month==='++')
-            $stampTarget = strtotime("+1 month", $stampNow);
-        if ($month==='--')
-            $stampTarget = strtotime("-1 month", $stampNow);
-        if ($week==='++')
-            $stampTarget = strtotime("+1 week", $stampNow);
-        if ($week==='--')
-            $stampTarget = strtotime("-1 week", $stampNow);
-        if ($day==='++')
-            $stampTarget = strtotime("+1 day", $stampNow);
-        if ($day==='--')
-            $stampTarget = strtotime("-1 day", $stampNow);
-
-        if ($today)
-            $stampTarget = time();
+        if ($month==='++')      $stampTarget = strtotime("+1 month", $stampNow);
+        if ($month==='--')      $stampTarget = strtotime("-1 month", $stampNow);
+        if ($week==='++')       $stampTarget = strtotime("+1 week", $stampNow);
+        if ($week==='--')       $stampTarget = strtotime("-1 week", $stampNow);
+        if ($day==='++')        $stampTarget = strtotime("+1 day", $stampNow);
+        if ($day==='--')        $stampTarget = strtotime("-1 day", $stampNow);
 
         $this->curr['year']      = strftime("%Y", $stampTarget);
         $this->curr['month']     = strftime("%m", $stampTarget);
@@ -87,29 +78,44 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function setScheduleAt($arr)
+    /**
+     *  setScheduleAtTime
+     *
+     *  set the schedule time given by parameters,
+     *  calculate previous and next clip to snap with it
+     *
+     *  @param input array, contains date and time
+     *  @return void
+     */
+
+    function setScheduleAtTime($arr)
     {
         extract($arr);
-        #print_r($arr);
 
-        if (is_numeric($year))          $this->scheduleAt['year']    = $year;
-        if (is_numeric($month))         $this->scheduleAt['month']   = sprintf('%02d', $month);
-        if (is_numeric($day))           $this->scheduleAt['day']     = sprintf('%02d', $day);
-        if (is_numeric($hour))          $this->scheduleAt['hour']    = sprintf('%02d', $hour);
-        if (is_numeric($minute))        $this->scheduleAt['minute']  = sprintf('%02d', $minute);
-        if (is_numeric($second))        $this->scheduleAt['second']  = sprintf('%02d', $second);
+        if (isset($today))              list($year, $month, $day)        = explode("-", strftime("%Y-%m-%d"));
+        if (is_numeric($year))          $this->scheduleAtTime['year']    = sprintf('%04d', $year);
+        if (is_numeric($month))         $this->scheduleAtTime['month']   = sprintf('%02d', $month);
+        if (is_numeric($day))           $this->scheduleAtTime['day']     = sprintf('%02d', $day);
+        if (is_numeric($hour))          $this->scheduleAtTime['hour']    = sprintf('%02d', $hour);
+        if (is_numeric($minute))        $this->scheduleAtTime['minute']  = sprintf('%02d', $minute);
+        if (is_numeric($second))        $this->scheduleAtTime['second']  = sprintf('%02d', $second);
+
+        $this->scheduleAtTime['stamp'] = $this->_datetime2timestamp($this->scheduleAtTime['year'].$this->scheduleAtTime['month'].$this->scheduleAtTime['day'].'T'.
+                                                                    $this->scheduleAtTime['hour'].':'.$this->scheduleAtTime['minute'].':'.$this->scheduleAtTime['second']);
 
         $week = $this->getWeekEntrys();
 
         ## search for previous entry
-        if (count($week[$this->scheduleAt['day']]) >= 1) {
-            foreach (array_reverse($week[$this->scheduleAt['day']]) as $entry) {
-                if (strtotime($entry[0]['end']) <=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
-                    $prev = TRUE;
-                    list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second'])
-                        = explode (':', strftime('%H:%M:%S', strtotime('+'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry[0]['end'])))
-                    );
-                    break;
+        if (count($week[$this->scheduleAtTime['day']]) >= 1) {
+            foreach (array_reverse($week[$this->scheduleAtTime['day']]) as $hourly) {
+                foreach (array_reverse($hourly) as $entry) {
+                    if ($entry['end_stamp'] <=  $this->scheduleAtTime['stamp']) {
+                        $prev = TRUE;
+                        list ($this->schedulePrev['hour'], $this->schedulePrev['minute'], $this->schedulePrev['second']) =
+                            explode (':', strftime('%H:%M:%S', strtotime('+'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry['end'])))
+                        );
+                        break 2;
+                    }
                 }
             }
         }
@@ -123,26 +129,28 @@ class uiScheduler extends uiCalendar
         reset ($week);
 
         ## search for next entry
-        if (count($week[$this->scheduleAt['day']]) >= 1) {
-            foreach ($week[$this->scheduleAt['day']] as $entry) {
-                if (strtotime($entry[0]['start']) >=  strtotime($this->scheduleAt['hour'].':'.$this->scheduleAt['minute'].':'.$this->scheduleAt['second'])) {
-                    $next = TRUE;
-                    list ($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second'])
-                        = explode (':', strftime('%H:%M:%S', strtotime('-'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry[0]['start']))));
-                    break;
+        if (count($week[$this->scheduleAtTime['day']]) >= 1) {
+            foreach ($week[$this->scheduleAtTime['day']] as $hourly) {
+                foreach (array_reverse($hourly) as $entry) {
+                    if ($entry['start_stamp'] >=  $this->scheduleAtTime['stamp']) {
+                        $next = TRUE;
+                        list ($this->scheduleNext['hour'], $this->scheduleNext['minute'], $this->scheduleNext['second']) =
+                            explode (':', strftime('%H:%M:%S', strtotime('-'.UI_SCHEDULER_PAUSE_PL2PL, strtotime($entry['start']))));
+                        break 2;
+                    }
                 }
             }
         }
         if ($next !== TRUE) {
-        ## end at midnight
-            $thisDay = $this->scheduleAt['year']."-".$this->scheduleAt['month']."-".$this->scheduleAt['day'];
+        ## end one sec. before midnight
+            $thisDay = $this->scheduleAtTime['year']."-".$this->scheduleAtTime['month']."-".$this->scheduleAtTime['day'];
             $nextDayStamp = strtotime('+1 day', $thisDay);
             $this->scheduleNext['year']     = strftime('%Y', $nextDayStamp);
             $this->scheduleNext['month']    = strftime('%m', $nextDayStamp);;
             $this->scheduleNext['day']      = strftime('%d', $nextDayStamp);
-            $this->scheduleNext['hour']     = 0;
-            $this->scheduleNext['minute']   = 0;
-            $this->scheduleNext['second']   = 0;
+            $this->scheduleNext['hour']     = 23;
+            $this->scheduleNext['minute']   = 59;
+            $this->scheduleNext['second']   = 59;
         }
 
         #print_r($this->schedulePrev);
@@ -169,6 +177,8 @@ class uiScheduler extends uiCalendar
                 'scheduleid'=> $val['id'],
                 'start'     => substr($val['start'], strpos($val['start'], 'T')+1),
                 'end'       => substr($val['end'],   strpos($val['end'], 'T')+1),
+                'start_stamp' => $this->_datetime2timestamp($val['start']),
+                'end_stamp' => $this->_datetime2timestamp($val['end']),
                 'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_TITLE),
                 'creator'   => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($val['playlistId']), UI_MDATA_KEY_CREATOR),
                 'type'      => 'Playlist'
@@ -257,58 +267,6 @@ class uiScheduler extends uiCalendar
     }
 
 
-    /*
-    function getDayTiming($year, $month, $day)
-    {
-        #echo $year.$month.$day;
-        $day_start = $this->_datetime2timestamp($year.$month.$day.'T00:00:00');
-        $day_end   = $this->_datetime2timestamp($year.$month.$day.'T23:59:59');
-
-        if (!$arr = $this->getDayUsage($year, $month, $day))
-            return array(array(                                         ## empty day
-                        'type'      => 'gap',
-                        'length'    => $day_end - $day_start
-                   ));
-
-        $curr = current($arr);
-        if ($this->_strtotime($curr['start']) > $day_start)             ## insert gap if first entry start after 00:00:00
-            $list[] = array(
-                        'type'      => 'gap',
-                        #'pos'       => 0,
-                        'length'    => $this->_strtotime($curr['start']) - $day_start
-                      );
-
-        while ($curr = current($arr)) {
-            $list[] = array(
-                        'type'      => 'entry',
-                        #'pos'       => $this->_strtotime($curr['start']) - $day_start,
-                        'length'    => $this->_strtotime($curr['end']) - $this->_strtotime($curr['start']),
-                        'entry'     => $curr
-                      );
-
-            if ($next = next($arr)) {
-                if ($this->_strtotime($next['start']) > $this->_strtotime($curr['end'])+1)  ## insert gap between entrys
-                    $list[] = array(
-                                'type'      => 'gap',
-                                #'pos'       => $this->_strtotime($curr['start'])-$day_start,
-                                'length'    => $this->_strtotime($next['start']) - $this->_strtotime($curr['end']),
-                              );
-            }
-            else {
-                if ($this->_strtotime($curr['end']) < $day_end)        ## insert gap if prev entry was not until midnight
-                    $list[] = array(
-                                'type'      => 'gap',
-                                #'pos'       => $this->_strtotime($curr['end']) - $day_start,
-                                'length'    => $day_end - $this->_strtotime($curr['end']),
-                              );
-            }
-
-        }
-        #print_r($list);
-        return $list;
-    }
-    */
-
     function getDayTimingScale()
     {
         for ($n = 0; $n <= 23; $n++) {
@@ -331,13 +289,13 @@ class uiScheduler extends uiCalendar
 
         $form = new HTML_QuickForm('schedule', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $this->Base->_parseArr2Form($form, $ui_fmask['schedule']);
-        $settime = array('H' => $this->scheduleAt['hour'],
-                         'i' => $this->scheduleAt['minute'],
-                         's' => $this->scheduleAt['second']
+        $settime = array('H' => $this->scheduleAtTime['hour'],
+                         'i' => $this->scheduleAtTime['minute'],
+                         's' => $this->scheduleAtTime['second']
                    );
-        $setdate = array('Y' => $this->scheduleAt['year'],
-                         'm' => $this->scheduleAt['month'],
-                         'd' => $this->scheduleAt['day']
+        $setdate = array('Y' => $this->scheduleAtTime['year'],
+                         'm' => $this->scheduleAtTime['month'],
+                         'd' => $this->scheduleAtTime['day']
                    );
         $form->setDefaults(array('time'         => $settime,
                                  'date'         => $setdate,
@@ -351,8 +309,23 @@ class uiScheduler extends uiCalendar
 
     }
 
+    function getPLtoSchedule($id)
+    {
+        if ($id) {
+            $this->Base->SCRATCHPAD->addItem($id);
+            $this->availablePlaylists[] = array(
+                'gunid'     => $this->Base->gb->_gunidFromId($id),
+                'title'     => $this->Base->_getMDataValue($id, UI_MDATA_KEY_TITLE),
+                'duration'  => $this->Base->_getMDataValue($id, UI_MDATA_KEY_DURATION),
+            ); 
+            return TRUE;
+        } else {
+            return $this->copyPLfromSP();
+        }
 
-    function copyPlFromSP()
+    }
+
+    function copyPlfromSP()
     {
         foreach ($this->Base->SCRATCHPAD->get() as $val) {
             if ($val['type'] === 'playlist' && $this->Base->gb->playlistIsAvailable($val['id'], $this->Base->sessid) === TRUE && $val['id'] != $this->Base->PLAYLIST->activeId)
@@ -371,17 +344,17 @@ class uiScheduler extends uiCalendar
         $xmldatetime = str_replace('-', '', $datetime);
         $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
 
-        if(!is_array($pl) || !count($pl)) return FALSE;
+        if (!is_array($pl) || !count($pl)) return FALSE;
 
         $pl = current($pl);
-        $offset = strftime('%H:%M:%S', time() - $this->_datetime2timestamp($pl['start']) - 3600);   ##  subtract 3600 sec. becausefor some reason strftime('%H:%M:%S', 0) is 01:00:00
+        $offset = strftime('%H:%M:%S', time() - $this->_datetime2timestamp($pl['start']) - 3600 * strftime('%H', 0));   ##  subtract difference to UTC
 
         $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);
 
         if (!$clip['gunid']) return FALSE;
 
         list($duration['h'], $duration['m'], $duration['s'])    = explode(':', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION));
-        list($elapsed['h'], $elapsed['m'], $elapsed['s'])       = explode(':', $clip['elapsed']);
+        list($elapsed['h'],  $elapsed['m'],  $elapsed['s'])     = explode(':', $clip['elapsed']);
         list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
 
         return array(

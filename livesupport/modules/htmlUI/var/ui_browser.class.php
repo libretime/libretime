@@ -73,7 +73,6 @@ class uiBrowser extends uiBase {
     function login(&$mask)
     {
         $form = new HTML_QuickForm('login', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        #$form->setRequiredNote(file_get_contents(UI_QFORM_REQUIREDNOTE));
         $this->_parseArr2Form($form, $mask['languages']);
         $this->_parseArr2Form($form, $mask['login']);
 
@@ -274,6 +273,8 @@ class uiBrowser extends uiBase {
      *
      *  Get file's metadata as XML
      *
+     *  Note: this does not work right with multiple languages
+     *
      *  @param id int, local id of stored file
      *  @return array
      */
@@ -296,11 +297,16 @@ class uiBrowser extends uiBase {
         require_once 'XML/Unserializer.php';
         $handler =& new XML_Unserializer;
         $handler->unserialize($this->getMdata($id));
-        $arr = $handler->getUnserializedData();
-        if (!is_array($arr))
-            return FALSE;
+        $arr = $handler->getUnserializedData();  
+
+        if (!is_array($arr)) return FALSE;
 
         foreach ($arr['metadata'] as $key=>$val) {
+
+            if (is_array($val)) {       ## just workaround
+                $val = current($val);
+            }
+
             if ($relations[$key]) {
                 unset($arr['metadata'][$key]);
                 $arr['metadata'][$relations[tra($key)]] = $val;
@@ -326,7 +332,7 @@ class uiBrowser extends uiBase {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
         extract ($parms);
-        $langid = $langid ? $langid : UI_DEFAULT_LANGID;
+        $langid = $langid ? $langid : $this->langid;
 
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['langswitch']);

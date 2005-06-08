@@ -77,6 +77,13 @@ function _getNumArr($start, $end, $step=1)
 }
 
 
+function _getLanguages()
+{
+    global $config;
+    return $config['languages'];
+}
+
+
 /**
  *  uiBase class
  *
@@ -342,7 +349,7 @@ class uiBase
 
 
     function _getMDataValue($id, $key, $langid=FALSE)
-    {
+    { 
         if ($langid===FALSE) $langid = $_SESSION['langid'];
 
         if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid))) {

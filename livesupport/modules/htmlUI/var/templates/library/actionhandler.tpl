@@ -25,10 +25,10 @@ onClick="return contextmenu('{$i.id}'
             {if $_PL_activeId == $i.id}
                 , 'PL.release'
             {else}
-                , 'PL.addItem', 'delete'
+                , 'SCHEDULER.addPL', 'PL.addItem', 'delete'
             {/if}
         {else}
-            , 'PL.activate', 'PL.create', 'delete'
+            , 'SCHEDULER.addPL', 'PL.activate', 'PL.create', 'delete'
         {/if}
     {/if}
 )"

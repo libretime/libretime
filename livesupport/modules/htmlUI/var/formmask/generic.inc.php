@@ -435,20 +435,8 @@ $ui_fmask = array(
                 'element'  => 'langid',
                 'type'     => 'select',
                 'label'    => 'Language',
-                'options'  => array(
-                            'ar_JO'        => 'Arabic(JO)',
-                            'am_AM'        => 'Armenian(AM)',
-                            'en_GB'        => 'English (GB)',
-                            'en_US'        => 'English (US)',
-                            'es_CO'        => 'Español (CO)',
-                            'cz_CZ'        => 'Česky (CZ)',
-                            'de_DE'        => 'Deutsch (DE)',
-                            'hu_HU'        => 'Magyar (HU)',
-                            'nl_NL'        => 'Nederlands (NL)',
-                            'sr_CS'        => 'Srpski (CS)',
-                            'ru_RU'        => 'Russia(RU)'
-                            ),
-                'default' => UI_DEFAULT_LANGID
+                'options'  => _getLanguages(),
+                'default'  => UI_DEFAULT_LANGID
             )
     ),
 

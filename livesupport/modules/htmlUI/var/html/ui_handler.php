@@ -253,8 +253,8 @@ switch($_REQUEST['act']){
         $uiHandler->SCHEDULER->setReload();
     break;
 
-    case "SCHEDULER.setScheduleTime":
-        $uiHandler->SCHEDULER->setScheduleAt($_REQUEST);
+    case "SCHEDULER.setScheduleAtTime":
+        $uiHandler->SCHEDULER->setScheduleAtTime($_REQUEST);
         $uiHandler->SCHEDULER->setClose();
     break;
 
@@ -277,7 +277,7 @@ switch($_REQUEST['act']){
 if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;
 #header('Location: '.$uiHandler->redirUrl);
 if (ob_get_contents()) {
-    $ui_wait = 5;
+    $ui_wait = 10;
 }
 ob_end_clean;
 ?>

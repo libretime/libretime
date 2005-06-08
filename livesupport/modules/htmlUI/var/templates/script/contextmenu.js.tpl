@@ -29,7 +29,7 @@
             switch (contextmenu.arguments[i]) {
                 {/literal}
                 case "PL.release":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)\" "+oF+">&nbsp;##Close playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)\" "+oF+">&nbsp;##Close Playlist##&nbsp;</a></li>";
                 break;
 
                 case "PL.addItem":
@@ -86,11 +86,19 @@
                 break;
 
                 case "SCHEDULER.addItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
                 break;
 
                 case "SCHEDULER.removeItem":
                     contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 50)\" "+oF+">&nbsp;##Remove Playlist##&nbsp;</a></li>";
+                break;
+
+                case "SCHEDULER.addPL":
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&today=1');"+
+                                                                                                      "hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&today=1&hour=0&minute=0');"+
+                                                                                                      "location.href='ui_browser.php?act=SCHEDULER';"+
+                                                                                                      "popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&playlistId="+param+"', 'Schedule', 420, 200)\" "+oF+
+                                                                                                      ">&nbsp;##Schedule Playlist##&nbsp;</a></li>";
                 break;
 
                 case "SUBJECTS.chgPasswd":
