@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */
@@ -124,7 +124,7 @@ class WhiteWindow : public Gtk::Window
         /**
          *  The event box for the title, enabling capturing mouse events.
          */
-        Gtk::EventBox                 * titleEventBox;
+        Gtk::HBox                     * titleBox;
 
         /**
          *  The left alignment contaner for the title.

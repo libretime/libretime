@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,8 +67,8 @@ WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
     titleLabel = 0;
     Ptr<WidgetFactory>::Ref wf          = WidgetFactory::getInstance();
     Gtk::Image*             titleImage  = Gtk::manage(wf->createImage(title));
-    titleEventBox                       = Gtk::manage(new Gtk::EventBox());
-    titleEventBox->add(*titleImage);
+    titleBox                            = Gtk::manage(new Gtk::HBox());
+    titleBox->add(*titleImage);
     
     constructWindow(backgroundColor, cornerImages, resizable);
 }
@@ -90,8 +90,8 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     titleLabel->modify_font(Pango::FontDescription(
                                         "Bitstream Vera Sans 10"));
     set_title(title);
-    titleEventBox   = Gtk::manage(new Gtk::EventBox());
-    titleEventBox->add(*titleLabel);
+    titleBox   = Gtk::manage(new Gtk::HBox());
+    titleBox->add(*titleLabel);
 
     constructWindow(backgroundColor, cornerImages, resizable);
 }
@@ -119,11 +119,11 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     Gdk::Color      bgColor = Colors::getColor(backgroundColor);
 
     // create the title
-    titleEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
+    titleBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
     titleAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_LEFT,
                                                     Gtk::ALIGN_CENTER,
                                                     0, 0));
-    titleAlignment->add(*titleEventBox);
+    titleAlignment->add(*titleBox);
     layout->attach(*titleAlignment, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
     // create the minimize, maximize and close buttons
@@ -177,8 +177,8 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     show_all();
 
     // register signal handlers
-    titleEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
-    titleEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
+    this->add_events(Gdk::BUTTON_PRESS_MASK);
+    this->signal_button_press_event().connect(sigc::mem_fun(*this,
                                                 &WhiteWindow::onTitleClicked));
 
     minimizeButton->signal_clicked().connect(sigc::mem_fun(*this,
