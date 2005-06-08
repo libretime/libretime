@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/bin/dumpDbSchema.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:l:h -l directory:,list:,help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o h -l help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
