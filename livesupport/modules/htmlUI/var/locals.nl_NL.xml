@@ -3,79 +3,79 @@
 	<Id>nl_NL</Id>
 	<item>
 		<key>Mo</key>
-		<value>Ma</value>
+		<value>ma</value>
 	</item>
 	<item>
 		<key>Tu</key>
-		<value>Di</value>
+		<value>di</value>
 	</item>
 	<item>
 		<key>We</key>
-		<value>Wo</value>
+		<value>wo</value>
 	</item>
 	<item>
 		<key>Th</key>
-		<value>Do</value>
+		<value>do</value>
 	</item>
 	<item>
 		<key>Fr</key>
-		<value>Vr</value>
+		<value>vr</value>
 	</item>
 	<item>
 		<key>Sa</key>
-		<value>Za</value>
+		<value>za</value>
 	</item>
 	<item>
 		<key>Su</key>
-		<value>Zo</value>
+		<value>zo</value>
 	</item>
 	<item>
 		<key>January</key>
-		<value>Januari</value>
+		<value>januari</value>
 	</item>
 	<item>
 		<key>February</key>
-		<value>Februari</value>
+		<value>februari</value>
 	</item>
 	<item>
 		<key>March</key>
-		<value>Maart</value>
+		<value>maart</value>
 	</item>
 	<item>
 		<key>April</key>
-		<value>April</value>
+		<value>april</value>
 	</item>
 	<item>
 		<key>May</key>
-		<value>Mei</value>
+		<value>mei</value>
 	</item>
 	<item>
 		<key>July</key>
-		<value>Juli</value>
+		<value>juli</value>
 	</item>
 	<item>
 		<key>August</key>
-		<value>Augustus</value>
+		<value>augustus</value>
 	</item>
 	<item>
 		<key>September</key>
-		<value>September</value>
+		<value>september</value>
 	</item>
 	<item>
 		<key>October</key>
-		<value>Oktober</value>
+		<value>oktober</value>
 	</item>
 	<item>
 		<key>November</key>
-		<value>November</value>
+		<value>november</value>
 	</item>
 	<item>
 		<key>December</key>
-		<value>December</value>
+		<value>december</value>
 	</item>
 	<item>
 		<key>June</key>
-		<value>Juni</value>
+		<value>juni</value>
 	</item>
 	<item>
 		<key>Monday</key>
@@ -139,19 +139,19 @@
 	</item>
 	<item>
 		<key>Add Group</key>
-		<value>Toevoegen Groep</value>
+		<value>Groep toevoegen</value>
 	</item>
 	<item>
 		<key>Add Members</key>
-		<value>Toevoegen Leden</value>
+		<value>Leden toevoegen</value>
 	</item>
 	<item>
 		<key>Add User</key>
-		<value>Toevoegen Gebruiker</value>
+		<value>Gebruiker toevoegen</value>
 	</item>
 	<item>
 		<key>Add selected</key>
-		<value>Toevoegen geselecteerd</value>
+		<value>Geselecteerd toevoegen</value>
 	</item>
 	<item>
 		<key>Add to group</key>
@@ -176,10 +176,6 @@
 	<item>
 		<key>Close Playlist</key>
 		<value>Sluit Playlist</value>
-	</item>
-	<item>
-		<key>Close playlist</key>
-		<value>Sluit speellijst</value>
 	</item>
 	<item>
 		<key>Current Members</key>
@@ -283,91 +279,91 @@
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-		<value>Het bestand $1 is groter dan de systeem instelling van LiveSupport.</value>
+		<value>$1 moet $2 zijn.</value>
 	</item>
 	<item>
 		<key>ScratchPad</key>
-		<value>ScratchPad</value>
+		<value>Het bestand $1 is groter dan de systeem instelling van LiveSupport.</value>
 	</item>
 	<item>
 		<key>Access denied.</key>
-		<value>Toegang geweigerd.</value>
+		<value>ScratchPad</value>
 	</item>
 	<item>
 		<key>Already active Playlist</key>
-		<value>Playlist is reeds actief.</value>
+		<value>Toegang geweigerd.</value>
 	</item>
 	<item>
 		<key>Audioclip Data saved</key>
-		<value>Audioclip informatie opgeslagen.</value>
+		<value>Playlist is reeds actief.</value>
 	</item>
 	<item>
 		<key>Cannot create Playlist</key>
-		<value>Kan Playlist niet maken.</value>
+		<value>Audioclip informatie opgeslagen.</value>
 	</item>
 	<item>
 		<key>Cannot delete this Playlist</key>
-		<value>Kan Playlist niet verwijderen.</value>
+		<value>Kan Playlist niet maken.</value>
 	</item>
 	<item>
 		<key>Cannot move item</key>
-		<value>Kan Item niet verplaatsen in de Playlist.</value>
+		<value>Kan Playlist niet verwijderen.</value>
 	</item>
 	<item>
 		<key>Cannot remove Item from Playlist</key>
-		<value>Kan Item niet van playlist verwijderen.</value>
+		<value>Kan Item niet verplaatsen in de Playlist.</value>
 	</item>
 	<item>
 		<key>Change fade information failed.</key>
-		<value>Veranderen van fade informatie mislukt.</value>
+		<value>Kan Item niet van playlist verwijderen.</value>
 	</item>
 	<item>
 		<key>Do</key>
-		<value />
+		<value>Veranderen van fade informatie mislukt.</value>
 	</item>
 	<item>
 		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
-		<value>$1 item was reeds op ScratchPad. Het is boven in de lijst geplaats.</value>
+		<value>do</value>
 	</item>
 	<item>
 		<key>Entry added at $1 with ScheduleId: $2</key>
-		<value>Regel toegevoegd aan $1 met ScheduleId: $2.</value>
+		<value>$1 item was reeds in het ScratchPad. Het is boven in de lijst geplaats.</value>
 	</item>
 	<item>
 		<key>Entry with ScheduleId $1 removed</key>
-		<value>Regel met schedule ID $1 verwijderd.</value>
+		<value>Regel toegevoegd aan $1 met ScheduleId: $2.</value>
 	</item>
 	<item>
 		<key>Error on add item to Playlist</key>
-		<value>Fout bij Item toevoegen aan Playlist.</value>
+		<value>Regel met schedule ID $1 verwijderd.</value>
 	</item>
 	<item>
 		<key>Error saving Settings</key>
-		<value>Fout opslaan van Systeem voorkeuren.</value>
+		<value>Fout bij Item toevoegen aan Playlist.</value>
 	</item>
 	<item>
 		<key>Error uploading Logo</key>
-		<value>Fout bij het verzenden van Logo.</value>
+		<value>Fout opslaan van Systeem voorkeuren.</value>
 	</item>
 	<item>
 		<key>Error: $1</key>
-		<value>Fout: $1</value>
+		<value>Fout bij het verzenden van Logo.</value>
 	</item>
 	<item>
 		<key>File $1 was not uploaded.</key>
-		<value>$1 bestand is niet verzonden.</value>
+		<value>Fout: $1</value>
 	</item>
 	<item>
 		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
-		<value>Map is niet leeg. U kunt deze beveiliging overschrijven door opnieuw op Del te drukken.</value>
+		<value>$1 bestand is niet verzonden.</value>
 	</item>
 	<item>
 		<key>Found locked Playlist.</key>
-		<value />
+		<value>Map is niet leeg. U kunt deze beveiliging overschrijven door opnieuw op Del te drukken.</value>
 	</item>
 	<item>
 		<key>Invalid Form Data</key>
-		<value>Vastgezette Playlist gevonden</value>
+		<value>Vastgezette Playlist gevonden.</value>
 	</item>
 	<item>
 		<key>Login failed</key>
@@ -375,15 +371,15 @@
 	</item>
 	<item>
 		<key>Metadata saved</key>
-		<value>Login niet gelukt</value>
+		<value>Login niet gelukt.</value>
 	</item>
 	<item>
 		<key>Missing value for $1</key>
-		<value>Meta-gegevens opgeslagen</value>
+		<value>Meta-gegevens opgeslagen.</value>
 	</item>
 	<item>
 		<key>No Item(s) selected</key>
-		<value>Waarde ontbreekt voor $1</value>
+		<value>Waarde ontbreekt voor $1.</value>
 	</item>
 	<item>
 		<key>No Playlist is locked by You.</key>
@@ -415,19 +411,19 @@
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; reverted</key>
-		<value>Playlist &quot;$1&quot; uitgegeven</value>
+		<value>Playlist &quot;$1&quot; uitgegeven.</value>
 	</item>
 	<item>
 		<key>Playlist &quot;$1&quot; saved</key>
-		<value>Playlist &quot;$1&quot; hersteld</value>
+		<value>Playlist &quot;$1&quot; hersteld.</value>
 	</item>
 	<item>
 		<key>Playlist has been locked by $1</key>
-		<value>Playlist &quot;$1&quot; opgeslagen</value>
+		<value>Playlist &quot;$1&quot; opgeslagen.</value>
 	</item>
 	<item>
 		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
-		<value>Playlist is vastgezet door $1</value>
+		<value>Playlist is vastgezet door $1.</value>
 	</item>
 	<item>
 		<key>Select a Value</key>
@@ -439,15 +435,15 @@
 	</item>
 	<item>
 		<key>Stream Data changed</key>
-		<value>Instellingen opgeslagen</value>
+		<value>Instellingen opgeslagen.</value>
 	</item>
 	<item>
 		<key>Stream Data saved</key>
-		<value>Stream Data veranderd</value>
+		<value>Stream data veranderd.</value>
 	</item>
 	<item>
 		<key>Subject $1 added.</key>
-		<value>Stream Data opgeslagen</value>
+		<value>Stream data opgeslagen.</value>
 	</item>
 	<item>
 		<key>Target is not Folder</key>
@@ -459,15 +455,15 @@
 	</item>
 	<item>
 		<key>Unable to release Playlist.</key>
-		<value>Er is geen Playlist beschikbaar om te ontsluiten</value>
+		<value>Er is geen Playlist beschikbaar om vrij te geven.</value>
 	</item>
 	<item>
 		<key>Unable to revert to locked state.</key>
-		<value>Playlist uitgeven is niet mogelijk</value>
+		<value>Playlist uitgeven is niet mogelijk.</value>
 	</item>
 	<item>
 		<key>Upload of file $1 was incomplete.</key>
-		<value>Herstellen van ontsloten status is niet mogelijk</value>
+		<value>Herstellen van vastgezette status is niet mogelijk.</value>
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
@@ -475,11 +471,11 @@
 	</item>
 	<item>
 		<key>You have an Playlist already activated, first close it</key>
-		<value>Het bestand $1 is groter dan in php.ini is ingesteld</value>
+		<value>Het bestand $1 is groter dan in php.ini is ingesteld.</value>
 	</item>
 	<item>
 		<key>Access</key>
-		<value>Er is reeds een Playlist open, sluit deze eerst</value>
+		<value>Er is reeds een Playlist open, sluit deze eerst.</value>
 	</item>
 	<item>
 		<key>Activate this Playlist</key>
@@ -511,7 +507,7 @@
 	</item>
 	<item>
 		<key>Album</key>
-		<value>Aan Playlist toevoegen</value>
+		<value>Aan open Playlist toevoegen</value>
 	</item>
 	<item>
 		<key>Artist</key>
@@ -523,7 +519,7 @@
 	</item>
 	<item>
 		<key>Audio file information web page</key>
-		<value>Web pagina van de artiest</value>
+		<value>Web pagina van artiest</value>
 	</item>
 	<item>
 		<key>Audio source web page</key>
@@ -667,7 +663,7 @@
 	</item>
 	<item>
 		<key>Encoded by</key>
-		<value>Metadata aanpassen</value>
+		<value>Meta-gegevens aanpassen</value>
 	</item>
 	<item>
 		<key>Encoder software used</key>
@@ -763,7 +759,7 @@
 	</item>
 	<item>
 		<key>Library Search</key>
-		<value>Lengte</value>
+		<value>Lengte - voer nul in bij gebruik van Live Stream</value>
 	</item>
 	<item>
 		<key>List Folder</key>
@@ -859,7 +855,7 @@
 	</item>
 	<item>
 		<key>No Entry</key>
-		<value>Nieuwe lege Playlist</value>
+		<value>Nieuwe lege Playlist creeren</value>
 	</item>
 	<item>
 		<key>No match found.</key>
@@ -883,7 +879,7 @@
 	</item>
 	<item>
 		<key>Orchestra or band</key>
-		<value>Exploitant</value>
+		<value>Operator</value>
 	</item>
 	<item>
 		<key>Original artist</key>
@@ -915,7 +911,7 @@
 	</item>
 	<item>
 		<key>Radio station name</key>
-		<value>Playlist Meta-gegevens</value>
+		<value>Playlist meta-gegevens</value>
 	</item>
 	<item>
 		<key>Radio station web page</key>
@@ -963,23 +959,23 @@
 	</item>
 	<item>
 		<key>Report location</key>
-		<value>Laat Datum/Tijd zien</value>
+		<value>Laat datum/tijd zien</value>
 	</item>
 	<item>
 		<key>Report organizations</key>
-		<value>laat Locatie zien</value>
+		<value>laat locatie zien</value>
 	</item>
 	<item>
 		<key>Reset</key>
-		<value>Laat Organisaties zien</value>
+		<value>Laat organisaties zien</value>
 	</item>
 	<item>
 		<key>Reset Criteria</key>
-		<value>Herstel Criteria</value>
+		<value>Herstel</value>
 	</item>
 	<item>
 		<key>Retype Password</key>
-		<value>Wachtwoord opnieuw invoeren</value>
+		<value>Herstel Criteria</value>
 	</item>
 	<item>
 		<key>Revert to Saved</key>

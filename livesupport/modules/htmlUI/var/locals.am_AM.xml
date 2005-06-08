@@ -135,9 +135,6 @@
 		<key>{$i.type|lower|capitalize}</key>
 	</item>
 	<item>
-		<key>{$o.name}</key>
-	</item>
-	<item>
 		<key>{$sec.header}</key>
 	</item>
 	<item>
