@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.1 $</li>
+  <li>Version: $Revision: 1.2 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/studioLocalization.html,v $</li>
 </ul>
 
@@ -47,17 +47,30 @@ binary <i>resource bundle</i> files using ICU's <code>genrb</code> program
 <h1>Adding a new language</h1>
 <ul>
     <li>Add the new text file to <code>products/gLiveSupport/var</code>.
+        (See the 
+<a href="http://icu.sourceforge.net/userguide/localizing.html#ICU4C">ICU
+        user guide</a> for the format of this file.)<br>
+        The first row of the file should be the locale name, followed by
+        ":table".  The locale name is of the form
+<code>&lt;language-code&gt;[[_&lt;country-code&gt;]_&lt;variant&gt;]</code>,
+        where 
+        <ul>
+            <li><code>&lt;language-code&gt;</code> is the
+<a href="http://www.loc.gov/standards/iso639-2/langcodes.html">ISO 639-1</a>
+                2-letter language code in lowercase,</li>
+            <li>the optional <code>&lt;country-code&gt;</code> is the
+<a href="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html">ISO 3166-1</a>
+                2-letter country code in uppercase, and</li>
+            <li>the optional <code>&lt;variant&gt;</code> is the variant
+                (usually EURO or CYRILLIC) in uppercase.</li>
+        </ul>
+        Note that this is slightly different from the normal ISO standard:
+        ICU uses it_IT_EURO where the standard would be it_IT@euro.<br>
         Make sure the file is in UTF-8 encoding, has Unix line breaks,
         and does not have a 
         <a href="http://www.unicode.org/faq/utf_bom.html#BOM">BOM</a>
-        character at the beginning.  The file name should be 
-        <code>&lt;language-code&gt;[_&lt;country-code&gt;].txt</code>,
-        where <code>&lt;language-code&gt;</code> is the
-<a href="http://www.loc.gov/standards/iso639-2/langcodes.html">ISO 639-1</a>
-        2-letter language code in lowercase,
-        and the optional <code>&lt;country-code&gt;</code> is the
-<a href="http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html">ISO 3166-1</a>
-        2-letter country code in uppercase.
+        character at the beginning.<br>
+        The file name should be the locale name, followed by ".txt".
     <li>Add a new line for the new language in each of the files
             <code>gLiveSupport.xml</code>,
             <code>gLiveSupport.xml.template</code> and 
