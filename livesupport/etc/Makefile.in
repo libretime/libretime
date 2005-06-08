@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -179,7 +179,6 @@ ${TMP_DIR}/tools_setup.stamp:
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
 	${GTK_DIR}/${GTK_VERSION}/bin/install.sh
 	${GTKMM_DIR}/${GTKMM_VERSION}/bin/install.sh
-	${GSTREAMER_DIR}/${GSTREAMER_VERSION}/bin/install.sh
 	${LIBXMLXX_DIR}/${LIBXMLXX_VERSION}/bin/install.sh
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh

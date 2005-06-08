@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.12 $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -77,8 +77,8 @@ VPATH    = ${SRC_DIR}
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
-GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
-GSTREAMER_LIBS=@GSTREAMER_LIBS@
+#GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
+#GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
 TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
 
@@ -130,13 +130,13 @@ PLAYLIST_EXECUTOR_LIB_OBJS = ${TMP_DIR}/HelixPlayer.o \
                              ${TMP_DIR}/ClientContext.o \
                              ${TMP_DIR}/ErrorSink.o \
                              ${TMP_DIR}/HelixIIDs.o \
-							 ${TMP_DIR}/GstreamerPlayer.o \
                              ${TMP_DIR}/AudioPlayerFactory.o
+# 							 ${TMP_DIR}/GstreamerPlayer.o
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/GstreamerPlayerTest.o \
                    ${TMP_DIR}/HelixPlayerTest.o \
-                   ${TMP_DIR}/AudioPlayerFactoryTest.o \
-                   ${TMP_DIR}/AudioPlayerFactoryGstreamerTest.o 
+                   ${TMP_DIR}/AudioPlayerFactoryTest.o
+#                   ${TMP_DIR}/AudioPlayerFactoryGstreamerTest.o 
+#                   ${TMP_DIR}/GstreamerPlayerTest.o
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
                    ${HELIX_LIBS} ${TAGLIB_LIBS} \
                    -lcppunit -ldl -lm -lxmlrpc++

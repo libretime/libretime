@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.6 $
+dnl Version  : $Revision: 1.7 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(PlaylistExecutor, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.6 $)
+AC_REVISION($Revision: 1.7 $)
 
 AC_CONFIG_SRCDIR(../src/HelixPlayer.cxx)
 
@@ -48,9 +48,9 @@ PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.6.0])
 AC_SUBST(LIBXMLPP_CFLAGS)
 AC_SUBST(LIBXMLPP_LIBS)
 
-PKG_CHECK_MODULES(GSTREAMER,[gstreamer-0.8 >= 0.8])
-AC_SUBST(GSTREAMER_CFLAGS)
-AC_SUBST(GSTREAMER_LIBS)
+dnl PKG_CHECK_MODULES(GSTREAMER,[gstreamer-0.8 >= 0.8])
+dnl AC_SUBST(GSTREAMER_CFLAGS)
+dnl AC_SUBST(GSTREAMER_LIBS)
 
 dnl-----------------------------------------------------------------------------
 dnl enable compilaton for code coverage data

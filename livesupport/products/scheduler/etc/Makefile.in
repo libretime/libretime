@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.56 $
+#   Version  : $Revision: 1.57 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -67,8 +67,8 @@ LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 LIBODBCXX_CFLAGS=@LIBODBCXX_CFLAGS@
 LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
-GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
-GSTREAMER_LIBS=@GSTREAMER_LIBS@
+#GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
+#GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
 
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`

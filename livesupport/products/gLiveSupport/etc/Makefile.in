@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.39 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.40 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -123,8 +123,8 @@ CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
 
-GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
-GSTREAMER_LIBS=@GSTREAMER_LIBS@
+#GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
+#GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
 ICU_CFLAGS=
 ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags-toolutil --ldflags-icuio`

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@
 
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "HelixPlayer.h"
-#include "GstreamerPlayer.h"
+//#include "GstreamerPlayer.h"
 
 
 using namespace LiveSupport::Core;
@@ -106,7 +106,7 @@ AudioPlayerFactory :: configure(const xmlpp::Element & element)
 
         return;
     }
-
+/*
     nodes = element.get_children(GstreamerPlayer::getConfigElementName());
     if (nodes.size() >= 1) {
         const xmlpp::Element  * configElement =
@@ -117,7 +117,7 @@ AudioPlayerFactory :: configure(const xmlpp::Element & element)
 
         return;
     }
-
+*/
     throw std::invalid_argument("no audio player factories to configure");
 }
 
