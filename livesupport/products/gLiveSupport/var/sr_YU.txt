@@ -1,4 +1,4 @@
-sr:table
+sr_YU:table
 {
     windowTitle:string       { "LiveSupport Master Panel" }
     notLoggedInMsg:string    { "Niste prijavljeni" }
@@ -12,7 +12,7 @@ sr:table
     schedulerButtonLabel:string             { "Raspored" }
     searchButtonLabel:string                { "Pretraga" }
 
-    localeNotAvailableMsg:string        { "Lokal {0} nije dostupan" }
+    localeNotAvailableMsg:string        { "Mesto {0} nije dostupno" }
     schedulerNotReachableMsg:string     { "Server sa rasporedom nije dostupan" }
     storageNotReachableMsg:string       { "Server nije dostupan" }
     authenticationNotReachableMsg:string
@@ -191,7 +191,7 @@ sr:table
         description:string          { "Opis" }
         format:string               { "Format" }
         length:string               { "Dužina" }
-        bpm:string                  { "Bpm" }
+        bpm:string                  { "BPM" }
         rating:string               { "Ocena" }
         encoded_by:string           { "Enkodirao" }
         track_number:string         { "Redni broj snimka" }
@@ -212,7 +212,7 @@ sr:table
         radio_station_name:string   { "Ime radio stanice" }
         audio_file_info_url:string  { "Web strana sa informacijama o fajlu" }
         artist_url:string           { "Web strana izvođača" }
-        audio_source_url:string     { "Web strana audio izvora" }
+        audio_source_url:string     { "Web strana izvora" }
         buy_cd_url:string           { "Kupi CD preko web strane" }
         isrc_number:string          { "ISRC broj" }
         catalog_number:string       { "Kataloški broj" }

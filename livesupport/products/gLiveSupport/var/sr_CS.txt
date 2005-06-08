@@ -1,0 +1,222 @@
+sr_CS:table
+{
+    windowTitle:string       { "LiveSupport Maстер Панел" }
+    notLoggedInMsg:string    { "Нисте пријављени" }
+    loggedInMsg:string       { "Пријављени сте као {0}" }
+    loginButtonLabel:string  { "Пријава" }
+    logoutButtonLabel:string { "Одјава" }
+    liveModeButtonLabel:string              { "Програм Уживо" }
+    uploadFileButtonLabel:string            { "Аплоуд фајла" }
+    scratchpadButtonLabel:string            { "Припрема" }
+    simplePlaylistMgmtButtonLabel:string    { "Обрада плеј листе" }
+    schedulerButtonLabel:string             { "Распоред" }
+    searchButtonLabel:string                { "Претрага" }
+
+    localeNotAvailableMsg:string        { "Место {0} није доступно " }
+    schedulerNotReachableMsg:string     { "Сервер са распоредом није доступан" }
+    storageNotReachableMsg:string       { "Сервер није доступан" }
+    authenticationNotReachableMsg:string
+                                      { "Сервер за аутентизацију није доступан" }
+    audioErrorMsg                       { "Грешка у аудио плејеру: " }
+
+    loginWindow:table
+    {
+        windowTitle:string          { "ПРИЈАВА" }
+
+        loginLabel:string           { "Пријави се" }
+        passwordLabel:string        { "Лозинка" }
+        okButtonLabel:string        { "У реду" }
+        cancelButtonLabel:string    { "Откажи" }
+    }
+
+    audioClipListWindow:table
+    {
+        windowTitle:string            { "LiveSupport Аудио Клипови" }
+
+        idColumnLabel:string          { "ид" }
+        lengthColumnLabel:string      { "дужина" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "Преузето" }
+
+        closeButtonLabel:string       { "Затвори" }
+    }
+
+    scratchpadWindow:table
+    {
+        windowTitle:string                  { "LiveSupport Припрема" }
+
+        typeColumnLabel:string              { "тип" }
+        titleColumnLabel:string             { "наслов" }
+        addToPlaylistButtonLabel:string     { "Додај у плеј листу" }
+        clearListButtonLabel:string         { "Обриши листу" }
+        removeButtonLabel:string            { "Уклони из листе" }
+
+        upMenuItem:string                   { "Помери горе" }
+        downMenuItem:string                 { "Помери доле" }
+        removeMenuItem:string               { "Уклони" }
+        addToPlaylistMenuItem:string        { "Додај у плеј листу" }
+        schedulePlaylistMenuItem:string     { "Програмирај плеј листу" }
+        deleteMenuItem:string               { "Обриши" }
+        cueMenuItem:string                  { "Проба" }
+        addToLiveModeMenuItem:string        { "Додај у Програм Уживо" }
+    }
+
+    playlistListWindow:table
+    {
+        windowTitle:string            { "LiveSupport Плеј Листа" }
+
+        listBoxLabel                  { "Плеј листе" }
+        detailBoxLabel                { "Детаљи плеј листе" }
+
+        idColumnLabel:string          { "ид" }
+        lengthColumnLabel:string      { "дужина" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "преузето" }
+
+        closeButtonLabel:string       { "затвори" }
+    }
+
+    uploadFileWindow:table
+    {
+        windowTitle:string            { "Аплоуд фајла" }
+
+        chooseFileLabel:string        { "Име фајла" }
+        chooseFileButtonLabel:string  { "Претражи" }
+
+        mainSectionLabel:string       { "Главно" }
+        titleLabel:string             { "Наслов" }
+        creatorLabel:string           { "Жанр" }
+        fileFormatLabel:string        { "Тип фајла" }
+        lengthLabel:string            { "Трајање" }
+
+        uploadButtonLabel:string      { "Аплоуд" }
+        closeButtonLabel:string       { "Откажи" }
+        statusBar:string              { "статус бар" }
+
+        fileChooserDialogTitle:string { "Изабери фајл" }
+        clipUploadedMessage:string    { "Аплоудован клип {0}" }
+    }
+
+    simplePlaylistManagementWindow:table
+    {
+        windowTitle:string            { "LiveSupport Једноставно управљање плеј листом" }
+
+        startColumnLabel:string       { "почни" }
+        titleColumnLabel:string       { "наслов" }
+        lengthColumnLabel:string      { "дужина" }
+        nameLabel:string              { "име" }
+        saveButtonLabel:string        { "сачувај" }
+        closeButtonLabel:string       { "затвори" }
+        statusBar:string              { "статус бар" }
+        playlistSavedMessage:string   { "сачувана плеј листа {0}" }
+    }
+
+    schedulerWindow:table
+    {
+        windowTitle:string            { "LiveSupport Распоред" }
+
+        startColumnLabel:string       { "почетак" }
+        titleColumnLabel:string       { "назив" }
+        endColumnLabel:string         { "крај" }
+        deleteMenuItem:string         { "Обриши" }
+
+        closeButtonLabel:string       { "затвори" }
+
+    }
+
+    schedulePlaylistWindow:table
+    {
+        windowTitle:string            { "LiveSupport Програмирање Плеј листе" }
+
+        hourLabel:string              { "сат: " }
+        minuteLabel:string            { "минут: " }
+        scheduleButtonLabel:string    { "програмирај" }
+        closeButtonLabel:string       { "затвори" }
+    }
+
+    searchWindow:table
+    {
+        windowTitle:string            { "LiveSupport Претрага/Преглед" }
+
+        simpleSearchTab:string        { "Претрага" }
+        advancedSearchTab:string      { "Напредна претрага" }
+        browseTab:string              { "Преглед" }
+        
+        searchByTextLabel:string      { "Тражи по" }
+        searchButtonLabel:string      { "Претражи" }
+        
+        typeColumnLabel:string        { "" }
+        titleColumnLabel:string       { "Наслов" }
+        creatorColumnLabel:string     { "Аутор" }
+        lengthColumnLabel:string      { "Дужина" }
+        
+        partialOperatorDisplay:string     { "садржи" }
+        partialOperatorSearchKey:string   { "део" }
+        prefixOperatorDisplay:string      { "почиње са" }
+        prefixOperatorSearchKey:string    { "префикс" }
+        =OperatorDisplay:string           { "једнако" }
+        =OperatorSearchKey:string         { "=" }
+        <=OperatorDisplay:string          { "<=" }
+        <=OperatorSearchKey:string        { "<=" }
+        >=OperatorDisplay:string          { ">=" }
+        >=OperatorSearchKey:string        { ">=" }
+        
+        allStringForBrowse                { "--- све ---" }
+        
+        addToScratchpadMenuItem:string    { "Додај у Припрему " }
+        addToLiveModeMenuItem:string      { "Додај у Програм Уживо" }
+    }
+
+    liveModeWindow:table
+    {
+        windowTitle:string            { "LiveSupport Програм Уживо" }
+        
+        cueMenuItem:string            { "Проба" }
+        upMenuItem:string             { "Помери горе" }
+        downMenuItem:string           { "Помери доле" }
+        removeMenuItem:string         { "Уклони" }
+        playMenuItem:string           { "Пусти" }
+        
+        cuePlayerLabel:string         { "Проба" }
+    }
+    
+    metadataTypes:table
+    {
+        title:string                { "Назив" }
+        creator:string              { "Аутор" }
+        album:string                { "Албум" }
+        year:string                 { "Година" }
+        genre:string                { "Жанр" }
+        description:string          { "Опис" }
+        format:string               { "Формат" }
+        length:string               { "Дужина" }
+        bpm:string                  { "БПМ" }
+        rating:string               { "Оцена" }
+        encoded_by:string           { "Eнкодирао" }
+        track_number:string         { "Редни број снимка" }
+        disc_number:string          { "Редни број диска" }
+        mood:string                 { "Расположење" }
+        publishing_label:string     { "Издавачка кућа" }
+        composer:string             { "Композитор" }
+        bitrate:string              { "Битрејт" }
+        channels:string             { "Број канала" }
+        sample_rate:string          { "Брзина узорковања" }
+        encoding_software:string    { "Eнкодер" }
+        checksum:string             { "Кoмплетна контрола" }
+        lyrics:string               { "Текст песме" }
+        orchestra_or_band:string    { "Оркестар или бенд" }
+        conductor:string            { "Диригент" }
+        lyricist:string             { "Текстописац" }
+        original_lyricist:string    { "Оригинални текстописац" }
+        radio_station_name:string   { "Име радио станице" }
+        audio_file_info_url:string  { "Веб страна са информацијама о фајлу" }
+        artist_url:string           { "Веб страна извођача" }
+        audio_source_url:string     { "Веб страна извора" }
+        buy_cd_url:string           { "Купи ЦД преко веб стране" }
+        isrc_number:string          { "ISRC број" }
+        catalog_number:string       { "Каталошки број" }
+        original_artist:string      { "Оригинални извођач" }
+        copyright:string            { "Ауторска права" }
+    }
+}
+

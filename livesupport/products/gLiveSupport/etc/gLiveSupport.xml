@@ -99,10 +99,11 @@
     />
 
     <supportedLanguages>
-        <language locale="en" name="English"/>
-        <language locale="es" name="Español"/>
-        <language locale="hu" name="Magyar"/>
-        <language locale="sr" name="Srpski"/>
+        <language locale="en"    name="English"/>
+        <language locale="es"    name="Español"/>
+        <language locale="hu"    name="Magyar"/>
+        <language locale="sr_CS" name="Српски"/>
+        <language locale="sr_YU" name="Srpski"/>
     </supportedLanguages>
 
     <widgetFactory    path = "var/widgets/" />
