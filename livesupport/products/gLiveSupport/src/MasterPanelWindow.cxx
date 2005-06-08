@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 #include <unicode/msgfmt.h>
 #include <gtkmm/label.h>
 #include <gtkmm/main.h>
+#include <gdkmm/pixbuf.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "MasterPanelWindow.h"
@@ -69,6 +70,18 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // TODO: remove hard-coded station logo path reference
     radioLogoWidget = Gtk::manage(new Gtk::Image("var/stationLogo.png"));
+    Glib::RefPtr<Gdk::Pixbuf>   logo = radioLogoWidget->get_pixbuf();
+    int     logoWidth  = logo->get_width();
+    int     logoHeight = logo->get_height();
+    if (logoWidth * 104 > logoHeight * 120) {
+        radioLogoWidget->set(logo->scale_simple(120,
+                                                (logoHeight * 120)/logoWidth,
+                                                Gdk::INTERP_BILINEAR ));
+    } else {
+        radioLogoWidget->set(logo->scale_simple((logoWidth * 104)/logoHeight,
+                                                104,
+                                                Gdk::INTERP_BILINEAR ));
+    }
     radioLogoWidget->set_size_request(120, 104);
 
     // set up the layout, which is a button box
