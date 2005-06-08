@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,8 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
         std::exit(1);
     }
 
-    nameEntry             = Gtk::manage(new Gtk::Entry());
+    EntryBin *      nameEntryBin = Gtk::manage(wf->createEntryBin());
+    nameEntry             = nameEntryBin->getEntry();
     entriesScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
     entriesModel          = Gtk::ListStore::create(modelColumns);
     entriesView           = Gtk::manage(wf->createTreeView(entriesModel));
@@ -118,7 +119,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     Gtk::Alignment *    nameEntryAlignment = Gtk::manage(new Gtk::Alignment(
                                         Gtk::ALIGN_LEFT, Gtk::ALIGN_CENTER,
                                         0.7));  // take up 70% of available room
-    nameEntryAlignment->add(*nameEntry);
+    nameEntryAlignment->add(*nameEntryBin);
     nameBox->pack_start(*nameEntryAlignment, Gtk::PACK_EXPAND_WIDGET, 5);
     mainBox->pack_start(*nameBox, Gtk::PACK_SHRINK, 5);
 
