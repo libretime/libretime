@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.61 $
+    Version  : $Revision: 1.62 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.61 $
+ *  @version $Revision: 1.62 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -255,6 +255,49 @@ class GreenBox extends BasicStor{
     }
 
     /**
+     *  Return metadata as hierarchical PHP hash-array
+     *
+     *  If xml:lang attribute is specified in metadata category,
+     *  array of metadata values indexed by xml:lang values
+     *  is presented instead of one plain metadata value.
+     *
+     *  @param id int, local object id
+     *  @param sessid string, session ID
+     *  @return array
+     */
+    function getMdataArray($id, $sessid)
+    {
+        if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
+            return $res;
+        $ac =& StoredFile::recall($this, $id);
+        if(PEAR::isError($ac)){ return $ac; }
+        $arr = $ac->md->genPhpArray();
+        $md = FALSE;
+        foreach($arr['children'] as $i=>$a){
+            if($a['elementname'] == 'metadata'){
+                $md = $arr['children'][$i];
+                break;
+            }
+        }
+        if($md === FALSE){
+            return PEAR::raiseError(
+                "GreenBox::getMdataArray: no metadata container found"
+            );
+        }
+        $res = array();
+        foreach($md['children'] as $i=>$el){
+            $lang = $el['attrs']['xml:lang'];
+            $category = $el['elementname'];
+            if($lang == ""){
+                $res[$category] = $el['content'];
+            }else{
+                $res[$category][$lang] = $el['content'];
+            }
+        }
+        return $res;
+    }
+
+    /**
      *  Get metadata element value
      *
      *  @param id int, virt.file's local id
@@ -455,10 +498,12 @@ class GreenBox extends BasicStor{
      *  @param sessid string, session ID
      *  @param fadeIn string, optional, in time format hh:mm:ss.ssssss
      *  @param fadeOut string, dtto
+     *  @param pause string, optional - pause between half-faded points
+     *          in time format hh:mm:ss.ssssss
      *  @return string, generated playlistElement gunid
      */
     function addAudioClipToPlaylist($token, $acId, $sessid,
-        $fadeIn=NULL, $fadeOut=NULL)
+        $fadeIn=NULL, $fadeOut=NULL, $pause=NULL)
     {
         require_once"Playlist.php";
         $pl =& Playlist::recallByToken($this, $token);
@@ -478,7 +523,7 @@ class GreenBox extends BasicStor{
             );
         }
 */
-        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut);
+        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL);
         if(PEAR::isError($res)) return $res;
         // recalculate offsets and total length:
         $r = $pl->recalculateTimes();
