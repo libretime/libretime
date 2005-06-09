@@ -289,7 +289,9 @@ class uiBrowser extends uiBase {
         extract($param);
         static $records, $relations;
         $arr =& $records[$id];
-        if (is_array($arr))  return $arr;
+
+        if (is_array($arr))        return array('metadata' => $arr);
+
         if (!is_array($relations)) include dirname(__FILE__).'/formmask/mdata_relations.inc.php';
 
         $arr = $this->gb->getMDataArray($id, $this->sessid);

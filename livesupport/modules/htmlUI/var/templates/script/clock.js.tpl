@@ -40,7 +40,10 @@ function myClock(eh, ei, es, dh, di, ds, next, interval) {
 }
 
 function incClock() {
-    if (clock['remaining'].getTime() <= clock['interval']) stopClock();
+    if (clock['remaining'].getTime() <= clock['interval']*2)  {
+        stopClock();
+        exit();
+    }
 
     clock['elapsed'].setTime(clock['elapsed'].getTime() + clock['interval']);
     clock['remaining'].setTime(clock['duration'].getTime() - clock['elapsed'].getTime());
