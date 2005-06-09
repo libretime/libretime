@@ -289,33 +289,29 @@ class uiBrowser extends uiBase {
         extract($param);
         static $records, $relations;
         $arr =& $records[$id];
+        if (is_array($arr))  return $arr;
+        if (!is_array($relations)) include dirname(__FILE__).'/formmask/mdata_relations.inc.php';
 
-        if (is_array($arr)) return $arr;
-
-        require_once dirname(__FILE__).'/formmask/mdata_relations.inc.php';
-
-        require_once 'XML/Unserializer.php';
-        $handler =& new XML_Unserializer;
-        $handler->unserialize($this->getMdata($id));
-        $arr = $handler->getUnserializedData();  
-
+        $arr = $this->gb->getMDataArray($id, $this->sessid);
         if (!is_array($arr)) return FALSE;
 
-        foreach ($arr['metadata'] as $key=>$val) {
-
-            if (is_array($val)) {       ## just workaround
-                $val = current($val);
+        foreach ($arr as $key=>$val) {
+            if (is_array($val)) {
+                if ($val[$this->langid]) $val = $val[$this->langid];
+                else                     $val = $val[UI_DEFAULT_LANGID];
             }
 
             if ($relations[$key]) {
-                unset($arr['metadata'][$key]);
-                $arr['metadata'][$relations[tra($key)]] = $val;
+                unset($arr[$key]);
+                $arr[$relations[tra($key)]]   = $val;
+            } else {
+                $arr[$key] = $val;
             }
         }
 
-        ksort($arr['metadata']);
+        ksort($arr);
 
-        return $arr;
+        return array('metadata' => $arr);
     }
 
 

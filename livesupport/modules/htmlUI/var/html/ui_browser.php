@@ -66,6 +66,11 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/PLAYLIST.changeTransition.tpl');
             break;
 
+            case "PL.changeAllTransitions";
+                $Smarty->assign('dynform', $uiBrowser->PLAYLIST->changeAllTransitionsForm($ui_fmask['PL.changeTransition']));
+                $Smarty->display('popup/PLAYLIST.changeAllTransitions.tpl');
+            break;
+
             case "PL.confirmDelete":
                 $Smarty->display('popup/PLAYLIST.confirmDelete.tpl');
             break;

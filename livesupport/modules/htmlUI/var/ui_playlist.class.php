@@ -257,43 +257,66 @@ class uiPlaylist
 
     function changeTransition($id, $type, $duration)
     {
-        $curr = $this->getCurrElement($id);
-        $prev = $this->getPrevElement($id);
-        $next = $this->getNextElement($id);
+        $pause = $pause;
+        $xfade = GreenBox::_secsToPlTime($duration/1000);
 
-        switch ($type) {
-            case "fadeX":
-                $item[$prev['attrs']['id']] =
-                              array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
-                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($duration/1000));
-                $item[$id]  = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($duration/1000),
-                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT]));
-            break;
-            case "pause":
-                $item[$prev['attrs']['id']] =
-                              array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
-                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime(-$duration/1000));
-                $item[$id]  = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime(-$duration/1000),
-                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT]));
-            break;
-            case "fadeIn":
-                $item[$id]  = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($duration/1000),
-                                    UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT]));
-            break;
-            case "fadeOut":
-                $item[$id] = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEIN]),
-                                   UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($duration/1000));
-            break;
-        }
-        #print_r($item);
-        foreach ($item as $i=>$val) {
-            $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
-            #print_r($r);
-            if (PEAR::isError($r)) {
+        if ($id) {
+            // just change fade between 2 clips
+            $curr = $this->getCurrElement($id);
+            $prev = $this->getPrevElement($id);
+            $next = $this->getNextElement($id);
+
+            switch ($type) {
+                case "fadeX":
+                    $item[$prev['attrs']['id']] =
+                                  array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
+                                        UI_PL_ELEM_FADEOUT => $xfade
+                                  );
+                    $item[$id]  = array(UI_PL_ELEM_FADEIN  => $xfade,
+                                        UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT])
+                                  );
+                break;
+                case "pause":
+                    $item[$prev['attrs']['id']] =
+                                  array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($prev[UI_PL_ELEM_FADEIN]),
+                                        UI_PL_ELEM_FADEOUT => $pause
+                                  );
+                    $item[$id]  = array(UI_PL_ELEM_FADEIN  => $pause,
+                                        UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT])
+                                  );
+                break;
+                case "fadeIn":
+                    $item[$id]  = array(UI_PL_ELEM_FADEIN  => $xfade,
+                                        UI_PL_ELEM_FADEOUT => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEOUT])
+                                  );
+                break;
+                case "fadeOut":
+                    $item[$id] = array(UI_PL_ELEM_FADEIN  => GreenBox::_secsToPlTime($curr[UI_PL_ELEM_FADEIN]),
+                                       UI_PL_ELEM_FADEOUT => $xfade
+                                 );
+                break;
+            }
+            #print_r($item);
+            foreach ($item as $i=>$val) {
+                $r = $this->Base->gb->changeFadeInfo($this->token, $i, $val[UI_PL_ELEM_FADEIN], $val[UI_PL_ELEM_FADEOUT], $this->Base->sessid);
+                #print_r($r);
+                if (PEAR::isError($r)) {
                     if (UI_VERBOSE) print_r($r);
                     $this->Base->_retMsg('Change fade information failed.');
                     return FALSE;
                 }
+            }
+        } else {
+            // change fade of all clips
+            foreach ($this->getFlat($this->activeId) as $v) {
+                $r = $this->Base->gb->changeFadeInfo($this->token, $v['attrs']['id'], $type==='pause'?$pause:$xfade, $type==='pause'?$pause:$xfade, $this->Base->sessid);
+                #print_r($r);
+                if (PEAR::isError($r)) {
+                    if (UI_VERBOSE) print_r($r);
+                    $this->Base->_retMsg('Change fade information failed.');
+                    return FALSE;
+                }
+            }
         }
     }
 
@@ -312,7 +335,7 @@ class uiPlaylist
 
     function getCurrElement($id)
     {
-        $arr = $this->getFlat($id);
+        $arr = $this->getFlat($this->activeId);
         while ($val = current($arr)) {
             if ($val['attrs']['id'] == $id) {
                 return current($arr);
@@ -324,7 +347,7 @@ class uiPlaylist
 
     function getPrevElement($id)
     {
-        $arr = $this->getFlat($id);
+        $arr = $this->getFlat($this->activeId);
         while ($val = current($arr)) {
             if ($val['attrs']['id'] == $id) {
                 return prev($arr);
@@ -336,7 +359,7 @@ class uiPlaylist
 
     function getNextElement($id)
     {
-        $arr = $this->getFlat($id);
+        $arr = $this->getFlat($this->activeId);
         while ($val = current($arr)) {
             if ($val['attrs']['id'] == $id) {
                 return next($arr);
@@ -367,12 +390,21 @@ class uiPlaylist
                 $form->setConstants(array('headline' => '<b>'.$s['title'].'</b>'));
             break;
         }
-
-
         $form->setConstants(array('id'       => $id,
                                   'duration' => $duration)
-                            );
+        );
         $this->Base->_parseArr2Form($form, $mask[$type]);
+        $this->Base->_parseArr2Form($form, $mask['all']);
+        $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
+        $form->accept($renderer);
+        return $renderer->toArray();
+    }
+
+
+    function changeAllTransitionsForm(&$mask)
+    {
+        $form = new HTML_QuickForm('PL_changeTransition', UI_STANDARD_FORM_METHOD, UI_HANDLER);
+        $this->Base->_parseArr2Form($form, $mask['transition']);
         $this->Base->_parseArr2Form($form, $mask['all']);
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);

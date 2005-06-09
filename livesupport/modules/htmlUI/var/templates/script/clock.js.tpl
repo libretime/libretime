@@ -34,7 +34,7 @@ function myClock(eh, ei, es, dh, di, ds, next, interval) {
     clock['elapsed']    = new Date();
     clock['duration']   = new Date();
     clock['remaining']  = new Date();
-    clock['elapsed'].setTime(Date.UTC(1970, 0, 1, eh, ei, es));
+    clock['elapsed'].setTime (Date.UTC(1970, 0, 1, eh, ei, es));
     clock['duration'].setTime(Date.UTC(1970, 0, 1, dh, di, ds));
     clock['run']        = setInterval("incClock();", clock['interval']);
 }
@@ -45,7 +45,7 @@ function incClock() {
     clock['elapsed'].setTime(clock['elapsed'].getTime() + clock['interval']);
     clock['remaining'].setTime(clock['duration'].getTime() - clock['elapsed'].getTime());
 
-    document.getElementById("statusbar_elapsed").innerHTML   = twoDigit(clock['elapsed'].getUTCHours()) + ":" + twoDigit(clock['elapsed'].getUTCMinutes()) + ":" + twoDigit(clock['elapsed'].getUTCSeconds());
+    document.getElementById("statusbar_elapsed").innerHTML   = twoDigit(clock['elapsed'].getUTCHours())   + ":" + twoDigit(clock['elapsed'].getUTCMinutes())   + ":" + twoDigit(clock['elapsed'].getUTCSeconds());
     document.getElementById("statusbar_remaining").innerHTML = twoDigit(clock['remaining'].getUTCHours()) + ":" + twoDigit(clock['remaining'].getUTCMinutes()) + ":" + twoDigit(clock['remaining'].getUTCSeconds());
     document.getElementById("statusbar_scala").style.width   = (100 / clock['duration'].getTime() * clock['elapsed'].getTime()) + "%";
 }
@@ -62,10 +62,14 @@ function stopClock() {
 
 {/literal}
 
-pre0_myClock({$smarty.now|date_format:"%Y, %m, %d, %H, %M, %S"}, 1000);
+pre0_myClock({$smarty.now|date_format:"%Y"|string_format:"%d"}, {$smarty.now|date_format:"%m"|string_format:"%d"}, {$smarty.now|date_format:"%d"|string_format:"%d"},
+             {$smarty.now|date_format:"%H"|string_format:"%d"}, {$smarty.now|date_format:"%M"|string_format:"%d"}, {$smarty.now|date_format:"%S"|string_format:"%d"},
+             1000);
 
 {if (is_array($_nowplaying.duration))}
-    myClock  ({$_nowplaying.elapsed.h},   {$_nowplaying.elapsed.m},   {$_nowplaying.elapsed.s|truncate:2:""},  {$_nowplaying.duration.h},   {$_nowplaying.duration.m},  {$_nowplaying.duration.s|truncate:2:""}, {if is_array($_nextplaying)}1{else}0{/if}, 333);
+    myClock  ({$_nowplaying.elapsed.h|string_format:"%d"}, {$_nowplaying.elapsed.m|string_format:"%d"}, {$_nowplaying.elapsed.s|string_format:"%d"},
+              {$_nowplaying.duration.h|string_format:"%d"}, {$_nowplaying.duration.m|string_format:"%d"}, {$_nowplaying.duration.s|string_format:"%d"},
+              {if is_array($_nextplaying)}1{else}0{/if}, 333);
 {/if}
 
 </script>

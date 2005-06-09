@@ -67,7 +67,8 @@
                     </table>
                 </div>
                 <div class="footer" style="width: 569px;">
-                    <input type="button" class="button_large" onClick="collector_submit('PL', 'PL.removeItem')" value="##Remove Selected##" />
+                    <input type="button" class="button_large" onClick="collector_submit('PL', '0&popup[]=PL.changeAllTransitions', '{$UI_BROWSER}', 'chgAllTrans', 400, 150)" value="##Change Fades##" />
+                    <input type="button" class="button_large" onClick="collector_submit('PL', 'PL.removeItem')"   value="##Remove Selected##" />
                     <input type="button" class="button_large" onClick="collector_clearAll('PL', 'PL.removeItem')" value="##Clear Playlist##" />
                 </div>
                 <div class="container_button">

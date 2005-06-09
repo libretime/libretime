@@ -317,7 +317,7 @@ class uiScheduler extends uiCalendar
                 'gunid'     => $this->Base->gb->_gunidFromId($id),
                 'title'     => $this->Base->_getMDataValue($id, UI_MDATA_KEY_TITLE),
                 'duration'  => $this->Base->_getMDataValue($id, UI_MDATA_KEY_DURATION),
-            ); 
+            );
             return TRUE;
         } else {
             return $this->copyPLfromSP();
@@ -489,7 +489,7 @@ class uiScheduler extends uiCalendar
         if ($this->_isError($r))
             return FALSE;
         if (isset($r['scheduleEntryId']))
-            $this->Base->_retMsg('Entry added at $1 with ScheduleId: $2', $datetime, $r['scheduleEntryId']);
+            $this->Base->_retMsg('Entry added at $1 with ScheduleId: $2', strftime("%Y-%m-%d %H:%M:%S", $this->_datetime2timestamp($datetime)), $r['scheduleEntryId']);
     }
 
 

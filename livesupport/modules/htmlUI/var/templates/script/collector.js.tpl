@@ -1,10 +1,11 @@
 {literal}
 <script type="text/javascript">
 
-function collector_submit(formname, action)
+function collector_submit(formname, action, script, name, width, height)
 {
     var href = '';
     var n;
+    if (!script) var script = '{/literal}{$UI_HANDLER}{literal}';
 
     for (n=0; n < (document.forms[formname].elements.length); n++) {
         if (document.forms[formname].elements[n].checked && document.forms[formname].elements[n].name != 'all') {
@@ -12,10 +13,10 @@ function collector_submit(formname, action)
         }
     }
 
-    if (href == '')
-        return false;
+    if (href == '') return false;
 
-    hpopup({/literal}'{$UI_HANDLER}{literal}?act=' + action + href);
+    if (name)   popup (script + '?act=' + action + href, popup, width, height);
+    else        hpopup(script + '?act=' + action + href);
 }
 
 function collector_switchAll(formname)
