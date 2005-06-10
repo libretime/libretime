@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,8 +86,8 @@ using namespace LiveSupport::Widgets;
  *  +---------------------------------------+
  *  </code></pre>
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.4 $
  */
 class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
@@ -279,6 +279,18 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
          */
         void
         updateFileInfo(void)                                throw ();
+
+        /**
+         *  Determine the length of an audio file on disk.
+         *
+         *  @param fileName     a binary audio file (e.g., /tmp/some_clip.mp3)
+         *  @return             the length of the file
+         *  @exception std::invalid_argument if the file is not found, or its
+         *                                   length could not be determined
+         */
+        Ptr<time_duration>::Ref
+        readPlaylength(Ptr<const std::string>::Ref   fileName)
+                                                throw (std::invalid_argument);
 
 
     public:

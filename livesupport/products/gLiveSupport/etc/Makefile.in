@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.42 $
+#   Version  : $Revision: 1.43 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -129,6 +129,7 @@ GTKMM_LIBS=@GTKMM_LIBS@
 ICU_CFLAGS=
 ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags-toolutil --ldflags-icuio`
 
+TAGLIB_CFLAGS=`${USR_DIR}/bin/taglib-config --cflags`
 TAGLIB_LIBS=`${USR_DIR}/bin/taglib-config --libs`
 
 TEST_RESULTS = ${DOC_DIR}/testResults.xml
@@ -152,6 +153,7 @@ CPPFLAGS = @CPPFLAGS@
 CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -pedantic -Wall -Wno-long-long \
                              ${ICU_CFLAGS} \
+                             ${TAGLIB_CFLAGS} \
                              ${LIBXMLPP_CFLAGS} \
                              ${GTKMM_CFLAGS} \
 							 ${GSTREAMER_CFLAGS} \

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.48 $
+    Version  : $Revision: 1.49 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -540,23 +540,6 @@ GLiveSupport :: showLoggedInUI(void)                        throw ()
     if (masterPanel.get()) {
         masterPanel->showLoggedInUI();
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Determine the length of an audio file
- *----------------------------------------------------------------------------*/
-Ptr<time_duration>::Ref
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: getPlaylength(Ptr<const std::string>::Ref   uri)
-                                                throw (std::invalid_argument)
-{
-    Ptr<time_duration>::Ref     playlength;
-    cuePlayer->open(*uri);
-    playlength = cuePlayer->getPlaylength();
-    cuePlayer->close();
-
-    return playlength;
 }
 
 

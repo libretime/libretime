@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.37 $
+ *  @version $Revision: 1.38 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -444,18 +444,6 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         void
         showLoggedInUI(void)                                    throw ();
-
-        /**
-         *  Determine the length of an audio file, base on a URI to the file.
-         *
-         *  @param uri an URI to a binary audio file
-         *  @return the length of the file
-         *  @exception std::invalid_argument if there is no file at the
-         *             specified URI
-         */
-        Ptr<time_duration>::Ref
-        getPlaylength(Ptr<const std::string>::Ref   uri)
-                                                throw (std::invalid_argument);
 
         /**
          *  Upload a file to the storage.

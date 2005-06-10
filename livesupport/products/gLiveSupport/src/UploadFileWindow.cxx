@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,8 @@
 #include <gtkmm/label.h>
 #include <gtkmm/stock.h>
 #include <gtkmm/filechooserdialog.h>
+#include <fileref.h>
+#include <audioproperties.h>
 
 #include "LiveSupport/Core/TimeConversion.h"
 #include "UploadFileWindow.h"
@@ -240,7 +242,7 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
         *fileURI += *fileName;
 
         try {
-            playlength = gLiveSupport->getPlaylength(fileURI);
+            playlength = readPlaylength(fileName);
         } catch (std::invalid_argument &e) {
             playlength.reset(new time_duration(0,0,0,0));
         }
@@ -326,5 +328,25 @@ void
 UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
 {
     hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Determine the length of an audio file
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+UploadFileWindow :: readPlaylength(Ptr<const std::string>::Ref   fileName)
+                                                throw (std::invalid_argument)
+{
+    TagLib::FileRef             fileRef(fileName->c_str());
+    TagLib::AudioProperties *   audioProperties = fileRef.audioProperties();
+
+    if (audioProperties) {
+        Ptr<time_duration>::Ref     length(new time_duration(seconds(
+                                                audioProperties->length() )));
+        return length;
+    } else {
+        throw std::invalid_argument("could not read file length");
+    }
 }
 
