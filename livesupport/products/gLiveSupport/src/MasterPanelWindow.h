@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 {
@@ -460,6 +460,15 @@ class MasterPanelWindow : public Gtk::Window, public LocalizedObject
 
 /* ====================================================== function prototypes */
 
+/**
+ *  Resize an image to fit in a box, preserving its aspect ratio.
+ *
+ *  @param image    the image to resize (modified by the method)
+ *  @param width    the width of the box
+ *  @param height   the height of the box
+ */
+void
+resizeImage(Gtk::Image* image, int width, int height)           throw ();
 
 } // namespace GLiveSupport
 } // namespace LiveSupport

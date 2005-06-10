@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,18 +70,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // TODO: remove hard-coded station logo path reference
     radioLogoWidget = Gtk::manage(new Gtk::Image("var/stationLogo.png"));
-    Glib::RefPtr<Gdk::Pixbuf>   logo = radioLogoWidget->get_pixbuf();
-    int     logoWidth  = logo->get_width();
-    int     logoHeight = logo->get_height();
-    if (logoWidth * 104 > logoHeight * 120) {
-        radioLogoWidget->set(logo->scale_simple(120,
-                                                (logoHeight * 120)/logoWidth,
-                                                Gdk::INTERP_BILINEAR ));
-    } else {
-        radioLogoWidget->set(logo->scale_simple((logoWidth * 104)/logoHeight,
-                                                104,
-                                                Gdk::INTERP_BILINEAR ));
-    }
+    resizeImage(radioLogoWidget, 120, 104);
     radioLogoWidget->set_size_request(120, 104);
 
     // set up the layout, which is a button box
@@ -591,5 +580,31 @@ MasterPanelWindow :: setNowPlaying(Ptr<Playable>::Ref    playable)
                                                                     throw ()
 {
     nowPlayingWidget->setPlayable(playable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Resize an image to fit in a box, preserving its aspect ratio.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport::GLiveSupport::
+resizeImage(Gtk::Image* image, int width, int height)               throw ()
+{
+    Glib::RefPtr<Gdk::Pixbuf>   pixbuf = image->get_pixbuf();
+    int     imageWidth  = pixbuf->get_width();
+    int     imageHeight = pixbuf->get_height();
+
+    // this is integerese for (logoWidth/logoHeight > width/height)
+    if (imageWidth * height > imageHeight * width) {
+        // image is wide: squash horizontally
+        image->set(pixbuf->scale_simple(width,
+                                        (imageHeight * width)/imageWidth,
+                                        Gdk::INTERP_BILINEAR ));
+    } else {
+        // image is tall: squash vertically
+        image->set(pixbuf->scale_simple((imageWidth * height)/imageHeight,
+                                        height,
+                                        Gdk::INTERP_BILINEAR ));
+    }
 }
 
