@@ -41,6 +41,22 @@ class uiScheduler extends uiCalendar
     }
 
 
+    function startDaemon()
+    {
+        exec(UI_SCHEDULER_DAEMON_CMD);
+        sleep(5);
+        exec('ps -A', $output);
+        foreach ($output as $l) {
+            if (preg_match("/ ".UI_SCHEDULER_DAEMON_NAME."$/", $l)) {
+                $this->Base->_retMsg('Scheduler started sucessfully.');
+                return TRUE;
+            }
+        }
+        $this->Base->_retMsg('Scheduler did not start.');
+        return FALSE;
+    }
+
+
     function set($arr)
     {
         extract($arr);

@@ -1,10 +1,12 @@
 <?php
+define('UI_SCHEDULER_DAEMON_CMD',       'make -C /var/www/livesupport/products/scheduler/ run >/tmp/scheduler.log 2>&1 &');
+define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');
+
 define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
 
 define('UI_DEFAULT_LANGID',             'en_GB');
-#define('UI_TIMEZONE',                  ' +100');
 define('UI_TIMEZONEOFFSET',             date('Z'));
 
 

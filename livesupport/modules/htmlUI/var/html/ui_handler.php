@@ -81,7 +81,6 @@ switch($_REQUEST['act']){
         $uiHandler->removePerm($_REQUEST["permid"], $_REQUEST["oid"]);
     break;
 
-    ## SUBJECTS
     case "SUBJECTS.addSubj":
         $uiHandler->SUBJECTS->addSubj($_REQUEST);
     break;
@@ -266,6 +265,11 @@ switch($_REQUEST['act']){
     case "SCHEDULER.removeItem":
         $uiHandler->SCHEDULER->removeFromScheduleMethod($_REQUEST['scheduleId']);
         $uiHandler->SCHEDULER->setReload();
+    break;
+
+    case "SCHEDULER.startDaemon":
+         $uiHandler->SCHEDULER->startDaemon();
+         $uiHandler->SCHEDULER->setReload();
     break;
 
     default:
