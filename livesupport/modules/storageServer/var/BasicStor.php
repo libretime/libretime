@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.52 $
+    Version  : $Revision: 1.53 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.52 $
+ *  @version $Revision: 1.53 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -645,14 +645,15 @@ class BasicStor extends Alib{
      *  @param id int, virt.file's local id
      *  @param category string, metadata element name
      *  @param lang string, optional xml:lang value for select language version
+     *  @param deflang string, optional xml:lang for default language
      *  @return array of matching records (as hash {id, value, attrs})
      *  @see Metadata::getMetadataValue
      */
-    function bsGetMetadataValue($id, $category, $lang=NULL)
+    function bsGetMetadataValue($id, $category, $lang=NULL, $deflang=NULL)
     {   
         $ac =& StoredFile::recall($this, $id);
         if($this->dbc->isError($ac)) return $ac;
-        return $ac->md->getMetadataValue($category, $lang);
+        return $ac->md->getMetadataValue($category, $lang, $deflang);
     }
     
     /**

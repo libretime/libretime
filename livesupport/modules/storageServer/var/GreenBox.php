@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.62 $
+    Version  : $Revision: 1.63 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.62 $
+ *  @version $Revision: 1.63 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -304,6 +304,7 @@ class GreenBox extends BasicStor{
      *  @param category string, metadata element name
      *  @param sessid string, session id
      *  @param lang string, optional xml:lang value for select language version
+     *  @param deflang string, optional xml:lang for default language
      *  @return array of matching records as hash with fields:
      *   <ul>
      *      <li>mid int, local metadata record id</li>
@@ -312,11 +313,12 @@ class GreenBox extends BasicStor{
      *          qualified name (e.g. xml:lang)</li>
      *   </ul>
      */
-    function getMdataValue($id, $category, $sessid='', $lang=NULL)
+    function getMdataValue($id, $category, $sessid='',
+        $lang=NULL, $deflang=NULL)
     {
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        return $this->bsGetMetadataValue($id, $category, $lang);
+        return $this->bsGetMetadataValue($id, $category, $lang, $deflang);
     }
 
     /**
@@ -523,9 +525,11 @@ class GreenBox extends BasicStor{
             );
         }
 */
+#        $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL, $pause);
         $res = $pl->addAudioClip($acId, $fadeIn, $fadeOut, NULL);
         if(PEAR::isError($res)) return $res;
         // recalculate offsets and total length:
+#        $r = $pl->recalculateTimes($pause);
         $r = $pl->recalculateTimes();
         if(PEAR::isError($r)){ return $r; }
         return $res;

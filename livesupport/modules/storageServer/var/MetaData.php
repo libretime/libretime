@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.33 $
+    Version  : $Revision: 1.34 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -310,6 +310,7 @@ class MetaData{
      *
      *  @param category string, metadata element name
      *  @param lang string, optional xml:lang value for select language version
+     *  @param deflang string, optional xml:lang for default language
      *  @param objns string, object namespace prefix - for internal use only
      *  @return array of matching records as hash with fields:
      *   <ul>
@@ -320,10 +321,12 @@ class MetaData{
      *   </ul>
      *  @see BasicStor::bsGetMetadataValue
      */
-    function getMetadataValue($category, $lang=NULL, $objns='_L')
+    function getMetadataValue($category, $lang=NULL, $deflang=NULL, $objns='_L')
     {
         $all = $this->getMetadataEl($category);
         $res = array();
+        $exact = NULL;
+        $def = NULL;
         // add attributes to result
         foreach($all as $i=>$rec){
             $pom = $this->getSubrows($rec['mid']);
@@ -332,15 +335,23 @@ class MetaData{
             $atlang = (isset($pom['attrs']['xml:lang']) ?
                 $pom['attrs']['xml:lang'] : NULL);
             // select only matching lang (en is default)
-            if(
-                is_null($lang) ||
-                strtolower($lang) == strtolower($atlang) ||
-//                (is_null($atlang) && strtolower($lang) == strtolower('en_GB'))
-                is_null($atlang)
-            ){
+            if(is_null($lang)){
                 $res[] = $all[$i];
+            }else{
+                switch(strtolower($atlang)){
+                    case '':
+                    break;
+                    case strtolower($lang):
+                        $exact = array($all[$i]);
+                    break;
+                    case strtolower($deflang):
+                        $def = array($all[$i]);
+                    break;
+                }
             }
         }
+        if($exact) return $exact;
+        if($def) return $def;
         return $res;
     }
 
@@ -392,7 +403,7 @@ class MetaData{
             }
         }else{
             // resolve container:
-            $contArr = $this->getMetadataValue($container, NULL, '_blank');
+            $contArr = $this->getMetadataValue($container, NULL, NULL, '_blank');
             if(PEAR::isError($contArr)) return $contArr;
             $parid = $contArr[0]['mid'];
             if(is_null($parid)){
