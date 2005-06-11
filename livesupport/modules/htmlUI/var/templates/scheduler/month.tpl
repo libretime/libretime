@@ -8,7 +8,7 @@
     <table class="scheduler_month">
         <tr>
         {foreach from=$SCHEDULER->Week item="_Weekday"}
-            <th>{$_Weekday.label.full}</th>
+            <th>##{$_Weekday.label.full}##</th>
         {/foreach}
          </tr>
 

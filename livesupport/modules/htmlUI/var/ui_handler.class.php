@@ -132,6 +132,7 @@ class uiHandler extends uiBase {
 
         $r = $this->gb->putFile($folderId, $formdata['mediafile']['name'], $ntmp, NULL, $this->sessid, $replace);
         @unlink($ntmp);
+
         if(PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl = UI_BROWSER."?act=editFile&id=".$id;
@@ -140,6 +141,11 @@ class uiHandler extends uiBase {
 
         $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
         $this->transMData($r);
+
+        if ($_SESSION['langid'] != UI_DEFAULT_LANGID) {           // set records in default language too
+            $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_DEFAULT_LANGID);
+            $this->transMData($r, UI_DEFAULT_LANGID);
+        }
 
         $this->redirUrl = UI_BROWSER."?act=editFile&id=$r";
         if (UI_VERBOSE) $this->_retMsg('Audioclip Data saved');
@@ -158,14 +164,11 @@ class uiHandler extends uiBase {
     }
 
 
-    function transMData($id)
+    function transMData($id, $langid=NULL)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
-        #$this->gb->replaceMetadata($id, $this->_analyzeFile($id, 'xml'), 'string', $this->sessid);
 
         $ia = $this->gb->analyzeFile($id, $this->sessid);
-        #print_r($ia);
-
         $this->_setMdataValue($id, UI_MDATA_KEY_DURATION, $this->gb->_secsToPlTime($ia['playtime_seconds']));
         $this->_setMDataValue($id, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_FILE);
 
@@ -180,9 +183,8 @@ class uiHandler extends uiBase {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if ($v['id3'] != FALSE) {
                     $key = strtolower($v['id3']);
-                    if ($ia['comments'][$key][0]) {
-                        $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0]);
-                        #echo "E: ".$v['element']." V: ".$ia['comments'][$key][0]."<br>";
+                    if ($ia['comments'][$key][0]) {   
+                        $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0], $langid);
                     }
                 }
             }

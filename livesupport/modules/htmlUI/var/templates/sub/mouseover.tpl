@@ -1,5 +1,5 @@
 {UIBROWSER->getMDataArr id=$i.id assign='_metaarr'}
-
+                          
 onMouseover = "showalttext('<div style=&quot;font-size: 120%; font-weight: bold&quot;>##{$i.type|lower|capitalize}##: {$_metaarr.metadata.Title}</div>' +
                             {if $i.type|lower == 'playlist'}
                                 {if $PL->isUSedBy($i.id) != false}'<div>##(used by {$PL->isUSedBy($i.id)})##</div>' + {/if}

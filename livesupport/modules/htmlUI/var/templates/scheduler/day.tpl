@@ -6,7 +6,7 @@
 <div class="container_elements">
     <h1>##Daily View##</h1>
     <div class="clearer">&nbsp;</div>
-    <p>{$SCHEDULER->curr.monthname} {$SCHEDULER->curr.day}, {$SCHEDULER->curr.year}</p>
+    <p>##{$SCHEDULER->curr.monthname}## {$SCHEDULER->curr.day}, {$SCHEDULER->curr.year}</p>
 
     <form name="SCHEDULER">
     <table class="scheduler_day" style="width: 606px;">
@@ -14,7 +14,7 @@
         {*    Tag vor/zurück + code um heutigen Tag abzufragen
         <tr>
             <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=--')"><<</a></th>
-            <th colspan="3" {if $SCHEDULER->curr.isToday} bgcolor="grey"{/if}>{$SCHEDULER->curr.dayname}, {$SCHEDULER->curr.year}-{$SCHEDULER->curr.month}-{$SCHEDULER->curr.day}</th>
+            <th colspan="3" {if $SCHEDULER->curr.isToday} bgcolor="grey"{/if}>##{$SCHEDULER->curr.dayname}##, ##{$SCHEDULER->curr.year}##-##{$SCHEDULER->curr.month}##-##{$SCHEDULER->curr.day}##</th>
             <th><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&day=%2B%2B')">>></a></th>
         </tr>
         *}
@@ -25,8 +25,8 @@
             <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SCHEDULER')"></td>
             *}
 
-            <td style="border-left: 1px solid #ccc; width: 95px">Time</td>
-            <td style="width: 481px; border-right: 0;">Show Info</td>
+            <td style="border-left: 1px solid #ccc; width: 95px">##Time##</td>
+            <td style="width: 481px; border-right: 0;">##Show Info##</td>
         </tr>
 
         {foreach from=$_scale item="_hour"}
@@ -44,7 +44,7 @@
                             {$i.start}-{$i.end}
                             {$i.creator}
                         </div>
-                        {* <div style="background-color: #FF6F1F; height: 3px" {include file="scheduler/week_additem.tpl"}></div> *}
+                       {include file="scheduler/between_additem.tpl"}
                     {/foreach}
 
                     </td>

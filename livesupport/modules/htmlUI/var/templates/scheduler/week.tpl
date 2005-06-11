@@ -22,7 +22,7 @@
                 <th class="firstrow" style="border-left: 1px solid #ccc"></th>
             {foreach from=$SCHEDULER->Week item="_Day"}      {* hier werden die Tagesnamen angezeigt *}
                 <th class="date"></th>
-                <th class="day"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">{$_Day.label.full}</a></th>
+                <th class="day"><a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=day&day={$_Day.day}&month={$_Day.month}&year={$_Day.year}')">##{$_Day.label.full}##</a></th>
             {/foreach}
                 {* Link Woche vor <a href="#" onClick="hpopup('{$UI_HANDLER}?act=SCHEDULER.set&week=%2B%2B')">>></a> *}
             </tr>
@@ -56,7 +56,7 @@
                         <p>{$i.start|truncate:8:""} - {$i.end|truncate:8:""}</p>
                         <p>{$i.creator}</p>
                     </div>
-                    {* <div style="background-color: #FF6F1F; height: 3px" {include file="scheduler/week_additem.tpl"}></div> *}
+                   {include file="scheduler/between_additem.tpl"}
                 {/foreach}
                 </td>
             {else}

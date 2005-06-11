@@ -348,11 +348,11 @@ class uiBase
     }
 
 
-    function _getMDataValue($id, $key, $langid=FALSE, $deflangid=UI_DEFAULT_LANGID)
+    function _getMDataValue($id, $key, $langid=NULL, $deflangid=UI_DEFAULT_LANGID)
     {
         if (!$langid) $langid = $_SESSION['langid'];
 
-        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid, $deflangid))) {  
+        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid, $deflangid))) {
             $value = current($arr);
             return $value['value'];
         }
@@ -360,11 +360,14 @@ class uiBase
     }
 
 
-    function _setMDataValue($id, $key, $value, $langid=UI_DEFAULT_LANGID)
+    function _setMDataValue($id, $key, $value, $langid=NULL)
     {
+        if (!$langid) $langid = $_SESSION['langid'];
+
         if ($this->gb->setMDataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;
         }
+
         return FALSE;
     }
 

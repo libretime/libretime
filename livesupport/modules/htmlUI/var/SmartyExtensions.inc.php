@@ -73,7 +73,7 @@ function S_htmlspecialchars($param)
  *  @param void array, array of strings to be outputted translated
  */
 function S_tra($in)
-{       
+{
     global $uiBrowser;
     foreach($in as $val) $param[] = $val;
 
@@ -86,8 +86,10 @@ function S_getHour($param)
     ## input format is HH:MM:SS.dddddd
     extract ($param);
     list ($h, $m, $s) = explode (':', $time);
-    settype($h, 'integer');
-    return $h;
+    $curr = mktime($h, $m ,$s);
+    if ($pause) $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
+
+    return strftime("%H", $curr);
 }
 
 function S_getMinute($param)
@@ -95,8 +97,10 @@ function S_getMinute($param)
     ## input format is HH:MM:SS.dddddd
     extract ($param);
     list ($h, $m, $s) = explode (':', $time);
-    settype($m, 'integer');
-    return $m;
+    $curr = mktime($h, $m ,$s);
+    if ($pause) $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
+
+    return strftime("%M", $curr);
 }
 
 function S_getSecond($param)
@@ -104,9 +108,10 @@ function S_getSecond($param)
     ## input format is HH:MM:SS.dddddd
     extract ($param);
     list ($h, $m, $s) = explode (':', $time);
-    if ($plus) $s += $plus;
-    settype($s, 'integer');
-    return $s;
+    $curr = mktime($h, $m ,$s);
+    if ($pause) $curr = strtotime(UI_SCHEDULER_PAUSE_PL2PL, $curr);
+
+    return strftime("%S", $curr);
 }
 
 
