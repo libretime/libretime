@@ -3,6 +3,10 @@
 	<status />
 	<Id>cz_CZ</Id>
 	<item>
+		<key>Show Info</key>
+		<value />
+	</item>
+	<item>
 		<key>Mo</key>
 		<value />
 	</item>

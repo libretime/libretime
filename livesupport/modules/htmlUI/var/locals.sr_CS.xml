@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
+	<status />
 	<Id>sr_CS</Id>
-	<status>checked</status>
+	<item>
+		<key>Show Info</key>
+		<value />
+	</item>
 	<item>
 		<key>Mo</key>
 		<value>Po</value>
@@ -520,7 +524,7 @@
 	</item>
 	<item>
 		<key>Audio file information web page</key>
-		<value>Web strana sa informacijom o audio fajlu</value>
+		<value>Web info strana audio fajlu</value>
 	</item>
 	<item>
 		<key>Audio source web page</key>
@@ -532,7 +536,7 @@
 	</item>
 	<item>
 		<key>Bitrate</key>
-		<value>Bitrate</value>
+		<value>Bitrejt</value>
 	</item>
 	<item>
 		<key>Browse</key>
@@ -604,7 +608,7 @@
 	</item>
 	<item>
 		<key>Count</key>
-		<value>Količina</value>
+		<value>Ukupno</value>
 	</item>
 	<item>
 		<key>Creator</key>
@@ -756,7 +760,7 @@
 	</item>
 	<item>
 		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
-		<value>Upiši nulu za Live Strim</value>
+		<value>Dužina (upiši nulu za Live Strim)</value>
 	</item>
 	<item>
 		<key>Library Search</key>
@@ -972,7 +976,7 @@
 	</item>
 	<item>
 		<key>Reset Criteria</key>
-		<value>Poništi kriterijum</value>
+		<value>Poništi kriterijume</value>
 	</item>
 	<item>
 		<key>Retype Password</key>

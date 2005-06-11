@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
+	<status />
 	<Id>es_CO</Id>
-	<status>checked</status>
+	<item>
+		<key>Show Info</key>
+		<value />
+	</item>
 	<item>
 		<key>Mo</key>
 		<value>Lu</value>

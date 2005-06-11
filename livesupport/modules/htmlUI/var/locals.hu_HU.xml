@@ -3,232 +3,236 @@
 	<status />
 	<Id>hu_HU</Id>
 	<item>
-		<key>Mo</key>
+		<key>Show Info</key>
 		<value />
+	</item>
+	<item>
+		<key>Mo</key>
+		<value>H</value>
 	</item>
 	<item>
 		<key>Tu</key>
-		<value />
+		<value>K</value>
 	</item>
 	<item>
 		<key>We</key>
-		<value />
+		<value>Sze</value>
 	</item>
 	<item>
 		<key>Th</key>
-		<value />
+		<value>Cs</value>
 	</item>
 	<item>
 		<key>Fr</key>
-		<value />
+		<value>P</value>
 	</item>
 	<item>
 		<key>Sa</key>
-		<value />
+		<value>Szo</value>
 	</item>
 	<item>
 		<key>Su</key>
-		<value />
+		<value>V</value>
 	</item>
 	<item>
 		<key>January</key>
-		<value />
+		<value>január</value>
 	</item>
 	<item>
 		<key>February</key>
-		<value />
+		<value>február</value>
 	</item>
 	<item>
 		<key>March</key>
-		<value />
+		<value>március</value>
 	</item>
 	<item>
 		<key>April</key>
-		<value />
+		<value>április</value>
 	</item>
 	<item>
 		<key>May</key>
-		<value />
+		<value>május</value>
 	</item>
 	<item>
 		<key>July</key>
-		<value />
+		<value>július</value>
 	</item>
 	<item>
 		<key>August</key>
-		<value />
+		<value>augusztus</value>
 	</item>
 	<item>
 		<key>September</key>
-		<value />
+		<value>szeptember</value>
 	</item>
 	<item>
 		<key>October</key>
-		<value />
+		<value>október</value>
 	</item>
 	<item>
 		<key>November</key>
-		<value />
+		<value>november</value>
 	</item>
 	<item>
 		<key>December</key>
-		<value />
+		<value>december</value>
 	</item>
 	<item>
 		<key>June</key>
-		<value />
+		<value>június</value>
 	</item>
 	<item>
 		<key>Monday</key>
-		<value />
+		<value>hétfő</value>
 	</item>
 	<item>
 		<key>Tuesday</key>
-		<value />
+		<value>kedd</value>
 	</item>
 	<item>
 		<key>Wednesday</key>
-		<value />
+		<value>szerda</value>
 	</item>
 	<item>
 		<key>Thursday</key>
-		<value />
+		<value>csütörtök</value>
 	</item>
 	<item>
 		<key>Friday</key>
-		<value />
+		<value>péntek</value>
 	</item>
 	<item>
 		<key>Saturday</key>
-		<value />
+		<value>szombat</value>
 	</item>
 	<item>
 		<key>Sunday</key>
-		<value />
+		<value>vasárnap</value>
 	</item>
 	<item>
 		<key>$1 must be $2</key>
-		<value />
+		<value>a(z) $1 objektumnak $2 típusúnak kell lennie</value>
 	</item>
 	<item>
 		<key>+</key>
-		<value />
+		<value>+</value>
 	</item>
 	<item>
 		<key>-</key>
-		<value />
+		<value>-</value>
 	</item>
 	<item>
 		<key>Access to home directory failed.</key>
-		<value />
+		<value>A saját könyvtár nem elérhető.</value>
 	</item>
 	<item>
 		<key>Nothing selected.</key>
-		<value />
+		<value>Nincs semmi kiválasztva.</value>
 	</item>
 	<item>
 		<key>Unable to activate playlist &quot;$1&quot;</key>
-		<value />
+		<value>Nem tudom megnyitni a(z) &apos;$1&apos; műsort</value>
 	</item>
 	<item>
 		<key>User or group &quot;$1&quot; already exists.</key>
-		<value />
+		<value>Már létezik $1 nevű felhasználó vagy csoport.</value>
 	</item>
 	<item>
 		<key>created at $1</key>
-		<value />
+		<value>létrehozva $1-kor</value>
 	</item>
 	<item>
 		<key>Add Group</key>
-		<value />
+		<value>Csoport hozzáadása</value>
 	</item>
 	<item>
 		<key>Add Members</key>
-		<value />
+		<value>Tagok hozzáadása</value>
 	</item>
 	<item>
 		<key>Add User</key>
-		<value />
+		<value>Felhasználó hozzáadása</value>
 	</item>
 	<item>
 		<key>Add selected</key>
-		<value />
+		<value>Kiválasztottak hozzáadása</value>
 	</item>
 	<item>
 		<key>Add to group</key>
-		<value />
+		<value>Hozzáadás a csoporthoz</value>
 	</item>
 	<item>
 		<key>Are you sure to discard all changes?</key>
-		<value />
+		<value>Biztos benne, hogy minden változtatást törölni akar?</value>
 	</item>
 	<item>
 		<key>Are you sure you want to change existing metadata?</key>
-		<value />
+		<value>Biztos benne, hogy meg akarja változtatni a már kitöltött mezőket?</value>
 	</item>
 	<item>
 		<key>Back to overview</key>
-		<value />
+		<value>Vissza az áttekintéshez</value>
 	</item>
 	<item>
 		<key>Change password</key>
-		<value />
+		<value>Jelszóváltoztatás</value>
 	</item>
 	<item>
 		<key>Close Playlist</key>
-		<value />
+		<value>Műsor bezárása</value>
 	</item>
 	<item>
 		<key>Current Members</key>
-		<value />
+		<value>Jelenlegi tagok</value>
 	</item>
 	<item>
 		<key>Delete</key>
-		<value />
+		<value>Törlés</value>
 	</item>
 	<item>
 		<key>Do you want to save changes?</key>
-		<value />
+		<value>Kívánja menteni a változásokat?</value>
 	</item>
 	<item>
 		<key>Edit</key>
-		<value />
+		<value>Szerkesztés</value>
 	</item>
 	<item>
 		<key>Login</key>
-		<value />
+		<value>Bejelentkezés</value>
 	</item>
 	<item>
 		<key>Manage group members</key>
-		<value />
+		<value>Csoport szerkesztése</value>
 	</item>
 	<item>
 		<key>Members</key>
-		<value />
+		<value>Tagok</value>
 	</item>
 	<item>
 		<key>No group members</key>
-		<value />
+		<value>Nincsenek tagok</value>
 	</item>
 	<item>
 		<key>Nothing left</key>
-		<value />
+		<value>Semmi sem maradt</value>
 	</item>
 	<item>
 		<key>Remove from group</key>
-		<value />
+		<value>Törlés a csoportból</value>
 	</item>
 	<item>
 		<key>Remove selected</key>
-		<value />
+		<value>Kiválasztottak törlése</value>
 	</item>
 	<item>
 		<key>User/Group Management</key>
-		<value />
+		<value>Felhasználók és csoportok szerkesztése</value>
 	</item>
 	<item>
 		<key>You need to have at least one non-open playlist on ScratchPad to schedule it.</key>
-		<value />
+		<value>Nincs időzíthető (csuporban levő és nem szerkesztett) műsor.</value>
 	</item>
 	<item>
 		<key>empty</key>
@@ -463,7 +467,7 @@
 		<value />
 	</item>
 	<item>
-		<key>Unable to set &quot;$1&quot; to &quot;$2&quot; langue &quot;$3&quot;</key>
+		<key>Upload of file $1 was incomplete.</key>
 		<value />
 	</item>
 	<item>
@@ -651,15 +655,15 @@
 		<value />
 	</item>
 	<item>
-		<key>Edit</key>
-		<value />
-	</item>
-	<item>
-		<key>Edit Metadata</key>
+		<key>Edit File</key>
 		<value />
 	</item>
 	<item>
 		<key>Edit Playlist</key>
+		<value />
+	</item>
+	<item>
+		<key>Edit Metadata</key>
 		<value />
 	</item>
 	<item>
@@ -735,11 +739,11 @@
 		<value />
 	</item>
 	<item>
-		<key>Item</key>
+		<key>Insert Playlist after previous</key>
 		<value />
 	</item>
 	<item>
-		<key>Insert Playlist after previous</key>
+		<key>Item</key>
 		<value />
 	</item>
 	<item>
@@ -971,11 +975,11 @@
 		<value />
 	</item>
 	<item>
-		<key>Retype Password</key>
+		<key>Reset Criteria</key>
 		<value />
 	</item>
 	<item>
-		<key>Reset Criteria</key>
+		<key>Retype Password</key>
 		<value />
 	</item>
 	<item>
@@ -983,7 +987,7 @@
 		<value />
 	</item>
 	<item>
-		<key>Rows Per Page</key>
+		<key>Rows per Page</key>
 		<value />
 	</item>
 	<item>
@@ -999,7 +1003,7 @@
 		<value />
 	</item>
 	<item>
-		<key>Save and Close this Playlist</key>
+		<key>Scheduler</key>
 		<value />
 	</item>
 	<item>
