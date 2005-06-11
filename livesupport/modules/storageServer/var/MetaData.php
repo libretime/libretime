@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/MetaData.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -327,6 +327,7 @@ class MetaData{
         $res = array();
         $exact = NULL;
         $def = NULL;
+        $plain = NULL;
         // add attributes to result
         foreach($all as $i=>$rec){
             $pom = $this->getSubrows($rec['mid']);
@@ -340,6 +341,7 @@ class MetaData{
             }else{
                 switch(strtolower($atlang)){
                     case '':
+                        $plain = array($all[$i]);
                     break;
                     case strtolower($lang):
                         $exact = array($all[$i]);
@@ -352,6 +354,7 @@ class MetaData{
         }
         if($exact) return $exact;
         if($def) return $def;
+        if($plain) return $plain;
         return $res;
     }
 
