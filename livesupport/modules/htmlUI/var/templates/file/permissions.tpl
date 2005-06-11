@@ -1,8 +1,12 @@
-<div id="permissions">
-{include file="sub/x.tpl"}
+<div class="container_table" style="width: 555px; height: auto;">
+<table>
+    <tr class="blue_head">
+            <td style="width: 300px">Subject Name</td>
+            <td style="width: 50px">Action</td>
+            <td style="width: 50px;">Permission</td>
+            <td style="width: 50px; border: 0">&nbsp;</td>
+        </tr>
 
-<table id="tbl" border="0" cellpadding="5">
-    <tr><td><b>Subject Name</b></td><td><b>Action</b></td><td><b>Permission</b></td><td></td></tr>
 
     {if (is_array($permissions.perms) && count($permissions.perms)>0)}
 
@@ -21,14 +25,14 @@
                 <td>{* <a <?php #href="alibExPList.php?id=<?php echo$row['subj']? >"?>> *}{$row.login}</a></td>
                 <td>{$row.action}</td>
                 <td>{$da}</td>
-                <td>
+                <td style="border:0">
                     <a href="{$UI_HANDLER}?act=removePerm&permid={$row.permid}&oid={$permissions.id}&id={$permissions.id}"
                     onClick="return confirm('Delete permission &quot;{$da}&nbsp;{$row.action}&quot; for user {$row.login}?')">[remove]</a>
                 </td>
             </tr>
         {/foreach}
     {else}
-        <tr><td colspan="4">No Permissions set.</td></tr>
+        <tr><td colspan="4" style="border:0">No Permissions set.</td></tr>
     {/if}
 </table>
 

@@ -348,11 +348,11 @@ class uiBase
     }
 
 
-    function _getMDataValue($id, $key, $langid=FALSE)
+    function _getMDataValue($id, $key, $langid=FALSE, $deflangid=UI_DEFAULT_LANGID)
     {
         if (!$langid) $langid = $_SESSION['langid'];
 
-        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid))) {
+        if (is_array($arr = $this->gb->getMDataValue($id, $key, $this->sessid, $langid, $deflangid))) {  
             $value = current($arr);
             return $value['value'];
         }

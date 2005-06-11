@@ -117,7 +117,7 @@ class uiHandler extends uiBase {
         $folderId = $formdata['folderId'];
 
         if ($this->gb->getFileType($folderId) != 'Folder') {
-            $this->_retMsg ('Target is not Folder');
+            $this->_retMsg('Target is not Folder');
             $this->redirUrl = UI_BROWSER."?act=fileList";
             return FALSE;
         }
@@ -125,7 +125,7 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editFile&id=".$id;
             return FALSE;
         }
-        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADD3R'].rand()."org.mdlf.livesupport");
+        $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport");
         $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
         move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
         chmod($ntmp, 0664);
