@@ -179,7 +179,7 @@
 	</item>
 	<item>
 		<key>Current Members</key>
-		<value>Huidige Leden</value>
+		<value>Huidige leden</value>
 	</item>
 	<item>
 		<key>Delete</key>
@@ -279,343 +279,343 @@
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
-		<value>$1 moet $2 zijn.</value>
-	</item>
-	<item>
-		<key>ScratchPad</key>
 		<value>Het bestand $1 is groter dan de systeem instelling van LiveSupport.</value>
 	</item>
 	<item>
-		<key>Access denied.</key>
+		<key>ScratchPad</key>
 		<value>ScratchPad</value>
 	</item>
 	<item>
-		<key>Already active Playlist</key>
+		<key>Access denied.</key>
 		<value>Toegang geweigerd.</value>
 	</item>
 	<item>
-		<key>Audioclip Data saved</key>
+		<key>Already active Playlist</key>
 		<value>Playlist is reeds actief.</value>
 	</item>
 	<item>
-		<key>Cannot create Playlist</key>
+		<key>Audioclip Data saved</key>
 		<value>Audioclip informatie opgeslagen.</value>
 	</item>
 	<item>
+		<key>Cannot create Playlist</key>
+		<value>Kan playlist niet maken.</value>
+	</item>
+	<item>
 		<key>Cannot delete this Playlist</key>
-		<value>Kan Playlist niet maken.</value>
+		<value>Kan playlist niet verwijderen.</value>
 	</item>
 	<item>
 		<key>Cannot move item</key>
-		<value>Kan Playlist niet verwijderen.</value>
+		<value>Kan item niet verplaatsen in de playlist.</value>
 	</item>
 	<item>
 		<key>Cannot remove Item from Playlist</key>
-		<value>Kan Item niet verplaatsen in de Playlist.</value>
+		<value>Kan item niet van playlist verwijderen.</value>
 	</item>
 	<item>
 		<key>Change fade information failed.</key>
-		<value>Kan Item niet van playlist verwijderen.</value>
-	</item>
-	<item>
-		<key>Do</key>
 		<value>Veranderen van fade informatie mislukt.</value>
 	</item>
 	<item>
-		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
+		<key>Do</key>
 		<value>do</value>
 	</item>
 	<item>
-		<key>Entry added at $1 with ScheduleId: $2</key>
-		<value>$1 item was reeds in het ScratchPad. Het is boven in de lijst geplaats.</value>
+		<key>Entry $1 was already on the ScratchPad. It has been moved to the top of the list.</key>
+		<value>$1 item was reeds op ScratchPad. Het is boven in de lijst geplaats.</value>
 	</item>
 	<item>
-		<key>Entry with ScheduleId $1 removed</key>
+		<key>Entry added at $1 with ScheduleId: $2</key>
 		<value>Regel toegevoegd aan $1 met ScheduleId: $2.</value>
 	</item>
 	<item>
-		<key>Error on add item to Playlist</key>
+		<key>Entry with ScheduleId $1 removed</key>
 		<value>Regel met schedule ID $1 verwijderd.</value>
 	</item>
 	<item>
-		<key>Error saving Settings</key>
+		<key>Error on add item to Playlist</key>
 		<value>Fout bij Item toevoegen aan Playlist.</value>
 	</item>
 	<item>
-		<key>Error uploading Logo</key>
+		<key>Error saving Settings</key>
 		<value>Fout opslaan van Systeem voorkeuren.</value>
 	</item>
 	<item>
-		<key>Error: $1</key>
+		<key>Error uploading Logo</key>
 		<value>Fout bij het verzenden van Logo.</value>
 	</item>
 	<item>
-		<key>File $1 was not uploaded.</key>
+		<key>Error: $1</key>
 		<value>Fout: $1</value>
 	</item>
 	<item>
-		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
+		<key>File $1 was not uploaded.</key>
 		<value>$1 bestand is niet verzonden.</value>
 	</item>
 	<item>
-		<key>Found locked Playlist.</key>
+		<key>Folder is not empty. You can override this protection by clicking DEL again</key>
 		<value>Map is niet leeg. U kunt deze beveiliging overschrijven door opnieuw op Del te drukken.</value>
 	</item>
 	<item>
-		<key>Invalid Form Data</key>
+		<key>Found locked Playlist.</key>
 		<value>Vastgezette Playlist gevonden.</value>
 	</item>
 	<item>
-		<key>Login failed</key>
+		<key>Invalid Form Data</key>
 		<value>Verkeerde data formaat</value>
 	</item>
 	<item>
-		<key>Metadata saved</key>
+		<key>Login failed</key>
 		<value>Login niet gelukt.</value>
 	</item>
 	<item>
-		<key>Missing value for $1</key>
+		<key>Metadata saved</key>
 		<value>Meta-gegevens opgeslagen.</value>
 	</item>
 	<item>
-		<key>No Item(s) selected</key>
+		<key>Missing value for $1</key>
 		<value>Waarde ontbreekt voor $1.</value>
 	</item>
 	<item>
-		<key>No Playlist is locked by You.</key>
+		<key>No Item(s) selected</key>
 		<value>Geen Items geselecteerd</value>
 	</item>
 	<item>
-		<key>Note: Station Preferences not setup proberly.</key>
-		<value>U heeft nog geen Playlist vastgezet.</value>
+		<key>No Playlist is locked by You.</key>
+		<value>U heeft nog geen playlist vastgezet.</value>
 	</item>
 	<item>
-		<key>Old password was incorrect.</key>
+		<key>Note: Station Preferences not setup proberly.</key>
 		<value>Mededeling: Eigenschappen zijn nog niet goed ingesteld.</value>
 	</item>
 	<item>
-		<key>Password changed.</key>
+		<key>Old password was incorrect.</key>
 		<value>Oude wachtwoord is niet goed.</value>
 	</item>
 	<item>
-		<key>Passwords did not match.</key>
+		<key>Password changed.</key>
 		<value>Wachtwoord aangepast.</value>
 	</item>
 	<item>
-		<key>Playlist &quot;$1&quot; activated</key>
+		<key>Passwords did not match.</key>
 		<value>Wachtwoord komt niet overeen.</value>
 	</item>
 	<item>
-		<key>Playlist &quot;$1&quot; released</key>
+		<key>Playlist &quot;$1&quot; activated</key>
 		<value>Playlist &quot;$1&quot; geopend</value>
 	</item>
 	<item>
-		<key>Playlist &quot;$1&quot; reverted</key>
+		<key>Playlist &quot;$1&quot; released</key>
 		<value>Playlist &quot;$1&quot; uitgegeven.</value>
 	</item>
 	<item>
-		<key>Playlist &quot;$1&quot; saved</key>
+		<key>Playlist &quot;$1&quot; reverted</key>
 		<value>Playlist &quot;$1&quot; hersteld.</value>
 	</item>
 	<item>
-		<key>Playlist has been locked by $1</key>
+		<key>Playlist &quot;$1&quot; saved</key>
 		<value>Playlist &quot;$1&quot; opgeslagen.</value>
 	</item>
 	<item>
-		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
+		<key>Playlist has been locked by $1</key>
 		<value>Playlist is vastgezet door $1.</value>
 	</item>
 	<item>
-		<key>Select a Value</key>
+		<key>ScratchPad length is not set in System Preferences, so it cannot be used.</key>
 		<value>Het aantal regels van het ScratchPad ontbreek in eigenschappen en kan daarom niet gebruikt worden.</value>
 	</item>
 	<item>
-		<key>Settings saved</key>
+		<key>Select a Value</key>
 		<value>Kies een waarde</value>
 	</item>
 	<item>
-		<key>Stream Data changed</key>
+		<key>Settings saved</key>
 		<value>Instellingen opgeslagen.</value>
 	</item>
 	<item>
-		<key>Stream Data saved</key>
+		<key>Stream Data changed</key>
 		<value>Stream data veranderd.</value>
 	</item>
 	<item>
-		<key>Subject $1 added.</key>
+		<key>Stream Data saved</key>
 		<value>Stream data opgeslagen.</value>
 	</item>
 	<item>
-		<key>Target is not Folder</key>
-		<value>Onderwerp $1 toegevoegd</value>
+		<key>Subject $1 added.</key>
+		<value>Onderwerp $1 toegevoegd.</value>
 	</item>
 	<item>
-		<key>There is no playlist available to unlock.</key>
+		<key>Target is not Folder</key>
 		<value>Doel is geen map.</value>
 	</item>
 	<item>
-		<key>Unable to release Playlist.</key>
+		<key>There is no playlist available to unlock.</key>
 		<value>Er is geen Playlist beschikbaar om vrij te geven.</value>
 	</item>
 	<item>
-		<key>Unable to revert to locked state.</key>
+		<key>Unable to release Playlist.</key>
 		<value>Playlist uitgeven is niet mogelijk.</value>
 	</item>
 	<item>
-		<key>Upload of file $1 was incomplete.</key>
+		<key>Unable to revert to locked state.</key>
 		<value>Herstellen van vastgezette status is niet mogelijk.</value>
 	</item>
 	<item>
-		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
+		<key>Upload of file $1 was incomplete.</key>
 		<value>Uploaden van bestand $1 was niet compleet.</value>
 	</item>
 	<item>
-		<key>You have an Playlist already activated, first close it</key>
+		<key>Uploaded file $1 is bigger than setting in php.ini.</key>
 		<value>Het bestand $1 is groter dan in php.ini is ingesteld.</value>
 	</item>
 	<item>
-		<key>Access</key>
+		<key>You have an Playlist already activated, first close it</key>
 		<value>Er is reeds een Playlist open, sluit deze eerst.</value>
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
+		<key>Access</key>
 		<value>Toegang</value>
 	</item>
 	<item>
-		<key>Add Audio</key>
+		<key>Activate this Playlist</key>
 		<value>Playlist activeren</value>
 	</item>
 	<item>
-		<key>Add Criteria</key>
+		<key>Add Audio</key>
 		<value>Audio toevoegen</value>
 	</item>
 	<item>
-		<key>Add file(s) to ScratchPad</key>
+		<key>Add Criteria</key>
 		<value>Criteria toevoegen</value>
 	</item>
 	<item>
-		<key>Add file(s) to active Playlist</key>
+		<key>Add file(s) to ScratchPad</key>
 		<value>Bestanden toevoegen aan ScratchPad</value>
 	</item>
 	<item>
-		<key>Add to ScratchPad</key>
+		<key>Add file(s) to active Playlist</key>
 		<value>Bestanden aan open Playlist toevoegen</value>
 	</item>
 	<item>
-		<key>Add to active Playlist</key>
+		<key>Add to ScratchPad</key>
 		<value>Aan ScratchPad toevoegen</value>
 	</item>
 	<item>
-		<key>Album</key>
+		<key>Add to active Playlist</key>
 		<value>Aan open Playlist toevoegen</value>
 	</item>
 	<item>
-		<key>Artist</key>
+		<key>Album</key>
 		<value>Album</value>
 	</item>
 	<item>
-		<key>Artist web page</key>
+		<key>Artist</key>
 		<value>Artiest</value>
 	</item>
 	<item>
-		<key>Audio file information web page</key>
+		<key>Artist web page</key>
 		<value>Web pagina van artiest</value>
 	</item>
 	<item>
-		<key>Audio source web page</key>
+		<key>Audio file information web page</key>
 		<value>Web pagina met audio informatie</value>
 	</item>
 	<item>
-		<key>BPM</key>
+		<key>Audio source web page</key>
 		<value>Web pagina van de audio bron</value>
 	</item>
 	<item>
-		<key>Bitrate</key>
+		<key>BPM</key>
 		<value>BPM</value>
 	</item>
 	<item>
-		<key>Browse</key>
+		<key>Bitrate</key>
 		<value>Bitrate</value>
 	</item>
 	<item>
-		<key>Buy CD web page</key>
+		<key>Browse</key>
 		<value>Bladeren</value>
 	</item>
 	<item>
-		<key>CW</key>
+		<key>Buy CD web page</key>
 		<value>Online CD bestellen</value>
 	</item>
 	<item>
-		<key>Cancel</key>
+		<key>CW</key>
 		<value>WK</value>
 	</item>
 	<item>
-		<key>Catalog number</key>
+		<key>Cancel</key>
 		<value>Annuleer</value>
 	</item>
 	<item>
-		<key>Category</key>
+		<key>Catalog number</key>
 		<value>Catalogus nummer</value>
 	</item>
 	<item>
-		<key>Change Fadein</key>
+		<key>Category</key>
 		<value>Categorie</value>
 	</item>
 	<item>
-		<key>Change Fadeout</key>
+		<key>Change Fadein</key>
 		<value>Fadein aanpassen</value>
 	</item>
 	<item>
-		<key>Change Transition</key>
+		<key>Change Fadeout</key>
 		<value>Fadeout aanpassen</value>
 	</item>
 	<item>
-		<key>Channels</key>
+		<key>Change Transition</key>
 		<value>Overgang aanpassen</value>
 	</item>
 	<item>
-		<key>Checksum</key>
+		<key>Channels</key>
 		<value>Kanalen</value>
 	</item>
 	<item>
-		<key>Clear</key>
+		<key>Checksum</key>
 		<value>Controlegetal</value>
 	</item>
 	<item>
-		<key>Clear Playlist</key>
+		<key>Clear</key>
 		<value>Leeg maken</value>
 	</item>
 	<item>
-		<key>Composer</key>
+		<key>Clear Playlist</key>
 		<value>Playlist leeg maken</value>
 	</item>
 	<item>
-		<key>Conductor</key>
+		<key>Composer</key>
 		<value>Componist</value>
 	</item>
 	<item>
-		<key>Contributor</key>
+		<key>Conductor</key>
 		<value>Dirigent</value>
 	</item>
 	<item>
-		<key>Copyright</key>
-		<value>Uitvoeder</value>
+		<key>Contributor</key>
+		<value>Uitvoerder</value>
 	</item>
 	<item>
-		<key>Count</key>
+		<key>Copyright</key>
 		<value>Copyright</value>
 	</item>
 	<item>
-		<key>Creator</key>
+		<key>Count</key>
 		<value>Aantal</value>
 	</item>
 	<item>
-		<key>Daily View</key>
+		<key>Creator</key>
 		<value>Maker</value>
 	</item>
 	<item>
-		<key>Data</key>
+		<key>Daily View</key>
 		<value>Dag overzicht</value>
+	</item>
+	<item>
+		<key>Data</key>
+		<value>Data</value>
 	</item>
 	<item>
 		<key>Date</key>
@@ -623,119 +623,119 @@
 	</item>
 	<item>
 		<key>Day</key>
-		<value>Datum</value>
-	</item>
-	<item>
-		<key>Delete File</key>
 		<value>Dag</value>
 	</item>
 	<item>
-		<key>Delete Playlist</key>
+		<key>Delete File</key>
 		<value>Bestand verwijderen</value>
 	</item>
 	<item>
-		<key>Description</key>
+		<key>Delete Playlist</key>
 		<value>Verwijder playlist</value>
 	</item>
 	<item>
-		<key>Disc number</key>
+		<key>Description</key>
 		<value>Omschrijving</value>
 	</item>
 	<item>
-		<key>Display this Playlist</key>
+		<key>Disc number</key>
 		<value>Disc nummer</value>
 	</item>
 	<item>
-		<key>Duration</key>
+		<key>Display this Playlist</key>
 		<value>Laat deze playlist zien</value>
 	</item>
 	<item>
-		<key>Edit File</key>
+		<key>Duration</key>
 		<value>Duur</value>
 	</item>
 	<item>
-		<key>Edit Playlist</key>
+		<key>Edit File</key>
 		<value>Bestand aanpassen</value>
 	</item>
 	<item>
-		<key>Edit Metadata</key>
+		<key>Edit Playlist</key>
 		<value>Playlist bewerken</value>
 	</item>
 	<item>
-		<key>Encoded by</key>
+		<key>Edit Metadata</key>
 		<value>Meta-gegevens aanpassen</value>
 	</item>
 	<item>
-		<key>Encoder software used</key>
-		<value>Geencodeerd door</value>
+		<key>Encoded by</key>
+		<value>Gecodeerd door</value>
 	</item>
 	<item>
-		<key>Fade</key>
+		<key>Encoder software used</key>
 		<value>Gebruikte encoder software</value>
 	</item>
 	<item>
-		<key>File</key>
+		<key>Fade</key>
 		<value>Fade</value>
 	</item>
 	<item>
-		<key>File List</key>
+		<key>File</key>
 		<value>Bestand</value>
 	</item>
 	<item>
+		<key>File List</key>
+		<value>Bestandenlijst</value>
+	</item>
+	<item>
 		<key>File Management</key>
-		<value>Bestandslijst</value>
+		<value>Bestandenbeheer</value>
 	</item>
 	<item>
 		<key>File Type</key>
-		<value>Bestandsbeheer</value>
+		<value>Bestandstype</value>
 	</item>
 	<item>
 		<key>File format</key>
-		<value>Bestandstype</value>
-	</item>
-	<item>
-		<key>File type</key>
 		<value>Bestandsformaat</value>
 	</item>
 	<item>
-		<key>Folder Structure</key>
+		<key>File type</key>
 		<value>Bestandstype</value>
 	</item>
 	<item>
-		<key>Format</key>
+		<key>Folder Structure</key>
 		<value>Mappen structuur</value>
 	</item>
 	<item>
-		<key>Frequency</key>
+		<key>Format</key>
 		<value>Formaat</value>
 	</item>
 	<item>
-		<key>Genre</key>
+		<key>Frequency</key>
 		<value>Frequentie</value>
 	</item>
 	<item>
-		<key>Go</key>
+		<key>Genre</key>
 		<value>Genre</value>
 	</item>
 	<item>
-		<key>Group Name</key>
+		<key>Go</key>
 		<value>Go</value>
 	</item>
 	<item>
-		<key>Help</key>
+		<key>Group Name</key>
 		<value>Groepsnaam</value>
 	</item>
 	<item>
-		<key>ISRC number</key>
+		<key>Help</key>
 		<value>Help</value>
 	</item>
 	<item>
-		<key>Insert Playlist here</key>
+		<key>ISRC number</key>
 		<value>SRC nummer</value>
 	</item>
 	<item>
-		<key>Insert Playlist after previous</key>
+		<key>Insert Playlist here</key>
 		<value>Playlist hier invoegen</value>
+	</item>
+	<item>
+		<key>Insert Playlist after previous</key>
+		<value>Na de vorige playlist invoegen</value>
 	</item>
 	<item>
 		<key>Item</key>
@@ -743,410 +743,410 @@
 	</item>
 	<item>
 		<key>Label</key>
-		<value>Item</value>
-	</item>
-	<item>
-		<key>Language</key>
 		<value>Omschrijving</value>
 	</item>
 	<item>
-		<key>Length</key>
+		<key>Language</key>
 		<value>Taal</value>
 	</item>
 	<item>
-		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
+		<key>Length</key>
 		<value>Lengte</value>
 	</item>
 	<item>
-		<key>Library Search</key>
-		<value>Lengte - voer nul in bij gebruik van Live Stream</value>
+		<key>Length&lt;br&gt;&lt;small&gt;Enter zero for Live Stream&lt;/small&gt;</key>
+		<value>Lengte&lt;br&gt;&lt;small&gt;voer nul in bij gebruik van Live Stream</value>
 	</item>
 	<item>
-		<key>List Folder</key>
+		<key>Library Search</key>
 		<value>Zoeken in bibliotheek</value>
 	</item>
 	<item>
-		<key>Listen to File</key>
+		<key>List Folder</key>
 		<value>Laat Map zien</value>
 	</item>
 	<item>
-		<key>Local Time</key>
+		<key>Listen to File</key>
 		<value>Naar bestand luisteren</value>
 	</item>
 	<item>
-		<key>Lyricist</key>
+		<key>Local Time</key>
 		<value>Lokale tijd</value>
 	</item>
 	<item>
-		<key>Lyrics</key>
-		<value>Lyricist</value>
+		<key>Lyricist</key>
+		<value>schrijver</value>
 	</item>
 	<item>
-		<key>MDataXML</key>
+		<key>Lyrics</key>
 		<value>Lyrics</value>
 	</item>
 	<item>
-		<key>Main</key>
+		<key>MDataXML</key>
 		<value>MDataXML</value>
 	</item>
 	<item>
-		<key>Maximum length of ScratchPad</key>
+		<key>Main</key>
 		<value>Algemeen</value>
 	</item>
 	<item>
-		<key>Media File</key>
+		<key>Maximum length of ScratchPad</key>
 		<value>Maximum aantal regels ScratchPad</value>
 	</item>
 	<item>
-		<key>Media Library</key>
+		<key>Media File</key>
 		<value>Media bestand</value>
 	</item>
 	<item>
-		<key>Metadata</key>
+		<key>Media Library</key>
 		<value>Media bibliotheek</value>
 	</item>
 	<item>
-		<key>Month</key>
+		<key>Metadata</key>
 		<value>Meta-gegevens</value>
 	</item>
 	<item>
-		<key>Monthly View</key>
+		<key>Month</key>
 		<value>Maand</value>
 	</item>
 	<item>
-		<key>Mood</key>
+		<key>Monthly View</key>
 		<value>Maand overzicht</value>
 	</item>
 	<item>
-		<key>Move</key>
+		<key>Mood</key>
 		<value>Stemming</value>
 	</item>
 	<item>
-		<key>Multiple Action:</key>
+		<key>Move</key>
 		<value>Verplaats</value>
 	</item>
 	<item>
-		<key>Music</key>
+		<key>Multiple Action:</key>
 		<value>Meervoudige actie:</value>
 	</item>
 	<item>
-		<key>Name</key>
+		<key>Music</key>
 		<value>Muziek</value>
 	</item>
 	<item>
-		<key>New</key>
+		<key>Name</key>
 		<value>Naam</value>
 	</item>
 	<item>
-		<key>New Password</key>
+		<key>New</key>
 		<value>Nieuw</value>
 	</item>
 	<item>
-		<key>New Playlist using this File</key>
+		<key>New Password</key>
 		<value>Nieuw wachtwoord</value>
 	</item>
 	<item>
-		<key>New Playlist using this file(s)</key>
+		<key>New Playlist using this File</key>
 		<value>Nieuwe Playlist gebruikt dit bestand</value>
 	</item>
 	<item>
-		<key>New empty Playlist</key>
+		<key>New Playlist using this file(s)</key>
 		<value>Nieuwe Playlist gebruikt deze bestanden</value>
 	</item>
 	<item>
-		<key>No Entry</key>
-		<value>Nieuwe lege Playlist creeren</value>
+		<key>New empty Playlist</key>
+		<value>Nieuwe lege Playlist creëren</value>
 	</item>
 	<item>
-		<key>No match found.</key>
+		<key>No Entry</key>
 		<value>Geen Items</value>
 	</item>
 	<item>
+		<key>No match found.</key>
+		<value>Geen Items gevonden.</value>
+	</item>
+	<item>
 		<key>No objects</key>
-		<value>Geen Items gevonden</value>
+		<value>Geen objecten.</value>
 	</item>
 	<item>
 		<key>Old Password</key>
-		<value>Geen objecten</value>
-	</item>
-	<item>
-		<key>Open last Playlist</key>
 		<value>Oude wachtwoord</value>
 	</item>
 	<item>
-		<key>Operator</key>
+		<key>Open last Playlist</key>
 		<value>Laatste Playlist openen</value>
 	</item>
 	<item>
-		<key>Orchestra or band</key>
+		<key>Operator</key>
 		<value>Operator</value>
 	</item>
 	<item>
-		<key>Original artist</key>
+		<key>Orchestra or band</key>
 		<value>Orkest of band</value>
 	</item>
 	<item>
-		<key>Original lyricist</key>
+		<key>Original artist</key>
 		<value>Originele artiest</value>
 	</item>
 	<item>
-		<key>Page</key>
+		<key>Original lyricist</key>
 		<value>Originele schrijver</value>
 	</item>
 	<item>
-		<key>Password</key>
+		<key>Page</key>
 		<value>Pagina</value>
 	</item>
 	<item>
-		<key>Playlist</key>
+		<key>Password</key>
 		<value>Wachtwoord</value>
 	</item>
 	<item>
-		<key>Playlist Editor</key>
+		<key>Playlist</key>
 		<value>Playlist</value>
 	</item>
 	<item>
-		<key>Playlist Metadata</key>
+		<key>Playlist Editor</key>
 		<value>Playlist Editor</value>
 	</item>
 	<item>
-		<key>Radio station name</key>
+		<key>Playlist Metadata</key>
 		<value>Playlist meta-gegevens</value>
 	</item>
 	<item>
+		<key>Radio station name</key>
+		<value>Naam van het station</value>
+	</item>
+	<item>
 		<key>Radio station web page</key>
-		<value>Naam van het radio station</value>
+		<value>Website van het station</value>
 	</item>
 	<item>
 		<key>Range</key>
-		<value>Website van het radio station</value>
-	</item>
-	<item>
-		<key>Rating</key>
 		<value>Totaal</value>
 	</item>
 	<item>
-		<key>RawAnalyze</key>
+		<key>Rating</key>
 		<value>Waardering</value>
 	</item>
 	<item>
-		<key>Remove File from Playlist</key>
+		<key>RawAnalyze</key>
 		<value>AnalyseerRaw</value>
 	</item>
 	<item>
-		<key>Remove Playlist</key>
+		<key>Remove File from Playlist</key>
 		<value>Verwijder bestand uit de Playlist</value>
 	</item>
 	<item>
-		<key>Remove Selected</key>
+		<key>Remove Playlist</key>
 		<value>Playlist verwijderen</value>
 	</item>
 	<item>
-		<key>Remove file(s)</key>
+		<key>Remove Selected</key>
 		<value>Geselecteerde verwijderen</value>
 	</item>
 	<item>
-		<key>Remove from Scratchpad</key>
+		<key>Remove file(s)</key>
 		<value>Bestanden verwijderen</value>
 	</item>
 	<item>
-		<key>Repeat Password</key>
+		<key>Remove from Scratchpad</key>
 		<value>Verwijderen uit Scratchpad</value>
 	</item>
 	<item>
-		<key>Report date/time</key>
+		<key>Repeat Password</key>
 		<value>Herhaal Wachtwoord</value>
 	</item>
 	<item>
-		<key>Report location</key>
+		<key>Report date/time</key>
 		<value>Laat datum/tijd zien</value>
 	</item>
 	<item>
-		<key>Report organizations</key>
+		<key>Report location</key>
 		<value>laat locatie zien</value>
 	</item>
 	<item>
-		<key>Reset</key>
+		<key>Report organizations</key>
 		<value>Laat organisaties zien</value>
 	</item>
 	<item>
-		<key>Reset Criteria</key>
+		<key>Reset</key>
 		<value>Herstel</value>
 	</item>
 	<item>
-		<key>Retype Password</key>
+		<key>Reset Criteria</key>
 		<value>Herstel Criteria</value>
 	</item>
 	<item>
-		<key>Revert to Saved</key>
+		<key>Retype Password</key>
 		<value>Wachtwoord opnieuw invoeren</value>
 	</item>
 	<item>
-		<key>Rows per Page</key>
+		<key>Revert to Saved</key>
 		<value>Ongedaan maken</value>
 	</item>
 	<item>
-		<key>Sample rate</key>
+		<key>Rows per Page</key>
 		<value>Rijen per pagina</value>
 	</item>
 	<item>
-		<key>Save Playlist</key>
+		<key>Sample rate</key>
 		<value>Sample rate</value>
 	</item>
 	<item>
-		<key>Save and Close</key>
+		<key>Save Playlist</key>
 		<value>Playlist bewaren</value>
 	</item>
 	<item>
-		<key>Scheduler</key>
+		<key>Save and Close</key>
 		<value>Opslaan en sluiten</value>
 	</item>
 	<item>
-		<key>Scheduler Navigation</key>
+		<key>Scheduler</key>
 		<value>Scheduler</value>
 	</item>
 	<item>
-		<key>Search</key>
+		<key>Scheduler Navigation</key>
 		<value>Scheduler verkenner</value>
 	</item>
 	<item>
-		<key>Search Library</key>
+		<key>Search</key>
 		<value>Zoeken</value>
 	</item>
 	<item>
-		<key>Signed in</key>
+		<key>Search Library</key>
 		<value>Bibliotheek doorzoeken</value>
 	</item>
 	<item>
-		<key>Station Logo</key>
+		<key>Signed in</key>
 		<value>Aanmelden</value>
 	</item>
 	<item>
+		<key>Station Logo</key>
+		<value>Station logo</value>
+	</item>
+	<item>
 		<key>Station Name</key>
-		<value>Stationslogo</value>
+		<value>Station naam</value>
 	</item>
 	<item>
 		<key>Station Settings</key>
-		<value>Stationsnaam</value>
-	</item>
-	<item>
-		<key>Station Time</key>
 		<value>Eigenschappen</value>
 	</item>
 	<item>
-		<key>Station URL</key>
-		<value>Stationstijd</value>
+		<key>Station Time</key>
+		<value>Station tijd</value>
 	</item>
 	<item>
-		<key>Stream</key>
+		<key>Station URL</key>
 		<value>Station URL</value>
 	</item>
 	<item>
-		<key>Stream URL</key>
+		<key>Stream</key>
 		<value>Stream</value>
 	</item>
 	<item>
-		<key>Subject</key>
+		<key>Stream URL</key>
 		<value>Stream URL</value>
 	</item>
 	<item>
-		<key>Submit</key>
+		<key>Subject</key>
 		<value>Onderwerp</value>
 	</item>
 	<item>
-		<key>System Settings</key>
+		<key>Submit</key>
 		<value>Versturen</value>
 	</item>
 	<item>
-		<key>Talk</key>
+		<key>System Settings</key>
 		<value>Systeem eigenschappen</value>
 	</item>
 	<item>
-		<key>Time</key>
+		<key>Talk</key>
 		<value>Gesproken</value>
 	</item>
 	<item>
-		<key>Title</key>
+		<key>Time</key>
 		<value>Tijd</value>
 	</item>
 	<item>
-		<key>Today</key>
+		<key>Title</key>
 		<value>Titel</value>
 	</item>
 	<item>
-		<key>Track number</key>
+		<key>Today</key>
 		<value>Vandaag</value>
 	</item>
 	<item>
-		<key>Tree view</key>
+		<key>Track number</key>
 		<value>Track nummer</value>
 	</item>
 	<item>
-		<key>Type</key>
+		<key>Tree view</key>
 		<value>Tree overzicht</value>
 	</item>
 	<item>
-		<key>User Password</key>
+		<key>Type</key>
 		<value>Type</value>
 	</item>
 	<item>
-		<key>User/Groups</key>
+		<key>User Password</key>
 		<value>Wachtwoord</value>
 	</item>
 	<item>
-		<key>Username</key>
+		<key>User/Groups</key>
 		<value>Gebruikers/Groepen</value>
 	</item>
 	<item>
-		<key>Week</key>
+		<key>Username</key>
 		<value>Gebruikersnaam</value>
 	</item>
 	<item>
-		<key>Weekly View</key>
+		<key>Week</key>
 		<value>Week</value>
 	</item>
 	<item>
-		<key>Year</key>
+		<key>Weekly View</key>
 		<value>Week overzicht</value>
 	</item>
 	<item>
-		<key>calendar week</key>
+		<key>Year</key>
 		<value>Jaar</value>
 	</item>
 	<item>
+		<key>calendar week</key>
+		<value>week kalender</value>
+	</item>
+	<item>
 		<key>copy</key>
-		<value>week calender</value>
+		<value>kopiëren</value>
 	</item>
 	<item>
 		<key>go up</key>
-		<value>kopieeren</value>
-	</item>
-	<item>
-		<key>move</key>
 		<value>naar boven</value>
 	</item>
 	<item>
-		<key>move down</key>
+		<key>move</key>
 		<value>verplaatsen</value>
 	</item>
 	<item>
-		<key>move up</key>
+		<key>move down</key>
 		<value>naar beneden verplaatsen</value>
 	</item>
 	<item>
-		<key>new&amp;nbsp;folder</key>
+		<key>move up</key>
 		<value>naar boven verplaatsen</value>
 	</item>
 	<item>
-		<key>next</key>
+		<key>new&amp;nbsp;folder</key>
 		<value>nieuwe map</value>
 	</item>
 	<item>
-		<key>permissions</key>
+		<key>next</key>
 		<value>volgende</value>
 	</item>
 	<item>
-		<key>previous</key>
+		<key>permissions</key>
 		<value>rechten</value>
+	</item>
+	<item>
+		<key>previous</key>
+		<value>vorige</value>
 	</item>
 </language>
