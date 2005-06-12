@@ -362,7 +362,7 @@ class uiBase
 
     function _setMDataValue($id, $key, $value, $langid=NULL)
     {
-        if (!$langid) $langid = $_SESSION['langid'];
+        if (!$langid) $langid = UI_DEFAULT_LANGID;
 
         if ($this->gb->setMDataValue($id, $key, $this->sessid, $value, $langid)) {
             return TRUE;

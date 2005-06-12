@@ -330,7 +330,7 @@ class uiBrowser extends uiBase {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
         extract ($parms);
-        $langid = $langid ? $langid : $this->langid;
+        $langid = $langid ? $langid : UI_DEFAULT_LANGID;
 
         $form = new HTML_QuickForm('langswitch', UI_STANDARD_FORM_METHOD, UI_BROWSER);
         $this->_parseArr2Form($form, $mask['langswitch']);

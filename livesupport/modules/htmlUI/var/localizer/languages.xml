@@ -2,8 +2,8 @@
 <languages>
 
     <language>
-        <Id>en_GB</Id>
-        <Name>English(GB)</Name>
+        <Id>en_US</Id>
+        <Name>English(US)</Name>
         <NativeName>English</NativeName>
     </language>
 
@@ -20,8 +20,8 @@
     </language>
 
     <language>
-        <Id>en_US</Id>
-        <Name>English(US)</Name>
+        <Id>en_GB</Id>
+        <Name>English(GB)</Name>
         <NativeName>English</NativeName>
     </language>
 

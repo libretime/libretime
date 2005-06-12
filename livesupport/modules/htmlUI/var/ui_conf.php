@@ -1,14 +1,18 @@
 <?php
-define('UI_SCHEDULER_DAEMON_CMD',       'make -C /var/www/livesupport/products/scheduler/ run >/tmp/scheduler.log 2>&1 &');
-define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');
+## Scheduler
+define('UI_SCHEDULER_DAEMON_CMD',       'make -C /var/www/livesupport/products/scheduler/ run >/tmp/scheduler.log 2>&1 &'); ## adjust the path here
+define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                      ## this is just name of scheduler process to grep in process list for it
 
+## Warning/Error level
 define('UI_VERBOSE',                    FALSE);
 define('UI_WARNING',                    TRUE);
 define('UI_ERROR',                      TRUE);
 
-define('UI_DEFAULT_LANGID',             'en_GB');
+## Local settings
+define('UI_DEFAULT_LANGID',             'en_US');
+#define('UI_UPLOAD_LANGID',              $_SESSION['langid']);
+define('UI_UPLOAD_LANGID',              UI_DEFAULT_LANGID);
 define('UI_TIMEZONEOFFSET',             date('Z'));
-
 
 ## Basic scripts
 define('UI_HANDLER',                    'ui_handler.php');

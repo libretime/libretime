@@ -52,7 +52,7 @@ class uiScheduler extends uiCalendar
                 return TRUE;
             }
         }
-        $this->Base->_retMsg('Scheduler did not start.');
+        $this->Base->_retMsg('Scheduler did not start. Check setting of "UI_SCHEDULER_DAEMON_CMD" in ui_conf.php. File "/tmp/scheduler.log" could be helpful.');
         return FALSE;
     }
 

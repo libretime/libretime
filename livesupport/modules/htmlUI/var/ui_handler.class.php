@@ -142,9 +142,9 @@ class uiHandler extends uiBase {
         $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name']);
         $this->transMData($r);
 
-        if ($_SESSION['langid'] != UI_DEFAULT_LANGID) {           // set records in default language too
-            $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_DEFAULT_LANGID);
-            $this->transMData($r, UI_DEFAULT_LANGID);
+        if (UI_UPLOAD_LANGID !== UI_DEFAULT_LANGID) {           // set records in default language too
+            $this->_setMDataValue($r, UI_MDATA_KEY_TITLE, $formdata['mediafile']['name'], UI_UPLOAD_LANGID);
+            $this->transMData($r, UI_UPLOAD_LANGID);
         }
 
         $this->redirUrl = UI_BROWSER."?act=editFile&id=$r";
@@ -164,7 +164,7 @@ class uiHandler extends uiBase {
     }
 
 
-    function transMData($id, $langid=NULL)
+    function transMData($id, $langid=UI_DEFAULT_LANGID)
     {
         include dirname(__FILE__).'/formmask/metadata.inc.php';
 
@@ -183,7 +183,7 @@ class uiHandler extends uiBase {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if ($v['id3'] != FALSE) {
                     $key = strtolower($v['id3']);
-                    if ($ia['comments'][$key][0]) {   
+                    if ($ia['comments'][$key][0]) { 
                         $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0], $langid);
                     }
                 }
