@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,8 +93,11 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // set up the now playing widget
     nowPlayingWidget = Gtk::manage(new NowPlaying(gLiveSupport, bundle));
+    Gtk::Alignment *    nowPlayingAlignment = Gtk::manage(new Gtk::Alignment(
+                                                        0.0, 0.7, 1.0, 0.0 ));
+    nowPlayingAlignment->add(*nowPlayingWidget);
     nowPlayingBin = Gtk::manage(widgetFactory->createDarkBlueBin());
-    nowPlayingBin->add(*nowPlayingWidget);
+    nowPlayingBin->add(*nowPlayingAlignment);
     nowPlayingBin->set_size_request(-1, 104);
 
     // set up the VU meter widget
