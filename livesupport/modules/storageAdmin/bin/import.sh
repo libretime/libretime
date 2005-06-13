@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/bin/import.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -36,7 +36,7 @@
 #-------------------------------------------------------------------------------
 
 reldir=`dirname $0`/..
-phpdir=`cd $reldir/bin/php; pwd`
+phpdir=`cd $reldir/var; pwd`
 filelistpathname=.
 
 #-------------------------------------------------------------------------------
