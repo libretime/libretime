@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/MetadataTypeContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -83,19 +83,47 @@ static const std::string configFileName = "etc/metadataTypeContainer.xml";
 void
 MetadataTypeContainerTest :: setUp(void)                             throw ()
 {
+    Ptr<ResourceBundle>::Ref    rootBundle;
     try {
         Ptr<xmlpp::DomParser>::Ref  parser(
                               new xmlpp::DomParser(bundleConfigFileName, true));
         const xmlpp::Document * document = parser->get_document();
         const xmlpp::Element  * root     = document->get_root_node();
 
-        bundle = LocalizedObject::getBundle(*root);
+        rootBundle = LocalizedObject::getBundle(*root);
+
     } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in configuration file");
+        CPPUNIT_FAIL("semantic error in bundle configuration file");
     } catch (std::exception &e) {
-        CPPUNIT_FAIL(e.what());
+        CPPUNIT_FAIL(std::string("XML error in bundle configuration file:\n")
+                   + e.what());
     }
-    CPPUNIT_ASSERT(bundle.get());
+    CPPUNIT_ASSERT(rootBundle);
+
+    UErrorCode      icuError = U_ZERO_ERROR;
+    bundle.reset(new ResourceBundle(rootBundle->get("metadata", icuError)));
+    CPPUNIT_ASSERT(U_SUCCESS(icuError));
+    CPPUNIT_ASSERT(bundle);
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                                    new xmlpp::DomParser(configFileName, true));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        container.reset(new MetadataTypeContainer(bundle));
+        container->configure(*root);
+
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(std::string("semantic error in metadata container"
+                                 " configuration file:\n")
+                   + e.what());
+    } catch (xmlpp::exception &e) {
+        CPPUNIT_FAIL(std::string("XML error in metadata container"
+                                 " configuration file:\n")
+                   + e.what());
+    }
+
 }
 
 
@@ -105,7 +133,6 @@ MetadataTypeContainerTest :: setUp(void)                             throw ()
 void
 MetadataTypeContainerTest :: tearDown(void)                          throw ()
 {
-    bundle.reset();
 }
 
 
@@ -117,26 +144,7 @@ MetadataTypeContainerTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<const MetadataType>::Ref        metadataType;
-    Ptr<MetadataTypeContainer>::Ref     container;
     bool                                gotException;
-
-    // test configuration from a configuration file
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        container.reset(new MetadataTypeContainer(bundle));
-        container->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(std::string("semantic error in configuration file:\n")
-                   + e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(std::string("XML error in configuration file:\n")
-                   + e.what());
-    }
 
     // test double-configuration
     try {
@@ -163,8 +171,8 @@ MetadataTypeContainerTest :: firstTest(void)
     metadataType = container->getByDcName("dc:creator");
 
     CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:creator");
-    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE2");
-    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "dc_creator");
+    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE1");
+    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "creator");
 
     // a negative check on the DC name
     CPPUNIT_ASSERT(!container->existsByDcName("dc:nonExistent"));
@@ -178,19 +186,19 @@ MetadataTypeContainerTest :: firstTest(void)
     CPPUNIT_ASSERT(gotException);
 
     // a simple positive check on the ID3v2 tag
-    CPPUNIT_ASSERT(container->existsById3Tag("TPE2"));
-    metadataType = container->getById3Tag("TPE2");
+    CPPUNIT_ASSERT(container->existsById3Tag("TPE1"));
+    metadataType = container->getById3Tag("TPE1");
 
     CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:creator");
-    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE2");
-    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "dc_creator");
+    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE1");
+    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "creator");
 
-    // a negative check on the DC name
-    CPPUNIT_ASSERT(!container->existsByDcName("NonExistentTag"));
+    // a negative check on the ID3v2 tag
+    CPPUNIT_ASSERT(!container->existsById3Tag("NonExistentTag"));
 
     gotException = false;
     try {
-        container->getByDcName("NonExistentTag");
+        container->getById3Tag("NonExistentTag");
     } catch (std::invalid_argument &e) {
         gotException = true;
     }
@@ -206,46 +214,31 @@ MetadataTypeContainerTest :: iteratorTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<const MetadataType>::Ref                    metadataType;
-    Ptr<MetadataTypeContainer>::Ref                 container;
     MetadataTypeContainer::Vector::const_iterator   it;
     MetadataTypeContainer::Vector::const_iterator   end;
+
+    // check the first two elements in the container
+    it  = container->begin();
+    end = container->end();
+
+    CPPUNIT_ASSERT(it != end);
+    metadataType = (Ptr<const MetadataType>::Ref) *it;
+    CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:title");
+    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TIT2");
+    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "title");
+
+    ++it;
+    CPPUNIT_ASSERT(it != end);
+    metadataType = (Ptr<const MetadataType>::Ref) *it;
+    CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:creator");
+    CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE1");
+    CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "creator");
 
     // test on an empty container
     container.reset(new MetadataTypeContainer(bundle));
     it  = container->begin();
     end = container->end();
     CPPUNIT_ASSERT(it == end);
-    container.reset();
-
-    // test configuration from a configuration file
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        container.reset(new MetadataTypeContainer(bundle));
-        container->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(std::string("semantic error in configuration file:\n")
-                   + e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(std::string("XML error in configuration file:\n")
-                   + e.what());
-    }
-
-    // cycle through the iterator, should be one element
-    it  = container->begin();
-    end = container->end();
-    while (it != end) {
-        metadataType = (Ptr<const MetadataType>::Ref) *it;
-        CPPUNIT_ASSERT(*metadataType->getDcName() == "dc:creator");
-        CPPUNIT_ASSERT(*metadataType->getId3Tag() == "TPE2");
-        CPPUNIT_ASSERT(*metadataType->getLocalizationKey() == "dc_creator");
-
-        ++it;
-    }
 }
 
 
@@ -257,25 +250,6 @@ MetadataTypeContainerTest :: localizedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<const MetadataType>::Ref           metadataType;
-    Ptr<MetadataTypeContainer>::Ref        container;
-
-    // test configuration from a configuration file
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                    new xmlpp::DomParser(configFileName, true));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        container.reset(new MetadataTypeContainer(bundle));
-        container->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(std::string("semantic error in configuration file:\n")
-                   + e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(std::string("XML error in configuration file:\n")
-                   + e.what());
-    }
 
     CPPUNIT_ASSERT(container->existsByDcName("dc:creator"));
     metadataType = container->getByDcName("dc:creator");
@@ -283,36 +257,41 @@ MetadataTypeContainerTest :: localizedTest(void)
     CPPUNIT_ASSERT(*metadataType->getLocalizedName() == "Creator");
 
     UErrorCode                      status = U_ZERO_ERROR;
+    Ptr<ResourceBundle>::Ref        rootBundle;
     Ptr<ResourceBundle>::Ref        huBundle;
     Ptr<ResourceBundle>::Ref        jpBundle;
     Ptr<const Glib::ustring>::Ref   ustr;
 
     // test with hungarian
-    huBundle.reset(new ResourceBundle("./tmp/" PACKAGE_NAME, "hu", status));
+    rootBundle.reset(new ResourceBundle("./tmp/" PACKAGE_NAME, "hu", status));
+    CPPUNIT_ASSERT(U_SUCCESS(status));
+    huBundle.reset(new ResourceBundle(rootBundle->get("metadata", status)));
     CPPUNIT_ASSERT(U_SUCCESS(status));
     container->setBundle(huBundle);
 
     ustr = metadataType->getLocalizedName();
-    CPPUNIT_ASSERT((*ustr)[0] == 0x004c);  // 'L'
-    CPPUNIT_ASSERT((*ustr)[1] == 0x00e9);  // 'e' with acute
-    CPPUNIT_ASSERT((*ustr)[2] == 0x0074);  // 't'
-    CPPUNIT_ASSERT((*ustr)[3] == 0x0072);  // 'r'
-    CPPUNIT_ASSERT((*ustr)[4] == 0x0065);  // 'e'
-    CPPUNIT_ASSERT((*ustr)[5] == 0x0068);  // 'h'
-    CPPUNIT_ASSERT((*ustr)[6] == 0x006f);  // 'o'
-    CPPUNIT_ASSERT((*ustr)[7] == 0x007a);  // 'z'
-    CPPUNIT_ASSERT((*ustr)[8] == 0x00f3);  // 'o' with acute
+    CPPUNIT_ASSERT(ustr->length() == 6);
+    CPPUNIT_ASSERT((*ustr)[0] == 0x0045);  // 'E'
+    CPPUNIT_ASSERT((*ustr)[1] == 0x006C);  // 'l'
+    CPPUNIT_ASSERT((*ustr)[2] == 0x0151);  // 'o' with double acute
+    CPPUNIT_ASSERT((*ustr)[3] == 0x0061);  // 'a'
+    CPPUNIT_ASSERT((*ustr)[4] == 0x0064);  // 'd'
+    CPPUNIT_ASSERT((*ustr)[5] == 0x00F3);  // 'o' with acute
 
     // test with japanese
-    jpBundle.reset(new ResourceBundle("./tmp/" PACKAGE_NAME, "jp", status));
+    rootBundle.reset(new ResourceBundle("./tmp/" PACKAGE_NAME, "jp", status));
+    CPPUNIT_ASSERT(U_SUCCESS(status));
+    jpBundle.reset(new ResourceBundle(rootBundle->get("metadata", status)));
     CPPUNIT_ASSERT(U_SUCCESS(status));
     container->setBundle(jpBundle);
 
     ustr = metadataType->getLocalizedName();
+    CPPUNIT_ASSERT(ustr->length() == 6);
     CPPUNIT_ASSERT((*ustr)[0] == 0x30af);  // katakana ku
     CPPUNIT_ASSERT((*ustr)[1] == 0x30ea);  // katakana ri
     CPPUNIT_ASSERT((*ustr)[2] == 0x30a8);  // katakana e
     CPPUNIT_ASSERT((*ustr)[3] == 0x30fc);  // katakana '-'
     CPPUNIT_ASSERT((*ustr)[4] == 0x30bf);  // katakana ta
+    CPPUNIT_ASSERT((*ustr)[5] == 0x30fc);  // katakana '-'
 }
 

@@ -147,144 +147,141 @@
 
     <metadataTypeContainer>
         <metadataType dcName          = "dc:title"
-                      id3Tag          = "Title"
+                      id3Tag          = "TIT2"
                       localizationKey = "title"
         />
         <metadataType dcName          = "dc:creator"
-                      id3Tag          = "Artist"
+                      id3Tag          = "TPE1"
                       localizationKey = "creator"
         />
         <metadataType dcName          = "dc:source"
-                      id3Tag          = "Album"
+                      id3Tag          = "TALB"
                       localizationKey = "album"
         />
         <metadataType dcName          = "ls:year"
-                      id3Tag          = "Year"
+                      id3Tag          = "TYER"
                       localizationKey = "year"
         />
         <metadataType dcName          = "dc:type"
-                      id3Tag          = "Genre"
+                      id3Tag          = "TCON"
                       localizationKey = "genre"
         />
         <metadataType dcName          = "dc:description"
-                      id3Tag          = "Comment"
+                      id3Tag          = "COMM"
                       localizationKey = "description"
         />
         <metadataType dcName          = "dc:format"
                       localizationKey = "format"
         />
         <metadataType dcName          = "ls:bpm"
-                      id3Tag          = "BPM"
+                      id3Tag          = "TBPM"
                       localizationKey = "bpm"
         />
         <metadataType dcName          = "ls:rating"
-                      id3Tag          = "Rating"
+                      id3Tag          = "POPM"
                       localizationKey = "rating"
         />
         <metadataType dcName          = "dcterms:extent"
                       localizationKey = "length"
         />
         <metadataType dcName          = "ls:encoded_by"
-                      id3Tag          = "Encoded by"
+                      id3Tag          = "TENC"
                       localizationKey = "encoded_by"
         />
         <metadataType dcName          = "ls:track_num"
-                      id3Tag          = "Track"
+                      id3Tag          = "TRCK"
                       localizationKey = "track_number"
         />
         <metadataType dcName          = "ls:disc_num"
-                      id3Tag          = "Disk"
+                      id3Tag          = "TPOS"
                       localizationKey = "disc_number"
         />
         <metadataType dcName          = "ls:mood"
-                      id3Tag          = "Mood"
+                      id3Tag          = "TMOO"
                       localizationKey = "mood"
         />
         <metadataType dcName          = "dc:publisher"
-                      id3Tag          = "Label"
+                      id3Tag          = "TPUB"
                       localizationKey = "publishing_label"
         />
         <metadataType dcName          = "ls:composer"
-                      id3Tag          = "Composer"
+                      id3Tag          = "TCOM"
                       localizationKey = "composer"
         />
         <metadataType dcName          = "ls:bitrate"
-                      id3Tag          = "Bitrate"
                       localizationKey = "bitrate"
         />
         <metadataType dcName          = "ls:channels"
-                      id3Tag          = "Channels"
                       localizationKey = "channels"
-        />  <!-- one of "", "Mono", "Stereo" or "5.1" -->
+        />
         <metadataType dcName          = "ls:samplerate"
-                      id3Tag          = "Samplerate"
                       localizationKey = "sample_rate"
         />
         <metadataType dcName          = "ls:encoder"
-                      id3Tag          = "Encoder"
+                      id3Tag          = "TSSE"
                       localizationKey = "encoding_software"
         />
         <metadataType dcName          = "ls:crc"
-                      id3Tag          = "CRC"
                       localizationKey = "checksum"
         />
         <metadataType dcName          = "ls:lyrics"
-                      id3Tag          = "Lyrics"
                       localizationKey = "lyrics"
         />
         <metadataType dcName          = "ls:orchestra"
-                      id3Tag          = "Orchestra or band"
+                      id3Tag          = "TPE2"
                       localizationKey = "orchestra_or_band"
         />
         <metadataType dcName          = "ls:conductor"
-                      id3Tag          = "Conductor"
+                      id3Tag          = "TPE3"
                       localizationKey = "conductor"
         />
         <metadataType dcName          = "ls:lyricist"
-                      id3Tag          = "Lyricist"
+                      id3Tag          = "TEXT"
                       localizationKey = "lyricist"
         />
         <metadataType dcName          = "ls:originallyricist"
-                      id3Tag          = "Original lyricist"
+                      id3Tag          = "TOLY"
                       localizationKey = "original_lyricist"
         />
         <metadataType dcName          = "ls:radiostationname"
-                      id3Tag          = "Radio station name"
+                      id3Tag          = "TRSN"
                       localizationKey = "radio_station_name"
         />
         <metadataType dcName          = "ls:audiofileinfourl"
-                      id3Tag          = "Audio file information web page"
+                      id3Tag          = "WOAF"
                       localizationKey = "audio_file_info_url"
         />
         <metadataType dcName          = "ls:artisturl"
-                      id3Tag          = "Artist web page"
+                      id3Tag          = "WOAR"
                       localizationKey = "artist_url"
         />
         <metadataType dcName          = "ls:audiosourceurl"
-                      id3Tag          = "Audio source web page"
+                      id3Tag          = "WOAS"
                       localizationKey = "audio_source_url"
         />
+        <metadataType dcName          = "ls:radiostationurl"
+                      id3Tag          = "WORS"
+                      localizationKey = "radio_station_url"
+        />
         <metadataType dcName          = "ls:buycdurl"
-                      id3Tag          = "Buy CD web page"
+                      id3Tag          = "WPAY"
                       localizationKey = "buy_cd_url"
         />
         <metadataType dcName          = "ls:isrcnumber"
-                      id3Tag          = "ISRC number"
+                      id3Tag          = "TSRC"
                       localizationKey = "isrc_number"
         />
         <metadataType dcName          = "ls:catalognumber"
-                      id3Tag          = "Catalog"
                       localizationKey = "catalog_number"
         />
         <metadataType dcName          = "ls:originalartist"
-                      id3Tag          = "Original Artist"
+                      id3Tag          = "TOPE"
                       localizationKey = "original_artist"
         />
         <metadataType dcName          = "dc:rights"
-                      id3Tag          = "Copyright"
+                      id3Tag          = "TCOP"
                       localizationKey = "copyright"
         />
-        <!-- TODO: finish; the above are only the Main and Music tabs -->
     </metadataTypeContainer>
 </gLiveSupport>
 

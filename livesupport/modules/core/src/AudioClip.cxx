@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -604,12 +604,9 @@ AudioClip :: getXmlDocumentString() const       throw ()
  *  Read the metadata contained in the id3v2 tag of the binary sound file.
  *----------------------------------------------------------------------------*/
 void
-AudioClip :: readTag()                          throw (std::invalid_argument)
+AudioClip :: readTag(Ptr<MetadataTypeContainer>::Ref  metadataTypes)
+                                                throw (std::invalid_argument)
 {
-    if (!TagConversion::isConfigured()) {
-        throw std::invalid_argument("tag conversion table not loaded");
-    }
-
     if (!getUri()) {
         throw std::invalid_argument("audio clip has no uri field");
     }
@@ -618,72 +615,85 @@ AudioClip :: readTag()                          throw (std::invalid_argument)
         throw std::invalid_argument("binary sound file not found");
     }
     
-    TagLib::FileRef         genericFileRef(getUri()->c_str());
-    TagLib::Tag*            tag = genericFileRef.tag();
-    if (!tag) {
-        return;
-    }
-
-    Ptr<const Glib::ustring>::Ref   value;                  // true = unicode
-    if (TagConversion::existsId3Tag("Artist")) {
-        value.reset(new const Glib::ustring(tag->artist().to8Bit(true)));
-        setMetadata(value, TagConversion::id3ToDublinCore("Artist"));
-    }
-    
-    if (TagConversion::existsId3Tag("Title")) {
-        value.reset(new const Glib::ustring(tag->title().to8Bit(true)));
-        setMetadata(value, TagConversion::id3ToDublinCore("Title"));
-    }
-    
-    if (TagConversion::existsId3Tag("Album")) {
-        value.reset(new const Glib::ustring(tag->album().to8Bit(true)));
-        setMetadata(value, TagConversion::id3ToDublinCore("Album"));
-    }
-    
-    if (TagConversion::existsId3Tag("Comment")) {
-        value.reset(new const Glib::ustring(tag->comment().to8Bit(true)));
-        setMetadata(value, TagConversion::id3ToDublinCore("Comment"));
-    }
-    
-    if (TagConversion::existsId3Tag("Genre")) {
-        value.reset(new const Glib::ustring(tag->genre().to8Bit(true)));
-        setMetadata(value, TagConversion::id3ToDublinCore("Genre"));
-    }
-    
-    if (TagConversion::existsId3Tag("Year")) {
-        std::stringstream   yearString;
-        yearString << tag->year();
-        value.reset(new const Glib::ustring(yearString.str()));
-        setMetadata(value, TagConversion::id3ToDublinCore("Year"));
-    }
-
-    if (TagConversion::existsId3Tag("Track")) {
-        std::stringstream   trackString;
-        trackString << tag->track();
-        value.reset(new const Glib::ustring(trackString.str()));
-        setMetadata(value, TagConversion::id3ToDublinCore("Track"));
-    }
-    
     TagLib::MPEG::File      mpegFile(getUri()->c_str());
     TagLib::ID3v2::Tag*     id3v2Tag = mpegFile.ID3v2Tag();
-    if (!id3v2Tag) {
-        return;
-    }
-    
-    TagLib::ID3v2::FrameListMap         frameListMap = id3v2Tag->frameListMap();
-    TagLib::ID3v2::FrameListMap::ConstIterator it = frameListMap.begin();
-    while (it != frameListMap.end()) {
-        const char*     keyBuffer = it->first.data();
-        std::string     keyString(keyBuffer, 4);
-        if (TagConversion::existsId3Tag(keyString)) {
-            TagLib::ID3v2::FrameList        frameList = it->second;
-            if (!frameList.isEmpty()) {
-                value.reset(new const Glib::ustring(frameList.front()
-                                                    ->toString().to8Bit(true)));
-                setMetadata(value, TagConversion::id3ToDublinCore(keyString));
+    if (id3v2Tag) {
+        Ptr<const MetadataType>::Ref    metadata;
+        Ptr<const Glib::ustring>::Ref   value;
+
+        TagLib::ID3v2::FrameListMap     frameListMap = id3v2Tag->frameListMap();
+        TagLib::ID3v2::FrameListMap::ConstIterator it;
+
+        for (it = frameListMap.begin(); it != frameListMap.end(); ++it) {
+            std::string     keyString(it->first.data(), 4);
+            try {
+                metadata = metadataTypes->getById3Tag(keyString);
+                TagLib::ID3v2::FrameList frameList = it->second;
+                if (!frameList.isEmpty()) {
+                    value.reset(new const Glib::ustring(
+                                frameList.front()->toString().to8Bit(true)));
+                    setMetadata(value, *metadata->getDcName());
+                }
+            } catch (std::invalid_argument &e) {
+                // id3v2 tag name not found in MetadataTypeContainer
+                // TODO: print warning?
             }
         }
-        ++it;
+        return;
+    }
+
+    TagLib::FileRef         genericFileRef(getUri()->c_str());
+    TagLib::Tag*            tag = genericFileRef.tag();
+    if (tag) {
+        TagLib::String                  stringValue;
+        TagLib::uint                    intValue;
+        Ptr<const Glib::ustring>::Ref   value;
+
+        stringValue = tag->artist();
+        if (!stringValue.isNull()) {
+            value.reset(new const Glib::ustring(stringValue.to8Bit(true)));
+            setMetadata(value, "dc:creator");
+        }
+        
+        stringValue = tag->title();
+        if (!stringValue.isNull()) {
+            value.reset(new const Glib::ustring(stringValue.to8Bit(true)));
+            setMetadata(value, "dc:title");
+        }
+        
+        stringValue = tag->album();
+        if (!stringValue.isNull()) {
+            value.reset(new const Glib::ustring(stringValue.to8Bit(true)));
+            setMetadata(value, "dc:source");
+        }
+        
+        stringValue = tag->comment();
+        if (!stringValue.isNull()) {
+            value.reset(new const Glib::ustring(stringValue.to8Bit(true)));
+            setMetadata(value, "dc:description");
+        }
+
+        stringValue = tag->genre();
+        if (!stringValue.isNull()) {
+            value.reset(new const Glib::ustring(stringValue.to8Bit(true)));
+            setMetadata(value, "dc:type");
+        }
+
+        intValue = tag->year();
+        if (intValue != 0) {
+            std::stringstream   yearString;
+            yearString << intValue;
+            value.reset(new const Glib::ustring(yearString.str()));
+            setMetadata(value, "ls:year");
+        }
+        
+        intValue = tag->track();
+        if (intValue != 0) {
+            std::stringstream   trackString;
+            trackString << intValue;
+            value.reset(new const Glib::ustring(trackString.str()));
+            setMetadata(value, "ls:track_num");
+        }
     }
 }
 

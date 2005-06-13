@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -41,6 +41,7 @@
 #endif
 
 #include <cppunit/extensions/HelperMacros.h>
+#include "LiveSupport/Core/AudioClip.h"
 
 
 namespace LiveSupport {
@@ -58,7 +59,7 @@ namespace Core {
  *  Unit test for the AudioClip class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see AudioClip
  */
 class AudioClipTest : public CPPUNIT_NS::TestFixture
@@ -69,6 +70,17 @@ class AudioClipTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(tagTest);
     CPPUNIT_TEST(marshallingTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
+        /**
+         *  The audio clip to test.
+         */
+        Ptr<AudioClip>::Ref                 audioClip;
+        
+        /**
+         *  The list of supported metadata types.
+         */
+        Ptr<MetadataTypeContainer>::Ref     metadataTypes;
 
     protected:
 

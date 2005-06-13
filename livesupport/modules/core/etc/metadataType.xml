@@ -10,6 +10,6 @@
 
 <metadataType dcName          = "dc:creator"
               id3Tag          = "TPE2"
-              localizationKey = "dc_creator"
+              localizationKey = "creator"
 />
 

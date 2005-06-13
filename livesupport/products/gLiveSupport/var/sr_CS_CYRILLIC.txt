@@ -212,6 +212,7 @@ sr_CS_CYRILLIC:table
         audio_file_info_url:string  { "Веб страна са информацијама о фајлу" }
         artist_url:string           { "Веб страна извођача" }
         audio_source_url:string     { "Веб страна извора" }
+        radio_station_url:string    { "Веб страна радио станице" }
         buy_cd_url:string           { "Купи ЦД преко веб стране" }
         isrc_number:string          { "ISRC број" }
         catalog_number:string       { "Каталошки број" }

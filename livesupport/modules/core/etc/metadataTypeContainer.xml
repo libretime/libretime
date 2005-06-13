@@ -3,17 +3,149 @@
 
 <!ELEMENT metadataType EMPTY >
 <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
-<!ATTLIST metadataType  id3Tag            NMTOKEN     #IMPLIED  >
-<!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
+<!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
+<!ATTLIST metadataType  localizationKey   CDATA       #REQUIRED >
 
 <!ELEMENT metadataTypeContainer (metadataType+) >
 
 ]>
 
 <metadataTypeContainer>
+    <metadataType dcName          = "dc:title"
+                  id3Tag          = "TIT2"
+                  localizationKey = "title"
+    />
     <metadataType dcName          = "dc:creator"
+                  id3Tag          = "TPE1"
+                  localizationKey = "creator"
+    />
+    <metadataType dcName          = "dc:source"
+                  id3Tag          = "TALB"
+                  localizationKey = "album"
+    />
+    <metadataType dcName          = "ls:year"
+                  id3Tag          = "TYER"
+                  localizationKey = "year"
+    />
+    <metadataType dcName          = "dc:type"
+                  id3Tag          = "TCON"
+                  localizationKey = "genre"
+    />
+    <metadataType dcName          = "dc:description"
+                  id3Tag          = "COMM"
+                  localizationKey = "description"
+    />
+    <metadataType dcName          = "dc:format"
+                  localizationKey = "format"
+    />
+    <metadataType dcName          = "ls:bpm"
+                  id3Tag          = "TBPM"
+                  localizationKey = "bpm"
+    />
+    <metadataType dcName          = "ls:rating"
+                  id3Tag          = "POPM"
+                  localizationKey = "rating"
+    />
+    <metadataType dcName          = "dcterms:extent"
+                  localizationKey = "length"
+    />
+    <metadataType dcName          = "ls:encoded_by"
+                  id3Tag          = "TENC"
+                  localizationKey = "encoded_by"
+    />
+    <metadataType dcName          = "ls:track_num"
+                  id3Tag          = "TRCK"
+                  localizationKey = "track_number"
+    />
+    <metadataType dcName          = "ls:disc_num"
+                  id3Tag          = "TPOS"
+                  localizationKey = "disc_number"
+    />
+    <metadataType dcName          = "ls:mood"
+                  id3Tag          = "TMOO"
+                  localizationKey = "mood"
+    />
+    <metadataType dcName          = "dc:publisher"
+                  id3Tag          = "TPUB"
+                  localizationKey = "publishing_label"
+    />
+    <metadataType dcName          = "ls:composer"
+                  id3Tag          = "TCOM"
+                  localizationKey = "composer"
+    />
+    <metadataType dcName          = "ls:bitrate"
+                  localizationKey = "bitrate"
+    />
+    <metadataType dcName          = "ls:channels"
+                  localizationKey = "channels"
+    />
+    <metadataType dcName          = "ls:samplerate"
+                  localizationKey = "sample_rate"
+    />
+    <metadataType dcName          = "ls:encoder"
+                  id3Tag          = "TSSE"
+                  localizationKey = "encoding_software"
+    />
+    <metadataType dcName          = "ls:crc"
+                  localizationKey = "checksum"
+    />
+    <metadataType dcName          = "ls:lyrics"
+                  localizationKey = "lyrics"
+    />
+    <metadataType dcName          = "ls:orchestra"
                   id3Tag          = "TPE2"
-                  localizationKey = "dc_creator"
+                  localizationKey = "orchestra_or_band"
+    />
+    <metadataType dcName          = "ls:conductor"
+                  id3Tag          = "TPE3"
+                  localizationKey = "conductor"
+    />
+    <metadataType dcName          = "ls:lyricist"
+                  id3Tag          = "TEXT"
+                  localizationKey = "lyricist"
+    />
+    <metadataType dcName          = "ls:originallyricist"
+                  id3Tag          = "TOLY"
+                  localizationKey = "original_lyricist"
+    />
+    <metadataType dcName          = "ls:radiostationname"
+                  id3Tag          = "TRSN"
+                  localizationKey = "radio_station_name"
+    />
+    <metadataType dcName          = "ls:audiofileinfourl"
+                  id3Tag          = "WOAF"
+                  localizationKey = "audio_file_info_url"
+    />
+    <metadataType dcName          = "ls:artisturl"
+                  id3Tag          = "WOAR"
+                  localizationKey = "artist_url"
+    />
+    <metadataType dcName          = "ls:audiosourceurl"
+                  id3Tag          = "WOAS"
+                  localizationKey = "audio_source_url"
+    />
+    <metadataType dcName          = "ls:radiostationurl"
+                  id3Tag          = "WORS"
+                  localizationKey = "radio_station_url"
+    />
+    <metadataType dcName          = "ls:buycdurl"
+                  id3Tag          = "WPAY"
+                  localizationKey = "buy_cd_url"
+    />
+    <metadataType dcName          = "ls:isrcnumber"
+                  id3Tag          = "TSRC"
+                  localizationKey = "isrc_number"
+    />
+    <metadataType dcName          = "ls:catalognumber"
+                  localizationKey = "catalog_number"
+    />
+    <metadataType dcName          = "ls:originalartist"
+                  id3Tag          = "TOPE"
+                  localizationKey = "original_artist"
+    />
+    <metadataType dcName          = "dc:rights"
+                  id3Tag          = "TCOP"
+                  localizationKey = "copyright"
     />
 </metadataTypeContainer>
 

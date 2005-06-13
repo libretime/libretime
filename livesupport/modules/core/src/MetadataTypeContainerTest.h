@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/MetadataTypeContainerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace Core {
 /**
  *  Unit test for the MetadataTypeContainer class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  *  @see MetadataTypeContainer
  */
 class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
@@ -74,7 +74,12 @@ class MetadataTypeContainerTest : public CPPUNIT_NS::TestFixture
         /**
          *  The resource bundle used by the container.
          */
-        Ptr<ResourceBundle>::Ref    bundle;
+        Ptr<ResourceBundle>::Ref            bundle;
+
+        /**
+         *  The metadata container used in the tests.
+         */
+        Ptr<MetadataTypeContainer>::Ref     container;
 
         /**
          *  A simple test.

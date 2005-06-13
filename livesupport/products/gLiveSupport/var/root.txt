@@ -213,6 +213,7 @@ root:table
         audio_file_info_url:string  { "File info web page" }
         artist_url:string           { "Artist web page" }
         audio_source_url:string     { "Source web page" }
+        radio_station_url:string    { "Radio station web page" }
         buy_cd_url:string           { "Buy CD web page" }
         isrc_number:string          { "ISRC number" }
         catalog_number:string       { "Catalog number" }

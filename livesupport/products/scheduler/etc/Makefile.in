@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.57 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.58 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -72,6 +72,9 @@ LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
 
 
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
+
+# TODO: move ICU flag determination to configure script
+ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
 
 TAGLIB_CFLAGS   =`${USR_DIR}/bin/taglib-config --cflags`
 TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
@@ -156,6 +159,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 					 ${LIBODBCXX_LIBS} \
 					 ${GSTREAMER_LIBS} \
                      ${CURL_LIBS} \
+                     ${ICU_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
                      -L${HELIX_LIB_DIR} \

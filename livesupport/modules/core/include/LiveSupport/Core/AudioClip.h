@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,7 @@
 #include "LiveSupport/Core/UniqueId.h"
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/Core/Playable.h"
+#include "LiveSupport/Core/MetadataTypeContainer.h"
 
 
 namespace LiveSupport {
@@ -130,7 +131,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -562,27 +563,22 @@ class AudioClip : public Configurable,
 
 
         /**
-         *  Read the metadata contained in the id3v2 tag of the mp3 sound
-         *  file.  The id3v1 tag is also read; if a field is present in both,
-         *  the id3v2 tag is used.
-         *
-         *  Ogg Vorbis sound files are not supported yet.  If the 
-         *  sound file is not in mp3 format, the method returns normally
-         *  and does not do anything; however, some junk is printed on
-         *  the standard error.
+         *  Read the metadata contained in the id3v2 tags of the mp3 sound
+         *  file.  If no id3v2 tags are found, the file is searched for other
+         *  (id3v1, APE, XiphComment) tags.
          *
          *  The tags are processed and translated into Dublin Core
-         *  metadata fields using the TagConversion class.  Only those fields
-         *  are processed which have a Dublin Core equivalent listed in the
-         *  xml element used for configuring TagConversion.
+         *  metadata fields using the MetadataTypeContainer object.
          *
-         *  @exception std::invalid_argument if TagConversion has not been
-         *             configured yet, or if the AudioClip instance does not
+         *  @param  metadataTypes   contains a list of all supported
+         *                          metadata types.
+         *  @exception std::invalid_argument if the AudioClip instance does not
          *             have a uri field, or the file name contained in the uri
-         *             field is invalid
+         *             field is invalid.
          */
         void
-        readTag()                               throw (std::invalid_argument);
+        readTag(Ptr<MetadataTypeContainer>::Ref     metadataTypes)
+                                                throw (std::invalid_argument);
 };
 
 

@@ -213,6 +213,7 @@ sr_CS:table
         audio_file_info_url:string  { "Web strana sa informacijama o fajlu" }
         artist_url:string           { "Web strana izvođača" }
         audio_source_url:string     { "Web strana izvora" }
+        radio_station_url:string    { "Web strana radio stanice" }
         buy_cd_url:string           { "Kupi CD preko web strane" }
         isrc_number:string          { "ISRC broj" }
         catalog_number:string       { "Kataloški broj" }

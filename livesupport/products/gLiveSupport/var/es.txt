@@ -213,6 +213,7 @@ es:table
         audio_file_info_url:string  { "Sitio web con información del archivo" }
         artist_url:string           { "Sitio web del artista" }
         audio_source_url:string     { "Sitio web de la fuente" }
+        radio_station_url:string    { "Sitio web de la estación de radio" }
         buy_cd_url:string           { "Sitio web para comprar CD" }
         isrc_number:string          { "número ISRC" }
         catalog_number:string       { "número de catálogo" }

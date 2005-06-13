@@ -6,6 +6,9 @@ hu:table
         bar:string      { "bár" }
     }
 
-    dc_creator:string   { "Létrehozó" }
+    metadata:table
+    {
+        creator:string   { "Előadó" }
+    }
 }
 

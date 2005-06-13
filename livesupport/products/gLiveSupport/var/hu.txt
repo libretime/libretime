@@ -149,17 +149,6 @@ hu:table
         creatorColumnLabel:string     { "Előadó" }
         lengthColumnLabel:string      { "Hossz" }
         
-        genreMetadataDisplay:string       { "Műfaj" }
-        genreMetadataSearchKey:string     { "dc:type" }
-        creatorMetadataDisplay:string     { "Előadó" }
-        creatorMetadataSearchKey:string   { "dc:creator" }
-        albumMetadataDisplay:string       { "Lemez" }
-        albumMetadataSearchKey:string     { "dc:source" }
-        titleMetadataDisplay:string       { "Cím" }
-        titleMetadataSearchKey:string     { "dc:title" }
-        lengthMetadataDisplay:string      { "Hossz" }
-        lengthMetadataSearchKey:string    { "dcterms:extent" }
-        
         partialOperatorDisplay:string     { "része" }
         partialOperatorSearchKey:string   { "partial" }
         prefixOperatorDisplay:string      { "kezdete" }
@@ -222,6 +211,7 @@ hu:table
         audio_file_info_url:string  { "Zeneszám honlapja" }
         artist_url:string           { "Előadó honlapja" }
         audio_source_url:string     { "Forrás honlapja" }
+        radio_station_url:string    { "Rádióadó honlapja" }
         buy_cd_url:string           { "CD-bolt honlapja" }
         isrc_number:string          { "ISRC-szám" }
         catalog_number:string       { "Katalógusszám" }

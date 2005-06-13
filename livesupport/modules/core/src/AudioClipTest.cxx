@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,9 +65,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION(AudioClipTest);
 static const std::string configFileName = "etc/audioClip.xml";
 
 /**
- *  The name of the configuration file for the tag conversion table.
+ *  The name of the configuration file for the resource bundle.
  */
-static const std::string tagConversionConfig = "etc/tagConversionTable.xml";
+static const std::string bundleConfigFileName = "etc/resourceBundle.xml";
+
+/**
+ *  The name of the configuration file for the metadata type container.
+ */
+static const std::string metadataConfigFileName 
+                         = "etc/metadataTypeContainer.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -81,6 +87,57 @@ static const std::string tagConversionConfig = "etc/tagConversionTable.xml";
 void
 AudioClipTest :: setUp(void)                         throw ()
 {
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                        new xmlpp::DomParser(configFileName, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+        
+        audioClip.reset(new AudioClip());
+        audioClip->configure(*root);
+        
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in audio clip configuration file");
+    } catch (xmlpp::exception &e) {
+        std::string  eMsg = "error parsing audio clip configuration file\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
+
+    Ptr<ResourceBundle>::Ref    bundle;
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                        new xmlpp::DomParser(bundleConfigFileName, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+        
+        bundle = LocalizedObject::getBundle(*root);
+        
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in configuration file");
+    } catch (std::exception &e) {
+        std::string  eMsg = "error parsing audio clip configuration file\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
+    CPPUNIT_ASSERT(bundle);
+
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                        new xmlpp::DomParser(metadataConfigFileName, false));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+        
+        metadataTypes.reset(new MetadataTypeContainer(bundle));
+        metadataTypes->configure(*root);
+        
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL("semantic error in metadata configuration file");
+    } catch (xmlpp::exception &e) {
+        std::string  eMsg = "error parsing metadata configuration file\n";
+        eMsg += e.what();
+        CPPUNIT_FAIL(eMsg);
+    }
 }
 
 
@@ -100,49 +157,32 @@ void
 AudioClipTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                new xmlpp::DomParser(configFileName, false));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-        Ptr<AudioClip>::Ref     audioClip(new AudioClip());
+    CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x1);
+    Ptr<const boost::posix_time::time_duration>::Ref  duration
+                                            = audioClip->getPlaylength();
+    CPPUNIT_ASSERT(duration->hours() == 0);
+    CPPUNIT_ASSERT(duration->minutes() == 18);
+    CPPUNIT_ASSERT(duration->seconds() == 30);
 
-        audioClip->configure(*root);
+    Ptr<const Glib::ustring>::Ref     title = audioClip->getTitle();
+    CPPUNIT_ASSERT(title);
+    CPPUNIT_ASSERT(*title == "File Title txt");
 
-        CPPUNIT_ASSERT(audioClip->getId()->getId() == 0x1);
-        Ptr<const boost::posix_time::time_duration>::Ref  duration
-                                                = audioClip->getPlaylength();
-        CPPUNIT_ASSERT(duration->hours() == 0);
-        CPPUNIT_ASSERT(duration->minutes() == 18);
-        CPPUNIT_ASSERT(duration->seconds() == 30);
+    Ptr<const Glib::ustring>::Ref     subject = audioClip
+                                    ->getMetadata("dc:subject");
+    CPPUNIT_ASSERT(subject);
+    CPPUNIT_ASSERT(*subject == "Keywords: qwe, asd, zcx");
 
-        Ptr<const Glib::ustring>::Ref     title = audioClip->getTitle();
-        CPPUNIT_ASSERT(title);
-        CPPUNIT_ASSERT(*title == "File Title txt");
+    Ptr<const Glib::ustring>::Ref     alternativeTitle = audioClip
+                                    ->getMetadata("dcterms:alternative");
+    CPPUNIT_ASSERT(alternativeTitle);
+    CPPUNIT_ASSERT(*alternativeTitle ==
+                        "Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ");
 
-        Ptr<const Glib::ustring>::Ref     subject = audioClip
-                                        ->getMetadata("dc:subject");
-        CPPUNIT_ASSERT(subject);
-        CPPUNIT_ASSERT(*subject == "Keywords: qwe, asd, zcx");
-
-        Ptr<const Glib::ustring>::Ref     alternativeTitle = audioClip
-                                        ->getMetadata("dcterms:alternative");
-        CPPUNIT_ASSERT(alternativeTitle);
-        CPPUNIT_ASSERT(*alternativeTitle ==
-                            "Alternative File Title ín sőmé %$#@* LÁNGŰAGÉ");
-
-        CPPUNIT_ASSERT(*audioClip->getXmlElementString() ==
-                                            "<audioClip id=\"0000000000000001\" "
-                                            "playlength=\"00:18:30.000000\" "
-                                            "title=\"File Title txt\"/>");
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in configuration file");
-    } catch (xmlpp::exception &e) {
-        std::string  eMsg = "error parsing configuration file\n";
-        eMsg += e.what();
-        CPPUNIT_FAIL(eMsg);
-    }
+    CPPUNIT_ASSERT(*audioClip->getXmlElementString() ==
+                                        "<audioClip id=\"0000000000000001\" "
+                                        "playlength=\"00:18:30.000000\" "
+                                        "title=\"File Title txt\"/>");
 }
 
 
@@ -153,23 +193,6 @@ void
 AudioClipTest :: conversionTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<AudioClip>::Ref     audioClip(new AudioClip());
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                new xmlpp::DomParser(configFileName, false));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        audioClip->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL("semantic error in configuration file");
-    } catch (xmlpp::exception &e) {
-        std::string  eMsg = "error parsing configuration file\n";
-        eMsg += e.what();
-        CPPUNIT_FAIL(eMsg);
-    }
-    
     Ptr<Playable>::Ref      playable = audioClip;
     CPPUNIT_ASSERT(playable->getType() == Playable::AudioClipType);
     
@@ -188,24 +211,10 @@ void
 AudioClipTest :: tagTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                            new xmlpp::DomParser(tagConversionConfig, false));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-        TagConversion::configure(*root);
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-
-    Ptr<AudioClip>::Ref     audioClip(new AudioClip());
-    
     Ptr<std::string>::Ref   uri(new std::string("var/test10001.mp3"));
     audioClip->setUri(uri);
     try {
-        audioClip->readTag();
+        audioClip->readTag(metadataTypes);
     } catch (std::invalid_argument &e) {
         CPPUNIT_FAIL(e.what());
     }
@@ -227,21 +236,6 @@ void
 AudioClipTest :: marshallingTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<AudioClip>::Ref     audioClip(new AudioClip());
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                new xmlpp::DomParser(configFileName, false));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        audioClip->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-
     XmlRpc::XmlRpcValue     xmlRpcValue = *audioClip;
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("audioClip"));
 

@@ -6,6 +6,9 @@ jp:table
         bar:string      { "ばる" }
     }
 
-    dc_creator:string   { "クリエーター" }
+    metadata:table
+    {
+        creator:string   { "クリエーター" }
+    }
 }
 
