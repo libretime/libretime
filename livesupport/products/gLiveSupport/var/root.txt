@@ -152,15 +152,10 @@ root:table
         lengthColumnLabel:string      { "Length" }
         
         partialOperatorDisplay:string     { "contains" }
-        partialOperatorSearchKey:string   { "partial" }
         prefixOperatorDisplay:string      { "starts with" }
-        prefixOperatorSearchKey:string    { "prefix" }
         =OperatorDisplay:string           { "equals" }
-        =OperatorSearchKey:string         { "=" }
         <=OperatorDisplay:string          { "<=" }
-        <=OperatorSearchKey:string        { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        >=OperatorSearchKey:string        { ">=" }
         
         allStringForBrowse                { "--- all ---" }
         

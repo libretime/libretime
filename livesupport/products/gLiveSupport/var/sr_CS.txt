@@ -152,15 +152,10 @@ sr_CS:table
         lengthColumnLabel:string      { "Dužina" }
         
         partialOperatorDisplay:string     { "sadrži" }
-        partialOperatorSearchKey:string   { "deo" }
         prefixOperatorDisplay:string      { "počinje sa" }
-        prefixOperatorSearchKey:string    { "prefiks" }
         =OperatorDisplay:string           { "jednako" }
-        =OperatorSearchKey:string         { "=" }
         <=OperatorDisplay:string          { "<=" }
-        <=OperatorSearchKey:string        { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        >=OperatorSearchKey:string        { ">=" }
         
         allStringForBrowse                { "--- sve ---" }
         

@@ -150,15 +150,10 @@ hu:table
         lengthColumnLabel:string      { "Hossz" }
         
         partialOperatorDisplay:string     { "része" }
-        partialOperatorSearchKey:string   { "partial" }
         prefixOperatorDisplay:string      { "kezdete" }
-        prefixOperatorSearchKey:string    { "prefix" }
         =OperatorDisplay:string           { "=" }
-        =OperatorSearchKey:string         { "=" }
         <=OperatorDisplay:string          { "<=" }
-        <=OperatorSearchKey:string        { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        >=OperatorSearchKey:string        { ">=" }
 
         allStringForBrowse                { "--- minden ---" }
         

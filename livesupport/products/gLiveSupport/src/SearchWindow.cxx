@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -316,10 +316,15 @@ void
 SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
                                                                 throw ()
 {
-    Ptr<std::list<Ptr<Playable>::Ref> >::Ref
-            searchResults = gLiveSupport->search(criteria);
-    std::list<Ptr<Playable>::Ref>::const_iterator it;
+    Ptr<std::list<Ptr<Playable>::Ref> >::Ref searchResults;
+    try {
+        searchResults = gLiveSupport->search(criteria);
+    } catch (XmlRpcException &e) {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
 
+    std::list<Ptr<Playable>::Ref>::const_iterator it;
     treeModel->clear();
     int     rowNumber = 0;
     

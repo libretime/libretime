@@ -152,15 +152,10 @@ es:table
         lengthColumnLabel:string      { "Duración" }
         
         partialOperatorDisplay:string     { "contiene" }
-        partialOperatorSearchKey:string   { "parcial" }
         prefixOperatorDisplay:string      { "empieza con" }
-        prefixOperatorSearchKey:string    { "prefix" }
         =OperatorDisplay:string           { "equivale" }
-        =OperatorSearchKey:string         { "=" }
         <=OperatorDisplay:string          { "<=" }
-        <=OperatorSearchKey:string        { "<=" }
         >=OperatorDisplay:string          { ">=" }
-        >=OperatorSearchKey:string        { ">=" }
         
         allStringForBrowse                { "--- todo ---" }
         

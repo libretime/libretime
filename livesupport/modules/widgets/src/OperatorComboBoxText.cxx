@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/OperatorComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,16 +62,21 @@ OperatorComboBoxText :: OperatorComboBoxText(
         : ComboBoxText(leftImage, centerImage, rightImage),
           LocalizedObject(bundle)
 {
-    appendPair(getResourceUstring("partialOperatorDisplay"),
-               getResourceUstring("partialOperatorSearchKey"));
-    appendPair(getResourceUstring("prefixOperatorDisplay"),
-               getResourceUstring("prefixOperatorSearchKey"));
-    appendPair(getResourceUstring("=OperatorDisplay"),
-               getResourceUstring("=OperatorSearchKey"));
-    appendPair(getResourceUstring("<=OperatorDisplay"),
-               getResourceUstring("<=OperatorSearchKey"));
-    appendPair(getResourceUstring(">=OperatorDisplay"),
-               getResourceUstring(">=OperatorSearchKey"));
+    Ptr<Glib::ustring>::Ref   searchOperator(new Glib::ustring("partial"));
+    appendPair(getResourceUstring("partialOperatorDisplay"), searchOperator);
+
+    *searchOperator = "prefix";
+    appendPair(getResourceUstring("prefixOperatorDisplay"), searchOperator);
+
+    *searchOperator = "=";
+    appendPair(getResourceUstring("=OperatorDisplay"), searchOperator);
+
+    *searchOperator = "<=";
+    appendPair(getResourceUstring("<=OperatorDisplay"), searchOperator);
+
+    *searchOperator = ">=";
+    appendPair(getResourceUstring(">=OperatorDisplay"), searchOperator);
+
     set_active(0);  // select the first item
 }
 
