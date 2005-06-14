@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/import.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,6 +97,7 @@ while($filename = fgets($stdin, 2048)){
     $ia = GetAllFileInfo("$filename", 'mp3');
     if(PEAR::isError($ia)){ _err($ia, $filename); continue; }
     if(!$ia['fileformat']){ echo "???\n"; continue; }
+    if(!$ia['bitrate']){ echo "not audio?\n"; continue; }
 
     $mdata = array();
     foreach($flds as $k1=>$fn1){
