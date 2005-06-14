@@ -1,0 +1,219 @@
+nl:table
+{
+    windowTitle:string       { "LiveSupport Master Panel" }
+    notLoggedInMsg:string    { "Niet aangemeld" }
+    loggedInMsg:string       { "Aangemeld als {0}" }
+    loginButtonLabel:string  { "aanmelden" }
+    logoutButtonLabel:string { "afmelden" }
+    liveModeButtonLabel:string              { "live mode" }
+    uploadFileButtonLabel:string            { "bestand toevoegen" }
+    scratchpadButtonLabel:string            { "scratchpad" }
+    simplePlaylistMgmtButtonLabel:string    { "playlist aanpassen" }
+    schedulerButtonLabel:string             { "scheduler" }
+    searchButtonLabel:string                { "zoeken" }
+
+    localeNotAvailableMsg:string        { "Locale {0} niet beschikbaar" }
+    schedulerNotReachableMsg:string     { "Scheduler server niet beschikbaar" }
+    storageNotReachableMsg:string       { "Storage server niet beschikbaar" }
+    authenticationNotReachableMsg:string
+                                      { "Authentication server niet beschikbaar" }
+    audioErrorMsg                       { "Audio player fout: " }
+
+    loginWindow:table
+    {
+        windowTitle:string          { "Aanmelden" }
+
+        loginLabel:string           { "Aanmelden" }
+        passwordLabel:string        { "Wachtwoord" }
+        okButtonLabel:string        { "OK" }
+        cancelButtonLabel:string    { "Annuleer" }
+    }
+
+    audioClipListWindow:table
+    {
+        windowTitle:string            { "LiveSupport Audio Clip window" }
+
+        idColumnLabel:string          { "id" }
+        lengthColumnLabel:string      { "lengte" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "token" }
+
+        closeButtonLabel:string       { "sluiten" }
+    }
+
+    scratchpadWindow:table
+    {
+        windowTitle:string                  { "LiveSupport Scratchpad" }
+
+        typeColumnLabel:string              { "type" }
+        titleColumnLabel:string             { "titel" }
+        addToPlaylistButtonLabel:string     { "Toevoegen aan playlist" }
+        clearListButtonLabel:string         { "Leeg maken" }
+        removeButtonLabel:string            { "Item(s) verwijderen" }
+
+        upMenuItem:string                   { "Naar _Boven" }
+        downMenuItem:string                 { "Naar B_eneden" }
+        removeMenuItem:string               { "_Verwijderen" }
+        addToPlaylistMenuItem:string        { "_Toevoegen aan Playlist" }
+        schedulePlaylistMenuItem:string     { "_Playlist plannen" }
+        deleteMenuItem:string               { "_Verwijder" }
+        cueMenuItem:string                  { "_Cue" }
+        addToLiveModeMenuItem:string        { "Aan _Live Mode toevoegen" }
+    }
+
+    playlistListWindow:table
+    {
+        windowTitle:string            { "LiveSupport Playlist window" }
+
+        listBoxLabel                  { "Playlists" }
+        detailBoxLabel                { "Playlist details" }
+
+        idColumnLabel:string          { "id" }
+        lengthColumnLabel:string      { "lengte" }
+        uriColumnLabel:string         { "URI" }
+        tokenColumnLabel:string       { "token" }
+
+        closeButtonLabel:string       { "sluiten" }
+    }
+
+    uploadFileWindow:table
+    {
+        windowTitle:string            { "Bestand versturen" }
+
+        chooseFileLabel:string        { "Bestandsnaam" }
+        chooseFileButtonLabel:string  { "Bladeren" }
+
+        mainSectionLabel:string       { "Algemeen" }
+        titleLabel:string             { "Titel" }
+        creatorLabel:string           { "Maker" }
+        genreLabel:string             { "Genre" }
+        fileFormatLabel:string        { "Bestandstype" }
+        lengthLabel:string            { "Duur" }
+
+        uploadButtonLabel:string      { "Verzenden" }
+        closeButtonLabel:string       { "Annuleer" }
+        statusBar:string              { "status balk" }
+
+        fileChooserDialogTitle:string { "Kies een bestand" }
+        clipUploadedMessage:string    { "clip {0} verzonden" }
+    }
+
+    simplePlaylistManagementWindow:table
+    {
+        windowTitle:string            { "LiveSupport Simple Playlist beheer window" }
+
+        startColumnLabel:string       { "start" }
+        titleColumnLabel:string       { "titel" }
+        lengthColumnLabel:string      { "lengte" }
+        nameLabel:string              { "naam" }
+        saveButtonLabel:string        { "opslaan" }
+        closeButtonLabel:string       { "sluiten" }
+        statusBar:string              { "status balk" }
+        playlistSavedMessage:string   { "playlist {0} opgeslagen" }
+    }
+
+    schedulerWindow:table
+    {
+        windowTitle:string            { "LiveSupport Scheduler window" }
+
+        startColumnLabel:string       { "start" }
+        titleColumnLabel:string       { "titel" }
+        endColumnLabel:string         { "einde" }
+        deleteMenuItem:string         { "_Verwijder" }
+
+        closeButtonLabel:string       { "sluiten" }
+
+    }
+
+    schedulePlaylistWindow:table
+    {
+        windowTitle:string            { "LiveSupport Schedule Playlist window" }
+
+        hourLabel:string              { "uur: " }
+        minuteLabel:string            { "minuten: " }
+        scheduleButtonLabel:string    { "schedule" }
+        closeButtonLabel:string       { "sluiten" }
+    }
+
+    searchWindow:table
+    {
+        windowTitle:string            { "LiveSupport zoeken/verkenner window" }
+
+        simpleSearchTab:string        { "Zoeken" }
+        advancedSearchTab:string      { "Geadvanceerd zoeken" }
+        browseTab:string              { "Bladeren" }
+        
+        searchByTextLabel:string      { "Zoeken met" }
+        searchButtonLabel:string      { "Zoeken" }
+        
+        typeColumnLabel:string        { "" }
+        titleColumnLabel:string       { "Titel" }
+        creatorColumnLabel:string     { "Maker" }
+        lengthColumnLabel:string      { "Lengte" }
+        
+        partialOperatorDisplay:string     { "contains" }
+        prefixOperatorDisplay:string      { "start met" }
+        =OperatorDisplay:string           { "gelijk aan" }
+        <=OperatorDisplay:string          { "<=" }
+        >=OperatorDisplay:string          { ">=" }
+        
+        allStringForBrowse                { "--- alle ---" }
+        
+        addToScratchpadMenuItem:string    { "_Aan Scratchpad toevoegen" }
+        addToLiveModeMenuItem:string      { "Aan _Live Mode toevoegen" }
+    }
+
+    liveModeWindow:table
+    {
+        windowTitle:string            { "LiveSupport Live Mode window" }
+        
+        cueMenuItem:string            { "Pre_view" }
+        upMenuItem:string             { "Naar _Boven" }
+        downMenuItem:string           { "Naar B_eneden" }
+        removeMenuItem:string         { "_Verwijder" }
+        playMenuItem:string           { "_Play" }
+        
+        cuePlayerLabel:string         { "Cueen" }
+    }
+    
+    metadataTypes:table
+    {
+        title:string                { "Titel" }
+        creator:string              { "Maker" }
+        album:string                { "Album" }
+        year:string                 { "Jaar" }
+        genre:string                { "Genre" }
+        description:string          { "Omschrijving" }
+        format:string               { "Format" }
+        length:string               { "Lengte" }
+        bpm:string                  { "BPM" }
+        rating:string               { "Waardering" }
+        encoded_by:string           { "Geencodeerd door" }
+        track_number:string         { "Track nummer" }
+        disc_number:string          { "Disk nummer" }
+        mood:string                 { "Stemming" }
+        publishing_label:string     { "Platen label" }
+        composer:string             { "Componist" }
+        bitrate:string              { "Bitrate" }
+        channels:string             { "Kanalen" }
+        sample_rate:string          { "Sample rate" }
+        encoding_software:string    { "Encoder software" }
+        checksum:string             { "Controlegetal" }
+        lyrics:string               { "Tekst schrijver" }
+        orchestra_or_band:string    { "Orkest of band" }
+        conductor:string            { "Dirigent" }
+        lyricist:string             { "Schrijver" }
+        original_lyricist:string    { "Originele schrijver" }
+        radio_station_name:string   { "Naam van het station" }
+        audio_file_info_url:string  { "Web pagina met audio informatie" }
+        artist_url:string           { "Web pagina van artiest" }
+        audio_source_url:string     { "Web pagina van de audio bron" }
+        radio_station_url:string    { "Website van het station" }
+        buy_cd_url:string           { "Online CD bestellen" }
+        isrc_number:string          { "ISRC nummer" }
+        catalog_number:string       { "Catalogus nummer" }
+        original_artist:string      { "Originele artiest" }
+        copyright:string            { "Copyright" }
+    }
+}
+

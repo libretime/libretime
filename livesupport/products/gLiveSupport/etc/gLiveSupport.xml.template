@@ -106,6 +106,7 @@
         <language locale="en"               name="English"/>
         <language locale="es"               name="Español"/>
         <language locale="hu"               name="Magyar"/>
+        <language locale="nl"               name="Nederlands"/>
         <language locale="sr_CS"            name="Srpski"/>
         <language locale="sr_CS_CYRILLIC"   name="Српски"/>
     </supportedLanguages>
