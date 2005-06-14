@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ cat $products_dir/scheduler/etc/scheduler.xml.template \
     | sed -e "$replace_sed_string" \
     > $configdir/scheduler.xml
 
-cat $products_dir/gLiveSupport/etc/gLiveSupport.xml.template \
+cat $products_dir/gLiveSupport/etc/gLiveSupport.xml.user-template \
     | sed -e "$replace_sed_string" \
     > $configdir/gLiveSupport.xml
 
