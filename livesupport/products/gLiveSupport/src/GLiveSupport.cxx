@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.49 $
+    Version  : $Revision: 1.50 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -98,6 +98,11 @@ static const std::string outputPlayerElementName = "outputPlayer";
  *  The name of the config element for the sound cue player
  *----------------------------------------------------------------------------*/
 static const std::string cuePlayerElementName = "cuePlayer";
+
+/*------------------------------------------------------------------------------
+ *  The name of the config element for the station logo image
+ *----------------------------------------------------------------------------*/
+static const std::string stationLogoConfigElementName = "stationLogo";
 
 /*------------------------------------------------------------------------------
  *  The name of the user preference for storing Scratchpad contents
@@ -239,6 +244,18 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
 
     cuePlayer = apf->getAudioPlayer();
     cuePlayer->initialize();
+
+    // configure the station logo image
+    nodes = element.get_children(stationLogoConfigElementName);
+    if (nodes.size() < 1) {
+        throw std::invalid_argument("no station logo element");
+    }
+    const xmlpp::Element*  stationLogoElement 
+                           = dynamic_cast<const xmlpp::Element*>(nodes.front());
+    const Glib::ustring    stationLogoFileName
+                           = stationLogoElement->get_attribute("path")
+                                               ->get_value();
+    stationLogoPixbuf = Gdk::Pixbuf::create_from_file(stationLogoFileName);
 
     // configure the MetadataTypeContainer
     nodes = element.get_children(MetadataTypeContainer::getConfigElementName());
@@ -1058,5 +1075,16 @@ GLiveSupport :: browse(Ptr<const Glib::ustring>::Ref    metadata,
                                                 throw (XmlRpcException)
 {
     return storage->browse(sessionId, metadata, criteria);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return an image containing the radio station logo.
+ *----------------------------------------------------------------------------*/
+Gtk::Image *
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getStationLogoImage(void)       throw()
+{
+    return new Gtk::Image(stationLogoPixbuf);
 }
 

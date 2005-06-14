@@ -9,6 +9,7 @@
                                        schedulerClientFactory,
                                        outputPlayer,
                                        cuePlayer,
+                                       stationLogo,
                                        metadataTypeContainer) >
 
 <!ELEMENT resourceBundle    EMPTY >
@@ -87,6 +88,9 @@
 
 <!ELEMENT metadataTypeContainer (metadataType+) >
 
+<!ELEMENT stationLogo    EMPTY >
+<!ATTLIST stationLogo    path    CDATA   #REQUIRED >
+
 <!ELEMENT metadataType EMPTY >
 <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
 <!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
@@ -144,6 +148,8 @@
             />
         </audioPlayer>
     </cuePlayer>
+    
+    <stationLogo    path="var/stationLogo.png" />
 
     <metadataTypeContainer>
         <metadataType dcName          = "dc:title"

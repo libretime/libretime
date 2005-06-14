@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.38 $
+ *  @version $Revision: 1.39 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -216,6 +216,11 @@ class GLiveSupport : public LocalizedConfigurable,
          *  True if the cue audio player has been paused.
          */
         bool                            cuePlayerIsPaused;
+
+        /**
+         *  The raw image containing the station logo.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>       stationLogoPixbuf;
 
         /**
          *  Read a supportedLanguages configuration element,
@@ -718,6 +723,15 @@ class GLiveSupport : public LocalizedConfigurable,
         void
         setNowPlaying(Ptr<Playable>::Ref    playable)
                                                 throw ();
+
+        /**
+         *  Return an image containing the radio station logo.
+         *  It is the responsibility of the caller to dispose of this object.
+         *
+         *  @return the station logo image.
+         */
+        Gtk::Image*
+        getStationLogoImage()                   throw ();
 };
 
 /* ================================================= external data structures */

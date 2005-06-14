@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,7 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 {
     Ptr<WidgetFactory>::Ref widgetFactory = WidgetFactory::getInstance();
 
-    // TODO: remove hard-coded station logo path reference
-    radioLogoWidget = Gtk::manage(new Gtk::Image("var/stationLogo.png"));
+    radioLogoWidget = Gtk::manage(gLiveSupport->getStationLogoImage());
     resizeImage(radioLogoWidget, 120, 104);
     radioLogoWidget->set_size_request(120, 104);
 
