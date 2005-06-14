@@ -88,18 +88,6 @@ case "$1" in
         check_exe "pear" || exit 1;
         check_exe "odbcinst" || exit 1;
 
-        check_pear_module "DB" || exit 1;
-        check_pear_module "Calendar" || exit 1;
-        check_pear_module "File" || exit 1;
-        check_pear_module "File_Find" || exit 1;
-        check_pear_module "HTML_Common" || exit 1;
-        check_pear_module "HTML_QuickForm" || exit 1;
-        check_pear_module "XML_Beautifier" || exit 1;
-        check_pear_module "XML_Parser" || exit 1;
-        check_pear_module "XML_RPC" || exit 1;
-        check_pear_module "XML_Serializer" || exit 1;
-        check_pear_module "XML_Util" || exit 1;
-
         echo "Checking for validity of apache daemon group $apache_group...";
         check_group_permission $apache_group || exit 1;
 

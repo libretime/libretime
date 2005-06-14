@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
 etcdir=$basedir/etc
 srcdir=$basedir/src
-installdir=$basedir/../..
+installdir=$basedir/../../..
 
 description="PEAR packages needed by LiveSupport"
 

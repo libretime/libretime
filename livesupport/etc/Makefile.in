@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -183,7 +183,7 @@ ${TMP_DIR}/tools_setup.stamp:
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh
 	${TAGLIB_DIR}/${TAGLIB_VERSION}/bin/install.sh
-	${PEAR_DIR}/bin/install.sh
+#	${PEAR_DIR}/bin/install.sh
 	touch ${TMP_DIR}/tools_setup.stamp
 
 doxytag_setup: ${TMP_DIR}/doxytag_setup.stamp
@@ -201,8 +201,8 @@ ${TMP_DIR}/modules_setup.stamp:
 	${EVENT_SCHEDULER_DIR}/bin/autogen.sh
 	${SCHEDULER_CLIENT_DIR}/bin/autogen.sh
 	${WIDGETS_DIR}/bin/autogen.sh
-	-${MAKE} -C ${ARCHIVE_SERVER_DIR} all
-	-${MAKE} -C ${STORAGE_SERVER_DIR} all
+#	-${MAKE} -C ${ARCHIVE_SERVER_DIR} all
+#	-${MAKE} -C ${STORAGE_SERVER_DIR} all
 	touch ${TMP_DIR}/modules_setup.stamp
 
 products_setup: ${TMP_DIR}/products_setup.stamp

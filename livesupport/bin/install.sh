@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -213,12 +213,6 @@ $bindir/preInstall.sh --apache-group $apache_group || exit 1;
 #   Copy the files
 #-------------------------------------------------------------------------------
 $bindir/copyInstall.sh --directory $installdir || exit 1;
-
-
-#-------------------------------------------------------------------------------
-#   Install PEAR packages (locally in the LiveSupport)
-#-------------------------------------------------------------------------------
-$toolsdir/pear/bin/install.sh -d $installdir || exit 1;
 
 
 #-------------------------------------------------------------------------------

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallScheduler.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -43,6 +43,7 @@ bindir=$basedir/bin
 etcdir=$basedir/etc
 docdir=$basedir/doc
 tmpdir=$basedir/tmp
+usrdir=$basedir/usr
 
 
 #-------------------------------------------------------------------------------
@@ -376,6 +377,12 @@ rm -f $odbc_template_tmp
 
 
 #-------------------------------------------------------------------------------
+#   Install PEAR packages (locally in the LiveSupport)
+#-------------------------------------------------------------------------------
+$install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
+
+
+#-------------------------------------------------------------------------------
 #  Customize the configuration files with the appropriate values
 #-------------------------------------------------------------------------------
 echo "Customizing configuration files..."
@@ -388,9 +395,9 @@ cat $install_var/archiveServer/var/conf.php.template \
     | sed -e "$replace_sed_string" \
     > $install_var/archiveServer/var/conf.php
 
-cat $install_usr/storageAdmin/bin/php/conf.php.template \
+cat $install_usr/var/conf.php.template \
     | sed -e "$replace_sed_string" \
-    > $install_usr/storageAdmin/bin/php/conf.php
+    > $install_usr/var/conf.php
 
 cat $install_etc/scheduler.xml.template \
     | sed -e "$replace_sed_string" \

@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: mash $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -147,8 +147,11 @@ cp -pPR $modules_dir/archiveServer/var $install_var/archiveServer
 mkdir $install_var/htmlUI
 cp -pPR $modules_dir/htmlUI/var $install_var/htmlUI
 
-mkdir $install_usr/storageAdmin
-cp -pPR $modules_dir/storageAdmin/bin $install_usr/storageAdmin
+cp -pPR $modules_dir/storageAdmin/bin $install_usr
+cp -pPR $modules_dir/storageAdmin/var $install_usr
+
+mkdir -p $install_usr/lib
+cp -pPR $toolsdir/pear $install_usr/lib
 
 
 #-------------------------------------------------------------------------------
