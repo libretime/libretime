@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.21 $
+#   Version  : $Revision: 1.22 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -73,6 +73,9 @@ VPATH    = ${SRC_DIR}
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
+# TODO: move ICU flag determination to configure script
+ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
+
 CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 
 TAGLIB_LIBS     =`${USR_DIR}/bin/taglib-config --libs`
@@ -104,6 +107,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${INCLUDE_DIR} -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
                      ${LIBXMLPP_LIBS} \
+                     ${ICU_LIBS} \
                      ${CURL_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \

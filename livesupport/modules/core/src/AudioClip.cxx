@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,7 +40,6 @@
 #include <id3v1tag.h>   // for TagLib
 #include <id3v2tag.h>   // for TagLib
 
-#include "LiveSupport/Core/TagConversion.h"
 #include "LiveSupport/Core/AudioClip.h"
 
 using namespace boost::posix_time;

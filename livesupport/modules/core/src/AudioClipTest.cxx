@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,7 +45,6 @@
 
 #include "LiveSupport/Core/AudioClip.h"
 #include "LiveSupport/Core/Playlist.h"
-#include "LiveSupport/Core/TagConversion.h"
 #include "AudioClipTest.h"
 
 
