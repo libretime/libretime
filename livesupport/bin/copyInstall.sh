@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.10 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -184,6 +184,7 @@ cp -pPR $products_dir/gLiveSupport/tmp/gLiveSupport*.res $install_var
 #-------------------------------------------------------------------------------
 cp -pPR $bindir/postInstallScheduler.sh $install_bin
 cp -pPR $bindir/postInstallGLiveSupport.sh $install_bin
+cp -pPR $etcdir/apache $install_etc
 cp -pPR $products_dir/scheduler/etc/scheduler.xml.template $install_etc
 cp -pPR $products_dir/scheduler/etc/odbcinst_template $install_etc
 cp -pPR $products_dir/scheduler/etc/odbcinst_debian_template $install_etc

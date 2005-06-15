@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallScheduler.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -447,6 +447,54 @@ chgrp $apache_group $install_var/htmlUI/var/html/img
 
 chmod g+sw $install_var/htmlUI/var/templates_c
 chmod g+sw $install_var/htmlUI/var/html/img
+
+
+#-------------------------------------------------------------------------------
+#  Configuring Apache
+#-------------------------------------------------------------------------------
+echo "Configuring apache ..."
+CONFFILE=90_php_livesupport.conf
+AP_DDIR_FOUND=no
+for APACHE_DDIR in \
+    /etc/apache/conf.d /etc/apache2/conf/modules.d /etc/httpd/conf.d
+do
+    echo -n "$APACHE_DDIR "
+    if [ -d $APACHE_DDIR ]; then
+        echo "Y"
+        AP_DDIR_FOUND=yes
+        cp $basedir/etc/apache/$CONFFILE $APACHE_DDIR
+    else
+        echo "N"
+    fi
+done
+if [ "$AP_DDIR_FOUND" != "yes" ]; then
+    echo "###############################"
+    echo " Could not configure Apache"
+    echo "  include following file into apache config manually:"
+    echo "  $basedir/etc/apache/$CONFFILE"
+    echo "###############################"
+fi
+echo "done"
+
+echo "Restarting apache...";
+AP_SCR_FOUND=no
+for APACHE_SCRIPT in apache apache2 httpd ; do
+    echo -n "$APACHE_SCRIPT "
+    if [ -x /etc/init.d/$APACHE_SCRIPT ]; then
+        echo "Y"
+        AP_SCR_FOUND=yes
+        /etc/init.d/$APACHE_SCRIPT restart
+    else
+        echo "N"
+    fi
+done
+if [ "$AP_SCR_FOUND" != "yes" ]; then
+    echo "###############################"
+    echo " Could not reload Apache"
+    echo "  please reload apache manually"
+    echo "###############################"
+fi
+echo "done"
 
 
 #-------------------------------------------------------------------------------

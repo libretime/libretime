@@ -101,6 +101,8 @@ install-arch:
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/bin \
           $(CURDIR)/debian/livesupport/opt/livesupport/usr/var \
           $(CURDIR)/debian/livesupport-station/opt/livesupport/usr
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \
+          $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 
 	# now separate the studio (client) files into debian/livesupport-studio
 	mkdir -p $(CURDIR)/debian/livesupport-studio
