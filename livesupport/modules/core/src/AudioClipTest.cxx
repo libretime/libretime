@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -227,6 +227,10 @@ AudioClipTest :: tagTest(void)
                                     = audioClip->getMetadata("dc:creator");
     CPPUNIT_ASSERT(*artist == "The Muppets");
 
+    Ptr<const Glib::ustring>::Ref   album 
+                                    = audioClip->getMetadata("dc:source");
+    CPPUNIT_ASSERT(*album == "מוישה אופניק");
+
     // ... or with URI
     uri.reset(new std::string("file:var/test10001.mp3"));
     audioClip->setUri(uri);
@@ -241,6 +245,10 @@ AudioClipTest :: tagTest(void)
 
     artist = audioClip->getMetadata("dc:creator");
     CPPUNIT_ASSERT(*artist == "The Muppets");
+
+    album = audioClip->getMetadata("dc:source");
+    CPPUNIT_ASSERT(*album == "מוישה אופניק");
+    // Moshe Offnik is the Israeli/Palestinian version of Oscar The Grouch
 }
 
 

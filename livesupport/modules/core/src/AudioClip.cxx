@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -637,7 +637,7 @@ AudioClip :: readTag(Ptr<MetadataTypeContainer>::Ref  metadataTypes)
                 TagLib::ID3v2::FrameList frameList = it->second;
                 if (!frameList.isEmpty()) {
                     value.reset(new const Glib::ustring(
-                                frameList.front()->toString().to8Bit(true)));
+                                frameList.front()->toString().to8Bit(false)));
                     setMetadata(value, *metadata->getDcName());
                 }
             } catch (std::invalid_argument &e) {
