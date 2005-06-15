@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/taglib/taglib-1.3.1/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -40,6 +40,7 @@ reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 usrdir=`cd $basedir/../../../usr; pwd;`
 tmpdir=$basedir/tmp
+etcdir=$basedir/etc
 sharedir=$usrdir/share
 docdir=$sharedir/doc/taglib-1.3.1
 tar=$basedir/src/$product.tar.gz
@@ -59,6 +60,7 @@ cd $tmpdir
 
 tar xfz $tar
 cd $product
+patch -p1 < $etcdir/taglib-1.3.1-length-in-microseconds.patch
 ./configure --prefix=$installdir
 make install
 

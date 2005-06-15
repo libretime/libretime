@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -271,9 +271,11 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
         // display the new play length
         std::ostringstream  lengthStr;
         lengthStr << std::setfill('0')
-                    << std::setw(2) << playlength->hours() << ":"
-                    << std::setw(2) << playlength->minutes() << ":"
-                    << std::setw(2) << playlength->seconds();
+            << std::setw(2) << playlength->hours() << ":"
+            << std::setw(2) << playlength->minutes() << ":"
+            << std::setw(2) << (playlength->fractional_seconds() < 500000 ?
+                                    playlength->seconds() 
+                                  : playlength->seconds() + 1);
         lengthValueLabel->set_text(lengthStr.str());
     }
 }
@@ -358,8 +360,8 @@ UploadFileWindow :: readPlaylength(const std::string &   fileName)
     TagLib::AudioProperties *   audioProperties = fileRef.audioProperties();
 
     if (audioProperties) {
-        Ptr<time_duration>::Ref     length(new time_duration(seconds(
-                                                audioProperties->length() )));
+        Ptr<time_duration>::Ref length(new time_duration(microseconds(
+                                    audioProperties->length_microseconds() )));
         return length;
     } else {
         throw std::invalid_argument("could not read file length");
