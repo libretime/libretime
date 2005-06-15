@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClipTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -210,6 +210,7 @@ void
 AudioClipTest :: tagTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
+    // should work with either plain file path...
     Ptr<std::string>::Ref   uri(new std::string("var/test10001.mp3"));
     audioClip->setUri(uri);
     try {
@@ -224,6 +225,21 @@ AudioClipTest :: tagTest(void)
 
     Ptr<const Glib::ustring>::Ref   artist 
                                     = audioClip->getMetadata("dc:creator");
+    CPPUNIT_ASSERT(*artist == "The Muppets");
+
+    // ... or with URI
+    uri.reset(new std::string("file:var/test10001.mp3"));
+    audioClip->setUri(uri);
+    try {
+        audioClip->readTag(metadataTypes);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+
+    title = audioClip->getMetadata("dc:title");
+    CPPUNIT_ASSERT(*title == "Theme Song");
+
+    artist = audioClip->getMetadata("dc:creator");
     CPPUNIT_ASSERT(*artist == "The Muppets");
 }
 

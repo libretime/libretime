@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,11 +70,10 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
           : WhiteWindow("",
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
-            LocalizedObject(bundle)
+            LocalizedObject(bundle),
+            gLiveSupport(gLiveSupport)
 {
-    this->gLiveSupport = gLiveSupport;
-    fileName.reset(new std::string());
-    isFileGood = false;
+    isAudioClipValid = false;
 
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -224,28 +223,50 @@ UploadFileWindow :: onChooseFileButtonClicked(void)             throw ()
 void
 UploadFileWindow :: updateFileInfo(void)                        throw ()
 {
-    std::string     newFileName = fileNameEntry->get_text().raw();
+    std::string             fileName = fileNameEntry->get_text().raw();
+    Ptr<std::string>::Ref   newUri(new std::string("file://"));
+    newUri->append(fileName);
 
-    if (*fileName != newFileName) {
+    if (!isAudioClipValid || 
+            *audioClip->getUri() != *newUri) {
         // see if the file exists, and is readable
-        std::ifstream   file(newFileName.c_str());
+        std::ifstream   file(fileName.c_str());
         if (!file.good()) {
-            isFileGood = false;
+            isAudioClipValid = false;
             file.close();
             return;
         }
         file.close();
-        isFileGood = true;
-        fileName.reset(new std::string(newFileName));
+        isAudioClipValid = true;
 
-        fileURI.reset(new std::string("file://"));
-        *fileURI += *fileName;
-
+        Ptr<time_duration>::Ref     playlength;
         try {
             playlength = readPlaylength(fileName);
         } catch (std::invalid_argument &e) {
+            statusBar->set_text(e.what());
             playlength.reset(new time_duration(0,0,0,0));
         }
+
+        Ptr<const Glib::ustring>::Ref   tempTitle(new const Glib::ustring);
+        audioClip.reset(new AudioClip(tempTitle, playlength, newUri));
+
+        // read the id3 tags
+        try {
+            audioClip->readTag(gLiveSupport->getMetadataTypeContainer());
+        } catch (std::invalid_argument &e) {
+            statusBar->set_text(e.what());
+            isAudioClipValid = false;
+            return;
+        }
+
+        titleEntry->set_text(*audioClip->getTitle());
+        Ptr<const Glib::ustring>::Ref   creator 
+                                        = audioClip->getMetadata("dc:creator");
+        creatorEntry->set_text(creator ? *creator : "");
+
+        Ptr<const Glib::ustring>::Ref   genre
+                                        = audioClip->getMetadata("dc:type");
+        genreEntry->set_text(genre ? *genre : "");
 
         // display the new play length
         std::ostringstream  lengthStr;
@@ -278,21 +299,15 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 {
     try {
         updateFileInfo();
-        if (!isFileGood) {
+        if (!isAudioClipValid) {
             // TODO: localize error message
             throw std::invalid_argument("file does not exist");
         }
 
-        Ptr<const Glib::ustring>::Ref   ustrValue;
-
-        ustrValue.reset(new Glib::ustring(titleEntry->get_text()));
-
-        // create and upload an AudioClip object
-        Ptr<AudioClip>::Ref     audioClip(new AudioClip(ustrValue,
-                                                        playlength,
-                                                        fileURI));
-
         // set the metadata available
+        Ptr<const Glib::ustring>::Ref   ustrValue(new Glib::ustring(
+                                                    titleEntry->get_text() ));
+        audioClip->setTitle(ustrValue);
         ustrValue.reset(new Glib::ustring(creatorEntry->get_text()));
         audioClip->setMetadata(ustrValue, "dc:creator");
         ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
@@ -300,6 +315,7 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         ustrValue.reset(new Glib::ustring(
                                     fileFormatComboBox->get_active_text()));
         audioClip->setMetadata(ustrValue, "dc:format");
+        // TODO: is this really what we mean by dc:format?
 
         // upload the audio clip
         gLiveSupport->uploadFile(audioClip);
@@ -335,10 +351,10 @@ UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
  *  Determine the length of an audio file
  *----------------------------------------------------------------------------*/
 Ptr<time_duration>::Ref
-UploadFileWindow :: readPlaylength(Ptr<const std::string>::Ref   fileName)
+UploadFileWindow :: readPlaylength(const std::string &   fileName)
                                                 throw (std::invalid_argument)
 {
-    TagLib::FileRef             fileRef(fileName->c_str());
+    TagLib::FileRef             fileRef(fileName.c_str());
     TagLib::AudioProperties *   audioProperties = fileRef.audioProperties();
 
     if (audioProperties) {

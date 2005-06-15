@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
@@ -225,23 +225,12 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The name of the file to upload.
          */
-        Ptr<std::string>::Ref       fileName;
+        Ptr<AudioClip>::Ref         audioClip;
 
         /**
-         *  Signals if the file under fileName is good.
+         *  Signals if the audio clip is valid.
          */
-        bool                        isFileGood;
-
-        /**
-         *  The URI to the file to upload.
-         *  Basically same as fileName, with 'file://' prepended.
-         */
-        Ptr<std::string>::Ref       fileURI;
-
-        /**
-         *  The playling length of the file to upload.
-         */
-        Ptr<time_duration>::Ref     playlength;
+        bool                        isAudioClipValid;
 
         /**
          *  Function to catch the event of the choose file button being
@@ -289,7 +278,7 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
          *                                   length could not be determined
          */
         Ptr<time_duration>::Ref
-        readPlaylength(Ptr<const std::string>::Ref   fileName)
+        readPlaylength(const std::string &  fileName)
                                                 throw (std::invalid_argument);
 
 

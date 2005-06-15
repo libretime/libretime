@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -610,11 +610,18 @@ AudioClip :: readTag(Ptr<MetadataTypeContainer>::Ref  metadataTypes)
         throw std::invalid_argument("audio clip has no uri field");
     }
     
-    if (!TagLib::File::isReadable(getUri()->c_str())) {
+    std::string     uri = *getUri();
+    if (uri.substr(0,7) == "file://") {
+        uri = uri.substr(7);
+    } else if (uri.substr(0,5) == "file:") {
+        uri = uri.substr(5);
+    }
+    
+    if (!TagLib::File::isReadable(uri.c_str())) {
         throw std::invalid_argument("binary sound file not found");
     }
     
-    TagLib::MPEG::File      mpegFile(getUri()->c_str());
+    TagLib::MPEG::File      mpegFile(uri.c_str());
     TagLib::ID3v2::Tag*     id3v2Tag = mpegFile.ID3v2Tag();
     if (id3v2Tag) {
         Ptr<const MetadataType>::Ref    metadata;
@@ -641,7 +648,7 @@ AudioClip :: readTag(Ptr<MetadataTypeContainer>::Ref  metadataTypes)
         return;
     }
 
-    TagLib::FileRef         genericFileRef(getUri()->c_str());
+    TagLib::FileRef         genericFileRef(uri.c_str());
     TagLib::Tag*            tag = genericFileRef.tag();
     if (tag) {
         TagLib::String                  stringValue;
