@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.53 $
+    Version  : $Revision: 1.54 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.53 $
+ *  @version $Revision: 1.54 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1194,7 +1194,14 @@ class BasicStor extends Alib{
     {
         $exid = $this->getObjId($name, $parid);
         if($this->dbc->isError($exid)) return $exid;
-        if(!is_null($exid)){ $this->removeObj($exid); }
+        //if(!is_null($exid)){ $this->removeObj($exid); }
+        $name2 = $name;
+        for( ;
+            $xid = $this->getObjId($name2, $parid),
+                !is_null($xid) && !$this->dbc->isError($xid);
+            $name2 .= "_"
+        );
+        if(!is_null($exid)){ $r = $this->renameObj($exid, $name2); }
         return parent::addObj($name, $type, $parid, $aftid, $param);
     }
 
@@ -1244,9 +1251,9 @@ class BasicStor extends Alib{
     /**
      *  Reset storageServer for debugging.
      *
-     *  @param input string
+     *  @param loadSampleData boolean - allows deny sample data loading
      */
-    function resetStorage($input='')
+    function resetStorage($loadSampleData=TRUE)
     {
         $this->deleteData();
         if(!$this->config['isArchive']){
