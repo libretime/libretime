@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/import.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,6 +76,7 @@ $flds = array(
     ),
     'comments' => array(
         'genre'  => 'dc:type',
+        'title'  => 'dc:title',
 //        'genreid'  => 'GENREID',
     ),
     'filename'  => 'ls:filename',
