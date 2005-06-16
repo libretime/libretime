@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.54 $
+    Version  : $Revision: 1.55 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.54 $
+ *  @version $Revision: 1.55 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -121,7 +121,7 @@ class BasicStor extends Alib{
     function bsPutFile($parid, $fileName, $mediaFileLP, $mdataFileLP,
         $gunid=NULL, $ftype='unKnown', $mdataLoc='file')
     {
-        $name   = "$fileName";
+        $name   = addslashes("$fileName");
         $id = $this->addObj($name , $ftype, $parid);
         if($this->dbc->isError($id)) return $id;
         $ac =&  StoredFile::insert(
