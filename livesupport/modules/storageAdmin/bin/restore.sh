@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/bin/restore.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ tarfile="$tfdir/$tfbname"
 #   Do restore
 #-------------------------------------------------------------------------------
 
-tmpdir=`mktemp -dp $tmpmaindir`
+tmpdir=`mktemp -d $tmpmaindir/tmp.XXXXXX`
 
 echo "Restoring database from $tarfile ..."
 cd $tmpdir
@@ -107,7 +107,10 @@ tar xjf $tarfile0.bz2
 rm -f $tarfile0.bz2
 cd $phpdir
 php -q restore.php $tmpdir/$dbxml $tmpdir
-rm -rf $tmpdir
+rm -rf "$tmpdir/stor"
+rm -f $tmpdir/*
+rmdir "$tmpdir"
+
 
 #-------------------------------------------------------------------------------
 #   Say goodbye

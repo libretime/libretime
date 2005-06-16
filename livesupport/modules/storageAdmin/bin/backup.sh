@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/bin/backup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ destdir=`cd $destdir; pwd`
 #   Do backup
 #-------------------------------------------------------------------------------
 
-tmpdir=`mktemp -dp $tmpmaindir`
+tmpdir=`mktemp -d $tmpmaindir/tmp.XXXXXX`
 
 echo "Backuping to $destdir/$tarfile :"
 echo "Dumping database  ..."
@@ -110,7 +110,7 @@ echo "Compressing XML part ..."
 bzip2 $tarfile0
 tar rf $tarfile $tarfile0.bz2 --remove-files
 mv $tarfile "$destdir"
-rm -rf $tmpdir
+rmdir $tmpdir
 
 #-------------------------------------------------------------------------------
 #   Say goodbye
