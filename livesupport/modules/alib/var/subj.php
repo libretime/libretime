@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/var/subj.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ define('ALIBERR_BADSMEMB', 21);
  *   (allow adding users to groups or groups to groups)
  *   
  *  @author  $Author: tomas $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  *  @see ObjClasses
  *  @see Alib
  */
@@ -68,19 +68,21 @@ class Subjects extends ObjClasses{
      *   @param login string
      *   @param pass string, optional
      *   @param realname string, optional
+     *   @param passenc boolean, optional, password already encrypted if true
      *   @return int/err
      */
-    function addSubj($login, $pass=NULL, $realname='')
+    function addSubj($login, $pass=NULL, $realname='', $passenc=FALSE)
     {
         if(!$login) return $this->dbc->raiseError(
             get_class($this)."::addSubj: empty login"
         );
         $id = $this->dbc->nextId("{$this->subjTable}_id_seq");
         if(PEAR::isError($id)) return $id;
+        if(!is_null($pass) && !$passenc) $pass = md5($pass);
         $r = $this->dbc->query("
             INSERT INTO {$this->subjTable} (id, login, pass, type, realname)
             VALUES ($id, '$login', ".
-                (is_null($pass) ? "'!', 'G'" : "'".md5($pass)."', 'U'").",
+                (is_null($pass) ? "'!', 'G'" : "'$pass', 'U'").",
                 '$realname')
         ");
         if(PEAR::isError($r)) return $r;
@@ -149,11 +151,13 @@ class Subjects extends ObjClasses{
      *   @param login string
      *   @param oldpass string, old password (optional for 'superuser mode')
      *   @param pass string, optional
+     *   @param passenc boolean, optional, password already encrypted if true
      *   @return boolean/err
      */
-    function passwd($login, $oldpass=null, $pass='')
+    function passwd($login, $oldpass=null, $pass='', $passenc=FALSE)
     {
-        $cpass = md5($pass);
+        if(!$passenc) $cpass = md5($pass);
+        else $cpass = $pass;
         if(!is_null($oldpass)){
             $oldcpass = md5($oldpass);
             $oldpCond = "AND pass='$oldcpass'";
