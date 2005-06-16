@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.20 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,7 +68,6 @@
 #include "LiveSupport/EventScheduler/EventScheduler.h"
 #include "AddAudioClipToPlaylistMethod.h"
 #include "CreatePlaylistMethod.h"
-#include "DeletePlaylistMethod.h"
 #include "DisplayAudioClipMethod.h"
 #include "DisplayAudioClipsMethod.h"
 #include "DisplayPlaylistMethod.h"
@@ -167,8 +166,8 @@ using namespace LiveSupport::PlaylistExecutor;
  *                       xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.20 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.21 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -236,11 +235,6 @@ class SchedulerDaemon : public Installable,
          *  The createPlaylistMethod the daemon is providing.
          */
         Ptr<CreatePlaylistMethod>::Ref          createPlaylistMethod;
-
-        /**
-         *  The deletePlaylistMethod the daemon is providing.
-         */
-        Ptr<DeletePlaylistMethod>::Ref          deletePlaylistMethod;
 
         /**
          *  The displayAudioClipMethod the daemon is providing.

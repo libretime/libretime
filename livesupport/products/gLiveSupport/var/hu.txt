@@ -52,10 +52,9 @@ hu:table
 
         upMenuItem:string                   { "_Fel" }
         downMenuItem:string                 { "_Le" }
-        removeMenuItem:string               { "_Eltávolítani" }
+        removeMenuItem:string               { "_Törölni" }
         addToPlaylistMenuItem:string        { "Műsorhoz _hozzáadni" }
         schedulePlaylistMenuItem:string     { "_Műsor időzítése" }
-        deleteMenuItem:string               { "_Törölni" }
         cueMenuItem:string                  { "_Belehallgatni" }
         addToLiveModeMenuItem:string        { "Élő _adásba" }
     }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.39 $
+ *  @version $Revision: 1.40 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -596,16 +596,6 @@ class GLiveSupport : public LocalizedConfigurable,
         removeFromSchedule(Ptr<UniqueId>::Ref   scheduleEntryId)
                                                     throw (XmlRpcException);
 
-        /**
-         *  Delete a playable object from storage.
-         *
-         *  @param playable the playable object to delete.
-         *  @exception XmlRpcException in case of XML-RPC errors.
-         */
-        virtual void
-        deletePlayable(Ptr<Playable>::Ref   playable)
-                                                throw (XmlRpcException);
-         
         /**
          *  Play a Playable object using the output audio player.
          *

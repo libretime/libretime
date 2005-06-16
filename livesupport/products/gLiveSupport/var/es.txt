@@ -56,7 +56,6 @@ es:table
         removeMenuItem:string               { "Eliminar" }
         addToPlaylistMenuItem:string        { "Añadir a lista de reproducción" }
         schedulePlaylistMenuItem:string     { "Programar lista de reproducción" }
-        deleteMenuItem:string               { "Eliminar" }
         cueMenuItem:string                  { "Previsualizar" }
         addToLiveModeMenuItem:string        { "Añadir a modo en vivo" }
     }

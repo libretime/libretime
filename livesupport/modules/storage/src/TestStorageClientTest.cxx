@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -158,36 +158,6 @@ TestStorageClientTest :: getVersionTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Testing the deletePlaylist method
- *----------------------------------------------------------------------------*/
-void
-TestStorageClientTest :: deletePlaylistTest(void)
-                                                throw (CPPUNIT_NS::Exception)
-{
-    Ptr<UniqueId>::Ref      id1(new UniqueId(0x1));
-    Ptr<UniqueId>::Ref      id2(new UniqueId(0x77));
-
-    try {
-        tsc->deletePlaylist(dummySessionId, id2);
-        CPPUNIT_FAIL("allowed to delete non-existent playlist");
-    } catch (XmlRpcException &e) {
-    }
-
-    try {
-        tsc->deletePlaylist(dummySessionId, id1);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL("cannot delete existing playlist");
-    }
-
-    try {
-        tsc->deletePlaylist(dummySessionId, id1);
-        CPPUNIT_FAIL("allowed to delete non-existent playlist");
-    } catch (XmlRpcException &e) {
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Testing the reset method
  *----------------------------------------------------------------------------*/
 void
@@ -277,16 +247,6 @@ TestStorageClientTest :: audioClipTest(void)
                                                = tsc->getAudioClipIds();
     CPPUNIT_ASSERT(audioClipIds);
     CPPUNIT_ASSERT(audioClipIds->size() >= 3);
-
-    Ptr<UniqueId>::Ref  audioClipId = audioClipIds->at(0);
-    CPPUNIT_ASSERT((int) (audioClipId->getId()) == 0x10001);
-
-    try {
-        tsc->deleteAudioClip(dummySessionId, id02);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    CPPUNIT_ASSERT(!tsc->existsAudioClip(dummySessionId, id02));
 
     Ptr<const Glib::ustring>::Ref   title(new Glib::ustring("New Title"));
     Ptr<time_duration>::Ref         playlength(new time_duration(0,0,13,0));

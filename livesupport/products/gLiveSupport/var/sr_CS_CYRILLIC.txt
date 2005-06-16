@@ -56,7 +56,6 @@ sr_CS_CYRILLIC:table
         removeMenuItem:string               { "Уклони" }
         addToPlaylistMenuItem:string        { "Додај у плеј листу" }
         schedulePlaylistMenuItem:string     { "Програмирај плеј листу" }
-        deleteMenuItem:string               { "Обриши" }
         cueMenuItem:string                  { "Проба" }
         addToLiveModeMenuItem:string        { "Додај у Програм Уживо" }
     }

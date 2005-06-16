@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,6 @@ SchedulerDaemon :: SchedulerDaemon (void)                   throw ()
 {
     addAudioClipToPlaylistMethod.reset(new AddAudioClipToPlaylistMethod());
     createPlaylistMethod.reset(new CreatePlaylistMethod());
-    deletePlaylistMethod.reset(new DeletePlaylistMethod());
     displayAudioClipMethod.reset(new DisplayAudioClipMethod());
     displayAudioClipsMethod.reset(new DisplayAudioClipsMethod());
     displayPlaylistMethod.reset(new DisplayPlaylistMethod());
@@ -282,7 +281,6 @@ SchedulerDaemon :: registerXmlRpcFunctions(
 {
     xmlRpcServer->addMethod(addAudioClipToPlaylistMethod.get());
     xmlRpcServer->addMethod(createPlaylistMethod.get());
-    xmlRpcServer->addMethod(deletePlaylistMethod.get());
     xmlRpcServer->addMethod(displayAudioClipMethod.get());
     xmlRpcServer->addMethod(displayAudioClipsMethod.get());
     xmlRpcServer->addMethod(displayPlaylistMethod.get());

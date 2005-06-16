@@ -56,7 +56,6 @@ nl:table
         removeMenuItem:string               { "_Verwijderen" }
         addToPlaylistMenuItem:string        { "_Toevoegen aan Playlist" }
         schedulePlaylistMenuItem:string     { "_Playlist plannen" }
-        deleteMenuItem:string               { "_Verwijder" }
         cueMenuItem:string                  { "_Cue" }
         addToLiveModeMenuItem:string        { "Aan _Live Mode toevoegen" }
     }

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.58 $
+#   Version  : $Revision: 1.59 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -185,7 +185,6 @@ SCHEDULER_OBJS = ${TMP_DIR}/SignalDispatcher.o \
                  ${TMP_DIR}/RescheduleMethod.o \
                  ${TMP_DIR}/ScheduleFactory.o \
                  ${TMP_DIR}/PostgresqlSchedule.o \
-                 ${TMP_DIR}/DeletePlaylistMethod.o \
                  ${TMP_DIR}/DisplayPlaylistsMethod.o \
                  ${TMP_DIR}/OpenPlaylistForEditingMethod.o \
                  ${TMP_DIR}/CreatePlaylistMethod.o \
@@ -235,8 +234,6 @@ TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/RescheduleMethodTest.o \
                    ${TMP_DIR}/RpcRescheduleTest.o \
                    ${TMP_DIR}/PostgresqlScheduleTest.o \
-                   ${TMP_DIR}/DeletePlaylistMethodTest.o \
-                   ${TMP_DIR}/RpcDeletePlaylistTest.o \
                    ${TMP_DIR}/DisplayPlaylistMethodTest.o \
                    ${TMP_DIR}/RpcDisplayPlaylistTest.o \
                    ${TMP_DIR}/DisplayPlaylistsMethodTest.o \

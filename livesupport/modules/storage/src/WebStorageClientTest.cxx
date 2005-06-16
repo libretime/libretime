@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.43 $
+    Version  : $Revision: 1.44 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -355,22 +355,6 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newPlaylist->getUri());
-
-/*
-    // test deletePlaylist()
-    try {
-        wsc->deletePlaylist(sessionId, playlistIdxx);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-
-    try {
-        exists = wsc->existsPlaylist(sessionId, playlistIdxx);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    CPPUNIT_ASSERT(!exists);
-*/
 }
 
 
@@ -404,7 +388,7 @@ WebStorageClientTest :: audioClipTest(void)
     CPPUNIT_ASSERT(sessionId);
 
 
-    // test existsAudioClip(), deleteAudioClip() and getAudioClip()
+    // test existsAudioClip() and getAudioClip()
     bool exists = false;;
     try {
         exists = wsc->existsAudioClip(sessionId, id01);
@@ -419,20 +403,7 @@ WebStorageClientTest :: audioClipTest(void)
     } catch (XmlRpcException &e) {
         CPPUNIT_FAIL(e.what());
     }
-/*
-    try {
-        wsc->deleteAudioClip(sessionId, id01);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
 
-    try {
-        exists = wsc->existsAudioClip(sessionId, id01);
-    } catch (XmlRpcException &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-    CPPUNIT_ASSERT(!exists);
-*/
     Ptr<UniqueId>::Ref  id77(new UniqueId(10077));
     try {
         exists = wsc->existsAudioClip(sessionId, id77);

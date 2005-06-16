@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -422,30 +422,6 @@ static const std::string    savePlaylistNewPlaylistParamName = "newPlaylist";
 static const std::string    savePlaylistResultParamName = "plid";
 
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: deletePlaylist */
-
-/*------------------------------------------------------------------------------
- *  The name of the delete playlist method on the storage server
- *----------------------------------------------------------------------------*/
-static const std::string    deletePlaylistMethodName 
-                            = "locstor.deletePlaylist";
-
-/*------------------------------------------------------------------------------
- *  The name of the session ID parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    deletePlaylistSessionIdParamName = "sessid";
-
-/*------------------------------------------------------------------------------
- *  The name of the playlist unique ID parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    deletePlaylistPlaylistIdParamName = "plid";
-
-/*------------------------------------------------------------------------------
- *  The name of the result parameter returned by the method
- *----------------------------------------------------------------------------*/
-static const std::string    deletePlaylistResultParamName = "status";
-
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ audio clip methods */
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: existsAudioClip */
@@ -603,30 +579,6 @@ static const std::string    releaseAudioClipTokenParamName = "token";
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
 static const std::string    releaseAudioClipResultParamName = "status";
-
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: deleteAudioClip */
-
-/*------------------------------------------------------------------------------
- *  The name of the delete audio clip method on the storage server
- *----------------------------------------------------------------------------*/
-static const std::string    deleteAudioClipMethodName 
-                            = "locstor.deleteAudioClip";
-
-/*------------------------------------------------------------------------------
- *  The name of the session ID parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    deleteAudioClipSessionIdParamName = "sessid";
-
-/*------------------------------------------------------------------------------
- *  The name of the audio clip unique ID parameter in the input structure
- *----------------------------------------------------------------------------*/
-static const std::string    deleteAudioClipAudioClipIdParamName = "gunid";
-
-/*------------------------------------------------------------------------------
- *  The name of the result parameter returned by the method
- *----------------------------------------------------------------------------*/
-static const std::string    deleteAudioClipResultParamName = "status";
 
 
 /* ===============================================  local function prototypes */
@@ -1335,67 +1287,6 @@ WebStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
 
 
 /*------------------------------------------------------------------------------
- *  Delete a playlist.
- *----------------------------------------------------------------------------*/
-void
-WebStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
-                                   Ptr<UniqueId>::Ref  id)
-                                                throw (Core::XmlRpcException)
-{
-    XmlRpcValue     parameters;
-    XmlRpcValue     result;
-
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
-    parameters.clear();
-    parameters[deletePlaylistSessionIdParamName] 
-            = sessionId->getId();
-    parameters[deletePlaylistPlaylistIdParamName] 
-            = std::string(*id);
-    
-    result.clear();
-    if (!xmlRpcClient.execute(deletePlaylistMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += deletePlaylistMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-    
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << deletePlaylistMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-    
-    if (! result.hasMember(deletePlaylistResultParamName) 
-       || result[deletePlaylistResultParamName].getType() 
-                                                != XmlRpcValue::TypeBoolean) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << deletePlaylistMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-    
-    if (! bool(result[deletePlaylistResultParamName])) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << deletePlaylistMethodName
-             << "' returned 'false'";
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
@@ -1858,67 +1749,6 @@ WebStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
     Ptr<const std::string>::Ref     nullpointer;
     audioClip->setToken(nullpointer);
     audioClip->setUri(nullpointer);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Delete an audio clip.
- *----------------------------------------------------------------------------*/
-void
-WebStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
-                                    Ptr<UniqueId>::Ref  id)
-                                                throw (Core::XmlRpcException)
-{
-    XmlRpcValue     parameters;
-    XmlRpcValue     result;
-
-    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
-                              storageServerPath.c_str(), false);
-
-    parameters.clear();
-    parameters[deleteAudioClipSessionIdParamName] 
-            = sessionId->getId();
-    parameters[deleteAudioClipAudioClipIdParamName] 
-            = std::string(*id);
-    
-    result.clear();
-    if (!xmlRpcClient.execute(deleteAudioClipMethodName.c_str(),
-                              parameters, result)) {
-        xmlRpcClient.close();
-        std::string eMsg = "cannot execute XML-RPC method '";
-        eMsg += deleteAudioClipMethodName;
-        eMsg += "'";
-        throw XmlRpcCommunicationException(eMsg);
-    }
-    xmlRpcClient.close();
-    
-    if (xmlRpcClient.isFault()) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << deleteAudioClipMethodName
-             << "' returned error message:\n"
-             << result;
-        throw Core::XmlRpcMethodFaultException(eMsg.str());
-    }
-    
-    if (! result.hasMember(deleteAudioClipResultParamName) 
-       || result[deleteAudioClipResultParamName].getType() 
-                                                != XmlRpcValue::TypeBoolean) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << deleteAudioClipMethodName
-             << "' returned unexpected value:\n"
-             << result;
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
-    
-    if (! bool(result[deleteAudioClipResultParamName])) {
-        std::stringstream eMsg;
-        eMsg << "XML-RPC method '" 
-             << deleteAudioClipMethodName
-             << "' returned 'false'";
-        throw XmlRpcMethodResponseException(eMsg.str());
-    }
 }
 
 

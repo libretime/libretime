@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -167,10 +167,6 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 sigc::mem_fun(*this,
                                         &ScratchpadWindow::onRemoveItem)));
         audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("deleteMenuItem"),
-                                sigc::mem_fun(*this,
-                                        &ScratchpadWindow::onDeleteItem)));
-        audioClipMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("cueMenuItem"),
                                 sigc::mem_fun(*audioButtonBox,
                                         &CuePlayer::onPlayItem)));
@@ -211,10 +207,6 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
                                 *getResourceUstring("removeMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onRemoveItem)));
-        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
-                                *getResourceUstring("deleteMenuItem"),
-                                sigc::mem_fun(*this,
-                                    &ScratchpadWindow::onDeleteItem)));
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("cueMenuItem"),
                                 sigc::mem_fun(*audioButtonBox,
@@ -473,23 +465,6 @@ ScratchpadWindow :: onDownItem(void)                            throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Delete menu item selected from the entry conext menu
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onDeleteItem(void)                          throw ()
-{
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-
-    try {
-        deleteItem(playable);
-    } catch (XmlRpcException &e) {
-        // TODO: signal error here
-    }
-    showContents();
-}
-
-
-/*------------------------------------------------------------------------------
  *  Remove an item from the Scratchpad
  *----------------------------------------------------------------------------*/
 void
@@ -512,18 +487,6 @@ ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref    id)  throw ()
 
         it++;
     }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Delete an item from storage, and remove it from the Scratchpad
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: deleteItem(Ptr<Playable>::Ref    playable)
-                                                        throw (XmlRpcException)
-{
-    removeItem(playable->getId());
-    gLiveSupport->deletePlayable(playable);
 }
 
 

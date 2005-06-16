@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.34 $
+    Version  : $Revision: 1.35 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  */
 class TestStorageClient :
                     virtual public Configurable,
@@ -362,23 +362,6 @@ class TestStorageClient :
                                             throw (XmlRpcException);
 
         /**
-         *  Delete a playlist with the specified id.
-         *  Will refuse to delete the playlist if it is being edited (i.e., 
-         *  has been opened with editPlaylist() but has not yet been released
-         *  with savePlaylist()).
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @param id the id of the playlist to be deleted.
-         *  @exception XmlRpcException if no playlist with the specified
-         *                             id exists.
-         */
-        virtual void
-        deletePlaylist(Ptr<SessionId>::Ref  sessionId,
-                       Ptr<UniqueId>::Ref   id)
-                                                throw (XmlRpcException);
-
-
-        /**
          *  Tell if an audio clip with a given id exists.
          *
          *  @param sessionId the session ID from the authentication client
@@ -468,20 +451,6 @@ class TestStorageClient :
          */
         virtual void
         releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
-                                                throw (XmlRpcException);
-
-
-        /**
-         *  Delete an audio clip with the specified id.
-         *
-         *  @param sessionId the session ID from the authentication client
-         *  @param id the id of the audio clip to be deleted.
-         *  @exception XmlRpcException if no audio clip with the
-         *                             specified id exists.
-         */
-        virtual void
-        deleteAudioClip(Ptr<SessionId>::Ref   sessionId,
-                        Ptr<UniqueId>::Ref    id)
                                                 throw (XmlRpcException);
 
 

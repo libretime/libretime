@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.50 $
+    Version  : $Revision: 1.51 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -736,29 +736,6 @@ GLiveSupport :: removeFromSchedule(Ptr<UniqueId>::Ref   scheduleEntryId)
                                                     throw (XmlRpcException)
 {
     scheduler->removeFromSchedule(sessionId, scheduleEntryId);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Delete a playable object from the storage.
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: deletePlayable(Ptr<Playable>::Ref   playable)
-                                                    throw (XmlRpcException)
-{
-    switch (playable->getType()) {
-        case Playable::AudioClipType:
-            storage->deleteAudioClip(sessionId, playable->getId());
-            break;
-
-        case Playable::PlaylistType:
-            storage->deletePlaylist(sessionId, playable->getId());
-            break;
-
-        default:
-            break;
-    }
 }
 
 

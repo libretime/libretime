@@ -56,7 +56,6 @@ sr_CS:table
         removeMenuItem:string               { "Ukloni" }
         addToPlaylistMenuItem:string        { "Dodaj u plej listu" }
         schedulePlaylistMenuItem:string     { "programiraj plej listu" }
-        deleteMenuItem:string               { "Obriši" }
         cueMenuItem:string                  { "Proba" }
         addToLiveModeMenuItem:string        { "Dodaj u Program Uživo" }
     }

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.7 $
+         *  @version $Revision: 1.8 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -179,7 +179,7 @@ class ScratchpadWindow : public WhiteWindow,
         Button *                    clearListButton;
 
         /**
-         *  The "delete selected item" button.
+         *  The "remove selected item" button.
          */
         Button *                    removeButton;
 
@@ -229,13 +229,6 @@ class ScratchpadWindow : public WhiteWindow,
         onRemoveItem(void)                                      throw ();
 
         /**
-         *  Signal handler for the "delete" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onDeleteItem(void)                                      throw ();
-
-        /**
          *  Signal handler for the "up" menu item selected from
          *  the entry context menu.
          */
@@ -269,15 +262,6 @@ class ScratchpadWindow : public WhiteWindow,
          */
         virtual void
         onAddToLiveMode(void)                                   throw ();
-
-        /**
-         *  Delete an item from the storage and remove it from the Scratchpad.
-         *
-         *  @param playable the Playable object to delete and remove.
-         *  @exception XmlRpcException on XML-RPC errors.
-         */
-        void
-        deleteItem(Ptr<Playable>::Ref  playable)        throw (XmlRpcException);
 
 
     public:

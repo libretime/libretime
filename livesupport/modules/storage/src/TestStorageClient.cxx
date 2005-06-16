@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -382,7 +382,7 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
                     storeIt = playlistMap.find(playlist->getId()->getId());
 
     if (storeIt == playlistMap.end()) {
-        throw XmlRpcException("playlist deleted while it was being edited???");
+        throw XmlRpcException("playlist vanished while it was being edited???");
     }
     storeIt->second = playlist;
 
@@ -541,29 +541,6 @@ TestStorageClient :: releasePlaylist(Ptr<Playlist>::Ref  playlist) const
 
 
 /*------------------------------------------------------------------------------
- *  Delete a playlist.
- *----------------------------------------------------------------------------*/
-void
-TestStorageClient :: deletePlaylist(Ptr<SessionId>::Ref sessionId,
-                                    Ptr<UniqueId>::Ref  id)
-                                                throw (XmlRpcException)
-{
-    if (!sessionId) {
-        throw XmlRpcException("missing session ID argument");
-    }
-
-    if (editedPlaylists.find(id->getId()) != editedPlaylists.end()) {
-        throw XmlRpcException("playlist is being edited");
-    }
-
-    // erase() returns the number of entries found & erased
-    if (!playlistMap.erase(id->getId())) {
-        throw XmlRpcException("no such playlist");
-    }
-}
-
-
-/*------------------------------------------------------------------------------
  *  Tell if an audio clip exists.
  *----------------------------------------------------------------------------*/
 const bool
@@ -684,25 +661,6 @@ TestStorageClient :: releaseAudioClip(Ptr<AudioClip>::Ref audioClip) const
     
     Ptr<std::string>::Ref   nullPointer;
     audioClip->setUri(nullPointer);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Delete an audio clip.
- *----------------------------------------------------------------------------*/
-void
-TestStorageClient :: deleteAudioClip(Ptr<SessionId>::Ref sessionId,
-                                     Ptr<UniqueId>::Ref  id)
-                                                throw (XmlRpcException)
-{
-    if (!sessionId) {
-        throw XmlRpcException("missing session ID argument");
-    }
-
-    // erase() returns the number of entries found & erased
-    if (!audioClipMap.erase(id->getId())) {
-        throw XmlRpcException("no such audio clip");
-    }
 }
 
 

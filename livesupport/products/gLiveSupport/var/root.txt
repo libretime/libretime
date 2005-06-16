@@ -56,7 +56,6 @@ root:table
         removeMenuItem:string               { "_Remove" }
         addToPlaylistMenuItem:string        { "_Add To Playlist" }
         schedulePlaylistMenuItem:string     { "_Schedule Playlist" }
-        deleteMenuItem:string               { "_Delete" }
         cueMenuItem:string                  { "Pre_view" }
         addToLiveModeMenuItem:string        { "Add To _Live Mode" }
     }
