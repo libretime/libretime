@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ ZebraTreeView :: ~ZebraTreeView(void)                           throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Add a column to the TreeView.
+ *  Add a text column to the TreeView.
  *----------------------------------------------------------------------------*/
 int 
 ZebraTreeView :: appendColumn(
@@ -87,11 +87,47 @@ ZebraTreeView :: appendColumn(
     Gtk::CellRendererText*  renderer = Gtk::manage(new Gtk::CellRendererText);
     
     // the constructor packs the renderer into the TreeViewColumn
-    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
-                                Gtk::TreeViewColumn(title, *renderer) );
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(
+                                new Gtk::TreeViewColumn(title, *renderer) );
                                 
     // and then we associate this renderer with the model column
     viewColumn->add_attribute(renderer->property_markup(), modelColumn);
+
+    // this cell data function will do the blue-gray zebra stripes
+    viewColumn->set_cell_data_func(
+                    *renderer,
+                    sigc::mem_fun(*this, &ZebraTreeView::cellDataFunction) );
+    
+    // set the minimum width of the column
+    if (minimumWidth) {
+        viewColumn->set_min_width(minimumWidth);
+    }
+    
+    return append_column(*viewColumn);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add an image column to the TreeView.
+ *----------------------------------------------------------------------------*/
+int 
+ZebraTreeView :: appendColumn(
+                        const Glib::ustring&            title, 
+                        const Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > &
+                                                        modelColumn,
+                        int                             minimumWidth)
+                                                                throw ()
+{
+    // a standard cell renderer; can be replaced with a ZebraCellRenderer
+    Gtk::CellRendererPixbuf*  renderer = Gtk::manage(
+                                    new Gtk::CellRendererPixbuf );
+    
+    // the constructor packs the renderer into the TreeViewColumn
+    Gtk::TreeViewColumn*      viewColumn = Gtk::manage(
+                                    new Gtk::TreeViewColumn(title, *renderer) );
+                                
+    // and then we associate this renderer with the model column
+    viewColumn->add_attribute(renderer->property_pixbuf(), modelColumn);
 
     // this cell data function will do the blue-gray zebra stripes
     viewColumn->set_cell_data_func(
@@ -130,8 +166,8 @@ ZebraTreeView :: appendColumn(
     renderer->property_pixbuf() = passiveImage;
     
     // the constructor packs the renderer into the TreeViewColumn
-    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
-                                Gtk::TreeViewColumn(title, *renderer) );
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(
+                                new Gtk::TreeViewColumn(title, *renderer) );
 
     // this cell data function will do the blue-gray zebra stripes
     viewColumn->set_cell_data_func(
@@ -180,8 +216,8 @@ ZebraTreeView :: appendCenteredColumn(
     renderer->property_xalign() = 0.5;
 
     // the constructor packs the renderer into the TreeViewColumn
-    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
-                                Gtk::TreeViewColumn(title, *renderer) );
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(
+                                new Gtk::TreeViewColumn(title, *renderer) );
                                 
     // and then we associate this renderer with the model column
     viewColumn->add_attribute(renderer->property_markup(), modelColumn);
@@ -217,8 +253,8 @@ ZebraTreeView :: appendLineNumberColumn(
     renderer->property_xalign() = 0.5;
 
     // the constructor packs the renderer into the TreeViewColumn
-    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(new
-                                Gtk::TreeViewColumn(title, *renderer) );
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(
+                                new Gtk::TreeViewColumn(title, *renderer) );
                                 
     // this cell data function will do the blue-gray zebra stripes
     // and fill in the line number from the model.rowNumberColumn

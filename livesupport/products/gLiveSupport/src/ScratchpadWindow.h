@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.8 $
+         *  @version $Revision: 1.9 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -95,7 +95,8 @@ class ScratchpadWindow : public WhiteWindow,
                 /**
                  *  The column for the type of the entry in the list
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         typeColumn;
+                Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >
+                                                            typeColumn;
 
                 /**
                  *  The column for the title of the audio clip or playlist.

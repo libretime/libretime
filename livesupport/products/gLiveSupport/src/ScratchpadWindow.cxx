@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,7 +108,7 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // Add the TreeView's view columns:
     try {
         treeView->appendColumn(*getResourceUstring("typeColumnLabel"),
-                               modelColumns.typeColumn, 60);
+                               modelColumns.typeColumn, 20);
         treeView->appendColumn(*getResourceUstring("titleColumnLabel"),
                                modelColumns.titleColumn, 200);
     } catch (std::invalid_argument &e) {
@@ -251,6 +251,8 @@ ScratchpadWindow :: showContents(void)                          throw ()
     treeModel->clear();
     int     rowNumber = 0;
     
+    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
+
     while (it != end) {
         playable  = *it;
         row       = *(treeModel->append());
@@ -258,11 +260,13 @@ ScratchpadWindow :: showContents(void)                          throw ()
         row[modelColumns.playableColumn] = playable;
         switch (playable->getType()) {
             case Playable::AudioClipType:
-                row[modelColumns.typeColumn]  = "audioclip";
+                row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                            WidgetFactory::audioClipIconImage);
                 break;
 
             case Playable::PlaylistType:
-                row[modelColumns.typeColumn]  = "playlist";
+                row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                            WidgetFactory::playlistIconImage);
                 break;
                 
             default:

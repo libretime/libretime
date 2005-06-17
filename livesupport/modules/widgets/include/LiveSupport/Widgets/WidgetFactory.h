@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ class ZebraTreeView;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -123,7 +123,9 @@ class WidgetFactory :
                        searchWindowTitleImage,
                        liveModeWindowTitleImage,
                        playlistsWindowTitleImage,
-                       schedulerWindowTitleImage }
+                       schedulerWindowTitleImage,
+                       audioClipIconImage,
+                       playlistIconImage }
                                                     ImageType;
 
 
@@ -187,6 +189,12 @@ class WidgetFactory :
          *  The combo box right image.
          */
         Glib::RefPtr<Gdk::Pixbuf>       comboBoxRightImage;
+
+        /**
+         *  A container holding the miscallenous image pixbuf references.
+         */
+        std::map<ImageType, Glib::RefPtr<Gdk::Pixbuf> >
+                                        imageTypePixbufs;
 
         /**
          *  The default constructor.
@@ -351,6 +359,14 @@ class WidgetFactory :
         {
             return whiteWindowImages;
         }
+
+        /**
+         *  Return a smart pointer to a Gdk::Pixbuf holding a named image.
+         *
+         *  @return the image.
+         */
+        Glib::RefPtr<Gdk::Pixbuf>
+        getPixbuf(ImageType   imageName)                            throw ();
 
         /**
          *  Create and return a container holding an image.

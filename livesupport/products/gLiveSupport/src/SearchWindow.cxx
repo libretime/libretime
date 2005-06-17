@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -232,7 +232,7 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     // add the TreeView's view columns
     try {
         searchResults->appendColumn(*getResourceUstring("typeColumnLabel"),
-                               modelColumns.typeColumn, 60);
+                               modelColumns.typeColumn, 20);
         searchResults->appendColumn(*getResourceUstring("titleColumnLabel"),
                                modelColumns.titleColumn, 200);
         searchResults->appendColumn(*getResourceUstring("creatorColumnLabel"),
@@ -324,6 +324,8 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
         return;
     }
 
+    Ptr<WidgetFactory>::Ref     widgetFactory = WidgetFactory::getInstance();
+
     std::list<Ptr<Playable>::Ref>::const_iterator it;
     treeModel->clear();
     int     rowNumber = 0;
@@ -339,10 +341,12 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
         
         switch (playable->getType()) {
             case Playable::AudioClipType:
-                row[modelColumns.typeColumn]  = "audioclip";
+                row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                            WidgetFactory::audioClipIconImage);
                 break;
             case Playable::PlaylistType:
-                row[modelColumns.typeColumn]  = "playlist";
+                row[modelColumns.typeColumn]  = widgetFactory->getPixbuf(
+                                            WidgetFactory::playlistIconImage);
                 break;
             default:
                 break;

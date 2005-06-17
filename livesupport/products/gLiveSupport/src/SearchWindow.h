@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -181,7 +181,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.13 $
+         *  @version $Revision: 1.14 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -189,7 +189,8 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
                 /**
                  *  The column for the type of the entry in the list
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         typeColumn;
+                Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> >
+                                                            typeColumn;
 
                 /**
                  *  The column for the title of the audio clip or playlist.

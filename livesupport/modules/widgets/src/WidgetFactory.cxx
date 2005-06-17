@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -269,6 +269,16 @@ static const std::string    playlistsWindowTitleImageName
                             = "titleImages/playlistsWindowTitle.png";
 
 /**
+ *  The name of the image for the audio clip icon.
+ */
+static const std::string    audioClipIconImageName = "icons/audioClipIcon.gif";
+
+/**
+ *  The name of the image for the playlist icon.
+ */
+static const std::string    playlistIconImageName = "icons/playlistIcon.gif";
+
+/**
  *  The name of the image for the title of the scheduler window.
  */
 static const std::string    schedulerWindowTitleImageName 
@@ -367,6 +377,23 @@ WidgetFactory :: configure(const xmlpp::Element & element)
 
     // load the white window corner images
     whiteWindowImages.reset(new CornerImages(path + whiteWindowPath));
+
+    // load the miscellaneous images
+    imageTypePixbufs[resizeImage]   = loadImage(resizeImageName);
+    imageTypePixbufs[scratchpadWindowTitleImage]
+                                    = loadImage(scratchpadWindowTitleImageName);
+    imageTypePixbufs[searchWindowTitleImage]
+                                    = loadImage(searchWindowTitleImageName);
+    imageTypePixbufs[liveModeWindowTitleImage]
+                                    = loadImage(liveModeWindowTitleImageName);
+    imageTypePixbufs[playlistsWindowTitleImage]
+                                    = loadImage(playlistsWindowTitleImageName);
+    imageTypePixbufs[schedulerWindowTitleImage]
+                                    = loadImage(schedulerWindowTitleImageName);
+    imageTypePixbufs[audioClipIconImage]
+                                    = loadImage(audioClipIconImageName);
+    imageTypePixbufs[playlistIconImage]
+                                    = loadImage(playlistIconImageName);
 }
 
 
@@ -568,44 +595,22 @@ WidgetFactory :: createButton(ImageButtonType    type)              throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Create a resize image
+ *  Return a Gdk::Pixbuf reference to a named image
+ *----------------------------------------------------------------------------*/
+Glib::RefPtr<Gdk::Pixbuf>
+WidgetFactory :: getPixbuf(ImageType  imageName)                    throw ()
+{
+    return imageTypePixbufs[imageName];
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a Gtk::Image
  *----------------------------------------------------------------------------*/
 Gtk::Image *
 WidgetFactory :: createImage(ImageType  imageName)                  throw ()
 {
-    Glib::RefPtr<Gdk::Pixbuf>   rawImage;
-    
-    switch (imageName) {
-
-        case resizeImage:
-            rawImage = loadImage(resizeImageName);
-            break;
-
-        case scratchpadWindowTitleImage:
-            rawImage = loadImage(scratchpadWindowTitleImageName);
-            break;
-
-        case searchWindowTitleImage:
-            rawImage = loadImage(searchWindowTitleImageName);
-            break;
-
-        case liveModeWindowTitleImage:
-            rawImage = loadImage(liveModeWindowTitleImageName);
-            break;
-
-        case playlistsWindowTitleImage:
-            rawImage = loadImage(playlistsWindowTitleImageName);
-            break;
-
-        case schedulerWindowTitleImage:
-            rawImage = loadImage(schedulerWindowTitleImageName);
-            break;
-
-        default:
-            return 0;
-    }
-
-    return new Gtk::Image(rawImage);
+    return new Gtk::Image(getPixbuf(imageName));
 }
 
 
