@@ -8,7 +8,7 @@ nl:table
     liveModeButtonLabel:string              { "live mode" }
     uploadFileButtonLabel:string            { "bestand toevoegen" }
     scratchpadButtonLabel:string            { "scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "playlist aanpassen" }
+    simplePlaylistMgmtButtonLabel:string    { "edit playlist" }
     schedulerButtonLabel:string             { "scheduler" }
     searchButtonLabel:string                { "zoeken" }
 
@@ -21,9 +21,9 @@ nl:table
 
     loginWindow:table
     {
-        windowTitle:string          { "Aanmelden" }
+        windowTitle:string          { "AANMELDEN" }
 
-        loginLabel:string           { "Aanmelden" }
+        loginLabel:string           { "Gebruikersnaam" }
         passwordLabel:string        { "Wachtwoord" }
         okButtonLabel:string        { "OK" }
         cancelButtonLabel:string    { "Annuleer" }
@@ -47,17 +47,17 @@ nl:table
 
         typeColumnLabel:string              { "type" }
         titleColumnLabel:string             { "titel" }
-        addToPlaylistButtonLabel:string     { "Toevoegen aan playlist" }
-        clearListButtonLabel:string         { "Leeg maken" }
-        removeButtonLabel:string            { "Item(s) verwijderen" }
+        addToPlaylistButtonLabel:string     { "Toevoegen aan Playlist" }
+        clearListButtonLabel:string         { "Lijst leeg maken" }
+        removeButtonLabel:string            { "Verwijder item" }
 
-        upMenuItem:string                   { "Naar _Boven" }
+        upMenuItem:string                   { "Naar B_oven" }
         downMenuItem:string                 { "Naar B_eneden" }
         removeMenuItem:string               { "_Verwijderen" }
-        addToPlaylistMenuItem:string        { "_Toevoegen aan Playlist" }
-        schedulePlaylistMenuItem:string     { "_Playlist plannen" }
+        addToPlaylistMenuItem:string        { "Toevoegen aan _Playlist" }
+        schedulePlaylistMenuItem:string     { "_Schedule Playlist" }
         cueMenuItem:string                  { "_Cue" }
-        addToLiveModeMenuItem:string        { "Aan _Live Mode toevoegen" }
+        addToLiveModeMenuItem:string        { "Toevoegen aan _Live Mode" }
     }
 
     playlistListWindow:table
@@ -77,7 +77,7 @@ nl:table
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "Bestand versturen" }
+        windowTitle:string            { "Bestand toevoegen" }
 
         chooseFileLabel:string        { "Bestandsnaam" }
         chooseFileButtonLabel:string  { "Bladeren" }
@@ -86,7 +86,7 @@ nl:table
         titleLabel:string             { "Titel" }
         creatorLabel:string           { "Maker" }
         genreLabel:string             { "Genre" }
-        fileFormatLabel:string        { "Bestandstype" }
+        fileFormatLabel:string        { "Type" }
         lengthLabel:string            { "Duur" }
 
         uploadButtonLabel:string      { "Verzenden" }
@@ -99,7 +99,7 @@ nl:table
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Simple Playlist beheer window" }
+        windowTitle:string            { "LiveSupport Playlist beheer window" }
 
         startColumnLabel:string       { "start" }
         titleColumnLabel:string       { "titel" }
@@ -136,10 +136,10 @@ nl:table
 
     searchWindow:table
     {
-        windowTitle:string            { "LiveSupport zoeken/verkenner window" }
+        windowTitle:string            { "LiveSupport zoeken/bladeren window" }
 
         simpleSearchTab:string        { "Zoeken" }
-        advancedSearchTab:string      { "Geadvanceerd zoeken" }
+        advancedSearchTab:string      { "Geadvanceerd" }
         browseTab:string              { "Bladeren" }
         
         searchByTextLabel:string      { "Zoeken met" }
@@ -158,21 +158,21 @@ nl:table
         
         allStringForBrowse                { "--- alle ---" }
         
-        addToScratchpadMenuItem:string    { "_Aan Scratchpad toevoegen" }
-        addToLiveModeMenuItem:string      { "Aan _Live Mode toevoegen" }
+        addToScratchpadMenuItem:string    { "Toevoegen aan _Scratchpad" }
+        addToLiveModeMenuItem:string      { "Toevoegen aan _Live Mode" }
     }
 
     liveModeWindow:table
     {
         windowTitle:string            { "LiveSupport Live Mode window" }
         
-        cueMenuItem:string            { "Pre_view" }
-        upMenuItem:string             { "Naar _Boven" }
+        cueMenuItem:string            { "_Cue" }
+        upMenuItem:string             { "Naar B_oven" }
         downMenuItem:string           { "Naar B_eneden" }
-        removeMenuItem:string         { "_Verwijder" }
+        removeMenuItem:string         { "_Verwijderen" }
         playMenuItem:string           { "_Play" }
         
-        cuePlayerLabel:string         { "Cueen" }
+        cuePlayerLabel:string         { "Cue" }
     }
     
     metadataTypes:table
