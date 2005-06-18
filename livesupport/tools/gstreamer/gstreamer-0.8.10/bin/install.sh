@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -62,7 +62,12 @@ echo "installing $plugins from $basedir to $installdir"
 cd $tmpdir
 tar xfj $plugins_tar
 cd $plugins
+# see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=305658
+# for details on the following patch
 patch -p1 < $etcdir/adder-fix.diff
+# see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
+# for details on the following patch
+patch -p1 < $etcdir/switcher-fix.diff
 # --disable-spc is a workaround for gst-plugins-0.8.9, as some APU.c file
 # is missing from there. remove this when later versions come around
 ./configure --disable-spc --prefix=$installdir
