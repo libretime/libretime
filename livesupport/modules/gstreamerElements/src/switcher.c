@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.1 $",
+    "$Revision: 1.2 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -385,7 +385,6 @@ livesupport_switcher_chain(GstPad     * pad,
     g_return_if_fail(LIVESUPPORT_IS_SWITCHER(switcher));
 
     if (switcher->eos) {
-        GstElement    * parent;
         GstEvent      * event;
 
         GST_DEBUG("switcher_chain: eos");
@@ -393,22 +392,6 @@ livesupport_switcher_chain(GstPad     * pad,
         event = gst_event_new(GST_EVENT_EOS);
         gst_pad_send_event(switcher->srcpad, event);
         gst_element_set_eos(GST_ELEMENT(switcher));
-
-        parent = GST_ELEMENT(gst_element_get_parent(GST_ELEMENT(switcher)));
-        if (parent) {
-            gst_element_set_eos(parent);
-        }
-        /* TODO: fix this mess here... */
-        /*
-        for (parent =
-                 GST_ELEMENT(gst_element_get_parent(GST_ELEMENT(switcher)));
-             parent;
-             parent = GST_ELEMENT(gst_element_get_parent(parent))) {
-
-            GST_DEBUG("switcher_chain: eos #1.1");
-            gst_element_set_eos(parent);
-        }
-        */
 
         return;
     }

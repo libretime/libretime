@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -125,10 +125,12 @@ LDFLAGS  = @LDFLAGS@ ${GSTREAMER_LIBS} \
 ONESHOT_READER_LIB_OBJS = ${TMP_DIR}/oneshot-reader.o
 
 MINIMAL_AUDIO_SMIL_LIB_OBJS = ${TMP_DIR}/seek.o \
-                              ${TMP_DIR}/seek-pack.o\
+                              ${TMP_DIR}/util.o \
+                              ${TMP_DIR}/seek-pack.o \
                               ${TMP_DIR}/minimal-audio-smil.o
 
 PARTIAL_PLAY_LIB_OBJS = ${TMP_DIR}/seek.o \
+                        ${TMP_DIR}/util.o \
                         ${TMP_DIR}/seek-pack.o \
 						${TMP_DIR}/smil-util.o \
                         ${TMP_DIR}/partial-play.o
@@ -137,6 +139,7 @@ SWITCHER_LIB_OBJS = ${TMP_DIR}/smil-util.o \
                     ${TMP_DIR}/switcher.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                   ${TMP_DIR}/SwitcherTest.o \
                    ${TMP_DIR}/PartialPlayTest.o \
                    ${TMP_DIR}/OneshotReaderTest.o \
 				   ${TMP_DIR}/MinimalAudioSmilTest.o

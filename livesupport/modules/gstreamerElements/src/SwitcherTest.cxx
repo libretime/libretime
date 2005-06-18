@@ -22,8 +22,8 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/PartialPlayTest.cxx,v $
+    Version  : $Revision: 1.1 $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
 
@@ -38,7 +38,7 @@
 
 #include <gst/gst.h>
 
-#include "PartialPlayTest.h"
+#include "SwitcherTest.h"
 
 
 using namespace LiveSupport::GstreamerElements;
@@ -48,7 +48,7 @@ using namespace LiveSupport::GstreamerElements;
 
 /* ================================================  local constants & macros */
 
-CPPUNIT_TEST_SUITE_REGISTRATION(PartialPlayTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(SwitcherTest);
 
 static const char *         testFile = "var/1minutecounter.mp3";
 
@@ -72,7 +72,7 @@ eos_signal_handler(GstElement     * element,
  *  Set up the test environment
  *----------------------------------------------------------------------------*/
 void
-PartialPlayTest :: setUp(void)                         throw ()
+SwitcherTest :: setUp(void)                         throw ()
 {
 }
 
@@ -81,7 +81,7 @@ PartialPlayTest :: setUp(void)                         throw ()
  *  Clean up the test environment
  *----------------------------------------------------------------------------*/
 void
-PartialPlayTest :: tearDown(void)                      throw ()
+SwitcherTest :: tearDown(void)                      throw ()
 {
 }
 
@@ -90,11 +90,14 @@ PartialPlayTest :: tearDown(void)                      throw ()
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-PartialPlayTest :: firstTest(void)
+SwitcherTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     GstElement    * pipeline;
-    GstElement    * filter;
+    GstElement    * source;
+    GstElement    * decoder;
+    GstElement    * sw;
+    GstElement    * switcher;
     GstElement    * sink;
 
     /* initialize GStreamer */
@@ -102,19 +105,22 @@ PartialPlayTest :: firstTest(void)
 
     /* create elements */
     pipeline = gst_pipeline_new("audio-player");
-    filter   = gst_element_factory_make("partialplay", "partialplay");
+    source   = gst_element_factory_make("filesrc", "source");
+    decoder  = gst_element_factory_make("mad", "decoder");
+    sw       = gst_element_factory_make("switch", "sw");
+    switcher = gst_element_factory_make("switcher", "switcher");
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
     /* set filename property on the file source */
-    g_object_set(G_OBJECT(filter), "location", testFile, NULL);
-    g_object_set(G_OBJECT(filter), "config", "3s;10s-17s", NULL);
-    g_signal_connect(filter, "eos", G_CALLBACK(eos_signal_handler), pipeline);
+    g_object_set(G_OBJECT(source), "location", testFile, NULL);
+    g_object_set(G_OBJECT(switcher), "source-config", "0[3s]", NULL);
+    /* listen for the eos event on switcher, so the pipeline can be stopped */
+    g_signal_connect(switcher, "eos", G_CALLBACK(eos_signal_handler), pipeline);
 
-    gst_element_link(filter, sink);
+    gst_element_link_many(source, decoder, sw, switcher, sink, NULL);
+    gst_bin_add_many(GST_BIN(pipeline),
+                     source, decoder, sw, switcher, sink, NULL);
 
-    gst_bin_add_many(GST_BIN(pipeline), filter, sink, NULL);
-
-    gst_element_set_state(filter, GST_STATE_READY);
     gst_element_set_state(sink, GST_STATE_READY);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 

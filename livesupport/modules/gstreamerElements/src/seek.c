@@ -22,13 +22,14 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek.c,v $
 
 ------------------------------------------------------------------------------*/
 
 /* ============================================================ include files */
 
+#include "util.h"
 #include "seek.h"
 
 
@@ -71,17 +72,6 @@ seek_element(GstElement   * element,
 
 #ifndef SEEK_ELEMENT
 /**
- *  Return the first src pad for an element.
- *
- *  @param element the element to return the pad from.
- *  @return the first src pad for element, or NULL.
- */
-static GstPad *
-get_src_pad(GstElement    * element);
-#endif
-
-#ifndef SEEK_ELEMENT
-/**
  *  Seek on the first src pad of an element.
  *
  *  @param element the element to seek on.
@@ -108,30 +98,6 @@ seek_element(GstElement   * element,
              gint64         seekTime)
 {
     return gst_element_seek(element, seekType, seekTime);
-}
-#endif
-
-
-#ifndef SEEK_ELEMENT
-/*------------------------------------------------------------------------------
- *  Return the first src pad for an element.
- *----------------------------------------------------------------------------*/
-static GstPad *
-get_src_pad(GstElement    * element)
-{
-    const GList   * pads;
-
-    for (pads = gst_element_get_pad_list(element);
-         pads;
-         pads = g_list_next(pads)) {
-        GstPad    * pad = pads->data;
-
-        if (GST_PAD_IS_SRC(pad)) {
-            return pad;
-        }
-    }
-
-    return 0;
 }
 #endif
 

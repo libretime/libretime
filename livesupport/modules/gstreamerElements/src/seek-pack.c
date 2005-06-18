@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <gst/gst.h>
 
+#include "util.h"
 #include "seek.h"
 #include "seek-pack.h"
 
@@ -62,6 +63,16 @@
 /* ===============================================  local function prototypes */
 
 /**
+ *  Signal handler for the eos event of the switcher element.
+ *
+ *  @param element the element emitting the eos signal
+ *  @param userData pointer to the container bin of the switcher.
+ */
+static void
+switcher_eos_signal_handler(GstElement     * element,
+                            gpointer         userData);
+
+/**
  *  Perform the seeks on the SeekPack, set by the initialization function.
  *
  *  @param seekPack the SeekPack to perform the seek on.
@@ -72,6 +83,25 @@ livesupport_seek_pack_seek(LivesupportSeekPack    * seekPack);
 
 
 /* =============================================================  module code */
+
+/*------------------------------------------------------------------------------
+ *  eos signal handler for the switcher element
+ *----------------------------------------------------------------------------*/
+static void
+switcher_eos_signal_handler(GstElement     * element,
+                            gpointer         userData)
+{
+    GstElement    * container = GST_ELEMENT(userData);
+
+    g_return_if_fail(container != NULL);
+    g_return_if_fail(GST_IS_ELEMENT(container));
+
+    /* set the container into eos state */
+
+    GST_DEBUG("SeekPack.switcher setting SeekPack.bin to eos");
+    gst_element_set_eos(container);
+}
+
 
 /*------------------------------------------------------------------------------
  *  Create a new SeekPack.
@@ -101,6 +131,11 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
     g_snprintf(str, len, "%s_seekPackBin", uniqueName);
     seekPack->bin       = gst_bin_new(str);
     g_free(str);
+
+    g_signal_connect(seekPack->switcher,
+                     "eos",
+                     G_CALLBACK(switcher_eos_signal_handler),
+                     seekPack->bin);
 
     seekPack->silenceDuration   = 0LL;
     seekPack->startTime         = 0LL;

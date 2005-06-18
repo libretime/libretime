@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ GST_PLUGIN_DEFINE (
     "partialplay",
     "Partial play",
     plugin_init,
-    "$Revision: 1.1 $",
+    "$Revision: 1.2 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -112,6 +112,17 @@ livesupport_partial_play_class_init(LivesupportPartialPlayClass   * klass);
  */
 static void
 livesupport_partial_play_base_init(LivesupportPartialPlayClass    * klass);
+
+/**
+ *  Signal handler for the eos event of the SeekPack->bin element.
+ *
+ *  @param element the element emitting the eos signal
+ *  @param userData pointer to the container bin of the switcher,
+ *         which is this PartialPlay element
+ */
+static void
+seek_pack_eos_signal_handler(GstElement     * element,
+                             gpointer         userData);
 
 /**
  *  PartialPlay instance initializer.
@@ -330,6 +341,25 @@ livesupport_partial_play_class_init(LivesupportPartialPlayClass   * klass)
 
 
 /*------------------------------------------------------------------------------
+ *  eos signal handler for the seekPack->bin element
+ *----------------------------------------------------------------------------*/
+static void
+seek_pack_eos_signal_handler(GstElement     * element,
+                             gpointer         userData)
+{
+    GstElement    * container = GST_ELEMENT(userData);
+
+    g_return_if_fail(container != NULL);
+    g_return_if_fail(GST_IS_ELEMENT(container));
+
+    /* set the container into eos state */
+
+    GST_DEBUG("SeekPack.bin setting PartialPlay to eos");
+    gst_element_set_eos(container);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Initialize a new PartialPlay element.
  *----------------------------------------------------------------------------*/
 static void
@@ -342,6 +372,11 @@ livesupport_partial_play_init(LivesupportPartialPlay  * pplay)
     pplay->srcpad = gst_element_add_ghost_pad(GST_ELEMENT(pplay),
                             gst_element_get_pad(pplay->seekPack->bin, "src"),
                             "src");
+
+    g_signal_connect(pplay->seekPack->bin,
+                     "eos",
+                     G_CALLBACK(seek_pack_eos_signal_handler),
+                     pplay);
 
     /* TODO: free these strings when disposing of the object */
     pplay->location        = g_strdup("");
