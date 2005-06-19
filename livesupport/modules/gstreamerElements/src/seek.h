@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,12 @@
  *  Utility functions to help seeking in gstreamer elements.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /* ============================================================ include files */
@@ -78,6 +82,10 @@ gboolean
 livesupport_seek_seconds(GstElement   * element,
                          gint64         seconds);
 
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* Seek_h */
 

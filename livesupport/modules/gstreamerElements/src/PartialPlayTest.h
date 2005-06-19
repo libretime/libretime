@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/PartialPlayTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class PartialPlayTest : public CPPUNIT_NS::TestFixture
 {
@@ -74,9 +74,10 @@ class PartialPlayTest : public CPPUNIT_NS::TestFixture
          *
          *  @param audioFile the file to play
          *  @param config the partial play config to use when playing the file
+         *  @return the number of milliseconds played.
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
-        void
+        gint64
         playFile(const char   * audioFile,
                  const char   * config)
                                                 throw (CPPUNIT_NS::Exception);

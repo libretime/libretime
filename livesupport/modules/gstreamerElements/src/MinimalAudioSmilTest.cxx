@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ MinimalAudioSmilTest :: tearDown(void)                      throw ()
 /*------------------------------------------------------------------------------
  *  Play a SMIL file.
  *----------------------------------------------------------------------------*/
-void
+gint64
 MinimalAudioSmilTest :: playSmilFile(const char   * smilFile)
                                                 throw (CPPUNIT_NS::Exception)
 {
@@ -102,6 +102,8 @@ MinimalAudioSmilTest :: playSmilFile(const char   * smilFile)
     GstElement    * filesrc;
     GstElement    * smil;
     GstElement    * sink;
+    GstFormat       format;
+    gint64          timePlayed;
 
     /* initialization */
     gst_init(0, 0);
@@ -122,9 +124,14 @@ MinimalAudioSmilTest :: playSmilFile(const char   * smilFile)
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
     while (gst_bin_iterate(GST_BIN(pipeline)));
 
+    format = GST_FORMAT_TIME;
+    gst_element_query(sink, GST_QUERY_POSITION, &format, &timePlayed);
+
     /* clean up */
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(GST_OBJECT(pipeline));
+
+    return timePlayed;
 }
 
 
@@ -135,7 +142,11 @@ void
 MinimalAudioSmilTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    playSmilFile(simpleFile);
+    gint64  timePlayed;
+
+    timePlayed = playSmilFile(simpleFile);
+    CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
 }
 
 
@@ -146,6 +157,10 @@ void
 MinimalAudioSmilTest :: parallelTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    playSmilFile(parallelFile);
+    gint64  timePlayed;
+
+    timePlayed = playSmilFile(parallelFile);
+    CPPUNIT_ASSERT(timePlayed > 7.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 8.1 * GST_SECOND);
 }
 

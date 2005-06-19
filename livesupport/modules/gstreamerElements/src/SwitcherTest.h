@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,28 +58,31 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SwitcherTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SwitcherTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(openEndedTest);
+    CPPUNIT_TEST(multipleTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
 
         /**
-         *  Play a specific file, with a specific switcher configuration.
+         *  Play audio files, with a specific switcher configuration.
          *
-         *  @param audioFile the name of the audio file to play.
+         *  @param audioFiles an array of file names to play
+         *  @param noFiles the size of the audioFiles array.
          *  @param sourceConfig the source config to use.
          *  @return the number of milliseconds played.
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         gint64
-        playFile(const char   * audioFile,
-                 const char   * sourceConfig)
+        playFiles(const char     ** audioFiles,
+                  unsigned int      noFiles,
+                  const char      * sourceConfig)
                                                 throw (CPPUNIT_NS::Exception);
 
 
@@ -100,6 +103,14 @@ class SwitcherTest : public CPPUNIT_NS::TestFixture
          */
         void
         openEndedTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the switcher with multiple inputs.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        multipleTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:

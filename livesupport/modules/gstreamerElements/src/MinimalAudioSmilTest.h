@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
 {
@@ -73,9 +73,10 @@ class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
          *  Play a smil file.
          *
          *  @param smilFile the name of the smil file to play.
+         *  @return the number of milliseconds played.
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
-        void
+        gint64
         playSmilFile(const char   * smilFile)
                                                 throw (CPPUNIT_NS::Exception);
 

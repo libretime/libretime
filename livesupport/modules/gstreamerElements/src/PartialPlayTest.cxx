@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/PartialPlayTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(PartialPlayTest);
 /**
  *  A test file.
  */
-static const char *         testFile = "var/1minutecounter.mp3";
+static const char *         testFile = "var/5seccounter.mp3";
 
 
 /* ===============================================  local function prototypes */
@@ -92,7 +92,7 @@ PartialPlayTest :: tearDown(void)                      throw ()
 /*------------------------------------------------------------------------------
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
-void
+gint64
 PartialPlayTest :: playFile(const char    * audioFile,
                             const char    * config)
                                                 throw (CPPUNIT_NS::Exception)
@@ -100,6 +100,8 @@ PartialPlayTest :: playFile(const char    * audioFile,
     GstElement    * pipeline;
     GstElement    * filter;
     GstElement    * sink;
+    GstFormat       format;
+    gint64          timePlayed;
 
     /* initialize GStreamer */
     gst_init(0, 0);
@@ -124,9 +126,14 @@ PartialPlayTest :: playFile(const char    * audioFile,
 
     while (gst_bin_iterate(GST_BIN(pipeline)));
 
+    format = GST_FORMAT_TIME;
+    gst_element_query(sink, GST_QUERY_POSITION, &format, &timePlayed);
+
     /* clean up nicely */
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(GST_OBJECT (pipeline));
+
+    return timePlayed;
 }
 
 
@@ -154,7 +161,11 @@ void
 PartialPlayTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    playFile(testFile, "3s;10s-13s");
+    gint64  timePlayed;
+
+    timePlayed = playFile(testFile, "2s;1s-4s");
+    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
 }
 
 
@@ -165,6 +176,10 @@ void
 PartialPlayTest :: openEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    playFile(testFile, "3s;10s-");
+    gint64  timePlayed;
+
+    timePlayed = playFile(testFile, "2s;2s-");
+    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
 }
 

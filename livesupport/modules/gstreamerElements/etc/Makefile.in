@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -139,14 +139,15 @@ SWITCHER_LIB_OBJS = ${TMP_DIR}/smil-util.o \
                     ${TMP_DIR}/switcher.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
+                   ${TMP_DIR}/seek.o \
+                   ${TMP_DIR}/util.o \
+                   ${TMP_DIR}/seek-pack.o \
+                   ${TMP_DIR}/SeekTest.o \
                    ${TMP_DIR}/SwitcherTest.o \
                    ${TMP_DIR}/SeekPackTest.o \
                    ${TMP_DIR}/PartialPlayTest.o \
                    ${TMP_DIR}/OneshotReaderTest.o \
-				   ${TMP_DIR}/MinimalAudioSmilTest.o \
-                   ${TMP_DIR}/seek.o \
-                   ${TMP_DIR}/util.o \
-                   ${TMP_DIR}/seek-pack.o
+				   ${TMP_DIR}/MinimalAudioSmilTest.o 
 
 TEST_RUNNER_LIBS = -l${CORE_LIB} -lcppunit -ldl -lxmlrpc++
 

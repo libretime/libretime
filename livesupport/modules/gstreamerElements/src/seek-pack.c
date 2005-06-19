@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -190,9 +190,14 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
     seekPack->realEndTime       = 0LL;
 
     g_value_init(&gvalue, G_TYPE_STRING);
-    g_snprintf(str, 256, "0[%lfs];1[%lfs]",
-                         seekPack->silenceDuration / NSEC_PER_SEC_FLOAT,
-                         seekPack->duration / NSEC_PER_SEC_FLOAT);
+    if (seekPack->endTime >= 0) {
+        g_snprintf(str, 256, "0[%lfs];1[%lfs]",
+                             seekPack->silenceDuration / NSEC_PER_SEC_FLOAT,
+                             seekPack->duration / NSEC_PER_SEC_FLOAT);
+    } else {
+        g_snprintf(str, 256, "0[%lfs];1[]",
+                             seekPack->silenceDuration / NSEC_PER_SEC_FLOAT);
+    }
     g_value_set_string(&gvalue, str);
     gst_element_set_property(seekPack->switcher, "source-config", &gvalue);
 

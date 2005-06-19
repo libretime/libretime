@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -90,16 +90,16 @@ SwitcherTest :: tearDown(void)                      throw ()
  *  Play an audio file
  *----------------------------------------------------------------------------*/
 gint64
-SwitcherTest :: playFile(const char   * audioFile,
-                         const char   * sourceConfig)
+SwitcherTest :: playFiles(const char     ** audioFiles,
+                          unsigned int      noFiles,
+                          const char      * sourceConfig)
                                                 throw (CPPUNIT_NS::Exception)
 {
     GstElement    * pipeline;
-    GstElement    * source;
-    GstElement    * decoder;
     GstElement    * sw;
     GstElement    * switcher;
     GstElement    * sink;
+    unsigned int    i;
     GstFormat       format;
     gint64          timePlayed;
 
@@ -108,21 +108,37 @@ SwitcherTest :: playFile(const char   * audioFile,
 
     /* create elements */
     pipeline = gst_pipeline_new("audio-player");
-    source   = gst_element_factory_make("filesrc", "source");
-    decoder  = gst_element_factory_make("mad", "decoder");
     sw       = gst_element_factory_make("switch", "sw");
     switcher = gst_element_factory_make("switcher", "switcher");
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
-    /* set filename property on the file source */
-    g_object_set(G_OBJECT(source), "location", audioFile, NULL);
+    gst_element_link_many(sw, switcher, sink, NULL);
+    gst_bin_add_many(GST_BIN(pipeline), sw, switcher, sink, NULL);
+
+    for (i = 0; i < noFiles; ++i) {
+        GstElement    * source;
+        GstElement    * decoder;
+        char            str[256];
+        gboolean        ret;
+
+        g_snprintf(str, 256, "source_%d", i);
+        source   = gst_element_factory_make("filesrc", str);
+        CPPUNIT_ASSERT(source);
+
+        g_snprintf(str, 256, "decoder_%d", i);
+        decoder  = gst_element_factory_make("mad", str);
+        CPPUNIT_ASSERT(decoder);
+
+        g_object_set(G_OBJECT(source), "location", audioFiles[i], NULL);
+
+        ret = gst_element_link_many(source, decoder, sw, NULL);
+        CPPUNIT_ASSERT(ret);
+        gst_bin_add_many(GST_BIN(pipeline), source, decoder, NULL);
+    }
+
     g_object_set(G_OBJECT(switcher), "source-config", sourceConfig, NULL);
     /* listen for the eos event on switcher, so the pipeline can be stopped */
     g_signal_connect(switcher, "eos", G_CALLBACK(eos_signal_handler), pipeline);
-
-    gst_element_link_many(source, decoder, sw, switcher, sink, NULL);
-    gst_bin_add_many(GST_BIN(pipeline),
-                     source, decoder, sw, switcher, sink, NULL);
 
     gst_element_set_state(sink, GST_STATE_READY);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
@@ -166,7 +182,7 @@ SwitcherTest :: firstTest(void)
 {
     gint64  timePlayed;
 
-    timePlayed = playFile(testFile, "0[3s]");
+    timePlayed = playFiles(&testFile, 1, "0[3s]");
     CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
     CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
 }
@@ -181,9 +197,25 @@ SwitcherTest :: openEndedTest(void)
 {
     gint64  timePlayed;
 
-    timePlayed = playFile(testFile, "0[]");
+    timePlayed = playFiles(&testFile, 1, "0[]");
     CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
     CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: multipleTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    const char    * testFiles[2] = { testFile, testFile };
+    gint64          timePlayed;
+
+    timePlayed = playFiles(testFiles, 2, "0[2s];1[2s]");
+    CPPUNIT_ASSERT(timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 4.1 * GST_SECOND);
 }
 
 
