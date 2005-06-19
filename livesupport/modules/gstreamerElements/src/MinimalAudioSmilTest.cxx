@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,7 +57,15 @@ using namespace LiveSupport::GstreamerElements;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MinimalAudioSmilTest);
 
-static const char *         testFile = "var/simple.smil";
+/**
+ *  A simple smil file.
+ */
+static const char *         simpleFile = "var/simple.smil";
+
+/**
+ *  A parallel smil file.
+ */
+static const char *         parallelFile = "var/parallel.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -84,10 +92,10 @@ MinimalAudioSmilTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  A simple smoke test.
+ *  Play a SMIL file.
  *----------------------------------------------------------------------------*/
 void
-MinimalAudioSmilTest :: firstTest(void)
+MinimalAudioSmilTest :: playSmilFile(const char   * smilFile)
                                                 throw (CPPUNIT_NS::Exception)
 {
     GstElement    * pipeline;
@@ -99,12 +107,12 @@ MinimalAudioSmilTest :: firstTest(void)
     gst_init(0, 0);
 
     /* create elements */
-    pipeline = gst_pipeline_new("my_pipeline");
-    filesrc  = gst_element_factory_make("filesrc", "my_filesource");
-    smil     = gst_element_factory_make("minimalaudiosmil", "my_smil");
+    pipeline = gst_pipeline_new("pipeline");
+    filesrc  = gst_element_factory_make("filesrc", "filesource");
+    smil     = gst_element_factory_make("minimalaudiosmil", "smil");
     sink     = gst_element_factory_make("alsasink", "audiosink");
 
-    g_object_set(G_OBJECT(filesrc), "location", testFile, NULL);
+    g_object_set(G_OBJECT(filesrc), "location", smilFile, NULL);
 
     /* link everything together */
     gst_element_link_many(filesrc, smil, sink, NULL);
@@ -117,5 +125,27 @@ MinimalAudioSmilTest :: firstTest(void)
     /* clean up */
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(GST_OBJECT(pipeline));
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: firstTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    playSmilFile(simpleFile);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test <par> SMIL elements
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: parallelTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    playSmilFile(parallelFile);
 }
 

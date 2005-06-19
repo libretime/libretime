@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,30 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SwitcherTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SwitcherTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(openEndedTest);
     CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        /**
+         *  Play a specific file, with a specific switcher configuration.
+         *
+         *  @param audioFile the name of the audio file to play.
+         *  @param sourceConfig the source config to use.
+         *  @return the number of milliseconds played.
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        gint64
+        playFile(const char   * audioFile,
+                 const char   * sourceConfig)
+                                                throw (CPPUNIT_NS::Exception);
+
 
     protected:
 
@@ -75,6 +92,14 @@ class SwitcherTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to play a file until its end.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        openEndedTest(void)                     throw (CPPUNIT_NS::Exception);
 
 
     public:

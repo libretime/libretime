@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ using namespace LiveSupport::GstreamerElements;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SwitcherTest);
 
-static const char *         testFile = "var/1minutecounter.mp3";
+static const char *         testFile = "var/5seccounter.mp3";
 
 
 /* ===============================================  local function prototypes */
@@ -87,10 +87,11 @@ SwitcherTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  A simple smoke test.
+ *  Play an audio file
  *----------------------------------------------------------------------------*/
-void
-SwitcherTest :: firstTest(void)
+gint64
+SwitcherTest :: playFile(const char   * audioFile,
+                         const char   * sourceConfig)
                                                 throw (CPPUNIT_NS::Exception)
 {
     GstElement    * pipeline;
@@ -99,6 +100,8 @@ SwitcherTest :: firstTest(void)
     GstElement    * sw;
     GstElement    * switcher;
     GstElement    * sink;
+    GstFormat       format;
+    gint64          timePlayed;
 
     /* initialize GStreamer */
     gst_init(0, 0);
@@ -112,8 +115,8 @@ SwitcherTest :: firstTest(void)
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
     /* set filename property on the file source */
-    g_object_set(G_OBJECT(source), "location", testFile, NULL);
-    g_object_set(G_OBJECT(switcher), "source-config", "0[3s]", NULL);
+    g_object_set(G_OBJECT(source), "location", audioFile, NULL);
+    g_object_set(G_OBJECT(switcher), "source-config", sourceConfig, NULL);
     /* listen for the eos event on switcher, so the pipeline can be stopped */
     g_signal_connect(switcher, "eos", G_CALLBACK(eos_signal_handler), pipeline);
 
@@ -126,9 +129,14 @@ SwitcherTest :: firstTest(void)
 
     while (gst_bin_iterate(GST_BIN(pipeline)));
 
+    format = GST_FORMAT_TIME;
+    gst_element_query(sink, GST_QUERY_POSITION, &format, &timePlayed);
+
     /* clean up nicely */
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(GST_OBJECT (pipeline));
+
+    return timePlayed;
 }
 
 
@@ -147,4 +155,35 @@ eos_signal_handler(GstElement     * element,
     // set the container into eos state
     gst_element_set_eos(container);
 }
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: firstTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+
+    timePlayed = playFile(testFile, "0[3s]");
+    CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: openEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+
+    timePlayed = playFile(testFile, "0[]");
+    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+}
+
 

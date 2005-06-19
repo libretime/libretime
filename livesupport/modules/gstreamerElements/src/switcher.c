@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.2 $",
+    "$Revision: 1.3 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -406,16 +406,23 @@ livesupport_switcher_chain(GstPad     * pad,
                                                 switcher->currentConfig->data;
     }
 
-    if (config->duration < 0) {
+    if (config->duration < 0LL) {
         /* handle config->duration == -1LL (play until EOS) */
         if (GST_IS_EVENT(in)) {
             GstEvent  * event = GST_EVENT(in);
 
             if (GST_EVENT_TYPE(event) == GST_EVENT_EOS) {
                 switch_to_next_source(switcher);
-                return;
+            } else {
+                gst_pad_event_default(switcher->srcpad, event);
             }
+        } else {
+            buf = GST_BUFFER(in);
+
+            /* just push out the incoming buffer without touching it */
+            gst_pad_push(switcher->srcpad, GST_DATA(buf));
         }
+        return;
     }
 
     if (GST_IS_EVENT(in)) {

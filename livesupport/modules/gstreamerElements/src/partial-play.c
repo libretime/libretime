@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ GST_PLUGIN_DEFINE (
     "partialplay",
     "Partial play",
     plugin_init,
-    "$Revision: 1.2 $",
+    "$Revision: 1.3 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -409,6 +409,9 @@ update_source_config(LivesupportPartialPlay   * pplay)
         if (sscanf(token, "%[^-]-%s", from, to) == 2) {
             pplay->playFrom = smil_clock_value_to_nanosec(from);
             pplay->playTo   = smil_clock_value_to_nanosec(to);
+        } else if (sscanf(token, "%[^-]-", from) == 1) {
+            pplay->playFrom = smil_clock_value_to_nanosec(from);
+            pplay->playTo   = -1LL;
         }
 
         g_free(to);

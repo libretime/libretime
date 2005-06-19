@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,8 +35,12 @@
  *  some silence and then some specified part of the source.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /* ============================================================ include files */
@@ -171,6 +175,12 @@ livesupport_seek_pack_set_state(LivesupportSeekPack   * seekPack,
  */
 gboolean
 livesupport_seek_pack_iterate(LivesupportSeekPack     * seekPack);
+
+
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* SeekPack_h */
 

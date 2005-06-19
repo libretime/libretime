@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/PartialPlayTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,9 @@ using namespace LiveSupport::GstreamerElements;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PartialPlayTest);
 
+/**
+ *  A test file.
+ */
 static const char *         testFile = "var/1minutecounter.mp3";
 
 
@@ -90,7 +93,8 @@ PartialPlayTest :: tearDown(void)                      throw ()
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-PartialPlayTest :: firstTest(void)
+PartialPlayTest :: playFile(const char    * audioFile,
+                            const char    * config)
                                                 throw (CPPUNIT_NS::Exception)
 {
     GstElement    * pipeline;
@@ -106,8 +110,8 @@ PartialPlayTest :: firstTest(void)
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
     /* set filename property on the file source */
-    g_object_set(G_OBJECT(filter), "location", testFile, NULL);
-    g_object_set(G_OBJECT(filter), "config", "3s;10s-17s", NULL);
+    g_object_set(G_OBJECT(filter), "location", audioFile, NULL);
+    g_object_set(G_OBJECT(filter), "config", config, NULL);
     g_signal_connect(filter, "eos", G_CALLBACK(eos_signal_handler), pipeline);
 
     gst_element_link(filter, sink);
@@ -140,5 +144,27 @@ eos_signal_handler(GstElement     * element,
 
     // set the container into eos state
     gst_element_set_eos(container);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+PartialPlayTest :: firstTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    playFile(testFile, "3s;10s-13s");
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Open ended test
+ *----------------------------------------------------------------------------*/
+void
+PartialPlayTest :: openEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    playFile(testFile, "3s;10s-");
 }
 
