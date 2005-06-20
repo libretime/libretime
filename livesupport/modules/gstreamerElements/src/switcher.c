@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.3 $",
+    "$Revision: 1.4 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -82,9 +82,9 @@ static GstElementClass    * parent_class = NULL;
  *  The sink pad factory.
  */
 static GstStaticPadTemplate sink_factory = GST_STATIC_PAD_TEMPLATE(
-                                                      "sink",
+                                                      "sink_%d",
                                                       GST_PAD_SINK,
-                                                      GST_PAD_ALWAYS,
+                                                      GST_PAD_REQUEST,
                                                       GST_STATIC_CAPS("ANY"));
 
 /**
@@ -124,6 +124,14 @@ static void
 livesupport_switcher_init(LivesupportSwitcher * switcher);
 
 /**
+ *  Destroy a Switcher object.
+ *
+ *  @param object the Switcher object to destroy.
+ */
+static void
+livesupport_switcher_dispose(GObject * object);
+
+/**
  *  Set a property on a Switcher object.
  *
  *  @param object a Switcher object
@@ -152,23 +160,22 @@ livesupport_switcher_get_property(GObject     * object,
 						          GParamSpec  * pspec);
 
 /**
- *  The main chain function of the Switcher element.
+ *  The main loop function of the Switcher element.
  *
- *  @param pad the pad on which data is received.
+ *  @param element the Switcher element to loop on.
  *  @param in the data recieved.
  */
 static void
-livesupport_switcher_chain(GstPad     * pad,
-                           GstData    * in);
+livesupport_switcher_loop(GstElement      * element);
 
 /**
  *  This function handles the link with other plug-ins.
  *
  *  @param pad the pad that is about to be linked.
- *  @param caps the set of possible linking capabilities 
+ *  @param caps the set of possible linking capabilities
  *  @return GST_PAD_LINK_OK or GST_PAD_LINK_DONE if linking can be or has
- *          been done, GST_PAD_LINK_DELAYED if linking can not yet be done,
- *          GST_PAD_LINK_REFUSED in linking can not be done.
+ *           been done, GST_PAD_LINK_DELAYED if linking can not yet be done,
+ *           GST_PAD_LINK_REFUSED in linking can not be done.
  */
 static GstPadLinkReturn
 livesupport_switcher_link(GstPad          * pad,
@@ -192,31 +199,21 @@ switch_to_next_source(LivesupportSwitcher     * switcher);
 static void
 update_source_config(LivesupportSwitcher   * switcher);
 
+/**
+ *  Create a new pad upon request.
+ *
+ *  @param element a Switcher element, for which to create the new pas.
+ *  @param template the pad template to use for the new pad.
+ *  @param name the requested name of the new pad.
+ *  @return the new, requested pad.
+ */
+static GstPad *
+request_new_pad(GstElement        * element,
+                GstPadTemplate    * template,
+                const gchar       * name);
+
 
 /* =============================================================  module code */
-
-/*------------------------------------------------------------------------------
- *  This function handles the link with other plug-ins.
- *----------------------------------------------------------------------------*/
-static GstPadLinkReturn
-livesupport_switcher_link(GstPad          * pad,
-                          const GstCaps   * caps)
-{
-    LivesupportSwitcher   * filter;
-    GstPad                * otherpad;
-
-    filter = LIVESUPPORT_SWITCHER(gst_pad_get_parent(pad));
-    g_return_val_if_fail(filter != NULL, GST_PAD_LINK_REFUSED);
-    g_return_val_if_fail(LIVESUPPORT_IS_SWITCHER(filter),
-                         GST_PAD_LINK_REFUSED);
-    otherpad = (pad == filter->srcpad ? filter->sinkpad : filter->srcpad);
-
-    /* set caps on next or previous element's pad, and see what they
-     * think. In real cases, we would (after this step) extract
-     * properties from the caps such as video size or audio samplerat. */
-    return gst_pad_try_set_caps (otherpad, caps);
-}
-
 
 /*------------------------------------------------------------------------------
  *  Return the type structure for the Switcher plugin.
@@ -245,6 +242,22 @@ livesupport_switcher_get_type(void)
     }
 
     return plugin_type;
+}
+
+
+/*------------------------------------------------------------------------------ *  This function handles the link with other plug-ins.
+ *----------------------------------------------------------------------------*/static GstPadLinkReturn
+livesupport_switcher_link(GstPad          * pad,
+                          const GstCaps   * caps)
+{
+    LivesupportSwitcher   * switcher;
+
+    switcher = LIVESUPPORT_SWITCHER(gst_pad_get_parent(pad));
+    g_return_val_if_fail(switcher != NULL, GST_PAD_LINK_REFUSED);
+    g_return_val_if_fail(LIVESUPPORT_IS_SWITCHER(switcher),
+                         GST_PAD_LINK_REFUSED);
+
+    return gst_pad_try_set_caps(switcher->srcpad, caps);
 }
 
 
@@ -277,10 +290,10 @@ static void
 livesupport_switcher_class_init(LivesupportSwitcherClass  * klass)
 {
     GObjectClass      * gobject_class;
-    GstElementClass   * gstelement_class;
+    GstElementClass   * element_class;
 
-    gobject_class    = (GObjectClass*) klass;
-    gstelement_class = (GstElementClass*) klass;
+    gobject_class = (GObjectClass*) klass;
+    element_class = (GstElementClass*) klass;
 
     parent_class = g_type_class_ref(GST_TYPE_ELEMENT);
 
@@ -292,8 +305,49 @@ livesupport_switcher_class_init(LivesupportSwitcherClass  * klass)
                                                         "",
                                                         G_PARAM_READWRITE));
 
+    gobject_class->dispose      = livesupport_switcher_dispose;
     gobject_class->set_property = livesupport_switcher_set_property;
     gobject_class->get_property = livesupport_switcher_get_property;
+
+    element_class->request_new_pad = request_new_pad;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Create a new request pad.
+ *----------------------------------------------------------------------------*/
+static GstPad *
+request_new_pad(GstElement        * element,
+                GstPadTemplate    * template,
+                const gchar       * name)
+{
+    LivesupportSwitcher   * switcher;
+    GstPad                * pad;
+
+    g_return_val_if_fail(element != NULL, NULL);
+    g_return_val_if_fail(LIVESUPPORT_IS_SWITCHER(element), NULL);
+
+    switcher = LIVESUPPORT_SWITCHER(element);
+
+    if (template->direction != GST_PAD_SINK) {
+        GST_DEBUG("only sink pads are created on request");
+        return NULL;
+    }
+
+    pad = gst_pad_new_from_template(template, name);
+    gst_pad_set_link_function(pad, livesupport_switcher_link);
+    gst_pad_set_getcaps_function(pad, gst_pad_proxy_getcaps);
+
+    gst_element_add_pad(element, pad);
+    /* TODO: catch the pad remove event, and remove the pad from this
+     *       list as well */
+    switcher->sinkpadList = g_list_append(switcher->sinkpadList, pad);
+
+    if (GST_PAD_CAPS(switcher->srcpad)) {
+        gst_pad_try_set_caps(pad, GST_PAD_CAPS(switcher->srcpad));
+    }
+
+    return pad;
 }
 
 
@@ -305,28 +359,55 @@ livesupport_switcher_init(LivesupportSwitcher * switcher)
 {
     GstElementClass   * klass = GST_ELEMENT_GET_CLASS(switcher);
 
-    switcher->sinkpad = gst_pad_new_from_template(
-	                        gst_element_class_get_pad_template(klass, "sink"),
-                            "sink");
-    gst_pad_set_link_function(switcher->sinkpad, livesupport_switcher_link);
-    gst_pad_set_getcaps_function(switcher->sinkpad, gst_pad_proxy_getcaps);
-
     switcher->srcpad = gst_pad_new_from_template (
 	                        gst_element_class_get_pad_template(klass, "src"),
                             "src");
-    gst_pad_set_link_function(switcher->srcpad, livesupport_switcher_link);
+    gst_pad_set_link_function(switcher->srcpad, gst_pad_proxy_pad_link);
     gst_pad_set_getcaps_function(switcher->srcpad, gst_pad_proxy_getcaps);
 
-    gst_element_add_pad(GST_ELEMENT(switcher), switcher->sinkpad);
     gst_element_add_pad(GST_ELEMENT(switcher), switcher->srcpad);
-    gst_pad_set_chain_function(switcher->sinkpad, livesupport_switcher_chain);
+    gst_element_set_loop_function(GST_ELEMENT(switcher),
+                                  livesupport_switcher_loop);
 
+    switcher->sinkpadList      = NULL;
     switcher->elapsedTime      = 0LL;
-    switcher->nextOffset       = 0LL;
+    switcher->offset           = 0LL;
+    switcher->switchTime       = 0LL;
     switcher->eos              = FALSE;
-    /* TODO: dispose of the config string and list later */
     switcher->sourceConfig     = 0;
     switcher->sourceConfigList = NULL;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Destroy a Switcher object.
+ *----------------------------------------------------------------------------*/
+static void
+livesupport_switcher_dispose(GObject * object)
+{
+    LivesupportSwitcher   * switcher = LIVESUPPORT_SWITCHER(object);
+
+    g_return_if_fail(LIVESUPPORT_IS_SWITCHER(switcher));
+
+    if (switcher->sinkpadList) {
+        g_list_free(switcher->sinkpadList);
+    }
+    if (switcher->sourceConfig) {
+        g_free(switcher->sourceConfig);
+    }
+    if (switcher->sourceConfigList) {
+        GList     * element;
+       
+        for (element = g_list_first(switcher->sourceConfigList);
+             element;
+             element = g_list_next(element)) {
+
+            g_free(element->data);
+        }
+        g_list_free(switcher->sourceConfigList);
+    }
+
+    G_OBJECT_CLASS(parent_class)->dispose(object);
 }
 
 
@@ -343,8 +424,6 @@ switch_to_next_source(LivesupportSwitcher     * switcher)
                                                 switcher->currentConfig->data;
 
     if ((switcher->currentConfig = g_list_next(switcher->currentConfig))) {
-        GValue          gvalue = { 0 };
-        GstElement    * switchElement;
 
         GST_INFO("switching from source %d, duration: %" G_GINT64_FORMAT,
                 oldConfig->sourceId, oldConfig->duration);
@@ -352,13 +431,15 @@ switch_to_next_source(LivesupportSwitcher     * switcher)
         newConfig = (LivesupportSwitcherSourceConfig*)
                                                 switcher->currentConfig->data;
 
-        switchElement = GST_PAD_PARENT(GST_PAD_PEER(switcher->sinkpad));
-        g_value_init(&gvalue, G_TYPE_INT);
-        g_value_set_int(&gvalue, newConfig->sourceId);
-        gst_element_set_property(switchElement, "active-source", &gvalue);
+        if (!newConfig->sinkPad) {
+            if (!(newConfig->sinkPad = g_list_nth_data(switcher->sinkpadList,
+                                                       newConfig->sourceId))) {
+                /* TODO: mark error */
+            }
+        }
 
-        switcher->nextOffset = oldConfig->duration >= 0
-                             ? switcher->nextOffset + newConfig->duration
+        switcher->switchTime = oldConfig->duration >= 0
+                             ? switcher->switchTime + newConfig->duration
                              : switcher->elapsedTime + newConfig->duration;
     } else {
         /* mark EOS, as there are no more sources to switch to */
@@ -371,23 +452,22 @@ switch_to_next_source(LivesupportSwitcher     * switcher)
  *  The main chain function.
  *----------------------------------------------------------------------------*/
 static void
-livesupport_switcher_chain(GstPad     * pad,
-                           GstData    * in)
+livesupport_switcher_loop(GstElement      * element)
 {
     LivesupportSwitcher               * switcher;
+    GstData                           * data;
     GstBuffer                         * buf;
     LivesupportSwitcherSourceConfig   * config = NULL;
 
-    g_return_if_fail(GST_IS_PAD(pad));
-    g_return_if_fail(in != NULL);
+    g_return_if_fail(element != NULL);
+    g_return_if_fail(LIVESUPPORT_IS_SWITCHER(element));
 
-    switcher = LIVESUPPORT_SWITCHER(GST_OBJECT_PARENT(pad));
-    g_return_if_fail(LIVESUPPORT_IS_SWITCHER(switcher));
+    switcher = LIVESUPPORT_SWITCHER(element);
 
     if (switcher->eos) {
         GstEvent      * event;
 
-        GST_DEBUG("switcher_chain: eos");
+        GST_DEBUG("switcher_loop: eos");
         /* push an EOS event down the srcpad, just to make sure */
         event = gst_event_new(GST_EVENT_EOS);
         gst_pad_send_event(switcher->srcpad, event);
@@ -397,19 +477,28 @@ livesupport_switcher_chain(GstPad     * pad,
     }
 
     if (switcher->currentConfig == NULL) {
+        /* if this is the very first call to the loop function */
         switcher->currentConfig = g_list_first(switcher->sourceConfigList);
         config                  = (LivesupportSwitcherSourceConfig*)
                                                 switcher->currentConfig->data;
-        switcher->nextOffset = config->duration;
+        switcher->switchTime = config->duration;
+        if (!config->sinkPad) {
+            if (!(config->sinkPad = g_list_nth_data(switcher->sinkpadList,
+                                                    config->sourceId))) {
+                /* TODO: mark error */
+            }
+        }
     } else {
         config = (LivesupportSwitcherSourceConfig*)
                                                 switcher->currentConfig->data;
     }
 
+    data = gst_pad_pull(config->sinkPad);
+
     if (config->duration < 0LL) {
         /* handle config->duration == -1LL (play until EOS) */
-        if (GST_IS_EVENT(in)) {
-            GstEvent  * event = GST_EVENT(in);
+        if (GST_IS_EVENT(data)) {
+            GstEvent  * event = GST_EVENT(data);
 
             if (GST_EVENT_TYPE(event) == GST_EVENT_EOS) {
                 switch_to_next_source(switcher);
@@ -417,7 +506,16 @@ livesupport_switcher_chain(GstPad     * pad,
                 gst_pad_event_default(switcher->srcpad, event);
             }
         } else {
-            buf = GST_BUFFER(in);
+            buf = GST_BUFFER(data);
+
+            if (GST_BUFFER_DURATION(buf) != GST_CLOCK_TIME_NONE) {
+                switcher->elapsedTime += GST_BUFFER_DURATION(buf);
+            }
+            switcher->offset += GST_BUFFER_SIZE(buf);
+            GST_INFO("elapsed time: %" G_GINT64_FORMAT, switcher->elapsedTime);
+
+            GST_BUFFER_TIMESTAMP(buf) = switcher->elapsedTime;
+            GST_BUFFER_OFFSET(buf)    = switcher->offset;
 
             /* just push out the incoming buffer without touching it */
             gst_pad_push(switcher->srcpad, GST_DATA(buf));
@@ -425,24 +523,28 @@ livesupport_switcher_chain(GstPad     * pad,
         return;
     }
 
-    if (GST_IS_EVENT(in)) {
+    if (GST_IS_EVENT(data)) {
         /* handle events */
-        GstEvent  * event = GST_EVENT(in);
+        GstEvent  * event = GST_EVENT(data);
 
         gst_pad_event_default(switcher->srcpad, event);
         return;
     }
 
-    buf = GST_BUFFER(in);
+    buf = GST_BUFFER(data);
     if (GST_BUFFER_DURATION(buf) != GST_CLOCK_TIME_NONE) {
         switcher->elapsedTime += GST_BUFFER_DURATION(buf);
     }
+    switcher->offset += GST_BUFFER_SIZE(buf);
     GST_INFO("elapsed time: %" G_GINT64_FORMAT, switcher->elapsedTime);
 
-    if (switcher->elapsedTime >= switcher->nextOffset) {
+    if (switcher->elapsedTime >= switcher->switchTime) {
         /* time to switch to the next source */
         switch_to_next_source(switcher);
     }
+
+    GST_BUFFER_TIMESTAMP(buf) = switcher->elapsedTime;
+    GST_BUFFER_OFFSET(buf)    = switcher->offset;
 
     /* just push out the incoming buffer without touching it */
     gst_pad_push(switcher->srcpad, GST_DATA(buf));
@@ -497,6 +599,8 @@ update_source_config(LivesupportSwitcher   * switcher)
             config->duration = smil_clock_value_to_nanosec(durationStr);
             found            = config->duration >= 0;
         }
+        /* don't fill in the sinkPad yet, as it may be added later */
+        config->sinkPad = NULL;
 
         g_free(durationStr);
 

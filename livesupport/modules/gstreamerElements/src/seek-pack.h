@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@
  *  some silence and then some specified part of the source.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 
 #ifdef __cplusplus
@@ -71,7 +71,6 @@ struct _LivesupportSeekPack {
     GstElement    * parser;
     GstElement    * decoder;
 
-    GstElement    * switchElement;
     GstElement    * switcher;
     GstElement    * bin;
 
@@ -167,14 +166,6 @@ livesupport_seek_pack_remove_from_bin(LivesupportSeekPack     * seekPack,
 void
 livesupport_seek_pack_set_state(LivesupportSeekPack   * seekPack,
                                 GstElementState         state);
-
-/**
- *  Iterate on the seekpack.
- *
- *  @param seekPack the SeekPack to iterate on.
- */
-gboolean
-livesupport_seek_pack_iterate(LivesupportSeekPack     * seekPack);
 
 
 

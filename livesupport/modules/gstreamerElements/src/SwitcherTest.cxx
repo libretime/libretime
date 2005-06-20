@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,6 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
                                                 throw (CPPUNIT_NS::Exception)
 {
     GstElement    * pipeline;
-    GstElement    * sw;
     GstElement    * switcher;
     GstElement    * sink;
     unsigned int    i;
@@ -108,12 +107,11 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
 
     /* create elements */
     pipeline = gst_pipeline_new("audio-player");
-    sw       = gst_element_factory_make("switch", "sw");
     switcher = gst_element_factory_make("switcher", "switcher");
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
-    gst_element_link_many(sw, switcher, sink, NULL);
-    gst_bin_add_many(GST_BIN(pipeline), sw, switcher, sink, NULL);
+    gst_element_link_many(switcher, sink, NULL);
+    gst_bin_add_many(GST_BIN(pipeline), switcher, sink, NULL);
 
     for (i = 0; i < noFiles; ++i) {
         GstElement    * source;
@@ -131,7 +129,7 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
 
         g_object_set(G_OBJECT(source), "location", audioFiles[i], NULL);
 
-        ret = gst_element_link_many(source, decoder, sw, NULL);
+        ret = gst_element_link_many(source, decoder, switcher, NULL);
         CPPUNIT_ASSERT(ret);
         gst_bin_add_many(GST_BIN(pipeline), source, decoder, NULL);
     }
@@ -216,6 +214,22 @@ SwitcherTest :: multipleTest(void)
     timePlayed = playFiles(testFiles, 2, "0[2s];1[2s]");
     CPPUNIT_ASSERT(timePlayed > 3.9 * GST_SECOND);
     CPPUNIT_ASSERT(timePlayed < 4.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: multipleOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    const char    * testFiles[2] = { testFile, testFile };
+    gint64          timePlayed;
+
+    timePlayed = playFiles(testFiles, 2, "0[2s];1[]");
+    CPPUNIT_ASSERT(timePlayed > 6.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 7.1 * GST_SECOND);
 }
 
 

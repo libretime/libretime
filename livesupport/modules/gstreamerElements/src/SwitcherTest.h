@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class SwitcherTest : public CPPUNIT_NS::TestFixture
 {
@@ -66,6 +66,7 @@ class SwitcherTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(openEndedTest);
     CPPUNIT_TEST(multipleTest);
+    CPPUNIT_TEST(multipleOpenEndedTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -111,6 +112,14 @@ class SwitcherTest : public CPPUNIT_NS::TestFixture
          */
         void
         multipleTest(void)                      throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the switcher with multiple inputs, including open-ended ones.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        multipleOpenEndedTest(void)             throw (CPPUNIT_NS::Exception);
 
 
     public:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -97,7 +97,6 @@ switcher_eos_signal_handler(GstElement     * element,
     g_return_if_fail(GST_IS_ELEMENT(container));
 
     /* set the container into eos state */
-
     GST_DEBUG("SeekPack.switcher setting SeekPack.bin to eos");
     gst_element_set_eos(container);
 }
@@ -124,8 +123,6 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
 
     g_snprintf(str, len, "%s_seekPackDecoder", uniqueName);
     seekPack->decoder   = gst_element_factory_make("mad", str);
-    g_snprintf(str, len, "%s_seekPackSwitch", uniqueName);
-    seekPack->switchElement = gst_element_factory_make("switch", str);
     g_snprintf(str, len, "%s_seekPackSwitcher", uniqueName);
     seekPack->switcher = gst_element_factory_make("switcher", str);
     g_snprintf(str, len, "%s_seekPackBin", uniqueName);
@@ -148,7 +145,6 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
 
     gst_element_link_many(seekPack->silence,
                           seekPack->audioconvert,
-                          seekPack->switchElement,
                           seekPack->switcher,
                           NULL);
 
@@ -156,7 +152,6 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
     gst_bin_add_many(GST_BIN(seekPack->bin),
                      seekPack->silence,
                      seekPack->audioconvert,
-                     seekPack->switchElement,
                      seekPack->switcher,
                      NULL);
     gst_element_add_ghost_pad(seekPack->bin,
@@ -203,7 +198,7 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
 
     gst_element_link(seekPack->source, seekPack->decoder);
     livesupport_seek_pack_seek(seekPack);
-    gst_element_link(seekPack->decoder, seekPack->switchElement);
+    gst_element_link(seekPack->decoder, seekPack->switcher);
 
     gst_bin_add_many(GST_BIN(seekPack->bin),
                      seekPack->source,
@@ -271,7 +266,7 @@ livesupport_seek_pack_set_state(LivesupportSeekPack   * seekPack,
      *        it's seek position */
     gst_element_set_state(seekPack->audioconvert, state);
     gst_element_set_state(seekPack->decoder, state);
-    gst_element_set_state(seekPack->switchElement, state);
+    gst_element_set_state(seekPack->switcher, state);
 }
 
 
@@ -325,61 +320,5 @@ livesupport_seek_pack_seek(LivesupportSeekPack    * seekPack)
                         NULL);
     gst_element_unlink(seekPack->decoder, fakesink);
     gst_object_unref(GST_OBJECT(pipeline));
-}
-
-
-/*------------------------------------------------------------------------------
- *  Iterate on a SeekPack.
- *  This will change from silence to the proper audio if needed.
- *----------------------------------------------------------------------------*/
-gboolean
-livesupport_seek_pack_iterate(LivesupportSeekPack     * seekPack)
-{
-    gint64      value;
-    GstFormat   format = GST_FORMAT_TIME;
-
-    gst_bin_iterate(GST_BIN(seekPack->bin));
-
-    if (seekPack->sendingSilence) {
-        gst_element_query(seekPack->silence,
-                          GST_QUERY_POSITION,
-                          &format,
-                          &value);
-
-        if (value >= seekPack->silenceDuration) {
-            GValue      gvalue = { 0 };
-
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, 1);
-            gst_element_set_property(seekPack->switchElement,
-                                     "active-source",
-                                     &gvalue);
-
-            seekPack->sendingSilence = FALSE;
-        }
-    } else {
-        gst_element_query(seekPack->decoder,
-                          GST_QUERY_POSITION,
-                          &format,
-                          &value);
-
-        /* FIXME: this is a workaround, as the seek actually won't get us
-         *        where we asked it to. */
-        if (!seekPack->realEndTime) {
-            seekPack->positionAfterSeek = value;
-            seekPack->realEndTime       = value + seekPack->duration;
-        }
-
-        if (value >= seekPack->realEndTime) {
-            GST_INFO("reached EOS at %" G_GINT64_FORMAT "\n", value);
-            gst_element_set_eos(seekPack->source);
-            gst_element_set_eos(seekPack->decoder);
-            gst_element_set_eos(seekPack->bin);
-
-            return FALSE;
-        }
-    }
-
-    return TRUE;
 }
 
