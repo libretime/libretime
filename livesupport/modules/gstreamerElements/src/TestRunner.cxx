@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/TestRunner.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,8 @@
 #else
 #error "Need getopt.h"
 #endif
+
+#include <gst/gst.h>
 
 #include <fstream>
 
@@ -144,6 +146,9 @@ int
 main(   int     argc,
         char  * argv[] )                                throw ()
 {
+    // initialize the gst parameters
+    gst_init(&argc, &argv);
+
     if (!processArguments(argc, argv)) {
         return 0;
     }
