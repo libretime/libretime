@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/util.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,8 +34,12 @@
  *  Utility functions helping to work with SMIL-related data structures.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /* ============================================================ include files */
@@ -63,6 +67,10 @@
 GstPad *
 get_src_pad(GstElement    * element);
 
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif /* Util_h */
 
