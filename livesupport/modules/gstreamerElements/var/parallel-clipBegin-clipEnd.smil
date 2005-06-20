@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<smil xmlns="http://www.w3.org/2001/SMIL20/Language" >
+    <body>
+        <par>
+            <audio src       = "file:var/1minutecounter.mp3"
+                   clipBegin = "10s"
+                   clipEnd   = "15s"
+            /> 
+            <audio src       = "file:var/1minutecounter.mp3"
+                   begin     = "3s"
+                   clipBegin = "10s"
+                   clipEnd   = "15s"
+            /> 
+        </par>
+    </body>
+</smil>

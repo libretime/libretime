@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,16 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(MinimalAudioSmilTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(simpleClipBeginTest);
+    CPPUNIT_TEST(simpleClipBeginEndTest);
     CPPUNIT_TEST(parallelTest);
+    CPPUNIT_TEST(parallelClipBeginEndTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -92,12 +95,37 @@ class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
 
         /**
+         *  A simple test with clipBegin attribute.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        simpleClipBeginTest(void)               throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A simple test with clipBegin and clipEnd attributes.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        simpleClipBeginEndTest(void)            throw (CPPUNIT_NS::Exception);
+
+        /**
          *  Test on <par> elements in a SMIL file.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
         parallelTest(void)                      throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test on <par> elements in a SMIL file, with clipBegin and
+         *  clipEnd attributes.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        parallelClipBeginEndTest(void)          throw (CPPUNIT_NS::Exception);
 
 
     public:

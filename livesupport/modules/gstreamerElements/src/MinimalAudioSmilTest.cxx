@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -63,9 +63,28 @@ CPPUNIT_TEST_SUITE_REGISTRATION(MinimalAudioSmilTest);
 static const char *         simpleFile = "var/simple.smil";
 
 /**
+ *  A simple smil file with clipBegin and clipEnd attributes
+ */
+static const char *         simpleClipBeginFile =
+                                            "var/simple-clipBegin.smil";
+
+/**
+ *  A simple smil file with clipBegin and clipEnd attributes
+ */
+static const char *         simpleClipBeginEndFile =
+                                            "var/simple-clipBegin-clipEnd.smil";
+
+/**
  *  A parallel smil file.
  */
 static const char *         parallelFile = "var/parallel.smil";
+
+
+/**
+ *  A parallel smil file with clipBegin and clipEnd attributes.
+ */
+static const char *         parallelClipBeginEndFile =
+                                        "var/parallel-clipBegin-clipEnd.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -151,6 +170,36 @@ MinimalAudioSmilTest :: firstTest(void)
 
 
 /*------------------------------------------------------------------------------
+ *  A simple test with clipBegin attribute
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: simpleClipBeginTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+
+    timePlayed = playSmilFile(simpleClipBeginFile);
+    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple test with clipBegin and clipEnd attributes
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: simpleClipBeginEndTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+
+    timePlayed = playSmilFile(simpleClipBeginEndFile);
+    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Test <par> SMIL elements
  *----------------------------------------------------------------------------*/
 void
@@ -160,6 +209,21 @@ MinimalAudioSmilTest :: parallelTest(void)
     gint64  timePlayed;
 
     timePlayed = playSmilFile(parallelFile);
+    CPPUNIT_ASSERT(timePlayed > 7.9 * GST_SECOND);
+    CPPUNIT_ASSERT(timePlayed < 8.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test <par> SMIL elements with clipBegin and clipEnd attributes
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: parallelClipBeginEndTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+
+    timePlayed = playSmilFile(parallelClipBeginEndFile);
     CPPUNIT_ASSERT(timePlayed > 7.9 * GST_SECOND);
     CPPUNIT_ASSERT(timePlayed < 8.1 * GST_SECOND);
 }

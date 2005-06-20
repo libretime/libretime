@@ -2,10 +2,10 @@
 <smil xmlns="http://www.w3.org/2001/SMIL20/Language" >
     <body>
         <par>
-            <audio src       = "file:var/5seccounter.mp3"
-            /> 
-            <audio src       = "file:var/5seccounter.mp3"
-                   begin     = "3s"
+            <audio src       = "file:var/1minutecounter.mp3"
+                   begin     = "2s"
+                   clipBegin = "10s"
+                   clipEnd   = "13s"
             /> 
         </par>
     </body>
