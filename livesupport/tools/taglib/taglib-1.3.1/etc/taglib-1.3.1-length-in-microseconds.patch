@@ -5,14 +5,14 @@
  
      /*!
 -     * Returns the lenght of the file in seconds.
-+     * Returns the length of the file in seconds.
++     * Returns the length of the file in seconds (rounded down).
       */
      virtual int length() const = 0;
  
      /*!
-+     * Returns the length of the file in microseconds.
++     * Returns the fractional part of the length of the file, in microseconds.
 +     */
-+    virtual long length_microseconds() const = 0;
++    virtual int length_microseconds() const = 0;
 +
 +    /*!
       * Returns the most appropriate bit rate for the file in kb/s.  For constant
@@ -24,7 +24,7 @@
        // Reimplementations.
  
        virtual int length() const;
-+      virtual long length_microseconds() const;
++      virtual int length_microseconds() const;
        virtual int bitrate() const;
        virtual int sampleRate() const;
        virtual int channels() const;
@@ -34,9 +34,9 @@
    return d->length;
  }
  
-+long FLAC::Properties::length_microseconds() const
++int FLAC::Properties::length_microseconds() const
 +{
-+  return long(d->length) * 1000000;
++  return 0;
 +}
 +
  int FLAC::Properties::bitrate() const
@@ -48,7 +48,7 @@
        // Reimplementations.
  
        virtual int length() const;
-+      virtual long length_microseconds() const;
++      virtual int length_microseconds() const;
        virtual int bitrate() const;
        virtual int sampleRate() const;
        virtual int channels() const;
@@ -58,9 +58,9 @@
    return d->length;
  }
  
-+long MPC::Properties::length_microseconds() const
++int MPC::Properties::length_microseconds() const
 +{
-+  return long(d->length) * 1000000;
++  return 0;
 +}
 +
  int MPC::Properties::bitrate() const
@@ -72,7 +72,7 @@
        // Reimplementations.
  
        virtual int length() const;
-+      virtual long length_microseconds() const;
++      virtual int length_microseconds() const;
        virtual int bitrate() const;
        virtual int sampleRate() const;
        virtual int channels() const;
@@ -92,12 +92,12 @@
  int MPEG::Properties::length() const
  {
 -  return d->length;
-+  return int((d->length + 500000) / 1000000);
++  return int(d->length / 1000000);
 +}
 +
-+long MPEG::Properties::length_microseconds() const
++int MPEG::Properties::length_microseconds() const
 +{
-+  return long(d->length);
++  return int(d->length % 1000000);
  }
  
  int MPEG::Properties::bitrate() const
@@ -132,7 +132,7 @@
        // Reimplementations.
  
        virtual int length() const;
-+      virtual long length_microseconds() const;
++      virtual int length_microseconds() const;
        virtual int bitrate() const;
        virtual int sampleRate() const;
        virtual int channels() const;
@@ -152,12 +152,12 @@
  int Vorbis::Properties::length() const
  {
 -  return d->length;
-+  return int((d->length + 500000) / 1000000);
++  return int(d->length / 1000000);
 +}
 +
-+long Vorbis::Properties::length_microseconds() const
++int Vorbis::Properties::length_microseconds() const
 +{
-+  return long(d->length);
++  return int(d->length % 1000000);
  }
  
  int Vorbis::Properties::bitrate() const
