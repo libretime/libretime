@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -34,46 +34,47 @@ product=gstreamer-0.8.10
 plugins=gst-plugins-0.8.9
 
 reldir=`dirname $0`/..
-basedir=`cd $reldir; pwd;`
-installdir=`cd $basedir/../../../usr; pwd;`
-tmpdir=$basedir/tmp
-etcdir=$basedir/etc
-gstreamer_tar=$basedir/src/$product.tar.bz2
-plugins_tar=$basedir/src/$plugins.tar.bz2
+basedir=`cd ${reldir}; pwd;`
+installdir=`cd ${basedir}/../../../usr; pwd;`
+tmpdir=${basedir}/tmp
+etcdir=${basedir}/etc
+gstreamer_tar=${basedir}/src/${product}.tar.bz2
+plugins_tar=${basedir}/src/${plugins}.tar.bz2
+pkg_config_path=${installdir}/lib/pkgconfig
 
-export PATH=$installdir/bin:$PATH
-export LD_LIBRARY_PATH=$installdir/lib:$LD_LIBRARY_PATH
-export PKG_CONFIG_PATH=$installdir/lib/pkgconfig
+export LDFLAGS="-L${installdir}/lib"
+export CPPFLAGS="-I${installdir}/install"
 
+mkdir -p ${tmpdir}
 
-mkdir -p $tmpdir
+echo "installing ${product} from ${basedir} to ${installdir}"
 
-echo "installing $product from $basedir to $installdir"
-
-cd $tmpdir
-tar xfj $gstreamer_tar
-cd $product
-./configure --prefix=$installdir
+cd ${tmpdir}
+tar xfj ${gstreamer_tar}
+cd ${product}
+./configure --prefix=${installdir} \
+            --with-pkg-config-path=${pkg_config_path}
 make install
 
 
-echo "installing $plugins from $basedir to $installdir"
+echo "installing ${plugins} from ${basedir} to ${installdir}"
 
-cd $tmpdir
-tar xfj $plugins_tar
-cd $plugins
+cd ${tmpdir}
+tar xfj ${plugins_tar}
+cd ${plugins}
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=305658
 # for details on the following patch
-patch -p1 < $etcdir/adder-fix.diff
+patch -p1 < ${etcdir}/adder-fix.diff
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
 # for details on the following patch
-patch -p1 < $etcdir/switcher-fix.diff
+patch -p1 < ${etcdir}/switcher-fix.diff
 # --disable-spc is a workaround for gst-plugins-0.8.9, as some APU.c file
 # is missing from there. remove this when later versions come around
-./configure --disable-spc --prefix=$installdir
+./configure --disable-spc --prefix=${installdir} \
+            --with-pkg-config-path=${pkg_config_path}
 make install
 
 
-cd $basedir
+cd ${basedir}
 rm -rf tmp
 
