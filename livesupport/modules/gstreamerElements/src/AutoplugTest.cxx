@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,8 +123,10 @@ AutoplugTest :: playFile(const char   * audioFile)
     // iterate until playTo is reached
     while (gst_bin_iterate(GST_BIN(pipeline)));
 
+    /* query the decoder, as for some reason, the sink will return
+     * unreal numbers */
     format = GST_FORMAT_TIME;
-    gst_element_query(sink, GST_QUERY_POSITION, &format, &timePlayed);
+    gst_element_query(decoder, GST_QUERY_POSITION, &format, &timePlayed);
 
     /* clean up nicely */
     gst_element_set_state(pipeline, GST_STATE_NULL);
