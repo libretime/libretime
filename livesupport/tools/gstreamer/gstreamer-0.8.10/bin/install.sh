@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -68,6 +68,9 @@ patch -p1 < ${etcdir}/adder-fix.diff
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
 # for details on the following patch
 patch -p1 < ${etcdir}/switcher-fix.diff
+# see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308619
+# for details on the following patch
+patch -p1 < ${etcdir}/id3demuxbin-pad-free-fix.patch
 # --disable-spc is a workaround for gst-plugins-0.8.9, as some APU.c file
 # is missing from there. remove this when later versions come around
 ./configure --disable-spc --prefix=${installdir} \
