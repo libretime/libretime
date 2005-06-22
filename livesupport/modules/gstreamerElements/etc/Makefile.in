@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -76,6 +76,9 @@ TEST_RESULTS = ${DOC_DIR}/testResults.xml
 # the text result XSLT has to be relative to the test result file, e.g. TMP_DIR
 TEST_XSLT    = ../etc/testResultToHtml.xsl
 
+GSTREAMER_ELEMENTS_LIB		= livesupport_gstreamerelements
+GSTREAMER_ELEMENTS_LIB_FILE = ${LIB_DIR}/lib${GSTREAMER_ELEMENTS_LIB}.a
+
 ONESHOT_READER_LIB          = livesupport_oneshotreader
 ONESHOT_READER_LIB_FILE     = ${LIB_DIR}/lib${ONESHOT_READER_LIB}.so
 MINIMAL_AUDIO_SMIL_LIB      = livesupport_minimalaudiosmil
@@ -122,26 +125,22 @@ LDFLAGS  = @LDFLAGS@ ${GSTREAMER_LIBS} \
 #-------------------------------------------------------------------------------
 #	Dependencies
 #-------------------------------------------------------------------------------
+GSTREAMER_ELEMENTS_LIB_OBJS = ${TMP_DIR}/seek.o \
+                   			  ${TMP_DIR}/util.o \
+                   			  ${TMP_DIR}/seek-pack.o \
+				   			  ${TMP_DIR}/autoplug.o \
+							  ${TMP_DIR}/smil-util.o
+
 ONESHOT_READER_LIB_OBJS = ${TMP_DIR}/oneshot-reader.o
 
-MINIMAL_AUDIO_SMIL_LIB_OBJS = ${TMP_DIR}/seek.o \
-                              ${TMP_DIR}/util.o \
-                              ${TMP_DIR}/seek-pack.o \
-                              ${TMP_DIR}/minimal-audio-smil.o
+MINIMAL_AUDIO_SMIL_LIB_OBJS = ${TMP_DIR}/minimal-audio-smil.o
 
-PARTIAL_PLAY_LIB_OBJS = ${TMP_DIR}/seek.o \
-                        ${TMP_DIR}/util.o \
-                        ${TMP_DIR}/seek-pack.o \
-						${TMP_DIR}/smil-util.o \
-                        ${TMP_DIR}/partial-play.o
+PARTIAL_PLAY_LIB_OBJS = ${TMP_DIR}/partial-play.o
 
-SWITCHER_LIB_OBJS = ${TMP_DIR}/smil-util.o \
-                    ${TMP_DIR}/switcher.o
+SWITCHER_LIB_OBJS = ${TMP_DIR}/switcher.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-                   ${TMP_DIR}/seek.o \
-                   ${TMP_DIR}/util.o \
-                   ${TMP_DIR}/seek-pack.o \
+				   ${TMP_DIR}/AutoplugTest.o \
                    ${TMP_DIR}/SeekTest.o \
                    ${TMP_DIR}/SwitcherTest.o \
                    ${TMP_DIR}/SeekPackTest.o \
@@ -149,7 +148,8 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/OneshotReaderTest.o \
 				   ${TMP_DIR}/MinimalAudioSmilTest.o 
 
-TEST_RUNNER_LIBS = -l${CORE_LIB} -lcppunit -ldl -lxmlrpc++
+TEST_RUNNER_LIBS = -l${GSTREAMER_ELEMENTS_LIB} -l${CORE_LIB} \
+                   -lcppunit -ldl -lxmlrpc++
 
 
 #-------------------------------------------------------------------------------
@@ -157,7 +157,8 @@ TEST_RUNNER_LIBS = -l${CORE_LIB} -lcppunit -ldl -lxmlrpc++
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean
 
-all: dir_setup ${ONESHOT_READER_LIB_FILE} \
+all: dir_setup ${GSTREAMER_ELEMENTS_LIB_FILE} \
+               ${ONESHOT_READER_LIB_FILE} \
                ${MINIMAL_AUDIO_SMIL_LIB_FILE} \
                ${PARTIAL_PLAY_LIB_FILE} \
                ${SWITCHER_LIB_FILE} \
@@ -172,6 +173,7 @@ doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
 
 clean:
+	${RM} ${GSTREAMER_ELEMENTS_LIB_OBJS} ${GSTREAMER_ELEMENTS_LIB_FILE}
 	${RM} ${ONESHOT_READER_LIB_OBJS} ${ONESHOT_READER_LIB_FILE}
 	${RM} ${MINIMAL_AUDIO_SMIL_LIB_OBJS} ${MINIMAL_AUDIO_SMIL_LIB_FILE}
 	${RM} ${PARTIAL_PLAY_LIB_OBJS} ${PARTIAL_PLAY_LIB_FILE}
@@ -196,17 +198,24 @@ check: all ${TEST_RUNNER}
 #-------------------------------------------------------------------------------
 #   Specific targets
 #-------------------------------------------------------------------------------
-${ONESHOT_READER_LIB_FILE}: ${ONESHOT_READER_LIB_OBJS}
+${GSTREAMER_ELEMENTS_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_OBJS}
+	${AR} crus $@ $^
+
+${ONESHOT_READER_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_FILE} \
+                            ${ONESHOT_READER_LIB_OBJS}
 	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
-${MINIMAL_AUDIO_SMIL_LIB_FILE}: ${MINIMAL_AUDIO_SMIL_LIB_OBJS}
-	${CC} -shared ${GST_LDFLAGS} -o $@ $^
+${MINIMAL_AUDIO_SMIL_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_FILE} \
+                                ${MINIMAL_AUDIO_SMIL_LIB_OBJS}
+	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
-${PARTIAL_PLAY_LIB_FILE}: ${PARTIAL_PLAY_LIB_OBJS}
-	${CC} -shared ${GST_LDFLAGS} -o $@ $^
+${PARTIAL_PLAY_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_FILE} \
+                          ${PARTIAL_PLAY_LIB_OBJS}
+	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
-${SWITCHER_LIB_FILE}: ${SWITCHER_LIB_OBJS}
-	${CC} -shared ${GST_LDFLAGS} -o $@ $^
+${SWITCHER_LIB_FILE}: ${SWITCHER_LIB_OBJS} \
+					  ${GSTREAMER_ELEMENTS_LIB_FILE}
+	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
 ${TMP_DIR}:
 	${MKDIR} ${TMP_DIR}
@@ -214,7 +223,8 @@ ${TMP_DIR}:
 ${DOXYGEN_DIR}:
 	${MKDIR} ${DOXYGEN_DIR}
 
-${TEST_RUNNER}: ${CORE_LIB_FILE} ${TEST_RUNNER_OBJS}
+${TEST_RUNNER}: ${CORE_LIB_FILE} ${GSTREAMER_ELEMENTS_LIB_FILE} \
+                ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
 
 ${CORE_LIB_FILE}:
