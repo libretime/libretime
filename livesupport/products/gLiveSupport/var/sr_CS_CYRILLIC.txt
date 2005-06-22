@@ -90,10 +90,11 @@ sr_CS_CYRILLIC:table
 
         uploadButtonLabel:string      { "Аплоуд" }
         closeButtonLabel:string       { "Откажи" }
-        statusBar:string              { "статус бар" }
 
         fileChooserDialogTitle:string { "Изабери фајл" }
-        clipUploadedMessage:string    { "Аплоудован клип {0}" }
+        clipUploadedMsg:string        { "Аплоудован клип ''{0}''." }
+        couldNotOpenFileMsg:string    { "*** translate me ***" }
+        missingTitleMsg:string        { "*** translate me ***" }
     }
 
     simplePlaylistManagementWindow:table

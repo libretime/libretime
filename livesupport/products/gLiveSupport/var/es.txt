@@ -91,10 +91,11 @@ es:table
 
         uploadButtonLabel:string      { "Cargar" }
         closeButtonLabel:string       { "Cancelar" }
-        statusBar:string              { "Barra de estatus" }
 
         fileChooserDialogTitle:string { "Seleccione un archivo" }
-        clipUploadedMessage:string    { "clip cargado {0}" }
+        clipUploadedMsg:string        { "Clip ''{0}'' cargado." }
+        couldNotOpenFileMsg:string    { "*** translate me ***" }
+        missingTitleMsg:string        { "*** translate me ***" }
     }
 
     simplePlaylistManagementWindow:table

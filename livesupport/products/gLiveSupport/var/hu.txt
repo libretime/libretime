@@ -90,10 +90,11 @@ hu:table
 
         uploadButtonLabel:string      { "feltölt" }
         closeButtonLabel:string       { "bezár" }
-        statusBar:string              { "állapotsor" }
 
         fileChooserDialogTitle:string { "File Kiválasztása" }
-        clipUploadedMessage:string    { "hangfile {0} feltöltve" }
+        clipUploadedMsg:string        { "A ''{0}'' klip feltöltve." }
+        couldNotOpenFileMsg:string    { "A fájl nem olvasható." }
+        missingTitleMsg:string        { "Kérem, adjon meg egy címet." }
     }
 
     simplePlaylistManagementWindow:table

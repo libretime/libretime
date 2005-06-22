@@ -91,10 +91,11 @@ root:table
 
         uploadButtonLabel:string      { "Upload" }
         closeButtonLabel:string       { "Cancel" }
-        statusBar:string              { "status bar" }
 
         fileChooserDialogTitle:string { "Choose a File" }
-        clipUploadedMessage:string    { "uploaded clip {0}" }
+        clipUploadedMsg:string        { "Uploaded clip ''{0}''." }
+        couldNotOpenFileMsg:string    { "The file could not be opened." }
+        missingTitleMsg:string        { "Please enter a title." }
     }
 
     simplePlaylistManagementWindow:table

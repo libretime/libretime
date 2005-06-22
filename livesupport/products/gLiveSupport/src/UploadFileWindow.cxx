@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -127,8 +127,7 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
                                 *getResourceUstring("uploadButtonLabel")));
         closeButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("closeButtonLabel")));
-        statusBar = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("statusBar")));
+        statusBar = Gtk::manage(new Gtk::Label(""));
     } catch (std::invalid_argument &e) {
         // TODO: signal error
         std::cerr << e.what() << std::endl;
@@ -227,57 +226,56 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
     Ptr<std::string>::Ref   newUri(new std::string("file://"));
     newUri->append(fileName);
 
-    if (!isAudioClipValid || 
-            *audioClip->getUri() != *newUri) {
-        // see if the file exists, and is readable
-        std::ifstream   file(fileName.c_str());
-        if (!file.good()) {
-            isAudioClipValid = false;
-            file.close();
-            return;
-        }
+    // see if the file exists, and is readable
+    std::ifstream   file(fileName.c_str());
+    if (!file.good()) {
         file.close();
-        isAudioClipValid = true;
-
-        Ptr<time_duration>::Ref     playlength;
-        try {
-            playlength = readPlaylength(fileName);
-        } catch (std::invalid_argument &e) {
-            statusBar->set_text(e.what());
-            playlength.reset(new time_duration(0,0,0,0));
-        }
-
-        Ptr<const Glib::ustring>::Ref   tempTitle(new const Glib::ustring);
-        audioClip.reset(new AudioClip(tempTitle, playlength, newUri));
-
-        // read the id3 tags
-        try {
-            audioClip->readTag(gLiveSupport->getMetadataTypeContainer());
-        } catch (std::invalid_argument &e) {
-            statusBar->set_text(e.what());
-            isAudioClipValid = false;
-            return;
-        }
-
-        titleEntry->set_text(*audioClip->getTitle());
-        Ptr<const Glib::ustring>::Ref   creator 
-                                        = audioClip->getMetadata("dc:creator");
-        creatorEntry->set_text(creator ? *creator : "");
-
-        Ptr<const Glib::ustring>::Ref   genre
-                                        = audioClip->getMetadata("dc:type");
-        genreEntry->set_text(genre ? *genre : "");
-
-        // display the new play length
-        std::ostringstream  lengthStr;
-        lengthStr << std::setfill('0')
-            << std::setw(2) << playlength->hours() << ":"
-            << std::setw(2) << playlength->minutes() << ":"
-            << std::setw(2) << (playlength->fractional_seconds() < 500000
-                                                  ? playlength->seconds() 
-                                                  : playlength->seconds() + 1);
-        lengthValueLabel->set_text(lengthStr.str());
+        statusBar->set_text(*getResourceUstring("couldNotOpenFileMsg"));
+        isAudioClipValid = false;
+        return;
     }
+    file.close();
+
+    Ptr<time_duration>::Ref     playlength;
+    try {
+        playlength = readPlaylength(fileName);
+    } catch (std::invalid_argument &e) {
+        statusBar->set_text(e.what());
+        playlength.reset(new time_duration(0,0,0,0));
+    }
+
+    Ptr<const Glib::ustring>::Ref   tempTitle(new const Glib::ustring);
+    audioClip.reset(new AudioClip(tempTitle, playlength, newUri));
+
+    // read the id3 tags
+    try {
+        audioClip->readTag(gLiveSupport->getMetadataTypeContainer());
+    } catch (std::invalid_argument &e) {
+        statusBar->set_text(e.what());
+        isAudioClipValid = false;
+        return;
+    }
+
+    titleEntry->set_text(*audioClip->getTitle());
+    Ptr<const Glib::ustring>::Ref   creator 
+                                    = audioClip->getMetadata("dc:creator");
+    creatorEntry->set_text(creator ? *creator : "");
+
+    Ptr<const Glib::ustring>::Ref   genre
+                                    = audioClip->getMetadata("dc:type");
+    genreEntry->set_text(genre ? *genre : "");
+
+    // display the new play length
+    std::ostringstream  lengthStr;
+    lengthStr << std::setfill('0')
+        << std::setw(2) << playlength->hours() << ":"
+        << std::setw(2) << playlength->minutes() << ":"
+        << std::setw(2) << (playlength->fractional_seconds() < 500000
+                                                ? playlength->seconds() 
+                                                : playlength->seconds() + 1);
+    lengthValueLabel->set_text(lengthStr.str());
+
+    isAudioClipValid = true;
 }
 
 
@@ -299,43 +297,42 @@ UploadFileWindow :: onFileNameEntryLeave(GdkEventFocus    * event)
 void
 UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 {
+    if (!isAudioClipValid) {
+        return;
+    }
+
+    Ptr<const Glib::ustring>::Ref   ustrValue(new Glib::ustring(
+                                                titleEntry->get_text() ));
+    if (*ustrValue == "") {
+        statusBar->set_text(*getResourceUstring("missingTitleMsg"));
+        return;
+    }
+    audioClip->setTitle(ustrValue);
+    ustrValue.reset(new Glib::ustring(creatorEntry->get_text()));
+    audioClip->setMetadata(ustrValue, "dc:creator");
+    ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
+    audioClip->setMetadata(ustrValue, "dc:type");
+    ustrValue.reset(new Glib::ustring(
+                                fileFormatComboBox->get_active_text()));
+    audioClip->setMetadata(ustrValue, "dc:format");
+    // TODO: is this really what we mean by dc:format?
+
     try {
-        updateFileInfo();
-        if (!isAudioClipValid) {
-            // TODO: localize error message
-            throw std::invalid_argument("file does not exist");
-        }
-
-        // set the metadata available
-        Ptr<const Glib::ustring>::Ref   ustrValue(new Glib::ustring(
-                                                    titleEntry->get_text() ));
-        audioClip->setTitle(ustrValue);
-        ustrValue.reset(new Glib::ustring(creatorEntry->get_text()));
-        audioClip->setMetadata(ustrValue, "dc:creator");
-        ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
-        audioClip->setMetadata(ustrValue, "dc:type");
-        ustrValue.reset(new Glib::ustring(
-                                    fileFormatComboBox->get_active_text()));
-        audioClip->setMetadata(ustrValue, "dc:format");
-        // TODO: is this really what we mean by dc:format?
-
-        // upload the audio clip
         gLiveSupport->uploadFile(audioClip);
-
-        // display success in the status bar
-        Ptr<Glib::ustring>::Ref statusText = formatMessage(
-                                                    "clipUploadedMessage",
-                                                    *audioClip->getTitle());
-        statusBar->set_text(*statusText);
-
-        // clean the entry fields
-        //titleEntry->set_text("");
-        //fileNameEntry->set_text("");
-    } catch (std::invalid_argument &e) {
-        statusBar->set_text(e.what());
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
+        return;
     }
+
+    statusBar->set_text(*formatMessage("clipUploadedMsg",
+                                       *audioClip->getTitle() ));
+
+    fileNameEntry->set_text("");
+    titleEntry->set_text("");
+    creatorEntry->set_text("");
+    genreEntry->set_text("");
+
+    isAudioClipValid = false;
 }
 
 
@@ -345,6 +342,15 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
 void
 UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
 {
+    fileNameEntry->set_text("");
+    titleEntry->set_text("");
+    creatorEntry->set_text("");
+    genreEntry->set_text("");
+
+    statusBar->set_text("");
+
+    isAudioClipValid = false;
+
     hide();
 }
 

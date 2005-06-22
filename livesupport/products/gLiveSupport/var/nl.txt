@@ -91,10 +91,11 @@ nl:table
 
         uploadButtonLabel:string      { "Verzenden" }
         closeButtonLabel:string       { "Annuleer" }
-        statusBar:string              { "status balk" }
 
         fileChooserDialogTitle:string { "Kies een bestand" }
-        clipUploadedMessage:string    { "clip {0} verzonden" }
+        clipUploadedMsg:string        { "Clip ''{0}'' verzonden." }
+        couldNotOpenFileMsg:string    { "*** translate me ***" }
+        missingTitleMsg:string        { "*** translate me ***" }
     }
 
     simplePlaylistManagementWindow:table
