@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.4 $",
+    "$Revision: 1.5 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -449,7 +449,7 @@ switch_to_next_source(LivesupportSwitcher     * switcher)
 
 
 /*------------------------------------------------------------------------------
- *  The main chain function.
+ *  The main loop function.
  *----------------------------------------------------------------------------*/
 static void
 livesupport_switcher_loop(GstElement      * element)

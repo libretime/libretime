@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -140,7 +140,7 @@ PARTIAL_PLAY_LIB_OBJS = ${TMP_DIR}/partial-play.o
 SWITCHER_LIB_OBJS = ${TMP_DIR}/switcher.o
 
 TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
-				   ${TMP_DIR}/AutoplugTest.o \
+                   ${TMP_DIR}/AutoplugTest.o \
                    ${TMP_DIR}/SeekTest.o \
                    ${TMP_DIR}/SwitcherTest.o \
                    ${TMP_DIR}/SeekPackTest.o \
@@ -201,16 +201,16 @@ check: all ${TEST_RUNNER}
 ${GSTREAMER_ELEMENTS_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_OBJS}
 	${AR} crus $@ $^
 
-${ONESHOT_READER_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_FILE} \
-                            ${ONESHOT_READER_LIB_OBJS}
+${ONESHOT_READER_LIB_FILE}: ${ONESHOT_READER_LIB_OBJS} \
+                            ${GSTREAMER_ELEMENTS_LIB_FILE}
 	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
-${MINIMAL_AUDIO_SMIL_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_FILE} \
-                                ${MINIMAL_AUDIO_SMIL_LIB_OBJS}
+${MINIMAL_AUDIO_SMIL_LIB_FILE}: ${MINIMAL_AUDIO_SMIL_LIB_OBJS} \
+					      		${GSTREAMER_ELEMENTS_LIB_FILE}
 	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
-${PARTIAL_PLAY_LIB_FILE}: ${GSTREAMER_ELEMENTS_LIB_FILE} \
-                          ${PARTIAL_PLAY_LIB_OBJS}
+${PARTIAL_PLAY_LIB_FILE}: ${PARTIAL_PLAY_LIB_OBJS} \
+					      ${GSTREAMER_ELEMENTS_LIB_FILE}
 	${CC} -shared -o $@ $^ ${GST_LDFLAGS}
 
 ${SWITCHER_LIB_FILE}: ${SWITCHER_LIB_OBJS} \

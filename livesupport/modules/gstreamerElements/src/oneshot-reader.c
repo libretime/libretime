@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/oneshot-reader.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "oneshotreaderplugin",
                   "A reader that reads all of the input on one go",
                   plugin_init,
-                  "$Revision: 1.1 $",
+                  "$Revision: 1.2 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -283,6 +283,7 @@ static void
 livesupport_one_shot_reader_loop(GstElement * element)
 {
     LivesupportOneShotReader  * reader;
+    GstData                   * data;
 
     g_return_if_fail(element != NULL);
     g_return_if_fail(GST_IS_ONE_SHOT_READER(element));
@@ -301,6 +302,9 @@ livesupport_one_shot_reader_loop(GstElement * element)
         }
         reader->processed = TRUE;
     }
+
+    /* just pull the data from the source and don't care about it */
+    data = gst_pad_pull(reader->sinkpad);
 
     gst_element_set_eos(element);
 }

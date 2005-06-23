@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/OneshotReaderTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -125,7 +125,7 @@ OneshotReaderTest :: firstTest(void)
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
     // well, actually don't run, by setting to state PLAYING,
     // we already have what we're looking for.
-    //while (gst_bin_iterate (GST_BIN (pipeline)));
+    while (gst_bin_iterate(GST_BIN(pipeline)));
 
     g_object_get(G_OBJECT(oneshot), "contents", &contents, NULL);
     g_object_get(G_OBJECT(oneshot), "length", &length, NULL);
@@ -135,7 +135,6 @@ OneshotReaderTest :: firstTest(void)
     verifyContents = new char[length];
     ifs.open(testFile);
     CPPUNIT_ASSERT(ifs.good());
-    // read length - 1, as oneshotreader appends an extra NULL character
     ifs.read(verifyContents, length);
     CPPUNIT_ASSERT(!memcmp(contents, verifyContents, length));
     

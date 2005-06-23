@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,6 +60,16 @@ static const char *         mp3TestFile = "var/5seccounter.mp3";
  *  An ogg vorbis test file.
  */
 static const char *         oggTestFile = "var/5seccounter.ogg";
+
+/**
+ *  A SMIL test file.
+ */
+static const char *         smilTestFile = "var/simple.smil";
+
+/**
+ *  A file we can't plug.
+ */
+static const char *         badFile = "src/AutoplugTest.cxx";
 
 
 /* ===============================================  local function prototypes */
@@ -111,6 +121,14 @@ AutoplugTest :: playFile(const char   * audioFile)
 
     decoder = autoplug_plug_source(source);
 
+    if (!decoder) {
+        gst_object_unref(GST_OBJECT(sink));
+        gst_object_unref(GST_OBJECT(source));
+        gst_object_unref(GST_OBJECT(pipeline));
+
+        return 0LL;
+    }
+
     gst_element_link(decoder, sink);
     gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
 
@@ -130,7 +148,7 @@ AutoplugTest :: playFile(const char   * audioFile)
 
     /* clean up nicely */
     gst_element_set_state(pipeline, GST_STATE_NULL);
-    gst_object_unref(GST_OBJECT (pipeline));
+    gst_object_unref(GST_OBJECT(pipeline));
 
     return timePlayed;
 }
@@ -167,5 +185,38 @@ AutoplugTest :: oggVorbisTest(void)
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A SMIL test.
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilTestFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test somethign we can't plug.
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: negativeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(badFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed == 0LL);
 }
 

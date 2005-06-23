@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,15 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class AutoplugTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(AutoplugTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(oggVorbisTest);
+    CPPUNIT_TEST(smilTest);
+    CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -98,6 +100,22 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
          */
         void
         oggVorbisTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test a SMIL file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilTest(void)                          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A negative test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        negativeTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:

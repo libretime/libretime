@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,8 +55,8 @@
  */
 static GstElementDetails livesupport_minimal_audio_smil_details =
              GST_ELEMENT_DETAILS("MinimalAudioSmil",
-                                 "Generic",
-                                 "A minimal SMIL payer, supporting only audio",
+                                 "Parse/Smil",
+                                 "A minimal SMIL player, supporting only audio",
                                  "Akos Maroy <maroy@campware.org>");
 
 /**
@@ -110,7 +110,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.1 $",
+                  "$Revision: 1.2 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -242,7 +242,9 @@ read_stream_into_memory(LivesupportMinimalAudioSmil    * smil,
     *outlength = 0;
 
     oldState = gst_element_get_state(smil->oneshotReader);
-    gst_element_set_state(smil->oneshotReader, GST_STATE_PLAYING);
+    if (oldState != GST_STATE_PLAYING) {
+        gst_element_set_state(smil->oneshotReader, GST_STATE_PLAYING);
+    }
     g_object_get(G_OBJECT(smil->oneshotReader), "length", &length, NULL);
     g_object_get(G_OBJECT(smil->oneshotReader), "contents", &buffer, NULL);
 
@@ -438,6 +440,10 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
     xmlDocPtr               document;
     xmlNode               * node;
 
+    if (!GST_PAD_IS_LINKED(smil->sinkpad)) {
+        return FALSE;
+    }
+
     /* read the source document into memory */
     read_stream_into_memory(smil, &buffer, &length);
     if (!buffer) {
@@ -493,15 +499,22 @@ static GstElementStateReturn
 livesupport_minimal_audio_smil_change_state(GstElement * element)
 {
     LivesupportMinimalAudioSmil   * smil;
+    GstElementState                 transition = GST_STATE_TRANSITION(element);
 
     smil = LIVESUPPORT_MINIMAL_AUDIO_SMIL(element);
 
-    switch (GST_STATE_TRANSITION (element)) {
+    switch (transition) {
         case GST_STATE_NULL_TO_READY:
             gst_element_set_state(GST_ELEMENT(smil->bin), GST_STATE_READY);
             break;
 
         case GST_STATE_READY_TO_PAUSED:
+            gst_element_set_state(GST_ELEMENT(smil->bin), GST_STATE_PAUSED);
+            break;
+
+        case GST_STATE_PAUSED_TO_PLAYING:
+            gst_element_set_state(GST_ELEMENT(smil->bin), GST_STATE_PLAYING);
+
             if (!smil->fileProcessed) {
                 /* set to true, in case of multiple change events */
                 smil->fileProcessed = TRUE;
@@ -513,11 +526,7 @@ livesupport_minimal_audio_smil_change_state(GstElement * element)
                                       (NULL));
                 }
             }
-            gst_element_set_state(GST_ELEMENT(smil->bin), GST_STATE_PAUSED);
-            break;
 
-        case GST_STATE_PAUSED_TO_PLAYING:
-            gst_element_set_state(GST_ELEMENT(smil->bin), GST_STATE_PLAYING);
             break;
 
         case GST_STATE_PLAYING_TO_PAUSED:
@@ -680,7 +689,7 @@ plugin_init (GstPlugin * plugin)
 {
     return gst_element_register(plugin,
                                 "minimalaudiosmil",
-                                GST_RANK_NONE,
+                                GST_RANK_SECONDARY,
                                 LIVESUPPORT_TYPE_MINIMAL_AUDIO_SMIL);
 }
 

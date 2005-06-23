@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -107,6 +107,14 @@ static void
 autoplug_init(Typefind      * typefind);
 
 /**
+ *  De-initialize a typefind object.
+ *
+ *  @param typefind the Typefind structure to de-init.
+ */
+static void
+autoplug_deinit(Typefind      * typefind);
+
+/**
  *  A filter specifying the kind of factories we're interested in.
  *
  *  @param feature the feature to test
@@ -176,11 +184,15 @@ autoplug_newpad(GstElement    * element,
  *  Remove all typefind elements inside the bin, traversing to lower binds
  *  if necessary. The pads linked through the removed typefind elements are
  *  linked directly instead.
+ *  The typefind member of the supplied Typefind object is also removed,
+ *  and changed to NULL.
  *
+ *  @param typefind the typefind object to work on.
  *  @param bin the bin to remove the typefind elements from.
  */
 static void
-autoplug_remove_typefind_elements(GstBin   * bin);
+autoplug_remove_typefind_elements(Typefind    * typefind,
+                                  GstBin      * bin);
 
 
 /* =============================================================  module code */
@@ -277,6 +289,28 @@ autoplug_init(Typefind      * typefind)
     typefind->done = FALSE;
 }
 
+/*------------------------------------------------------------------------------
+ *  De-initialize a Typefind object.
+ *----------------------------------------------------------------------------*/
+static void
+autoplug_deinit(Typefind      * typefind)
+{
+    g_list_free(typefind->factories);
+
+    if (typefind->typefind) {
+        g_signal_handler_disconnect(typefind->typefind,
+                                    typefind->typefindSignal);
+    }
+
+    if (typefind->audiosink && !gst_element_get_parent(typefind->audiosink)) {
+        gst_object_unref(GST_OBJECT(typefind->audiosink));
+    }
+    if (typefind->sink && !gst_element_get_parent(typefind->sink)) {
+        gst_object_unref(GST_OBJECT(typefind->sink));
+    }
+    gst_object_unref(GST_OBJECT(typefind->pipeline));
+}
+
 
 /*------------------------------------------------------------------------------
  *  Handle the event of a new pad being created on an element with
@@ -311,20 +345,37 @@ autoplug_close_link(Typefind      * typefind,
 	                const gchar   * padname,
 	                const GList   * templlist)
 {
-    GstPad    * pad;
-    gboolean    has_dynamic_pads = FALSE;
+    GstPad        * pad;
+    gboolean        has_dynamic_pads = FALSE;
+    GstElement    * srcelement;
+
+    srcelement = GST_ELEMENT(gst_pad_get_parent(srcpad));
 
     GST_DEBUG("Plugging pad %s:%s to newly created %s:%s",
-	          gst_object_get_name (GST_OBJECT (gst_pad_get_parent (srcpad))),
-	          gst_pad_get_name (srcpad),
-	          gst_object_get_name (GST_OBJECT (sinkelement)), padname);
+	          gst_object_get_name(GST_OBJECT(srcelement)),
+	          gst_pad_get_name(srcpad),
+	          gst_object_get_name(GST_OBJECT(sinkelement)), padname);
 
     /* add the element to the pipeline and set correct state */
-    gst_element_set_state(sinkelement, GST_STATE_PAUSED);
     gst_bin_add(GST_BIN(typefind->bin), sinkelement);
     pad = gst_element_get_pad(sinkelement, padname);
     gst_pad_link(srcpad, pad);
-    gst_bin_sync_children_state(GST_BIN(typefind->bin));
+    /* FIXME: this is a nasty workaround for lack of time
+     *        the minimalaudiosmil will try to read the input immediately
+     *        from it sink pad as its set to PLAYING state,
+     *        but that will result in a zillion such gstreamer warnings:
+     *        "deadlock detected, disabling group 0xXXXXXX"
+     *        but for example the vorbis demuxer needs to be in PLAYING
+     *        state so that it can dynamically connect its request pads.
+     *        fix this as soon as possible!
+     */
+    if (!(g_strrstr(gst_object_get_name(GST_OBJECT(srcelement)),
+                  "minimalaudiosmil")
+       || g_strrstr(gst_object_get_name(GST_OBJECT(sinkelement)),
+                  "minimalaudiosmil"))) {
+
+        gst_bin_sync_children_state(GST_BIN(typefind->bin));
+    }
 
     /* if we have static source pads, link those. If we have dynamic
      * source pads, listen for new-pad signals on the element */
@@ -414,7 +465,6 @@ autoplug_try_to_plug(Typefind         * typefind,
                                 "src");
         gst_element_link(typefind->bin, typefind->sink);
         gst_bin_add(GST_BIN(typefind->pipeline), typefind->sink);
-        gst_bin_sync_children_state(GST_BIN(typefind->bin));
         gst_bin_sync_children_state(GST_BIN(typefind->pipeline));
 
         gst_caps_free (audiocaps);
@@ -448,19 +498,22 @@ autoplug_try_to_plug(Typefind         * typefind,
             if (res && !gst_caps_is_empty(res)) {
                 GstElement    * element;
                 const GList   * padTemplates;
+                gchar         * templateName;
 
                 /* close link and return */
                 gst_caps_free(res);
+                templateName = g_strdup(templ->name_template);
                 element      = gst_element_factory_create(factory, NULL);
                 padTemplates = gst_element_factory_get_pad_templates(factory);
                 autoplug_close_link(typefind,
                                     pad,
                                     element,
-                                    templ->name_template,
+                                    templateName,
 		                            padTemplates);
+                g_free(templateName);
                 return;
             }
-            gst_caps_free (res);
+            gst_caps_free(res);
 
             /* we only check one sink template per factory, so move on to the
              * next factory now */
@@ -518,7 +571,8 @@ autoplug_error_handler(GstElement * pipeline,
  *  linked directly instead.
  *----------------------------------------------------------------------------*/
 static void
-autoplug_remove_typefind_elements(GstBin   * bin)
+autoplug_remove_typefind_elements(Typefind    * typefind,
+                                  GstBin      * bin)
 {
     GstElement    * element;
     const GList   * elements;
@@ -538,7 +592,7 @@ autoplug_remove_typefind_elements(GstBin   * bin)
                   g_type_is_a(type, GST_TYPE_BIN));
 
         if (GST_IS_BIN(element)) {
-            autoplug_remove_typefind_elements(GST_BIN(element));
+            autoplug_remove_typefind_elements(typefind, GST_BIN(element));
         } else if (g_strrstr(gst_element_factory_get_longname(factory),
                              "TypeFind")) {
             GstPad        * tfSinkPad;
@@ -581,6 +635,10 @@ autoplug_remove_typefind_elements(GstBin   * bin)
 
             gst_bin_remove(bin, element);
 
+            if (element == typefind->typefind) {
+                typefind->typefind = NULL;
+            }
+
             /* start iteration from the beginning, as probably the element
              * list is invalidated with us removing the typefind element */
             elements = gst_bin_get_list(GST_BIN(bin));
@@ -599,6 +657,11 @@ GstElement *
 autoplug_plug_source(GstElement    * source)
 {
     Typefind        typefind;
+    GstElement    * bin;
+
+    /* add an additional ref on the source, as we'll put it in a bin
+     * and remove it from the bin later, which will decrease the ref by one */
+    g_object_ref(source);
 
     typefind.source = source;
     autoplug_init(&typefind);
@@ -611,24 +674,31 @@ autoplug_plug_source(GstElement    * source)
     /* run */
     while (!typefind.done && gst_bin_iterate(GST_BIN(typefind.pipeline)));
 
+    if (!typefind.done) {
+        autoplug_deinit(&typefind);
+        return NULL;
+    }
+
     /* remove the sink element */
     gst_element_unlink(typefind.bin, typefind.sink);
     gst_bin_remove(GST_BIN(typefind.pipeline), typefind.sink);
+    typefind.sink = NULL;
 
     /* remove the typefind elements, and re-link with the source */
-    g_signal_handler_disconnect(typefind.typefind, typefind.typefindSignal);
-    autoplug_remove_typefind_elements(GST_BIN(typefind.bin));
+    autoplug_remove_typefind_elements(&typefind, GST_BIN(typefind.bin));
     gst_element_link(typefind.source, typefind.bin);
 
     /* destory the pipeline, but keep source and bin */
-    g_object_ref(typefind.source);
     g_object_ref(typefind.bin);
     gst_bin_remove(GST_BIN(typefind.pipeline), typefind.bin);
-    gst_object_unref(GST_OBJECT(typefind.pipeline));
 
-    gst_element_set_state(typefind.bin, GST_STATE_PAUSED);
-    gst_bin_sync_children_state(GST_BIN(typefind.bin));
+    bin = typefind.bin;
 
-    return typefind.bin;
+    autoplug_deinit(&typefind);
+
+    gst_element_set_state(bin, GST_STATE_PAUSED);
+    gst_bin_sync_children_state(GST_BIN(bin));
+
+    return bin;
 }
 
