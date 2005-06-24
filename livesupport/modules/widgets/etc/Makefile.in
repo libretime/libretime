@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.17 $
+#   Version  : $Revision: 1.18 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -66,6 +66,9 @@ VPATH    = ${SRC_DIR}
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
+
+# TODO: move ICU flag determination to configure script
+ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags --ldflags-toolutil --ldflags-icuio`
 
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
@@ -127,7 +130,7 @@ WIDGETS_LIB_OBJS = ${TMP_DIR}/ImageButton.o \
 TEST_EXE_OBJS    = ${TMP_DIR}/TestWindow.o \
 				   ${TMP_DIR}/main.o
 
-TEST_EXE_LIBS = -l${CORE_LIB} \
+TEST_EXE_LIBS = -l${WIDGETS_LIB} -l${CORE_LIB} ${ICU_LIBS} \
                 -lboost_date_time-gcc \
                 -lxmlrpc++ -lssl
 
