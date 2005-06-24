@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -406,8 +406,17 @@ WidgetFactory :: loadImage(const std::string    imageName)
 {
     Glib::RefPtr<Gdk::Pixbuf>   image;
 
-    if (!(image = Gdk::Pixbuf::create_from_file(path + imageName))) {
-        throw std::invalid_argument("Missing " + image);
+    bool    success = true;
+    try {
+        image = Gdk::Pixbuf::create_from_file(path + imageName);
+    } catch (Glib::FileError &e) {
+        success = false;
+    } catch (Gdk::PixbufError &e) {
+        success = false;
+    }
+    
+    if (!success || !image) {
+        throw std::invalid_argument("Missing " + imageName);
     }
 
     return image;
