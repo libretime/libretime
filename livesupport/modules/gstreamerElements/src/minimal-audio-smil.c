@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,7 +110,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.2 $",
+                  "$Revision: 1.3 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -248,10 +248,13 @@ read_stream_into_memory(LivesupportMinimalAudioSmil    * smil,
     g_object_get(G_OBJECT(smil->oneshotReader), "length", &length, NULL);
     g_object_get(G_OBJECT(smil->oneshotReader), "contents", &buffer, NULL);
 
-    gst_element_set_state(smil->oneshotReader, oldState);
+    if (!length) {
+        return;
+    }
 
-    *outbuffer = buffer;
+    *outbuffer = g_malloc(length);
     *outlength = length;
+    memcpy(*outbuffer, buffer, length);
 }
 
 
@@ -431,7 +434,7 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
 
 /*------------------------------------------------------------------------------
  *  Process the sink input as a SMIL file.
- *----------------------------------------------------------------------------*/
+e*----------------------------------------------------------------------------*/
 static gboolean
 process_smil_file(LivesupportMinimalAudioSmil * smil)
 {
@@ -440,6 +443,12 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
     xmlDocPtr               document;
     xmlNode               * node;
 
+    if (smil->fileProcessed) {
+        return TRUE;
+    }
+
+    smil->fileProcessed = TRUE;
+
     if (!GST_PAD_IS_LINKED(smil->sinkpad)) {
         return FALSE;
     }
@@ -447,12 +456,14 @@ process_smil_file(LivesupportMinimalAudioSmil * smil)
     /* read the source document into memory */
     read_stream_into_memory(smil, &buffer, &length);
     if (!buffer) {
+        smil->fileProcessed = FALSE;
         return FALSE;
     }
 
     /* parse the XML files */
     document = xmlReadMemory((const char *) buffer,
                              length, "noname.xml", NULL, 0);
+    g_free(buffer);
     if (!document
      || !(node = get_body_element(document))) {
         GST_ELEMENT_ERROR(GST_ELEMENT(smil),
@@ -515,16 +526,12 @@ livesupport_minimal_audio_smil_change_state(GstElement * element)
         case GST_STATE_PAUSED_TO_PLAYING:
             gst_element_set_state(GST_ELEMENT(smil->bin), GST_STATE_PLAYING);
 
-            if (!smil->fileProcessed) {
-                /* set to true, in case of multiple change events */
-                smil->fileProcessed = TRUE;
-                if (!(smil->fileProcessed = process_smil_file(smil))) {
-                    GST_ELEMENT_ERROR(GST_ELEMENT(smil),
-                                      STREAM,
-                                      WRONG_TYPE,
-                                      ("unable to process SMIL file"),
-                                      (NULL));
-                }
+            if (!process_smil_file(smil)) {
+                GST_ELEMENT_ERROR(GST_ELEMENT(smil),
+                                  STREAM,
+                                  WRONG_TYPE,
+                                  ("unable to process SMIL file"),
+                                  (NULL));
             }
 
             break;

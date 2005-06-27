@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 
 #include <gst/gst.h>
 
+#include "LiveSupport/GstreamerElements/autoplug.h"
 #include "util.h"
 #include "seek.h"
 #include "seek-pack.h"
@@ -112,6 +113,8 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
     gchar                 * str      = g_malloc(len);
     LivesupportSeekPack   * seekPack = g_malloc(sizeof(LivesupportSeekPack));
 
+    seekPack->name      = g_strdup(uniqueName);
+
     g_snprintf(str, len, "%s_seekPackSilence", uniqueName);
     seekPack->silence   = gst_element_factory_make("silence", str);
     g_snprintf(str, len, "%s_seekPackAudioConvert", uniqueName);
@@ -121,8 +124,8 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
     /* TODO: typefind, and create Ogg Vorbis parser/decoder */
     seekPack->parser    = NULL;
 
-    g_snprintf(str, len, "%s_seekPackDecoder", uniqueName);
-    seekPack->decoder   = gst_element_factory_make("mad", str);
+    /* generate decoder later, by autoplugging */
+    seekPack->decoder   = 0;
     g_snprintf(str, len, "%s_seekPackSwitcher", uniqueName);
     seekPack->switcher = gst_element_factory_make("switcher", str);
     g_snprintf(str, len, "%s_seekPackBin", uniqueName);
@@ -172,8 +175,10 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
                            gint64                   startTime,
                            gint64                   endTime)
 {
-    GValue      gvalue = { 0 };
-    gchar       str[256];
+    GValue          gvalue = { 0 };
+    gchar           str[256];
+    unsigned int    len      = strlen(seekPack->name) + 64;
+    gchar         * name     = g_malloc(len);
 
     seekPack->source            = source;
 
@@ -196,6 +201,11 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
     g_value_set_string(&gvalue, str);
     gst_element_set_property(seekPack->switcher, "source-config", &gvalue);
 
+    g_snprintf(name, len, "%s_seekPackDecoder", seekPack->name);
+    seekPack->decoder = ls_gst_autoplug_plug_source(seekPack->source,
+                                                    name);
+    g_free(name);
+
     gst_element_link(seekPack->source, seekPack->decoder);
     livesupport_seek_pack_seek(seekPack);
     gst_element_link(seekPack->decoder, seekPack->switcher);
@@ -215,6 +225,7 @@ livesupport_seek_pack_destroy(LivesupportSeekPack     * seekPack)
 {
     gst_element_set_state(seekPack->bin, GST_STATE_NULL);
     g_object_unref(seekPack->bin);
+    g_free(seekPack->name);
     g_free(seekPack);
 }
 
@@ -264,9 +275,15 @@ livesupport_seek_pack_set_state(LivesupportSeekPack   * seekPack,
 {
     /* FIXME: resetting the source from PLAYING state would make it lose
      *        it's seek position */
-    gst_element_set_state(seekPack->audioconvert, state);
-    gst_element_set_state(seekPack->decoder, state);
-    gst_element_set_state(seekPack->switcher, state);
+    if (seekPack->audioconvert) {
+        gst_element_set_state(seekPack->audioconvert, state);
+    }
+    if (seekPack->decoder) {
+        gst_element_set_state(seekPack->decoder, state);
+    }
+    if (seekPack->switcher) {
+        gst_element_set_state(seekPack->switcher, state);
+    }
 }
 
 
@@ -299,8 +316,8 @@ livesupport_seek_pack_seek(LivesupportSeekPack    * seekPack)
                      NULL);
 
     GST_DEBUG("setting seek pipeline to PLAYING state");
-    gst_element_set_state(seekPack->decoder, GST_STATE_READY);
-    gst_element_set_state(fakesink, GST_STATE_READY);
+    gst_element_set_state(seekPack->decoder, GST_STATE_PAUSED);
+    gst_element_set_state(fakesink, GST_STATE_PAUSED);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
     GST_DEBUG("starting to iterate...");
@@ -312,7 +329,6 @@ livesupport_seek_pack_seek(LivesupportSeekPack    * seekPack)
     GST_DEBUG("seeking on element");
     ret = livesupport_seek(seekPack->decoder, seekType, seekPack->startTime);
     GST_DEBUG("seek result: %d", ret);
-
 
     gst_bin_remove_many(GST_BIN(pipeline),
                         seekPack->source,

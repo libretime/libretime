@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/oneshot-reader.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "oneshotreaderplugin",
                   "A reader that reads all of the input on one go",
                   plugin_init,
-                  "$Revision: 1.2 $",
+                  "$Revision: 1.3 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -218,6 +218,7 @@ read_stream_into_memory(LivesupportOneShotReader  * reader,
     guint32         length;
     guint32         read;
     guint8        * buffer;
+    gboolean        ret;
 
     *outbuffer = 0;
     *outlength = 0;
@@ -230,6 +231,9 @@ read_stream_into_memory(LivesupportOneShotReader  * reader,
                           (NULL));
         return;
     }
+
+    /* seek to the beginning, to make sure... */
+    gst_bytestream_seek(reader->bytestream, 0LL, GST_SEEK_METHOD_SET);
 
     length = (guint32) gst_bytestream_length(reader->bytestream);
     buffer = g_malloc(length + 1);
@@ -267,6 +271,9 @@ read_stream_into_memory(LivesupportOneShotReader  * reader,
 
     /* flush the bytestream, as we've read all from it anyway */
     gst_bytestream_flush_fast(reader->bytestream, length);
+
+    /* re-seek to the beginning, to make sure it can be set to PLAYING again */
+    gst_bytestream_seek(reader->bytestream, 0LL, GST_SEEK_METHOD_SET);
 
     /* put a 0 character at the end of the buffer */
     buffer[length] = '\0';
@@ -380,9 +387,11 @@ livesupport_one_shot_reader_dispose(GObject * object)
 
     if (reader->bytestream) {
         gst_bytestream_destroy(reader->bytestream);
+        reader->bytestream = 0;
     }
     if (reader->contents) {
         g_free(reader->contents);
+        reader->contents = 0;
     }
 
     G_OBJECT_CLASS(parent_class)->dispose(object);

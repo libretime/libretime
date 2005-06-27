@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,7 +38,7 @@
 
 #include <gst/gst.h>
 
-#include "autoplug.h"
+#include "LiveSupport/GstreamerElements/autoplug.h"
 #include "AutoplugTest.h"
 
 
@@ -119,7 +119,7 @@ AutoplugTest :: playFile(const char   * audioFile)
 
     g_object_set(G_OBJECT(source), "location", audioFile, NULL);
 
-    decoder = autoplug_plug_source(source);
+    decoder = ls_gst_autoplug_plug_source(source, "decoder");
 
     if (!decoder) {
         gst_object_unref(GST_OBJECT(sink));
@@ -132,11 +132,10 @@ AutoplugTest :: playFile(const char   * audioFile)
     gst_element_link(decoder, sink);
     gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
 
-    gst_element_set_state(source, GST_STATE_PAUSED);
+    gst_element_set_state(source, GST_STATE_PLAYING);
     gst_element_set_state(decoder, GST_STATE_PAUSED);
     gst_element_set_state(sink, GST_STATE_PAUSED);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
-    gst_bin_sync_children_state(GST_BIN(pipeline));
 
     // iterate until playTo is reached
     while (gst_bin_iterate(GST_BIN(pipeline)));

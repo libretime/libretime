@@ -23,11 +23,11 @@
  
     Author   : $Author: maroy $
     Version  : $Revision: 1.1 $
-    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/Attic/autoplug.h,v $
+    Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/include/LiveSupport/GstreamerElements/autoplug.h,v $
 
 ------------------------------------------------------------------------------*/
-#ifndef Audioplug_h
-#define Audioplug_h
+#ifndef LiveSupport_GstreamerElements_Autoplug_h
+#define LiveSupport_GstreamerElements_Autoplug_h
 
 /**
  *  @file
@@ -64,17 +64,19 @@ extern "C" {
  *  source, and produces raw audio on its src pad as it output.
  *
  *  @param source the source to autoplug.
+ *  @param name the name of the new element.
  *  @return a gstreamer element already linked to source, that produces
  *          the audio provided by source in audio/x-raw-int or
  *          audio/x-raw-float format, as needed.
  */
 GstElement *
-autoplug_plug_source(GstElement    * source);
+ls_gst_autoplug_plug_source(GstElement    * source,
+                            const gchar   * name);
 
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* Audioplug_h */
+#endif /* LiveSupport_GstreamerElements_Autoplug_h */
 

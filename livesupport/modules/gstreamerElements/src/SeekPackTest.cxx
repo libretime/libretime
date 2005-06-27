@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekPackTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -177,13 +177,15 @@ SeekPackTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playFile(testFile,
                           2LL * GST_SECOND,
                           1LL * GST_SECOND,
                           3LL * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed > 3.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 4.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
 }
 
 
@@ -195,13 +197,15 @@ SeekPackTest :: noSilenceTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playFile(testFile,
                           0LL * GST_SECOND,
                           1LL * GST_SECOND,
                           3LL * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed > 1.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 2.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 1.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.1 * GST_SECOND);
 }
 
 
@@ -213,12 +217,14 @@ SeekPackTest :: openEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playFile(testFile,
                           2LL * GST_SECOND,
                           1LL * GST_SECOND,
                           -1LL);
-    CPPUNIT_ASSERT(timePlayed > 5.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 6.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 5.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 6.1 * GST_SECOND);
 }
 

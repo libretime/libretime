@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,7 +36,7 @@
 
 #include <gst/gst.h>
 
-#include "autoplug.h"
+#include "LiveSupport/GstreamerElements/autoplug.h"
 
 
 /* ===================================================  local data structures */
@@ -102,9 +102,12 @@ autoplug_typefound_handler(GstElement * typefind,
  *  Initialize a typefind object.
  *
  *  @param typefind the Typefind structure to init.
+ *  @param name the name of the topmost bin element, that will
+ *         be returned at the end of autoplugging.
  */
 static void
-autoplug_init(Typefind      * typefind);
+autoplug_init(Typefind      * typefind,
+              const gchar   * name);
 
 /**
  *  De-initialize a typefind object.
@@ -247,7 +250,8 @@ autoplug_compare_ranks(GstPluginFeature   * feature1,
  *  Initialize a Typefind object, like the factories that we care about.
  *----------------------------------------------------------------------------*/
 static void
-autoplug_init(Typefind      * typefind)
+autoplug_init(Typefind      * typefind,
+              const gchar   * name)
 {
     /* first filter out the interesting element factories */
     typefind->factories = gst_registry_pool_feature_filter(
@@ -259,7 +263,7 @@ autoplug_init(Typefind      * typefind)
                                       (GCompareFunc) autoplug_compare_ranks);
 
     typefind->pipeline  = gst_pipeline_new("pipeline");
-    typefind->bin       = gst_bin_new("bin");
+    typefind->bin       = gst_bin_new(name);
     typefind->typefind  = gst_element_factory_make("typefind", "tf");
     typefind->audiosink = gst_element_factory_make("audioconvert", "audiosink");
     typefind->sink      = gst_element_factory_make("fakesink", "fakesink");
@@ -297,6 +301,7 @@ autoplug_deinit(Typefind      * typefind)
 {
     g_list_free(typefind->factories);
 
+    gst_element_set_state(typefind->pipeline, GST_STATE_NULL);
     if (typefind->typefind) {
         g_signal_handler_disconnect(typefind->typefind,
                                     typefind->typefindSignal);
@@ -654,7 +659,8 @@ autoplug_remove_typefind_elements(Typefind    * typefind,
  *  Filter the features that we're interested in.
  *----------------------------------------------------------------------------*/
 GstElement *
-autoplug_plug_source(GstElement    * source)
+ls_gst_autoplug_plug_source(GstElement    * source,
+                            const gchar   * name)
 {
     Typefind        typefind;
     GstElement    * bin;
@@ -664,7 +670,7 @@ autoplug_plug_source(GstElement    * source)
     g_object_ref(source);
 
     typefind.source = source;
-    autoplug_init(&typefind);
+    autoplug_init(&typefind, name);
 
     gst_element_set_state(typefind.audiosink, GST_STATE_PAUSED);
     gst_element_set_state(typefind.sink, GST_STATE_PAUSED);
@@ -679,18 +685,22 @@ autoplug_plug_source(GstElement    * source)
         return NULL;
     }
 
+    /* remove the source element from the pipeline */
+    gst_bin_remove(GST_BIN(typefind.pipeline), typefind.source);
+    gst_element_unlink(typefind.source, typefind.bin);
+
     /* remove the sink element */
     gst_element_unlink(typefind.bin, typefind.sink);
     gst_bin_remove(GST_BIN(typefind.pipeline), typefind.sink);
     typefind.sink = NULL;
 
-    /* remove the typefind elements, and re-link with the source */
-    autoplug_remove_typefind_elements(&typefind, GST_BIN(typefind.bin));
-    gst_element_link(typefind.source, typefind.bin);
-
     /* destory the pipeline, but keep source and bin */
     g_object_ref(typefind.bin);
     gst_bin_remove(GST_BIN(typefind.pipeline), typefind.bin);
+
+    /* remove the typefind elements, and re-link with the source */
+    autoplug_remove_typefind_elements(&typefind, GST_BIN(typefind.bin));
+    gst_element_link(typefind.source, typefind.bin);
 
     bin = typefind.bin;
 
