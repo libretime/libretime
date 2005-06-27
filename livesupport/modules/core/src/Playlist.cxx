@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -275,6 +275,30 @@ Playlist :: setPlaylength(Ptr<time_duration>::Ref playlength)
 
 
 /*------------------------------------------------------------------------------
+ *  Set the value of the playlength from a string (private).
+ *----------------------------------------------------------------------------*/
+void
+Playlist :: setPlaylength(const std::string &   timeString)
+                                                throw (std::invalid_argument)
+{
+    try {
+        playlength.reset(new time_duration(duration_from_string(timeString)));
+    } catch (boost::bad_lexical_cast &e) {
+        std::string     eMsg = "bad time format in playlength: ";
+        eMsg += e.what();
+        throw std::invalid_argument(eMsg);
+    } catch (std::exception &e) {
+        std::string     eMsg = "bad time format in playlength: ";
+        eMsg += e.what();
+        throw std::invalid_argument(eMsg);
+    } catch ( ... ) {
+        std::string     eMsg = "bad time format in playlength";
+        throw std::invalid_argument(eMsg);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Create a playlist object based on an XML element.
  *----------------------------------------------------------------------------*/
 void
@@ -300,8 +324,6 @@ Playlist :: configure(const xmlpp::Element    & element)
     
     if (!playlength
             && (attribute = element.get_attribute(playlengthAttrName))) {
-        playlength.reset(new time_duration(
-                                duration_from_string(attribute->get_value())));
         Ptr<Glib::ustring>::Ref playlengthString(new Glib::ustring(
                                                      attribute->get_value() ));
         setMetadata(playlengthString, extentElementName, extentElementPrefix);
@@ -358,8 +380,7 @@ Playlist :: configure(const xmlpp::Element    & element)
             if (!playlength && prefix  == extentElementPrefix
                             && name    == extentElementName) {
                 if (dataElement->has_child_text()) {
-                    playlength.reset(new time_duration(duration_from_string(
-                            dataElement->get_child_text()->get_content() )));
+                    setPlaylength(dataElement->get_child_text()->get_content());
                 } else {              // or just leave blank?  bad either way
                     playlength.reset(new time_duration(0,0,0,0));
                 }
@@ -641,7 +662,7 @@ Playlist :: getMetadata(const string &key) const
 void
 Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
                         const std::string &key)
-                                                throw ()
+                                                throw (std::invalid_argument)
 {
     std::string name, prefix;
     separateNameAndNameSpace(key, name, prefix);
@@ -655,11 +676,10 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
 void
 Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value, 
                         const std::string &name, const std::string &prefix)
-                                                throw ()
+                                                throw (std::invalid_argument)
 {
     if (prefix == extentElementPrefix && name == extentElementName) {
-        playlength.reset(new time_duration(
-                                duration_from_string(*value) ));
+        setPlaylength(*value);
     }
     
     if (prefix == titleElementPrefix && name == titleElementName) {

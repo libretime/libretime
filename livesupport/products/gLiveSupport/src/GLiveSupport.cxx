@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.51 $
+    Version  : $Revision: 1.52 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 #include "LiveSupport/SchedulerClient/SchedulerClientFactory.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Core/XmlRpcInvalidDataException.h"
 
 #include "MasterPanelWindow.h"
 #include "GLiveSupport.h"
@@ -1029,13 +1030,27 @@ GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
             audioClipIds = storage->getAudioClipIds();
     std::vector<Ptr<UniqueId>::Ref>::const_iterator it;
     for (it = audioClipIds->begin(); it != audioClipIds->end(); ++it) {
-        results->push_back(storage->getAudioClip(sessionId, *it));
+        try {
+            Ptr<AudioClip>::Ref     audioClip
+                                    = storage->getAudioClip(sessionId, *it);
+            results->push_back(audioClip);
+        } catch (XmlRpcInvalidDataException &e) {
+            std::cerr << "invalid audio clip in search(): " << e.what()
+                      << std::endl;
+        }
     }
     
     Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
             playlistIds = storage->getPlaylistIds();
     for (it = playlistIds->begin(); it != playlistIds->end(); ++it) {
-        results->push_back(storage->getPlaylist(sessionId, *it));
+        try {
+            Ptr<Playlist>::Ref     playlist
+                                    = storage->getPlaylist(sessionId, *it);
+            results->push_back(playlist);
+        } catch (XmlRpcInvalidDataException &e) {
+            std::cerr << "invalid playlist in search(): " << e.what()
+                      << std::endl;
+        }
     }
     
     return results;

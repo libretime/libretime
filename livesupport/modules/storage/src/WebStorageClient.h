@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -258,9 +258,10 @@ class WebStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the playlist to return.
          *  @return the requested playlist.
+         *  @exception XmlRpcInvalidDataException if the audio clip we got
+         *                  from the storage is invalid.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call or no playlist with the specified
-         *                             id exists.
+         *                  call or no playlist with the specified id exists.
          */
         virtual Ptr<Playlist>::Ref
         getPlaylist(Ptr<SessionId>::Ref sessionId,
@@ -379,9 +380,10 @@ class WebStorageClient :
          *  @param sessionId the session ID from the authentication client
          *  @param id the id of the audio clip to return.
          *  @return the requested audio clip.
+         *  @exception XmlRpcInvalidDataException if the audio clip we got
+         *                  from the storage is invalid.
          *  @exception XmlRpcException if there is a problem with the XML-RPC
-         *                             call or no audio clip with the 
-         *                             specified id exists.
+         *                  call or no audio clip with the specified id exists.
          */
         virtual Ptr<AudioClip>::Ref
         getAudioClip(Ptr<SessionId>::Ref    sessionId,

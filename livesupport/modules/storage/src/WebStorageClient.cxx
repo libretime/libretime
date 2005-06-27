@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.42 $
+    Version  : $Revision: 1.43 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -54,6 +54,7 @@
 #include "LiveSupport/Core/XmlRpcMethodResponseException.h"
 #include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
 #include "LiveSupport/Core/XmlRpcIOException.h"
+#include "LiveSupport/Core/XmlRpcInvalidDataException.h"
 #include "WebStorageClient.h"
 
 using namespace boost::posix_time;
@@ -914,10 +915,10 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
         playlist->configure(*root);
 
     } catch (std::invalid_argument &e) {
-        throw XmlRpcMethodResponseException(
+        throw XmlRpcInvalidDataException(
                                     "semantic error in playlist metafile");
     } catch (xmlpp::exception &e) {
-        throw XmlRpcMethodResponseException(
+        throw XmlRpcInvalidDataException(
                                     "error parsing playlist metafile");
     }
 
@@ -1410,11 +1411,11 @@ WebStorageClient :: getAudioClip(Ptr<SessionId>::Ref sessionId,
     } catch (std::invalid_argument &e) {
         std::string eMsg = "semantic error in audio clip metafile:\n";
         eMsg += e.what();
-        throw XmlRpcMethodResponseException(eMsg);
+        throw XmlRpcInvalidDataException(eMsg);
     } catch (xmlpp::exception &e) {
         std::string eMsg = "error parsing audio clip metafile";
         eMsg += e.what();
-        throw XmlRpcMethodResponseException(eMsg);
+        throw XmlRpcInvalidDataException(eMsg);
     }
 
     parameters.clear();

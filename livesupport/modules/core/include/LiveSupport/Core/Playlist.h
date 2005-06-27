@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.35 $
+    Version  : $Revision: 1.36 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.35 $
+ *  @version $Revision: 1.36 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -204,20 +204,33 @@ class Playlist : public Configurable,
          *  @param value the new value of the metadata field.
          *  @param name    the name of the metadata field (without prefix)
          *  @param prefix  the prefix of the metadata field
+         *  @exception std::invalid_argument    if the key is dcterms:extent, 
+         *                  but the value is not a valid ISO-8601 time
          */
         void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
                     const std::string &name, const std::string &prefix)
-                                                throw ();
+                                                throw (std::invalid_argument);
 
         /**
          *  Set the total playing length of this playlist.
          *
-         *  @param the playing length in microseconds precision.
+         *  @param playlength the playing length in microseconds precision.
          */
         void
         setPlaylength(Ptr<time_duration>::Ref playlength) 
                                                 throw ();
+
+        /**
+         *  Set the playlength member of this audio clip.
+         *
+         *  @param timeString   the playing length in microseconds precision.
+         *  @exception std::invalid_argument    if the argument is not
+         *                      a valid ISO-8601 time
+         */
+        void
+        setPlaylength(const std::string &   timeString)
+                                                throw (std::invalid_argument);
 
         /**
          *  A private iterator type for internal use.  It is non-constant;
@@ -677,13 +690,15 @@ class Playlist : public Configurable,
         /**
          *  Set the value of a metadata field in this playlist.
          *
-         *  @param value the new value of the metadata field.
-         *  @param  key  the name of the metadata field
+         *  @param value    the new value of the metadata field.
+         *  @param  key     the name of the metadata field
+         *  @exception std::invalid_argument    if the key is dcterms:extent, 
+         *                  but the value is not a valid ISO-8601 time
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
                     const std::string &key)
-                                                throw ();
+                                                throw (std::invalid_argument);
 
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace boost::posix_time;
  *  It contains the methods which are common to these classes.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {
@@ -208,11 +208,14 @@ class Playable : public boost::enable_shared_from_this<Playable>
          *
          *  @param value the new value of the metadata field.
          *  @param  key  the name of the metadata field
+         *  @exception std::invalid_argument    if the key is dcterms:extent, 
+         *                  but the value is not a valid ISO-8601 time
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
                     const std::string &key)
-                                                throw () = 0;
+                                                throw (std::invalid_argument)
+                                                                            = 0;
 
         /**
          *  Return a partial XML representation of this audio clip or playlist.

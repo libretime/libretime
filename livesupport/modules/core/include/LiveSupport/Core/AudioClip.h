@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -131,7 +131,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.26 $
+ *  @version $Revision: 1.27 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -178,11 +178,13 @@ class AudioClip : public Configurable,
          *  @param value the new value of the metadata field.
          *  @param name    the name of the metadata field (without prefix)
          *  @param prefix  the prefix of the metadata field
+         *  @exception std::invalid_argument    if the key is dcterms:extent, 
+         *                  but the value is not a valid ISO-8601 time
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
                     const std::string &name, const std::string &prefix)
-                                                throw ();
+                                                throw (std::invalid_argument);
 
         /**
          *  Convert a time_duration to string, in format HH:MM:SS.ssssss.
@@ -196,6 +198,17 @@ class AudioClip : public Configurable,
                 return to_simple_string(*time) + ".000000";
             }
         }
+
+        /**
+         *  Set the playlength member of this audio clip.
+         *
+         *  @param timeString   the new playlength
+         *  @exception std::invalid_argument    if the argument is not
+         *                      a valid ISO-8601 time
+         */
+        void
+        setPlaylength(const std::string &   timeString)
+                                                throw (std::invalid_argument);
 
 
     public:
@@ -496,11 +509,13 @@ class AudioClip : public Configurable,
          *
          *  @param value the new value of the metadata field.
          *  @param key   the name of the metadata field
+         *  @exception std::invalid_argument    if the key is dcterms:extent, 
+         *                  but the value is not a valid ISO-8601 time
          */
         virtual void
         setMetadata(Ptr<const Glib::ustring>::Ref value, 
                     const std::string &key)
-                                                throw ();
+                                                throw (std::invalid_argument);
 
 
         /**
@@ -589,7 +604,7 @@ class AudioClip : public Configurable,
 
 
         /**
-         *  Auxilliary method used by satisfiesCondition().
+         *  Auxilliary method used by setMetadata() and getMetadata().
          */
         void
         separateNameAndNameSpace(const std::string & key,
