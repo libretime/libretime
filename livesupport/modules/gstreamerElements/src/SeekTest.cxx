@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,6 +38,7 @@
 
 #include <gst/gst.h>
 
+#include "LiveSupport/GstreamerElements/autoplug.h"
 #include "seek.h"
 #include "SeekTest.h"
 
@@ -51,7 +52,20 @@ using namespace LiveSupport::GstreamerElements;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SeekTest);
 
-static const char *         testFile = "var/5seccounter.mp3";
+/**
+ *  An mp3 test file.
+ */
+static const char *         mp3File = "var/5seccounter.mp3";
+
+/**
+ *  An Ogg Vorbis test file.
+ */
+static const char *         oggVorbisFile = "var/5seccounter.ogg";
+
+/**
+ *  An smil test file.
+ */
+static const char *         smilFile = "var/simple.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -86,6 +100,56 @@ SeekTest :: playFile(const char   * audioFile,
                      gint64         playTo)
                                                 throw (CPPUNIT_NS::Exception)
 {
+#if 0
+    GstElement    * pipeline;
+    GstElement    * source;
+    GstElement    * decoder;
+    GstElement    * sink;
+    GstFormat       format;
+    gint64          timePlayed;
+
+    /* initialize GStreamer */
+    gst_init(0, 0);
+
+    /* create elements */
+    pipeline = gst_pipeline_new("audio-player");
+    source   = gst_element_factory_make("filesrc", "source");
+    sink     = gst_element_factory_make("alsasink", "alsa-output");
+
+    g_object_set(G_OBJECT(source), "location", audioFile, NULL);
+
+    decoder = ls_gst_autoplug_plug_source(source, "decoder");
+
+    if (!decoder) {
+        gst_object_unref(GST_OBJECT(sink));
+        gst_object_unref(GST_OBJECT(source));
+        gst_object_unref(GST_OBJECT(pipeline));
+
+        return 0LL;
+    }
+
+    gst_element_link(decoder, sink);
+    gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
+
+    gst_element_set_state(source, GST_STATE_PLAYING);
+    gst_element_set_state(decoder, GST_STATE_PAUSED);
+    gst_element_set_state(sink, GST_STATE_PAUSED);
+    gst_element_set_state(pipeline, GST_STATE_PLAYING);
+
+    // iterate until playTo is reached
+    while (gst_bin_iterate(GST_BIN(pipeline)));
+
+    /* query the decoder, as for some reason, the sink will return
+     * unreal numbers */
+    format = GST_FORMAT_TIME;
+    gst_element_query(decoder, GST_QUERY_POSITION, &format, &timePlayed);
+
+    /* clean up nicely */
+    gst_element_set_state(pipeline, GST_STATE_NULL);
+    gst_object_unref(GST_OBJECT(pipeline));
+
+    return timePlayed;
+#endif
     GstElement    * pipeline;
     GstElement    * source;
     GstElement    * decoder;
@@ -106,18 +170,29 @@ SeekTest :: playFile(const char   * audioFile,
 
     pipeline = gst_pipeline_new("audio-player");
     source   = gst_element_factory_make("filesrc", "source");
-    decoder  = gst_element_factory_make("mad", "decoder");
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
     g_object_set(G_OBJECT(source), "location", audioFile, NULL);
 
-    gst_element_link_many(source, decoder, sink, NULL);
+    decoder = ls_gst_autoplug_plug_source(source, "decoder");
+
+    if (!decoder) {
+        gst_object_unref(GST_OBJECT(sink));
+        gst_object_unref(GST_OBJECT(source));
+        gst_object_unref(GST_OBJECT(pipeline));
+
+        return 0LL;
+    }
+
+    gst_element_link(decoder, sink);
     gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
 
-    gst_element_set_state(sink, GST_STATE_READY);
+    gst_element_set_state(source, GST_STATE_PLAYING);
+    gst_element_set_state(decoder, GST_STATE_PAUSED);
+    gst_element_set_state(sink, GST_STATE_PAUSED);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
-    // iterate on the piplinee until the played time becomes more than 0
+    // iterate on the pipline until the played time becomes more than 0
     // as the seek even will only be taken into consideration after that
     // by gstreamer
     for (timePlayed = 0;
@@ -158,14 +233,16 @@ SeekTest :: playFile(const char   * audioFile,
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-SeekTest :: firstTest(void)
+SeekTest :: mp3Test(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
-    timePlayed = playFile(testFile, 1LL * GST_SECOND, 4LL * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
+    timePlayed = playFile(mp3File, 1LL * GST_SECOND, 4LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
 }
 
 
@@ -173,15 +250,89 @@ SeekTest :: firstTest(void)
  *  Seek and play until the end of the auido file.
  *----------------------------------------------------------------------------*/
 void
-SeekTest :: openEndedTest(void)
+SeekTest :: mp3OpenEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     // see http://bugzilla.gnome.org/show_bug.cgi?id=308312
     // as why this seek is not precise
-    timePlayed = playFile(testFile, 2LL * GST_SECOND, -1LL);
-    CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
+    timePlayed = playFile(mp3File, 2LL * GST_SECOND, -1LL);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
 }
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test on an Ogg Vorbis file.
+ *----------------------------------------------------------------------------*/
+void
+SeekTest :: oggVorbisTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(oggVorbisFile, 1LL * GST_SECOND, 4LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Seek and play an ogg vorbis file until the end of the auido file.
+ *----------------------------------------------------------------------------*/
+void
+SeekTest :: oggVorbisOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    // see http://bugzilla.gnome.org/show_bug.cgi?id=308312
+    // as why this seek is not precise
+    timePlayed = playFile(oggVorbisFile, 2LL * GST_SECOND, -1LL);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test on a SMIL file.
+ *----------------------------------------------------------------------------*/
+void
+SeekTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilFile, 1LL * GST_SECOND, 4LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Seek and play a SMIL file until the end of the auido file.
+ *----------------------------------------------------------------------------*/
+void
+SeekTest :: smilOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    // see http://bugzilla.gnome.org/show_bug.cgi?id=308312
+    // as why this seek is not precise
+    timePlayed = playFile(oggVorbisFile, 2LL * GST_SECOND, -1LL);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
+}
+
 

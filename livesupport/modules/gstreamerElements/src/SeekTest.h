@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,17 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SeekTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SeekTest);
-    CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(openEndedTest);
+//    CPPUNIT_TEST(mp3Test);
+//    CPPUNIT_TEST(mp3OpenEndedTest);
+//    CPPUNIT_TEST(oggVorbisTest);
+//    CPPUNIT_TEST(oggVorbisOpenEndedTest);
+    CPPUNIT_TEST(smilTest);
+    CPPUNIT_TEST(smilOpenEndedTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -89,20 +93,52 @@ class SeekTest : public CPPUNIT_NS::TestFixture
     protected:
 
         /**
-         *  A simple smoke test.
+         *  A simple mp3 test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+        mp3Test(void)                           throw (CPPUNIT_NS::Exception);
 
         /**
-         *  A test where the result is played until its end.
+         *  A test where an mp3 file is played until its end.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        openEndedTest(void)                     throw (CPPUNIT_NS::Exception);
+        mp3OpenEndedTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A simple ogg vorbis test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test where an ogg vorbis file is played until its end.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisOpenEndedTest(void)            throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A simple SMIL test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilTest(void)                          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test where an SMIL file is played until its end.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilOpenEndedTest(void)                 throw (CPPUNIT_NS::Exception);
 
 
     public:
