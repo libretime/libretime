@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -275,6 +275,7 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
                                                 : playlength->seconds() + 1);
     lengthValueLabel->set_text(lengthStr.str());
 
+    statusBar->set_text("");
     isAudioClipValid = true;
 }
 

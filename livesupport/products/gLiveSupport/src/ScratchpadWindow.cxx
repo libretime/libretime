@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -272,7 +272,8 @@ ScratchpadWindow :: showContents(void)                          throw ()
             default:
                 break;
         }
-        row[modelColumns.titleColumn]     = *playable->getTitle();
+        row[modelColumns.titleColumn]     = Glib::Markup::escape_text(
+                                                        *playable->getTitle());
         row[modelColumns.rowNumberColumn] = rowNumber;
 
         ++it;

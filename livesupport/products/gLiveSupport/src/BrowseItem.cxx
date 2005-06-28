@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/BrowseItem.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
 #endif
 
 #include <iostream>
+#include <glibmm.h>
 
 #include "LiveSupport/Widgets/WidgetFactory.h"
 
@@ -92,7 +93,8 @@ BrowseItem :: BrowseItem(
     pack_start(*scrolledWindow, Gtk::PACK_SHRINK, 5);
 
     try {
-        allString = *getResourceUstring("allStringForBrowse");
+        allString = Glib::Markup::escape_text(
+                                    *getResourceUstring("allStringForBrowse"));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -157,7 +159,8 @@ BrowseItem :: onShow(void)                                          throw ()
     std::vector<Glib::ustring>::const_iterator valuesIt;
     for (valuesIt = values->begin(); valuesIt != values->end(); ++valuesIt) {
         row = *treeModel->append();
-        row[modelColumns.column]            = *valuesIt;
+        row[modelColumns.column]            = Glib::Markup::escape_text(
+                                                                    *valuesIt);
         row[modelColumns.rowNumberColumn]   = rowNumber++;
     }
     

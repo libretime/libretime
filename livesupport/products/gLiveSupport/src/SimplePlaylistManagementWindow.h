@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,20 +74,19 @@ using namespace LiveSupport::Widgets;
  *  The layout of this window is roughly the following:
  *  <pre><code>
  *  +--- simple playlist management window --------+
- *  | name:    +-- name input ----+                |
- *  | +-- playlist entries -------+                |
- *  | | +-- entry1 -------------+ |                |
- *  | | +-- entry2 -------------+ |                |
- *  | |  ...                      |                |
- *  | +---------------------------+                |
- *  | +-- save button ------------+                |
- *  | +-- close button -----------+                |
- *  | +-- status bar -------------+                |
+ *  | name:    +-- name input -------------+       |
+ *  | +-- playlist entries ----------------------+ |
+ *  | | +-- entry1 ----------------------------+ | |
+ *  | | +-- entry2 ----------------------------+ | |
+ *  | |  ...                                     | |
+ *  | +------------------------------------------+ |
+ *  |        +- save button -+  +- close button -+ |
+ *  | +-- status bar ----------------------------+ |
  *  +----------------------------------------------+
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -100,7 +99,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.4 $
+         *  @version $Revision: 1.5 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -113,17 +112,17 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                 /**
                  *  The column for the start of the playlist entry.
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         startColumn;
+                Gtk::TreeModelColumn<Glib::ustring>             startColumn;
 
                 /**
                  *  The column for the title of the audio clip or playlist.
                  */
-                Gtk::TreeModelColumn<Glib::ustring>     titleColumn;
+                Gtk::TreeModelColumn<Glib::ustring>             titleColumn;
 
                 /**
                  *  The column for the length of the playlist entry.
                  */
-                Gtk::TreeModelColumn<Glib::ustring>         lengthColumn;
+                Gtk::TreeModelColumn<Glib::ustring>             lengthColumn;
 
                 /**
                  *  Constructor.

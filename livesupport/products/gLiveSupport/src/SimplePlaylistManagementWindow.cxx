@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -242,7 +242,7 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
             row[modelColumns.startColumn]
                         = to_simple_string(*playlistElem->getRelativeOffset());
             row[modelColumns.titleColumn]
-                        = *playable->getTitle();
+                        = Glib::Markup::escape_text(*playable->getTitle());
             row[modelColumns.lengthColumn]
                         = to_simple_string(*playable->getPlaylength());
         }

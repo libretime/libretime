@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -352,11 +352,17 @@ SearchWindow :: onSearch(Ptr<SearchCriteria>::Ref   criteria)
                 break;
         }
 
-        Ptr<const Glib::ustring>::Ref   title   = playable->getTitle();
-        row[modelColumns.titleColumn]           = title ? *title : "";
+        Ptr<const Glib::ustring>::Ref
+                    title   = playable->getTitle();
+        row[modelColumns.titleColumn] 
+                            = title ? Glib::Markup::escape_text(*title)
+                                    : "";
 
-        Ptr<Glib::ustring>::Ref creator = playable->getMetadata("dc:creator");
-        row[modelColumns.creatorColumn] = creator ? *creator : "";
+        Ptr<Glib::ustring>::Ref
+                    creator = playable->getMetadata("dc:creator");
+        row[modelColumns.creatorColumn]
+                            = creator ? Glib::Markup::escape_text(*creator)
+                                      : "";
 
         Ptr<time_duration>::Ref length = playable->getPlaylength();
         row[modelColumns.lengthColumn] = length ? to_simple_string(*length)
