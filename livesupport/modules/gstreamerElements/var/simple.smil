@@ -3,7 +3,6 @@
     <body>
         <par>
             <audio src       = "file:var/5seccounter.mp3"
-                   begin     = "2s"
             /> 
         </par>
     </body>
