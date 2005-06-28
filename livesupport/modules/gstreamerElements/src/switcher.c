@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.5 $",
+    "$Revision: 1.6 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -500,6 +500,8 @@ livesupport_switcher_loop(GstElement      * element)
         if (GST_IS_EVENT(data)) {
             GstEvent  * event = GST_EVENT(data);
 
+            GST_INFO("handling event type %d", GST_EVENT_TYPE(event));
+
             if (GST_EVENT_TYPE(event) == GST_EVENT_EOS) {
                 switch_to_next_source(switcher);
             } else {
@@ -527,6 +529,8 @@ livesupport_switcher_loop(GstElement      * element)
         /* handle events */
         GstEvent  * event = GST_EVENT(data);
 
+        GST_INFO("handling event type %d", GST_EVENT_TYPE(event));
+
         gst_pad_event_default(switcher->srcpad, event);
         return;
     }
@@ -542,6 +546,9 @@ livesupport_switcher_loop(GstElement      * element)
         /* time to switch to the next source */
         switch_to_next_source(switcher);
     }
+
+    GST_INFO("pushing data size: %d, duration: %" G_GINT64_FORMAT,
+             GST_BUFFER_SIZE(buf), GST_BUFFER_DURATION(buf));
 
     GST_BUFFER_TIMESTAMP(buf) = switcher->elapsedTime;
     GST_BUFFER_OFFSET(buf)    = switcher->offset;
