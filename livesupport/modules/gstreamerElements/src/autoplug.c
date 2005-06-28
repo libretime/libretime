@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -685,22 +685,18 @@ ls_gst_autoplug_plug_source(GstElement    * source,
         return NULL;
     }
 
-    /* remove the source element from the pipeline */
-    gst_bin_remove(GST_BIN(typefind.pipeline), typefind.source);
-    gst_element_unlink(typefind.source, typefind.bin);
-
     /* remove the sink element */
     gst_element_unlink(typefind.bin, typefind.sink);
     gst_bin_remove(GST_BIN(typefind.pipeline), typefind.sink);
     typefind.sink = NULL;
 
-    /* destory the pipeline, but keep source and bin */
-    g_object_ref(typefind.bin);
-    gst_bin_remove(GST_BIN(typefind.pipeline), typefind.bin);
-
     /* remove the typefind elements, and re-link with the source */
     autoplug_remove_typefind_elements(&typefind, GST_BIN(typefind.bin));
     gst_element_link(typefind.source, typefind.bin);
+
+    /* destory the pipeline, but keep source and bin */
+    g_object_ref(typefind.bin);
+    gst_bin_remove(GST_BIN(typefind.pipeline), typefind.bin);
 
     bin = typefind.bin;
 
