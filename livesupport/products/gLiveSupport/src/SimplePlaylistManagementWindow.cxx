@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -175,6 +175,7 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
         Ptr<Playlist>::Ref              playlist;
 
         title.reset(new Glib::ustring(nameEntry->get_text()));
+        // TODO: check for empty title and display "are you sure?" message
 
         playlist = gLiveSupport->getEditedPlaylist();
         if (!playlist) {
@@ -189,8 +190,6 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
                                                     "playlistSavedMessage",
                                                     *playlist->getTitle());
         statusBar->set_text(*statusText);
-
-        gLiveSupport->releaseEditedPlaylist();
 
         // clean the entry fields
         nameEntry->set_text("");
@@ -207,7 +206,8 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
 void
 SimplePlaylistManagementWindow :: onCloseButtonClicked (void)       throw ()
 {
-    gLiveSupport->releaseEditedPlaylist();
+    // TODO: display "are you sure?" message
+    gLiveSupport->cancelEditedPlaylist();
 
     hide();
 }

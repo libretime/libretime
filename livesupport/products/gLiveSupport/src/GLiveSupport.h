@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.40 $
+ *  @version $Revision: 1.41 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -546,13 +546,13 @@ class GLiveSupport : public LocalizedConfigurable,
         savePlaylist(void)                          throw (XmlRpcException);
 
         /**
-         *  Release the playlist that was opened for editing.
+         *  Cancel the edited playlist: undo changes and release the lock.
          *
          *  @exception XmlRpcException on XML-RPC errors.
          *  @see #openPlaylistForEditing
          */
         void
-        releaseEditedPlaylist(void)                 throw (XmlRpcException);
+        cancelEditedPlaylist(void)                  throw (XmlRpcException);
 
         /**
          *  Return the scheduled entries for a specified time interval.

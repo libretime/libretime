@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.52 $
+    Version  : $Revision: 1.53 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -637,29 +637,31 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
                                                     throw (XmlRpcException)
 {
-    releaseEditedPlaylist();
+    cancelEditedPlaylist();
 
     if (!playlistId.get()) {
         playlistId     = storage->createPlaylist(sessionId);
     }
 
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);
+    editedPlaylist->createSavedCopy();
 
     return editedPlaylist;
 }
 
 
 /*------------------------------------------------------------------------------
- *  Release the edited playlist.
+ *  Cancel the edited playlist: undo changes and release the lock.
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseEditedPlaylist(void)
+GLiveSupport :: cancelEditedPlaylist(void)
                                                     throw (XmlRpcException)
 {
-    if (editedPlaylist.get()) {
+    if (editedPlaylist) {
         if (editedPlaylist->isLocked()) {
-            storage->releasePlaylist(editedPlaylist);
+            editedPlaylist->revertToSavedCopy();
+            storage->savePlaylist(sessionId, editedPlaylist);
         }
         editedPlaylist.reset();
     }
@@ -703,12 +705,17 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: savePlaylist(void)
                                                     throw (XmlRpcException)
 {
-    storage->savePlaylist(sessionId, editedPlaylist);
+    Ptr<Playlist>::Ref  playlist;
 
-    Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId,
-                                                    editedPlaylist->getId());
-    addToScratchpad(playlist);
-    editedPlaylist.reset();
+    if (editedPlaylist) {
+        if (editedPlaylist->isLocked()) {
+            editedPlaylist->deleteSavedCopy();
+            storage->savePlaylist(sessionId, editedPlaylist);
+            playlist = storage->getPlaylist(sessionId, editedPlaylist->getId());
+            addToScratchpad(playlist);
+        }
+        editedPlaylist.reset();
+    }
 
     return playlist;
 }
