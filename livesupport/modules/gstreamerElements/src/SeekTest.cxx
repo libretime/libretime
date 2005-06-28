@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,56 +100,6 @@ SeekTest :: playFile(const char   * audioFile,
                      gint64         playTo)
                                                 throw (CPPUNIT_NS::Exception)
 {
-#if 0
-    GstElement    * pipeline;
-    GstElement    * source;
-    GstElement    * decoder;
-    GstElement    * sink;
-    GstFormat       format;
-    gint64          timePlayed;
-
-    /* initialize GStreamer */
-    gst_init(0, 0);
-
-    /* create elements */
-    pipeline = gst_pipeline_new("audio-player");
-    source   = gst_element_factory_make("filesrc", "source");
-    sink     = gst_element_factory_make("alsasink", "alsa-output");
-
-    g_object_set(G_OBJECT(source), "location", audioFile, NULL);
-
-    decoder = ls_gst_autoplug_plug_source(source, "decoder");
-
-    if (!decoder) {
-        gst_object_unref(GST_OBJECT(sink));
-        gst_object_unref(GST_OBJECT(source));
-        gst_object_unref(GST_OBJECT(pipeline));
-
-        return 0LL;
-    }
-
-    gst_element_link(decoder, sink);
-    gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
-
-    gst_element_set_state(source, GST_STATE_PLAYING);
-    gst_element_set_state(decoder, GST_STATE_PAUSED);
-    gst_element_set_state(sink, GST_STATE_PAUSED);
-    gst_element_set_state(pipeline, GST_STATE_PLAYING);
-
-    // iterate until playTo is reached
-    while (gst_bin_iterate(GST_BIN(pipeline)));
-
-    /* query the decoder, as for some reason, the sink will return
-     * unreal numbers */
-    format = GST_FORMAT_TIME;
-    gst_element_query(decoder, GST_QUERY_POSITION, &format, &timePlayed);
-
-    /* clean up nicely */
-    gst_element_set_state(pipeline, GST_STATE_NULL);
-    gst_object_unref(GST_OBJECT(pipeline));
-
-    return timePlayed;
-#endif
     GstElement    * pipeline;
     GstElement    * source;
     GstElement    * decoder;
