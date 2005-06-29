@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/oneshot-reader.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "oneshotreaderplugin",
                   "A reader that reads all of the input on one go",
                   plugin_init,
-                  "$Revision: 1.3 $",
+                  "$Revision: 1.4 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -218,7 +218,6 @@ read_stream_into_memory(LivesupportOneShotReader  * reader,
     guint32         length;
     guint32         read;
     guint8        * buffer;
-    gboolean        ret;
 
     *outbuffer = 0;
     *outlength = 0;
