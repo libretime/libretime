@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -199,10 +199,17 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
                           seekPack->switcher,
                           NULL);
 
-    /* seek on the decoder, and link it up with the switcher */
-    gst_element_link(seekPack->source, seekPack->decoder);
-    livesupport_seek_pack_seek(seekPack);
-    gst_element_link(seekPack->decoder, seekPack->switcher);
+    if (seekPack->decoder) {
+        /* seek on the decoder, and link it up with the switcher */
+        gst_element_link(seekPack->source, seekPack->decoder);
+        livesupport_seek_pack_seek(seekPack);
+        gst_element_link(seekPack->decoder, seekPack->switcher);
+    } else {
+        /* just fake the content with silence,
+         * if it could not be auto-plugged */
+        seekPack->decoder = gst_element_factory_make("silence", "decoder");
+        gst_element_link(seekPack->decoder, seekPack->switcher);
+    }
 
     /* put all inside the bin, and link up a ghost pad to switch's src pad */
     gst_bin_add_many(GST_BIN(seekPack->bin),

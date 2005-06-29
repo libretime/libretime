@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,6 +70,16 @@ static const char *         smilTestFile = "var/simple.smil";
  *  A file we can't plug.
  */
 static const char *         badFile = "src/AutoplugTest.cxx";
+
+/**
+ *  A very short file.
+ */
+static const char *         shortFile = "var/test-short.mp3";
+
+/**
+ *  A SMIL file referring to a very short file.
+ */
+static const char *         shortSmilFile = "var/short.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -217,5 +227,39 @@ AutoplugTest :: negativeTest(void)
     timePlayed = playFile(badFile);
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed == 0LL);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test on a very short file.
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: shortTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(shortFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 1.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test on a SMIL file referring to a very short file.
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: shortSmilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(shortSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 1.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.1 * GST_SECOND);
 }
 
