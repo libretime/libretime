@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ using namespace LiveSupport::Widgets;
 WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
                            Colors::ColorName            backgroundColor,
                            Ptr<CornerImages>::Ref       cornerImages,
-                           bool                         resizable)
+                           int                          properties)
                                                                     throw ()
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL),
                   isMaximized(false)
@@ -70,7 +70,7 @@ WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
     titleBox                            = Gtk::manage(new Gtk::HBox());
     titleBox->add(*titleImage);
     
-    constructWindow(backgroundColor, cornerImages, resizable);
+    constructWindow(backgroundColor, cornerImages, properties);
 }
 
 
@@ -80,7 +80,7 @@ WhiteWindow :: WhiteWindow(WidgetFactory::ImageType     title,
 WhiteWindow :: WhiteWindow(Glib::ustring                title,
                            Colors::ColorName            backgroundColor,
                            Ptr<CornerImages>::Ref       cornerImages,
-                           bool                         resizable)
+                           int                          properties)
                                                                     throw ()
                 : Gtk::Window(Gtk::WINDOW_TOPLEVEL),
                   isMaximized(false)
@@ -93,7 +93,7 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
     titleBox   = Gtk::manage(new Gtk::HBox());
     titleBox->add(*titleLabel);
 
-    constructWindow(backgroundColor, cornerImages, resizable);
+    constructWindow(backgroundColor, cornerImages, properties);
 }
 
     
@@ -103,13 +103,14 @@ WhiteWindow :: WhiteWindow(Glib::ustring                title,
 void
 WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
                                Ptr<CornerImages>::Ref       cornerImages,
-                               bool                         resizable)
+                               int                          properties)
                                                                     throw ()
 {
     set_decorated(false);
     defaultWidth  = -1;
     defaultHeight = -1;
-    set_resizable(resizable);
+    set_resizable(properties & isResizable);
+    set_modal(properties & isModal);
 
     Ptr<WidgetFactory>::Ref   wf = WidgetFactory::getInstance();
 
@@ -127,23 +128,31 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     layout->attach(*titleAlignment, 0, 1, 0, 1, Gtk::FILL, Gtk::SHRINK);
 
     // create the minimize, maximize and close buttons
-    minimizeButton = Gtk::manage(wf->createButton(
-                                        WidgetFactory::windowMinimizeButton));
-    if (resizable) {
+    Gtk::Box *  cornerButtonBox = Gtk::manage(new Gtk::HBox);
+
+    int     padding = 5;
+    if (!(properties & isModal)) {
+        closeButton = Gtk::manage(wf->createButton(
+                                        WidgetFactory::windowCloseButton));
+        cornerButtonBox->pack_end(*closeButton, Gtk::PACK_SHRINK, padding);
+        padding = 0;
+        closeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                        &WhiteWindow::onCloseButtonClicked));
+    }
+    if (properties & isResizable) {
         maximizeButton = Gtk::manage(wf->createButton(
                                         WidgetFactory::windowMaximizeButton));
+        cornerButtonBox->pack_end(*maximizeButton, Gtk::PACK_SHRINK, padding);
+        padding = (padding == 0) ? 5 : 0;
+        maximizeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                        &WhiteWindow::onMaximizeButtonClicked));
     }
-    closeButton = Gtk::manage(wf->createButton(
-                                        WidgetFactory::windowCloseButton));
-    Gtk::Box *  cornerButtonBox = Gtk::manage(new Gtk::HBox);
-    if (resizable) {
-        cornerButtonBox->pack_start(*minimizeButton, Gtk::PACK_SHRINK, 5);
-        cornerButtonBox->pack_start(*maximizeButton, Gtk::PACK_SHRINK, 0);
-        cornerButtonBox->pack_start(*closeButton, Gtk::PACK_SHRINK, 5);
-    } else {
-        cornerButtonBox->pack_start(*minimizeButton, Gtk::PACK_SHRINK, 0);
-        cornerButtonBox->pack_start(*closeButton, Gtk::PACK_SHRINK, 5);
-    }
+    minimizeButton = Gtk::manage(wf->createButton(
+                                        WidgetFactory::windowMinimizeButton));
+    cornerButtonBox->pack_end(*minimizeButton, Gtk::PACK_SHRINK, padding);
+    minimizeButton->signal_clicked().connect(sigc::mem_fun(*this,
+                                        &WhiteWindow::onMinimizeButtonClicked));
+
     cornerButtonAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
                                                            Gtk::ALIGN_CENTER,
                                                            0, 0));
@@ -156,7 +165,7 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     layout->attach(*childContainer, 0, 2, 1, 2);
 
     // create the resize image
-    if (resizable) {
+    if (properties & isResizable) {
         resizeImage = Gtk::manage(wf->createImage(WidgetFactory::resizeImage));
         resizeEventBox = Gtk::manage(new Gtk::EventBox());
         resizeEventBox->modify_bg(Gtk::STATE_NORMAL, bgColor);
@@ -166,6 +175,10 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
                                                          0, 0));
         resizeAlignment->add(*resizeEventBox);
         layout->attach(*resizeAlignment, 1, 2, 2, 3, Gtk::FILL, Gtk::SHRINK);
+
+        resizeEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
+        resizeEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
+                                                &WhiteWindow::onResizeClicked));
     }
 
     // add the corners
@@ -174,25 +187,14 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
     Gtk::Window::add(*blueBin);
 
     // show all
-    show_all();
+    if (!(properties & isBornHidden)) {
+        show_all();
+    }
 
     // register signal handlers
     this->add_events(Gdk::BUTTON_PRESS_MASK);
     this->signal_button_press_event().connect(sigc::mem_fun(*this,
                                                 &WhiteWindow::onTitleClicked));
-
-    minimizeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                        &WhiteWindow::onMinimizeButtonClicked));
-    closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                        &WhiteWindow::onCloseButtonClicked));
-
-    if (resizable) {
-        maximizeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                        &WhiteWindow::onMaximizeButtonClicked));
-        resizeEventBox->add_events(Gdk::BUTTON_PRESS_MASK);
-        resizeEventBox->signal_button_press_event().connect(sigc::mem_fun(*this,
-                                                &WhiteWindow::onResizeClicked));
-    }
 }
 
 

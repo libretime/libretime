@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/MessageWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ MessageWindow :: MessageWindow (Ptr<Glib::ustring>::Ref message)
           : WhiteWindow(*message,
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        false)
+                        0)
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 

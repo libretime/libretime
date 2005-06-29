@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/DialogWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,10 +64,9 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
           : WhiteWindow("",
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        false),
+                        WhiteWindow::isModal | WhiteWindow::isBornHidden),
             LocalizedObject(bundle)
 {
-    hide();
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
     layout = Gtk::manage(new Gtk::VBox());
@@ -122,7 +121,6 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
     }
 
     set_default_size(100*buttonCount + 50, 120);
-    set_modal(true);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
 
     add(*layout);

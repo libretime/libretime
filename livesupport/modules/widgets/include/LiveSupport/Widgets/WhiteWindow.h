@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */
@@ -322,12 +322,12 @@ class WhiteWindow : public Gtk::Window
          *
          *  @param backgroundColor the background color.
          *  @param cornerImages the corner images.
-         *  @param resizable true if the user can resize the window.
+         *  @param properties   some WindowProperties flags
          */
         void
         constructWindow(Colors::ColorName           backgroundColor,
                         Ptr<CornerImages>::Ref      cornerImages,
-                        bool                        resizable = true)
+                        int                         properties)
                                                             throw ();
 
 
@@ -338,12 +338,12 @@ class WhiteWindow : public Gtk::Window
          *  @param title the title of the window.
          *  @param backgroundColor the background color.
          *  @param cornerImages the corner images.
-         *  @param resizable true if the user can resize the window.
+         *  @param properties   some WindowProperties flags
          */
         WhiteWindow(WidgetFactory::ImageType    title,
                     Colors::ColorName           backgroundColor,
                     Ptr<CornerImages>::Ref      cornerImages,
-                    bool                        resizable = true)
+                    int                         properties = isResizable)
                                                             throw ();
 
         /**
@@ -352,12 +352,12 @@ class WhiteWindow : public Gtk::Window
          *  @param title the title of the window.
          *  @param backgroundColor the background color.
          *  @param cornerImages the corner images.
-         *  @param resizable true if the user can resize the window.
+         *  @param properties   some WindowProperties flags
          */
         WhiteWindow(Glib::ustring               title,
                     Colors::ColorName           backgroundColor,
                     Ptr<CornerImages>::Ref      cornerImages,
-                    bool                        resizable = true)
+                    int                         properties = isResizable)
                                                             throw ();
 
         /**
@@ -391,6 +391,14 @@ class WhiteWindow : public Gtk::Window
         void
         set_default_size(int    width,
                          int    height)                     throw ();
+
+        /**
+         *  Properties the WhiteWindow can have.  This is passed as the
+         *  properties parameter to the constructors.
+         */
+        typedef enum  { isResizable     = 1,
+                        isModal         = 2,
+                        isBornHidden    = 4 }       WindowProperties;
 };
 
 
