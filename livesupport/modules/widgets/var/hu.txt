@@ -1,0 +1,8 @@
+hu:table
+{
+    cancelButtonLabel:string    { "Mégsem" }
+    noButtonLabel:string        { "Nem" }
+    yesButtonLabel:string       { "Igen" }
+    okButtonLabel:string        { "OK" }
+}
+

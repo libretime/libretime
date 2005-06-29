@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,6 +53,7 @@
 #include "LiveSupport/Widgets/EntryBin.h"
 #include "LiveSupport/Widgets/Notebook.h"
 #include "LiveSupport/Widgets/WhiteWindow.h"
+#include "LiveSupport/Widgets/DialogWindow.h"
 
 
 namespace LiveSupport {
@@ -71,8 +72,8 @@ using namespace LiveSupport::Core;
 /**
  *  A window, enabling interactive testing of UI components.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.10 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.11 $
  */
 class TestWindow : public WhiteWindow
 {
@@ -89,6 +90,12 @@ class TestWindow : public WhiteWindow
         void
         onStopButtonPressed(void)                           throw ();
     
+        /**
+         *  The "are you sure?" dialog window.
+         */
+        DialogWindow              * dialogWindow;
+    
+
     protected:
         /**
          *  The layout used in the window.

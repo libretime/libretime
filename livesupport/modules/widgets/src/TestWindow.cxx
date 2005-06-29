@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,6 +47,11 @@ using namespace LiveSupport::Widgets;
 
 
 /* ================================================  local constants & macros */
+
+/**
+ *  The name of the configuration file for the resource bundle.
+ */
+static const std::string bundleConfigFileName = "etc/resourceBundle.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -111,6 +116,33 @@ TestWindow :: TestWindow (void)
     add(*blueBin);
     show_all();
     layout->attach(*cueStopImageButton, 1, 2, 0, 1);
+    
+    Ptr<ResourceBundle>::Ref    resourceBundle;
+    try {
+        Ptr<xmlpp::DomParser>::Ref  parser(
+                              new xmlpp::DomParser(bundleConfigFileName, true));
+        const xmlpp::Document * document = parser->get_document();
+        const xmlpp::Element  * root     = document->get_root_node();
+
+        resourceBundle = LocalizedObject::getBundle(*root);
+
+    } catch (std::invalid_argument &e) {
+        std::cerr << "semantic error in bundle configuration file:\n"
+                  << e.what() << std::endl;
+        exit(1);
+    } catch (std::exception &e) {
+        std::cerr << "XML error in bundle configuration file:\n"
+                  << e.what() << std::endl;
+        exit(1);
+    }
+
+    Ptr<Glib::ustring>::Ref     confirmationMessage(new Glib::ustring(
+                                                            "Are you sure?" ));
+    dialogWindow = new DialogWindow(confirmationMessage,
+                                    DialogWindow::cancelButton |
+                                    DialogWindow::noButton |
+                                    DialogWindow::yesButton,
+                                    resourceBundle);
 }
 
 
@@ -119,6 +151,7 @@ TestWindow :: TestWindow (void)
  *----------------------------------------------------------------------------*/
 TestWindow :: ~TestWindow (void)                                throw ()
 {
+    delete dialogWindow;
 }
 
 
@@ -143,6 +176,20 @@ TestWindow :: onButtonClicked(void)                                 throw ()
 void
 TestWindow :: onPlayButtonPressed(void)                         throw ()
 {
+    DialogWindow::ButtonType    result = dialogWindow->run();
+    switch (result) {
+        case DialogWindow::cancelButton:
+                    std::cerr << "Cancelled." << std::endl;
+                    break;
+        case DialogWindow::noButton:
+                    std::cerr << "No." << std::endl;
+                    break;
+        case DialogWindow::yesButton:
+                    std::cerr << "Yes." << std::endl;
+                    break;
+        default:    std::cerr << "This can never happen." << std::endl;
+    }
+    
     cuePlayImageButton->hide();
     cueStopImageButton->show();
 }
