@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WhiteWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -94,7 +94,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *  @see WidgetFactory
  *  @see WidgetFactory#getWhiteWindowCorners
  */
@@ -181,42 +181,6 @@ class WhiteWindow : public Gtk::Window
          *  Just a container for the main content of the window.
          */
         Gtk::Alignment                * childContainer;
-
-        /**
-         *  The event handler for the title being clicked on.
-         *
-         *  @param event the button click event.
-         *  @return true if the the event was handled, false otherwise.
-         */
-        bool
-        onTitleClicked(GdkEventButton     * event)          throw ();
-
-        /**
-         *  Signal handler for the minimize button clicked.
-         */
-        virtual void
-        onMinimizeButtonClicked(void)                       throw ();
-
-        /**
-         *  Signal handler for the maximize button clicked.
-         */
-        virtual void
-        onMaximizeButtonClicked(void)                       throw ();
-
-        /**
-         *  Signal handler for the close button clicked.
-         */
-        virtual void
-        onCloseButtonClicked(void)                          throw ();
-
-        /**
-         *  The event handler for the resize being clicked on.
-         *
-         *  @param event the button click event.
-         *  @return true if the the event was handled, false otherwise.
-         */
-        bool
-        onResizeClicked(GdkEventButton     * event)         throw ();
 
         /**
          *  Default constructor.
@@ -329,6 +293,42 @@ class WhiteWindow : public Gtk::Window
                         Ptr<CornerImages>::Ref      cornerImages,
                         int                         properties)
                                                             throw ();
+
+        /**
+         *  The event handler for the title being clicked on.
+         *
+         *  @param event the button click event.
+         *  @return true if the the event was handled, false otherwise.
+         */
+        virtual bool
+        onTitleClicked(GdkEventButton     * event)          throw ();
+
+        /**
+         *  Signal handler for the minimize button clicked.
+         */
+        virtual void
+        onMinimizeButtonClicked(void)                       throw ();
+
+        /**
+         *  Signal handler for the maximize button clicked.
+         */
+        virtual void
+        onMaximizeButtonClicked(void)                       throw ();
+
+        /**
+         *  Signal handler for the close button clicked.
+         */
+        virtual void
+        onCloseButtonClicked(void)                          throw ();
+
+        /**
+         *  The event handler for the resize being clicked on.
+         *
+         *  @param event the button click event.
+         *  @return true if the the event was handled, false otherwise.
+         */
+        virtual bool
+        onResizeClicked(GdkEventButton     * event)         throw ();
 
 
     public:

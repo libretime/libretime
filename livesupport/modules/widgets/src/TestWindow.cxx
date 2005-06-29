@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,11 +76,11 @@ TestWindow :: TestWindow (void)
     cuePlayImageButton = Gtk::manage(
                     widgetFactory->createButton(WidgetFactory::cuePlayButton));
     cuePlayImageButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                            &TestWindow::onPlayButtonPressed));
+                                            &TestWindow::onPlayButtonClicked));
     cueStopImageButton = Gtk::manage(
                     widgetFactory->createButton(WidgetFactory::cueStopButton));
     cueStopImageButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                            &TestWindow::onStopButtonPressed));
+                                            &TestWindow::onStopButtonClicked));
 
     // create a button
     button = Gtk::manage(widgetFactory->createButton("Hello, World!"));
@@ -139,7 +139,6 @@ TestWindow :: TestWindow (void)
     Ptr<Glib::ustring>::Ref     confirmationMessage(new Glib::ustring(
                                                             "Are you sure?" ));
     dialogWindow = new DialogWindow(confirmationMessage,
-                                    DialogWindow::cancelButton |
                                     DialogWindow::noButton |
                                     DialogWindow::yesButton,
                                     resourceBundle);
@@ -171,37 +170,43 @@ TestWindow :: onButtonClicked(void)                                 throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Change the image from "play" to "stop" on the button when pressed.
+ *  Change the image from "play" to "stop" on the button when clicked.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: onPlayButtonPressed(void)                         throw ()
+TestWindow :: onPlayButtonClicked(void)                         throw ()
 {
-    DialogWindow::ButtonType    result = dialogWindow->run();
-    switch (result) {
-        case DialogWindow::cancelButton:
-                    std::cerr << "Cancelled." << std::endl;
-                    break;
-        case DialogWindow::noButton:
-                    std::cerr << "No." << std::endl;
-                    break;
-        case DialogWindow::yesButton:
-                    std::cerr << "Yes." << std::endl;
-                    break;
-        default:    std::cerr << "This can never happen." << std::endl;
-    }
-    
     cuePlayImageButton->hide();
     cueStopImageButton->show();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Change the image from "stop" to "play" on the button when pressed.
+ *  Change the image from "stop" to "play" on the button when clicked.
  *----------------------------------------------------------------------------*/
 void
-TestWindow :: onStopButtonPressed(void)                         throw ()
+TestWindow :: onStopButtonClicked(void)                         throw ()
 {
     cueStopImageButton->hide();
     cuePlayImageButton->show();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Override the close button functionality.
+ *----------------------------------------------------------------------------*/
+void
+TestWindow :: onCloseButtonClicked(void)                        throw ()
+{
+    DialogWindow::ButtonType    result = dialogWindow->run();
+    switch (result) {
+        case DialogWindow::noButton:
+                    return;
+
+        case DialogWindow::yesButton:
+                    hide();
+                    break;
+
+        default:    std::cerr << "This can never happen." << std::endl;
+    }
+}
+    

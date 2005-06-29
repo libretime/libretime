@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/DialogWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -121,7 +121,7 @@ DialogWindow :: DialogWindow (Ptr<Glib::ustring>::Ref   message,
     }
 
     set_default_size(100*buttonCount + 50, 120);
-    property_window_position().set_value(Gtk::WIN_POS_NONE);
+    property_window_position().set_value(Gtk::WIN_POS_CENTER);
 
     add(*layout);
 }

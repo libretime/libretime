@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WhiteWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -146,12 +146,13 @@ WhiteWindow :: constructWindow(Colors::ColorName            backgroundColor,
         padding = (padding == 0) ? 5 : 0;
         maximizeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &WhiteWindow::onMaximizeButtonClicked));
-    }
-    minimizeButton = Gtk::manage(wf->createButton(
+
+        minimizeButton = Gtk::manage(wf->createButton(
                                         WidgetFactory::windowMinimizeButton));
-    cornerButtonBox->pack_end(*minimizeButton, Gtk::PACK_SHRINK, padding);
-    minimizeButton->signal_clicked().connect(sigc::mem_fun(*this,
+        cornerButtonBox->pack_end(*minimizeButton, Gtk::PACK_SHRINK, padding);
+        minimizeButton->signal_clicked().connect(sigc::mem_fun(*this,
                                         &WhiteWindow::onMinimizeButtonClicked));
+    }
 
     cornerButtonAlignment = Gtk::manage(new Gtk::Alignment(Gtk::ALIGN_RIGHT,
                                                            Gtk::ALIGN_CENTER,

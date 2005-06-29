@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class TestWindow : public WhiteWindow
 {
@@ -82,13 +82,13 @@ class TestWindow : public WhiteWindow
          *  Change the image from "play" to "stop" on the button when pressed.
          */
         void
-        onPlayButtonPressed(void)                           throw ();
+        onPlayButtonClicked(void)                           throw ();
     
         /**
          *  Change the image from "stop" to "play" on the button when pressed.
          */
         void
-        onStopButtonPressed(void)                           throw ();
+        onStopButtonClicked(void)                           throw ();
     
         /**
          *  The "are you sure?" dialog window.
@@ -148,10 +148,17 @@ class TestWindow : public WhiteWindow
         BlueBin                   * blueBin;
 
         /**
-         *  Event handler for the button being clicked.
+         *  Event handler for the large button being clicked.
          */
         virtual void
         onButtonClicked(void)                               throw ();
+
+        /**
+         *  Event handler for the close button being clicked
+         *  (overrides WhiteWindow::onCloseButtonClicked()).
+         */
+        virtual void
+        onCloseButtonClicked(void)                          throw ();
 
 
     public:
