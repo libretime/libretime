@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -85,6 +85,16 @@ static const char *         parallelFile = "var/parallel.smil";
  */
 static const char *         parallelClipBeginEndFile =
                                         "var/parallel-clipBegin-clipEnd.smil";
+
+/**
+ *  A SMIL file containing an Ogg Vorbis file.
+ */
+static const char *         oggVorbisSmilFile = "var/simple-ogg.smil";
+
+/**
+ *  A SMIL file containing another SMIL file.
+ */
+static const char *         embeddedSmilFile = "var/embedded.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -162,10 +172,12 @@ MinimalAudioSmilTest :: firstTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playSmilFile(simpleFile);
-    CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
 }
 
 
@@ -177,10 +189,12 @@ MinimalAudioSmilTest :: simpleClipBeginTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playSmilFile(simpleClipBeginFile);
-    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
 }
 
 
@@ -192,10 +206,12 @@ MinimalAudioSmilTest :: simpleClipBeginEndTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playSmilFile(simpleClipBeginEndFile);
-    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
 }
 
 
@@ -207,10 +223,12 @@ MinimalAudioSmilTest :: parallelTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playSmilFile(parallelFile);
-    CPPUNIT_ASSERT(timePlayed > 7.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 8.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 7.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 8.1 * GST_SECOND);
 }
 
 
@@ -222,9 +240,45 @@ MinimalAudioSmilTest :: parallelClipBeginEndTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
     timePlayed = playSmilFile(parallelClipBeginEndFile);
-    CPPUNIT_ASSERT(timePlayed > 7.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 8.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 7.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 8.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a SMIL file pointing to an Ogg Vorbis file.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: oggVorbisTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(oggVorbisSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a SMIL file pointing to another SMIL file.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: embeddedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(embeddedSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,16 +58,20 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(MinimalAudioSmilTest);
+#if 0
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simpleClipBeginTest);
     CPPUNIT_TEST(simpleClipBeginEndTest);
     CPPUNIT_TEST(parallelTest);
     CPPUNIT_TEST(parallelClipBeginEndTest);
+#endif
+    CPPUNIT_TEST(oggVorbisTest);
+    CPPUNIT_TEST(embeddedTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -126,6 +130,22 @@ class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
          */
         void
         parallelClipBeginEndTest(void)          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A simple test with a SMIL file referring to an Ogg Vorbis file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test looking at an embedded SMIL file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        embeddedTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:
