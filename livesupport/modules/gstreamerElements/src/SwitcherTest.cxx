@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -38,6 +38,7 @@
 
 #include <gst/gst.h>
 
+#include "LiveSupport/GstreamerElements/autoplug.h"
 #include "SwitcherTest.h"
 
 
@@ -50,7 +51,20 @@ using namespace LiveSupport::GstreamerElements;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SwitcherTest);
 
-static const char *         testFile = "var/5seccounter.mp3";
+/**
+ *  An mp3 test file.
+ */
+static const char *         mp3File = "var/5seccounter.mp3";
+
+/**
+ *  An ogg vorbis test file.
+ */
+static const char *         oggVorbisFile = "var/5seccounter.ogg";
+
+/**
+ *  A SMIL test file.
+ */
+static const char *         smilFile = "var/simple.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -110,9 +124,6 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
     switcher = gst_element_factory_make("switcher", "switcher");
     sink     = gst_element_factory_make("alsasink", "alsa-output");
 
-    gst_element_link_many(switcher, sink, NULL);
-    gst_bin_add_many(GST_BIN(pipeline), switcher, sink, NULL);
-
     for (i = 0; i < noFiles; ++i) {
         GstElement    * source;
         GstElement    * decoder;
@@ -122,23 +133,34 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
         g_snprintf(str, 256, "source_%d", i);
         source   = gst_element_factory_make("filesrc", str);
         CPPUNIT_ASSERT(source);
-
-        g_snprintf(str, 256, "decoder_%d", i);
-        decoder  = gst_element_factory_make("mad", str);
-        CPPUNIT_ASSERT(decoder);
-
         g_object_set(G_OBJECT(source), "location", audioFiles[i], NULL);
 
-        ret = gst_element_link_many(source, decoder, switcher, NULL);
+        g_snprintf(str, 256, "decoder_%d", i);
+        decoder = ls_gst_autoplug_plug_source(source, str);
+        CPPUNIT_ASSERT(decoder);
+
+        ret = gst_element_link(decoder, switcher);
         CPPUNIT_ASSERT(ret);
         gst_bin_add_many(GST_BIN(pipeline), source, decoder, NULL);
     }
+
+    /* link and add the switcher & sink _after_ the decoders above
+     * otherwise we'll get a:
+     * "assertion failed: (group->group_links == NULL)"
+     * error later on when trying to free up the pipeline
+     * see http://bugzilla.gnome.org/show_bug.cgi?id=309122
+     */
+    gst_element_link_many(switcher, sink, NULL);
+    gst_bin_add_many(GST_BIN(pipeline), switcher, sink, NULL);
 
     g_object_set(G_OBJECT(switcher), "source-config", sourceConfig, NULL);
     /* listen for the eos event on switcher, so the pipeline can be stopped */
     g_signal_connect(switcher, "eos", G_CALLBACK(eos_signal_handler), pipeline);
 
-    gst_element_set_state(sink, GST_STATE_READY);
+    gst_element_set_state(sink, GST_STATE_PAUSED);
+    /* set the switcher to PAUSED, as it will give
+     * "trying to push on unnegotiaded pad" warnings otherwise */
+    gst_element_set_state(switcher, GST_STATE_PAUSED);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
     while (gst_bin_iterate(GST_BIN(pipeline)));
@@ -175,14 +197,16 @@ eos_signal_handler(GstElement     * element,
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-SwitcherTest :: firstTest(void)
+SwitcherTest :: mp3Test(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
-    timePlayed = playFiles(&testFile, 1, "0[3s]");
-    CPPUNIT_ASSERT(timePlayed > 2.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 3.1 * GST_SECOND);
+    timePlayed = playFiles(&mp3File, 1, "0[3s]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
 }
 
 
@@ -190,14 +214,16 @@ SwitcherTest :: firstTest(void)
  *  Play a file until its end.
  *----------------------------------------------------------------------------*/
 void
-SwitcherTest :: openEndedTest(void)
+SwitcherTest :: mp3OpenEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
-    timePlayed = playFiles(&testFile, 1, "0[]");
-    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+    timePlayed = playFiles(&mp3File, 1, "0[]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
 }
 
 
@@ -205,15 +231,17 @@ SwitcherTest :: openEndedTest(void)
  *  Play a file until its end.
  *----------------------------------------------------------------------------*/
 void
-SwitcherTest :: multipleTest(void)
+SwitcherTest :: mp3MultipleTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    const char    * testFiles[2] = { testFile, testFile };
+    const char    * testFiles[] = { mp3File, mp3File };
     gint64          timePlayed;
+    char            str[256];
 
     timePlayed = playFiles(testFiles, 2, "0[2s];1[2s]");
-    CPPUNIT_ASSERT(timePlayed > 3.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 4.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
 }
 
 
@@ -221,15 +249,157 @@ SwitcherTest :: multipleTest(void)
  *  Play a file until its end.
  *----------------------------------------------------------------------------*/
 void
-SwitcherTest :: multipleOpenEndedTest(void)
+SwitcherTest :: mp3MultipleOpenEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    const char    * testFiles[2] = { testFile, testFile };
+    const char    * testFiles[] = { mp3File, mp3File };
     gint64          timePlayed;
+    char            str[256];
 
     timePlayed = playFiles(testFiles, 2, "0[2s];1[]");
-    CPPUNIT_ASSERT(timePlayed > 6.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 7.1 * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 6.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 7.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: oggVorbisTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFiles(&oggVorbisFile, 1, "0[3s]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: oggVorbisOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFiles(&oggVorbisFile, 1, "0[]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: oggVorbisMultipleTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    const char    * testFiles[] = { oggVorbisFile, oggVorbisFile };
+    gint64          timePlayed;
+    char            str[256];
+
+    timePlayed = playFiles(testFiles, 2, "0[2s];1[2s]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: oggVorbisMultipleOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    const char    * testFiles[] = { oggVorbisFile, oggVorbisFile };
+    gint64          timePlayed;
+    char            str[256];
+
+    timePlayed = playFiles(testFiles, 2, "0[2s];1[]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 6.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 7.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFiles(&smilFile, 1, "0[3s]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 3.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: smilOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFiles(&smilFile, 1, "0[]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: smilMultipleTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    const char    * testFiles[] = { smilFile, smilFile };
+    gint64          timePlayed;
+    char            str[256];
+
+    timePlayed = playFiles(testFiles, 2, "0[2s];1[2s]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a file until its end.
+ *----------------------------------------------------------------------------*/
+void
+SwitcherTest :: smilMultipleOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    const char    * testFiles[] = { smilFile, smilFile };
+    gint64          timePlayed;
+    char            str[256];
+
+    timePlayed = playFiles(testFiles, 2, "0[2s];1[]");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 6.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 7.1 * GST_SECOND);
 }
 
 

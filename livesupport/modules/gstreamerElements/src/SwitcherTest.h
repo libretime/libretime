@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,15 +58,23 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class SwitcherTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SwitcherTest);
-    CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(openEndedTest);
-    CPPUNIT_TEST(multipleTest);
-    CPPUNIT_TEST(multipleOpenEndedTest);
+    CPPUNIT_TEST(mp3Test);
+    CPPUNIT_TEST(mp3OpenEndedTest);
+    CPPUNIT_TEST(mp3MultipleTest);
+    CPPUNIT_TEST(mp3MultipleOpenEndedTest);
+    CPPUNIT_TEST(oggVorbisTest);
+    CPPUNIT_TEST(oggVorbisOpenEndedTest);
+    CPPUNIT_TEST(oggVorbisMultipleTest);
+    CPPUNIT_TEST(oggVorbisMultipleOpenEndedTest);
+    CPPUNIT_TEST(smilTest);
+    CPPUNIT_TEST(smilOpenEndedTest);
+    CPPUNIT_TEST(smilMultipleTest);
+    CPPUNIT_TEST(smilMultipleOpenEndedTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -90,36 +98,103 @@ class SwitcherTest : public CPPUNIT_NS::TestFixture
     protected:
 
         /**
-         *  A simple smoke test.
+         *  A simple smoke test with an mp3 file.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+        mp3Test(void)                           throw (CPPUNIT_NS::Exception);
 
         /**
-         *  A test to play a file until its end.
+         *  A test to play an mp3 file until its end.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        openEndedTest(void)                     throw (CPPUNIT_NS::Exception);
+        mp3OpenEndedTest(void)                  throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Test the switcher with multiple inputs.
+         *  Test the switcher with multiple mp3 inputs.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        multipleTest(void)                      throw (CPPUNIT_NS::Exception);
+        mp3MultipleTest(void)                   throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Test the switcher with multiple inputs, including open-ended ones.
+         *  Test the switcher with multiple mp3 inputs,
+         *  including open-ended ones.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        multipleOpenEndedTest(void)             throw (CPPUNIT_NS::Exception);
+        mp3MultipleOpenEndedTest(void)          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A simple smoke test with an ogg vorbis file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to play an ogg vorbis file until its end.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisOpenEndedTest(void)            throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the switcher with multiple ogg vorbis inputs.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisMultipleTest(void)             throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the switcher with multiple ogg vorbis inputs,
+         *  including open-ended ones.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisMultipleOpenEndedTest(void)    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A simple smoke test with a SMIL file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilTest(void)                          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to play a SMIL file until its end.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilOpenEndedTest(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the switcher with multiple SMIL inputs.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilMultipleTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the switcher with multiple SMIL inputs,
+         *  including open-ended ones.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilMultipleOpenEndedTest(void)         throw (CPPUNIT_NS::Exception);
 
 
     public:

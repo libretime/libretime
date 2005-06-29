@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.6 $",
+    "$Revision: 1.7 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -169,19 +169,6 @@ static void
 livesupport_switcher_loop(GstElement      * element);
 
 /**
- *  This function handles the link with other plug-ins.
- *
- *  @param pad the pad that is about to be linked.
- *  @param caps the set of possible linking capabilities
- *  @return GST_PAD_LINK_OK or GST_PAD_LINK_DONE if linking can be or has
- *           been done, GST_PAD_LINK_DELAYED if linking can not yet be done,
- *           GST_PAD_LINK_REFUSED in linking can not be done.
- */
-static GstPadLinkReturn
-livesupport_switcher_link(GstPad          * pad,
-                          const GstCaps   * caps);
-
-/**
  *  Switch to the source next in line.
  *  Call this function if it's time to switch to the next source.
  *
@@ -242,22 +229,6 @@ livesupport_switcher_get_type(void)
     }
 
     return plugin_type;
-}
-
-
-/*------------------------------------------------------------------------------ *  This function handles the link with other plug-ins.
- *----------------------------------------------------------------------------*/static GstPadLinkReturn
-livesupport_switcher_link(GstPad          * pad,
-                          const GstCaps   * caps)
-{
-    LivesupportSwitcher   * switcher;
-
-    switcher = LIVESUPPORT_SWITCHER(gst_pad_get_parent(pad));
-    g_return_val_if_fail(switcher != NULL, GST_PAD_LINK_REFUSED);
-    g_return_val_if_fail(LIVESUPPORT_IS_SWITCHER(switcher),
-                         GST_PAD_LINK_REFUSED);
-
-    return gst_pad_try_set_caps(switcher->srcpad, caps);
 }
 
 
@@ -335,7 +306,7 @@ request_new_pad(GstElement        * element,
     }
 
     pad = gst_pad_new_from_template(template, name);
-    gst_pad_set_link_function(pad, livesupport_switcher_link);
+    gst_pad_set_link_function(pad, gst_pad_proxy_pad_link);
     gst_pad_set_getcaps_function(pad, gst_pad_proxy_getcaps);
 
     gst_element_add_pad(element, pad);
@@ -434,7 +405,11 @@ switch_to_next_source(LivesupportSwitcher     * switcher)
         if (!newConfig->sinkPad) {
             if (!(newConfig->sinkPad = g_list_nth_data(switcher->sinkpadList,
                                                        newConfig->sourceId))) {
-                /* TODO: mark error */
+                GST_ELEMENT_ERROR(GST_ELEMENT(switcher),
+                                  RESOURCE,
+                                  NOT_FOUND,
+                                  ("can't find sinkpad for next sink"),
+                                  (NULL));
             }
         }
 
@@ -485,7 +460,11 @@ livesupport_switcher_loop(GstElement      * element)
         if (!config->sinkPad) {
             if (!(config->sinkPad = g_list_nth_data(switcher->sinkpadList,
                                                     config->sourceId))) {
-                /* TODO: mark error */
+                GST_ELEMENT_ERROR(GST_ELEMENT(switcher),
+                                  RESOURCE,
+                                  NOT_FOUND,
+                                  ("can't find sinkpad for first sink"),
+                                  (NULL));
             }
         }
     } else {
@@ -512,11 +491,11 @@ livesupport_switcher_loop(GstElement      * element)
 
             if (GST_BUFFER_DURATION(buf) != GST_CLOCK_TIME_NONE) {
                 switcher->elapsedTime += GST_BUFFER_DURATION(buf);
+                GST_BUFFER_TIMESTAMP(buf) = switcher->elapsedTime;
             }
             switcher->offset += GST_BUFFER_SIZE(buf);
             GST_INFO("elapsed time: %" G_GINT64_FORMAT, switcher->elapsedTime);
 
-            GST_BUFFER_TIMESTAMP(buf) = switcher->elapsedTime;
             GST_BUFFER_OFFSET(buf)    = switcher->offset;
 
             /* just push out the incoming buffer without touching it */
