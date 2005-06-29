@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,7 +110,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.3 $",
+                  "$Revision: 1.4 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -581,6 +581,7 @@ static void
 livesupport_minimal_audio_smil_init(LivesupportMinimalAudioSmil * smil)
 {
     GValue      gvalue = { 0 };
+    GstPad    * oneshotReaderSink;
 
     smil->bin    = GST_BIN(gst_bin_new("smilbin"));
 
@@ -601,10 +602,10 @@ livesupport_minimal_audio_smil_init(LivesupportMinimalAudioSmil * smil)
                             gst_element_get_pad(GST_ELEMENT(smil->bin), "src"),
                             "src");
     smil->oneshotReader = gst_element_factory_make("oneshotreader", "oneshot");
-    smil->oneshotReaderSink = gst_element_get_pad(smil->oneshotReader, "sink");
+    oneshotReaderSink = gst_element_get_pad(smil->oneshotReader, "sink");
     gst_bin_add(GST_BIN(smil), smil->oneshotReader);
     smil->sinkpad = gst_element_add_ghost_pad(GST_ELEMENT(smil),
-                                              smil->oneshotReaderSink,
+                                              oneshotReaderSink,
                                               "sink");
 
     smil->fileProcessed = FALSE;
