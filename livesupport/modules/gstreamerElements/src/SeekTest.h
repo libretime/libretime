@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,15 +58,15 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class SeekTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SeekTest);
-//    CPPUNIT_TEST(mp3Test);
-//    CPPUNIT_TEST(mp3OpenEndedTest);
-//    CPPUNIT_TEST(oggVorbisTest);
-//    CPPUNIT_TEST(oggVorbisOpenEndedTest);
+    CPPUNIT_TEST(mp3Test);
+    CPPUNIT_TEST(mp3OpenEndedTest);
+    CPPUNIT_TEST(oggVorbisTest);
+    CPPUNIT_TEST(oggVorbisOpenEndedTest);
     CPPUNIT_TEST(smilTest);
     CPPUNIT_TEST(smilOpenEndedTest);
     CPPUNIT_TEST_SUITE_END();
