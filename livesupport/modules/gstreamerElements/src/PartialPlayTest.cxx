@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/PartialPlayTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -51,9 +51,19 @@ using namespace LiveSupport::GstreamerElements;
 CPPUNIT_TEST_SUITE_REGISTRATION(PartialPlayTest);
 
 /**
- *  A test file.
+ *  An mp3 test file.
  */
-static const char *         testFile = "var/5seccounter.mp3";
+static const char *         mp3File = "var/5seccounter.mp3";
+
+/**
+ *  An ogg vorbis test file.
+ */
+static const char *         oggVorbisFile = "var/5seccounter.ogg";
+
+/**
+ *  A SMIL test file.
+ */
+static const char *         smilFile = "var/simple.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -158,14 +168,16 @@ eos_signal_handler(GstElement     * element,
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-PartialPlayTest :: firstTest(void)
+PartialPlayTest :: mp3Test(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
-    timePlayed = playFile(testFile, "2s;1s-4s");
-    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+    timePlayed = playFile(mp3File, "2s;1s-4s");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
 }
 
 
@@ -173,13 +185,83 @@ PartialPlayTest :: firstTest(void)
  *  Open ended test
  *----------------------------------------------------------------------------*/
 void
-PartialPlayTest :: openEndedTest(void)
+PartialPlayTest :: mp3OpenEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
+    char    str[256];
 
-    timePlayed = playFile(testFile, "2s;2s-");
-    CPPUNIT_ASSERT(timePlayed > 4.9 * GST_SECOND);
-    CPPUNIT_ASSERT(timePlayed < 5.1 * GST_SECOND);
+    timePlayed = playFile(mp3File, "2s;2s-");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+PartialPlayTest :: oggVorbisTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(oggVorbisFile, "2s;1s-4s");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Open ended test
+ *----------------------------------------------------------------------------*/
+void
+PartialPlayTest :: oggVorbisOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(oggVorbisFile, "2s;2s-");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple smoke test.
+ *----------------------------------------------------------------------------*/
+void
+PartialPlayTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilFile, "2s;1s-4s");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Open ended test
+ *----------------------------------------------------------------------------*/
+void
+PartialPlayTest :: smilOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilFile, "2s;2s-");
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
 }
 
