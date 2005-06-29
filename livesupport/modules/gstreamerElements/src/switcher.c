@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.7 $",
+    "$Revision: 1.8 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -481,10 +481,21 @@ livesupport_switcher_loop(GstElement      * element)
 
             GST_INFO("handling event type %d", GST_EVENT_TYPE(event));
 
-            if (GST_EVENT_TYPE(event) == GST_EVENT_EOS) {
-                switch_to_next_source(switcher);
-            } else {
-                gst_pad_event_default(switcher->srcpad, event);
+            switch (GST_EVENT_TYPE(event)) {
+                case GST_EVENT_EOS:
+                    switch_to_next_source(switcher);
+                    break;
+
+                case GST_EVENT_FLUSH:
+                    /* silently discard flush events
+                     * this is because when having an Ogg Vorbis source
+                     * as the second source, the flush event will indefinately
+                     * bounce back and forward, and the filesrc will regenerate
+                     * new flush events ad infinitum */
+                    break;
+
+                default:
+                    gst_pad_event_default(switcher->srcpad, event);
             }
         } else {
             buf = GST_BUFFER(data);
@@ -510,7 +521,19 @@ livesupport_switcher_loop(GstElement      * element)
 
         GST_INFO("handling event type %d", GST_EVENT_TYPE(event));
 
-        gst_pad_event_default(switcher->srcpad, event);
+        switch (GST_EVENT_TYPE(event)) {
+            case GST_EVENT_FLUSH:
+                /* silently discard flush events
+                 * this is because when having an Ogg Vorbis source
+                 * as the second source, the flush event will indefinately
+                 * bounce back and forward, and the filesrc will regenerate
+                 * new flush events ad infinitum */
+                break;
+
+            default:
+                gst_pad_event_default(switcher->srcpad, event);
+        }
+
         return;
     }
 

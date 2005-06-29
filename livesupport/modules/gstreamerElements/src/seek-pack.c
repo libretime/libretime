@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -121,8 +121,6 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
     seekPack->audioconvert = gst_element_factory_make("audioconvert", str);
 
     seekPack->source    = NULL;
-    /* TODO: typefind, and create Ogg Vorbis parser/decoder */
-    seekPack->parser    = NULL;
 
     /* generate decoder later, by autoplugging */
     seekPack->decoder   = 0;
@@ -146,17 +144,6 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
     
     seekPack->sendingSilence = TRUE;
 
-    gst_element_link_many(seekPack->silence,
-                          seekPack->audioconvert,
-                          seekPack->switcher,
-                          NULL);
-
-    /* put all inside the bin, and link up a ghost pad to switch's src pad */
-    gst_bin_add_many(GST_BIN(seekPack->bin),
-                     seekPack->silence,
-                     seekPack->audioconvert,
-                     seekPack->switcher,
-                     NULL);
     gst_element_add_ghost_pad(seekPack->bin,
                               gst_element_get_pad(seekPack->switcher, "src"),
                               "src");
@@ -206,14 +193,32 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
                                                     name);
     g_free(name);
 
+    /* link up the silence element with the switcher first */
+    gst_element_link_many(seekPack->silence,
+                          seekPack->audioconvert,
+                          seekPack->switcher,
+                          NULL);
+
+    /* seek on the decoder, and link it up with the switcher */
     gst_element_link(seekPack->source, seekPack->decoder);
     livesupport_seek_pack_seek(seekPack);
     gst_element_link(seekPack->decoder, seekPack->switcher);
 
+    /* put all inside the bin, and link up a ghost pad to switch's src pad */
     gst_bin_add_many(GST_BIN(seekPack->bin),
+                     seekPack->silence,
+                     seekPack->audioconvert,
                      seekPack->source,
                      seekPack->decoder,
                      NULL);
+
+    /* put the switcher last into the bin, and also link it as last
+     * otherwise we'll get a:
+     * "assertion failed: (group->group_links == NULL)"
+     * error later on when trying to free up the pipeline
+     * see http://bugzilla.gnome.org/show_bug.cgi?id=309122
+     */
+    gst_bin_add(GST_BIN(seekPack->bin), seekPack->switcher);
 }
 
 

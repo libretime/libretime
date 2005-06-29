@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekPackTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,9 +52,19 @@ using namespace LiveSupport::GstreamerElements;
 CPPUNIT_TEST_SUITE_REGISTRATION(SeekPackTest);
 
 /**
- *  A test file.
+ *  An mp3 test file.
  */
-static const char *         testFile = "var/5seccounter.mp3";
+static const char *         mp3File = "var/5seccounter.mp3";
+
+/**
+ *  An ogg vorbis test file.
+ */
+static const char *         oggVorbisFile = "var/5seccounter.ogg";
+
+/**
+ *  A smil test file.
+ */
+static const char *         smilFile = "var/simple.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -173,13 +183,13 @@ eos_signal_handler(GstElement     * element,
  *  A simple smoke test.
  *----------------------------------------------------------------------------*/
 void
-SeekPackTest :: firstTest(void)
+SeekPackTest :: mp3Test(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
     char    str[256];
 
-    timePlayed = playFile(testFile,
+    timePlayed = playFile(mp3File,
                           2LL * GST_SECOND,
                           1LL * GST_SECOND,
                           3LL * GST_SECOND);
@@ -193,13 +203,13 @@ SeekPackTest :: firstTest(void)
  *  A test with no silence.
  *----------------------------------------------------------------------------*/
 void
-SeekPackTest :: noSilenceTest(void)
+SeekPackTest :: mp3NoSilenceTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
     char    str[256];
 
-    timePlayed = playFile(testFile,
+    timePlayed = playFile(mp3File,
                           0LL * GST_SECOND,
                           1LL * GST_SECOND,
                           3LL * GST_SECOND);
@@ -213,18 +223,138 @@ SeekPackTest :: noSilenceTest(void)
  *  Open ended test
  *----------------------------------------------------------------------------*/
 void
-SeekPackTest :: openEndedTest(void)
+SeekPackTest :: mp3OpenEndedTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     gint64  timePlayed;
     char    str[256];
 
-    timePlayed = playFile(testFile,
+    timePlayed = playFile(mp3File,
                           2LL * GST_SECOND,
                           1LL * GST_SECOND,
                           -1LL);
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 5.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 6.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple test with an ogg vorbis file
+ *----------------------------------------------------------------------------*/
+void
+SeekPackTest :: oggVorbisTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(oggVorbisFile,
+                          2LL * GST_SECOND,
+                          1LL * GST_SECOND,
+                          3LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A no silence test with an ogg vorbis file
+ *----------------------------------------------------------------------------*/
+void
+SeekPackTest :: oggVorbisNoSilenceTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(oggVorbisFile,
+                          0LL * GST_SECOND,
+                          1LL * GST_SECOND,
+                          3LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 1.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  An open ended test with an ogg vorbis file
+ *----------------------------------------------------------------------------*/
+void
+SeekPackTest :: oggVorbisOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(oggVorbisFile,
+                          2LL * GST_SECOND,
+                          1LL * GST_SECOND,
+                          -1LL);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple test with a SMIL file
+ *----------------------------------------------------------------------------*/
+void
+SeekPackTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilFile,
+                          2LL * GST_SECOND,
+                          1LL * GST_SECOND,
+                          3LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple test with a SMIL file, without silence
+ *----------------------------------------------------------------------------*/
+void
+SeekPackTest :: smilNoSilenceTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilFile,
+                          0LL * GST_SECOND,
+                          1LL * GST_SECOND,
+                          3LL * GST_SECOND);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 1.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A simple test with a SMIL file, playing until EOS
+ *----------------------------------------------------------------------------*/
+void
+SeekPackTest :: smilOpenEndedTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(smilFile,
+                          2LL * GST_SECOND,
+                          1LL * GST_SECOND,
+                          -1LL);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 3.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 4.1 * GST_SECOND);
 }
 

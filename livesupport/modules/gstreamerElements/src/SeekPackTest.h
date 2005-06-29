@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekPackTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,14 +58,20 @@ namespace GstreamerElements {
  *  Unit test for the SeekPack structure.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 class SeekPackTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(SeekPackTest);
-    CPPUNIT_TEST(firstTest);
-    CPPUNIT_TEST(noSilenceTest);
-    CPPUNIT_TEST(openEndedTest);
+    CPPUNIT_TEST(mp3Test);
+    CPPUNIT_TEST(mp3NoSilenceTest);
+    CPPUNIT_TEST(mp3OpenEndedTest);
+    CPPUNIT_TEST(oggVorbisTest);
+    CPPUNIT_TEST(oggVorbisNoSilenceTest);
+    CPPUNIT_TEST(oggVorbisOpenEndedTest);
+    CPPUNIT_TEST(smilTest);
+    CPPUNIT_TEST(smilNoSilenceTest);
+    CPPUNIT_TEST(smilOpenEndedTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -92,28 +98,76 @@ class SeekPackTest : public CPPUNIT_NS::TestFixture
     protected:
 
         /**
-         *  A simple smoke test.
+         *  A simple mp3 smoke test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        firstTest(void)                         throw (CPPUNIT_NS::Exception);
+        mp3Test(void)                           throw (CPPUNIT_NS::Exception);
 
         /**
-         *  A test with no silence.
+         *  An mp3 test with no silence.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        noSilenceTest(void)                     throw (CPPUNIT_NS::Exception);
+        mp3NoSilenceTest(void)                  throw (CPPUNIT_NS::Exception);
 
         /**
-         *  An open ended play test.
+         *  An open ended mp3 play test.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
          */
         void
-        openEndedTest(void)                     throw (CPPUNIT_NS::Exception);
+        mp3OpenEndedTest(void)                  throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Try SeekPack on an ogg vorbis file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Try SeekPack on an ogg vorbis file, without playing silence.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisNoSilenceTest(void)            throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Try SeekPack on an ogg vorbis file, playing until EOS.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbisOpenEndedTest(void)            throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Try SeekPack on a SMIL file.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilTest(void)                          throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Try SeekPack on a SMIL file, with no silence in the front.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilNoSilenceTest(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Try SeekPack on a SMIL file, playing until EOS.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        smilOpenEndedTest(void)                 throw (CPPUNIT_NS::Exception);
 
 
     public:
