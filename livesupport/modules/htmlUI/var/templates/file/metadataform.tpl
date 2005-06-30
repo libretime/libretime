@@ -1,12 +1,11 @@
 {UIBROWSER->metaDataForm id=$editItem.id langid=$editItem.curr_langid assign="_metadataform"}
 
 <div id="tabnav">
-<ul>
-<!--li><a href="#" class="active">Search</a></li-->
-<li><a href="#" onClick="javascript:showMain();"  id="switch_Main">##Main##</a></li>
-<li><a href="#" onClick="javascript:showMusic();" id="switch_Music">##Music##</a></li>
-<li><a href="#" onClick="javascript:showTalk();"  id="switch_Talk">##Talk##</a></li>
-</ul>
+    <ul>
+        <li><a href="#" onClick="javascript:showMain();"  id="switch_Main">##Main##</a></li>
+        <li><a href="#" onClick="javascript:showMusic();" id="switch_Music">##Music##</a></li>
+        <li><a href="#" onClick="javascript:showTalk();"  id="switch_Talk">##Talk##</a></li>
+    </ul>
 </div>
 
     {assign var="dynform" value=$_metadataform.langswitch}

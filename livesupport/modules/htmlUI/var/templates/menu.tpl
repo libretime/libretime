@@ -1,19 +1,31 @@
     <!-- start nav -->
         <div class="container_nav">
             <ul id="nav">
-                <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=editFile">##Add Audio##</a>
+                <li><a>##Add Audio##</a>
                     <ul>
-                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=editFile"     >##File##</a></li>
-                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=editWebstream">##Stream##</a></li>
+                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData"     >##File##</a></li>
+                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Stream##</a></li>
                     </ul>
                 </li>
-                <li><a href="{$UI_BROWSER}?id={$START.id}&act=BROWSE">##Media Library##</a>
+                <li><a>##Media Library##</a>
                     <ul>
                         <li><a href="{$UI_BROWSER}?id={$START.id}&act=BROWSE">##Browse##</a></li>
                         <li><a href="{$UI_BROWSER}?id={$START.id}&act=SEARCH">##Search##</a></li>
                     </ul>
                 </li>
-                <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Playlist Editor##</a></li>
+                <li><a>##Playlists##</a>
+                    <ul>
+                        {if $PL->getActiveArr()}
+                            <li><a href="{$UI_BROWSER}?id={$START.fid}&act=PL.simpleManagement">##Edit Playlist##</a></li>
+                        {else}
+                            {if $PL->reportLookedPL()}
+                                <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.unlook')">##Open last Playlist##</a></li>
+                            {else}
+                                <li><a onClick="hpopup('{$UI_HANDLER}?act=PL.create')">##New empty Playlist##</a></li>
+                            {/if}
+                        {/if}
+                    </ul>
+                </li>
                 <li><a href="{$UI_BROWSER}?act=SCHEDULER">##Scheduler##</a>
                     <ul>
                         <li><a href="javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.set&view=month');       location.href='{$UI_BROWSER}?act=SCHEDULER'">##Month##</a></li>
@@ -24,7 +36,7 @@
                 </li>
 
                 {if $SUBJECTS->Base->gb->checkPerm($SUBJECTS->Base->userid, 'subjects')}
-                <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Station Settings##</a>
+                <li><a href="{$UI_BROWSER}?act=changeStationPrefs">##Preferences##</a>
                     <ul>
                         <li><a href="{$UI_BROWSER}?act=changeStationPrefs"      >##Station Settings##</a></li>
                         <li><a href="{$UI_BROWSER}?act=SUBJECTS"                >##User/Groups##</a></li>

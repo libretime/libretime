@@ -26,6 +26,8 @@ class uiScheduler extends uiCalendar
 
         $this->uiCalendar();
         $this->initXmlRpc();
+        
+        $this->startDaemon();
     }
 
 
@@ -41,18 +43,30 @@ class uiScheduler extends uiCalendar
     }
 
 
-    function startDaemon()
+    function startDaemon($msg=FALSE)
     {
+    	if ($this->testDaemon($msg) === TRUE)
+    		return TRUE;
+    		
         exec(UI_SCHEDULER_DAEMON_CMD);
         sleep(5);
-        exec('ps -A', $output);
+		
+        if ($this->testDaemon($msg)===FALSE) {
+        	if ($msg) $this->Base->_retMsg('Scheduler did not start. Check setting of "UI_SCHEDULER_DAEMON_CMD" in ui_conf.php. File "/tmp/scheduler.log" could be helpful.');
+        	return FALSE;
+        }
+    }
+    
+    function testDaemon($msg=FALSE)
+    {
+    	exec('ps -A', $output);
         foreach ($output as $l) {
             if (preg_match("/ ".UI_SCHEDULER_DAEMON_NAME."$/", $l)) {
-                $this->Base->_retMsg('Scheduler started sucessfully.');
+                if ($msg) $this->Base->_retMsg('Scheduler is running.');
                 return TRUE;
             }
         }
-        $this->Base->_retMsg('Scheduler did not start. Check setting of "UI_SCHEDULER_DAEMON_CMD" in ui_conf.php. File "/tmp/scheduler.log" could be helpful.');
+        
         return FALSE;
     }
 

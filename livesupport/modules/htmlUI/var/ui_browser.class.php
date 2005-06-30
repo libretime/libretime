@@ -138,27 +138,7 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  uploadFileM
-     *
-     *  create a form for file-upload
-     *
-     *  @param int local $id of directory to store file in
-     *
-     *  @eturn string  (html)
-     */
-    function uploadFileM(&$mask, $id)
-    {
-        $form = new HTML_QuickForm('uploadFileM', UI_STANDARD_FORM_METHOD, UI_HANDLER);
-        $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
-        $form->setConstants(array('id'  => $id,
-                                  'act' => 'uploadFileM'));
-        $this->_parseArr2Form($form, $mask);
-        return $form->toHTML();
-    }
-
-
-    /**
-     *  uploadFile
+     *  fileForm
      *
      *  create a form for file-upload
      *
@@ -175,7 +155,7 @@ class uiBrowser extends uiBase {
         $form->setMaxFileSize($this->STATIONPREFS['stationMaxfilesize']);
         $form->setConstants(array('folderId' => $folderId,
                                   'id'  => $id,
-                                  'act' => $id ? 'editFile' : 'uploadFile'));
+                                  'act' => $id ? 'editItem' : 'addFileData'));
         $this->_parseArr2Form($form, $mask);
         $renderer =& new HTML_QuickForm_Renderer_Array(true, true);
         $form->accept($renderer);
@@ -184,7 +164,7 @@ class uiBrowser extends uiBase {
 
 
     /**
-     *  addWebstream
+     *  webstreamForm
      *
      *  create a form to add Webstream
      *
@@ -200,7 +180,7 @@ class uiBrowser extends uiBase {
         $form = new HTML_QuickForm('addWebstream', UI_STANDARD_FORM_METHOD, UI_HANDLER);
         $const = array('folderId' => $folderId,
                        'id'     => $id,
-                       'act'    => 'editWebstream',
+                       'act'    => $id ? 'editWebstreamData' : 'addWebstreamData',
                        'title'  => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_TITLE) : NULL,
                        'url'    => $id ? $this->_getMDataValue($id, UI_MDATA_KEY_URL) : 'http://',
                        'length' => $id ? preg_replace("/\.[0-9]{1,6}/", "", $this->_getMDataValue($id, UI_MDATA_KEY_DURATION)) : NULL

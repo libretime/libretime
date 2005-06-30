@@ -3,10 +3,10 @@
 {if $PL_editMetaData}
     {include file="playlist/metadata.tpl"}
 
-{elseif is_array($PL->getActiveArr())}           {* already activated Playlist *}
+{elseif is_array($PL->getActiveArr())}          {* already activated Playlist *}
     {include file="playlist/editor.tpl"}
 
-{else}                                  {* no active Playlist *}
+{else}                                          {* no active Playlist *}
     <div class="container_elements" style="width: 607px;">
     <h1>##Playlist Editor##</h1>
         <p>&nbsp;</p>

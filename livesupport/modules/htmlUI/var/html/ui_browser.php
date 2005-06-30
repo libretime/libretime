@@ -133,20 +133,23 @@ if ($uiBrowser->userid) {
         $Smarty->assign('uploadform', $uiBrowser->uploadFileM($ui_fmask['uploadFileM'], $uiBrowser->id));
     break;
 
+    case "addFileData":
+    case "addFileMData":
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+        $Smarty->assign('editItem', array('type' => 'audioclip', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
+    break;
+
+    case "addWebstreamData":
+    case "addWebstreamMData":
+        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
+        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
+    break;
+
     case "editItem":
         $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
         $Smarty->assign('editItem', array('type' => $uiBrowser->type, 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
     break;
 
-    case "editFile":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => 'file', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
-    break;
-
-    case "editWebstream":
-        $Smarty->assign('structure', $uiBrowser->getStructure($uiBrowser->id));
-        $Smarty->assign('editItem', array('type' => 'webstream', 'id' => $_REQUEST['id'], 'folderId' => $uiBrowser->fid, 'curr_langid' => $_REQUEST['curr_langid']));
-    break;
 
     case "SEARCH":
         $Smarty->assign('searchForm', $uiBrowser->SEARCH->searchForm($uiBrowser->id, $ui_fmask));

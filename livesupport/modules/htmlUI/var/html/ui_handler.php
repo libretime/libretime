@@ -23,32 +23,27 @@ switch($_REQUEST['act']){
         $uiHandler->logout(TRUE);
     break;
 
-    case "uploadFileM":
-        if ($ui_tmpid = $uiHandler->uploadFileM(array_merge($_REQUEST, $_FILES), $uiHandler->id, $ui_fmask["uploadFileM"]))
-            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
-    break;
 
-    case "uploadFile":
+    ## file/webstream handling
+    case "addFileData":
         if (($ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $ui_fmask["file"])) !== FALSE)
             $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 
-    case "replaceFile":
-        $ui_tmpgunid = $uiHandler->gb->_gunidFromId($uiHandler->id);
-        if ($uiHandler->delete($uiHandler->id) === TRUE) {
-            $ui_tmpid = $uiHandler->uploadFile(array_merge($_REQUEST, $_FILES), $uiHandler->pid, $ui_fmask["file"], $ui_tmpgunid);
-            $uiHandler->SCRATCHPAD->removeItems($uiHandler->id);
-            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
-        }
+    case "addWebstreamData":
+        $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);
+        $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
     break;
 
-    case "editWebstream":
-        if ($_REQUEST['id']) {
-            $uiHandler->editWebstream($_REQUEST, $ui_fmask['webstream']);
-        } else {
-            $ui_tmpid = $uiHandler->addWebstream($_REQUEST, $ui_fmask['webstream']);
-            $uiHandler->SCRATCHPAD->addItem($ui_tmpid);
-        }
+    case "addWebstreamMData":
+    case "editWebstreamData":
+        $uiHandler->editWebstream($_REQUEST, $ui_fmask['webstream']);
+        $uiHandler->SCRATCHPAD->reLoadM();
+    break;
+
+    case "editMetaData":
+        $uiHandler->editMetaData($_REQUEST);
+        $uiHandler->SCRATCHPAD->reLoadM();
     break;
 
     case "newFolder":
@@ -103,11 +98,6 @@ switch($_REQUEST['act']){
 
     case "changeStationPrefs":
         $uiHandler->changeStationPrefs(array_merge($_REQUEST, $_FILES), $ui_fmask["stationPrefs"]);
-    break;
-
-    case "editMetaData":
-        $uiHandler->editMetaData($_REQUEST);
-        $uiHandler->SCRATCHPAD->reLoadM();
     break;
 
     case "SP.addItem":
@@ -268,7 +258,7 @@ switch($_REQUEST['act']){
     break;
 
     case "SCHEDULER.startDaemon":
-         $uiHandler->SCHEDULER->startDaemon();
+         $uiHandler->SCHEDULER->startDaemon(TRUE);
          $uiHandler->SCHEDULER->setReload();
     break;
 

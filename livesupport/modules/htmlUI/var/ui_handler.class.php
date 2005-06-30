@@ -147,7 +147,7 @@ class uiHandler extends uiBase {
             $this->transMData($r, UI_UPLOAD_LANGID);
         }
 
-        $this->redirUrl = UI_BROWSER."?act=editFile&id=$r";
+        $this->redirUrl = UI_BROWSER."?act=addFileMData&id=$r";
         if (UI_VERBOSE) $this->_retMsg('Audioclip Data saved');
         return $r;
     }
@@ -183,7 +183,7 @@ class uiHandler extends uiBase {
             foreach ($mask['pages'][$key] as $k=>$v) {
                 if ($v['id3'] != FALSE) {
                     $key = strtolower($v['id3']);
-                    if ($ia['comments'][$key][0]) { 
+                    if ($ia['comments'][$key][0]) {
                         $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0], $langid);
                     }
                 }
@@ -214,7 +214,9 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
         }
+
         $r = $this->gb->storeWebstream($folderId, $formdata['title'], NULL, $this->sessid, NULL, $formdata['url']);
+
         if(PEAR::isError($r)) {
             $this->_retMsg($r->getMessage());
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
@@ -227,7 +229,7 @@ class uiHandler extends uiBase {
         $this->_setMDataValue($r, UI_MDATA_KEY_DURATION, $extent);
         $this->_setMDataValue($r, UI_MDATA_KEY_FORMAT, UI_MDATA_VALUE_FORMAT_STREAM);
 
-        $this->redirUrl = UI_BROWSER."?act=editWebstream&id=$r";
+        $this->redirUrl = UI_BROWSER."?act=addWebstreamMData&id=$r";
         if (UI_VERBOSE) $this->_retMsg('Stream Data saved');
         return $r;
     }
@@ -240,12 +242,14 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=editWebstream&id=".$id;
             return FALSE;
         }
-        $length = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
-        $this->_setMDataValue($id, UI_MDATA_KEY_TITLE, $this->sessid, $formdata['title']);
-        $this->_setMDataValue($id, UI_MDATA_KEY_URL, $this->sessid, $formdata['url']);
-        $this->_setMDataValue($id, UI_MDATA_KEY_DURATION, $this->sessid,  $length);
+        $extent = sprintf('%02d', $formdata['length']['H']).':'.sprintf('%02d', $formdata['length']['i']).':'.sprintf('%02d', $formdata['length']['s']).'.000000';
+
+        $this->_setMDataValue($id, UI_MDATA_KEY_TITLE, $formdata['title']);
+        $this->_setMDataValue($id, UI_MDATA_KEY_URL, $formdata['url']);
+        $this->_setMDataValue($id, UI_MDATA_KEY_DURATION, $extent);
+
+        $this->redirUrl = UI_BROWSER.'?act=editItem&id='.$formdata['id'];
         if (UI_VERBOSE) $this->_retMsg('Stream Data changed');
-        $this->redirUrl = UI_BROWSER.'?act=editWebstream&id='.$formdata['id'];
     }
 
 
