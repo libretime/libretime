@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/backup.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,6 +36,7 @@ require_once 'DB.php';
 require_once "XML/Util.php";
 require_once "XML/Beautifier.php";
 require_once "$storageServerPath/var/BasicStor.php";
+require_once "$storageServerPath/var/Prefs.php";
 
 PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
@@ -112,6 +113,7 @@ function admDumpGroup(&$bs, $gid, $ind=''){
     $isGr = $bs->isGroup($gid);
     if(PEAR::isError($isGr)){ echo $isGr->getMessage(); exit; }
     $pars = array('name'=>"$name");
+    $pars['id'] = $gid;
     if(!$isGr){
         return XML_Util::createTagFromArray(array(
             'namespace' => NSPACE,
@@ -126,12 +128,16 @@ function admDumpGroup(&$bs, $gid, $ind=''){
         $fid2 = $member['id'];
         $res .= admDumpGroup($bs, $fid2, "$ind ");
     }
-    if(!$res){
-        return XML_Util::createTagFromArray(array(
+    $tagarr = array(
             'namespace' => NSPACE,
             'localPart' => 'group',
             'attributes'=> $pars,
-        ));
+    );
+    $prefs = admDumpPrefs($bs, $gid);
+    if(!is_null($prefs)) $res .= $prefs;
+    if($res) $tagarr['content'] = $res;
+    return XML_Util::createTagFromArray($tagarr, $res === '');
+    if(!$res){
     }else{
         return XML_Util::createTagFromArray(array(
             'namespace' => NSPACE,
@@ -148,19 +154,51 @@ function admDumpSubjects(&$bs, $ind=''){
     foreach($subjs as $i =>$member){
         switch($member['type']){
             case"U":
+                $prefs = admDumpPrefs($bs, $member['id']);
                 $pars = array('login'=>"{$member['login']}", 'pass'=>"{$member['pass']}");
-                $res .= XML_Util::createTagFromArray(array(
-                    #'namespace' => 'ls',
+                $pars['id'] = $member['id'];
+                $tagarr =                 array(
+                    'namespace' => NSPACE,
                     'localPart' => 'user',
                     'attributes'=> $pars,
-                ));
+                );
+                if(!is_null($prefs)) $tagarr['content'] = $prefs;
+                $res .= XML_Util::createTagFromArray($tagarr , FALSE);
                 break;
             case"G":
                 $res .= admDumpGroup($bs, $member['id'], "$ind  ");
                 break;
         }
     }
-    return "$ind<subjects>\n$res$ind</subjects>\n";
+#    return "$ind<subjects>\n$res$ind</subjects>\n";
+    return XML_Util::createTagFromArray(array(
+        'namespace' => NSPACE,
+        'localPart' => 'subjects',
+        'content'=> $res,
+    ), FALSE);
+}
+
+function admDumpPrefs(&$bs, $subjid){
+    $res ='';
+    $pr =& new Prefs($bs);
+    $prefkeys = $pr->readKeys($subjid);
+#    var_dump($subjid); var_dump($prefkeys); #exit;
+    foreach($prefkeys as $i =>$prefk){
+        $keystr = $prefk['keystr'];
+        $prefval = $pr->readVal($subjid, $keystr);
+        $pars = array('name'=>"$keystr", 'val'=>"$prefval");
+        $res .= XML_Util::createTagFromArray(array(
+            'namespace' => NSPACE,
+            'localPart' => 'pref',
+            'attributes'=> $pars,
+        ));
+    }
+    if(!$res) return NULL;
+    return XML_Util::createTagFromArray(array(
+        'namespace' => NSPACE,
+        'localPart' => 'preferences',
+        'content'=> $res,
+    ), FALSE);
 }
 
 $subjects = admDumpSubjects($bs, ' ');
