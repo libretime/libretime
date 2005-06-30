@@ -2,7 +2,7 @@
 class Display {
 
     function transForm ($source, $target, $file, $onlyUntranslated=false)
-    {
+    {          
         // creates an form for translation
         // from $source to $target language
         $html .= '<form name="transForm" action="'._PANEL_SCRIPT_.'" target="'._PANEL_FRAME_.'" method="post">

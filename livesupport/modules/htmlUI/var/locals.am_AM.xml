@@ -3,6 +3,14 @@
 	<status />
 	<Id>am_AM</Id>
 	<item>
+		<key>Stream Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value />
+	</item>
+	<item>
 		<key>Show Info</key>
 		<value />
 	</item>
@@ -607,22 +615,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Fade</key>
-		<value />
-	</item>
-	<item>
-		<key>File</key>
-		<value />
-	</item>
-	<item>
-		<key>File List</key>
-		<value />
-	</item>
-	<item>
-		<key>File Management</key>
-		<value />
-	</item>
-	<item>
 		<key>File Type</key>
 		<value />
 	</item>
@@ -807,10 +799,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Open last Playlist</key>
-		<value />
-	</item>
-	<item>
 		<key>Operator</key>
 		<value />
 	</item>
@@ -839,7 +827,7 @@
 		<value />
 	</item>
 	<item>
-		<key>Playlist Editor</key>
+		<key>Playlists</key>
 		<value />
 	</item>
 	<item>

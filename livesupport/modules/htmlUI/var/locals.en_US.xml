@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
 	<status />
-	<Id>en_GB</Id>
+	<Id>en_US</Id>
+	<item>
+		<key>Stream Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value />
+	</item>
 	<item>
 		<key>Show Info</key>
 		<value />
@@ -607,22 +615,6 @@
 		<value>Contributor</value>
 	</item>
 	<item>
-		<key>Copyright</key>
-		<value>Copyright</value>
-	</item>
-	<item>
-		<key>Count</key>
-		<value>Count</value>
-	</item>
-	<item>
-		<key>Creator</key>
-		<value>Creator</value>
-	</item>
-	<item>
-		<key>Daily View</key>
-		<value>Daily view</value>
-	</item>
-	<item>
 		<key>Data</key>
 		<value>Data</value>
 	</item>
@@ -807,10 +799,6 @@
 		<value>Media file</value>
 	</item>
 	<item>
-		<key>Media Library</key>
-		<value>Media Library</value>
-	</item>
-	<item>
 		<key>Metadata</key>
 		<value>Metadata</value>
 	</item>
@@ -911,8 +899,8 @@
 		<value>Playlist</value>
 	</item>
 	<item>
-		<key>Playlist Editor</key>
-		<value>Playlist Editor</value>
+		<key>Playlists</key>
+		<value>Playlists</value>
 	</item>
 	<item>
 		<key>Playlist Metadata</key>
@@ -1149,10 +1137,6 @@
 	<item>
 		<key>next</key>
 		<value>next</value>
-	</item>
-	<item>
-		<key>permissions</key>
-		<value>permissions</value>
 	</item>
 	<item>
 		<key>previous</key>

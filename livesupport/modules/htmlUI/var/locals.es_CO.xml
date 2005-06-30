@@ -3,6 +3,14 @@
 	<status />
 	<Id>es_CO</Id>
 	<item>
+		<key>Stream Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value />
+	</item>
+	<item>
 		<key>Show Info</key>
 		<value />
 	</item>
@@ -607,22 +615,6 @@
 		<value>Colaborador</value>
 	</item>
 	<item>
-		<key>Count</key>
-		<value>Derechos reservados</value>
-	</item>
-	<item>
-		<key>Creator</key>
-		<value>Conteo</value>
-	</item>
-	<item>
-		<key>Daily View</key>
-		<value>Creador</value>
-	</item>
-	<item>
-		<key>Data</key>
-		<value>Vista diaria</value>
-	</item>
-	<item>
 		<key>Date</key>
 		<value>Datos</value>
 	</item>
@@ -807,10 +799,6 @@
 		<value>Archivo de medios</value>
 	</item>
 	<item>
-		<key>Metadata</key>
-		<value>Audioteca</value>
-	</item>
-	<item>
 		<key>Month</key>
 		<value>Metadatos</value>
 	</item>
@@ -907,7 +895,7 @@
 		<value>Clave de acceso</value>
 	</item>
 	<item>
-		<key>Playlist Editor</key>
+		<key>Playlists</key>
 		<value>Lista de reproducción</value>
 	</item>
 	<item>
@@ -1149,9 +1137,5 @@
 	<item>
 		<key>permissions</key>
 		<value>Próximo</value>
-	</item>
-	<item>
-		<key>previous</key>
-		<value>Permisos</value>
 	</item>
 </language>

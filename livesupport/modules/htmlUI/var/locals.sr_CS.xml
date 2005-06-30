@@ -3,6 +3,14 @@
 	<status />
 	<Id>sr_CS</Id>
 	<item>
+		<key>Stream Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value />
+	</item>
+	<item>
 		<key>Show Info</key>
 		<value />
 	</item>
@@ -607,22 +615,6 @@
 		<value>Autorska prava</value>
 	</item>
 	<item>
-		<key>Count</key>
-		<value>Ukupno</value>
-	</item>
-	<item>
-		<key>Creator</key>
-		<value>Autor</value>
-	</item>
-	<item>
-		<key>Daily View</key>
-		<value>Dnevni pregled</value>
-	</item>
-	<item>
-		<key>Data</key>
-		<value>Podaci</value>
-	</item>
-	<item>
 		<key>Date</key>
 		<value>Datum</value>
 	</item>
@@ -807,10 +799,6 @@
 		<value>Audioteka</value>
 	</item>
 	<item>
-		<key>Metadata</key>
-		<value>Metadata</value>
-	</item>
-	<item>
 		<key>Month</key>
 		<value>Mesec</value>
 	</item>
@@ -907,7 +895,7 @@
 		<value>Plej lista</value>
 	</item>
 	<item>
-		<key>Playlist Editor</key>
+		<key>Playlists</key>
 		<value>Obrada plej liste</value>
 	</item>
 	<item>
@@ -1149,9 +1137,5 @@
 	<item>
 		<key>permissions</key>
 		<value>dopuštene radnje</value>
-	</item>
-	<item>
-		<key>previous</key>
-		<value>prethodno</value>
 	</item>
 </language>

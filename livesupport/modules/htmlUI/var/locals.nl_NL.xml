@@ -3,6 +3,14 @@
 	<status />
 	<Id>nl_NL</Id>
 	<item>
+		<key>Stream Data</key>
+		<value />
+	</item>
+	<item>
+		<key>Preferences</key>
+		<value />
+	</item>
+	<item>
 		<key>Show Info</key>
 		<value />
 	</item>
@@ -607,22 +615,6 @@
 		<value>Copyright</value>
 	</item>
 	<item>
-		<key>Count</key>
-		<value>Aantal</value>
-	</item>
-	<item>
-		<key>Creator</key>
-		<value>Maker</value>
-	</item>
-	<item>
-		<key>Daily View</key>
-		<value>Dag overzicht</value>
-	</item>
-	<item>
-		<key>Data</key>
-		<value>Data</value>
-	</item>
-	<item>
 		<key>Date</key>
 		<value>Datum</value>
 	</item>
@@ -807,10 +799,6 @@
 		<value>Media bibliotheek</value>
 	</item>
 	<item>
-		<key>Metadata</key>
-		<value>Meta-gegevens</value>
-	</item>
-	<item>
 		<key>Month</key>
 		<value>Maand</value>
 	</item>
@@ -907,8 +895,8 @@
 		<value>Playlist</value>
 	</item>
 	<item>
-		<key>Playlist Editor</key>
-		<value>Playlist Editor</value>
+		<key>Playlists</key>
+		<value>Playlists</value>
 	</item>
 	<item>
 		<key>Playlist Metadata</key>
@@ -1149,9 +1137,5 @@
 	<item>
 		<key>permissions</key>
 		<value>rechten</value>
-	</item>
-	<item>
-		<key>previous</key>
-		<value>vorige</value>
 	</item>
 </language>

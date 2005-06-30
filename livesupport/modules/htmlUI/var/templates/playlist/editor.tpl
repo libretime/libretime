@@ -78,7 +78,7 @@
                 </div>
                 <div class="container_button">
                     <input type="button" class="button_large" value="##Close Playlist##"  onClick="popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)">
-                    <input type="button" class="button_large" value="##Metadata##"        onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'">
+                    <input type="button" class="button_large" value="##Description##"        onClick="location.href='{$UI_BROWSER}?act=PL.editMetaData'">
                 </div>
             </div>
 
