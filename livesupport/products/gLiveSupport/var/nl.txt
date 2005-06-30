@@ -109,7 +109,7 @@ nl:table
         saveButtonLabel:string        { "opslaan" }
         closeButtonLabel:string       { "sluiten" }
         statusBar:string              { "status balk" }
-        playlistSavedMessage:string   { "playlist {0} opgeslagen" }
+        playlistSavedMsg:string       { "playlist {0} opgeslagen" }
     }
 
     schedulerWindow:table

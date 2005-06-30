@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -138,10 +138,10 @@ TestWindow :: TestWindow (void)
 
     Ptr<Glib::ustring>::Ref     confirmationMessage(new Glib::ustring(
                                                             "Are you sure?" ));
-    dialogWindow = new DialogWindow(confirmationMessage,
-                                    DialogWindow::noButton |
-                                    DialogWindow::yesButton,
-                                    resourceBundle);
+    dialogWindow.reset(new DialogWindow(confirmationMessage,
+                                        DialogWindow::noButton |
+                                        DialogWindow::yesButton,
+                                        resourceBundle ));
 }
 
 
@@ -150,7 +150,6 @@ TestWindow :: TestWindow (void)
  *----------------------------------------------------------------------------*/
 TestWindow :: ~TestWindow (void)                                throw ()
 {
-    delete dialogWindow;
 }
 
 

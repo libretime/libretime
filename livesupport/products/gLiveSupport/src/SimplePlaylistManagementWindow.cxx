@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -152,6 +152,20 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     property_window_position().set_value(Gtk::WIN_POS_NONE);
 
     show_all();
+
+    Ptr<Glib::ustring>::Ref     confirmationMessage;
+    try {
+        confirmationMessage.reset(new Glib::ustring(
+                                    *getResourceUstring("sureToExitMsg") ));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    dialogWindow.reset(new DialogWindow(confirmationMessage,
+                                        DialogWindow::noButton |
+                                        DialogWindow::yesButton,
+                                        gLiveSupport->getBundle() ));
 }
 
 
@@ -187,7 +201,7 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
         playlist = gLiveSupport->savePlaylist();
 
         Ptr<Glib::ustring>::Ref statusText = formatMessage(
-                                                    "playlistSavedMessage",
+                                                    "playlistSavedMsg",
                                                     *playlist->getTitle());
         statusBar->set_text(*statusText);
 
@@ -206,10 +220,22 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
 void
 SimplePlaylistManagementWindow :: onCloseButtonClicked (void)       throw ()
 {
-    // TODO: display "are you sure?" message
-    gLiveSupport->cancelEditedPlaylist();
+    // TODO: only ask if playlist has been modified
+    DialogWindow::ButtonType    result = dialogWindow->run();
+    switch (result) {
+        case DialogWindow::noButton:
+                    return;
 
-    hide();
+        case DialogWindow::yesButton:
+                    gLiveSupport->cancelEditedPlaylist();
+                    hide();
+                    break;
+
+        default:    std::cerr << "Error: DialogWindow returned " << result
+                              << "; " << DialogWindow::noButton << " or "
+                              << DialogWindow::yesButton << " is expected."
+                              << std::endl;
+    }
 }
 
 

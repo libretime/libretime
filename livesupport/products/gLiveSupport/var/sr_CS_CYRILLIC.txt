@@ -108,7 +108,7 @@ sr_CS_CYRILLIC:table
         saveButtonLabel:string        { "сачувај" }
         closeButtonLabel:string       { "затвори" }
         statusBar:string              { "статус бар" }
-        playlistSavedMessage:string   { "сачувана плеј листа {0}" }
+        playlistSavedMsg:string       { "сачувана плеј листа {0}" }
     }
 
     schedulerWindow:table

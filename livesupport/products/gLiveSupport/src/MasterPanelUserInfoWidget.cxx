@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -96,6 +96,20 @@ MasterPanelUserInfoWidget :: MasterPanelUserInfoWidget (
 
     // show everything
     show_all();
+
+    Ptr<Glib::ustring>::Ref     confirmationMessage;
+    try {
+        confirmationMessage.reset(new Glib::ustring(
+                                    *getResourceUstring("sureToExitMsg") ));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+
+    dialogWindow.reset(new DialogWindow(confirmationMessage,
+                                        DialogWindow::noButton |
+                                        DialogWindow::yesButton,
+                                        gLiveSupport->getBundle() ));
 }
 
 
@@ -242,6 +256,11 @@ MasterPanelUserInfoWidget :: updateStrings(void)
 
     userInfoLabel->set_label(*loggedInMsg);
     logInOutButton->set_label(*loginButtonLabel);
+
+    dialogWindow.reset(new DialogWindow(getResourceUstring("sureToExitMsg"),
+                                        DialogWindow::noButton |
+                                        DialogWindow::yesButton,
+                                        gLiveSupport->getBundle() ));
 }
 
 
@@ -251,6 +270,12 @@ MasterPanelUserInfoWidget :: updateStrings(void)
 void
 MasterPanelUserInfoWidget :: onCloseButtonClicked (void)            throw ()
 {
+    // TODO: make this disableable (nice word, isn't it?) from config
+    DialogWindow::ButtonType    userReply = dialogWindow->run();
+    if (userReply != DialogWindow::yesButton) {
+        return;
+    }
+
     gLiveSupport->stopOutputAudio();
 
     // get the topmost container, should be the application window itself

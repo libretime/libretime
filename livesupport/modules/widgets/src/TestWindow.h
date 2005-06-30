@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/TestWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Core;
  *  A window, enabling interactive testing of UI components.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class TestWindow : public WhiteWindow
 {
@@ -93,7 +93,7 @@ class TestWindow : public WhiteWindow
         /**
          *  The "are you sure?" dialog window.
          */
-        DialogWindow              * dialogWindow;
+        Ptr<DialogWindow>::Ref      dialogWindow;
     
 
     protected:

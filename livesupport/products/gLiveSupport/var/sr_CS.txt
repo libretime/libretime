@@ -109,7 +109,7 @@ sr_CS:table
         saveButtonLabel:string        { "sačuvaj" }
         closeButtonLabel:string       { "zatvori" }
         statusBar:string              { "status bar" }
-        playlistSavedMessage:string   { "sačuvana plej lista {0}" }
+        playlistSavedMsg:string       { "sačuvana plej lista {0}" }
     }
 
     schedulerWindow:table

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelUserInfoWidget.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/DialogWindow.h"
 
 #include "GLiveSupport.h"
 
@@ -67,8 +68,8 @@ using namespace LiveSupport::Core;
  *
  *  This widget handles login and login info display.
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.6 $
  */
 class MasterPanelUserInfoWidget : public Gtk::Table,
                                   public LocalizedObject
@@ -88,6 +89,11 @@ class MasterPanelUserInfoWidget : public Gtk::Table,
          *  A label to display the currently logged in user.
          */
         Gtk::Label                * userInfoLabel;
+
+        /**
+         *  The "are you sure you want to exit?" dialog window.
+         */
+        Ptr<DialogWindow>::Ref      dialogWindow;
 
         /**
          *  The gLiveSupport object, handling the logic of the application.

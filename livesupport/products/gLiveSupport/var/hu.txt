@@ -12,11 +12,17 @@ hu:table
     schedulerButtonLabel:string             { "időzítő" }
     searchButtonLabel:string                { "keresés" }
 
+    cancelButtonLabel:string        { "Mégsem" }
+    noButtonLabel:string            { "Nem" }
+    yesButtonLabel:string           { "Igen" }
+    okButtonLabel:string            { "OK" }
+
     localeNotAvailableMsg:string        { "A {0} nyelv nem elérhető" }
     schedulerNotReachableMsg:string     { "Az időzítő szerver nem elérhető" }
     storageNotReachableMsg:string       { "A tároló szerver nem elérhető" }
     authenticationNotReachableMsg:string  { "A beléptető szerver nem elérhető" }
     audioErrorMsg                       { "Hiba történt a lejátszáskor: " }
+    sureToExitMsg:string                { "Biztos, hogy ki szeretne lépni?" }
 
     loginWindow:table
     {
@@ -109,6 +115,7 @@ hu:table
         closeButtonLabel:string       { "bezár" }
         statusBar:string              { "állapotsor" }
         playlistSavedMessage:string   { "a {0} műsor elmentve" }
+        sureToExitMsg:string          { "Biztos, hogy nem akarja elmenteni a műsort?" }
     }
 
     schedulerWindow:table

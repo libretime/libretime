@@ -12,12 +12,18 @@ root:table
     schedulerButtonLabel:string             { "scheduler" }
     searchButtonLabel:string                { "search" }
 
+    cancelButtonLabel:string        { "Cancel" }
+    noButtonLabel:string            { "No" }
+    yesButtonLabel:string           { "Yes" }
+    okButtonLabel:string            { "OK" }
+
     localeNotAvailableMsg:string        { "Locale {0} not available" }
     schedulerNotReachableMsg:string     { "Scheduler server not available" }
     storageNotReachableMsg:string       { "Storage server not available" }
     authenticationNotReachableMsg:string
-                                      { "Authentication server not available" }
+                                        { "Authentication server not available" }
     audioErrorMsg                       { "Audio player error: " }
+    sureToExitMsg:string                { "Are you sure you want to exit?" }
 
     loginWindow:table
     {
@@ -109,7 +115,8 @@ root:table
         saveButtonLabel:string        { "save" }
         closeButtonLabel:string       { "close" }
         statusBar:string              { "status bar" }
-        playlistSavedMessage:string   { "saved playlist {0}" }
+        playlistSavedMsg:string       { "saved playlist {0}" }
+        sureToExitMsg:string          { "Do you want to exit without saving?" }
     }
 
     schedulerWindow:table

@@ -109,7 +109,7 @@ es:table
         saveButtonLabel:string        { "guardar" }
         closeButtonLabel:string       { "cerrar" }
         statusBar:string              { "barra de estatus" }
-        playlistSavedMessage:string   { "lista de reproducción guardada {0}" }
+        playlistSavedMsg:string       { "lista de reproducción guardada {0}" }
     }
 
     schedulerWindow:table
