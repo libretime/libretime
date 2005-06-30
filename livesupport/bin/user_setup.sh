@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.4 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -108,6 +108,7 @@ dbpassword=test
 homedir=$HOME
 configdir=$homedir/.livesupport
 htmldir=$homedir/public_html
+outputdsp=/dev/dsp
 
 
 
@@ -126,6 +127,7 @@ echo "  apache daemon group:     $apache_group";
 echo "  home directory:          $homedir";
 echo "  configuration directory: $configdir";
 echo "  web base directory:      $htmldir";
+echo "  output audio device:     $outputdsp";
 echo ""
 
 
@@ -165,6 +167,7 @@ ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
 
+ls_output_dsp=$outputdsp
 
 
 # replace / characters with a \/ sequence, for sed below
@@ -179,6 +182,7 @@ ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
 ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
+ls_output_dsp_s=`echo $ls_output_dsp | sed -e "s/\//\\\\\\\\\//g"`
 
 replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_dbuser/$ls_dbuser/; \
@@ -195,7 +199,8 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
               s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
               s/ls_scheduler_host/$ls_scheduler_host/; \
-              s/ls_scheduler_port/$ls_scheduler_port/;"
+              s/ls_scheduler_port/$ls_scheduler_port/; \
+              s/ls_output_dsp/$ls_output_dsp_s/;"
 
 
 
