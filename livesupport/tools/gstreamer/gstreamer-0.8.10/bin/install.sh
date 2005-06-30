@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -41,6 +41,10 @@ etcdir=${basedir}/etc
 gstreamer_tar=${basedir}/src/${product}.tar.bz2
 plugins_tar=${basedir}/src/${plugins}.tar.bz2
 pkg_config_path=${installdir}/lib/pkgconfig
+
+export PATH=${installdir}/bin:$PATH
+export LD_LIBRARY_PATH=${installdir}/lib
+export PKG_CONFIG_PATH=${pkg_config_path}
 
 export LDFLAGS="-L${installdir}/lib"
 export CPPFLAGS="-I${installdir}/install"
