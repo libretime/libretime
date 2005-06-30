@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/PlaylistEventTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,15 +71,15 @@ using namespace LiveSupport::PlaylistExecutor;
  *  Unit test for the PlaylistEvent class
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see PlaylistEvent
  */
 class PlaylistEventTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(PlaylistEventTest);
     CPPUNIT_TEST(simpleTest);
-//    CPPUNIT_TEST(initializeTest);
-//    CPPUNIT_TEST(playTest);
+    CPPUNIT_TEST(initializeTest);
+    CPPUNIT_TEST(playTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:

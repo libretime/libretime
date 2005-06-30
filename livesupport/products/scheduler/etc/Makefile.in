@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.60 $
+#   Version  : $Revision: 1.61 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -232,7 +232,7 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
 
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \
                    ${TMP_DIR}/TestRunner.o \
-				   ${TMP_DIR}/BaseTestMethod.o \
+                   ${TMP_DIR}/BaseTestMethod.o \
                    ${TMP_DIR}/ResetStorageMethodTest.o \
                    ${TMP_DIR}/SchedulerDaemonTest.o \
                    ${TMP_DIR}/GetSchedulerTimeMethodTest.o \

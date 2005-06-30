@@ -63,10 +63,13 @@
 <!ELEMENT playLogFactory (postgresqlPlayLog) >
 <!ELEMENT postgresqlPlayLog EMPTY >
 
-<!ELEMENT audioPlayer   (helixPlayer) >
+<!ELEMENT audioPlayer   (helixPlayer|gstreamerPlayer) >
 
 <!ELEMENT helixPlayer   EMPTY >
 <!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+
+<!ELEMENT gstreamerPlayer   EMPTY >
+<!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
 
 <!ELEMENT xmlRpcDaemon EMPTY >
 <!ATTLIST xmlRpcDaemon xmlRpcHost   CDATA          #REQUIRED >
@@ -126,7 +129,7 @@
     </playLogFactory>
 
     <audioPlayer>
-        <helixPlayer dllPath = "../../usr/lib/helix"/>
+        <gstreamerPlayer audioDevice = "plughw:0,0" />
     </audioPlayer>
 
     <xmlRpcDaemon xmlRpcHost  = "localhost"
