@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/import.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -43,6 +43,8 @@ $dbc = DB::connect($config['dsn'], TRUE);
 if(PEAR::isError($dbc)){ echo "ERROR: ".$dbc->getMessage()." ".$dbc->getUserInfo()."\n"; exit(1); }
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $gb = &new GreenBox($dbc, $config);
+
+$testonly = ($argv[1] == '-n');
 
 $errors=0;
 $filecount=0;
@@ -75,8 +77,13 @@ $flds = array(
 //        'bitrate'    => 'ls:bitrate',
     ),
     'comments' => array(
-        'genre'  => 'dc:type',
-        'title'  => 'dc:title',
+        'genre'     => 'dc:type',
+        'title'     => 'dc:title',
+        'artist'    => 'dc:creator',
+        'album'     => 'dc:source',
+        'tracknumber'=> 'ls:track_num',
+        'date'      => 'ls:year',
+        'label'      => 'dc:publisher',
 //        'genreid'  => 'GENREID',
     ),
     'filename'  => 'ls:filename',
@@ -99,7 +106,7 @@ while($filename = fgets($stdin, 2048)){
     if(PEAR::isError($ia)){ _err($ia, $filename); continue; }
     if(!$ia['fileformat']){ echo "???\n"; continue; }
     if(!$ia['bitrate']){ echo "not audio?\n"; continue; }
-
+    
     $mdata = array();
     foreach($flds as $k1=>$fn1){
         if(is_null($fn1)) continue;
@@ -140,16 +147,18 @@ while($filename = fgets($stdin, 2048)){
         }
     }
 
-    $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip');
-    if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
-    $id = $r;
+    if(!$testonly){
+        $r = $gb->bsPutFile($parid, $mdata['ls:filename'], "$filename", "$storageServerPath/var/emptyMdata.xml", NULL, 'audioclip');
+        if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
+        $id = $r;
 
-    $r = $gb->bsSetMetadataBatch($id, $mdata);
-    if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
+        $r = $gb->bsSetMetadataBatch($id, $mdata);
+        if(PEAR::isError($r)){ _err($r, $filename); echo var_export($mdata)."\n"; continue; }
+    }else{
+        var_dump($mdata); echo"======================= ";
+#        var_dump($ia); echo"======================= ";
+    }
 
-#    $r = $gb->bsGetMetadata($id);
-#    if(PEAR::isError($r)){ _err($r, $filename); continue; }
-#    echo "$r\n";
     echo "OK\n";
     $filecount++;
 }
@@ -160,5 +169,5 @@ $end    = intval(date('U'));
 $time   = $end-$start;
 if($time>0) $speed  = round(($filecount+$errors)/$time, 1);
 else $speed = "N/A";
-echo " File imported: $filecount, in $time s, $speed files/s, errors: $errors\n";
+echo " Files ".($testonly ? "analyzed" : "imported").": $filecount, in $time s, $speed files/s, errors: $errors\n";
 ?>
