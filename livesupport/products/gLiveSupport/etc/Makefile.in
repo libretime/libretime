@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.44 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.45 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -49,6 +49,9 @@ ETC_DIR      = ${BASE_DIR}/etc
 SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
 VAR_DIR      = ${BASE_DIR}/var
+
+REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
+
 
 USR_DIR         = ${BASE_DIR}/../../usr
 USR_INCLUDE_DIR = ${USR_DIR}/include
@@ -103,6 +106,13 @@ SCHEDULER_CLIENT_LIB_DIR     = ${SCHEDULER_CLIENT_DIR}/lib
 SCHEDULER_CLIENT_LIB         = livesupport_scheduler_client
 SCHEDULER_CLIENT_LIB_FILE = ${SCHEDULER_CLIENT_LIB_DIR}/lib${SCHEDULER_CLIENT_LIB}.a
 
+GSTREAMER_ELEMENTS_DIR         = ${MODULES_DIR}/gstreamerElements
+GSTREAMER_ELEMENTS_INCLUDE_DIR = ${GSTREAMER_ELEMENTS_DIR}/include
+GSTREAMER_ELEMENTS_LIB_DIR     = ${GSTREAMER_ELEMENTS_DIR}/lib
+GSTREAMER_ELEMENTS_LIB         = livesupport_gstreamerelements
+GSTREAMER_ELEMENTS_LIB_FILE    = ${GSTREAMER_ELEMENTS_LIB_DIR}/lib${GSTREAMER_ELEMENTS_LIB}.a
+GST_REAL_LIB_DIR=${REAL_BASE_DIR}/modules/gstreamerElements/lib
+
 PLAYLIST_EXECUTOR_DIR         = ${MODULES_DIR}/playlistExecutor
 PLAYLIST_EXECUTOR_INCLUDE_DIR = ${PLAYLIST_EXECUTOR_DIR}/include
 PLAYLIST_EXECUTOR_LIB_DIR     = ${PLAYLIST_EXECUTOR_DIR}/lib
@@ -123,8 +133,8 @@ CURL_LIBS=`${USR_DIR}/bin/curl-config --libs`
 GTKMM_CFLAGS=@GTKMM_CFLAGS@
 GTKMM_LIBS=@GTKMM_LIBS@
 
-#GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
-#GSTREAMER_LIBS=@GSTREAMER_LIBS@
+GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
+GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
 ICU_CFLAGS=
 ICU_LIBS=`${USR_DIR}/bin/icu-config --ldflags-toolutil --ldflags-icuio`
@@ -144,6 +154,7 @@ TEST_RUNNER   = ${TMP_DIR}/testRunner
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
 export LD_LIBRARY_PATH:=${LD_LIBRARY_PATH}:${USR_LIB_DIR}
+export GST_PLUGIN_PATH=${GST_REAL_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------
@@ -164,6 +175,7 @@ CXXFLAGS = @CXXFLAGS@ @DEFS@ @COVERAGE_CXXFLAGS@ -pthread \
                              -I${STORAGE_INCLUDE_DIR} \
                              -I${WIDGETS_INCLUDE_DIR} \
                              -I${SCHEDULER_CLIENT_INCLUDE_DIR} \
+                             -I${GSTREAMER_ELEMENTS_INCLUDE_DIR} \
                              -I${PLAYLIST_EXECUTOR_INCLUDE_DIR} \
                              -I${TMP_DIR}
 LDFLAGS  = @LDFLAGS@ -pthread \
@@ -180,6 +192,7 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      -L${STORAGE_LIB_DIR} \
                      -L${WIDGETS_LIB_DIR} \
                      -L${SCHEDULER_CLIENT_LIB_DIR} \
+                     -L${GSTREAMER_ELEMENTS_LIB_DIR} \
                      -L${PLAYLIST_EXECUTOR_LIB_DIR}
 
 
@@ -219,6 +232,7 @@ G_LIVESUPPORT_EXE_OBJS = ${TMP_DIR}/main.o
 FSDF = ${G_LIVESUPPORT_OBJS} \
                          ${TMP_DIR}/main.o
 G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
+                         -l${GSTREAMER_ELEMENTS_LIB} \
                          -l${AUTHENTICATION_LIB} \
                          -l${STORAGE_LIB} \
                          -l${WIDGETS_LIB} \
@@ -337,6 +351,9 @@ ${WIDGETS_LIB_FILE}:
 
 ${SCHEDULER_CLIENT_LIB_FILE}:
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR}
+
+${GSTREAMER_ELEMENTS_LIB_FILE}:
+	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR}
 
 ${PLAYLIST_EXECUTOR_LIB_FILE}:
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR}

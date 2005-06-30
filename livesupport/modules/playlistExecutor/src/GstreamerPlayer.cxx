@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,6 +34,7 @@
 #endif
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/GstreamerElements/autoplug.h"
 #include "GstreamerPlayer.h"
 
 
@@ -55,11 +56,6 @@ const std::string GstreamerPlayer::configElementNameStr = "gstreamerPlayer";
  *  The name of the audio device attribute.
  */
 static const std::string    audioDeviceName = "audioDevice";
-
-/**
- *  The factories considered when creating the pipeline
- */
-GList * GstreamerPlayer::factories = 0;
 
 
 /* ===============================================  local function prototypes */
@@ -103,7 +99,6 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     if (!gst_init_check(0, 0)) {
         throw std::runtime_error("couldn't initialize the gstreamer library");
     }
-    initFactories();
 
     // initialize the pipeline
     pipeline   = gst_thread_new("audio-player");
@@ -111,85 +106,15 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     gst_object_ref(GST_OBJECT(pipeline));
     gst_object_sink(GST_OBJECT(pipeline));
 
-    filesrc    = gst_element_factory_make("filesrc", "file-source");
-    typefinder = gst_element_factory_make("typefind", "typefind");
-    gst_element_link(filesrc, typefinder);
-    gst_bin_add_many(GST_BIN(pipeline), filesrc, typefinder, NULL);
-
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
     g_signal_connect(pipeline, "state-change", G_CALLBACK(stateChange), this);
-    g_signal_connect(typefinder, "have-type", G_CALLBACK(typeFound), this);
 
     audiosink = gst_element_factory_make("alsasink", "audiosink");
     setAudioDevice(audioDevice);
+    gst_bin_add(GST_BIN(pipeline), audiosink);
 
     // set up other variables
     initialized = true;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Initialize the list of factories
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: initFactories(void)                      throw ()
-{
-    if (factories) {
-        return;
-    }
-
-    factories = gst_registry_pool_feature_filter(
-                        (GstPluginFeatureFilter) featureFilter, FALSE, NULL);
-    // sort the factories according to their ranks
-    factories = g_list_sort(factories, (GCompareFunc) compareRanks);
-}
-
-
-/*------------------------------------------------------------------------------
- *  Filter plugins so that only demixers, decoders and parsers are considered
- *----------------------------------------------------------------------------*/
-gboolean
-GstreamerPlayer :: featureFilter(GstPluginFeature   * feature,
-                                 gpointer             data)
-                                                                    throw ()
-{
-    const gchar * klass;
-    guint         rank;
-
-    // we only care about element factories
-    if (!GST_IS_ELEMENT_FACTORY(feature)) {
-        return FALSE;
-    }
-
-    // only parsers, demuxers and decoders
-    klass = gst_element_factory_get_klass(GST_ELEMENT_FACTORY(feature));
-    if (g_strrstr(klass, "Demux") == NULL &&
-        g_strrstr(klass, "Decoder") == NULL &&
-        g_strrstr(klass, "Parse") == NULL) {
-
-        return FALSE;
-    }
-
-    // only select elements with autoplugging rank
-    rank = gst_plugin_feature_get_rank(feature);
-    if (rank < GST_RANK_MARGINAL) {
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Compare two plugins according to their ranks
- *----------------------------------------------------------------------------*/
-gint
-GstreamerPlayer :: compareRanks(GstPluginFeature   * feature1,
-                                GstPluginFeature   * feature2)
-                                                                throw ()
-{
-    return gst_plugin_feature_get_rank(feature1)
-         - gst_plugin_feature_get_rank(feature2);
 }
 
 
@@ -206,202 +131,6 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
 {
     // TODO: handle error
     std::cerr << "gstreamer error: " << error->message << std::endl;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Handler for the event when a matching type has been found
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: typeFound(GstElement      * typefinder,
-                             guint             probability,
-                             GstCaps         * caps,
-                             gpointer          self)
-                                                                throw ()
-{
-    // actually plug now
-    GstreamerPlayer   * player = (GstreamerPlayer*) self;
-    try {
-        player->tryToPlug(gst_element_get_pad(typefinder, "src"), caps);
-    } catch (std::logic_error &e) {
-        // TODO: handle error
-        std::cerr << e.what() << std::endl;
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Try to plug a matching element to the specified pad
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: tryToPlug(GstPad           * pad,
-                             const GstCaps    * caps)
-                                                    throw (std::logic_error)
-{
-    GstObject    * parent = GST_OBJECT(gst_pad_get_parent(pad));
-    const gchar  * mime;
-    const GList  * item;
-    GstCaps      * res;
-    GstCaps      * audiocaps;
-
-    // don't plug if we're already plugged
-    if (GST_PAD_IS_LINKED(gst_element_get_pad(audiosink, "sink"))) {
-        throw std::logic_error(std::string("Omitting link for pad ")
-                              + gst_object_get_name(parent) + ":"
-                              + gst_pad_get_name(pad)
-                              + " because we're alreadey linked");
-    }
-
-    // only plug audio
-    mime = gst_structure_get_name(gst_caps_get_structure(caps, 0));
-    if (!g_strrstr (mime, "audio")) {
-        throw std::logic_error(std::string("Omitting link for pad ")
-                              + gst_object_get_name(parent) + ":"
-                              + gst_pad_get_name(pad)
-                              + " because mimetype "
-                              + mime
-                              + " is non-audio");
-    }
-
-    // can it link to the audiopad?
-    audiocaps = gst_pad_get_caps(gst_element_get_pad(audiosink, "sink"));
-    res       = gst_caps_intersect(caps, audiocaps);
-    if (res && !gst_caps_is_empty(res)) {
-        closeLink(pad, audiosink, "sink", NULL);
-        gst_caps_free(audiocaps);
-        gst_caps_free(res);
-        return;
-    }
-    gst_caps_free(audiocaps);
-    gst_caps_free(res);
-
-    // try to plug from our list
-    for (item = factories; item != NULL; item = item->next) {
-        GstElementFactory * factory = GST_ELEMENT_FACTORY(item->data);
-        const GList       * pads;
-
-        for (pads = gst_element_factory_get_pad_templates (factory);
-             pads != NULL;
-             pads = pads->next) {
-
-            GstPadTemplate * templ = GST_PAD_TEMPLATE(pads->data);
-
-            // find the sink template - need an always pad
-            if (templ->direction != GST_PAD_SINK ||
-                templ->presence != GST_PAD_ALWAYS) {
-                continue;
-            }
-
-            // can it link?
-            res = gst_caps_intersect(caps, templ->caps);
-            if (res && !gst_caps_is_empty(res)) {
-                GstElement *element;
-
-                // close link and return
-                gst_caps_free(res);
-                element = gst_element_factory_create(factory, NULL);
-                closeLink(pad,
-                          element,
-                          templ->name_template,
-                          gst_element_factory_get_pad_templates(factory));
-
-                const gchar *klass =
-                    gst_element_factory_get_klass(GST_ELEMENT_FACTORY(factory));
-                if (g_strrstr(klass, "Decoder")) {
-                    // if a decoder element, store it
-                    decoder = element;
-                    decoderSrc = gst_element_get_pad(decoder, "src");
-                }
-                return;
-            }
-            gst_caps_free(res);
-
-            // we only check one sink template per factory, so move on to the
-            // next factory now
-            break;
-        }
-    }
-
-    throw std::logic_error(std::string("No compatible pad found to decode ")
-                         + mime
-                         + " on "
-                         + gst_object_get_name (parent) + ":"
-                         + gst_pad_get_name (pad));
-}
-
-
-/*------------------------------------------------------------------------------
- *  Close the element links
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: closeLink(GstPad       * srcpad,
-                             GstElement   * sinkelement,
-                             const gchar  * padname,
-                             const GList  * templlist)
-                                                                throw ()
-{
-    gboolean has_dynamic_pads = FALSE;
-
-    // add the element to the pipeline and set correct state
-    gst_element_set_state(sinkelement, GST_STATE_PAUSED);
-    gst_bin_add(GST_BIN(pipeline), sinkelement);
-    gst_pad_link(srcpad, gst_element_get_pad(sinkelement, padname));
-    gst_bin_sync_children_state(GST_BIN(pipeline));
-
-    // if we have static source pads, link those. If we have dynamic
-    // source pads, listen for new-pad signals on the element
-    for ( ; templlist != NULL; templlist = templlist->next) {
-        GstPadTemplate *templ = GST_PAD_TEMPLATE(templlist->data);
-
-        // only sourcepads, no request pads
-        if (templ->direction != GST_PAD_SRC ||
-            templ->presence == GST_PAD_REQUEST) {
-
-            continue;
-        }
-
-        switch (templ->presence) {
-            case GST_PAD_ALWAYS: {
-                GstPad *pad = gst_element_get_pad(sinkelement,
-                                                  templ->name_template);
-                GstCaps *caps = gst_pad_get_caps(pad);
-
-                // link
-                tryToPlug(pad, caps);
-                gst_caps_free(caps);
-                break;
-            }
-
-            case GST_PAD_SOMETIMES:
-                has_dynamic_pads = TRUE;
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    // listen for newly created pads if this element supports that
-    if (has_dynamic_pads) {
-        g_signal_connect(sinkelement, "new-pad", G_CALLBACK(newPad), this);
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for when a new dynamic pad is created
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: newPad(GstElement     * element,
-                          GstPad         * pad,
-                          gpointer         self)
-                                                                    throw ()
-{
-    GstreamerPlayer   * player = (GstreamerPlayer*) self;
-    GstCaps           * caps   = gst_pad_get_caps(pad);
-
-    player->tryToPlug(pad, caps);
-    gst_caps_free(caps);
 }
 
 
@@ -503,6 +232,10 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 {
     std::string     filePath;
 
+    if (isOpened()) {
+        close();
+    }
+
     if (fileUrl.find("file:") == 0) {
         filePath = fileUrl.substr(5, fileUrl.size());
     } else if (fileUrl.find("file://") == 0) {
@@ -511,7 +244,23 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         throw std::invalid_argument("badly formed URL or unsupported protocol");
     }
 
+    g_object_ref(G_OBJECT(audiosink));
+    gst_bin_remove(GST_BIN(pipeline), audiosink);
+
+    filesrc    = gst_element_factory_make("filesrc", "file-source");
     g_object_set(G_OBJECT(filesrc), "location", filePath.c_str(), NULL);
+
+    decoder = ls_gst_autoplug_plug_source(filesrc, "decoder");
+
+    if (!decoder) {
+        throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
+    }
+
+    gst_element_link(decoder, audiosink);
+    gst_bin_add_many(GST_BIN(pipeline), filesrc, decoder, audiosink, NULL);
+
+    gst_element_set_state(pipeline, GST_STATE_PAUSED);
+    gst_bin_sync_children_state(GST_BIN(pipeline));
 }
 
 
@@ -521,11 +270,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
 bool
 GstreamerPlayer :: isOpened(void)                               throw ()
 {
-    gchar     * str;
-
-    g_object_get(G_OBJECT(filesrc), "location", &str, NULL);
-
-    return str != 0;
+    return decoder != 0;
 }
 
 
@@ -539,8 +284,8 @@ GstreamerPlayer :: getPlaylength(void)                      throw ()
     gint64                    ns;
     GstFormat                 format = GST_FORMAT_TIME;
 
-    if (decoderSrc
-     && gst_pad_query(decoderSrc, GST_QUERY_TOTAL, &format, &ns)
+    if (decoder
+     && gst_element_query(decoder, GST_QUERY_TOTAL, &format, &ns)
      && format == GST_FORMAT_TIME) {
 
         // use microsec, as nanosec() is not found by the compiler (?)
@@ -617,6 +362,12 @@ GstreamerPlayer :: close(void)                       throw ()
     }
 
     gst_element_set_state(pipeline, GST_STATE_NULL);
+    gst_element_unlink(filesrc, decoder);
+    gst_element_unlink(decoder, audiosink);
+    gst_bin_remove(GST_BIN(pipeline), decoder);
+    gst_bin_remove(GST_BIN(pipeline), filesrc);
+    filesrc = 0;
+    decoder = 0;
 }
 
 

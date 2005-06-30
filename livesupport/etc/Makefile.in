@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -94,17 +94,18 @@ TAGLIB_DIR        = ${TOOLS_DIR}/taglib
 TAGLIB_VERSION    = taglib-1.3.1
 PEAR_DIR          = ${TOOLS_DIR}/pear
 
-MODULES_DIR           = ${BASE_DIR}/modules
-CORE_DIR              = ${MODULES_DIR}/core
-AUTHENTICATION_DIR    = ${MODULES_DIR}/authentication
-DB_DIR                = ${MODULES_DIR}/db
-STORAGE_DIR           = ${MODULES_DIR}/storage
-PLAYLIST_EXECUTOR_DIR = ${MODULES_DIR}/playlistExecutor
-EVENT_SCHEDULER_DIR   = ${MODULES_DIR}/eventScheduler
-SCHEDULER_CLIENT_DIR  = ${MODULES_DIR}/schedulerClient
-WIDGETS_DIR           = ${MODULES_DIR}/widgets
-ARCHIVE_SERVER_DIR    = ${MODULES_DIR}/archiveServer
-STORAGE_SERVER_DIR    = ${MODULES_DIR}/storageServer
+MODULES_DIR            = ${BASE_DIR}/modules
+CORE_DIR               = ${MODULES_DIR}/core
+AUTHENTICATION_DIR     = ${MODULES_DIR}/authentication
+DB_DIR                 = ${MODULES_DIR}/db
+STORAGE_DIR            = ${MODULES_DIR}/storage
+GSTREAMER_ELEMENTS_DIR = ${MODULES_DIR}/gstreamerElements
+PLAYLIST_EXECUTOR_DIR  = ${MODULES_DIR}/playlistExecutor
+EVENT_SCHEDULER_DIR    = ${MODULES_DIR}/eventScheduler
+SCHEDULER_CLIENT_DIR   = ${MODULES_DIR}/schedulerClient
+WIDGETS_DIR            = ${MODULES_DIR}/widgets
+ARCHIVE_SERVER_DIR     = ${MODULES_DIR}/archiveServer
+STORAGE_SERVER_DIR     = ${MODULES_DIR}/storageServer
 
 PRODUCTS_DIR  = ${BASE_DIR}/products
 SCHEDULER_DIR = ${PRODUCTS_DIR}/scheduler
@@ -150,6 +151,8 @@ flawfinder:
                   ${AUTHENTICATION_DIR}/include ${AUTHENTICATION_DIR}/src \
                   ${DB_DIR}/include ${DB_DIR}/src \
                   ${STORAGE_DIR}/include ${STORAGE_DIR}/src \
+                  ${GSTREAMER_ELEMENTS_DIR}/include \
+                  ${GSTREAMER_ELEMENTS_DIR}/src \
                   ${PLAYLIST_EXECUTOR_DIR}/include \
                   ${PLAYLIST_EXECUTOR_DIR}/src \
                   ${EVENT_SCHEDULER_DIR}/include ${EVENT_SCHEDULER_DIR}/src \
@@ -179,6 +182,7 @@ ${TMP_DIR}/tools_setup.stamp:
 	${HELIX_DIR}/${HELIX_VERSION}/bin/install.sh
 	${GTK_DIR}/${GTK_VERSION}/bin/install.sh
 	${GTKMM_DIR}/${GTKMM_VERSION}/bin/install.sh
+	${GSTREAMER_DIR}/${GSTREAMER_VERSION}/bin/install.sh
 	${LIBXMLXX_DIR}/${LIBXMLXX_VERSION}/bin/install.sh
 	${ICU_DIR}/${ICU_VERSION}/bin/install.sh
 	${CURL_DIR}/${CURL_VERSION}/bin/install.sh
@@ -197,6 +201,7 @@ ${TMP_DIR}/modules_setup.stamp:
 	${AUTHENTICATION_DIR}/bin/autogen.sh
 	${DB_DIR}/bin/autogen.sh
 	${STORAGE_DIR}/bin/autogen.sh
+	${GSTREAMER_ELEMENTS_DIR}/bin/autogen.sh
 	${PLAYLIST_EXECUTOR_DIR}/bin/autogen.sh
 	${EVENT_SCHEDULER_DIR}/bin/autogen.sh
 	${SCHEDULER_CLIENT_DIR}/bin/autogen.sh
@@ -216,6 +221,7 @@ distclean:
 	${MAKE} -C ${AUTHENTICATION_DIR} distclean
 	${MAKE} -C ${DB_DIR} distclean
 	${MAKE} -C ${STORAGE_DIR} distclean
+	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} distclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} distclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} distclean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} distclean
@@ -231,6 +237,7 @@ depclean:
 	${MAKE} -C ${AUTHENTICATION_DIR} depclean
 	${MAKE} -C ${DB_DIR} depclean
 	${MAKE} -C ${STORAGE_DIR} depclean
+	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} depclean
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} depclean
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} depclean
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} depclean
@@ -246,6 +253,7 @@ ${TMP_DIR}/compile.stamp:
 	${MAKE} -C ${AUTHENTICATION_DIR} all
 	${MAKE} -C ${DB_DIR} all
 	${MAKE} -C ${STORAGE_DIR} all
+	${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} all
 	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} all
 	${MAKE} -C ${EVENT_SCHEDULER_DIR} all
 	${MAKE} -C ${SCHEDULER_CLIENT_DIR} all
@@ -259,6 +267,7 @@ check:
 	-${MAKE} -C ${AUTHENTICATION_DIR} check
 	-${MAKE} -C ${DB_DIR} check
 	-${MAKE} -C ${STORAGE_DIR} check
+	-${MAKE} -C ${GSTREAMER_ELEMENTS_DIR} check
 	-${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} check
 	-${MAKE} -C ${EVENT_SCHEDULER_DIR} check
 	-${MAKE} -C ${SCHEDULER_CLIENT_DIR} check

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -154,6 +154,35 @@ GstreamerPlayerTest :: simplePlayTest(void)
 
 
 /*------------------------------------------------------------------------------
+ *  Play a simple SMIL file
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: smilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    player->initialize();
+    try {
+        player->open("file:var/simpleSmil.smil");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+    player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Check for error conditions
  *----------------------------------------------------------------------------*/
 void
@@ -274,7 +303,9 @@ GstreamerPlayerTest :: eventListenerTest(void)
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
     while (player->isPlaying()) {
@@ -284,6 +315,7 @@ GstreamerPlayerTest :: eventListenerTest(void)
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(listener1->stopFlag);
     listener1->stopFlag = false;
+    player->close();
 
     // try with two listeners
     Ptr<TestEventListener>::Ref     listener2(new TestEventListener());
@@ -297,7 +329,9 @@ GstreamerPlayerTest :: eventListenerTest(void)
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
     CPPUNIT_ASSERT(!listener2->stopFlag);
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     CPPUNIT_ASSERT(!listener1->stopFlag);
     CPPUNIT_ASSERT(!listener2->stopFlag);
@@ -311,6 +345,7 @@ GstreamerPlayerTest :: eventListenerTest(void)
     CPPUNIT_ASSERT(listener2->stopFlag);
     listener1->stopFlag = false;
     listener2->stopFlag = false;
+    player->close();
 
     // try with only the second listener
     CPPUNIT_ASSERT_NO_THROW(
@@ -322,7 +357,9 @@ GstreamerPlayerTest :: eventListenerTest(void)
     );
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(!listener2->stopFlag);
-    player->start();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
     CPPUNIT_ASSERT(player->isPlaying());
     CPPUNIT_ASSERT(!listener2->stopFlag);
     while (player->isPlaying()) {
@@ -332,8 +369,8 @@ GstreamerPlayerTest :: eventListenerTest(void)
     CPPUNIT_ASSERT(!player->isPlaying());
     CPPUNIT_ASSERT(listener2->stopFlag);
     listener2->stopFlag = false;
-
     player->close();
+
     player->deInitialize();
 }
 

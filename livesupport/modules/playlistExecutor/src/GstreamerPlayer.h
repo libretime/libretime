@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,7 @@
 
 #include <list>
 
-//#include <gst/gst.h>
+#include <gst/gst.h>
 
 #include "LiveSupport/Core/Configurable.h"
 #include "LiveSupport/PlaylistExecutor/AudioPlayerInterface.h"
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
@@ -108,30 +108,14 @@ class GstreamerPlayer : virtual public Configurable,
         GstElement            * filesrc;
 
         /**
-         *  The typefinder element.
-         */
-        GstElement            * typefinder;
-
-        /**
          *  The decoder element.
          */
         GstElement            * decoder;
 
         /**
-         *  The source pad of the decoder element.
-         *  This pad can be used to navigate in a time-based manner.
-         */
-        GstPad                * decoderSrc;
-
-        /**
          *  The audio sink
          */
         GstElement            * audiosink;
-
-        /**
-         *  The list of factories considered when creating the pipeline.
-         */
-        static GList          * factories;
 
         /**
          *  The URL to play.
@@ -163,40 +147,6 @@ class GstreamerPlayer : virtual public Configurable,
         ListenerVector          listeners;
 
         /**
-         *  Initialize the list of factories that we're interested in
-         *  when creating the pipeline.
-         */
-        static void
-        initFactories(void)                             throw ();
-
-        /**
-         *  Filter plugins so that only factories for demuxers, decoders
-         *  and parsers are considered.
-         *
-         *  @param feature the features of the plugin to check
-         *  @param data not used
-         *  @return true of the supplied feature is a factory for a demuxer,
-         *          decoder or parser, false otherwise
-         */
-        static gboolean
-        featureFilter(GstPluginFeature   * feature,
-                      gpointer             data)
-                                                                    throw ();
-
-        /**
-         *  Compare the plugin features according to their rank.
-         *
-         *  @param feature1 one of the features to compare
-         *  @param feature2 the second feature to compare
-         *  @return 0 of the ranks are equal, <0 if feature1 is ranked lower,
-         *          >0 if feature1 is ranked higher
-         */
-        static gint
-        compareRanks(GstPluginFeature   * feature1,
-                     GstPluginFeature   * feature2)
-                                                                    throw ();
-
-        /**
          *  Handler to recieve errors from gstreamer.
          *
          *  @param pipeline the pipeline generating the error
@@ -213,34 +163,6 @@ class GstreamerPlayer : virtual public Configurable,
                      gpointer       self)                           throw ();
 
         /**
-         *  Even handler for when a matching type was found by typefineder.
-         *
-         *  @param typefinder the typefineder that found the match
-         *  @param probability the probability of the match
-         *  @param caps the capabilities of the found match
-         *  @param self pointer to the associated GstreamPlayer object.
-         */
-        static void
-        typeFound(GstElement      * typefinder,
-                  guint             probability,
-                  GstCaps         * caps,
-                  gpointer          self)                           throw ();
-
-        /**
-         *  Event handler for when a new dynamic pad is found. Plug the found
-         *  pad by calling tryToPlug().
-         *
-         *  @param element the element where the new pad came up.
-         *  @param pad the new pad
-         *  @param self reference to the associated GstreamerPlayer object
-         */
-        static void
-        newPad(GstElement     * element,
-               GstPad         * pad,
-               gpointer         self)
-                                                                    throw ();
-
-        /**
          *  Event handler for the state change event on the pipeline.
          *  Use this to catch events like playing has ended.
          *
@@ -254,33 +176,6 @@ class GstreamerPlayer : virtual public Configurable,
                     gint            oldState,
                     gint            newState,
                     gpointer        self)
-                                                                    throw ();
-
-        /**
-         *  Try to plug a matching element to the specified pad
-         *
-         *  @param pad the pad to plug to
-         *  @param caps find a matching element to these capabilities
-         *  @exception std::logic_error if couldn't plug
-         */
-        void
-        tryToPlug(GstPad           * pad,
-                  const GstCaps    * caps)
-                                                    throw (std::logic_error);
-
-        /**
-         *  Close the link between a source pad and a sink element
-         *
-         *  @param srcpad the source pad to link up
-         *  @param sinkelement link srcpad to this element
-         *  @param padname use this pad from sinkelement to link to
-         *  @param templlist use pads from these templates
-         */
-        void
-        closeLink(GstPad       * srcpad,
-                  GstElement   * sinkelement,
-                  const gchar  * padname,
-                  const GList  * templlist)
                                                                     throw ();
 
         /**
@@ -307,9 +202,7 @@ class GstreamerPlayer : virtual public Configurable,
         {
             pipeline    = 0;
             filesrc     = 0;
-            typefinder  = 0;
             decoder     = 0;
-            decoderSrc  = 0;
             audiosink   = 0;
             initialized = false;
         }
