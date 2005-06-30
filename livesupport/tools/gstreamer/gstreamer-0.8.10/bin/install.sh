@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -82,7 +82,12 @@ patch -p1 < ${etcdir}/id3demuxbin-pad-free-fix.patch
 patch -p1 < ${etcdir}/typefind-smil.patch
 # --disable-spc is a workaround for gst-plugins-0.8.9, as some APU.c file
 # is missing from there. remove this when later versions come around
-./configure --disable-spc --prefix=${installdir} \
+# --disable-gconf --disable-gconftool is here because libgconf will refer
+# to the system libgobject, which might conflict with our version,
+# resulting in missing linking symbols
+./configure --disable-spc \
+            --disable-gconf --disable-gconftool \
+            --prefix=${installdir} \
             --with-pkg-config-path=${pkg_config_path}
 make install || exit 1
 
