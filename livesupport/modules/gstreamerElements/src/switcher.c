@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.8 $",
+    "$Revision: 1.9 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -418,6 +418,8 @@ switch_to_next_source(LivesupportSwitcher     * switcher)
                              : switcher->elapsedTime + newConfig->duration;
     } else {
         /* mark EOS, as there are no more sources to switch to */
+        GST_INFO("no more sources after source %d, duration: %" G_GINT64_FORMAT,
+                oldConfig->sourceId, oldConfig->duration);
         switcher->eos = TRUE;
     }
 }
@@ -442,7 +444,7 @@ livesupport_switcher_loop(GstElement      * element)
     if (switcher->eos) {
         GstEvent      * event;
 
-        GST_DEBUG("switcher_loop: eos");
+        GST_INFO("switcher_loop: eos");
         /* push an EOS event down the srcpad, just to make sure */
         event = gst_event_new(GST_EVENT_EOS);
         gst_pad_send_event(switcher->srcpad, event);

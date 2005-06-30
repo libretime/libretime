@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -45,6 +45,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+#include "smil-util.h"
 #include "minimal-audio-smil.h"
 
 
@@ -90,6 +91,9 @@ static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE (
 
 /* ================================================  local constants & macros */
 
+#define NSEC_PER_SEC_FLOAT  1000000000.0
+
+
 #define UNREF_IF_NOT_NULL(gst_object)               \
 {                                                   \
     if ((gst_object)) {                             \
@@ -110,7 +114,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.4 $",
+                  "$Revision: 1.5 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -142,19 +146,61 @@ static xmlNode *
 get_body_element(xmlDocPtr  document);
 
 /**
- *  Handle an "<audio>" SMIL element.
+ *  Handle an "<animate>" element.
  *
  *  @param smil a MinimalAudioSmil object.
+ *  @param bin the container to put all the generated elements in.
+ *  @param offset the offset in nanoseconds that the animation should
+ *         begin at. this is usually the begin="xx" attribute value
+ *         of the containing element.
+ *  @param animate the "<animate>" element to handle.
+ *  @param namePrefix name prefix to use for generated gstreamer element
+ *         names
+ *  @param index the index of the "<animate>" element with respect to it's
+ *         containing element.
+ *  @return a gstreamer element, that if linked after the containing SMIL
+ *          element, performs the animation described by the "<animate>"
+ *          SMIL element
+ */
+static GstElement *
+handle_animate_element(LivesupportMinimalAudioSmil  * smil,
+                       GstBin                       * bin,
+                       gint64                         offset,
+                       xmlNode                      * animate,
+                       const gchar                  * namePrefix,
+                       int                            index);
+
+/**
+ *  Signal handler for the eos event of a gstreamer element.
+ *  The handler will set the gstreamer element pointed to by userData
+ *  to eos as well.
+ *
+ *  @param element the element emitting the eos signal
+ *  @param userData pointer to a gstreamer element to  put into eos state.
+ */
+static void
+element_eos_signal_handler(GstElement     * element,
+                           gpointer         userData);
+
+/**
+ *  Handle an "<audio>" SMIL element.
+ *  A series of elements will be generated, all linked and added to the
+ *  supplied bin container. The last element in the series will be returned,
+ *  that can be linked further to produce the desired output.
+ *
+ *  @param smil a MinimalAudioSmil object.
+ *  @param bin the container to put all the generated elements in.
  *  @param audio an "<audio>" SMIL element.
  *  @param index the index of the "<audio>" element with respect to it's
  *         containing element.
  *  @return a gstreamer element that will play audio as described by the
  *          "<audio>" SMIL element. the element will be named using the
- *          supplied index, thus is will be uniquely named with respect
+ *          supplied indexes, thus is will be uniquely named with respect
  *          to it's parent.
  */
 static GstElement *
 handle_audio_element(LivesupportMinimalAudioSmil  * smil,
+                     GstBin                       * bin,
                      xmlNode                      * audio,
                      int                            index);
 
@@ -282,22 +328,186 @@ get_body_element(xmlDocPtr  document)
 
 
 /*------------------------------------------------------------------------------
+ *  Handle an "<animate>" SMIL element, which is supposedly inside
+ *  an "<audio>" element
+ *----------------------------------------------------------------------------*/
+static GstElement *
+handle_animate_element(LivesupportMinimalAudioSmil  * smil,
+                       GstBin                       * bin,
+                       gint64                         offset,
+                       xmlNode                      * animate,
+                       const gchar                  * namePrefix,
+                       int                            index)
+{
+    GstElement        * volenv;
+    xmlAttribute      * attr;
+    double              from  = 0.0;
+    double              to    = 0.0;
+    double              begin = 0.0;
+    double              end   = 0.0;
+    const gchar       * cstr;
+    gchar             * str;
+    guint               len;
+
+    /* handle the attributes */
+    for (attr = ((xmlElement*)animate)->attributes;
+         attr;
+         attr = (xmlAttribute*) attr->next) {
+
+        xmlNode * node;
+
+        /* TODO: support attribute values that are represented with
+         *       more than one text node, in all content assignments below */
+        if (!strcmp(attr->name, "attributeName")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                cstr = (gchar*) node->content;
+                /* we only support soundLevel animation at the moment */
+                if (strcmp(cstr, "soundLevel")) {
+                    GST_WARNING("unsupported animate attribute: %s", cstr);
+                    return 0;
+                }
+            }
+        } else if (!strcmp(attr->name, "calcMode")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                cstr = (gchar*) node->content;
+                /* we only support linear calc mode at the moment */
+                if (strcmp(cstr, "linear")) {
+                    GST_WARNING("unsupported animate calcMode: %s", cstr);
+                    return 0;
+                }
+            }
+        } else if (!strcmp(attr->name, "fill")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                cstr = (gchar*) node->content;
+                /* we only support freeze fill at the moment */
+                if (strcmp(cstr, "freeze")) {
+                    GST_WARNING("unsupported animate fill: %s", cstr);
+                    return 0;
+                }
+            }
+        } else if (!strcmp(attr->name, "from")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                cstr = (gchar*) node->content;
+                if (!smil_parse_percent(cstr, &from)) {
+                    GST_WARNING("bad from value: %s", cstr);
+                    return 0;
+                }
+            }
+        } else if (!strcmp(attr->name, "to")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                cstr = (gchar*) node->content;
+                if (!smil_parse_percent(cstr, &to)) {
+                    GST_WARNING("bad to value: %s", cstr);
+                    return 0;
+                }
+            }
+        } else if (!strcmp(attr->name, "begin")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                gint64  i;
+
+                cstr  = (gchar*) node->content;
+                i     = smil_clock_value_to_nanosec(cstr) + offset;
+                begin = ((double) i) / NSEC_PER_SEC_FLOAT;
+            }
+        } else if (!strcmp(attr->name, "end")) {
+            if ((node = attr->children) && node->type == XML_TEXT_NODE) {
+                gint64  i;
+
+                cstr = (gchar*) node->content;
+                i   = smil_clock_value_to_nanosec(cstr) + offset;
+                end = ((double) i) / NSEC_PER_SEC_FLOAT;
+            }
+        } else {
+            GST_WARNING("unsupported SMIL audio element attribute: %s",
+                        attr->name);
+        }
+    }
+
+    if (from == 0.0 && to == 0.0 && begin == 0.0 && end == 0.0) {
+        GST_WARNING("some required animate attribute missing");
+        return 0;
+    }
+
+    if (begin >= end) {
+        GST_WARNING("begin value in animate greater than end value");
+        return 0;
+    }
+
+    /* now create a volenv element */
+    len = strlen(namePrefix) + strlen("_volenv_XXXXXXXXXX") + 1;
+    str = g_malloc(len);
+    g_snprintf(str, len, "%s_volenv_%d", namePrefix, index);
+    if (!(volenv = gst_element_factory_make("volenv", str))) {
+        GST_WARNING("can't create a required gstreamer element");
+        g_free(str);
+        return 0;
+    }
+    g_free(str);
+
+    /* insert the control points */
+    str = g_malloc(64);
+    /* insert an initial volume level at 0.0 */
+    if (begin <= 0.0) {
+        g_snprintf(str, 64, "0.0:%lf", from);
+        g_object_set(G_OBJECT(volenv), "controlpoint", str, NULL);
+        g_snprintf(str, 64, "0.01:%lf", from);
+        g_object_set(G_OBJECT(volenv), "controlpoint", str, NULL);
+    } else {
+        g_object_set(G_OBJECT(volenv), "controlpoint", "0.0:1.0", NULL);
+        g_snprintf(str, 64, "%lf:%lf", begin, from);
+        g_object_set(G_OBJECT(volenv), "controlpoint", str, NULL);
+    }
+    g_snprintf(str, 64, "%lf:%lf", end, to);
+    g_object_set(G_OBJECT(volenv), "controlpoint", str, NULL);
+    g_free(str);
+
+    return volenv;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  eos signal handler for the partial play element
+ *----------------------------------------------------------------------------*/
+static void
+element_eos_signal_handler(GstElement     * element,
+                           gpointer         userData)
+{
+    GstElement    * elem= GST_ELEMENT(userData);
+
+    g_return_if_fail(elem!= NULL);
+    g_return_if_fail(GST_IS_ELEMENT(elem));
+
+    /* set the element into eos state */
+
+    GST_INFO("setting element %p to eos", elem);
+    gst_element_set_eos(elem);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Handle an "<audio>" SMIL element.
  *----------------------------------------------------------------------------*/
 static GstElement *
 handle_audio_element(LivesupportMinimalAudioSmil  * smil,
+                     GstBin                       * bin,
                      xmlNode                      * audio,
                      int                            index)
 {
-    xmlAttribute          * attr;
-    gchar                 * src       = 0;
-    gchar                 * begin     = 0;
-    gchar                 * clipBegin = 0;
-    gchar                 * clipEnd   = 0;
-    gchar                 * str;
-    guint                   len;
-    GstElement            * pplay;
+    xmlAttribute      * attr;
+    gchar             * src       = 0;
+    gchar             * begin     = 0;
+    gchar             * clipBegin = 0;
+    gchar             * clipEnd   = 0;
+    gint64              nsBegin;
+    gchar             * name;
+    gchar             * str;
+    guint               len;
+    GstElement        * pplay;
+    GstElement        * element;
+    xmlNode           * node;
+    int                 ix;
 
+    /* handle the attributes */
     for (attr = ((xmlElement*)audio)->attributes;
          attr;
          attr = (xmlAttribute*) attr->next) {
@@ -336,6 +546,7 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
     if (!begin) {
         begin = "0s";
     }
+    nsBegin = smil_clock_value_to_nanosec(begin);
     if (!clipBegin) {
         clipBegin = "0s";
     }
@@ -350,14 +561,13 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
 
     /* now create a partial play element */
     len = strlen("partialplay_XXXXXXXXXX") + 1;
-    str = g_malloc(len);
-    g_snprintf(str, len, "partialplay_%d", index);
-    if (!(pplay = gst_element_factory_make("partialplay", str))) {
+    name = g_malloc(len);
+    g_snprintf(name, len, "partialplay_%d", index);
+    if (!(pplay = gst_element_factory_make("partialplay", name))) {
         GST_WARNING("can't create a required gstreamer element");
-        g_free(str);
+        g_free(name);
         return 0;
     }
-    g_free(str);
     g_object_set(G_OBJECT(pplay), "location", src, NULL);
 
     len = strlen(begin)
@@ -370,7 +580,45 @@ handle_audio_element(LivesupportMinimalAudioSmil  * smil,
     g_object_set(G_OBJECT(pplay), "config", str, NULL);
     g_free(str);
 
-    return pplay;
+    gst_bin_add(bin, pplay);
+
+    /* now handle the possible animate elements inside this audio element */
+    element = pplay;
+    for (ix = 0, node = audio->children; node; node = node->next, ++ix) {
+        if (node->type == XML_ELEMENT_NODE) {
+            GstElement    * elem = 0;
+
+            if (!strcmp(node->name, "animate")) {
+                elem = handle_animate_element(smil, bin, nsBegin,
+                                              node, name, ix);
+            } else {
+                GST_WARNING("unsupported SMIL element %s found inside a audio",
+                            node->name);
+            }
+
+            if (elem) {
+                gst_element_link(element, elem);
+                gst_bin_add(bin, elem);
+
+                /* FIXME: this is an ugly workaround.
+                 *        for some reason, the EOS event does not get
+                 *        propagated to the volenv elements from the
+                 *        partial play element. so we catch the EOS
+                 *        event from each element, and set the next in
+                 *        line to EOS explicitly */
+                g_signal_connect(element,
+                                 "eos",
+                                 G_CALLBACK(element_eos_signal_handler),
+                                 elem);
+
+                element = elem;
+            }
+        }
+    }
+
+    g_free(name);
+
+    return element;
 }
 
 
@@ -408,7 +656,10 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
             GstElement    * element = 0;
 
             if (!strcmp(node->name, "audio")) {
-                element = handle_audio_element(smil, node, index);
+                element = handle_audio_element(smil,
+                                               GST_BIN(pipeline),
+                                               node,
+                                               index);
             } else {
                 GST_WARNING("unsupported SMIL element %s found inside a par",
                             node->name);
@@ -418,7 +669,6 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
                 if (!gst_element_link(element, adder)) {
                     GST_WARNING("can't link par child to adder");
                 }
-                gst_bin_add(GST_BIN(pipeline), element);
             }
         }
     }

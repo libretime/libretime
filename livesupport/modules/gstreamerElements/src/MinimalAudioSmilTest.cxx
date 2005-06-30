@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,6 +95,29 @@ static const char *         oggVorbisSmilFile = "var/simple-ogg.smil";
  *  A SMIL file containing another SMIL file.
  */
 static const char *         embeddedSmilFile = "var/embedded.smil";
+
+/**
+ *  A SMIL file containing sound animation.
+ */
+static const char *         soundAnimationSmilFile = "var/animateSound.smil";
+
+/**
+ *  A SMIL file containing sound animation with two parallel files.
+ */
+static const char *         soundAnimationParallelSmilFile =
+                                            "var/animateSoundParallel.smil";
+
+/**
+ *  A SMIL file containing sound animation in effect of a fade in / out.
+ */
+static const char *         fadeInOutSmilFile = "var/fadeInOut.smil";
+
+/**
+ *  A SMIL file containing sound animation in effect of a fade in / out,
+ *  with two overlapping audio files.
+ */
+static const char *         fadeInOutParallelSmilFile =
+                                                "var/fadeInOutParallel.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -277,6 +300,77 @@ MinimalAudioSmilTest :: embeddedTest(void)
     char    str[256];
 
     timePlayed = playSmilFile(embeddedSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a SMIL file containing sound level animation.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: soundAnimationTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(soundAnimationSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a SMIL file containing sound level animation with two files in
+ *  parallel.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: soundAnimationParallelTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(soundAnimationParallelSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a SMIL file containing sound level animation resulting in a fade
+ *  in / fade out effect.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: fadeInOutTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(fadeInOutSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a SMIL file containing sound level animation resulting in a fade
+ *  in / fade out effect, with two parallel files
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: fadeInOutParallelTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(fadeInOutParallelSmilFile);
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);

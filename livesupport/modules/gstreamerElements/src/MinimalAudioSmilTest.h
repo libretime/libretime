@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,20 +58,22 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(MinimalAudioSmilTest);
-#if 0
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simpleClipBeginTest);
     CPPUNIT_TEST(simpleClipBeginEndTest);
     CPPUNIT_TEST(parallelTest);
     CPPUNIT_TEST(parallelClipBeginEndTest);
-#endif
     CPPUNIT_TEST(oggVorbisTest);
     CPPUNIT_TEST(embeddedTest);
+    CPPUNIT_TEST(soundAnimationTest);
+    CPPUNIT_TEST(soundAnimationParallelTest);
+    CPPUNIT_TEST(fadeInOutTest);
+    CPPUNIT_TEST(fadeInOutParallelTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -146,6 +148,39 @@ class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
          */
         void
         embeddedTest(void)                      throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test sound level animation.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        soundAnimationTest(void)                throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test sound level animation with two parallel elements.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        soundAnimationParallelTest(void)        throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test fade in / fade out using sound level animation.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        fadeInOutTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test fade in / fade out using sound level animation,
+         *  with two parallel audio files.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        fadeInOutParallelTest(void)             throw (CPPUNIT_NS::Exception);
 
 
     public:

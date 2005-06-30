@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/smil-util.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -150,5 +150,24 @@ smil_clock_value_to_nanosec(const gchar    * value)
     }
 
     return -1LL;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a percent value to a double.
+ *----------------------------------------------------------------------------*/
+gboolean
+smil_parse_percent(const gchar    * str,
+                   double         * value)
+{
+    double  val;
+
+    if (g_str_has_suffix(str, "%")
+     && sscanf(str, "%lf%%", &val) == 1) {
+        *value = val / 100.0;
+        return TRUE;
+    }
+
+    return FALSE;
 }
 

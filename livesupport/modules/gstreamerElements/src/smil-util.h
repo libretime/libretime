@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/smil-util.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,7 +34,7 @@
  *  Utility functions helping to work with SMIL-related data structures.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 
 
@@ -82,6 +82,19 @@
  */
 gint64
 smil_clock_value_to_nanosec(const gchar    * value);
+
+
+/**
+ *  Parse a string as a percentage value, and return the result as a
+ *  float. Indicate parse error.
+ *
+ *  @param str the string to parse.
+ *  @param value the parsed value (out parameter).
+ *  @return TRUE if parsing went OK, FALSE otherwise.
+ */
+gboolean
+smil_parse_percent(const gchar    * str,
+                   double         * value);
 
 
 #endif /* SmilUtil_h */
