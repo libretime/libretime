@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ tar xfj ${gstreamer_tar}
 cd ${product}
 ./configure --prefix=${installdir} \
             --with-pkg-config-path=${pkg_config_path}
-make install
+make install || exit 1
 
 
 echo "installing ${plugins} from ${basedir} to ${installdir}"
@@ -84,7 +84,7 @@ patch -p1 < ${etcdir}/typefind-smil.patch
 # is missing from there. remove this when later versions come around
 ./configure --disable-spc --prefix=${installdir} \
             --with-pkg-config-path=${pkg_config_path}
-make install
+make install || exit 1
 
 
 cd ${basedir}
