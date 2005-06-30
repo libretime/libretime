@@ -23,11 +23,13 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/restore.php,v $
 
 ------------------------------------------------------------------------------*/
 define('NSPACE', 'lse');
+define('VERBOSE', FALSE);
+#define('VERBOSE', TRUE);
 
 header("Content-type: text/plain");
 require_once 'conf.php';
@@ -36,6 +38,7 @@ require_once 'DB.php';
 require_once "XML/Util.php";
 require_once "XML/Beautifier.php";
 require_once "$storageServerPath/var/BasicStor.php";
+require_once "$storageServerPath/var/Prefs.php";
 
 /* =========================================================== misc functions */
 function ls_restore_processObject($el){
@@ -68,6 +71,7 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
     switch($obj['type']){
         case"folder";
             if($reallyInsert){
+                if(VERBOSE) echo " creating folder {$obj['name']} ...\n";
                 $r = $bs->bsCreateFolder($parid, $obj['name']);
                 ls_restore_checkErr($r, __LINE__);
             }else $r=$parid;
@@ -81,12 +85,15 @@ function ls_restore_restoreObject($obj, $parid, $reallyInsert=TRUE){
         case"webstream";
         case"playlist";
             $gunid = $obj['gunid'];
+            if(is_null($gunid)) break;
             $gunid3 = substr($gunid, 0, 3);
             $mediaFile = "$tmpdir/stor/$gunid3/$gunid";
+#            echo "X1 $gunid, $gunid3, $mediaFile\n";
             if(!file_exists($mediaFile)) $mediaFile = NULL;
             $mdataFile = "$tmpdir/stor/$gunid3/$gunid.xml";
             if(!file_exists($mdataFile)) $mdataFile = NULL;
             if($reallyInsert){
+                if(VERBOSE) echo " creating file {$obj['name']} ...\n";
                 $r = $bs->bsPutFile($parid, $obj['name'],
                      $mediaFile, $mdataFile, $obj['gunid'],
                      strtolower($obj['type']));
@@ -102,6 +109,7 @@ PEAR::setErrorHandling(PEAR_ERROR_RETURN);
 $dbc = DB::connect($config['dsn'], TRUE);
 $dbc->setFetchMode(DB_FETCHMODE_ASSOC);
 $bs = &new BasicStor($dbc, $config);
+$pr =& new Prefs($bs);
 
 $dbxml = file_get_contents($argv[1]);
 $tmpdir = $argv[2];
@@ -141,22 +149,25 @@ foreach($xmlTree->children as $i=>$el){
 }
 
 /* ---------------------------------------------- processing subjects element */
-$subjects = array();
-$groups = array();
+$subjects   = array();
+$groups     = array();
 foreach($subjArr as $i=>$el){
     switch($el->name){
         case"group":
-            $groups[$el->attrs['name']->val] = $el->children;
-            $subjects[$el->attrs['name']->val] = array(
+            $grname = $el->attrs['name']->val;
+            $groups[$grname] = $el->children;
+            $subjects[$grname] = array(
                 'type'      => 'group',
             );
         break;
         case"user":
-            $subjects[$el->attrs['login']->val] = array(
+            $login = $el->attrs['login']->val;
+            $subjects[$login] = array(
                 'type'      => 'user',
                 'pass'      => $el->attrs['pass']->val,
 #                'realname'  => $el->attrs['realname']->val,
                 'realname'  => '',
+                'prefs'     => $el->children[0]->children,
             );
         break;
     }
@@ -165,7 +176,15 @@ foreach($subjArr as $i=>$el){
 /* -------------------------------------------------------- processing groups */
 foreach($groups as $grname=>$group){
     foreach($group as $i=>$el){
-        $groups[$grname][$i] = $el->attrs['name']->val;
+        switch($el->name){
+            case"member":
+                $groups[$grname][$i] = $el->attrs['name']->val;
+            break;
+            case"preferences":
+                $subjects[$grname]['prefs'] = $el->children;
+                unset($groups[$grname][$i]);
+            break;
+        }
     }
 }
 
@@ -179,42 +198,66 @@ foreach($groups as $grname=>$group){
 
 /* ================================================================ restoring */
 
+if(VERBOSE) echo " resetting storage ...\n";
 $bs->resetStorage(FALSE);
 $storId = $bs->storId;
 
 /* ------------------------------------------------------- restoring subjects */
 foreach($subjects as $login=>$subj){
-    $uid = $bs->getSubjId($login);
-    ls_restore_checkErr($uid);
+    $uid0 = $bs->getSubjId($login);
+    ls_restore_checkErr($uid0);
     switch($subj['type']){
         case"user":
             if($login=='root'){
                 $r = $bs->passwd($login, NULL, $subj['pass'], TRUE);
                 ls_restore_checkErr($r, __LINE__);
+                $uid = $uid0;
             }else{
-                if(!is_null($uid)){
+                if(!is_null($uid0)){
                     $r = $bs->removeSubj($login);
                     ls_restore_checkErr($r, __LINE__);
                 }
-                $bs->addSubj($login, $subj['pass'], $subj['realname'], TRUE);
-                ls_restore_checkErr($r, __LINE__);
+                if(VERBOSE) echo " adding user $login ...\n";
+                $uid = $bs->addSubj($login, $subj['pass'], $subj['realname'], TRUE);
+                ls_restore_checkErr($uid, __LINE__);
             }
         break;
         case"group":
-            if(!is_null($uid)){
+            if(!is_null($uid0)){
                 $r = $bs->removeSubj($login);
-                if(PEAR::isError($r)) break;
+                if(PEAR::isError($r)){ $uid = $uid0; break; }
                 //ls_restore_checkErr($r, __LINE__);
             }
-            $r = $bs->addSubj($login, NULL);
-            ls_restore_checkErr($r, __LINE__);
+            if(VERBOSE) echo " adding group $login ...\n";
+            $uid = $bs->addSubj($login, NULL);
+            ls_restore_checkErr($uid, __LINE__);
+#            var_export($uid); echo " ";
         break;
+    }
+#    echo "$login/$uid   :\n";
+    if(isset($subj['prefs'])){
+#        var_dump($subj['prefs']); exit;
+        foreach($subj['prefs'] as $i=>$el){
+            switch($el->name){
+                case"pref":
+                    $prefkey = $el->attrs['name']->val;
+                    $prefval = $el->attrs['val']->val;
+#                    echo" PREF($prefkey)=$prefval\n";
+                    $res = $pr->insert($uid, $prefkey, $prefval);
+                    ls_restore_checkErr($res, __LINE__);
+                break;
+                default:
+                    var_dump($el);
+            }
+        }
     }
 }
 
 /* --------------------------------------------------------- restoring groups */
+#var_dump($groups);
 foreach($groups as $grname=>$group){
     foreach($group as $i=>$login){
+        if(VERBOSE) echo " adding subject $login to group $grname ...\n";
         $r = $bs->addSubj2Gr($login, $grname);
         ls_restore_checkErr($r, __LINE__);
     }
