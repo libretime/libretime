@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -69,7 +69,8 @@ cd ${plugins}
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=305658
 # for details on the following patch
 patch -p1 < ${etcdir}/adder-fix.diff
-# TODO: file a bug report with this patch
+# see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=309218
+# for details on the following patch
 patch -p1 < ${etcdir}/adder-duration-fix.patch
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
 # for details on the following patch
