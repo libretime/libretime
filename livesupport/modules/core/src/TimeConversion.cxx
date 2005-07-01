@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,7 +157,7 @@ TimeConversion :: sleep(Ptr<time_duration>::Ref duration)
  *  Convert a time_duration to a format used in SMILs.
  *----------------------------------------------------------------------------*/
 Ptr<std::string>::Ref
-TimeConversion :: timeDurationToStringMilliseconds(
+TimeConversion :: timeDurationToSmilString(
                                 Ptr<time_duration>::Ref  duration)
                                                                     throw ()
 {
@@ -166,7 +166,7 @@ TimeConversion :: timeDurationToStringMilliseconds(
     int                 microseconds = duration->fractional_seconds();
     stringStream << "."
                  << std::setw(3) << std::setfill('0') << std::dec
-                 << microseconds / 1000
+                 << (microseconds + 500) / 1000
                  << 's';
     Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
     return result;

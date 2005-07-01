@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -215,16 +215,17 @@ TimeConversionTest :: sleepTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test the timeDurationToStringMilliseconds() function
+ *  Test the timeDurationToSmilString() function
  *----------------------------------------------------------------------------*/
 void
 TimeConversionTest :: durationToStringTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<time_duration>::Ref duration(new time_duration(1,2,3,4000));
+    Ptr<time_duration>::Ref duration(new time_duration(duration_from_string(
+                                                        "01:02:03.003700" )));
 
     Ptr<std::string>::Ref   durationString
-                            = TimeConversion::timeDurationToStringMilliseconds(
+                            = TimeConversion::timeDurationToSmilString(
                                                                     duration);
     CPPUNIT_ASSERT_EQUAL(std::string("3723.004s"), *durationString);
 }
