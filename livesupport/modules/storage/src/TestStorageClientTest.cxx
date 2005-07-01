@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -344,6 +344,8 @@ TestStorageClientTest :: acquirePlaylistTest(void)
         ifs1.close();
         CPPUNIT_FAIL("temp file not created correctly");
     }
+//  std::cerr << "url:\n" << *playlist->getUri() << "\n";
+//  sleep(30);
     ifs1.close();
 
     string  savedTempFilePath = playlist->getUri()->substr(7);
