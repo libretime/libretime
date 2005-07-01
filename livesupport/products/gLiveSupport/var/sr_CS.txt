@@ -110,6 +110,8 @@ sr_CS:table
         closeButtonLabel:string       { "zatvori" }
         statusBar:string              { "status bar" }
         playlistSavedMsg:string       { "sačuvana plej lista {0}" }
+        savePlaylistDialogMsg:string  { "*** translate me ***" }
+        emptyTitleErrorMsg:string     { "*** translate me ***" }
     }
 
     schedulerWindow:table

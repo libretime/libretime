@@ -116,7 +116,8 @@ root:table
         closeButtonLabel:string       { "close" }
         statusBar:string              { "status bar" }
         playlistSavedMsg:string       { "saved playlist {0}" }
-        sureToExitMsg:string          { "Do you want to exit without saving?" }
+        savePlaylistDialogMsg:string  { "Would you like to save the playlist?" }
+        emptyTitleErrorMsg:string     { "Please enter a title." }
     }
 
     schedulerWindow:table

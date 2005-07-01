@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -100,7 +100,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.6 $
+         *  @version $Revision: 1.7 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -192,6 +192,14 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  The "are you sure you want to exit?" dialog window.
          */
         Ptr<DialogWindow>::Ref      dialogWindow;
+
+        /**
+         *  Save the edited playlist.
+         *
+         *  @return true if the playlist was saved successully.
+         */
+        virtual bool
+        savePlaylist(void)                                      throw ();
 
         /**
          *  Signal handler for the save button clicked.

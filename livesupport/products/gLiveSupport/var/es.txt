@@ -110,6 +110,8 @@ es:table
         closeButtonLabel:string       { "cerrar" }
         statusBar:string              { "barra de estatus" }
         playlistSavedMsg:string       { "lista de reproducción guardada {0}" }
+        savePlaylistDialogMsg:string  { "*** translate me ***" }
+        emptyTitleErrorMsg:string     { "*** translate me ***" }
     }
 
     schedulerWindow:table

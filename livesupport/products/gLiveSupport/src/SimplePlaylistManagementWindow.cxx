@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,8 +104,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
         entriesView->appendColumn(*getResourceUstring("lengthColumnLabel"),
                                    modelColumns.lengthColumn, 120);
 
-        statusBar = Gtk::manage(new Gtk::Label(
-                                    *getResourceUstring("statusBar")));
+        statusBar = Gtk::manage(new Gtk::Label(""));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
@@ -156,13 +155,14 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     Ptr<Glib::ustring>::Ref     confirmationMessage;
     try {
         confirmationMessage.reset(new Glib::ustring(
-                                    *getResourceUstring("sureToExitMsg") ));
+                                *getResourceUstring("savePlaylistDialogMsg") ));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
 
     dialogWindow.reset(new DialogWindow(confirmationMessage,
+                                        DialogWindow::cancelButton |
                                         DialogWindow::noButton |
                                         DialogWindow::yesButton,
                                         gLiveSupport->getBundle() ));
@@ -179,26 +179,27 @@ SimplePlaylistManagementWindow :: ~SimplePlaylistManagementWindow (void)
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the save button getting clicked.
+ *  Save the edited playlist.
  *----------------------------------------------------------------------------*/
-void
-SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
+bool
+SimplePlaylistManagementWindow :: savePlaylist (void)               throw ()
 {
     try {
-        Ptr<const Glib::ustring>::Ref   title;
-        Ptr<Playlist>::Ref              playlist;
-
-        title.reset(new Glib::ustring(nameEntry->get_text()));
-        // TODO: check for empty title and display "are you sure?" message
-
-        playlist = gLiveSupport->getEditedPlaylist();
+        Ptr<Playlist>::Ref              playlist
+                                        = gLiveSupport->getEditedPlaylist();
         if (!playlist) {
-            return;
+            return false;
+        }
+
+        Ptr<const Glib::ustring>::Ref   title(new Glib::ustring(
+                                                    nameEntry->get_text()));
+        if (*title == "") {
+            statusBar->set_text(*getResourceUstring("emptyTitleErrorMsg"));
+            return false;
         }
         
         playlist->setTitle(title);
-
-        playlist = gLiveSupport->savePlaylist();
+        gLiveSupport->savePlaylist();
 
         Ptr<Glib::ustring>::Ref statusText = formatMessage(
                                                     "playlistSavedMsg",
@@ -208,9 +209,21 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
         // clean the entry fields
         nameEntry->set_text("");
         entriesModel->clear();
+        return true;
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
+        return false;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the save button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
+{
+    savePlaylist();
 }
 
 
@@ -220,22 +233,32 @@ SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
 void
 SimplePlaylistManagementWindow :: onCloseButtonClicked (void)       throw ()
 {
-    // TODO: only ask if playlist has been modified
-    DialogWindow::ButtonType    result = dialogWindow->run();
-    switch (result) {
-        case DialogWindow::noButton:
-                    return;
+    if (gLiveSupport->getEditedPlaylist()) {
+        DialogWindow::ButtonType    result = dialogWindow->run();
+        switch (result) {
+            case DialogWindow::noButton:
+                        gLiveSupport->cancelEditedPlaylist();
+                        statusBar->set_text("");
+                        nameEntry->set_text("");
+                        entriesModel->clear();
+                        break;
 
-        case DialogWindow::yesButton:
-                    gLiveSupport->cancelEditedPlaylist();
-                    hide();
-                    break;
+            case DialogWindow::yesButton:
+                        if (savePlaylist()) {
+                            statusBar->set_text("");
+                            break;
+                        } else {
+                            return;
+                        }
 
-        default:    std::cerr << "Error: DialogWindow returned " << result
-                              << "; " << DialogWindow::noButton << " or "
-                              << DialogWindow::yesButton << " is expected."
-                              << std::endl;
+            case DialogWindow::cancelButton:
+                        return;
+            default :               // can happen if window is closed
+                        return;     //   with Alt-F4 -- treated as cancel
+        }
     }
+
+    hide();
 }
 
 

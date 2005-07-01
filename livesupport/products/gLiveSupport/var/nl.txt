@@ -110,6 +110,8 @@ nl:table
         closeButtonLabel:string       { "sluiten" }
         statusBar:string              { "status balk" }
         playlistSavedMsg:string       { "playlist {0} opgeslagen" }
+        savePlaylistDialogMsg:string  { "*** translate me ***" }
+        emptyTitleErrorMsg:string     { "*** translate me ***" }
     }
 
     schedulerWindow:table

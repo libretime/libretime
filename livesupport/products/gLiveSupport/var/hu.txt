@@ -115,7 +115,8 @@ hu:table
         closeButtonLabel:string       { "bezár" }
         statusBar:string              { "állapotsor" }
         playlistSavedMessage:string   { "a {0} műsor elmentve" }
-        sureToExitMsg:string          { "Biztos, hogy nem akarja elmenteni a műsort?" }
+        savePlaylistDialogMsg:string  { "El szeretné menteni a műsort?" }
+        emptyTitleErrorMsg:string     { "Kérem, adjon meg egy címet!" }
     }
 
     schedulerWindow:table
