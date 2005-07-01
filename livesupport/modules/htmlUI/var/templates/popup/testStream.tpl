@@ -20,9 +20,12 @@
     {/if}
     </div>
 
-    <p><input type="button" class="button" value="##Listen##" onclick="listenStream()"></p>
+    <p>
+        <input type="button" class="button" value="##Listen##" onclick="listenStream()">
+        <input type="button" class="button" value="##Close##"  onclick="window.close()">
+    </p>
     <br>
-    
+
     <div>
     {if $data.header}
         Returned connection header:<pre>{$data.header}</pre>
@@ -31,6 +34,7 @@
 
 {else}
      <div>{tra str='Connection to $1 port $2 $3' 1=$data.host 2=$data.port 3='<font color="red">failed</font>'}</div>
+      <p><input type="button" class="button" value="##Close##" onclick="window.close()"></p>
 {/if}
 
 <script language="javascript">

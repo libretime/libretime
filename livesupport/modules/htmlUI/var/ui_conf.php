@@ -1,5 +1,6 @@
 <?php
-define('UI_VERSION',                    'LiveSupport 1.0 rc');
+define('UI_VERSION',                    'LiveSupport 1.0 rc1');
+define('UI_VERSION_FULLNAME',           'LiveSupport 1.0 release canditate 1');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
 ## Scheduler
@@ -88,6 +89,7 @@ define('UI_SCHEDULER_DEFAULT_VIEW',     'day');
 define('UI_SCHEDULER_PAUSE_PL2PL',      '5 seconds');
 
 ## File types
+define('UI_FILETYPE_ANY',               'file');
 define('UI_FILETYPE_PLAYLIST',          'playlist');
 define('UI_FILETYPE_AUDIOCLIP',         'audioClip');
 define('UI_FILETYPE_WEBSTREAM',         'webstream');

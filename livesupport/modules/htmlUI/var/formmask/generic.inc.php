@@ -368,11 +368,11 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'File type',
             'options'   => array(
-                            'File'      => '*',
-                            'audioclip' => 'Audio Clip',
-                            'webstream' => 'Web Stream',
-                            'playlist'  => 'Playlist'
-                            )
+                            UI_FILETYPE_ANY       => '*',
+                            UI_FILETYPE_AUDIOCLIP => 'Audio Clip',
+                            #UI_FILETYPE_WEBSTREAM => 'Web Stream',
+                            UI_FILETYPE_PLAYLIST  => 'Playlist'
+                           ),
         ),
         array(
             'element'   => 'limit',
@@ -485,11 +485,11 @@ $ui_fmask = array(
             'type'      => 'select',
             'label'     => 'File Type',
             'options'   => array(
-                            'File'      => '*',
-                            'audioclip' => 'Audio Clip',
-                            'webstream' => 'Web Stream',
-                            'playlist'  => 'Playlist'
-                            ),
+                            UI_FILETYPE_ANY       => '*',
+                            UI_FILETYPE_AUDIOCLIP => 'Audio Clip',
+                            #UI_FILETYPE_WEBSTREAM => 'Web Stream',
+                            UI_FILETYPE_PLAYLIST  => 'Playlist'
+                           ),
             'attributes'=> array('onChange' =>  'hpopup("'.UI_HANDLER.'?act=BROWSE.setFiletype&filetype=" + this.form.filetype.value)')
         ),
         array(

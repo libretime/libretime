@@ -91,9 +91,8 @@ $mask = array(
                 'label'     => 'File format',
                 'required'  => TRUE,
                 'options'   => array(
-                                'File'          => 'File',
-                                'live stream'   => 'Live Stream',
-                                'networked file'=> 'Networked File',
+                                'File'          => 'Audioclip',
+                                'live stream'   => 'Webstream'
                                ),
                 'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
@@ -163,9 +162,8 @@ $mask = array(
                 'type'      => 'select',
                 'label'     => 'Format',
                 'options'   => array(
-                                'File'          => 'File',
-                                'live stream'   => 'Live Stream',
-                                'networked file'=> 'Networked File'
+                                'File'          => 'Audioclip',
+                                'live stream'   => 'Webtream'
                                ),
                 'attributes'=> array('disabled' => 'on'),
                 'id3'       => FALSE
@@ -442,9 +440,8 @@ $mask = array(
                 'type'      => 'select',
                 'label'     => 'Format',
                 'options'   => array(
-                                'File'          => 'File',
-                                'live stream'   => 'Live Stream',
-                                'networked file'=> 'Networked File'
+                                'File'          => 'Audioclip',
+                                'live stream'   => 'Webstream'
                                 ),
                 'attributes'=> array('disabled' => 'on')
             ),
