@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -157,7 +157,7 @@ GstreamerPlayerTest :: simplePlayTest(void)
  *  Play a simple SMIL file
  *----------------------------------------------------------------------------*/
 void
-GstreamerPlayerTest :: smilTest(void)
+GstreamerPlayerTest :: simpleSmilTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
@@ -178,6 +178,64 @@ GstreamerPlayerTest :: smilTest(void)
     }
     CPPUNIT_ASSERT(!player->isPlaying());
     player->close();
+    player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a more complicated SMIL file
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: secondSmilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    player->initialize();
+    try {
+        player->open("file:var/sequentialSmil.smil");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+    player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Play a SMIL file with sound animation
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: animatedSmilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+
+    player->initialize();
+
+    try {
+        player->open("file:var/animatedSmil.smil");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+
     player->deInitialize();
 }
 
