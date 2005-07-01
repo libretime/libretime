@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/OperatorComboBoxText.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -62,20 +62,20 @@ OperatorComboBoxText :: OperatorComboBoxText(
         : ComboBoxText(leftImage, centerImage, rightImage),
           LocalizedObject(bundle)
 {
-    Ptr<Glib::ustring>::Ref   searchOperator(new Glib::ustring("partial"));
-    appendPair(getResourceUstring("partialOperatorDisplay"), searchOperator);
+    Ptr<Glib::ustring>::Ref   partialOperator(new Glib::ustring("partial"));
+    appendPair(getResourceUstring("partialOperatorDisplay"), partialOperator);
 
-    *searchOperator = "prefix";
-    appendPair(getResourceUstring("prefixOperatorDisplay"), searchOperator);
+    Ptr<Glib::ustring>::Ref   prefixOperator(new Glib::ustring("prefix"));
+    appendPair(getResourceUstring("prefixOperatorDisplay"), prefixOperator);
 
-    *searchOperator = "=";
-    appendPair(getResourceUstring("=OperatorDisplay"), searchOperator);
+    Ptr<Glib::ustring>::Ref   equalsOperator(new Glib::ustring("="));
+    appendPair(getResourceUstring("=OperatorDisplay"), equalsOperator);
 
-    *searchOperator = "<=";
-    appendPair(getResourceUstring("<=OperatorDisplay"), searchOperator);
+    Ptr<Glib::ustring>::Ref   lessOrEqualOperator(new Glib::ustring("<="));
+    appendPair(getResourceUstring("<=OperatorDisplay"), lessOrEqualOperator);
 
-    *searchOperator = ">=";
-    appendPair(getResourceUstring(">=OperatorDisplay"), searchOperator);
+    Ptr<Glib::ustring>::Ref   greaterOrEqualOperator(new Glib::ustring(">="));
+    appendPair(getResourceUstring(">=OperatorDisplay"), greaterOrEqualOperator);
 
     set_active(0);  // select the first item
 }
