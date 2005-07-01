@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,12 +100,12 @@ MasterPanelWindow :: MasterPanelWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     nowPlayingBin->set_size_request(-1, 104);
 
     // set up the VU meter widget
-    vuMeterWidget = Gtk::manage(new Gtk::Label("VU meter"));
+    vuMeterWidget = Gtk::manage(new Gtk::Label(""));
     vuMeterBin = Gtk::manage(widgetFactory->createBlueBin());
     vuMeterBin->add(*vuMeterWidget);
     vuMeterBin->set_size_request(200, 40);
     // set up the next playing widget
-    nextPlayingWidget = Gtk::manage(new Gtk::Label("next playing"));
+    nextPlayingWidget = Gtk::manage(new Gtk::Label(""));
     nextPlayingBin = Gtk::manage(widgetFactory->createBlueBin());
     nextPlayingBin->add(*nextPlayingWidget);
     nextPlayingBin->set_size_request(200, 59);
