@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -162,6 +162,8 @@ NowPlaying :: onPlayButtonClicked(void)                             throw ()
 void
 NowPlaying :: onPauseButtonClicked(void)                            throw ()
 {
+    gLiveSupport->setOutputAudioPauseFlag(true);
+
     gLiveSupport->pauseOutputAudio();
 
     remove(*pauseButton);
@@ -169,6 +171,7 @@ NowPlaying :: onPauseButtonClicked(void)                            throw ()
     playButton->show();   
     
     isPaused = true;
+    gLiveSupport->setOutputAudioPauseFlag(false);
 }
 
 

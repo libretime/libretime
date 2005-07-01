@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/CuePlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -174,11 +174,13 @@ void
 CuePlayer :: onPauseButtonClicked(void)                             throw ()
 {
     try {
+        gLiveSupport->setCueAudioPauseFlag(true);
         gLiveSupport->pauseCueAudio();
         audioState = pausedState;
         remove(*pauseButton);
         pack_end(*playButton, Gtk::PACK_SHRINK, 3);
         playButton->show();
+        gLiveSupport->setCueAudioPauseFlag(false);
     } catch (std::logic_error &e) {
         std::cerr << "GLiveSupport::pauseCueAudio() error:" << std::endl
                     << e.what() << std::endl;
@@ -209,6 +211,10 @@ CuePlayer :: onStopButtonClicked(void)                              throw ()
 void
 CuePlayer :: onStop(void)                                           throw ()
 {
+    if (gLiveSupport->getCueAudioPauseFlag()) {
+        return;                 // onStop() is fired on pause, unfortunately
+    }
+
     switch (audioState) {
         case pausedState:
             remove(*playButton);

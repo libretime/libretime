@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.55 $
+    Version  : $Revision: 1.56 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -836,6 +836,10 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: onStop(void)                                throw ()
 {
+    if (getOutputAudioPauseFlag()) {
+        return;                 // onStop() is fired on pause, unfortunately
+    }
+
     releaseOutputAudio();
     
     Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();
