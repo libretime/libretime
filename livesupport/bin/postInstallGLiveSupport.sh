@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: mash $
-#   Version  : $Revision: 1.4 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallGLiveSupport.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -93,10 +93,10 @@ while true; do
             scheduler_port=$2;
             shift; shift;;
         -o|--output-dsp)
-            output_dsp=$2;
+            output_alsa_device=$2;
             shift; shift;;
-        -c|--cue_dsp)
-            cue_dsp=$2;
+        -c|--cue_alsa_device)
+            cue_alsa_device=$2;
             shift; shift;;			
         --)
             shift;
@@ -126,12 +126,12 @@ if [ "x$scheduler_port" == "x" ]; then
     scheduler_port=3344;
 fi
 
-if [ "x$output_dsp" == "x" ]; then
-    output_dsp=/dev/dsp;
+if [ "x$output_alsa_device" == "x" ]; then
+    output_alsa_device="plughw:0,0";
 fi
 
-if [ "x$cue_dsp" == "x" ]; then
-    cue_dsp=/dev/dsp;
+if [ "x$cue_alsa_device" == "x" ]; then
+    cue_alsa_device="plughw:0,0";
 fi
 
 echo "Making post-install steps for GLiveSupport.";
@@ -142,8 +142,8 @@ echo "  installation directory: $installdir";
 echo "  host name:              $hostname";
 echo "  web server port:        $http_port";
 echo "  scheduler port:         $scheduler_port";
-echo "  live broadcast device:  $output_dsp";
-echo "  preview device:         $cue_dsp";
+echo "  live broadcast device:  $output_alsa_device";
+echo "  preview device:         $cue_alsa_device";
 echo ""
 
 #-------------------------------------------------------------------------------
@@ -160,8 +160,8 @@ ls_scheduler_host=$hostname
 ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
-ls_output_dsp=$output_dsp
-ls_cue_dsp=$cue_dsp
+ls_output_alsa_device=$output_alsa_device
+ls_cue_alsa_device=$cue_alsa_device
 
 
 install_bin=$installdir/bin
@@ -183,8 +183,8 @@ ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
 ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
-ls_output_dsp_s=`echo $ls_output_dsp | sed -e "s/\//\\\\\\\\\//g"`
-ls_cue_dsp_s=`echo $ls_cue_dsp | sed -e "s/\//\\\\\\\\\//g"` 
+ls_output_alsa_device_s=`echo $ls_output_alsa_device | sed -e "s/\//\\\\\\\\\//g"`
+ls_cue_alsa_device_s=`echo $ls_cue_alsa_device | sed -e "s/\//\\\\\\\\\//g"` 
 
 replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_storageUrlPath/\/$ls_php_urlPrefix_s\/storageServer\/var/; \
@@ -193,8 +193,8 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
               s/ls_php_host/$ls_php_host/; \
               s/ls_php_port/$ls_php_port/; \
-              s/ls_output_dsp/$ls_output_dsp_s/; \
-              s/ls_cue_dsp/$ls_cue_dsp_s/; \
+              s/ls_output_alsa_device/$ls_output_alsa_device_s/; \
+              s/ls_cue_alsa_device/$ls_cue_alsa_device_s/; \
               s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
               s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
               s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \

@@ -140,13 +140,13 @@
 
     <outputPlayer>
         <audioPlayer>
-            <gstreamerPlayer audioDevice = "ls_output_dsp" />
+            <gstreamerPlayer audioDevice = "plughw:0,0" />
         </audioPlayer>
     </outputPlayer>
 
     <cuePlayer>
         <audioPlayer>
-            <gstreamerPlayer audioDevice = "ls_cue_dsp" />
+            <gstreamerPlayer audioDevice = "plughw:0,0" />
         </audioPlayer>
     </cuePlayer>
 

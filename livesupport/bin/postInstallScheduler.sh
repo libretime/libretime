@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.6 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallScheduler.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ while true; do
             dbpassword=$2;
             shift; shift;;
         -o|--output-dsp)
-            output_dsp=$2;
+            output_alsa_device=$2;
             shift; shift;;			
         --)
             shift;
@@ -176,8 +176,8 @@ if [ "x$www_root" == "x" ]; then
     www_root=/var/www
 fi
 
-if [ "x$output_dsp" == "x" ]; then
-    output_dsp=/dev/dsp;
+if [ "x$output_alsa_device" == "x" ]; then
+    output_alsa_device="plughw:0,0";
 fi
 
 echo "Making post-install steps for the LiveSupport scheduler.";
@@ -194,7 +194,7 @@ echo "  database user:          $dbuser";
 echo "  database user password: $dbpassword";
 echo "  apache daemon group:    $apache_group";
 echo "  apache document root:   $www_root";
-echo "  broadcast device:       $output_dsp";
+echo "  broadcast device:       $output_alsa_device";
 echo ""
 
 #-------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ ls_scheduler_host=$hostname
 ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
-ls_output_dsp=$output_dsp
+ls_output_alsa_device=$output_alsa_device
 
 
 postgres_user=postgres
@@ -241,7 +241,7 @@ ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
 ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
-ls_output_dsp_s=`echo $ls_output_dsp | sed -e "s/\//\\\\\\\\\//g"`
+ls_output_alsa_device_s=`echo $ls_output_alsa_device | sed -e "s/\//\\\\\\\\\//g"`
 
 replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_dbuser/$ls_dbuser/; \
@@ -254,7 +254,7 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_alib_xmlRpcPrefix/$ls_alib_xmlRpcPrefix_s/; \
               s/ls_php_host/$ls_php_host/; \
               s/ls_php_port/$ls_php_port/; \
-              s/ls_output_dsp/$ls_output_dsp_s/; \
+              s/ls_output_alsa_device/$ls_output_alsa_device_s/; \
               s/ls_archiveUrlPath/\/$ls_php_urlPrefix_s\/archiveServer\/var/; \
               s/ls_scheduler_urlPrefix/$ls_scheduler_urlPrefix_s/; \
               s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
