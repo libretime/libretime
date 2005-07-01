@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -241,14 +241,13 @@ Ptr<Playable>::Ref
 LiveModeWindow :: popTop(void)                                      throw ()
 {
     Ptr<Playable>::Ref          playable;
-/*  disabled for testing
     Gtk::TreeModel::iterator    iter = treeModel->children().begin();
     
     if (iter) {
         playable = (*iter)[modelColumns.playableColumn];
         treeModel->erase(iter);
     }
-*/    
+
     return playable;
 }
 
