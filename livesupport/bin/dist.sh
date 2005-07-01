@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.10 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -168,6 +168,10 @@ gtkmm_dir=$toolsdir/gtkmm
 gtkmm_version=gtkmm-2.5.5
 gtkmm_tmpdir=$tools_tmpdir/gtkmm
 
+gstreamer_dir=$toolsdir/gstreamer
+gstreamer_version=gstreamer-0.8.10
+gstreamer_tmpdir=$toolsdir/gstreamer
+
 icu_dir=$toolsdir/icu
 icu_version=icu-3.0
 icu_tmpdir=$tools_tmpdir/icu
@@ -277,6 +281,9 @@ cp -pPR $gtk_dir/$gtk_version $gtk_tmpdir
 
 mkdir -p $gtkmm_tmpdir
 cp -pPR $gtkmm_dir/$gtkmm_version $gtkmm_tmpdir
+
+mkdir -p $gstreamer_tmpdir
+cp -pPR $gstreamer_dir/$gstreamer_version $gstreamer_tmpdir
 
 mkdir -p $icu_tmpdir
 cp -pPR $icu_dir/$icu_version $icu_tmpdir
