@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchItem.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  A single search input field.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class AdvancedSearchItem : public Gtk::HBox, 
                            public LocalizedObject
@@ -112,6 +112,20 @@ class AdvancedSearchItem : public Gtk::HBox,
          */
         ImageButton *           closeButton;
         
+        /**
+         *  A signal object emitted when the plus button is pressed.
+         */
+        sigc::signal<void>      signalAddNewObject;
+
+        /**
+         *  Event handler for the Plus button getting clicked.
+         */
+        void
+        onPlusButtonClicked()                                   throw ()
+        {
+            signalAddNew().emit();
+        }
+
 
     public:
     
@@ -158,12 +172,12 @@ class AdvancedSearchItem : public Gtk::HBox,
         /**
          *  The signal proxy for pressing the add new condition button.
          *
-         *  @return the signal_activate() proxy of the Plus button.
+         *  @return a signal emitted when the Plus button is clicked.
          */
-        Glib::SignalProxy0<void>
-        signal_add_new(void)                                    throw ()
+        sigc::signal<void>
+        signalAddNew(void)                                      throw ()
         {
-            return plusButton->signal_clicked();
+            return signalAddNewObject;
         }
 };
 

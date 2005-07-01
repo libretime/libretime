@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/WidgetFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ class ZebraTreeView;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.24 $
+ *  @version $Revision: 1.25 $
  */
 class WidgetFactory :
                         virtual public Configurable
@@ -106,7 +106,7 @@ class WidgetFactory :
         /**
          *  The types of available image buttons.
          */
-        typedef enum { deleteButton, plusButton,
+        typedef enum { deleteButton, plusButton, minusButton,
                        smallPlayButton, smallPauseButton, smallStopButton,
                        hugePlayButton, 
                        cuePlayButton, cueStopButton,

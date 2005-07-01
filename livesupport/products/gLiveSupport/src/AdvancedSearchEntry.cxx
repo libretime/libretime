@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchEntry.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -70,7 +70,7 @@ AdvancedSearchEntry :: AdvancedSearchEntry(
                                                                 getBundle() ));
     pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
 
-    searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
+    searchOptionsBox->signalAddNew().connect(sigc::mem_fun(*this, 
                                     &AdvancedSearchEntry::onAddNewCondition ));
 }
 
@@ -87,8 +87,6 @@ AdvancedSearchEntry :: onAddNewCondition(void)                      throw ()
                                                        getBundle() ));
     pack_start(*searchOptionsBox, Gtk::PACK_SHRINK, 5);
 
-    searchOptionsBox->signal_add_new().connect(sigc::mem_fun(*this, 
-                                    &AdvancedSearchEntry::onAddNewCondition ));
     searchOptionsBox->show_all_children();
     searchOptionsBox->show();
 }

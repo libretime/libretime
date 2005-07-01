@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AdvancedSearchItem.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,14 +88,16 @@ AdvancedSearchItem :: AdvancedSearchItem(
     valueEntry = Gtk::manage(wf->createEntryBin());
     pack_start(*valueEntry,     Gtk::PACK_EXPAND_WIDGET, 5);
     
-    plusButton = Gtk::manage(wf->createButton(WidgetFactory::plusButton));
-    pack_start(*plusButton,     Gtk::PACK_SHRINK, 5);
-    
-    if (!isFirst) {
-        closeButton = Gtk::manage(wf->createButton(WidgetFactory::deleteButton));
+    if (isFirst) {
+        plusButton = Gtk::manage(wf->createButton(WidgetFactory::plusButton));
+        pack_start(*plusButton, Gtk::PACK_SHRINK, 5);
+        plusButton->signal_clicked().connect(sigc::mem_fun(*this, 
+                                    &AdvancedSearchItem::onPlusButtonClicked ));
+    } else {
+        closeButton = Gtk::manage(wf->createButton(WidgetFactory::minusButton));
         closeButton->signal_clicked().connect(sigc::mem_fun(*this, 
-                                            &AdvancedSearchItem::destroy_ ));
-        pack_start(*closeButton,    Gtk::PACK_SHRINK, 5);
+                                    &AdvancedSearchItem::destroy_ ));
+        pack_start(*closeButton, Gtk::PACK_SHRINK, 5);
     }
 }
 
