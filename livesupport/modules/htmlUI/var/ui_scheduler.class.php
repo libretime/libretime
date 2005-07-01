@@ -26,7 +26,7 @@ class uiScheduler extends uiCalendar
 
         $this->uiCalendar();
         $this->initXmlRpc();
-        
+
         $this->startDaemon();
     }
 
@@ -45,28 +45,28 @@ class uiScheduler extends uiCalendar
 
     function startDaemon($msg=FALSE)
     {
-    	if ($this->testDaemon($msg) === TRUE)
-    		return TRUE;
-    		
+        if ($this->testDaemon($msg) === TRUE)
+            return TRUE;
+
         exec(UI_SCHEDULER_DAEMON_CMD);
         sleep(5);
-		
+
         if ($this->testDaemon($msg)===FALSE) {
-        	if ($msg) $this->Base->_retMsg('Scheduler did not start. Check setting of "UI_SCHEDULER_DAEMON_CMD" in ui_conf.php. File "/tmp/scheduler.log" could be helpful.');
-        	return FALSE;
+            if ($msg) $this->Base->_retMsg('Scheduler did not start. Check setting of "UI_SCHEDULER_DAEMON_CMD" in ui_conf.php. File "/tmp/scheduler.log" could be helpful.');
+            return FALSE;
         }
     }
-    
+
     function testDaemon($msg=FALSE)
     {
-    	exec('ps -A', $output);
+        exec('ps -A', $output);
         foreach ($output as $l) {
             if (preg_match("/ ".UI_SCHEDULER_DAEMON_NAME."$/", $l)) {
                 if ($msg) $this->Base->_retMsg('Scheduler is running.');
                 return TRUE;
             }
         }
-        
+
         return FALSE;
     }
 
@@ -383,8 +383,8 @@ class uiScheduler extends uiCalendar
 
         if (!$clip['gunid']) return FALSE;
 
-        list($duration['h'], $duration['m'], $duration['s'])    = explode(':', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION));
-        list($elapsed['h'],  $elapsed['m'],  $elapsed['s'])     = explode(':', $clip['elapsed']);
+        list($duration['h'],  $duration['m'],  $duration['s'])  = explode(':', $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_DURATION));
+        list($elapsed['h'],   $elapsed['m'],   $elapsed['s'])   = explode(':', $clip['elapsed']);
         list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
 
         return array(
@@ -392,7 +392,9 @@ class uiScheduler extends uiCalendar
                 'duration'  => $duration,
                 'elapsed'   => $elapsed,
                 'remaining' => $remaining,
-                'percentage'=> 100 * $this->Base->gb->_plTimeToSecs($clip['elapsed']) / ( $this->Base->gb->_plTimeToSecs($clip['elapsed']) + $this->Base->gb->_plTimeToSecs($clip['remaining']))
+                'percentage'=> $this->Base->gb->_plTimeToSecs($clip['elapsed'])
+                                    ? 100 * $this->Base->gb->_plTimeToSecs($clip['elapsed']) / ( $this->Base->gb->_plTimeToSecs($clip['elapsed']) + $this->Base->gb->_plTimeToSecs($clip['remaining']))
+                                    : 100
                );
     }
 
