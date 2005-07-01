@@ -140,9 +140,7 @@
 
     <outputPlayer>
         <audioPlayer>
-            <helixPlayer dllPath     = "../../usr/lib/helix"
-                         audioDevice = "/dev/dsp"
-            />
+            <gstreamerPlayer audioDevice = "plughw:0,0" />
         </audioPlayer>
     </outputPlayer>
 

@@ -78,13 +78,17 @@
 <!ELEMENT outputPlayer  (audioPlayer) >
 <!ELEMENT cuePlayer     (audioPlayer) >
 
-<!ELEMENT audioPlayer   (helixPlayer) >
+<!ELEMENT audioPlayer   (helixPlayer|
+                         gstreamerPlayer) >
 
 <!ELEMENT helixPlayer   EMPTY >
-<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+<!ATTLIST helixPlayer   dllPath              CDATA     #REQUIRED >
 <!ATTLIST helixPlayer   audioDevice          CDATA     #IMPLIED  >
 <!ATTLIST helixPlayer   audioStreamTimeout   NMTOKEN   #IMPLIED >
-<!ATTLIST helixPlayer   fadeLookAheatTime    NMTOKEN   #IMPLIED >
+<!ATTLIST helixPlayer   fadeLookAheadTime    NMTOKEN   #IMPLIED >
+
+<!ELEMENT gstreamerPlayer   EMPTY >
+<!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
 
 <!ELEMENT metadataTypeContainer (metadataType+) >
 
@@ -136,20 +140,16 @@
 
     <outputPlayer>
         <audioPlayer>
-            <helixPlayer dllPath = "ls_install_dir/lib/helix"
-                         audioDevice = "ls_output_dsp"
-            />
+            <gstreamerPlayer audioDevice = "ls_output_dsp" />
         </audioPlayer>
     </outputPlayer>
 
     <cuePlayer>
         <audioPlayer>
-            <helixPlayer dllPath = "ls_install_dir/lib/helix"
-                         audioDevice = "ls_cue_dsp"
-            />
+            <gstreamerPlayer audioDevice = "ls_cue_dsp" />
         </audioPlayer>
     </cuePlayer>
-    
+
     <stationLogo    path="var/stationLogo.png" />
 
     <metadataTypeContainer>

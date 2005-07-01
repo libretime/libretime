@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.54 $
+    Version  : $Revision: 1.55 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -767,7 +767,8 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
             case Playable::PlaylistType:
                 outputItemPlayingNow = storage->acquirePlaylist(sessionId, 
                                                         playable->getId());
-                outputPlayer->openAndStart(outputItemPlayingNow->getPlaylist());
+                outputPlayer->open(*outputItemPlayingNow->getUri());
+                outputPlayer->start();
                 break;
     
             default:        // this never happens
@@ -904,7 +905,6 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
                 cueItemPlayingNow = storage->acquirePlaylist(sessionId, 
                                                              playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri());
-std::cerr << "uri: " << *cueItemPlayingNow->getUri() << ".\n";
                 cuePlayer->start();
                 break;
     
