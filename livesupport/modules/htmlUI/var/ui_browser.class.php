@@ -375,6 +375,11 @@ class uiBrowser extends uiBase {
      */
     function testStream($url)
     {
+        touch(UI_TESTSTREAM_MU3_TMP);
+        $handle = fopen(UI_TESTSTREAM_MU3_TMP, "w");
+        fwrite($handle, $url);
+        fclose($handle);
+
         $parse = parse_url($url);
         $host   = $parse["host"];
         $port   = $parse["port"] ? $parse["port"] : 80;
@@ -394,7 +399,7 @@ class uiBrowser extends uiBase {
                 if ($type = stristr($val, "content-type:")) {
                     $type = explode(':', $type);
 
-                    foreach ($this->config['stream_types'] as $t) {    echo $t;
+                    foreach ($this->config['stream_types'] as $t) {
                         if (preg_match('/'.str_replace('/', '\/', $t).'/i', $type[1])) {
                             $match = TRUE;
                             break;

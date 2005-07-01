@@ -1,4 +1,7 @@
 <?php
+define('UI_VERSION',                    'LiveSupport 1.0 rc');
+define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
+
 ## Scheduler
 define('UI_SCHEDULER_DAEMON_CMD',       'make -C /var/www/livesupport/products/scheduler/ run >/tmp/scheduler.log 2>&1 &'); ## adjust the path here
 define('UI_SCHEDULER_DAEMON_NAME',      'scheduler');                      ## this is just name of scheduler process to grep in process list for it

@@ -263,7 +263,7 @@ switch($_REQUEST['act']){
     break;
 
     default:
-        if ($uiHandler->userid) $uiHandler->_retMsg("Unknown method: $1", $_REQUEST["act"]);
+        if ($uiHandler->userid) $uiHandler->_retMsg("Unknown method: $1.\\nSee Help for more information.", $_REQUEST["act"]);
         $uiHandler->redirUrl = UI_BROWSER;
         if ($_REQUEST['is_popup'])
              $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';

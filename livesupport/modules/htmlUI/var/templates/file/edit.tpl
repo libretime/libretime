@@ -1,4 +1,7 @@
 <div class="content">
+{if $_REQUEST.act == addFileMData || $_REQUEST.act == addWebstreamMData || $_REQUEST.act == editItem}
+    {include file="file/tabswitch.tpl"}
+{/if}
     <div class="container_elements" style="width: 607px;">
         <h1>
         {if $_REQUEST.act == addFileData || $_REQUEST.act == addFileMData || $_REQUEST.act == addWebstreamData || $_REQUEST.act == addWebstreamMData}
@@ -34,11 +37,6 @@
         <div id="div_MData">
             {include file="file/metadataform.tpl"}
         </div>
-
-        {if $editItem.id}
-            <input type="button" class="button" onClick="showData()"  value="##Stream Data##">
-            <input type="button" class="button" onClick="showMData()" value="##Description##">
-        {/if}
     {/if}
 
     {if $editItem.type == 'playlist'}
@@ -48,28 +46,15 @@
     </div>
 </div>
 
-
-<script>
-
-function showData()
-{literal}
-{
-    document.getElementById('div_Data').style.display   = 'inherit';
-    document.getElementById('div_MData').style.display  = 'none';
-}
-
-function showMData()
-{
-    document.getElementById('div_MData').style.display  = 'inherit';
-    document.getElementById('div_Data').style.display   = 'none';
-}
-{/literal}
+<script language="javascript">
 
 {if $_REQUEST.act == addFileData || $_REQUEST.act == addWebstreamData}
     document.getElementById('div_MData').style.display   = 'none';
 {else}
     document.getElementById('div_Data').style.display  = 'none';
+    showMain();
 {/if}
+
 </script>
 
 

@@ -100,6 +100,10 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->assign('data', $uiBrowser->testStream($_REQUEST['url']));
                 $Smarty->display('popup/testStream.tpl');
             break;
+
+            case "help":
+                $Smarty->display('popup/help.tpl');
+            break;
         }
     }
     die();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
-	<status />
 	<Id>en_US</Id>
 	<item>
 		<key>Stream Data</key>
@@ -120,7 +119,7 @@
 	</item>
 	<item>
 		<key>$1 must be $2</key>
-		<value />
+		<value>$1 must be $2.</value>
 	</item>
 	<item>
 		<key>+</key>
@@ -289,10 +288,6 @@
 	<item>
 		<key>$1 uses an unsupported file type.</key>
 		<value />
-	</item>
-	<item>
-		<key>$1 must be $2</key>
-		<value>$1 must be $2.</value>
 	</item>
 	<item>
 		<key>Uploaded file $1 is bigger than LiveSupports system setting.</key>
@@ -848,7 +843,7 @@
 	</item>
 	<item>
 		<key>New empty Playlist</key>
-		<value>Create new empty playlist</value>
+		<value>New Playlist</value>
 	</item>
 	<item>
 		<key>No Entry</key>

@@ -21,8 +21,8 @@ function tra($input)
 {
     ## initialize at first call of this function ###
 
-    #$GS =& $_SESSION['GS'];
-    static $GS;
+    $GS =& $_SESSION['GS'];
+    #static $GS;
     global $uiBase;
 
     if ($uiBase->langid && !is_array($GS)) {

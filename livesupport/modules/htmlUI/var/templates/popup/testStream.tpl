@@ -14,17 +14,18 @@
     <div>
     {if $data.type.valid === true}
         {tra str='Stream is wanted type <font color="green">$1</font>.' 1=$data.type.type}
+
     {else}
         {tra str='Stream has wrong content type <font color="red">$1</font>.' 1=$data.type.type}
     {/if}
     </div>
 
-    <br><br>
-
+    <p><input type="button" class="button" value="##Listen##" onclick="listenStream()"></p>
+    <br>
+    
     <div>
     {if $data.header}
-        Returned connection header:
-        <pre>{$data.header}</pre>
+        Returned connection header:<pre>{$data.header}</pre>
     {/if}
     </div>
 
@@ -32,6 +33,17 @@
      <div>{tra str='Connection to $1 port $2 $3' 1=$data.host 2=$data.port 3='<font color="red">failed</font>'}</div>
 {/if}
 
+<script language="javascript">
+{literal}
+function listenStream()
+{
+{/literal}
+    testStreamWin = window.open("{$UI_TESTSTREAM_MU3_TMP}", "Test Stream", "width=100, height=100");
+    setTimeout("testStreamWin.close()", 5000);
+    {literal}
+}
+{/literal}
+</script>
 
 </body>
 </html>

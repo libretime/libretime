@@ -24,8 +24,10 @@ $Smarty->load_filter('output', 'localizer');
 
 
 ## some basic things ################################################
-$Smarty->assign('UI_BROWSER', UI_BROWSER);
-$Smarty->assign('UI_HANDLER', UI_HANDLER);
+foreach (get_defined_constants() as $k=>$v) {
+    $Smarty->assign($k, $v);
+}
+
 $Smarty->assign('ACT',    $_REQUEST['act']);
 $Smarty->assign('CONFIG', $config);
 $Smarty->assign('START',  array(
