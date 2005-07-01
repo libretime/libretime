@@ -3,8 +3,8 @@
             <ul id="nav">
                 <li><a>##Add Audio##</a>
                     <ul>
-                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData"     >##File##</a></li>
-                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Stream##</a></li>
+                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addFileData"     >##Audioclip##</a></li>
+                        <li><a href="{$UI_BROWSER}?folderId={$START.fid}&act=addWebstreamData">##Webstream##</a></li>
                     </ul>
                 </li>
                 <li><a>##Media Library##</a>

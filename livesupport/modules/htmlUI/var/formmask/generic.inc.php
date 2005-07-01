@@ -369,7 +369,7 @@ $ui_fmask = array(
             'label'     => 'File type',
             'options'   => array(
                             UI_FILETYPE_ANY       => '*',
-                            UI_FILETYPE_AUDIOCLIP => 'Audio Clip',
+                            UI_FILETYPE_AUDIOCLIP => 'Audioclip',
                             #UI_FILETYPE_WEBSTREAM => 'Web Stream',
                             UI_FILETYPE_PLAYLIST  => 'Playlist'
                            ),
@@ -486,7 +486,7 @@ $ui_fmask = array(
             'label'     => 'File Type',
             'options'   => array(
                             UI_FILETYPE_ANY       => '*',
-                            UI_FILETYPE_AUDIOCLIP => 'Audio Clip',
+                            UI_FILETYPE_AUDIOCLIP => 'Audioclip',
                             #UI_FILETYPE_WEBSTREAM => 'Web Stream',
                             UI_FILETYPE_PLAYLIST  => 'Playlist'
                            ),
