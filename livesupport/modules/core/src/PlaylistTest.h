@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *  @see Playlist
  */
 class PlaylistTest : public CPPUNIT_NS::TestFixture
@@ -70,6 +70,7 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(fadeInfoTest);
     CPPUNIT_TEST(conversionTest);
     CPPUNIT_TEST(marshallingTest);
+    CPPUNIT_TEST(addPlayableTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -128,6 +129,14 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         marshallingTest(void)                   throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the addPlayable() method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        addPlayableTest(void)                   throw (CPPUNIT_NS::Exception);
 
 
     public:

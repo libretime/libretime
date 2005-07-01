@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -439,13 +439,41 @@ Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
 
 
 /*------------------------------------------------------------------------------
+ *  Add a new audio clip or sub-playlist to the playlist.
+ *----------------------------------------------------------------------------*/
+Ptr<UniqueId>::Ref
+Playlist::addPlayable(Ptr<Playable>::Ref       playable,
+                      Ptr<time_duration>::Ref  relativeOffset,
+                      Ptr<FadeInfo>::Ref       fadeInfo)
+                                                throw (std::invalid_argument)
+{
+    Ptr<AudioClip>::Ref     audioClip;
+    Ptr<Playlist>::Ref      playlist;
+
+    switch (playable->getType()) {
+        case Playable::AudioClipType :
+             audioClip = boost::dynamic_pointer_cast<AudioClip>(playable);
+            return addAudioClip(audioClip, relativeOffset, fadeInfo);
+
+        case Playable::PlaylistType :
+             playlist = boost::dynamic_pointer_cast<Playlist>(playable);
+            return addPlaylist(playlist, relativeOffset, fadeInfo);
+
+        default :
+            throw std::invalid_argument("Playable object is neither AudioClip"
+                                        " nor Playlist?!");
+    }
+}
+
+
+/*------------------------------------------------------------------------------
  *  Add a new audio clip to the playlist.
  *----------------------------------------------------------------------------*/
 Ptr<UniqueId>::Ref
 Playlist::addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                        Ptr<time_duration>::Ref  relativeOffset,
                        Ptr<FadeInfo>::Ref       fadeInfo)
-                                                throw (std::invalid_argument)
+                                                throw ()
 {
     Ptr<PlaylistElement>::Ref   playlistElement(new PlaylistElement(
                                     relativeOffset, audioClip, fadeInfo));
@@ -469,7 +497,7 @@ Ptr<UniqueId>::Ref
 Playlist::addPlaylist(Ptr<Playlist>::Ref       playlist,
                       Ptr<time_duration>::Ref  relativeOffset,
                       Ptr<FadeInfo>::Ref       fadeInfo)
-                                                throw (std::invalid_argument)
+                                                throw ()
 {
     Ptr<PlaylistElement>::Ref  playlistElement(new PlaylistElement(
                                    relativeOffset, playlist, fadeInfo));

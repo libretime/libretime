@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -381,21 +381,6 @@ void
 PlaylistTest :: marshallingTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<Playlist>::Ref     playlist(new Playlist());
-    try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                                new xmlpp::DomParser(configFileName, false));
-        const xmlpp::Document * document = parser->get_document();
-        const xmlpp::Element  * root     = document->get_root_node();
-
-        playlist->configure(*root);
-
-    } catch (std::invalid_argument &e) {
-        CPPUNIT_FAIL(e.what());
-    } catch (xmlpp::exception &e) {
-        CPPUNIT_FAIL(e.what());
-    }
-
     XmlRpc::XmlRpcValue     xmlRpcValue = *playlist;
     CPPUNIT_ASSERT(xmlRpcValue.hasMember("playlist"));
 
@@ -407,5 +392,48 @@ PlaylistTest :: marshallingTest(void)
                                        == *otherPlaylist->getTitle());
     CPPUNIT_ASSERT(*playlist->getPlaylength() 
                                        == *otherPlaylist->getPlaylength());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the addPlayable() method
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: addPlayableTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<Playlist>::Ref     newPlaylist(new Playlist(*playlist));
+                                                // make a copy
+
+    Ptr<UniqueId>::Ref       clipId(new UniqueId("20001"));
+    Ptr<time_duration>::Ref  clipLength(new time_duration(0,0,10,0));
+    Ptr<AudioClip>::Ref      audioClip(new AudioClip(clipId, clipLength));
+
+    Ptr<time_duration>::Ref  firstOffset(new time_duration(0,0,30,0));
+                                                // hour, min, sec, frac_sec
+    try {
+        newPlaylist->addPlayable(audioClip, firstOffset);
+    } catch (std::invalid_argument &e) {
+        string eMsg = "addPlayable returned with error: ";
+        eMsg += e.what(); 
+        CPPUNIT_FAIL(eMsg);
+    }
+
+    CPPUNIT_ASSERT(newPlaylist->getPlaylength());
+    CPPUNIT_ASSERT(*newPlaylist->getPlaylength() == *firstOffset
+                                                  + *audioClip->getPlaylength());
+
+    Ptr<time_duration>::Ref  secondOffset(new time_duration(0,0,40,0));
+    try {
+        newPlaylist->addPlayable(playlist, secondOffset);
+    } catch (std::invalid_argument &e) {
+        string eMsg = "addPlayable returned with error: ";
+        eMsg += e.what(); 
+        CPPUNIT_FAIL(eMsg);
+    }
+
+    CPPUNIT_ASSERT(newPlaylist->getPlaylength());
+    CPPUNIT_ASSERT(*newPlaylist->getPlaylength() == *secondOffset
+                                                  + *playlist->getPlaylength());
 }
 

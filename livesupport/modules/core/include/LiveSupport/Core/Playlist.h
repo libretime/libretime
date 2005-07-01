@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.36 $
+    Version  : $Revision: 1.37 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.36 $
+ *  @version $Revision: 1.37 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -574,6 +574,27 @@ class Playlist : public Configurable,
         }
 
         /**
+         *  Add a new audio clip or sub-playlist to the playlist.
+         *
+         *  Checks the type of the playlist, and calls either addAudioClip()
+         *  or addPlaylist().
+         *
+         *  @param audioClip the new playable item to be added
+         *  @param relativeOffset the start of the playable item, relative
+         *             to the start of the playlist
+         *  @param fadeInfo the fade in / fade out info (optional)
+         *  @return the ID of the new PlaylistElement
+         *  @exception std::invalid_argument if playable is neither an AudioClip
+         *                                   nor a Playlist
+         */
+        Ptr<UniqueId>::Ref
+        addPlayable(Ptr<Playable>::Ref       playable,
+                    Ptr<time_duration>::Ref  relativeOffset,
+                    Ptr<FadeInfo>::Ref       fadeInfo
+                                              = Ptr<FadeInfo>::Ref())
+                                                throw (std::invalid_argument);
+
+        /**
          *  Add a new audio clip to the playlist.
          *
          *  The playlist is not checked for gaps (use valid() for that),
@@ -585,15 +606,13 @@ class Playlist : public Configurable,
          *             to the start of the playlist
          *  @param fadeInfo the fade in / fade out info (optional)
          *  @return the ID of the new PlaylistElement
-         *  @exception std::invalid_argument if the playlist already contains
-         *             a playlist element with the same relative offset
          */
         Ptr<UniqueId>::Ref
         addAudioClip(Ptr<AudioClip>::Ref      audioClip,
                      Ptr<time_duration>::Ref  relativeOffset,
                      Ptr<FadeInfo>::Ref       fadeInfo
                                               = Ptr<FadeInfo>::Ref())
-                                                throw (std::invalid_argument);
+                                                throw ();
 
         /**
          *  Add a new sub-playlist to the playlist.
@@ -607,15 +626,13 @@ class Playlist : public Configurable,
          *             to the start of the containing playlist
          *  @param fadeInfo the fade in / fade out info (optional)
          *  @return the ID of the new PlaylistElement
-         *  @exception std::invalid_argument if the playlist already contains
-         *             a playlist element with the same relative offset
          */
         Ptr<UniqueId>::Ref
         addPlaylist(Ptr<Playlist>::Ref       playlist,
                     Ptr<time_duration>::Ref  relativeOffset,
                     Ptr<FadeInfo>::Ref       fadeInfo
                                               = Ptr<FadeInfo>::Ref())
-                                                throw (std::invalid_argument);
+                                                throw ();
 
         /**
          *  Set the fade in / fade out info for a playlist element.
