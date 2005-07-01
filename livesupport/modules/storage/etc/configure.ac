@@ -20,8 +20,8 @@ dnl along with LiveSupport; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
-dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.4 $
+dnl Author   : $Author: fgerlits $
+dnl Version  : $Revision: 1.5 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,14 +35,14 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(Storage, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.4 $)
+AC_REVISION($Revision: 1.5 $)
 
 AC_CONFIG_SRCDIR(../src/StorageClientFactory.cxx)
 
 AC_CONFIG_HEADERS(configure.h)
 AC_PROG_CXX()
 
-AC_CHECK_HEADERS(getopt.h)
+AC_CHECK_HEADERS(getopt.h sys/time.h time.h)
 
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.6.0])
 AC_SUBST(LIBXMLPP_CFLAGS)

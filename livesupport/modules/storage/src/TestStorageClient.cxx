@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 #include <fstream>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/XmlRpcInvalidArgumentException.h"
 #include "LiveSupport/Core/XmlRpcIOException.h"
 #include "TestStorageClient.h"
@@ -468,17 +469,9 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
 
     while (it != oldPlaylist->end()) {
         Ptr<PlaylistElement>::Ref   plElement = it->second;
-        Ptr<FadeInfo>::Ref          fadeInfo = plElement->getFadeInfo();
-
-        Ptr<time_duration>::Ref 
-                relativeOffset      = plElement->getRelativeOffset();
-
-        long    offsetMilliseconds  = relativeOffset->total_milliseconds();
-        std::stringstream   offsetStringStream;
-        offsetStringStream << offsetMilliseconds / 1000l
-                           << '.'
-                           << offsetMilliseconds % 1000
-                           << 's';
+        Ptr<time_duration>::Ref     relativeOffset
+                                              = plElement->getRelativeOffset();
+        Ptr<FadeInfo>::Ref          fadeInfo  = plElement->getFadeInfo();
 
         Ptr<Playable>::Ref playable;
         switch (plElement->getType()) {
@@ -503,12 +496,83 @@ TestStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
                         = smilParNode->add_child(smilPlayableNodeName);
         smilPlayableNode->set_attribute(
                         smilPlayableUriAttrName, 
-                        *(playable->getUri()) );
+                        *playable->getUri() );
         smilPlayableNode->set_attribute(
                         smilRelativeOffsetAttrName, 
-                        offsetStringStream.str() );
-        ++it;
-        
+                        *TimeConversion::timeDurationToSmilString(
+                                                            relativeOffset ));
+
+        if (fadeInfo) {
+            Ptr<time_duration>::Ref     fadeIn  = fadeInfo->getFadeIn();
+            Ptr<time_duration>::Ref     fadeOut = fadeInfo->getFadeOut();
+
+            if (fadeIn) {
+                xmlpp::Element* smilFadeInNode
+                                = smilPlayableNode->add_child(
+                                                        smilAnimateNodeName);
+                smilFadeInNode->set_attribute(
+                                    smilAnimateNameAttrName,
+                                    smilAnimateNameAttrValue );
+                smilFadeInNode->set_attribute(
+                                    smilAnimateFromAttrName,
+                                    "0%" );
+                smilFadeInNode->set_attribute(
+                                    smilAnimateToAttrName,
+                                    "100%" );
+                smilFadeInNode->set_attribute(
+                                    smilAnimateCalcModeAttrName,
+                                    smilAnimateCalcModeAttrValue );
+                smilFadeInNode->set_attribute(
+                                    smilAnimateBeginAttrName,
+                                    "0s" );
+                smilFadeInNode->set_attribute(
+                                    smilAnimateEndAttrName,
+                                    *TimeConversion::timeDurationToSmilString(
+                                                                fadeIn ));
+                smilFadeInNode->set_attribute(
+                                    smilAnimateCalcModeAttrName,
+                                    smilAnimateCalcModeAttrValue );
+                smilFadeInNode->set_attribute(
+                                    smilAnimateFillAttrName,
+                                    smilAnimateFillAttrValue );
+            }
+
+            if (fadeOut) {
+                xmlpp::Element* smilFadeOutNode
+                                = smilPlayableNode->add_child(
+                                                        smilAnimateNodeName);
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateNameAttrName,
+                                    smilAnimateNameAttrValue );
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateFromAttrName,
+                                    "100%" );
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateToAttrName,
+                                    "0%" );
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateCalcModeAttrName,
+                                    smilAnimateCalcModeAttrValue );
+                Ptr<time_duration>::Ref  playlength = playable->getPlaylength();
+                Ptr<time_duration>::Ref  fadeBegin(new time_duration(
+                                                    *playlength - *fadeOut ));
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateBeginAttrName,
+                                    *TimeConversion::timeDurationToSmilString(
+                                                                fadeBegin ));
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateEndAttrName,
+                                    *TimeConversion::timeDurationToSmilString(
+                                                                playlength ));
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateCalcModeAttrName,
+                                    smilAnimateCalcModeAttrValue );
+                smilFadeOutNode->set_attribute(
+                                    smilAnimateFillAttrName,
+                                    smilAnimateFillAttrValue );
+            }
+        }
+        ++it;        
     }
 
     std::stringstream fileName;
