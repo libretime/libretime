@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace PlaylistExecutor {
  *  Unit test for the GstreamerPlayer class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *  @see GstreamerPlayer
  */
 class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
@@ -67,8 +67,8 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simplePlayTest);
     CPPUNIT_TEST(simpleSmilTest);
-//    CPPUNIT_TEST(secondSmilTest);
-//    CPPUNIT_TEST(animatedSmilTest);
+    CPPUNIT_TEST(secondSmilTest);
+    CPPUNIT_TEST(animatedSmilTest);
     CPPUNIT_TEST(checkErrorConditions);
     CPPUNIT_TEST(eventListenerAttachTest);
     CPPUNIT_TEST(eventListenerTest);
