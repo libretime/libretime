@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -211,5 +211,21 @@ TimeConversionTest :: sleepTest(void)
     end = TimeConversion::now();
 
     CPPUNIT_ASSERT((*end - *start) >= *duration);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the timeDurationToStringMilliseconds() function
+ *----------------------------------------------------------------------------*/
+void
+TimeConversionTest :: durationToStringTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref duration(new time_duration(1,2,3,4000));
+
+    Ptr<std::string>::Ref   durationString
+                            = TimeConversion::timeDurationToStringMilliseconds(
+                                                                    duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("3723.004s"), *durationString);
 }
 
