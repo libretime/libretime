@@ -12,7 +12,7 @@
                          fill          = "freeze"
                 />
             </audio>
-            <audio src="file:var/test10002.mp3" begin="6.23s"/> 
+            <audio src="file:var/test10002.mp3" begin="6.23s"> 
                 <animate attributeName = "soundLevel"
                          from          = "0%"
                          to            = "100%"
