@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.10 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -88,6 +88,7 @@ patch -p1 < ${etcdir}/typefind-smil.patch
 # resulting in missing linking symbols
 ./configure --disable-spc \
             --disable-gconf --disable-gconftool \
+            --disable-opengl \
             --prefix=${installdir} \
             --with-pkg-config-path=${pkg_config_path}
 make install || exit 1
