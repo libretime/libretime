@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -170,7 +170,7 @@ gtkmm_tmpdir=$tools_tmpdir/gtkmm
 
 gstreamer_dir=$toolsdir/gstreamer
 gstreamer_version=gstreamer-0.8.10
-gstreamer_tmpdir=$toolsdir/gstreamer
+gstreamer_tmpdir=$tools_tmpdir/gstreamer
 
 icu_dir=$toolsdir/icu
 icu_version=icu-3.0
