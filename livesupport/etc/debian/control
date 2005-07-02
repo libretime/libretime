@@ -23,7 +23,13 @@ Build-Depends: debhelper (>= 4.0.0),
                libpng12-dev,
                libjpeg62-dev,
                libssl-dev,
-               libxml2-dev
+               libxml2-dev,
+               libpopt-dev,
+               libasound2-dev,
+               libid3tag0-dev,
+               libmad0-dev,
+               libogg-dev,
+               libvorbis-dev
 Standards-Version: 3.6.1
 
 Package: livesupport-libs
@@ -35,7 +41,13 @@ Depends: ${shlibs:Depends},
          libpng12-0,
          libjpeg62,
          libssl0.9.7,
-         libxml2
+         libxml2,
+         libpopt0,
+         libasound2,
+         libid3tag0,
+         libmad0,
+         libogg0,
+         libvorbis0a
 Description: A radio program automation and support tool.
  This package contains the libraries used by LiveSupport.
 
