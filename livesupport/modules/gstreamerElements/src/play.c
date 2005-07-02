@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -110,10 +110,8 @@ main(int        argc,
     // iterate until playTo is reached
     while (gst_bin_iterate(GST_BIN(pipeline)));
 
-    /* FIXME: query the decoder, as for some reason, the sink will return
-     *        unreal numbers, when playing back mp3s only! */
     format = GST_FORMAT_TIME;
-    gst_element_query(decoder, GST_QUERY_POSITION, &format, &timePlayed);
+    gst_element_query(sink, GST_QUERY_POSITION, &format, &timePlayed);
 
     g_print("time played: %" G_GINT64_FORMAT " ns\n", timePlayed);
 
