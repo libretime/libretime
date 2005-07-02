@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -92,6 +92,7 @@ SWITCHER_LIB            	= livesupport_switcher
 SWITCHER_LIB_FILE       	= ${LIB_DIR}/lib${SWITCHER_LIB}.so
 
 TEST_RUNNER        = ${TMP_DIR}/testRunner
+PLAY               = ${TMP_DIR}/play
 
 DOXYGEN_CONFIG = ${ETC_DIR}/doxygen.config
 
@@ -154,6 +155,10 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
 TEST_RUNNER_LIBS = -l${GSTREAMER_ELEMENTS_LIB} -l${CORE_LIB} \
                    -lcppunit -ldl -lxmlrpc++
 
+PLAY_OBJS = ${TMP_DIR}/play.o
+
+PLAY_LIBS = -l${GSTREAMER_ELEMENTS_LIB} -l${CORE_LIB} 
+
 
 #-------------------------------------------------------------------------------
 #   Targets
@@ -165,6 +170,7 @@ all: dir_setup ${GSTREAMER_ELEMENTS_LIB_FILE} \
                ${MINIMAL_AUDIO_SMIL_LIB_FILE} \
                ${PARTIAL_PLAY_LIB_FILE} \
                ${SWITCHER_LIB_FILE} \
+			   ${PLAY} \
      gst_register
 
 dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
@@ -183,6 +189,7 @@ clean:
 	${RM} ${PARTIAL_PLAY_LIB_OBJS} ${PARTIAL_PLAY_LIB_FILE}
 	${RM} ${SWITCHER_LIB_OBJS} ${SWITCHER_LIB_FILE}
 	${RM} ${TEST_RUNNER_OBJS} ${TEST_RUNNER_RES} ${TEST_RUNNER}
+	${RM} ${PLAY_OBJS} ${PLAY}
 	${RM} ${TMP_DIR}/*.bb ${TMP_DIR}/*.bbg ${TMP_DIR}/*.da ${TMP_DIR}/*.info
 
 docclean:
@@ -230,6 +237,9 @@ ${DOXYGEN_DIR}:
 ${TEST_RUNNER}: ${CORE_LIB_FILE} ${GSTREAMER_ELEMENTS_LIB_FILE} \
                 ${TEST_RUNNER_OBJS}
 	${CXX} ${LDFLAGS} -o $@ ${TEST_RUNNER_OBJS} ${TEST_RUNNER_LIBS}
+
+${PLAY}: ${CORE_LIB_FILE} ${GSTREAMER_ELEMENTS_LIB_FILE} ${PLAY_OBJS}
+	${CXX} ${LDFLAGS} -o $@ ${PLAY_OBJS} ${PLAY_LIBS}
 
 ${CORE_LIB_FILE}:
 	${MAKE} -C ${CORE_DIR}
