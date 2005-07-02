@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@
  *  some silence and then some specified part of the source.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 
 #ifdef __cplusplus
@@ -67,10 +67,12 @@ struct _LivesupportSeekPack {
     gchar         * name;
 
     GstElement    * silence;
-    GstElement    * audioconvert;
+    GstElement    * silenceConvert;
 
     GstElement    * source;
     GstElement    * decoder;
+    GstElement    * decoderConvert;
+    GstElement    * decoderScale;
 
     GstElement    * switcher;
     GstElement    * bin;

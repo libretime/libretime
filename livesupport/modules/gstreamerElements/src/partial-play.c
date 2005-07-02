@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ GST_PLUGIN_DEFINE (
     "partialplay",
     "Partial play",
     plugin_init,
-    "$Revision: 1.3 $",
+    "$Revision: 1.4 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -232,6 +232,7 @@ livesupport_partial_play_change_state(GstElement * element)
 
     switch (GST_STATE_TRANSITION (element)) {
         case GST_STATE_NULL_TO_READY:
+            livesupport_seek_pack_set_state(pplay->seekPack, GST_STATE_READY);
             break;
 
         case GST_STATE_READY_TO_PAUSED:
@@ -269,6 +270,7 @@ livesupport_partial_play_change_state(GstElement * element)
             break;
             
         case GST_STATE_READY_TO_NULL:
+            livesupport_seek_pack_set_state(pplay->seekPack, GST_STATE_NULL);
             break;
 
         default:

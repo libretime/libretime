@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -118,6 +118,13 @@ static const char *         fadeInOutSmilFile = "var/fadeInOut.smil";
  */
 static const char *         fadeInOutParallelSmilFile =
                                                 "var/fadeInOutParallel.smil";
+
+/**
+ *  A SMIL file containing several audio elements in a par, that in effect
+ *  play sequentially.
+ */
+static const char *         sequentialSmilFile =
+                                                "var/sequentialSmil.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -374,5 +381,22 @@ MinimalAudioSmilTest :: fadeInOutParallelTest(void)
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A sequential par element test.
+ *----------------------------------------------------------------------------*/
+void
+MinimalAudioSmilTest :: sequentialSmilTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playSmilFile(sequentialSmilFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 34.7 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 35.0 * GST_SECOND);
 }
 

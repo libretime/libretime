@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,13 +117,16 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
 
     g_snprintf(str, len, "%s_seekPackSilence", uniqueName);
     seekPack->silence   = gst_element_factory_make("silence", str);
-    g_snprintf(str, len, "%s_seekPackAudioConvert", uniqueName);
-    seekPack->audioconvert = gst_element_factory_make("audioconvert", str);
+    g_snprintf(str, len, "%s_seekPackSilenceAudioConvert", uniqueName);
+    seekPack->silenceConvert = gst_element_factory_make("audioconvert",
+                                                             str);
 
     seekPack->source    = NULL;
 
     /* generate decoder later, by autoplugging */
-    seekPack->decoder   = 0;
+    seekPack->decoder        = 0;
+    seekPack->decoderConvert = 0;
+    seekPack->decoderScale   = 0;
     g_snprintf(str, len, "%s_seekPackSwitcher", uniqueName);
     seekPack->switcher = gst_element_factory_make("switcher", str);
     g_snprintf(str, len, "%s_seekPackBin", uniqueName);
@@ -191,32 +194,41 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
     g_snprintf(name, len, "%s_seekPackDecoder", seekPack->name);
     seekPack->decoder = ls_gst_autoplug_plug_source(seekPack->source,
                                                     name);
+    g_snprintf(name, len, "%s_seekPackDecoderConvert", seekPack->name);
+    seekPack->decoderConvert = gst_element_factory_make("audioconvert", name);
+    g_snprintf(name, len, "%s_seekPackDecoderScale", seekPack->name);
+    seekPack->decoderScale = gst_element_factory_make("audioscale", name);
     g_free(name);
 
     /* link up the silence element with the switcher first */
     gst_element_link_many(seekPack->silence,
-                          seekPack->audioconvert,
+                          seekPack->silenceConvert,
                           seekPack->switcher,
                           NULL);
 
     if (seekPack->decoder) {
         /* seek on the decoder, and link it up with the switcher */
-        gst_element_link(seekPack->source, seekPack->decoder);
+        gst_element_link_many(seekPack->source, seekPack->decoder);
         livesupport_seek_pack_seek(seekPack);
-        gst_element_link(seekPack->decoder, seekPack->switcher);
     } else {
         /* just fake the content with silence,
          * if it could not be auto-plugged */
         seekPack->decoder = gst_element_factory_make("silence", "decoder");
-        gst_element_link(seekPack->decoder, seekPack->switcher);
     }
+    gst_element_link_many(seekPack->decoder,
+                          seekPack->decoderConvert,
+                          seekPack->decoderScale,
+                          seekPack->switcher,
+                          NULL);
 
     /* put all inside the bin, and link up a ghost pad to switch's src pad */
     gst_bin_add_many(GST_BIN(seekPack->bin),
                      seekPack->silence,
-                     seekPack->audioconvert,
+                     seekPack->silenceConvert,
                      seekPack->source,
                      seekPack->decoder,
+                     seekPack->decoderConvert,
+                     seekPack->decoderScale,
                      NULL);
 
     /* put the switcher last into the bin, and also link it as last
@@ -287,14 +299,26 @@ livesupport_seek_pack_set_state(LivesupportSeekPack   * seekPack,
 {
     /* FIXME: resetting the source from PLAYING state would make it lose
      *        it's seek position */
-    if (seekPack->audioconvert) {
-        gst_element_set_state(seekPack->audioconvert, state);
+    if (seekPack->silence) {
+        gst_element_set_state(seekPack->silence, state);
+    }
+    if (seekPack->silenceConvert) {
+        gst_element_set_state(seekPack->silenceConvert, state);
     }
     if (seekPack->decoder) {
         gst_element_set_state(seekPack->decoder, state);
     }
+    if (seekPack->decoderConvert) {
+        gst_element_set_state(seekPack->decoderConvert, state);
+    }
+    if (seekPack->decoderScale) {
+        gst_element_set_state(seekPack->decoderScale, state);
+    }
     if (seekPack->switcher) {
         gst_element_set_state(seekPack->switcher, state);
+    }
+    if (seekPack->bin) {
+        gst_element_set_state(seekPack->bin, state);
     }
 }
 

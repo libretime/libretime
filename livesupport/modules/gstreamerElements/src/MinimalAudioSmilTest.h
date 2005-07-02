@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/MinimalAudioSmilTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
 {
@@ -74,6 +74,7 @@ class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(soundAnimationParallelTest);
     CPPUNIT_TEST(fadeInOutTest);
     CPPUNIT_TEST(fadeInOutParallelTest);
+    CPPUNIT_TEST(sequentialSmilTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -181,6 +182,14 @@ class MinimalAudioSmilTest : public CPPUNIT_NS::TestFixture
          */
         void
         fadeInOutParallelTest(void)             throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A sequential par element test.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        sequentialSmilTest(void)                throw (CPPUNIT_NS::Exception);
 
 
     public:
