@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.13 $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -233,7 +233,7 @@ $installdir/bin/postInstallScheduler.sh --directory $installdir \
 $installdir/bin/postInstallGLiveSupport.sh --directory $installdir \
                                            --host $hostname \
                                            --port $http_port \
-                                           --scheduler-port $scheduler_port
+                                           --scheduler-port $scheduler_port \
     || exit 1;
 
 
