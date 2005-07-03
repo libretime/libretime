@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.5 $</li>
+  <li>Version: $Revision: 1.6 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/release.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -29,7 +29,8 @@ releases, they will remain similar.<br>
 The release process boils down to the following steps:<br>
 <ul>
   <li>getting LiveSupport sources</li>
-  <li>checking the distribution script<br>
+  <li>checking the distribution script</li>
+  <li>updating release version and changelog<br>
   </li>
   <li>creating release tarballs</li>
   <li>testing the tarballs</li>
@@ -70,6 +71,27 @@ from <code>Makefile</code> with <code>boost_version</code> from <code>bin/dist.s
 Make sure to check the versions for all the tools mentioned in these
 files. Also check that there are no tools missing from the distribution
 script that are mentioned in the master <code>Makefile</code>.<br>
+<h1>Updating release version and changelog</h1>
+Updating the release version and maintining a changelog helps people
+track the progress of the project. Also, building binary packages rely
+on this information, in particular debian packages won't build if there
+is a mismatch between the release version and the topmost entry in the
+debian changelog file.<br>
+<br>
+Curently, only the debian changelog keeps track of the changes and the
+version of LiveSupport. To update the changelog, edit <code>etc/debian/changelog</code>,
+by inserting a section onto the top of the file:<br>
+<br>
+<pre>livesupport (&lt;ls-version&gt;-1) unstable; urgency=low<br><br>  * Changes listed here<br><br> -- <code>Package Maintainer &lt;maintainer@foo.bar&gt;</code>  &lt;timestamp&gt;<br><br></pre>
+The timestamp above must be preceeded by two spaces, and must be an RFC
+2822 compliant date string, which is most easily produced by issuing
+the <code>date -R</code> command. Please note that the debian package
+manager is quite picky on the format of the changelog file. See <a
+ href="http://www.debian.org/doc/debian-policy/ch-source.html#s-dpkgchangelog">section
+4.4</a> of the Debian Policy Manual for more details.<br>
+<br>
+Don't forget to commit the changes made to the changelog into the CVS
+before proceeding.<br>
 <h1>Creating release tarballs<br>
 </h1>
 To create the release tarballs, invoke the distribution script <code>bin/dist.sh</code>,
