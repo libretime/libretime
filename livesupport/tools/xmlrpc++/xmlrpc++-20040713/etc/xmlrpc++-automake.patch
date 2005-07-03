@@ -102,7 +102,7 @@ diff -Naur xmlrpc++/autogen.sh xmlrpc++-automake/autogen.sh
 +# Run this to set up the build system: configure, makefiles, etc.
 +# (based on the version in enlightenment's cvs)
 +
-+package="darkice"
++package="xmlrpc++"
 +
 +srcdir=`dirname $0`
 +test -z "$srcdir" && srcdir=.
