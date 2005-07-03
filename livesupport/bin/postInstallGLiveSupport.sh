@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.5 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallGLiveSupport.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:H:hp:P:c:o: -l directory:,host:,help,port:,scheduler-port:cue-dsp:output-dsp: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:H:hp:P:c:o: -l directory:,host:,help,port:,scheduler-port:,cue-dsp:,output-dsp: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in

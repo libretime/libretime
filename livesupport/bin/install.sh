@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.12 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -218,22 +218,22 @@ $bindir/copyInstall.sh --directory $installdir || exit 1;
 #-------------------------------------------------------------------------------
 #   Do post-install setup
 #-------------------------------------------------------------------------------
-$bindir/postInstallScheduler.sh --directory $installdir \
-                                --database $database \
-                                --apache-group $apache_group \
-                                --host $hostname \
-                                --port $http_port \
-                                --scheduler-port $scheduler_port \
-                                --dbserver $dbserver \
-                                --dbuser $dbuser \
-                                --dbpassword $dbpassword \
-                                --www-root $www_root \
+$installdir/bin/postInstallScheduler.sh --directory $installdir \
+                                        --database $database \
+                                        --apache-group $apache_group \
+                                        --host $hostname \
+                                        --port $http_port \
+                                        --scheduler-port $scheduler_port \
+                                        --dbserver $dbserver \
+                                        --dbuser $dbuser \
+                                        --dbpassword $dbpassword \
+                                        --www-root $www_root \
     || exit 1;
 
-$bindir/postInstallGLiveSupport.sh --directory $installdir \
-                                   --host $hostname \
-                                   --port $http_port \
-                                   --scheduler-port $scheduler_port \
+$installdir/bin/postInstallGLiveSupport.sh --directory $installdir \
+                                           --host $hostname \
+                                           --port $http_port \
+                                           --scheduler-port $scheduler_port
     || exit 1;
 
 
