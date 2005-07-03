@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.17 $
+#   Version  : $Revision: 1.18 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -136,7 +136,7 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
                    -l${GSTREAMER_ELEMENTS_LIB} \
                    ${TAGLIB_LIBS} \
-                   -lcppunit -ldl -lm -lxmlrpc++
+                   -lboost_date_time-gcc -lcppunit -ldl -lm -lxmlrpc++
 
 TWOTEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                       ${TMP_DIR}/TwoGstreamerPlayersTest.o

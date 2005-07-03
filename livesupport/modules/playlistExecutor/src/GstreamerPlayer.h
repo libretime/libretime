@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
@@ -176,6 +176,18 @@ class GstreamerPlayer : virtual public Configurable,
                     gint            oldState,
                     gint            newState,
                     gpointer        self)
+                                                                    throw ();
+
+        /**
+         *  An end-of-stream event handler, that will notify our pipeline,
+         *  that it's all over.
+         *
+         *  @param element the element emitting the eos signal
+         *  @param self a pointer to the associated GstreamerPlayer object.
+         */
+        static void
+        eosEventHandler(GstElement    * element,
+                        gpointer        self)
                                                                     throw ();
 
         /**

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -432,3 +432,70 @@ GstreamerPlayerTest :: eventListenerTest(void)
     player->deInitialize();
 }
 
+
+/*------------------------------------------------------------------------------
+ *  Time how long it takes to open, play and close files.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: timeSteps(const std::string  fileName)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<ptime>::Ref             start;
+    Ptr<ptime>::Ref             end;
+    Ptr<time_duration>::Ref     openTime;
+    Ptr<time_duration>::Ref     startTime;
+    Ptr<time_duration>::Ref     stopTime;
+    Ptr<time_duration>::Ref     closeTime;
+
+    start = TimeConversion::now();
+    try {
+        player->open(fileName);
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    end = TimeConversion::now();
+    openTime.reset(new time_duration(*end - *start));
+
+    CPPUNIT_ASSERT(!player->isPlaying());
+    start = TimeConversion::now();
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
+    end = TimeConversion::now();
+    startTime.reset(new time_duration(*end - *start));
+
+    CPPUNIT_ASSERT(player->isPlaying());
+
+    start = TimeConversion::now();
+    player->stop();
+    end = TimeConversion::now();
+    stopTime.reset(new time_duration(*end - *start));
+
+    CPPUNIT_ASSERT(!player->isPlaying());
+
+    start = TimeConversion::now();
+    player->close();
+    end = TimeConversion::now();
+    closeTime.reset(new time_duration(*end - *start));
+
+    // TODO: somehow assert on the time values
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test how long it takes to open and play files.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: openTimeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    player->initialize();
+
+    timeSteps("file:var/test.mp3");
+
+    timeSteps("file:var/simpleSmil.smil");
+
+    timeSteps("file:var/sequentialSmil.smil");
+
+    player->deInitialize();
+}

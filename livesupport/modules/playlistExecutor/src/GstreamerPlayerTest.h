@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace PlaylistExecutor {
 /**
  *  Unit test for the GstreamerPlayer class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.6 $
  *  @see GstreamerPlayer
  */
 class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
@@ -72,6 +72,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(checkErrorConditions);
     CPPUNIT_TEST(eventListenerAttachTest);
     CPPUNIT_TEST(eventListenerTest);
+    CPPUNIT_TEST(openTimeTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -80,6 +81,16 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
          *  The player to use for the tests.
          */
         Ptr<GstreamerPlayer>::Ref       player;
+
+        /**
+         *  Time how long it takes to open, play, stop and close files.
+         *
+         *  @param fileName the name of the file to take a look at.
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        timeSteps(const std::string     fileName)
+                                                throw (CPPUNIT_NS::Exception);
 
 
     protected:
@@ -147,6 +158,14 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         eventListenerTest(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test how long it takes to open and play files.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        openTimeTest(void)                      throw (CPPUNIT_NS::Exception);
 
 
     public:

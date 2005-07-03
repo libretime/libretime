@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,7 +109,7 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
     g_signal_connect(pipeline, "state-change", G_CALLBACK(stateChange), this);
 
-    audiosink = gst_element_factory_make("alsasink", "audiosink");
+    audiosink = gst_element_factory_make("alsasink", "alsasink");
     setAudioDevice(audioDevice);
     gst_bin_add(GST_BIN(pipeline), audiosink);
 
@@ -224,6 +224,20 @@ GstreamerPlayer :: fireOnStopEvent(void)                        throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  An EOS event handler, that will put the pipeline to EOS as well.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayer :: eosEventHandler(GstElement    * element,
+                                   gpointer        self)
+                                                                throw ()
+{
+    GstreamerPlayer   * player = (GstreamerPlayer*) self;
+
+    gst_element_set_eos(player->pipeline);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Specify which file to play
  *----------------------------------------------------------------------------*/
 void
@@ -231,6 +245,9 @@ GstreamerPlayer :: open(const std::string   fileUrl)
                                                 throw (std::invalid_argument)
 {
     std::string     filePath;
+    GstElement    * pipe;
+    GstElement    * fakesink;
+    gint64          position;
 
     if (isOpened()) {
         close();
@@ -256,8 +273,35 @@ GstreamerPlayer :: open(const std::string   fileUrl)
         throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
     }
 
+    // connect the decoder unto a fakesink, and iterate on it until the
+    // first bytes come out. this is to make sure that _really_ all
+    // initialiation is done at opening
+    pipe     = gst_pipeline_new("pipe");
+    fakesink = gst_element_factory_make("fakesink", "fakesink");
+    g_object_ref(G_OBJECT(filesrc));
+    g_object_ref(G_OBJECT(decoder));
+    gst_element_link_many(decoder, fakesink, NULL);
+    gst_bin_add_many(GST_BIN(pipe), filesrc, decoder, fakesink, NULL);
+
+    gst_element_set_state(pipe, GST_STATE_PAUSED);
+    gst_element_set_state(pipe, GST_STATE_PLAYING);
+
+    position = 0LL;
+    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
+        GstFormat   format = GST_FORMAT_DEFAULT;
+        gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
+    }
+
+    gst_element_set_state(pipe, GST_STATE_PAUSED);
+    gst_bin_remove_many(GST_BIN(pipe), filesrc, decoder, NULL);
+    gst_element_unlink(decoder, fakesink);
+    gst_object_unref(GST_OBJECT(pipe));
+
+    // connect the decoder to the real audio sink
     gst_element_link(decoder, audiosink);
     gst_bin_add_many(GST_BIN(pipeline), filesrc, decoder, audiosink, NULL);
+    // connect the eos signal handler
+    g_signal_connect(decoder, "eos", G_CALLBACK(eosEventHandler), this);
 
     gst_element_set_state(pipeline, GST_STATE_PAUSED);
     gst_bin_sync_children_state(GST_BIN(pipeline));

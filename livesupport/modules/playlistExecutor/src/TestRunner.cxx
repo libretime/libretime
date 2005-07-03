@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/TestRunner.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -46,6 +46,8 @@
 #endif
 
 #include <fstream>
+
+#include <gst/gst.h>
 
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/CompilerOutputter.h>
@@ -144,6 +146,9 @@ int
 main(   int     argc,
         char  * argv[] )                                throw ()
 {
+    // initialize the gst parameters
+    gst_init(&argc, &argv);
+
     if (!processArguments(argc, argv)) {
         return 0;
     }
