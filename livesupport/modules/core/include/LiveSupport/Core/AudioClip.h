@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/AudioClip.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -130,8 +130,8 @@ using namespace boost::posix_time;
  *  &lt;!ATTLIST audioClip  uri          CDATA       #IMPLIED   &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.27 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.28 $
  */
 class AudioClip : public Configurable,
                   public Playable
@@ -423,7 +423,7 @@ class AudioClip : public Configurable,
 
         /**
          *  Return the URI of the binary sound file of this audio clip, 
-         *  which can be played by the helix client.
+         *  which can be played by the audio player.
          *
          *  @return the URI.
          */
@@ -435,7 +435,7 @@ class AudioClip : public Configurable,
 
         /**
          *  Set the URI of the binary sound file of this audio clip, 
-         *  which can be played by the helix client.
+         *  which can be played by the audio player.
          *
          *  @param uri the new URI.
          */

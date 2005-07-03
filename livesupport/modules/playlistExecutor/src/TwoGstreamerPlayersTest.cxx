@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/TwoGstreamerPlayersTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ using namespace LiveSupport::PlaylistExecutor;
 CPPUNIT_TEST_SUITE_REGISTRATION(TwoGstreamerPlayersTest);
 
 /**
- *  The name of the configuration file for the Helix player.
+ *  The name of the configuration file for the audio player.
  */
 static const std::string configFileName = "etc/twoGstreamerPlayers.xml";
 

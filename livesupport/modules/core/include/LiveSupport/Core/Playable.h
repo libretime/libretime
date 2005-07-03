@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playable.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -72,8 +72,8 @@ using namespace boost::posix_time;
  *  An abstract class which is extended by AudioClip and Playlist.
  *  It contains the methods which are common to these classes.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.12 $
  */
 class Playable : public boost::enable_shared_from_this<Playable>
 {
@@ -133,7 +133,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
 
         /**
          *  Return the URI of the sound file of this audio clip or
-         *  playlist, which can be played by the helix client.  This
+         *  playlist, which can be played by the audio player.  This
          *  sound file can be an mp3 or a SMIL file.
          *
          *  @return the URI.
@@ -143,7 +143,7 @@ class Playable : public boost::enable_shared_from_this<Playable>
 
         /**
          *  Set the URI of the sound file of this audio clip or
-         *  playlist, which can be played by the helix client.  This
+         *  playlist, which can be played by the audio player.  This
          *  sound file can be an mp3 or a SMIL file.
          *
          *  @param uri the new URI.

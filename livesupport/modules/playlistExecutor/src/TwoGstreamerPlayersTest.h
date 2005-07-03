@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/TwoGstreamerPlayersTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,11 +55,11 @@ namespace PlaylistExecutor {
 /* =============================================================== data types */
 
 /**
- *  Unit test for the GstreamerPlayer class, two see if two helix players,
+ *  Unit test for the GstreamerPlayer class, two see if two audio players,
  *  playing on two different sound cards work correctly.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see GstreamerPlayer
  */
 class TwoGstreamerPlayersTest : public CPPUNIT_NS::TestFixture
@@ -74,12 +74,12 @@ class TwoGstreamerPlayersTest : public CPPUNIT_NS::TestFixture
     private:
 
         /**
-         *  Helix player #1 to use for the tests.
+         *  Audio player #1 to use for the tests.
          */
         Ptr<GstreamerPlayer>::Ref       player1;
 
         /**
-         *  Helix player #2 to use for the tests.
+         *  Audio player #2 to use for the tests.
          */
         Ptr<GstreamerPlayer>::Ref       player2;
 

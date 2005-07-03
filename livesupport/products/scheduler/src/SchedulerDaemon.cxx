@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -376,7 +376,8 @@ SchedulerDaemon :: startup (void)                           throw ()
         audioPlayer->initialize();
     } catch (std::exception &e) {
         // TODO: mark error
-        std::cerr << "Helix initialization problem: " << e.what() << std::endl;
+        std::cerr << "audio player initialization problem: " << e.what()
+                  << std::endl;
     }
     if (!eventScheduler.get()) {
         Ptr<PlaylistEventContainer>::Ref    eventContainer;

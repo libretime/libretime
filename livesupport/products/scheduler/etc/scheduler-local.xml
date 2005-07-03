@@ -63,10 +63,7 @@
 <!ELEMENT playLogFactory (postgresqlPlayLog) >
 <!ELEMENT postgresqlPlayLog EMPTY >
 
-<!ELEMENT audioPlayer   (helixPlayer|gstreamerPlayer) >
-
-<!ELEMENT helixPlayer   EMPTY >
-<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+<!ELEMENT audioPlayer   (gstreamerPlayer) >
 
 <!ELEMENT gstreamerPlayer   EMPTY >
 <!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.45 $
+#   Version  : $Revision: 1.46 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -58,13 +58,6 @@ USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 USR_BIN_DIR     = ${USR_DIR}/bin
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
-
-HELIX_LIB_DIR     = ${USR_LIB_DIR}/helix
-HELIX_LIBS        = ${HELIX_LIB_DIR}/runtlib.a \
-                    ${HELIX_LIB_DIR}/syslib.a \
-                    ${HELIX_LIB_DIR}/contlib.a \
-                    ${HELIX_LIB_DIR}/debuglib.a \
-                    ${HELIX_LIB_DIR}/utillib.a 
 
 GENRB     = ${USR_BIN_DIR}/genrb
 GENRBOPTS = --destdir ${TMP_DIR} \
@@ -186,7 +179,6 @@ LDFLAGS  = @LDFLAGS@ -pthread \
 					 ${GSTREAMER_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
-                     -L${HELIX_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
                      -L${STORAGE_LIB_DIR} \
@@ -238,7 +230,6 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${WIDGETS_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
-                         ${HELIX_LIBS} \
                          -lboost_date_time-gcc \
                          -lxmlrpc++ -lssl
 

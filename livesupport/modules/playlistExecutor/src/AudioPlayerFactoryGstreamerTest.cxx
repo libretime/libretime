@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactoryGstreamerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ using namespace LiveSupport::PlaylistExecutor;
 CPPUNIT_TEST_SUITE_REGISTRATION(AudioPlayerFactoryGstreamerTest);
 
 /**
- *  The name of the configuration file for the Helix player.
+ *  The name of the configuration file for the audio player.
  */
 static const std::string configFileName = "etc/audioPlayerGstreamer.xml";
 
@@ -119,7 +119,7 @@ AudioPlayerFactoryGstreamerTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the HelixPlayer engine can be started and stopped
+ *  Test to see if the audio player engine can be started and stopped
  *----------------------------------------------------------------------------*/
 void
 AudioPlayerFactoryGstreamerTest :: firstTest(void)

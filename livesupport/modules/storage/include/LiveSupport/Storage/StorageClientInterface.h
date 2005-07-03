@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/include/LiveSupport/Storage/StorageClientInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,8 +65,8 @@ using namespace Core;
 /**
  *  An interface for storage clients.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.16 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.17 $
  */
 class StorageClientInterface
 {
@@ -183,7 +183,7 @@ class StorageClientInterface
          *  each sub-playlist contained in the playlist.)
          *  The address of this local copy is
          *  stored in the <code>uri</code> field of the playlist.  The SMIL
-         *  file can be played using the Helix client.
+         *  file can be played using the audio player.
          *  For each audio clip contained (directly or indirectly) in the
          *  playlist, acquireAudioClip() is called
          *
@@ -286,7 +286,7 @@ class StorageClientInterface
         /**
          *  Acquire the resources for the audio clip with the specified id.
          *  The <code>uri</code> field of the audio clip returned by the
-         *  method points to a binary sound file playable by the Helix client.
+         *  method points to a binary sound file playable by the audio player.
          *  This binary sound file can be randomly accessed.
          *
          *  The returned audio clip also contains a <code>token</code> field

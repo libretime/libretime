@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ static const std::string    audioDeviceName = "audioDevice";
 /* =============================================================  module code */
 
 /*------------------------------------------------------------------------------
- *  Configure the Helix Player.
+ *  Configure the Audio Player.
  *----------------------------------------------------------------------------*/
 void
 GstreamerPlayer :: configure(const xmlpp::Element   &  element)
@@ -86,7 +86,7 @@ GstreamerPlayer :: configure(const xmlpp::Element   &  element)
 
 
 /*------------------------------------------------------------------------------
- *  Initialize the Helix Player
+ *  Initialize the Audio Player
  *----------------------------------------------------------------------------*/
 void
 GstreamerPlayer :: initialize(void)                 throw (std::exception)
@@ -386,18 +386,6 @@ GstreamerPlayer :: getVolume(void)                                  throw ()
  *----------------------------------------------------------------------------*/
 void
 GstreamerPlayer :: setVolume(unsigned int   volume)                 throw ()
-{
-}
-
-
-/*------------------------------------------------------------------------------
- *  Open a playlist, with simulated fading.
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: openAndStart(Ptr<Playlist>::Ref  playlist)       
-                                                throw (std::invalid_argument,
-                                                       std::logic_error,
-                                                       std::runtime_error)
 {
 }
 

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE audioPlayer [
 
-<!ELEMENT audioPlayer   (helixPlayer) >
+<!ELEMENT audioPlayer   (gstreamerPlayer) >
 
-<!ELEMENT helixPlayer   EMPTY >
-<!ATTLIST helixPlayer   dllPath     CDATA   #REQUIRED >
+<!ELEMENT gstreamerPlayer   EMPTY >
+<!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
+
 ]>
 <audioPlayer>
-    <helixPlayer dllPath = "../../usr/lib/helix"
-    />
+    <gstreamerPlayer audioDevice = "plughw:0,0" />
 </audioPlayer>

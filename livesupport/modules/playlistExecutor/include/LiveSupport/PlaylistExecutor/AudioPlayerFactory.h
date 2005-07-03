@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerFactory.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,29 +68,26 @@ using namespace LiveSupport::Core;
  *  for the desired type of connection manager inside the configuration
  *  element for the factory.
  *
- *  Currently only the HelixAudioPlayer is supported, thus a
+ *  Currently only the GstreamerAudioPlayer is supported, thus a
  *  configuration file may look like this:
  *
  *  <pre><code>
  *  &lt;audioPlayer&gt;
- *      <helixPlayer dllPath = "../../usr/lib/helix"
- *      />
+        <gstreamerPlayer audioDevice = "plughw:0,0" />
  *  &lt;/audioPlayer&gt;
  *  </code></pre>
  *
  *  The DTD for the above XML structure is:
  *
  *  <pre><code>
- *  <!ELEMENT audioPlayer   (helixPlayer|gstreamerPlayer) >
+ *  <!ELEMENT audioPlayer   (gstreamerPlayer) >
  *  </code></pre>
  *
- *  For the DTD and details of the helixPlayer or gstreamerPlayer configuration
- *  element, see the HelixPlayer or the GstreamerPlayer documentation,
- *  respectively.
+ *  For the DTD and details of the gstreamerPlayer configuration
+ *  element, see the GstreamerPlayer documentation.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
- *  @see HelixPlayer
+ *  @version $Revision: 1.3 $
  *  @see GstreamerPlayer
  */
 class AudioPlayerFactory :

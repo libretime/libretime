@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -103,8 +103,8 @@ class Playlist;
  *  &lt;!ATTLIST playlistElement  relativeOffset  NMTOKEN   #REQUIRED  &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.13 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -326,7 +326,7 @@ class PlaylistElement : public Configurable
          *  Return the Playable instance (an AudioClip or a Playlist)
          *  associated with the playlist element.  Use this if you don't
          *  care which type this playlist element is, e.g., you
-         *  just want to play it in a helix client.
+         *  just want to play it in an audio player.
          *
          *  @return the Playable instance associated with the element.
          */

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.37 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -127,8 +127,8 @@ using namespace boost::posix_time;
  *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #IMPLIED  &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.37 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.38 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -457,7 +457,7 @@ class Playlist : public Configurable,
 
         /**
          *  Return the URI of the SMIL file created from this
-         *  playlist, which can be played by the helix client.
+         *  playlist, which can be played by the audio player.
          *
          *  @return the URI.
          */
@@ -469,7 +469,7 @@ class Playlist : public Configurable,
 
         /**
          *  Set the URI of the SMIL file created from this
-         *  playlist, which can be played by the helix client.
+         *  playlist, which can be played by the audio player.
          *
          *  @param uri the new URI.
          */

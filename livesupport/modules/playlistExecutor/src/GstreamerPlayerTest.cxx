@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ using namespace LiveSupport::PlaylistExecutor;
 CPPUNIT_TEST_SUITE_REGISTRATION(GstreamerPlayerTest);
 
 /**
- *  The name of the configuration file for the Helix player.
+ *  The name of the configuration file for the audio player.
  */
 static const std::string configFileName = "etc/gstreamerPlayer.xml";
 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.61 $
+#   Version  : $Revision: 1.62 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -55,13 +55,6 @@ USR_DIR         = ${BASE_DIR}/../../usr
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
-
-HELIX_LIB_DIR     = ${USR_LIB_DIR}/helix
-HELIX_LIBS        = ${HELIX_LIB_DIR}/runtlib.a \
-                    ${HELIX_LIB_DIR}/syslib.a \
-                    ${HELIX_LIB_DIR}/contlib.a \
-                    ${HELIX_LIB_DIR}/debuglib.a \
-                    ${HELIX_LIB_DIR}/utillib.a 
 
 
 VPATH    = ${SRC_DIR}
@@ -174,7 +167,6 @@ LDFLAGS  = @LDFLAGS@ -pthread \
                      ${ICU_LIBS} \
                      ${TAGLIB_LIBS} \
                      -L${USR_LIB_DIR} \
-                     -L${HELIX_LIB_DIR} \
                      -L${CORE_LIB_DIR} \
                      -L${AUTHENTICATION_LIB_DIR} \
                      -L${DB_LIB_DIR} \
@@ -226,7 +218,6 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
                      -l${GSTREAMER_ELEMENTS_LIB} \
                      -l${STORAGE_LIB} -l${DB_LIB} -l${AUTHENTICATION_LIB} \
                      -l${CORE_LIB} \
-                     ${HELIX_LIBS} \
                      -lboost_date_time-gcc \
                      -lxmlrpc++ -lssl
 

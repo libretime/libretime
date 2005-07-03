@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
@@ -243,7 +243,7 @@ class GstreamerPlayer : virtual public Configurable,
                                                        std::logic_error);
 
         /**
-         *  Initialize the Helix Player object, so that it is ready to
+         *  Initialize the Audio Player object, so that it is ready to
          *  play audio files.
          *
          *  @exception std::exception on initialization problems.
@@ -252,7 +252,7 @@ class GstreamerPlayer : virtual public Configurable,
         initialize(void)                        throw (std::exception);
 
         /**
-         *  De-initialize the Helix Player object.
+         *  De-initialize the Audio Player object.
          */
         virtual void
         deInitialize(void)                      throw ();
@@ -387,30 +387,6 @@ class GstreamerPlayer : virtual public Configurable,
         virtual void
         setVolume(unsigned int  volume)                     throw ();
 
-        /**
-         *  Play a playlist, with simulated fading.
-         *
-         *  This is a stopgap method, and should be replaced as soon as
-         *  the SMIL animation issues are fixed in the Helix client.
-         *
-         *  The playlist is assumed to contain a URI field, which points
-         *  to a SMIL file containing the same audio clips, with the same
-         *  offsets, as the playlist.  This can be ensured, for example, by 
-         *  calling Storage::WebStorageClient::acquirePlaylist().
-         *
-         *  @param playlist the Playlist object to be played.
-         *  @exception std::invalid_argument playlist is invalid (e.g.,
-         *              does not have a URI field, or there is no valid
-         *              SMIL file at the given URI).
-         *  @exception std::logic_error thrown by start() if open() was
-         *              unsuccessful, but returned normally (never happens)
-         *  @exception std::runtime_error on errors thrown by the helix player
-         */
-        virtual void
-        openAndStart(Ptr<Playlist>::Ref  playlist)       
-                                                throw (std::invalid_argument,
-                                                       std::logic_error,
-                                                       std::runtime_error);
 };
 
 

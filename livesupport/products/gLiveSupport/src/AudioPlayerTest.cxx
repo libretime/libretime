@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AudioPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -67,7 +67,7 @@ using namespace LiveSupport::gLiveSupport;
 CPPUNIT_TEST_SUITE_REGISTRATION(AudioPlayerTest);
 
 /**
- *  The name of the configuration file for the Helix player.
+ *  The name of the configuration file for the audio player.
  */
 static const std::string audioPlayerConfigFileName 
                                             = "etc/audioPlayer.xml";
@@ -195,7 +195,7 @@ AudioPlayerTest :: tearDown(void)                      throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Test to see if the HelixPlayer engine can be started and stopped
+ *  Test to see if the audio player engine can be started and stopped
  *----------------------------------------------------------------------------*/
 void
 AudioPlayerTest :: firstTest(void)

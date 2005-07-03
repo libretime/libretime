@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/AudioPlayerFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,7 +34,6 @@
 #endif
 
 #include "LiveSupport/PlaylistExecutor/AudioPlayerFactory.h"
-#include "HelixPlayer.h"
 #include "GstreamerPlayer.h"
 
 
@@ -95,18 +94,7 @@ AudioPlayerFactory :: configure(const xmlpp::Element & element)
 
     xmlpp::Node::NodeList   nodes;
 
-    // try to look for a HelixPlayer configuration element
-    nodes = element.get_children(HelixPlayer::getConfigElementName());
-    if (nodes.size() >= 1) {
-        const xmlpp::Element  * configElement =
-                         dynamic_cast<const xmlpp::Element*> (*(nodes.begin()));
-        Ptr<HelixPlayer>::Ref   hp(new HelixPlayer());
-        hp->configure(*configElement);
-        audioPlayer = hp;
-
-        return;
-    }
-
+    // try to look for a GstreamerPlayer configuration element
     nodes = element.get_children(GstreamerPlayer::getConfigElementName());
     if (nodes.size() >= 1) {
         const xmlpp::Element  * configElement =
