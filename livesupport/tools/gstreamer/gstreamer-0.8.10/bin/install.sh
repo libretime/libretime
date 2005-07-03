@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.11 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/Attic/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -68,13 +68,13 @@ tar xfj ${plugins_tar}
 cd ${plugins}
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=305658
 # for details on the following patch
-patch -p1 < ${etcdir}/adder-fix.diff
+patch -p1 < ${etcdir}/adder-fix.patch
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=309218
 # for details on the following patch
 patch -p1 < ${etcdir}/adder-duration-fix.patch
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308167
 # for details on the following patch
-patch -p1 < ${etcdir}/switch-fix.diff
+patch -p1 < ${etcdir}/switch-fix.patch
 # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=308619
 # for details on the following patch
 patch -p1 < ${etcdir}/id3demuxbin-pad-free-fix.patch
