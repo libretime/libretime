@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.14 $
+#   Version  : $Revision: 1.15 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -105,13 +105,16 @@ if [ "x$directory" == "x" ]; then
     directory=`pwd`;
 fi
 
+d=`cd $directory; pwd`
+directory=$d
+
 
 echo "Creating tarballs for LiveSupport.";
 echo "";
 echo "Using the following parameters:";
 echo "";
-echo "  output directory:               $directory";
-echo "  package version number:         $version";
+echo "  output directory:       $directory";
+echo "  package version number: $version";
 echo ""
 
 
