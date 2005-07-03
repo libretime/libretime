@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>LiveSupport installation documentation</title>
-  <meta content="$Author: fgerlits $" name="author">
+  <meta content="$Author: maroy $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.7 $</li>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.8 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -99,6 +99,7 @@ expected to be installed as well.<br>
   <li><a href="http://mad.sourceforge.net/">libmad</a></li>
   <li><a href="http://www.xiph.org/ogg/vorbis/">libogg</a></li>
   <li><a href="http://www.xiph.org/ogg/vorbis/">libvorbis</a><br>
+  </li>
 </ul>
 <h1>Installing and configuring required external services</h1>
 LiveSupport depends on some external services to be able to run, most
@@ -239,9 +240,17 @@ simply invoke:<br>
 <br>
 <pre><code>&lt;ls-installdir&gt;/bin/scheduler.sh start</code><br></pre>
 <br>
-The only thing left to do is to try out the LiveSupport web interface.
-For this purpose, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/htmlUI/var/html/</code>
-. For your first login, use the following values:<br>
+The only thing left to do is to try out the LiveSupport web interface
+or the GUI application.<br>
+<br>
+For the web interface, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/htmlUI/var/html/</code>
+.<br>
+<br>
+The GUI application can be started by issuing the following command:<br>
+<br>
+<pre><code>&lt;ls-installdir&gt;/bin/gLiveSupport.sh</code><br></pre>
+<br>
+For your first login, use the following values:<br>
 <ul>
   <li>username: root</li>
   <li>password: q</li>
