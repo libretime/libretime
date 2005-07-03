@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>LiveSupport installation documentation</title>
-  <meta content="$Author: maroy $" name="author">
+  <meta content="$Author: fgerlits $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.5 $</li>
+  <li>Author: $Author: fgerlits $</li>
+  <li>Version: $Revision: 1.6 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -56,7 +56,7 @@ The following tools are expected on the system.<br>
   <li><a href="http://www.gnu.org/software/make/make.html">make</a>
 &gt;= 3.80</li>
   <li><a href="http://www.gnu.org/software/automake/">automake</a> &lt;
-1.9</li>
+1.8</li>
   <li><a href="http://www.gnu.org/software/autoconf/">autoconf</a>
 &gt;= 2.5<br>
 (If you have an older version installed as well, don't forget to set
@@ -81,6 +81,7 @@ The following development libraries are expected on the system. Please
 note that for all the libraries below, the development packages are
 expected to be installed as well.<br>
 <ul>
+  <li><a href="http://www.python.org/">python</a></li>
   <li><a href="http://www.unixodbc.org/">unixODBC</a> &gt;= 2.2</li>
   <li><a href="http://xorg.freedesktop.org/">xorg-x11</a> or <a
  href="http://www.xfree86.org/">XFree86</a></li>
@@ -91,6 +92,14 @@ expected to be installed as well.<br>
   </li>
   <li><a href="http://www.openssl.org/">openssl</a></li>
   <li><a href="http://xmlsoft.org/">libxml2</a></li>
+  <li><a href="http://directory.fsf.org/libs/popt.html">popt</a></li>
+  <li><a href="http://www.alsa-project.org/">ALSA libraries</a><br>
+  </li>
+  <li><a href="http://mad.sourceforge.net/">libid3tag</a><br>
+  </li>
+  <li><a href="http://mad.sourceforge.net/">libmad</a></li>
+  <li><a href="http://www.xiph.org/ogg/vorbis/">libogg</a></li>
+  <li><a href="http://www.xiph.org/ogg/vorbis/">libvorbis</a><br>
 </ul>
 <h1>Installing and configuring required external services</h1>
 LiveSupport depends on some external services to be able to run, most
