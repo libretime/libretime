@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.12 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -113,9 +113,16 @@ echo "";
 echo "  output directory:               $directory";
 echo "  package version number:         $version";
 echo ""
-echo "WARNING! make sure to run this script on a freshly checked-out copy";
-echo "         of LiveSupport, with NO generated files!";
-echo ""
+
+
+#-------------------------------------------------------------------------------
+#   Check if there are generated files, and bail out if so
+#-------------------------------------------------------------------------------
+if [ -f $basedir/Makefile ]; then
+    echo "ERROR: make sure to run this script on a freshly checked-out copy";
+    echo "       of LiveSupport, with NO generated files!";
+    exit 1;
+fi
 
 
 #-------------------------------------------------------------------------------
