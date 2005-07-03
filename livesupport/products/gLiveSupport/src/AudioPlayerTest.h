@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AudioPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -44,6 +44,7 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/SessionId.h"
+#include "LiveSupport/Core/BaseTestMethod.h"
 
 
 namespace LiveSupport {
@@ -60,13 +61,13 @@ using namespace LiveSupport::Core;
 /* =============================================================== data types */
 
 /**
- *  Testing the AudioPlayerInterface::openAndStart() method.
+ *  Testing audio playback from the storage.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  *  @see AudioPlayerFactory
  */
-class AudioPlayerTest : public CPPUNIT_NS::TestFixture
+class AudioPlayerTest : public BaseTestMethod
 {
     CPPUNIT_TEST_SUITE(AudioPlayerTest);
     CPPUNIT_TEST(firstTest);

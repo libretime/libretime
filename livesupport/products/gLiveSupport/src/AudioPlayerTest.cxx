@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/AudioPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -76,13 +76,13 @@ static const std::string audioPlayerConfigFileName
  *  The name of the configuration file for the local storage.
  */
 static const std::string storageClientConfigFileName
-                                            = "etc/storageClient.xml";
+                                            = "storageClient.xml";
 
 /**
  *  The name of the configuration file for the authentication client.
  */
 static const std::string authenticationClientConfigFileName 
-                                            = "etc/authenticationClient.xml";
+                                            = "authenticationClient.xml";
 
 
 /* ===============================================  local function prototypes */
@@ -121,9 +121,9 @@ AudioPlayerTest :: setUp(void)                         throw ()
     }
 
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                new xmlpp::DomParser(storageClientConfigFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser    parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                            storageClientConfigFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         Ptr<StorageClientFactory>::Ref      storageClientFactory;
@@ -145,9 +145,9 @@ AudioPlayerTest :: setUp(void)                         throw ()
     }
 
     try {
-        Ptr<xmlpp::DomParser>::Ref  parser(
-                new xmlpp::DomParser(authenticationClientConfigFileName, true));
-        const xmlpp::Document * document = parser->get_document();
+        xmlpp::DomParser    parser;
+        const xmlpp::Document * document = getConfigDocument(parser,
+                                            authenticationClientConfigFileName);
         const xmlpp::Element  * root     = document->get_root_node();
 
         Ptr<AuthenticationClientFactory>::Ref   authentClientFactory;
@@ -252,7 +252,7 @@ AudioPlayerTest :: playAudioClipTest(void)
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
 
     CPPUNIT_ASSERT_NO_THROW(
-        storage->releaseAudioClip(sessionId, audioClip)
+        storage->releaseAudioClip(audioClip)
     );
     audioPlayer->close();
 }
@@ -282,9 +282,11 @@ AudioPlayerTest :: playPlaylistTest(void)
     );
     
     CPPUNIT_ASSERT_NO_THROW(
-        audioPlayer->openAndStart(playlist)
+        audioPlayer->open(*playlist->getUri())
     );
 
+    CPPUNIT_ASSERT(!audioPlayer->isPlaying());
+    CPPUNIT_ASSERT_NO_THROW(audioPlayer->start());
     CPPUNIT_ASSERT(audioPlayer->isPlaying());
 
     Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
@@ -294,7 +296,7 @@ AudioPlayerTest :: playPlaylistTest(void)
     CPPUNIT_ASSERT(!audioPlayer->isPlaying());
 
     CPPUNIT_ASSERT_NO_THROW(
-        storage->releasePlaylist(sessionId, playlist)
+        storage->releasePlaylist(playlist)
     );
     audioPlayer->close();
 }
