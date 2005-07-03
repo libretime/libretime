@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.19 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -177,7 +177,7 @@ docclean:
 depclean: clean
 
 distclean: clean docclean
-	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
+	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/ac*.m4
 
 run: all ${TEST_EXE} ${TEST_RUNNER_RES}
 	${TEST_EXE} -c ${TEST_CFG}

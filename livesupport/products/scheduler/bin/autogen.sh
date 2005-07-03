@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -77,12 +77,19 @@ configure_ac=${etcdir}/configure.ac
 configure=${tmpdir}/configure
 aclocal_m4=${tmpdir}/aclocal.m4
 
-# run aclocal in etc, as it's blind, only sees files in the current directory
-ACLOCAL_FLAGS="--output=${aclocal_m4}"
+# copy over configure.ac and acinlclude.m4 from etc to tmp,
+# as aclocal >= 1.8 is sooo unbelivably stupid that it will simply try to
+# look for configure.ac in the current directory, and include acinclude.m4
+# in aclocal.m4 it without a directory path in front
+ACLOCAL_FLAGS="-I ${tmpdir} --acdir=${tmpdir} --output=${aclocal_m4}"
 echo "  aclocal $ACLOCAL_FLAGS"
-cd ${etcdir} && aclocal $ACLOCAL_FLAGS ; cd ${tmpdir}
+cp -f ${configure_ac} ${tmpdir}
+cp -f ${etcdir}/acinclude.m4 ${tmpdir}
+aclocal $ACLOCAL_FLAGS
+
 echo "  autoheader ${configure_ac}"
 autoheader ${configure_ac}
+
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 

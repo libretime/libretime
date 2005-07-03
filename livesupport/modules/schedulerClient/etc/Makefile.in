@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -164,7 +164,7 @@ depclean: clean
 	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
-	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
+	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/ac*.m4
 
 check: all ${TEST_RUNNER} install start run_tests stop uninstall
 

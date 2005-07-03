@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.46 $
+#   Version  : $Revision: 1.47 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -271,7 +271,7 @@ depclean: clean
 	${MAKE} -C ${CORE_DIR} clean
 
 distclean: clean docclean
-	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/*.m4
+	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/ac*.m4
 
 check: all ${TEST_RUNNER} storage_server_init run_tests
 
