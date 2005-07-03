@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.13 $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -163,10 +163,6 @@ lcov_dir=$toolsdir/lcov
 lcov_version=lcov-1.3
 lcov_tmpdir=$tools_tmpdir/lcov
 
-helix_dir=$toolsdir/helix
-helix_version=hxclient_1_3_0_neptunex-2004-12-15
-helix_tmpdir=$tools_tmpdir/helix
-
 gtk_dir=$toolsdir/gtk+
 gtk_version=gtk+-2.6.1
 gtk_tmpdir=$tools_tmpdir/gtk+
@@ -279,9 +275,6 @@ cp -pPR $xmlrpcxx_dir/$xmlrpcxx_version $xmlrpcxx_tmpdir
 
 mkdir -p $lcov_tmpdir
 cp -pPR $lcov_dir/$lcov_version $lcov_tmpdir
-
-mkdir -p $helix_tmpdir
-cp -pPR $helix_dir/$helix_version $helix_tmpdir
 
 mkdir -p $gtk_tmpdir
 cp -pPR $gtk_dir/$gtk_version $gtk_tmpdir
