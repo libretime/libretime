@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -166,8 +166,8 @@ using namespace LiveSupport::PlaylistExecutor;
  *                       xmlRpcDaemon) &gt;
  *  </code></pre>
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.21 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.22 $
  *  @see ConnectionManagerFactory
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -366,10 +366,11 @@ class SchedulerDaemon : public Installable,
          *  Execute any calls when the daemon is starting up.
          *  All resources allocated here should be freed up in shutdown().
          *
+         *  @exception std::logic_error if startup could not succeed.
          *  @see #shutdown
          */
         virtual void
-        startup (void)                                      throw ();
+        startup (void)                              throw (std::logic_error);
 
 
     public:

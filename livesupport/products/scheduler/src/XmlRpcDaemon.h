@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,7 +119,7 @@ using namespace LiveSupport::Core;
  *
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class XmlRpcDaemon
 {
@@ -254,10 +254,11 @@ class XmlRpcDaemon
          *  This function will only return when the daemon ha stopped
          *  running.
          *
+         *  @exception std::logic_error if startup could not succeed.
          *  @see #shutdown
          */
         virtual void
-        startup (void)                                      throw ();
+        startup (void)                              throw (std::logic_error);
 
 
     public:

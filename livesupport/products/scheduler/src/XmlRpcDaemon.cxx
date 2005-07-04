@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/XmlRpcDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -289,7 +289,7 @@ XmlRpcDaemon :: start (void)                         throw (std::logic_error)
  *  Execute any daemon startup calls.
  *----------------------------------------------------------------------------*/
 void
-XmlRpcDaemon :: startup (void)                       throw ()
+XmlRpcDaemon :: startup (void)                       throw (std::logic_error)
 {
     // and now our own XML-RPC methods
     registerXmlRpcFunctions(xmlRpcServer);

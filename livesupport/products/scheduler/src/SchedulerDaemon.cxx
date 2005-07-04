@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/src/SchedulerDaemon.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -312,11 +312,7 @@ SchedulerDaemon :: install(void)                throw (std::exception)
 {
     // TODO: check if we have already been configured
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
-    try {
-        sf->install();
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-    }
+    sf->install();
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
     plf->install();
 }
@@ -331,6 +327,10 @@ SchedulerDaemon :: isInstalled(void)            throw (std::exception)
     // TODO: check if we have already been configured
     Ptr<ScheduleFactory>::Ref   sf = ScheduleFactory::getInstance();
     Ptr<PlayLogFactory>::Ref    plf = PlayLogFactory::getInstance();
+
+    if (!sf.get() || !plf.get()) {
+        throw std::logic_error("coudln't initialize factories");
+    }
     
     return sf->isInstalled() && plf->isInstalled();
 }
@@ -347,6 +347,7 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
     try {
         plf->uninstall();
     } catch (std::exception &e) {
+        // TODO: don't print but throw it instead
         std::cerr << e.what() << std::endl;
     }
     
@@ -359,25 +360,29 @@ SchedulerDaemon :: uninstall(void)              throw (std::exception)
  *  Execute daemon startup functions.
  *----------------------------------------------------------------------------*/
 void
-SchedulerDaemon :: startup (void)                           throw ()
+SchedulerDaemon :: startup (void)                   throw (std::logic_error)
 {
-    if (!isInstalled()) {
-        install();
+    try {
+        if (!isInstalled()) {
+            install();
+        }
+    } catch (std::exception &e) {
+        throw std::logic_error(std::string("database installation problem: ")
+                               + e.what());
     }
 
     try {
         sessionId      = authentication->login(login, password);
     } catch (XmlRpcException &e) {
-        // TODO: mark error
-        std::cerr << "authentication problem: " << e.what() << std::endl;
+        throw std::logic_error(std::string("authentication problem: ")
+                               + e.what());
     }
 
     try {
         audioPlayer->initialize();
     } catch (std::exception &e) {
-        // TODO: mark error
-        std::cerr << "audio player initialization problem: " << e.what()
-                  << std::endl;
+        throw std::logic_error(std::string("audio player initialization "
+                               "problem: ") + e.what());
     }
     if (!eventScheduler.get()) {
         Ptr<PlaylistEventContainer>::Ref    eventContainer;
