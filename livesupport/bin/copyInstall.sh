@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.11 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -46,6 +46,7 @@ tmpdir=$basedir/tmp
 toolsdir=$basedir/tools
 modules_dir=$basedir/modules
 products_dir=$basedir/products
+gstreamer_lib_dir=$modules_dir/gstreamerElements/lib
 
 usrdir=`cd $basedir/usr; pwd;`
 
@@ -159,6 +160,19 @@ cp -pPR $toolsdir/pear $install_usr/lib
 #-------------------------------------------------------------------------------
 cp -pPR $usrdir/lib/* $install_lib
 cp -pPR $usrdir/etc/* $install_etc
+
+
+#-------------------------------------------------------------------------------
+#  Copy our gstreamer elements and create the gstreamer registry
+#-------------------------------------------------------------------------------
+gstreamer_dir=`find $install_lib -type d -name "gstreamer-*"`
+
+cp -pPR $modules_dir/gstreamerElements/lib/lib*.so $gstreamer_dir
+
+export LD_LIBRARY_PATH=$install_lib
+export GST_REGISTRY=$install_etc/gst-registry.xml
+export GST_PLUGIN_PATH=$gstreamer_dir
+$usrdir/bin/gst-register > /dev/null 2>&1
 
 
 #-------------------------------------------------------------------------------

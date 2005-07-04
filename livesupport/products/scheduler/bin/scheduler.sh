@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/scheduler.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -43,7 +43,11 @@ libdir=$basedir/lib
 #-------------------------------------------------------------------------------
 #  Set up the environment
 #-------------------------------------------------------------------------------
+gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
+
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
+export GST_REGISTRY=$etcdir/gst-registry.xml
+export GST_PLUGIN_PATH=$gstreamer_dir
 scheduler_exe=$bindir/scheduler
 config_file=$etcdir/scheduler.xml
 
