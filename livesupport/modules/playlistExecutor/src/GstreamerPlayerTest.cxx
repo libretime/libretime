@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -148,6 +148,79 @@ GstreamerPlayerTest :: simplePlayTest(void)
     CPPUNIT_ASSERT(playlength->fractional_seconds() == 785187);
 
     CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+    player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check if the setDevice() function works are advertized.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: setDeviceTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(10)));
+    Ptr<time_duration>::Ref     playlength;
+
+    player->initialize();
+
+    // check on an ALSA device
+    CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
+    try {
+        player->open("file:var/test-short.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    playlength = player->getPlaylength();
+    CPPUNIT_ASSERT(playlength.get());
+    CPPUNIT_ASSERT(playlength->seconds() == 2);
+    CPPUNIT_ASSERT(!player->isPlaying());
+
+    // check on an OSS DSP device
+    CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
+    try {
+        player->open("file:var/test-short.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    playlength = player->getPlaylength();
+    CPPUNIT_ASSERT(playlength.get());
+    CPPUNIT_ASSERT(playlength->seconds() == 2);
+    CPPUNIT_ASSERT(!player->isPlaying());
+
+    // check changing from ALSA to OSS after opening
+    CPPUNIT_ASSERT(player->setAudioDevice("plughw:0,0"));
+    try {
+        player->open("file:var/test-short.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(player->setAudioDevice("/dev/dsp"));
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    playlength = player->getPlaylength();
+    CPPUNIT_ASSERT(playlength.get());
+    CPPUNIT_ASSERT(playlength->seconds() == 2);
+    CPPUNIT_ASSERT(!player->isPlaying());
+
+
     player->close();
     player->deInitialize();
 }

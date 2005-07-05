@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace PlaylistExecutor {
  *  Unit test for the GstreamerPlayer class.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  *  @see GstreamerPlayer
  */
 class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
@@ -66,6 +66,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST_SUITE(GstreamerPlayerTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simplePlayTest);
+    CPPUNIT_TEST(setDeviceTest);
     CPPUNIT_TEST(simpleSmilTest);
     CPPUNIT_TEST(secondSmilTest);
     CPPUNIT_TEST(animatedSmilTest);
@@ -110,6 +111,14 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         simplePlayTest(void)                    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the setDevice() function, with ALSA and OSS devices.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        setDeviceTest(void)                     throw (CPPUNIT_NS::Exception);
 
         /**
          *  Play a simple SMIL file.

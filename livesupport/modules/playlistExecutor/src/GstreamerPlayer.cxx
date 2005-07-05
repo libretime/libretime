@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,9 +109,7 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
     g_signal_connect(pipeline, "state-change", G_CALLBACK(stateChange), this);
 
-    audiosink = gst_element_factory_make("alsasink", "alsasink");
     setAudioDevice(audioDevice);
-    gst_bin_add(GST_BIN(pipeline), audiosink);
 
     // set up other variables
     initialized = true;
@@ -441,9 +439,46 @@ bool
 GstreamerPlayer :: setAudioDevice(const std::string &deviceName)       
                                                                 throw ()
 {
-    // TODO: support OSS as well
-    if (deviceName.size() > 0) {
-        g_object_set(G_OBJECT(audiosink), "device", deviceName.c_str(), NULL);
+    bool    oss    = deviceName.find("/dev") == 0;
+    bool    relink = false;
+
+    if (deviceName.size() == 0) {
+        return false;
+    }
+
+    if (audiosink) {
+        bool    oldOss = g_strrstr(gst_element_get_name(audiosink), "osssink");
+        relink = oss && !oldOss;
+    }
+
+    if (relink && audiosink) {
+        if (decoder) {
+            gst_element_unlink(decoder, audiosink);
+        }
+        gst_bin_remove(GST_BIN(pipeline), audiosink);
+        // FIXME: why unref here? remove should unref already
+        g_object_unref(G_OBJECT(audiosink));
+        audiosink = 0;
+    }
+
+    if (!audiosink) {
+        audiosink = oss
+                  ? gst_element_factory_make("osssink", "osssink")
+                  : gst_element_factory_make("alsasink", "alsasink");
+        relink = true;
+    }
+    if (!audiosink) {
+        return false;
+    }
+
+    // it's the same property, "device" for both alsasink and osssink
+    g_object_set(G_OBJECT(audiosink), "device", deviceName.c_str(), NULL);
+
+    if (relink) {
+        if (decoder) {
+            gst_element_link(decoder, audiosink);
+        }
+        gst_bin_add(GST_BIN(pipeline), audiosink);
     }
 
     return true;
