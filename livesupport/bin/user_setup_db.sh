@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup_db.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -163,10 +163,10 @@ replace_sed_string="s/ls_dbuser/$ls_dbuser/; \
 #-------------------------------------------------------------------------------
 check_exe() {
     if [ -x "`which $1 2> /dev/null`" ]; then
-        echo "Exectuable $1 found...";
+        echo "Executable $1 found...";
         return 0;
     else
-        echo "Exectuable $1 not found...";
+        echo "Executable $1 not found...";
         return 1;
     fi
 }

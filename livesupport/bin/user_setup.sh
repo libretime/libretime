@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.7 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -211,10 +211,10 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
 #-------------------------------------------------------------------------------
 check_exe() {
     if [ -x "`which $1 2> /dev/null`" ]; then
-        echo "Exectuable $1 found...";
+        echo "Executable $1 found...";
         return 0;
     else
-        echo "Exectuable $1 not found...";
+        echo "Executable $1 not found...";
         return 1;
     fi
 }

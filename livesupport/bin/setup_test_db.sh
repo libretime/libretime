@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/setup_test_db.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -67,10 +67,10 @@ postgres_user=postgres
 #-------------------------------------------------------------------------------
 check_exe() {
     if [ -x "`which $1 2> /dev/null`" ]; then
-        echo "Exectuable $1 found...";
+        echo "Executable $1 found...";
         return 0;
     else
-        echo "Exectuable $1 not found...";
+        echo "Executable $1 not found...";
         return 1;
     fi
 }

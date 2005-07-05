@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.12 $
+#   Version  : $Revision: 1.13 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/copyInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -167,12 +167,8 @@ cp -pPR $usrdir/etc/* $install_etc
 #-------------------------------------------------------------------------------
 gstreamer_dir=`find $install_lib -type d -name "gstreamer-*"`
 
+cp -pPR $usrdir/bin/gst-* $install_bin
 cp -pPR $modules_dir/gstreamerElements/lib/lib*.so $gstreamer_dir
-
-export LD_LIBRARY_PATH=$install_lib
-export GST_REGISTRY=$install_etc/gst-registry.xml
-export GST_PLUGIN_PATH=$gstreamer_dir
-$usrdir/bin/gst-register > /dev/null 2>&1
 
 
 #-------------------------------------------------------------------------------

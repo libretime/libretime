@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallGLiveSupport.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -211,10 +211,10 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
 #-------------------------------------------------------------------------------
 check_exe() {
     if [ -x "`which $1 2> /dev/null`" ]; then
-        echo "Exectuable $1 found...";
+        echo "Executable $1 found...";
         return 0;
     else
-        echo "Exectuable $1 not found...";
+        echo "Executable $1 not found...";
         return 1;
     fi
 }
@@ -254,6 +254,18 @@ mv -f $tmp_file $install_etc/pango/pango.modules
 cat $install_etc/gLiveSupport.xml.template \
     | sed -e "$replace_sed_string" \
     > $install_etc/gLiveSupport.xml
+
+
+#-------------------------------------------------------------------------------
+#  Create the gstreamer registry
+#-------------------------------------------------------------------------------
+echo "Creating gstreamer registry...";
+
+gstreamer_dir=`find $install_lib -type d -name "gstreamer-*"`
+export LD_LIBRARY_PATH=$install_lib
+export GST_REGISTRY=$install_etc/gst-registry.xml
+export GST_PLUGIN_PATH=$gstreamer_dir
+$install_bin/gst-register > /dev/null 2>&1
 
 
 #-------------------------------------------------------------------------------

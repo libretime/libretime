@@ -6,9 +6,12 @@ LIVESUPPORT_DIR=/opt/livesupport
 LIVESUPPORT_BIN=$LIVESUPPORT_DIR/bin
 LIVESUPPORT_ETC=$LIVESUPPORT_DIR/etc
 LIVESUPPORT_LIB=$LIVESUPPORT_DIR/lib
+GSTREAMER_DIR=`find $LIVESUPPORT_LIB -type d -name "gstreamer-*"`
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:$LIVESUPPORT_BIN
 LD_LIBRARY_PATH=$LIVESUPPORT_LIB:$LD_LIBRARY_PATH
+GST_REGISTRY=$LIVESUPPORT_ETC/gst-registry.xml
+GST_PLUGIN_PATH=$GSTREAMER_DIR
 DAEMON=$LIVESUPPORT_BIN/scheduler
 NAME=livesupport-scheduler
 DESC="livesupport scheduler"
@@ -17,6 +20,8 @@ test -x $DAEMON || exit 0
 
 export PATH
 export LD_LIBRARY_PATH
+export GST_REGISTRY
+export GST_PLUGIN_PATH
 
 DAEMON_OPTS="-c $LIVESUPPORT_ETC/scheduler.xml"
 

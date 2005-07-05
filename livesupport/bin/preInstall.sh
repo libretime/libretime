@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/preInstall.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -126,10 +126,10 @@ rm -f $group_tmp_file;
 #-------------------------------------------------------------------------------
 check_exe() {
     if [ -x "`which $1 2> /dev/null`" ]; then
-        echo "Exectuable $1 found...";
+        echo "Executable $1 found...";
         return 0;
     else
-        echo "Exectuable $1 not found...";
+        echo "Executable $1 not found...";
         return 1;
     fi
 }
