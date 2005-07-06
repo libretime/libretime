@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,11 +57,12 @@ namespace PlaylistExecutor {
 /**
  *  Unit test for the GstreamerPlayer class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.7 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.8 $
  *  @see GstreamerPlayer
  */
-class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
+class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
+                            public AudioPlayerEventListener
 {
     CPPUNIT_TEST_SUITE(GstreamerPlayerTest);
     CPPUNIT_TEST(firstTest);
@@ -73,6 +74,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(checkErrorConditions);
     CPPUNIT_TEST(eventListenerAttachTest);
     CPPUNIT_TEST(eventListenerTest);
+    CPPUNIT_TEST(eventListenerOnStopTest);
     CPPUNIT_TEST(openTimeTest);
     CPPUNIT_TEST_SUITE_END();
 
@@ -92,6 +94,11 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
         void
         timeSteps(const std::string     fileName)
                                                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A flag set to true if onStop() should start playing a new clip.
+         */
+        bool                            startNewClipFlag;
 
 
     protected:
@@ -169,6 +176,14 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
         eventListenerTest(void)                 throw (CPPUNIT_NS::Exception);
 
         /**
+         *  Another, more realistic test of the event listener mechanism.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        eventListenerOnStopTest(void)           throw (CPPUNIT_NS::Exception);
+
+        /**
          *  Test how long it takes to open and play files.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.
@@ -180,6 +195,14 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
     public:
         
         /**
+         *  A virtual destructor, necessary because of onStop().
+         */
+        virtual
+        ~GstreamerPlayerTest(void)                      throw ()
+        {
+        }
+
+        /**
          *  Set up the environment for the test case.
          */
         void
@@ -190,6 +213,12 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture
          */
         void
         tearDown(void)                                  throw ();
+
+        /**
+         *  Event handler for the "player has stopped" event.
+         */
+        virtual void
+        onStop(void)                                    throw ();
 };
 
 

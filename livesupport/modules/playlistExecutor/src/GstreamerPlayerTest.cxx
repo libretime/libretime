@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -503,6 +503,73 @@ GstreamerPlayerTest :: eventListenerTest(void)
     player->close();
 
     player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Another, more realistic test of the event listener mechanism.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: eventListenerOnStopTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    CPPUNIT_ASSERT_NO_THROW(player->initialize());
+    player->attachListener(this);
+
+    // start the first clip
+    CPPUNIT_ASSERT_NO_THROW(
+        player->open("file:var/test-short.mp3");
+    );
+    CPPUNIT_ASSERT(!player->isPlaying());
+    CPPUNIT_ASSERT_NO_THROW(
+        player->start();
+    );
+    CPPUNIT_ASSERT(player->isPlaying());
+    startNewClipFlag = true;
+
+    // sleep for a while; in the meantime, onStop() starts the second clip
+    Ptr<time_duration>::Ref         sleepT(new time_duration(seconds(7)));
+    TimeConversion::sleep(sleepT);
+
+    // the second clip should be over by now
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+
+    player->detachListener(this);
+    player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Another, more realistic test of the event listener mechanism.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: onStop(void)
+                                                throw ()
+{
+    if (!startNewClipFlag) {
+        return;
+    }
+
+    try {
+        CPPUNIT_ASSERT_NO_THROW(
+            player->close();
+        );
+
+        CPPUNIT_ASSERT_NO_THROW(
+            player->open("file:var/test-short.mp3");
+        );
+        CPPUNIT_ASSERT(!player->isPlaying());
+
+        CPPUNIT_ASSERT_NO_THROW(
+            player->start();
+        );
+        CPPUNIT_ASSERT(player->isPlaying());
+    } catch (CPPUNIT_NS::Exception &e) {
+        std::cerr << "Exception in onStop(): " << e.what() << std::endl;
+    }
+
+    startNewClipFlag = false;
 }
 
 
