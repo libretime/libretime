@@ -45,8 +45,8 @@ nl:table
     {
         windowTitle:string                  { "LiveSupport Scratchpad" }
 
-        typeColumnLabel:string              { "type" }
-        titleColumnLabel:string             { "titel" }
+        typeColumnLabel:string              { "Type" }
+        titleColumnLabel:string             { "Titel" }
         addToPlaylistButtonLabel:string     { "Toevoegen aan Playlist" }
         clearListButtonLabel:string         { "Lijst leeg maken" }
         removeButtonLabel:string            { "Verwijder item" }
@@ -148,7 +148,7 @@ nl:table
         searchByTextLabel:string      { "Zoeken met" }
         searchButtonLabel:string      { "Zoeken" }
         
-        typeColumnLabel:string        { "" }
+        typeColumnLabel:string        { "Type" }
         titleColumnLabel:string       { "Titel" }
         creatorColumnLabel:string     { "Maker" }
         lengthColumnLabel:string      { "Lengte" }

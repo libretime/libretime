@@ -51,8 +51,8 @@ root:table
     {
         windowTitle:string                  { "LiveSupport Scratchpad" }
 
-        typeColumnLabel:string              { "type" }
-        titleColumnLabel:string             { "title" }
+        typeColumnLabel:string              { "Type" }
+        titleColumnLabel:string             { "Title" }
         addToPlaylistButtonLabel:string     { "Add to playlist" }
         clearListButtonLabel:string         { "Clear list" }
         removeButtonLabel:string            { "Remove item(s)" }
@@ -154,7 +154,7 @@ root:table
         searchByTextLabel:string      { "Search by" }
         searchButtonLabel:string      { "Search" }
         
-        typeColumnLabel:string        { "" }
+        typeColumnLabel:string        { "Type" }
         titleColumnLabel:string       { "Title" }
         creatorColumnLabel:string     { "Creator" }
         lengthColumnLabel:string      { "Length" }

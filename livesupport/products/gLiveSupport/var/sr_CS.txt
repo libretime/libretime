@@ -45,8 +45,8 @@ sr_CS:table
     {
         windowTitle:string                  { "LiveSupport Priprema" }
 
-        typeColumnLabel:string              { "tip" }
-        titleColumnLabel:string             { "naslov" }
+        typeColumnLabel:string              { "Tip" }
+        titleColumnLabel:string             { "Naslov" }
         addToPlaylistButtonLabel:string     { "Dodaj u plej listu" }
         clearListButtonLabel:string         { "Obriši listu" }
         removeButtonLabel:string            { "Ukloni iz liste" }
@@ -148,7 +148,7 @@ sr_CS:table
         searchByTextLabel:string      { "Traži po" }
         searchButtonLabel:string      { "Pretraži" }
         
-        typeColumnLabel:string        { "" }
+        typeColumnLabel:string        { "Tip" }
         titleColumnLabel:string       { "Naslov" }
         creatorColumnLabel:string     { "Autor" }
         lengthColumnLabel:string      { "Dužina" }

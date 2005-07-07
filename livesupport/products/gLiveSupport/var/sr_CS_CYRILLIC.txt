@@ -45,8 +45,8 @@ sr_CS_CYRILLIC:table
     {
         windowTitle:string                  { "LiveSupport Припрема" }
 
-        typeColumnLabel:string              { "тип" }
-        titleColumnLabel:string             { "наслов" }
+        typeColumnLabel:string              { "Тип" }
+        titleColumnLabel:string             { "Наслов" }
         addToPlaylistButtonLabel:string     { "Додај у плеј листу" }
         clearListButtonLabel:string         { "Обриши листу" }
         removeButtonLabel:string            { "Уклони из листе" }
@@ -147,7 +147,7 @@ sr_CS_CYRILLIC:table
         searchByTextLabel:string      { "Тражи по" }
         searchButtonLabel:string      { "Претражи" }
         
-        typeColumnLabel:string        { "" }
+        typeColumnLabel:string        { "Тип" }
         titleColumnLabel:string       { "Наслов" }
         creatorColumnLabel:string     { "Аутор" }
         lengthColumnLabel:string      { "Дужина" }

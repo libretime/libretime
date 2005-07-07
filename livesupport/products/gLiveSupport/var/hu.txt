@@ -50,8 +50,8 @@ hu:table
     {
         windowTitle:string                  { "LiveSupport Praktikus csupor" }
 
-        typeColumnLabel:string              { "típus" }
-        titleColumnLabel:string             { "cím" }
+        typeColumnLabel:string              { "Típus" }
+        titleColumnLabel:string             { "Cím" }
         createPlaylistButtonLabel:string    { "Műsorhoz hozzáadni" }
         clearListButtonLabel:string         { "Lista törlése" }
         removeButtonLabel:string            { "Kiválasztottak törlése" }
@@ -152,7 +152,7 @@ hu:table
         searchByTextLabel:string      { "Keresési feltétel:" }
         searchButtonLabel:string      { "Keress!" }
         
-        typeColumnLabel:string        { "" }
+        typeColumnLabel:string        { "Típus" }
         titleColumnLabel:string       { "Cím" }
         creatorColumnLabel:string     { "Előadó" }
         lengthColumnLabel:string      { "Hossz" }

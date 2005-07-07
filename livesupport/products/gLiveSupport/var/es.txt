@@ -45,8 +45,8 @@ es:table
     {
         windowTitle:string                  { "Scratchpad de LiveSupport " }
 
-        typeColumnLabel:string              { "tipo" }
-        titleColumnLabel:string             { "título" }
+        typeColumnLabel:string              { "Tipo" }
+        titleColumnLabel:string             { "Título" }
         addToPlaylistButtonLabel:string     { "Añadir a lista de reproducción" }
         clearListButtonLabel:string         { "Limpiar la lista" }
         removeButtonLabel:string            { "Eliminar elemento(s)" }
@@ -148,7 +148,7 @@ es:table
         searchByTextLabel:string      { "Buscar por" }
         searchButtonLabel:string      { "Buscar" }
         
-        typeColumnLabel:string        { "" }
+        typeColumnLabel:string        { "Tipo" }
         titleColumnLabel:string       { "Título" }
         creatorColumnLabel:string     { "Creador" }
         lengthColumnLabel:string      { "Duración" }
