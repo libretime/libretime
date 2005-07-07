@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -37,6 +37,7 @@
 #include <stdexcept>
 
 #include "LiveSupport/Core/TimeConversion.h"
+#include "LiveSupport/Widgets/WidgetFactory.h"
 #include "SchedulePlaylistWindow.h"
 
 
@@ -65,19 +66,24 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
                                     Ptr<ResourceBundle>::Ref    bundle,
                                     Ptr<Playlist>::Ref          playlist)
                                                                     throw ()
-                    : LocalizedObject(bundle)
+          : WhiteWindow(WidgetFactory::schedulerWindowTitleImage,
+                        Colors::White,
+                        WidgetFactory::getInstance()->getWhiteWindowCorners()),
+            LocalizedObject(bundle),
+            gLiveSupport(gLiveSupport),
+            playlist(playlist)
 {
-    this->gLiveSupport = gLiveSupport;
-    this->playlist     = playlist;
+    Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
+    
     try {
         set_title(*getResourceUstring("windowTitle"));
         hourLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
                                                                 "hourLabel")));
         minuteLabel = Gtk::manage(new Gtk::Label(*getResourceUstring(
                                                             "minuteLabel")));
-        scheduleButton = Gtk::manage(new Gtk::Button(
+        scheduleButton = Gtk::manage(wf->createButton(
                                   *getResourceUstring("scheduleButtonLabel")));
-        closeButton = Gtk::manage(new Gtk::Button(
+        closeButton = Gtk::manage(wf->createButton(
                                     *getResourceUstring("closeButtonLabel")));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
@@ -86,9 +92,8 @@ SchedulePlaylistWindow :: SchedulePlaylistWindow (
 
     playlistLabel = Gtk::manage(new Gtk::Label(*playlist->getTitle()));
     calendar      = Gtk::manage(new Gtk::Calendar());
-    hourEntry     = Gtk::manage(new Gtk::Entry());
-    minuteEntry   = Gtk::manage(new Gtk::Entry());
-
+    hourEntry     = Gtk::manage(wf->createEntryBin());
+    minuteEntry   = Gtk::manage(wf->createEntryBin());
 
     layout = Gtk::manage(new Gtk::Table());
 

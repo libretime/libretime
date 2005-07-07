@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -50,6 +50,9 @@
 
 #include "LiveSupport/Core/Ptr.h"
 #include "LiveSupport/Core/LocalizedObject.h"
+#include "LiveSupport/Widgets/WhiteWindow.h"
+#include "LiveSupport/Widgets/EntryBin.h"
+#include "LiveSupport/Widgets/Button.h"
 #include "GLiveSupport.h"
 
 namespace LiveSupport {
@@ -83,10 +86,11 @@ using namespace LiveSupport::Core;
  *  +-------------------------------------------------+
  *  </pre></code>
  *
- *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  */
-class SchedulePlaylistWindow : public Gtk::Window, public LocalizedObject
+class SchedulePlaylistWindow : public WhiteWindow,
+                               public LocalizedObject
 {
 
     protected:
@@ -124,7 +128,7 @@ class SchedulePlaylistWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The entry field for hour.
          */
-        Gtk::Entry                * hourEntry;
+        EntryBin                 * hourEntry;
 
         /**
          *  The minute label.
@@ -134,17 +138,17 @@ class SchedulePlaylistWindow : public Gtk::Window, public LocalizedObject
         /**
          *  The minute entry field.
          */
-        Gtk::Entry                * minuteEntry;
+        EntryBin                  * minuteEntry;
 
         /**
          *  The schedule button.
          */
-        Gtk::Button               * scheduleButton;
+        Button                    * scheduleButton;
 
         /**
          *  The close button.
          */
-        Gtk::Button               * closeButton;
+        Button                    * closeButton;
 
         /**
          *  Signal handler for the schedule button clicked.
