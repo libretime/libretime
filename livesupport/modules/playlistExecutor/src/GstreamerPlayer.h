@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
@@ -161,22 +161,6 @@ class GstreamerPlayer : virtual public Configurable,
                      GError       * error,
                      gchar        * debug,
                      gpointer       self)                           throw ();
-
-        /**
-         *  Event handler for the state change event on the pipeline.
-         *  Use this to catch events like playing has ended.
-         *
-         *  @param element the pipeline the event change has occured at
-         *  @param oldState the old state
-         *  @param newState the new state
-         *  @param self a pointer to the associated GstreamerPlayer object.
-         */
-        static void
-        stateChange(GstElement    * element,
-                    gint            oldState,
-                    gint            newState,
-                    gpointer        self)
-                                                                    throw ();
 
         /**
          *  An end-of-stream event handler, that will notify our pipeline,

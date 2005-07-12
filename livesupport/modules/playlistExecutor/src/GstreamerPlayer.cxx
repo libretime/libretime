@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -107,7 +107,6 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
     gst_object_sink(GST_OBJECT(pipeline));
 
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
-    g_signal_connect(pipeline, "state-change", G_CALLBACK(stateChange), this);
 
     setAudioDevice(audioDevice);
 
@@ -129,24 +128,6 @@ GstreamerPlayer :: errorHandler(GstElement   * pipeline,
 {
     // TODO: handle error
     std::cerr << "gstreamer error: " << error->message << std::endl;
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for when the state of the pipeline changes
- *----------------------------------------------------------------------------*/
-void
-GstreamerPlayer :: stateChange(GstElement    * element,
-                               gint            oldState,
-                               gint            newState,
-                               gpointer        self)
-                                                                    throw ()
-{
-    GstreamerPlayer   * player = (GstreamerPlayer*) self;
-
-    if (oldState == GST_STATE_PLAYING && newState != GST_STATE_PLAYING) {
-        player->fireOnStopEvent();
-    }
 }
 
 
@@ -232,6 +213,7 @@ GstreamerPlayer :: eosEventHandler(GstElement    * element,
     GstreamerPlayer   * player = (GstreamerPlayer*) self;
 
     gst_element_set_eos(player->pipeline);
+    player->fireOnStopEvent();
 }
 
 
