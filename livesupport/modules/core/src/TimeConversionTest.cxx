@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -215,18 +215,27 @@ TimeConversionTest :: sleepTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test the timeDurationToSmilString() function
+ *  Test the timeDurationToSmilString() and timeDurationToHhMmSs() functions
  *----------------------------------------------------------------------------*/
 void
 TimeConversionTest :: durationToStringTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
     Ptr<time_duration>::Ref duration(new time_duration(duration_from_string(
-                                                        "01:02:03.003700" )));
+                                                        "01:02:03.503700" )));
 
-    Ptr<std::string>::Ref   durationString
+    Ptr<std::string>::Ref   smilString
                             = TimeConversion::timeDurationToSmilString(
                                                                     duration);
-    CPPUNIT_ASSERT_EQUAL(std::string("3723.004s"), *durationString);
+    CPPUNIT_ASSERT_EQUAL(std::string("3723.504s"), *smilString);
+
+    Ptr<std::string>::Ref   hhMmSsString
+                            = TimeConversion::timeDurationToHhMmSsString(
+                                                                    duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("01:02:04"), *hhMmSsString);
+
+    duration.reset(new time_duration(duration_from_string("111:22:33")));
+    hhMmSsString = TimeConversion::timeDurationToHhMmSsString(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("111:22:33"), *hhMmSsString);
 }
 

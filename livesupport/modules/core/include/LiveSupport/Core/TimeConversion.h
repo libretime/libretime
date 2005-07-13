@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class TimeConversion
 {
@@ -141,11 +141,25 @@ class TimeConversion
 
         /**
          *  Convert a time_duration to a format used in SMILs.
+         *  This means number of seconds, rounded to the nearest millisecond.
+         *  For example: "1234.567s", "0.890s", or "3.000s".
          *
-         *  @param duration sleep for this duration.
+         *  @param duration the time duration to convert.
          */
         static Ptr<std::string>::Ref
-        timeDurationToSmilString(Ptr<time_duration>::Ref   duration)
+        timeDurationToSmilString(Ptr<time_duration>::Ref    duration)
+                                                                throw ();
+
+        /**
+         *  Convert a time_duration to a rounded format used on the screen.
+         *  This means a hh:mm:ss format, rounded to the nearest second.
+         *  For example: "01:02:03" or "00:10:00".  The hours field can be
+         *  more than two characters wide, e.g.: "8765:48:45".
+         *
+         *  @param duration the time duration to convert.
+         */
+        static Ptr<std::string>::Ref
+        timeDurationToHhMmSsString(Ptr<time_duration>::Ref  duration)
                                                                 throw ();
 };
 

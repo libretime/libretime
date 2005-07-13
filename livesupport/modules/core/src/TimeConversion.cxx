@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -162,12 +162,47 @@ TimeConversion :: timeDurationToSmilString(
                                                                     throw ()
 {
     std::stringstream   stringStream;
-    stringStream << duration->total_seconds();
-    int                 microseconds = duration->fractional_seconds();
+    stringStream << std::dec
+                 << duration->total_seconds();
+
+    int     microseconds = duration->fractional_seconds();
     stringStream << "."
-                 << std::setw(3) << std::setfill('0') << std::dec
+                 << std::setw(3) 
+                 << std::setfill('0')
                  << (microseconds + 500) / 1000
                  << 's';
+    Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a time_duration to a rounded format used on the screen.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TimeConversion :: timeDurationToHhMmSsString(
+                                Ptr<time_duration>::Ref  duration)
+                                                                    throw ()
+{
+    std::stringstream   stringStream;
+    stringStream << std::dec
+                 << std::setw(2) 
+                 << std::setfill('0')
+                 << duration->hours()
+                 << ":" 
+                 << std::setw(2) 
+                 << std::setfill('0')
+                 << duration->minutes();
+
+    int   seconds = duration->seconds();
+    if (duration->fractional_seconds() >= 500000) {
+        ++seconds;
+    }
+    stringStream << ":"
+                 << std::setw(2) 
+                 << std::setfill('0')
+                 << seconds;
+
     Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
     return result;
 }
