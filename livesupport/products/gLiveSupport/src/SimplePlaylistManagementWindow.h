@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -100,7 +100,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.7 $
+         *  @version $Revision: 1.8 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -121,9 +121,19 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                 Gtk::TreeModelColumn<Glib::ustring>             titleColumn;
 
                 /**
+                 *  The column for the fade in of the playlist entry.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>             fadeInColumn;
+
+                /**
                  *  The column for the length of the playlist entry.
                  */
                 Gtk::TreeModelColumn<Glib::ustring>             lengthColumn;
+
+                /**
+                 *  The column for the fade out of the playlist entry.
+                 */
+                Gtk::TreeModelColumn<Glib::ustring>             fadeOutColumn;
 
                 /**
                  *  Constructor.
@@ -133,7 +143,9 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                     add(idColumn);
                     add(startColumn);
                     add(titleColumn);
+                    add(fadeInColumn);
                     add(lengthColumn);
+                    add(fadeOutColumn);
                 }
         };
 

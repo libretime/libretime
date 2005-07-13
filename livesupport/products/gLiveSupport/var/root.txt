@@ -108,15 +108,17 @@ root:table
     {
         windowTitle:string            { "LiveSupport Simple Playlist Management Window" }
 
-        startColumnLabel:string       { "start" }
-        titleColumnLabel:string       { "title" }
-        lengthColumnLabel:string      { "length" }
-        nameLabel:string              { "name" }
-        saveButtonLabel:string        { "save" }
-        closeButtonLabel:string       { "close" }
+        startColumnLabel:string       { "Start" }
+        titleColumnLabel:string       { "Title" }
+        lengthColumnLabel:string      { "Length" }
+        fadeInColumnLabel:string      { "Fade in" }
+        fadeOutColumnLabel:string     { "Fade out" }
+        nameLabel:string              { "Name" }
+        saveButtonLabel:string        { "Save" }
+        closeButtonLabel:string       { "Close" }
         statusBar:string              { "status bar" }
-        playlistSavedMsg:string       { "saved playlist {0}" }
-        savePlaylistDialogMsg:string  { "Would you like to save the playlist?" }
+        playlistSavedMsg:string       { "Saved playlist ''{0}''." }
+        savePlaylistDialogMsg:string  { "Do you want to save the playlist?" }
         emptyTitleErrorMsg:string     { "Please enter a title." }
     }
 

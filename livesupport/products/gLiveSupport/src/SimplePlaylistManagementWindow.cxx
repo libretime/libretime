@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,8 @@
 
 #include <iostream>
 #include <stdexcept>
+
+#include "LiveSupport/Core/TimeConversion.h"
 
 #include "SimplePlaylistManagementWindow.h"
 
@@ -98,11 +100,15 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     // Add the TreeView's view columns:
     try {
         entriesView->appendColumn(*getResourceUstring("startColumnLabel"),
-                                   modelColumns.startColumn, 120);
+                                   modelColumns.startColumn, 80);
         entriesView->appendColumn(*getResourceUstring("titleColumnLabel"),
                                    modelColumns.titleColumn, 200);
+        entriesView->appendColumn(*getResourceUstring("fadeInColumnLabel"),
+                                   modelColumns.fadeInColumn, 80);
         entriesView->appendColumn(*getResourceUstring("lengthColumnLabel"),
-                                   modelColumns.lengthColumn, 120);
+                                   modelColumns.lengthColumn, 80);
+        entriesView->appendColumn(*getResourceUstring("fadeOutColumnLabel"),
+                                   modelColumns.fadeOutColumn, 80);
 
         statusBar = Gtk::manage(new Gtk::Label(""));
     } catch (std::invalid_argument &e) {
@@ -289,11 +295,28 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
             row[modelColumns.idColumn]
                         = playable->getId();
             row[modelColumns.startColumn]
-                        = to_simple_string(*playlistElem->getRelativeOffset());
+                        = *TimeConversion::timeDurationToHhMmSsString(
+                                            playlistElem->getRelativeOffset());
             row[modelColumns.titleColumn]
                         = Glib::Markup::escape_text(*playable->getTitle());
             row[modelColumns.lengthColumn]
-                        = to_simple_string(*playable->getPlaylength());
+                        = *TimeConversion::timeDurationToHhMmSsString(
+                                            playable->getPlaylength());
+
+            Ptr<FadeInfo>::Ref      fadeInfo = playlistElem->getFadeInfo();
+            Ptr<time_duration>::Ref fadeIn, fadeOut;
+            if (fadeInfo) {
+                fadeIn  = fadeInfo->getFadeIn();
+                fadeOut = fadeInfo->getFadeOut();
+            }
+            row[modelColumns.fadeInColumn]
+                        = (fadeIn && fadeIn->total_microseconds() != 0)
+                          ? *TimeConversion::timeDurationToHhMmSsString(fadeIn)
+                          : "-";
+            row[modelColumns.fadeOutColumn]
+                        = (fadeOut && fadeOut->total_microseconds() != 0)
+                          ? *TimeConversion::timeDurationToHhMmSsString(fadeOut)
+                          : "-";
         }
     }
 }
