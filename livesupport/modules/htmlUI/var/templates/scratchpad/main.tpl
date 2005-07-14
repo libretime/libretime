@@ -31,17 +31,17 @@
                             {else}
                                 <div style="cursor: pointer">
                             {/if}
-                                {$i.title|truncate:14:'...':true}
+                                {$i.title|truncate:18}
                                 </div>
                         {else}
-                            {$i.title|truncate:14:'...':true}
+                            {$i.title|truncate:18}
                         {/if}                                         {* on some reason object call doesn´t like usage of array *}
                     </td>                                             {assign var="_duration" value=$i.duration}
                     <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
                         {if $PL->isAvailable($i.id) == false}
                             <div align="left"><img src="img/ico_lock.gif">
-                            <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /></div> 
+                            <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /></div>
                         {else}
                         <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /> {/if}
                     </td>

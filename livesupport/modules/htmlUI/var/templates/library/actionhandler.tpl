@@ -2,22 +2,24 @@ onClick="return contextmenu('{$i.id}'
     , 'SP.addItem'
 
     {if $i.type|lower == 'audioclip'}
-        , 'listen', '{$i.gunid}'
+        , 'listen', '{$i.gunid}', '##audioclip##'
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
-            , 'PL.create'
+            , 'PL.create', '{$i.title|truncate:20}'
         {/if}
-        , 'edit', 'delete'
+        , 'edit',   '##audioclip##'
+        , 'delete', '##audioclip##'
     {/if}
 
     {if $i.type|lower == 'webstream'}
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
-            , 'PL.create'
+            , 'PL.create', '{$i.title|truncate:20}'
         {/if}
-        , 'edit', 'delete'
+        , 'edit',   '##webstream##'
+        , 'delete', '##webstream##'
     {/if}
 
     {if $i.type|lower == 'playlist'}
@@ -28,7 +30,9 @@ onClick="return contextmenu('{$i.id}'
                 , 'SCHEDULER.addPL', 'PL.addItem', 'delete'
             {/if}
         {else}
-            , 'SCHEDULER.addPL', 'PL.activate', 'PL.create', 'delete'
+            , 'SCHEDULER.addPL', 'PL.activate'
+            , 'PL.create', '{$i.title|truncate:20}'
+            , 'delete', '##playlist##'
         {/if}
     {/if}
 )"

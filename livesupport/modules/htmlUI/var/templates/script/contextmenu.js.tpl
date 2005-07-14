@@ -45,7 +45,7 @@
                 break;
 
                 case "PL.create":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##New Playlist using this File##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##New Playlist including &quot;##"+contextmenu.arguments[++i]+"&quot;&nbsp;</a></li>";
                 break;
 
                 case "PL.changeFadeIn":
@@ -69,16 +69,17 @@
                 break;
 
                 case "listen":
-                    i++;
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[i]+"' "+oF+">&nbsp;##Listen to File##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[++i]+"' "+oF+">&nbsp;##Listen ## "+contextmenu.arguments[++i]+"&nbsp;</a></li>";
                 break;
 
                 case "edit":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"' "+oF+">&nbsp;##Edit File##&nbsp;</a></li>";
+                    i++;
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"' "+oF+">&nbsp;##Edit## "+contextmenu.arguments[i]+"&nbsp;</a></li>";
                 break;
 
                 case "delete":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 50)\" "+oF+">&nbsp;##Delete File##&nbsp;</a></li>";
+                    i++;
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 50)\" "+oF+">&nbsp;##Delete## "+contextmenu.arguments[i]+"&nbsp;</a></li>";
                 break;
 
                 case "fileList":
