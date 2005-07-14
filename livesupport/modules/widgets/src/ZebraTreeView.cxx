@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/ZebraTreeView.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -300,6 +300,50 @@ ZebraTreeView :: lineNumberCellDataFunction(
     Gtk::CellRendererText *     textCell 
                                 = dynamic_cast<Gtk::CellRendererText*>(cell);
     textCell->property_markup() = numberString;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Add a centered text column to the TreeView.
+ *----------------------------------------------------------------------------*/
+int 
+ZebraTreeView :: appendEditableColumn(
+                    const Glib::ustring&                        title, 
+                    const Gtk::TreeModelColumn<Glib::ustring>&  modelColumn,
+                    int                                         columnId,
+                    int                                         minimumWidth)
+                                                                throw ()
+{
+    // a standard cell renderer; can be replaced with a ZebraCellRenderer
+    Gtk::CellRendererText*  renderer = Gtk::manage(new Gtk::CellRendererText);
+    
+    // right align the text in the column
+    renderer->property_xalign() = 1;
+
+    // set the cells to be editable, and connect the signal to our own
+    renderer->property_editable() = true;
+    renderer->signal_edited().connect(sigc::bind<int>(
+                    sigc::mem_fun(*this, &ZebraTreeView::emitSignalCellEdited),
+                    columnId ));
+
+    // the constructor packs the renderer into the TreeViewColumn
+    Gtk::TreeViewColumn*    viewColumn = Gtk::manage(
+                                new Gtk::TreeViewColumn(title, *renderer) );
+                                
+    // and then we associate this renderer with the model column
+    viewColumn->add_attribute(renderer->property_markup(), modelColumn);
+    
+    // this cell data function will do the blue-gray zebra stripes
+    viewColumn->set_cell_data_func(
+                    *renderer,
+                    sigc::mem_fun(*this, &ZebraTreeView::cellDataFunction) );
+    
+    // set the minimum width of the column
+    if (minimumWidth) {
+        viewColumn->set_min_width(minimumWidth);
+    }
+    
+    return append_column(*viewColumn);
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/ZebraTreeView.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ using namespace LiveSupport::Core;
  *  3) connected with a TreeModelColumn using set_renderer(). 
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class ZebraTreeView : public Gtk::TreeView
 {
@@ -130,7 +130,30 @@ class ZebraTreeView : public Gtk::TreeView
                         const Gtk::TreeModel::iterator&  iter,
                         int                              offset)
                                                                 throw ();
+
+        /**
+         *  Emit the "cell has been edited" signal.
+         */
+        void
+        emitSignalCellEdited(const Glib::ustring &  path,
+                             const Glib::ustring &  newText,
+                             int                    columnId)
+                                                                throw ()
+        {
+            signalCellEdited().emit(path, columnId, newText);
+        }
+
+
     protected:
+    
+        /**
+         *  A signal object to notify people that a cell has been edited.
+         */
+        sigc::signal<void, 
+                     const Glib::ustring &, 
+                     int, 
+                     const Glib::ustring &>     signalCellEditedObject;
+
 
     public:
         /**
@@ -227,6 +250,31 @@ class ZebraTreeView : public Gtk::TreeView
                                                                 throw ();
 
         /**
+         *  Add an editable text column to the TreeView.
+         *
+         *  The signal_edited() signal of the cell renderer gets connected
+         *  to the signalEdited() signal of the ZebraTreeView object; the
+         *  columnId argument will get passed to the signal handler.
+         *
+         *  This is used to display fade info (time durations), so the text is
+         *  right aligned in the column.
+         *
+         *  @param title        the title of the column
+         *  @param modelColumn  the model column this view will display
+         *  @param columnId     the column ID passed to the signal handler
+         *  @param minimumWidth the minimum width of the column, in pixels
+         *                      (optional)
+         *  @return the number of columns after adding this one
+         */
+        int 
+        appendEditableColumn(
+                     const Glib::ustring&                       title, 
+                     const Gtk::TreeModelColumn<Glib::ustring>& modelColumn,
+                     int   columnId,
+                     int   minimumWidth = 0)
+                                                                throw ();
+
+        /**
          *  Signal handler for the "up" menu option selected from
          *  the context menu.
          */
@@ -254,6 +302,17 @@ class ZebraTreeView : public Gtk::TreeView
          */
         void
         removeItem(const Gtk::TreeModel::iterator &   iter)     throw ();
+
+        /**
+         *  The signal raised when a cell has been edited.
+         *
+         *  @return the signal object (a protected member of this class)
+         */
+        sigc::signal<void, const Glib::ustring &, int, const Glib::ustring &>
+        signalCellEdited(void)                                  throw ()
+        {
+            return signalCellEditedObject;
+        }
 };
 
 

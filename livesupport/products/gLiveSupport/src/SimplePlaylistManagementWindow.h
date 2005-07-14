@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,11 +87,27 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
 {
+    private:
+
+        /**
+         *  Constants for identifying the two fade info columns.
+         */
+        enum {  fadeInColumnId,
+                fadeOutColumnId  };
+
+        /**
+         *  Signal handler for the fade info being edited.
+         */
+        void
+        onFadeInfoEdited(const Glib::ustring &  path,
+                         int                    columnId,
+                         const Glib::ustring &  newText)        throw();
+
 
     protected:
 
@@ -100,7 +116,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.8 $
+         *  @version $Revision: 1.9 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -257,6 +273,19 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
 
 /* ====================================================== function prototypes */
 
+        /**
+         *  Auxilliary function: set the fade in of a playlist element.
+         */
+        void
+        setFadeIn(Ptr<PlaylistElement>::Ref   playlistElement,
+                  Ptr<time_duration>::Ref     newFadeIn)        throw();
+
+        /**
+         *  Auxilliary function: set the fade out of a playlist element.
+         */
+        void
+        setFadeOut(Ptr<PlaylistElement>::Ref  playlistElement,
+                   Ptr<time_duration>::Ref    newFadeOut)       throw();
 
 } // namespace GLiveSupport
 } // namespace LiveSupport

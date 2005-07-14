@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -100,21 +100,33 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     // Add the TreeView's view columns:
     try {
         entriesView->appendColumn(*getResourceUstring("startColumnLabel"),
-                                   modelColumns.startColumn, 80);
+                                   modelColumns.startColumn,
+                                   60);
         entriesView->appendColumn(*getResourceUstring("titleColumnLabel"),
-                                   modelColumns.titleColumn, 200);
-        entriesView->appendColumn(*getResourceUstring("fadeInColumnLabel"),
-                                   modelColumns.fadeInColumn, 80);
+                                   modelColumns.titleColumn,
+                                   200);
+        entriesView->appendEditableColumn(
+                                  *getResourceUstring("fadeInColumnLabel"),
+                                   modelColumns.fadeInColumn,
+                                   fadeInColumnId,
+                                   60);
         entriesView->appendColumn(*getResourceUstring("lengthColumnLabel"),
-                                   modelColumns.lengthColumn, 80);
-        entriesView->appendColumn(*getResourceUstring("fadeOutColumnLabel"),
-                                   modelColumns.fadeOutColumn, 80);
+                                   modelColumns.lengthColumn,
+                                   60);
+        entriesView->appendEditableColumn(
+                                  *getResourceUstring("fadeOutColumnLabel"),
+                                   modelColumns.fadeOutColumn,
+                                   fadeOutColumnId,
+                                   60);
 
         statusBar = Gtk::manage(new Gtk::Label(""));
     } catch (std::invalid_argument &e) {
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
+
+    entriesView->signalCellEdited().connect(sigc::mem_fun(
+                    *this, &SimplePlaylistManagementWindow::onFadeInfoEdited ));
 
     // set up the layout
     Gtk::VBox *         mainBox = Gtk::manage(new Gtk::VBox);
@@ -152,7 +164,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     // show
     set_name("simplePlaylistManagementWindow");
-    set_default_size(450, 300);
+    set_default_size(470, 300);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
 
@@ -312,12 +324,104 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
             row[modelColumns.fadeInColumn]
                         = (fadeIn && fadeIn->total_microseconds() != 0)
                           ? *TimeConversion::timeDurationToHhMmSsString(fadeIn)
-                          : "-";
+                          : "-   ";
             row[modelColumns.fadeOutColumn]
                         = (fadeOut && fadeOut->total_microseconds() != 0)
                           ? *TimeConversion::timeDurationToHhMmSsString(fadeOut)
-                          : "-";
+                          : "-   ";
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the fade info being edited.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onFadeInfoEdited(
+                                        const Glib::ustring &  pathString,
+                                        int                    columnId,
+                                        const Glib::ustring &  newText)
+                                                                    throw()
+{
+    Gtk::TreeModel::Path        path(pathString);
+    std::vector<int>            rowNumberVector = path.get_indices();
+    int                         rowNumber = rowNumberVector.at(0);
+    
+    Ptr<time_duration>::Ref     newTime(new time_duration(
+                                            duration_from_string(newText) ));
+    
+    Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
+    Playlist::const_iterator    iter = playlist->begin();
+    for (int i=0; i<rowNumber; ++i) {
+        ++iter;
+    }
+    // TODO: add an at(n) access function to Playlist
+    Ptr<PlaylistElement>::Ref   playlistElement = iter->second;
+    
+    switch (columnId) {
+        case fadeInColumnId :
+            setFadeIn(playlistElement, newTime);
+            if (iter != playlist->begin()) {
+                --iter;
+                Ptr<PlaylistElement>::Ref   prevPlaylistElement = iter->second;
+                setFadeOut(prevPlaylistElement, newTime);
+            }
+            break;
+        case fadeOutColumnId :
+            setFadeOut(playlistElement, newTime);
+            ++iter;
+            if (iter != playlist->end()) {
+                Ptr<PlaylistElement>::Ref   nextPlaylistElement = iter->second;
+                setFadeIn(nextPlaylistElement, newTime);
+            }
+            break;
+        default :
+            return;         // should never happen
+    }
+    
+    showContents();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Auxilliary function: set the fade in of a playlist element.
+ *----------------------------------------------------------------------------*/
+void
+GLiveSupport :: setFadeIn(Ptr<PlaylistElement>::Ref     playlistElement,
+                          Ptr<time_duration>::Ref       newFadeIn)
+                                                                    throw()
+{
+    Ptr<FadeInfo>::Ref          oldFadeInfo = playlistElement->getFadeInfo();
+    Ptr<time_duration>::Ref     oldFadeOut;
+    if (oldFadeInfo) {
+        oldFadeOut = oldFadeInfo->getFadeOut();
+    } else {
+        oldFadeOut.reset(new time_duration(0,0,0,0));
+    }
+    Ptr<FadeInfo>::Ref          newFadeInfo(new FadeInfo(
+                                                newFadeIn, oldFadeOut ));
+    playlistElement->setFadeInfo(newFadeInfo);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Auxilliary function: set the fade out of a playlist element.
+ *----------------------------------------------------------------------------*/
+void
+GLiveSupport :: setFadeOut(Ptr<PlaylistElement>::Ref     playlistElement,
+                           Ptr<time_duration>::Ref       newFadeOut)
+                                                                    throw()
+{
+    Ptr<FadeInfo>::Ref          oldFadeInfo = playlistElement->getFadeInfo();
+    Ptr<time_duration>::Ref     oldFadeIn;
+    if (oldFadeInfo) {
+        oldFadeIn = oldFadeInfo->getFadeIn();
+    } else {
+        oldFadeIn.reset(new time_duration(0,0,0,0));
+    }
+    Ptr<FadeInfo>::Ref          newFadeInfo(new FadeInfo(
+                                                    oldFadeIn, newFadeOut ));
+    playlistElement->setFadeInfo(newFadeInfo);
 }
 
