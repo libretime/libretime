@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -156,11 +156,11 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     add(*mainBox);
 
-    // Register the signal handlers
+    // Register the signal handlers for the buttons
     saveButton->signal_clicked().connect(sigc::mem_fun(*this,
-                       &SimplePlaylistManagementWindow::onSaveButtonClicked));
+                        &SimplePlaylistManagementWindow::onSaveButtonClicked));
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                       &SimplePlaylistManagementWindow::onCloseButtonClicked));
+                        &SimplePlaylistManagementWindow::onCloseButtonClicked));
 
     // show
     set_name("simplePlaylistManagementWindow");
@@ -399,9 +399,12 @@ GLiveSupport :: setFadeIn(Ptr<PlaylistElement>::Ref     playlistElement,
     } else {
         oldFadeOut.reset(new time_duration(0,0,0,0));
     }
+    
     Ptr<FadeInfo>::Ref          newFadeInfo(new FadeInfo(
                                                 newFadeIn, oldFadeOut ));
-    playlistElement->setFadeInfo(newFadeInfo);
+    if (isLengthOkay(playlistElement, newFadeInfo)) {
+        playlistElement->setFadeInfo(newFadeInfo);
+    }
 }
 
 
@@ -422,6 +425,22 @@ GLiveSupport :: setFadeOut(Ptr<PlaylistElement>::Ref     playlistElement,
     }
     Ptr<FadeInfo>::Ref          newFadeInfo(new FadeInfo(
                                                     oldFadeIn, newFadeOut ));
-    playlistElement->setFadeInfo(newFadeInfo);
+    if (isLengthOkay(playlistElement, newFadeInfo)) {
+        playlistElement->setFadeInfo(newFadeInfo);
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Auxilliary function: check that fades are not longer than the whole clip.
+ *----------------------------------------------------------------------------*/
+inline bool
+GLiveSupport :: isLengthOkay(Ptr<PlaylistElement>::Ref     playlistElement,
+                             Ptr<FadeInfo>::Ref            newFadeInfo)
+                                                                    throw()
+{
+    time_duration   totalFades = *newFadeInfo->getFadeIn()
+                               + *newFadeInfo->getFadeOut();
+    return (totalFades < *playlistElement->getPlayable()->getPlaylength());
 }
 

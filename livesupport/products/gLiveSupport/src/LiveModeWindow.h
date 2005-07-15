@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -74,7 +74,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class LiveModeWindow : public WhiteWindow, public LocalizedObject
 {
@@ -87,7 +87,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.13 $
+         *  @version $Revision: 1.14 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -159,6 +159,7 @@ class LiveModeWindow : public WhiteWindow, public LocalizedObject
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.
+         *  This brings up the right-click context menu.
          *
          *  @param event the button event recieved
          */

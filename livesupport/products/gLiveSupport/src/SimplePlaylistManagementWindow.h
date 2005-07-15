@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -116,7 +116,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.9 $
+         *  @version $Revision: 1.10 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -286,6 +286,14 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         void
         setFadeOut(Ptr<PlaylistElement>::Ref  playlistElement,
                    Ptr<time_duration>::Ref    newFadeOut)       throw();
+
+        /**
+         *  Auxilliary function: check that fades are not longer than 
+         *  the whole clip.
+         */
+        bool
+        isLengthOkay(Ptr<PlaylistElement>::Ref  playlistElement,
+                     Ptr<FadeInfo>::Ref         newFadeInfo)    throw();
 
 } // namespace GLiveSupport
 } // namespace LiveSupport

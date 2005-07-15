@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -144,7 +144,7 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     outputPlayButton->signal_clicked().connect(sigc::mem_fun(*this,
                                             &LiveModeWindow::onOutputPlay ));
 
-    // create the right-click entry context menu for audio clips
+    // create the right-click entry context menu
     contextMenu = Gtk::manage(new Gtk::Menu());
     Gtk::Menu::MenuList& contextMenuList = contextMenu->items();
     // register the signal handlers for the popup menu
