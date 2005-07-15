@@ -94,8 +94,8 @@ nl:table
 
         fileChooserDialogTitle:string { "Kies een bestand" }
         clipUploadedMsg:string        { "Clip ''{0}'' verzonden." }
-        couldNotOpenFileMsg:string    { "*** translate me ***" }
-        missingTitleMsg:string        { "*** translate me ***" }
+        couldNotOpenFileMsg:string    { "Bestand kan niet geopend worden" }
+        missingTitleMsg:string        { "Voeg de titel omschrijving in" }
     }
 
     simplePlaylistManagementWindow:table
