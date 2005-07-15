@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.56 $
+    Version  : $Revision: 1.57 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -646,6 +646,8 @@ GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);
     editedPlaylist->createSavedCopy();
 
+    masterPanel->updateSimplePlaylistMgmtWindow();
+    
     return editedPlaylist;
 }
 

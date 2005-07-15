@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.9 $
+         *  @version $Revision: 1.10 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -242,6 +242,13 @@ class ScratchpadWindow : public WhiteWindow,
          */
         virtual void
         onDownItem(void)                                        throw ();
+
+        /**
+         *  Signal handler for the "edit playlist" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onEditPlaylist(void)                                    throw ();
 
         /**
          *  Signal handler for the "add to playlist" menu item selected from

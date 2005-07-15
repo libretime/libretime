@@ -60,8 +60,9 @@ root:table
         upMenuItem:string                   { "Move _Up" }
         downMenuItem:string                 { "Move D_own" }
         removeMenuItem:string               { "_Remove" }
+        editPlaylistMenuItem:string         { "_Edit" }
         addToPlaylistMenuItem:string        { "_Add To Playlist" }
-        schedulePlaylistMenuItem:string     { "_Schedule Playlist" }
+        schedulePlaylistMenuItem:string     { "_Schedule" }
         cueMenuItem:string                  { "Pre_view" }
         addToLiveModeMenuItem:string        { "Add To _Live Mode" }
     }

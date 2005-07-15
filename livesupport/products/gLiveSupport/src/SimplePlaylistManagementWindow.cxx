@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -294,6 +294,7 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
     playlist = gLiveSupport->getEditedPlaylist();
     
     if (playlist) {
+        nameEntry->set_text(*playlist->getTitle());
         entriesModel->clear();
         rowNumber = 0;
         for (it = playlist->begin(); it != playlist->end(); ++it) {
@@ -380,6 +381,9 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
             return;         // should never happen
     }
     
+    Ptr<Glib::ustring>::Ref     title(new Glib::ustring(nameEntry->get_text()));
+    playlist->setTitle(title);              // this is stupid; TODO: fix it
+
     showContents();
 }
 

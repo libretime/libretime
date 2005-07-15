@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -188,6 +188,10 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
 
     try{
         playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                                *getResourceUstring("editPlaylistMenuItem"),
+                                sigc::mem_fun(*this,
+                                        &ScratchpadWindow::onEditPlaylist)));
+        playlistMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
                                 *getResourceUstring("addToPlaylistMenuItem"),
                                 sigc::mem_fun(*this,
                                     &ScratchpadWindow::onAddToPlaylist)));
@@ -283,7 +287,7 @@ ScratchpadWindow :: showContents(void)                          throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the create playlist button getting clicked.
+ *  Event handler for the add to playlist button getting clicked.
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onAddToPlaylistButtonClicked (void)         throw ()
@@ -492,6 +496,18 @@ ScratchpadWindow :: removeItem(Ptr<const UniqueId>::Ref    id)  throw ()
 
         it++;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Edit Playlist menu item selected from the
+ *  entry conext menu
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onEditPlaylist(void)                        throw ()
+{
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    gLiveSupport->openPlaylistForEditing(playable->getId());
 }
 
 
