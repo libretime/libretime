@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace LiveSupport::Core;
 /**
  *  A generic interface for playing audio files.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.12 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.13 $
  */
 class AudioPlayerInterface
 {
@@ -99,11 +99,19 @@ class AudioPlayerInterface
 
         /**
          *  Attach an event listener for this audio player.
-         *  After this call, the supplied event will recieve all events
-         *  related to this audio player.
+         *  After this call, the supplied event listener object will recieve
+         *  all events related to this audio player.
+         *
+         *  Currently, there is only one event emitted by the audio player:
+         *  if the audio clip or playlist has finished playing naturally, 
+         *  the onStop() method of the listener is called.
+         *  Note that this event is not emitted if playing was stopped by 
+         *  a call to stop() or pause(); 
+         *  and also that for a playlist, the event is only fired once, 
+         *  at the end, and not for each item inside the playlist.
          *
          *  @param eventListener the event listener to register.
-         *  @see #detach
+         *  @see #detachListener
          */
         virtual void
         attachListener(AudioPlayerEventListener*    eventListener)
@@ -117,7 +125,7 @@ class AudioPlayerInterface
          *  @param eventListener the event listener to unregister.
          *  @exception std::invalid_argument if the supplied event listener
          *             has not been previously registered.
-         *  @see #attach
+         *  @see #attachListener
          */
         virtual void
         detachListener(AudioPlayerEventListener*    eventListener)
@@ -175,8 +183,9 @@ class AudioPlayerInterface
                                                                       = 0;
 
         /**
-         *  Pause the player.
-         *  Playing can be resumed by calling start().
+         *  Pause the player. Playing can be resumed by calling start().
+         *
+         *  This will not trigger a call to onStop() of the attached listeners.
          *
          *  @exception std::logic_error if there was no previous call to
          *             open().
@@ -198,6 +207,7 @@ class AudioPlayerInterface
 
         /**
          *  Stop playing.
+         *  This will not trigger a call to onStop() of the attached listeners.
          *
          *  @exception std::logic_error if there was no previous call to
          *             start()
