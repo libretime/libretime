@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.42 $
+    Version  : $Revision: 1.43 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.42 $
+ *  @version $Revision: 1.43 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -471,13 +471,14 @@ class GLiveSupport : public LocalizedConfigurable,
                                                     throw (XmlRpcException);
 
         /**
-         *  Add a file to the Scratchpad, and update it.
+         *  Add an item to the Scratchpad, and update it.
+         *  If the item is already in the scratchpad, it gets pushed to the top.
          *
          *  @param playable the audio clip or playlist to be added
          */
         void
         addToScratchpad(Ptr<Playable>::Ref  playable)           throw ();
-        
+
         /**
          *  Return the Scratchpad contents.
          *
