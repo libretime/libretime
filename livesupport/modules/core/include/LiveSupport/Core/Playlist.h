@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.38 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -127,8 +127,8 @@ using namespace boost::posix_time;
  *  &lt;!ATTLIST playlist  playlength   NMTOKEN    #IMPLIED  &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.38 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.39 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -268,14 +268,6 @@ class Playlist : public Configurable,
     public:
         /**
          *  Copy constructor.
-         *
-         *  Copies the <i>pointers</i> for all fields except elementList, 
-         *  savedCopy and metadata.  A new copy of these three are created,
-         *  but the playlists and strings contained in elementList and
-         *  metadata are not duplicated, only a new pointer to them is created.
-         *  The remaining fields are immutable; if you want to modify them, 
-         *  call the appropriate setter function with (a pointer to) an object
-         *  with the new value.
          *
          *  @param otherPlaylist the playlist to be copied
          */

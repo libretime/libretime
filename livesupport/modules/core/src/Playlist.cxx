@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.37 $
+    Version  : $Revision: 1.38 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -147,15 +147,20 @@ static const std::string    xmlNamespaceUri
  *----------------------------------------------------------------------------*/
 Playlist :: Playlist(const Playlist & otherPlaylist)
                                             throw ()
-                        : Playable(PlaylistType)
+                        : Playable(PlaylistType),
+                          id        (otherPlaylist.id),
+                          title     (otherPlaylist.title),
+                          playlength(otherPlaylist.playlength),
+                          uri       (otherPlaylist.uri),
+                          token     (otherPlaylist.token)
 {
-    id          = otherPlaylist.id;
-    title       = otherPlaylist.title;
-    playlength  = otherPlaylist.playlength;
-    uri         = otherPlaylist.uri;
-    token       = otherPlaylist.token;
-
-    elementList.reset(new PlaylistElementListType(*otherPlaylist.elementList));
+    elementList.reset(new PlaylistElementListType);
+    const_iterator  it;
+    for (it = otherPlaylist.begin(); it != otherPlaylist.end(); ++it) {
+        Ptr<PlaylistElement>::Ref   otherElement(new PlaylistElement(
+                                                                *it->second ));
+        elementList->insert(std::make_pair(it->first, otherElement));
+    }
     
     if (otherPlaylist.savedCopy) {
         savedCopy.reset(new Playlist(*otherPlaylist.savedCopy));
@@ -177,12 +182,11 @@ Playlist :: Playlist(Ptr<UniqueId>::Ref            id,
                      Ptr<time_duration>::Ref       playlength,
                      Ptr<const std::string>::Ref   uri)
                                                            throw ()
-                        : Playable(PlaylistType)
+                        : Playable(PlaylistType),
+                          id(id),
+                          uri(uri)
 {
-    this->id         = id;
     this->title.reset(new Glib::ustring(""));
-    this->playlength = playlength;
-    this->uri        = uri;
     
     elementList.reset(new PlaylistElementListType);
 
@@ -199,13 +203,10 @@ Playlist :: Playlist(Ptr<UniqueId>::Ref               id,
                      Ptr<time_duration>::Ref          playlength,
                      Ptr<const std::string>::Ref      uri)
                                                            throw ()
-                        : Playable(PlaylistType)
+                        : Playable(PlaylistType),
+                          id(id),
+                          uri(uri)
 {
-    this->id         = id;
-    this->title      = title;
-    this->playlength = playlength;
-    this->uri        = uri;
-    
     elementList.reset(new PlaylistElementListType);
 
     setTitle(title);
