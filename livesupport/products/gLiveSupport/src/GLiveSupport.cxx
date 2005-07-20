@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.60 $
+    Version  : $Revision: 1.61 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -695,6 +695,7 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
     }
 
     masterPanel->updateSimplePlaylistMgmtWindow();
+    emitSignalEditedPlaylistModified();
 }
 
 

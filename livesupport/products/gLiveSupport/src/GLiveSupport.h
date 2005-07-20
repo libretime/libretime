@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.44 $
+    Version  : $Revision: 1.45 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.44 $
+ *  @version $Revision: 1.45 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -271,6 +271,22 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         virtual void
         releaseCueAudio(void)                   throw (std::logic_error);
+
+        /**
+         *  Emit the "edited playlist has been modified" signal.
+         */
+        void
+        emitSignalEditedPlaylistModified(void)                  throw ()
+        {
+            signalEditedPlaylistModified().emit();
+        }
+
+
+    protected:
+        /**
+         *  A signal object to notify people that the edited playlist changed.
+         */
+        sigc::signal<void>              signalEditedPlaylistModifiedObject;
 
 
     public:
@@ -782,6 +798,17 @@ class GLiveSupport : public LocalizedConfigurable,
          */
         Gtk::Image*
         getStationLogoImage()                   throw ();
+
+        /**
+         *  The signal raised when the edited playlist is modified.
+         *
+         *  @return the signal object (a protected member of this class)
+         */
+        sigc::signal<void>
+        signalEditedPlaylistModified(void)      throw ()
+        {
+            return signalEditedPlaylistModifiedObject;
+        }
 };
 
 /* ================================================= external data structures */

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,8 +87,10 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
         std::exit(1);
     }
 
-    EntryBin *      nameEntryBin = Gtk::manage(wf->createEntryBin());
-    nameEntry             = nameEntryBin->getEntry();
+    nameEntry             = Gtk::manage(wf->createEntryBin());
+    nameEntry->signal_changed().connect(sigc::mem_fun(
+                    *this, &SimplePlaylistManagementWindow::onTitleEdited ));
+
     entriesScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
     entriesModel          = Gtk::ListStore::create(modelColumns);
     entriesView           = Gtk::manage(wf->createTreeView(entriesModel));
@@ -154,7 +156,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     Gtk::Alignment *    nameEntryAlignment = Gtk::manage(new Gtk::Alignment(
                                         Gtk::ALIGN_LEFT, Gtk::ALIGN_CENTER,
                                         0.7));  // take up 70% of available room
-    nameEntryAlignment->add(*nameEntryBin);
+    nameEntryAlignment->add(*nameEntry);
     nameBox->pack_start(*nameEntryAlignment, Gtk::PACK_EXPAND_WIDGET, 5);
     mainBox->pack_start(*nameBox, Gtk::PACK_SHRINK, 5);
 
@@ -204,6 +206,9 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                                         DialogWindow::noButton |
                                         DialogWindow::yesButton,
                                         gLiveSupport->getBundle() ));
+
+    gLiveSupport->signalEditedPlaylistModified().connect(sigc::mem_fun(
+            *this, &SimplePlaylistManagementWindow::onPlaylistModified ));
 }
 
 
@@ -391,6 +396,27 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
  *  Signal handler for the fade info being edited.
  *----------------------------------------------------------------------------*/
 void
+SimplePlaylistManagementWindow :: onTitleEdited(void)               throw()
+{
+    Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
+    if (!playlist) {
+        playlist = gLiveSupport->openPlaylistForEditing();
+    }
+    Ptr<Glib::ustring>::Ref     title(new Glib::ustring(
+                                                    nameEntry->get_text()));
+    if (*title != *playlist->getTitle()) {
+        playlist->setTitle(title);
+        isPlaylistModified = true;
+    }
+    
+    showContents();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the fade info being edited.
+ *----------------------------------------------------------------------------*/
+void
 SimplePlaylistManagementWindow :: onFadeInfoEdited(
                                         const Glib::ustring &  pathString,
                                         int                    columnId,
@@ -436,9 +462,6 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
             return;         // should never happen
     }
     
-    Ptr<Glib::ustring>::Ref     title(new Glib::ustring(nameEntry->get_text()));
-    playlist->setTitle(title);              // this is stupid; TODO: fix it
-
     showContents();
 }
 
@@ -511,5 +534,15 @@ SimplePlaylistManagementWindow :: isLengthOkay(
     time_duration   totalFades = *newFadeInfo->getFadeIn()
                                + *newFadeInfo->getFadeOut();
     return (totalFades <= *playlistElement->getPlayable()->getPlaylength());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the playlist being modified outside the window.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onPlaylistModified(void)          throw()
+{
+    isPlaylistModified = true;
 }
 

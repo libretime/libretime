@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/include/LiveSupport/Widgets/EntryBin.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ using namespace LiveSupport::Core;
  *  A container, holding a Gtk::Entry as its only child.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class EntryBin : public BlueBin
 {
@@ -116,6 +116,17 @@ class EntryBin : public BlueBin
         }
 
         /**
+         *  Set the text of the entry.
+         *
+         *  @return the get_text() string of the Gtk::Entry.
+         */
+        void
+        set_text(const Glib::ustring &  text)               throw ()
+        {
+            getEntry()->set_text(text);
+        }
+
+        /**
          *  The signal proxy for pressing enter in the entry field.
          *
          *  @return the signal_activate() proxy of the Gtk::Entry.
@@ -124,6 +135,17 @@ class EntryBin : public BlueBin
         signal_activate(void)                               throw ()
         {
             return getEntry()->signal_activate();
+        }
+
+        /**
+         *  The signal proxy for the text having changed in the entry field.
+         *
+         *  @return the signal_changed() proxy of the Gtk::Entry.
+         */
+        Glib::SignalProxy0<void>
+        signal_changed(void)                                throw ()
+        {
+            return getEntry()->signal_changed();
         }
 };
 

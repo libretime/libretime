@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -102,12 +102,28 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                 fadeOutColumnId  };
 
         /**
+         *  Signal handler for the title being edited.
+         */
+        void
+        onTitleEdited(void)                                     throw();
+
+        /**
          *  Signal handler for the fade info being edited.
+         *
+         *  @path       the path representing the row in the tree model
+         *  @columnId   the ID of the row which was passed to appendColumn()
+         *  @newText    the new fade value
          */
         void
         onFadeInfoEdited(const Glib::ustring &  path,
                          int                    columnId,
                          const Glib::ustring &  newText)        throw();
+
+        /**
+         *  Signal handler for the playlist being modified outside the window.
+         */
+        void
+        onPlaylistModified(void)                                throw();
 
         /**
          *  Set the fade in of a playlist element.
@@ -157,7 +173,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.11 $
+         *  @version $Revision: 1.12 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -225,7 +241,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         /**
          *  The test input entry for the name of the playlist.
          */
-        Gtk::Entry                * nameEntry;
+        EntryBin                  * nameEntry;
 
         /**
          *  A scrolled window, so that the entry list can be scrolled.
