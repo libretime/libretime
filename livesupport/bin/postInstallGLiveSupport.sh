@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.7 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallGLiveSupport.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -59,10 +59,10 @@ printUsage()
     echo "  -p, --port          The port of the apache web server [default: 80]"
     echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
     echo "                          [default: 3344]";
-    echo "  -o, --output-dsp    The dsp device of live-mode broadcast";
-    echo "                          [default: /dev/dsp]";
-    echo "  -c, --cue-dsp       The dsp device of preview listening";
-    echo "                          [default: /dev/dsp]";
+    echo "  -o, --output-device The audio device of live-mode broadcast";
+    echo "                          [default: plughw:0,0]";
+    echo "  -c, --cue-device    The audio device of preview listening";
+    echo "                          [default: plughw:0,0]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -73,7 +73,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:H:hp:P:c:o: -l directory:,host:,help,port:,scheduler-port:,cue-dsp:,output-dsp: -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:H:hp:P:c:o: -l directory:,host:,help,port:,scheduler-port:,cue-device:,output-device: -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -92,10 +92,10 @@ while true; do
         -P|--scheduler-port)
             scheduler_port=$2;
             shift; shift;;
-        -o|--output-dsp)
+        -o|--output-device)
             output_alsa_device=$2;
             shift; shift;;
-        -c|--cue_alsa_device)
+        -c|--cue-device)
             cue_alsa_device=$2;
             shift; shift;;			
         --)

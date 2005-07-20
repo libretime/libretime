@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/postInstallScheduler.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -72,8 +72,8 @@ printUsage()
     echo "                      database. [default: livesupport]";
     echo "  -w, --dbpassword    The database user password.";
     echo "                      [default: livesupport]";
-    echo "  -o, --output-dsp    The dsp device of broadcast";
-    echo "                      [default: /dev/dsp]";	
+    echo "  -o, --output-device The audio device of broadcast";
+    echo "                      [default: plughw:0,0]";	
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -84,7 +84,7 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o d:D:g:H:hp:P:r:s:u:w:o: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port:,www-root:,output-dsp -n $CMD -- "$@") || exit 1
+opts=$(getopt -o d:D:g:H:hp:P:r:s:u:w:o: -l apache-group:,database:,dbserver:,dbuser:,dbpassword:,directory:,host:,help,port:,scheduler-port:,www-root:,output-device -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
@@ -121,7 +121,7 @@ while true; do
         -w|--dbpassword)
             dbpassword=$2;
             shift; shift;;
-        -o|--output-dsp)
+        -o|--output-device)
             output_alsa_device=$2;
             shift; shift;;			
         --)
