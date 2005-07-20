@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -184,7 +184,7 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     // show
     set_name("simplePlaylistManagementWindow");
-    set_default_size(470, 300);
+    set_default_size(480, 350);
     set_modal(false);
     property_window_position().set_value(Gtk::WIN_POS_NONE);
 
@@ -301,6 +301,8 @@ SimplePlaylistManagementWindow :: onCloseButtonClicked(void)        throw ()
                                         // can happen if window is closed
             }                           //   with Alt-F4 -- treated as cancel
         }
+    } else {
+        closeWindow();
     }
 }
 
