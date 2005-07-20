@@ -117,6 +117,8 @@ root:table
         nameLabel:string              { "Name" }
         saveButtonLabel:string        { "Save" }
         closeButtonLabel:string       { "Close" }
+        lockFadesCheckButtonLabel:string    
+                                      { "Lock fade-out to following fade-in" }
         statusBar:string              { "status bar" }
         playlistSavedMsg:string       { "Saved playlist ''{0}''." }
         savePlaylistDialogMsg:string  { "Do you want to save the playlist?" }

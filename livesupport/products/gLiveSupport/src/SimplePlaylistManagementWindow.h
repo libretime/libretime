@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -81,13 +81,14 @@ using namespace LiveSupport::Widgets;
  *  | | +-- entry2 ----------------------------+ | |
  *  | |  ...                                     | |
  *  | +------------------------------------------+ |
+ *  | +- lock fades checkbox -+ |
  *  |        +- save button -+  +- close button -+ |
  *  | +-- status bar ----------------------------+ |
  *  +----------------------------------------------+
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -108,6 +109,46 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                          int                    columnId,
                          const Glib::ustring &  newText)        throw();
 
+        /**
+         *  Set the fade in of a playlist element.
+         */
+        void
+        setFadeIn(Ptr<PlaylistElement>::Ref   playlistElement,
+                  Ptr<time_duration>::Ref     newFadeIn)        throw();
+
+        /**
+         *  Set the fade out of a playlist element.
+         */
+        void
+        setFadeOut(Ptr<PlaylistElement>::Ref  playlistElement,
+                   Ptr<time_duration>::Ref    newFadeOut)       throw();
+
+        /**
+         *  Check that fades are not longer than the whole clip.
+         *
+         *  @return true if (fadeIn + fadeOut <= playlength).
+         */
+        bool
+        isLengthOkay(Ptr<PlaylistElement>::Ref  playlistElement,
+                     Ptr<FadeInfo>::Ref         newFadeInfo)    throw();
+
+        /**
+         *  Cancel the edited playlist.
+         *  Cancel the edited playlist in GLiveSupport, and close the window.
+         *
+         *  @see GLiveSupport::cancelEditedPlaylist()
+         *  @see closeWindow()
+         */
+        void
+        cancelPlaylist(void)                                    throw();
+
+        /**
+         *  Clean and close the window.
+         *  Set all widgets to empty and close the window.
+         */
+        void
+        closeWindow(void)                                       throw();
+
 
     protected:
 
@@ -116,7 +157,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.10 $
+         *  @version $Revision: 1.11 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
@@ -222,6 +263,18 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         Ptr<DialogWindow>::Ref      dialogWindow;
 
         /**
+         *  A flag set to true when the edited playlist is modified.
+         */
+        bool                        isPlaylistModified;
+
+        /**
+         *  A flag controlled by the "lock fades" check button.
+         *  This determines whether the fade-out of a clip is assumed to
+         *  be equal to the fade-in of the next clip.
+         */
+        bool                        areFadesLocked;
+
+        /**
          *  Save the edited playlist.
          *
          *  @return true if the playlist was saved successully.
@@ -240,6 +293,12 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          */
         virtual void
         onCloseButtonClicked(void)                              throw ();
+
+        /**
+         *  Signal handler for the "lock fades" check button toggled.
+         */
+        virtual void
+        onLockFadesCheckButtonClicked(void)                     throw ();
 
 
     public:
@@ -273,27 +332,6 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
 
 /* ====================================================== function prototypes */
 
-        /**
-         *  Auxilliary function: set the fade in of a playlist element.
-         */
-        void
-        setFadeIn(Ptr<PlaylistElement>::Ref   playlistElement,
-                  Ptr<time_duration>::Ref     newFadeIn)        throw();
-
-        /**
-         *  Auxilliary function: set the fade out of a playlist element.
-         */
-        void
-        setFadeOut(Ptr<PlaylistElement>::Ref  playlistElement,
-                   Ptr<time_duration>::Ref    newFadeOut)       throw();
-
-        /**
-         *  Auxilliary function: check that fades are not longer than 
-         *  the whole clip.
-         */
-        bool
-        isLengthOkay(Ptr<PlaylistElement>::Ref  playlistElement,
-                     Ptr<FadeInfo>::Ref         newFadeInfo)    throw();
 
 } // namespace GLiveSupport
 } // namespace LiveSupport

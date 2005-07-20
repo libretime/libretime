@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.59 $
+    Version  : $Revision: 1.60 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -443,6 +443,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: logout(void)                                throw ()
 {
     if (sessionId.get() != 0) {
+        cancelEditedPlaylist();
         stopCueAudio();
         storeScratchpadContents();
         scratchpadContents->clear();
@@ -700,24 +701,19 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
 /*------------------------------------------------------------------------------
  *  Save the currently edited playlist in storage
  *----------------------------------------------------------------------------*/
-Ptr<Playlist>::Ref
+void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: savePlaylist(void)
                                                     throw (XmlRpcException)
 {
-    Ptr<Playlist>::Ref  playlist;
-
     if (editedPlaylist) {
         if (editedPlaylist->isLocked()) {
             editedPlaylist->deleteSavedCopy();
             storage->savePlaylist(sessionId, editedPlaylist);
-            playlist = storage->getPlaylist(sessionId, editedPlaylist->getId());
-            addToScratchpad(playlist);
+            addToScratchpad(editedPlaylist);    // update with new version
         }
         editedPlaylist.reset();
     }
-
-    return playlist;
 }
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,8 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport)
+            gLiveSupport(gLiveSupport),
+            isPlaylistModified(false)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -128,6 +129,23 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
     entriesView->signalCellEdited().connect(sigc::mem_fun(
                     *this, &SimplePlaylistManagementWindow::onFadeInfoEdited ));
 
+    // construct the "lock fades" check button
+    Ptr<Glib::ustring>::Ref     lockFadesCheckButtonLabel;
+    try {
+        lockFadesCheckButtonLabel = getResourceUstring(
+                                                "lockFadesCheckButtonLabel");
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    Gtk::CheckButton *  lockFadesCheckButton = Gtk::manage(new Gtk::CheckButton(
+                                                *lockFadesCheckButtonLabel ));
+    lockFadesCheckButton->set_active(true);
+    areFadesLocked = true;
+    lockFadesCheckButton->signal_toggled().connect(sigc::mem_fun(
+            *this, 
+            &SimplePlaylistManagementWindow::onLockFadesCheckButtonClicked ));
+        
     // set up the layout
     Gtk::VBox *         mainBox = Gtk::manage(new Gtk::VBox);
     
@@ -142,6 +160,8 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
 
     mainBox->pack_start(*entriesScrolledWindow, Gtk::PACK_EXPAND_WIDGET, 5);
     
+    mainBox->pack_start(*lockFadesCheckButton, Gtk::PACK_SHRINK, 5);
+
     Gtk::ButtonBox *    buttonBox = Gtk::manage(new Gtk::HButtonBox(
                                                         Gtk::BUTTONBOX_END, 5));
     buttonBox->pack_start(*saveButton);
@@ -218,16 +238,15 @@ SimplePlaylistManagementWindow :: savePlaylist (void)               throw ()
         
         playlist->setTitle(title);
         gLiveSupport->savePlaylist();
+        gLiveSupport->openPlaylistForEditing(playlist->getId());
+        isPlaylistModified = false;
 
         Ptr<Glib::ustring>::Ref statusText = formatMessage(
                                                     "playlistSavedMsg",
                                                     *playlist->getTitle());
         statusBar->set_text(*statusText);
-
-        // clean the entry fields
-        nameEntry->set_text("");
-        entriesModel->clear();
         return true;
+        
     } catch (XmlRpcException &e) {
         statusBar->set_text(e.what());
         return false;
@@ -236,47 +255,78 @@ SimplePlaylistManagementWindow :: savePlaylist (void)               throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the save button getting clicked.
+ *  Signal handler for the save button getting clicked.
  *----------------------------------------------------------------------------*/
 void
-SimplePlaylistManagementWindow :: onSaveButtonClicked (void)        throw ()
+SimplePlaylistManagementWindow :: onSaveButtonClicked(void)         throw ()
 {
     savePlaylist();
 }
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the close button getting clicked.
+ *  Cancel the edited playlist (no questions asked).
  *----------------------------------------------------------------------------*/
 void
-SimplePlaylistManagementWindow :: onCloseButtonClicked (void)       throw ()
+SimplePlaylistManagementWindow :: cancelPlaylist(void)        throw ()
+{
+    gLiveSupport->cancelEditedPlaylist();
+    closeWindow();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the close button getting clicked.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onCloseButtonClicked(void)        throw ()
 {
     if (gLiveSupport->getEditedPlaylist()) {
-        DialogWindow::ButtonType    result = dialogWindow->run();
-        switch (result) {
-            case DialogWindow::noButton:
-                        gLiveSupport->cancelEditedPlaylist();
-                        statusBar->set_text("");
-                        nameEntry->set_text("");
-                        entriesModel->clear();
-                        break;
+        if (!isPlaylistModified) {
+            cancelPlaylist();
+        } else {
+            DialogWindow::ButtonType    result = dialogWindow->run();
+            switch (result) {
+                case DialogWindow::noButton:        cancelPlaylist();
+                                                    break;
 
-            case DialogWindow::yesButton:
-                        if (savePlaylist()) {
-                            statusBar->set_text("");
-                            break;
-                        } else {
-                            return;
-                        }
+                case DialogWindow::yesButton:       if (savePlaylist()) {
+                                                        closeWindow();
+                                                    }
+                                                    break;
 
-            case DialogWindow::cancelButton:
-                        return;
-            default :               // can happen if window is closed
-                        return;     //   with Alt-F4 -- treated as cancel
+                case DialogWindow::cancelButton:    break;
+
+                default :                           break;
+                                        // can happen if window is closed
+            }                           //   with Alt-F4 -- treated as cancel
         }
     }
+}
 
+
+/*------------------------------------------------------------------------------
+ *  Clean and close the window.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: closeWindow(void)                 throw ()
+{
+    statusBar->set_text("");
+    nameEntry->set_text("");
+    entriesModel->clear();
+    isPlaylistModified = false;
     hide();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the "lock fades" check button toggled.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onLockFadesCheckButtonClicked(void)
+                                                                    throw ()
+{
+    areFadesLocked = !areFadesLocked;
 }
 
 
@@ -349,8 +399,13 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
     std::vector<int>            rowNumberVector = path.get_indices();
     int                         rowNumber = rowNumberVector.at(0);
     
-    Ptr<time_duration>::Ref     newTime(new time_duration(
-                                            duration_from_string(newText) ));
+    Ptr<time_duration>::Ref     newTime;
+    try {
+        newTime.reset(new time_duration(duration_from_string(newText)));
+    } catch (boost::bad_lexical_cast &e) {
+        showContents();         // bad time format; restore previous state
+        return;
+    }
     
     Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
     Playlist::const_iterator    iter = playlist->begin();
@@ -363,16 +418,14 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
     switch (columnId) {
         case fadeInColumnId :
             setFadeIn(playlistElement, newTime);
-            if (iter != playlist->begin()) {
-                --iter;
+            if (areFadesLocked && iter-- != playlist->begin()) {
                 Ptr<PlaylistElement>::Ref   prevPlaylistElement = iter->second;
                 setFadeOut(prevPlaylistElement, newTime);
             }
             break;
         case fadeOutColumnId :
             setFadeOut(playlistElement, newTime);
-            ++iter;
-            if (iter != playlist->end()) {
+            if (areFadesLocked && ++iter != playlist->end()) {
                 Ptr<PlaylistElement>::Ref   nextPlaylistElement = iter->second;
                 setFadeIn(nextPlaylistElement, newTime);
             }
@@ -392,22 +445,26 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
  *  Auxilliary function: set the fade in of a playlist element.
  *----------------------------------------------------------------------------*/
 void
-GLiveSupport :: setFadeIn(Ptr<PlaylistElement>::Ref     playlistElement,
+SimplePlaylistManagementWindow :: setFadeIn(
+                          Ptr<PlaylistElement>::Ref     playlistElement,
                           Ptr<time_duration>::Ref       newFadeIn)
                                                                     throw()
 {
     Ptr<FadeInfo>::Ref          oldFadeInfo = playlistElement->getFadeInfo();
     Ptr<time_duration>::Ref     oldFadeOut;
     if (oldFadeInfo) {
-        oldFadeOut = oldFadeInfo->getFadeOut();
+        if (*oldFadeInfo->getFadeIn() == *newFadeIn) {
+            return;
+        }
+        oldFadeOut  = oldFadeInfo->getFadeOut();
     } else {
         oldFadeOut.reset(new time_duration(0,0,0,0));
     }
-    
     Ptr<FadeInfo>::Ref          newFadeInfo(new FadeInfo(
                                                 newFadeIn, oldFadeOut ));
     if (isLengthOkay(playlistElement, newFadeInfo)) {
         playlistElement->setFadeInfo(newFadeInfo);
+        isPlaylistModified = true;
     }
 }
 
@@ -416,13 +473,17 @@ GLiveSupport :: setFadeIn(Ptr<PlaylistElement>::Ref     playlistElement,
  *  Auxilliary function: set the fade out of a playlist element.
  *----------------------------------------------------------------------------*/
 void
-GLiveSupport :: setFadeOut(Ptr<PlaylistElement>::Ref     playlistElement,
-                           Ptr<time_duration>::Ref       newFadeOut)
+SimplePlaylistManagementWindow :: setFadeOut(
+                            Ptr<PlaylistElement>::Ref     playlistElement,
+                            Ptr<time_duration>::Ref       newFadeOut)
                                                                     throw()
 {
     Ptr<FadeInfo>::Ref          oldFadeInfo = playlistElement->getFadeInfo();
     Ptr<time_duration>::Ref     oldFadeIn;
     if (oldFadeInfo) {
+        if (*oldFadeInfo->getFadeOut() == *newFadeOut) {
+            return;
+        }
         oldFadeIn = oldFadeInfo->getFadeIn();
     } else {
         oldFadeIn.reset(new time_duration(0,0,0,0));
@@ -431,6 +492,7 @@ GLiveSupport :: setFadeOut(Ptr<PlaylistElement>::Ref     playlistElement,
                                                     oldFadeIn, newFadeOut ));
     if (isLengthOkay(playlistElement, newFadeInfo)) {
         playlistElement->setFadeInfo(newFadeInfo);
+        isPlaylistModified = true;
     }
 }
 
@@ -439,12 +501,13 @@ GLiveSupport :: setFadeOut(Ptr<PlaylistElement>::Ref     playlistElement,
  *  Auxilliary function: check that fades are not longer than the whole clip.
  *----------------------------------------------------------------------------*/
 inline bool
-GLiveSupport :: isLengthOkay(Ptr<PlaylistElement>::Ref     playlistElement,
-                             Ptr<FadeInfo>::Ref            newFadeInfo)
+SimplePlaylistManagementWindow :: isLengthOkay(
+                            Ptr<PlaylistElement>::Ref     playlistElement,
+                            Ptr<FadeInfo>::Ref            newFadeInfo)
                                                                     throw()
 {
     time_duration   totalFades = *newFadeInfo->getFadeIn()
                                + *newFadeInfo->getFadeOut();
-    return (totalFades < *playlistElement->getPlayable()->getPlaylength());
+    return (totalFades <= *playlistElement->getPlayable()->getPlaylength());
 }
 

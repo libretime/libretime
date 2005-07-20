@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.43 $
+    Version  : $Revision: 1.44 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.43 $
+ *  @version $Revision: 1.44 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -547,13 +547,14 @@ class GLiveSupport : public LocalizedConfigurable,
          *  Save the currently edited playlist in storage.
          *  This call has to be preceeded by a call to openPlaylistForEditing()
          *  or addToPlaylist().
+         *  After this call, the playlist is no longer being edited.  If you 
+         *  want to continue editing, open the playlist for editing again.
          *
-         *  @return the audio clip that was saved.
          *  @exception XmlRpcException on upload failures.
          *  @see #openPlaylistForEditing
          *  @see #addToPlaylist
          */
-        Ptr<Playlist>::Ref
+        void
         savePlaylist(void)                          throw (XmlRpcException);
 
         /**
