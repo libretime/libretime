@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/scheduler.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -70,6 +70,15 @@ case "$mode" in
         sleep 2
         ;;
 
+    'restart')
+        echo "Stopping the LiveSupport scheduler..."
+        $scheduler_exe -c $config_file stop
+        sleep 2
+        echo "Starting the LiveSupport scheduler..."
+        $scheduler_exe -c $config_file start
+        sleep 2
+        ;;
+
     'status')
         echo "Checking LiveSupport scheduler status..."
         $scheduler_exe -c $config_file status
@@ -96,7 +105,7 @@ case "$mode" in
         echo "LiveSupport scheduler System V runlevel init script."
         echo ""
         echo "Usage:"
-        echo "  $0 start|stop|status|install|uninstall|kill"
+        echo "  $0 start|stop|restart|status|install|uninstall|kill"
         echo ""
 
 esac
