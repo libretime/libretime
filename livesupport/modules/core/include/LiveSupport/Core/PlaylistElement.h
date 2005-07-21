@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/PlaylistElement.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -103,8 +103,8 @@ class Playlist;
  *  &lt;!ATTLIST playlistElement  relativeOffset  NMTOKEN   #REQUIRED  &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.13 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.14 $
  */
 class PlaylistElement : public Configurable 
 {
@@ -295,6 +295,21 @@ class PlaylistElement : public Configurable
         getId(void) const                                  throw ()
         {
             return id;
+        }
+
+        /**
+         *  Set the relative offset of the playlist element.
+         *  Note: this is very dangerous; use only if you know what you are
+         *  doing.  Never ever change the relative offset of a PlaylistElement
+         *  which is contained in a Playlist.
+         *
+         *  @param newOffset    the new relative offset of the element.
+         */
+        void
+        setRelativeOffset(Ptr<time_duration>::Ref   newOffset)
+                                                            throw ()
+        {
+            relativeOffset = newOffset;
         }
 
         /**

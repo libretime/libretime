@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,8 +69,8 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners()),
             LocalizedObject(bundle),
-            gLiveSupport(gLiveSupport),
-            isPlaylistModified(false)
+            isPlaylistModified(false),
+            gLiveSupport(gLiveSupport)
 {
     Ptr<WidgetFactory>::Ref     wf = WidgetFactory::getInstance();
     
@@ -128,9 +128,33 @@ SimplePlaylistManagementWindow :: SimplePlaylistManagementWindow (
         std::exit(1);
     }
 
+    entriesView->signal_button_press_event().connect_notify(sigc::mem_fun(
+                    *this, &SimplePlaylistManagementWindow::onEntryClicked ));
     entriesView->signalCellEdited().connect(sigc::mem_fun(
                     *this, &SimplePlaylistManagementWindow::onFadeInfoEdited ));
 
+    // create the right-click entry context menu
+    rightClickMenu = Gtk::manage(new Gtk::Menu());
+    Gtk::Menu::MenuList&    rightClickMenuList = rightClickMenu->items();
+
+    try {
+        rightClickMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                *getResourceUstring("upMenuItem"),
+                sigc::mem_fun(*this,
+                        &SimplePlaylistManagementWindow::onUpItem)));
+        rightClickMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                *getResourceUstring("downMenuItem"),
+                sigc::mem_fun(*this,
+                        &SimplePlaylistManagementWindow::onDownItem)));
+        rightClickMenuList.push_back(Gtk::Menu_Helpers::MenuElem(
+                *getResourceUstring("removeMenuItem"),
+                sigc::mem_fun(*this,
+                        &SimplePlaylistManagementWindow::onRemoveItem)));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
     // construct the "lock fades" check button
     Ptr<Glib::ustring>::Ref     lockFadesCheckButtonLabel;
     try {
@@ -355,25 +379,25 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
         entriesModel->clear();
         rowNumber = 0;
         for (it = playlist->begin(); it != playlist->end(); ++it) {
-            Ptr<PlaylistElement>::Ref  
-                                    playlistElem  = it->second;
-            Ptr<Playable>::Ref      playable      = playlistElem->getPlayable();
-            Gtk::TreeModel::Row     row           = *(entriesModel->append());
+            Ptr<PlaylistElement>::Ref playlistElement
+                                          = it->second;
+            Ptr<Playable>::Ref   playable = playlistElement->getPlayable();
+            Gtk::TreeModel::Row  row      = *(entriesModel->append());
     
+            row[modelColumns.playlistElementColumn]
+                        = playlistElement;
             row[modelColumns.rowNumberColumn]
                         = rowNumber++;
-            row[modelColumns.idColumn]
-                        = playable->getId();
             row[modelColumns.startColumn]
                         = *TimeConversion::timeDurationToHhMmSsString(
-                                            playlistElem->getRelativeOffset());
+                                        playlistElement->getRelativeOffset());
             row[modelColumns.titleColumn]
                         = Glib::Markup::escape_text(*playable->getTitle());
             row[modelColumns.lengthColumn]
                         = *TimeConversion::timeDurationToHhMmSsString(
-                                            playable->getPlaylength());
+                                        playable->getPlaylength());
 
-            Ptr<FadeInfo>::Ref      fadeInfo = playlistElem->getFadeInfo();
+            Ptr<FadeInfo>::Ref      fadeInfo = playlistElement->getFadeInfo();
             Ptr<time_duration>::Ref fadeIn, fadeOut;
             if (fadeInfo) {
                 fadeIn  = fadeInfo->getFadeIn();
@@ -544,5 +568,142 @@ void
 SimplePlaylistManagementWindow :: onPlaylistModified(void)          throw()
 {
     isPlaylistModified = true;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for an entry being clicked in the list
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onEntryClicked(GdkEventButton * event)
+                                                                    throw()
+{
+    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        Gtk::TreePath           currentPath;
+        Gtk::TreeViewColumn *   column;
+        int     cell_x,
+                cell_y;
+        bool foundValidRow = entriesView->get_path_at_pos(
+                                            int(event->x), int(event->y),
+                                            currentPath, column,
+                                            cell_x, cell_y);
+
+        if (foundValidRow) {
+            currentItem = entriesModel->get_iter(currentPath);
+            if (currentItem) {
+                rightClickMenu->popup(event->button, event->time);
+            }
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Up menu item selected from the context menu.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onUpItem(void)                    throw()
+{
+    if (currentItem && currentItem != entriesModel->children().begin()) {
+        Gtk::TreeIter   previousItem = currentItem;
+        --previousItem;
+        swapPlaylistElements(previousItem, currentItem);
+        isPlaylistModified = true;
+        showContents();
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Down menu item selected from the context menu.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onDownItem(void)                  throw()
+{
+    if (currentItem) {
+        Gtk::TreeIter   nextItem = currentItem;
+        ++nextItem;
+        if (nextItem) {
+            swapPlaylistElements(currentItem, nextItem);
+            isPlaylistModified = true;
+            showContents();
+        }
+    }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Swap two playlist elements in the edited playlist.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: swapPlaylistElements(
+                                        Gtk::TreeIter   firstIter,
+                                        Gtk::TreeIter   secondIter)
+                                                                    throw()
+{
+    Ptr<PlaylistElement>::Ref
+            firstElement  = (*firstIter) [modelColumns.playlistElementColumn];
+    Ptr<PlaylistElement>::Ref
+            secondElement = (*secondIter)[modelColumns.playlistElementColumn];
+
+    // remove the two playlist elements
+    Ptr<Playlist>::Ref  playlist = gLiveSupport->getEditedPlaylist();
+    playlist->removePlaylistElement(firstElement->getId());
+    playlist->removePlaylistElement(secondElement->getId());
+
+    // swap the relative offsets so that elt2.begin <-- elt1.begin
+    //                               and elt1.end   <-- elt2.end   
+    Ptr<time_duration>::Ref     firstStart = firstElement->getRelativeOffset();
+    Ptr<time_duration>::Ref     secondStart(new time_duration(
+                                        *secondElement->getRelativeOffset()
+                                        + *secondElement->getPlayable()
+                                                        ->getPlaylength()
+                                        - *firstElement->getPlayable()
+                                                       ->getPlaylength() ));
+    firstElement->setRelativeOffset(secondStart);
+    secondElement->setRelativeOffset(firstStart);
+
+    // move fades around if they seem to be simple crossfades    
+    Ptr<time_duration>::Ref     beginFade = firstElement->getFadeInfo()
+                                                        ->getFadeIn();
+    Ptr<time_duration>::Ref     midFade1  = firstElement->getFadeInfo()
+                                                        ->getFadeOut();
+    Ptr<time_duration>::Ref     midFade2  = secondElement->getFadeInfo()
+                                                         ->getFadeIn();
+    Ptr<time_duration>::Ref     endFade   = secondElement->getFadeInfo()
+                                                         ->getFadeOut();
+
+    if (*midFade1 == *midFade2) {
+        Ptr<FadeInfo>::Ref  firstFadeInfo (new FadeInfo(beginFade, midFade1));
+        Ptr<FadeInfo>::Ref  secondFadeInfo(new FadeInfo(midFade1,  endFade ));
+
+        firstElement->setFadeInfo(secondFadeInfo);
+        secondElement->setFadeInfo(firstFadeInfo);
+    }
+
+    // add the playlist elements back in
+    playlist->addPlaylistElement(firstElement);
+    playlist->addPlaylistElement(secondElement);
+    
+    // Note:
+    // removing and then adding is necessary to make sure that the playlist
+    // elements are correctly indexed by their relative offset in the playlist.
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu item selected from the context menu.
+ *----------------------------------------------------------------------------*/
+void
+SimplePlaylistManagementWindow :: onRemoveItem(void)                throw()
+{
+    Ptr<Playlist>::Ref          playlist = gLiveSupport->getEditedPlaylist();
+    Ptr<PlaylistElement>::Ref   playlistElement 
+                        = (*currentItem)[modelColumns.playlistElementColumn];
+    
+    playlist->removePlaylistElement(playlistElement->getId());
+
+    isPlaylistModified = true;
+    showContents();
 }
 

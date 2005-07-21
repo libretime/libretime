@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -387,19 +387,7 @@ ScratchpadWindow :: onEntryClicked (GdkEventButton     * event) throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Remove menu item selected from the entry conext menu
- *----------------------------------------------------------------------------*/
-void
-ScratchpadWindow :: onRemoveItem(void)                          throw ()
-{
-    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    removeItem(playable->getId());
-    showContents();
-}
-
-
-/*------------------------------------------------------------------------------
- *  Event handler for the Up menu item selected from the entry conext menu
+ *  Event handler for the Up menu item selected from the entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onUpItem(void)                              throw ()
@@ -435,7 +423,7 @@ ScratchpadWindow :: onUpItem(void)                              throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for the Down menu item selected from the entry conext menu
+ *  Event handler for the Down menu item selected from the entry context menu
  *----------------------------------------------------------------------------*/
 void
 ScratchpadWindow :: onDownItem(void)                            throw ()
@@ -470,6 +458,18 @@ ScratchpadWindow :: onDownItem(void)                            throw ()
 
         it++;
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Event handler for the Remove menu item selected from the entry context menu
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onRemoveItem(void)                          throw ()
+{
+    Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
+    removeItem(playable->getId());
+    showContents();
 }
 
 

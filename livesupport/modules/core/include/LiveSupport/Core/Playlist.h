@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.39 $
+ *  @version $Revision: 1.40 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -175,17 +175,6 @@ class Playlist : public Configurable,
          *  The list of playlist elements for this playlist.
          */
         Ptr<PlaylistElementListType>::Ref  elementList;
-
-        /**
-         *  Add a new playlist element to the playlist.
-         *
-         *  @param playlistElement the new playlist element to be added
-         *  @exception std::invalid_argument if the playlist already contains
-         *             a playlist element with the same relative offset
-         */
-        void
-        addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
-                                                throw (std::invalid_argument);
 
         /**
          *  A saved copy of this playlist.
@@ -624,6 +613,15 @@ class Playlist : public Configurable,
                     Ptr<time_duration>::Ref  relativeOffset,
                     Ptr<FadeInfo>::Ref       fadeInfo
                                               = Ptr<FadeInfo>::Ref())
+                                                throw ();
+
+        /**
+         *  Add a new playlist element to the playlist.
+         *
+         *  @param playlistElement the new playlist element to be added
+         */
+        void
+        addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
                                                 throw ();
 
         /**

@@ -120,6 +120,11 @@ root:table
         lockFadesCheckButtonLabel:string    
                                       { "Lock fade-out to following fade-in" }
         statusBar:string              { "status bar" }
+        
+        upMenuItem:string             { "Move _Up" }
+        downMenuItem:string           { "Move D_own" }
+        removeMenuItem:string         { "_Remove" }
+
         playlistSavedMsg:string       { "Saved playlist ''{0}''." }
         savePlaylistDialogMsg:string  { "Do you want to save the playlist?" }
         emptyTitleErrorMsg:string     { "Please enter a title." }

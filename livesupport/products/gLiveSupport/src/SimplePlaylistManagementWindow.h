@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -100,6 +100,24 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          */
         enum {  fadeInColumnId,
                 fadeOutColumnId  };
+
+        /**
+         *  A flag set to true when the edited playlist is modified.
+         */
+        bool                        isPlaylistModified;
+
+        /**
+         *  A flag controlled by the "lock fades" check button.
+         *  This determines whether the fade-out of a clip is assumed to
+         *  be equal to the fade-in of the next clip.
+         */
+        bool                        areFadesLocked;
+
+        /**
+         *  An iterator pointing to the current row, for popup functions.
+         *  It is set by onEntryClicked(), before popping up the menu.
+         */
+        Gtk::TreeIter               currentItem;
 
         /**
          *  Signal handler for the title being edited.
@@ -125,6 +143,65 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         void
         onPlaylistModified(void)                                throw();
 
+        /**
+         *  Signal handler for the mouse clicked on one of the entries.
+         *  This is used to pop up the right-click context menu.
+         *
+         *  @param event the button event recieved
+         */
+        void
+        onEntryClicked(GdkEventButton     * event)              throw ();
+
+        /**
+         *  Signal handler for the save button clicked.
+         */
+        void
+        onSaveButtonClicked(void)                               throw ();
+
+        /**
+         *  Signal handler for the close button clicked.
+         */
+        void
+        onCloseButtonClicked(void)                              throw ();
+
+        /**
+         *  Signal handler for the "lock fades" check button toggled.
+         */
+        void
+        onLockFadesCheckButtonClicked(void)                     throw ();
+
+        /**
+         *  Signal handler for the "up" menu item selected from
+         *  the right-click context menu.
+         */
+        void
+        onUpItem(void)                                          throw ();
+
+        /**
+         *  Signal handler for the "down" menu item selected from
+         *  the right-click context menu.
+         */
+        void
+        onDownItem(void)                                        throw ();
+
+        /**
+         *  Swap two playlist elements in the edited playlist.
+         *  This is used by onUpItem() and onDownItem().
+         *
+         *  @param firstIter    the first item, to be swapped...
+         *  @param secondIter   ... with this second item
+         */
+        void
+        swapPlaylistElements(Gtk::TreeIter   firstIter,
+                             Gtk::TreeIter   secondIter)        throw ();
+
+        /**
+         *  Signal handler for the "remove" menu item selected from
+         *  the right-click context menu.
+         */
+        virtual void
+        onRemoveItem(void)                                      throw ();
+        
         /**
          *  Set the fade in of a playlist element.
          */
@@ -165,6 +242,14 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         void
         closeWindow(void)                                       throw();
 
+        /**
+         *  Save the edited playlist.
+         *
+         *  @return true if the playlist was saved successully.
+         */
+        virtual bool
+        savePlaylist(void)                                      throw ();
+
 
     protected:
 
@@ -173,16 +258,11 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.12 $
+         *  @version $Revision: 1.13 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {
             public:
-                /**
-                 *  The column for the id of the audio clip or playlist.
-                 */
-                Gtk::TreeModelColumn<Ptr<const UniqueId>::Ref>  idColumn;
-
                 /**
                  *  The column for the start of the playlist entry.
                  */
@@ -209,16 +289,22 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
                 Gtk::TreeModelColumn<Glib::ustring>             fadeOutColumn;
 
                 /**
+                 *  The column for the pointer to the playlist element.
+                 */
+                Gtk::TreeModelColumn<Ptr<PlaylistElement>::Ref>
+                                                        playlistElementColumn;
+
+                /**
                  *  Constructor.
                  */
                 ModelColumns(void)                  throw ()
                 {
-                    add(idColumn);
                     add(startColumn);
                     add(titleColumn);
                     add(fadeInColumn);
                     add(lengthColumn);
                     add(fadeOutColumn);
+                    add(playlistElementColumn);
                 }
         };
 
@@ -279,42 +365,10 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         Ptr<DialogWindow>::Ref      dialogWindow;
 
         /**
-         *  A flag set to true when the edited playlist is modified.
+         *  The right-click context menu that comes up when right-clicking
+         *  a playlist element.
          */
-        bool                        isPlaylistModified;
-
-        /**
-         *  A flag controlled by the "lock fades" check button.
-         *  This determines whether the fade-out of a clip is assumed to
-         *  be equal to the fade-in of the next clip.
-         */
-        bool                        areFadesLocked;
-
-        /**
-         *  Save the edited playlist.
-         *
-         *  @return true if the playlist was saved successully.
-         */
-        virtual bool
-        savePlaylist(void)                                      throw ();
-
-        /**
-         *  Signal handler for the save button clicked.
-         */
-        virtual void
-        onSaveButtonClicked(void)                               throw ();
-
-        /**
-         *  Signal handler for the close button clicked.
-         */
-        virtual void
-        onCloseButtonClicked(void)                              throw ();
-
-        /**
-         *  Signal handler for the "lock fades" check button toggled.
-         */
-        virtual void
-        onLockFadesCheckButtonClicked(void)                     throw ();
+        Gtk::Menu *                 rightClickMenu;
 
 
     public:

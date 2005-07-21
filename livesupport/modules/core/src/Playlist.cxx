@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.38 $
+    Version  : $Revision: 1.39 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -431,7 +431,7 @@ Playlist :: configure(const xmlpp::Element    & element)
  *----------------------------------------------------------------------------*/
 void
 Playlist::addPlaylistElement(Ptr<PlaylistElement>::Ref playlistElement)
-                                                throw (std::invalid_argument)
+                                                throw ()
 {
     Ptr<const time_duration>::Ref  relativeOffset
                                    = playlistElement->getRelativeOffset();

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.10 $
+         *  @version $Revision: 1.11 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -216,18 +216,12 @@ class ScratchpadWindow : public WhiteWindow,
 
         /**
          *  Signal handler for the mouse clicked on one of the entries.
+         *  This is used to pop up the right-click context menu.
          *
          *  @param event the button event recieved
          */
         virtual void
         onEntryClicked(GdkEventButton     * event)              throw ();
-
-        /**
-         *  Signal handler for the "remove" menu item selected from
-         *  the entry context menu.
-         */
-        virtual void
-        onRemoveItem(void)                                      throw ();
 
         /**
          *  Signal handler for the "up" menu item selected from
@@ -243,6 +237,13 @@ class ScratchpadWindow : public WhiteWindow,
         virtual void
         onDownItem(void)                                        throw ();
 
+        /**
+         *  Signal handler for the "remove" menu item selected from
+         *  the entry context menu.
+         */
+        virtual void
+        onRemoveItem(void)                                      throw ();
+        
         /**
          *  Signal handler for the "edit playlist" menu item selected from
          *  the entry context menu.
