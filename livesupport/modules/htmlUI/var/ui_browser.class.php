@@ -387,7 +387,8 @@ class uiBrowser extends uiBase {
 
 
         if ($handle = @fsockopen($host, $port, $errno, $errstr, 10)) {
-            fputs($handle, "GET $uri HTTP/1.0\r\n\r\n");
+            fputs($handle, "GET $uri HTTP/1.0\r\n");
+            fputs($handle, "Host: $host:$port\r\n\r\n");
             $data = fread($handle, 1024);
             list($header, $lost) = explode("\r\n\r\n", $data);
             eregi("^[^\r^\n]*", $data, $piece);

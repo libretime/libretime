@@ -209,12 +209,12 @@ input, select { font-size: 12px;
     font-size: 11px;
 }
 
-.whatplaying .time .left { font-size: 12px;
+.whatplaying .time .left {
     float: left;
     width: 125px;
 }
 
-.whatplaying .time .right { font-size: 12px;
+.whatplaying .time .right { 
     width: 125px;
     float: left;
     text-align: right;

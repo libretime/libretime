@@ -15,6 +15,9 @@ require_once 'HTML/QuickForm/Renderer/ArraySmarty.php';
 $Smarty         =& new Smarty;
 $uiBrowser      =& new uiBrowser($config);
 $uiBase         =& $uiBrowser;
+$jscom          =& new jscom(array("jscom_wrapper"));
+$jscom->handler();
+
 
 ## load Smarty+filters ##############################################
 require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';

@@ -31,10 +31,10 @@
                             {else}
                                 <div style="cursor: pointer">
                             {/if}
-                                {$i.title|truncate:18}
+                                {$i.title|truncate:14}
                                 </div>
                         {else}
-                            {$i.title|truncate:18}
+                            {$i.title|truncate:14}
                         {/if}                                         {* on some reason object call doesn´t like usage of array *}
                     </td>                                             {assign var="_duration" value=$i.duration}
                     <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>

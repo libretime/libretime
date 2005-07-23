@@ -121,10 +121,12 @@ class uiHandler extends uiBase {
             $this->redirUrl = UI_BROWSER."?act=fileList";
             return FALSE;
         }
+
         if (!$this->_validateForm($formdata, $mask)) {
             $this->redirUrl = UI_BROWSER."?act=editFile&id=".$id;
             return FALSE;
         }
+
         $tmpgunid = md5(microtime().$_SERVER['SERVER_ADDR'].rand()."org.mdlf.livesupport");
         $ntmp = $this->gb->bufferDir.'/'.$tmpgunid;
         move_uploaded_file($formdata['mediafile']['tmp_name'], $ntmp);
@@ -179,12 +181,14 @@ class uiHandler extends uiBase {
         if ($ia['audio']['codec'])      $this->_setMDataValue($id, UI_MDATA_KEY_ENCODER,    $ia['audio']['codec']);
 
         // from id3 Tags
-        foreach ($mask['pages'] as $key=>$val) {
-            foreach ($mask['pages'][$key] as $k=>$v) {
-                if ($v['id3'] != FALSE) {
-                    $key = strtolower($v['id3']);
-                    if ($ia['comments'][$key][0]) {
-                        $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0], $langid);
+        foreach ($mask['pages'] as $key=>$val) {                   ## loop main, music, talk
+            foreach ($mask['pages'][$key] as $k=>$v) {             ## loop throught elements
+                if (is_array($v['id3'])) {
+                    foreach ($v['id3'] as $name) {                 ## loop throught list of equivalent id3-tags
+                        $key = strtolower($name);
+                        if ($ia['comments'][$key][0]) {
+                            $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0], $langid);
+                        }
                     }
                 }
             }
@@ -274,6 +278,7 @@ class uiHandler extends uiBase {
                 $this->_retMsg('Unable to set "$1" to value "$2".', $key, $val);
             }
         }
+
         if (UI_VERBOSE) $this->_retMsg('Metadata saved');
     }
 

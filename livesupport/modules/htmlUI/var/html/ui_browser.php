@@ -4,6 +4,10 @@ require_once dirname(__FILE__).'/../ui_browser_init.php';
 if (is_array($_REQUEST['popup'])){
     foreach ($_REQUEST['popup'] as $val) {
         switch ($val) {
+            case "jscom":
+                 $Smarty->display('jscom.tpl');
+            break;
+
             case "_reload_parent":
                 $Smarty->display('popup/_reload_parent.tpl');
             break;

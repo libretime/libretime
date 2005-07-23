@@ -1,5 +1,6 @@
 <script type="text/javascript">
-     function frename(name, id){literal}{{/literal}
+
+    function frename(name, id){literal}{{/literal}
         var s=document.getElementById('ID'+id);
         s.innerHTML='<form action="{$UI_HANDLER}" method="post" style="display:inline">'+
                         '<input type="text" name="newname" value="'+name+'" size="12">'+
@@ -7,30 +8,34 @@
                         '<input type="hidden" name="act" value="rename">'+
                     '</form>';
      {literal}}{/literal}
-     function fmove(id, relPath){literal}{{/literal}
+
+    function fmove(id, relPath){literal}{{/literal}
         var newPath=prompt('Destination folder (relative path):', relPath);
         if(newPath==null) return;
         location.href='{$UI_HANDLER}?id='+id+'&act=move&newPath='+newPath;
      {literal}}{/literal}
-     function fcopy(id, relPath){literal}{{/literal}
+
+    function fcopy(id, relPath){literal}{{/literal}
         var newPath=prompt('Destination folder (relative path):', relPath);
         if(newPath==null) return;
         location.href='{$UI_HANDLER}?id='+id+'&act=copy&newPath='+newPath;
      {literal}}{/literal}
-     function freplicate(name, id){literal}{{/literal}
+
+    function freplicate(name, id){literal}{{/literal}
         var np=prompt('Destination folder (relative path):', id);
         if(np==null) return;
         location.href='{$UI_HANDLER}?id='+id+'&act=repl&newparid='+np;
      {literal}}{/literal}
-     function newFolder(){literal}{{/literal}
+
+    function newFolder(){literal}{{/literal}
         var nn=prompt('New folder name:');
         if(nn==null) return;
         location.href='{$UI_HANDLER}?id={$START.id}&act=newFolder&newname='+nn;
-     {literal}}
+    {literal}}
 
 
-     function popup(url, name, width, height)   // popup in center of perent window
-     {
+    function popup(url, name, width, height)   // popup in center of perent window
+    {
         var screenX;
         var screenY;
         var Xpos;
@@ -57,10 +62,10 @@
 
         popupwin = window.open(url, name, arg);
         window.popupwin.focus();
-     }
+    }
 
-     function hpopup(url)
-     {
+    function hpopup(url)
+    {
         var width  = 160;
         var height = 120;
         var name = Math.random();
@@ -90,13 +95,20 @@
 
         popupwin = window.open(url, name, arg);
         //window.parent.focus();
-     }
-     {/literal}
+    }
 
-     {UIBROWSER->getAlertMsg assign='alertMsg'}
-     {if $alertMsg}
+    function twoDigit(i) {
+        i = Math.round(i);
+        if(i < 10) i = "0" + i;
+
+        return i;
+    }
+    {/literal}
+
+    {UIBROWSER->getAlertMsg assign='alertMsg'}
+    {if $alertMsg}
         alert('{$alertMsg}');
-     {/if}
+    {/if}
 
 
 </script>

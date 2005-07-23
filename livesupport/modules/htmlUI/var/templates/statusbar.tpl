@@ -1,7 +1,6 @@
 {assign var='_nowplaying'  value=$SCHEDULER->getNowNextClip()}
 {assign var='_nextplaying' value=$SCHEDULER->getNowNextClip(1)}
 
-{include file="script/clock.js.tpl"}
     <!-- start header -->
         <!-- start header left -->
         <div class="headLeft">
@@ -39,24 +38,29 @@
             <!-- start what playing -->
             <div class="whatplaying" id="statusbar_whatsplaying">
                 {if $_nowplaying}
-                    <div class="nowplaying">Now Playing: {$_nowplaying.title|truncate:33}</div>
+                    <div class="nowplaying">##Now Playing##: <strong id="now_title"></strong></div>
                     <div class="scala">
-                        <div class="scala_in" id="statusbar_scala" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
+                        <div class="scala_in" id="now_scala" style="width: {$_nowplaying.percentage}%;">&nbsp;</div>
                     </div>
                     <div class="time">
-                        <div class="left">Elapsed:    <strong id="statusbar_elapsed">{$_nowplaying.elapsed.h}:{$_nowplaying.elapsed.m}:{$_nowplaying.elapsed.s|truncate:2:""}</strong></div>
-                        <div class="right">Remaining: <strong id="statusbar_remaining">{$_nowplaying.remaining.h}:{$_nowplaying.remaining.m}:{$_nowplaying.remaining.s|truncate:2:""}</strong></div>
+                        <div class="left">Elapsed:    <strong id="now_elapsed"></strong></div>
+                        <div class="right">Remaining: <strong id="now_remaining"></strong></div>
                     </div>
                 {/if}
                 <div class="clearer"></div>
+                <div id="next_clip">
                 {if $_nextplaying}
-                    <p>Playing Next: {$_nextplaying.title|truncate:22} {$_nextplaying.duration.h}:{$_nextplaying.duration.m}:{$_nextplaying.duration.s|truncate:2:""}</p>
+                    <p>##Playing Next##: <span id="next_title"></span> <span id="next_duration"></span></p>
                 {/if}
+                </div>
             </div>
             <!-- end what playing -->
         </div>
         <!-- end header right -->
     <!-- end header -->
+
+{include file="script/clock.js.tpl"}
+{include file="script/progressbar.js.tpl"}
 
 {assign var='_nowplaying'  value=null}
 {assign var='_nextplaying' value=null}

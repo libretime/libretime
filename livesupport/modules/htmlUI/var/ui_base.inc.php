@@ -1,4 +1,12 @@
 <?php
+function jscom_wrapper($object, $parent, $method) {
+    $args = func_get_args();
+    unset($args[0]);
+    unset($args[1]);
+    unset($args[2]);
+    return call_user_func_array(array(&$GLOBALS[$object]->$parent, "$method"), $args);
+}
+
 function errCallBack($err)
 {
     echo "<pre>gm:\n".$err->getMessage()."\ndi:\n".$err->getDebugInfo()."\nui:\n".$err->getUserInfo()."\n";
@@ -136,6 +144,7 @@ class uiBase
         $this->PLAYLIST     =& new uiPlaylist($this);
         $this->SCHEDULER    =& new uiScheduler($this);
         $this->SUBJECTS     =& new uiSubjects($this);
+        $this->_self_       =& $this;
     }
 
 

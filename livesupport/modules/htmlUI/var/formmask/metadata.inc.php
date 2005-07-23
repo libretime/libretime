@@ -69,21 +69,21 @@ $mask = array(
                 'type'      => 'text',
                 'label'     => 'Title',
                 'required'  => TRUE,
-                'id3'       => 'Title'
+                'id3'       => array('Title')
             ),
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
                 'label'     => 'Creator',
                 'required'  => TRUE,
-                'id3'       => 'Artist'
+                'id3'       => array('Artist')
             ),
             array(
                 'element'   => 'dc:type',
                 'type'      => 'text',
                 'label'     => 'Genre',
                 'required'  => TRUE,
-                'id3'       => 'Genre'
+                'id3'       => array('Genre')
             ),
             array(
                 'element'   => 'dc:format',
@@ -110,52 +110,38 @@ $mask = array(
                 'element'   => 'dc:title',
                 'type'      => 'text',
                 'label'     => 'Title',
-                'id3'       => 'Title'
+                #'id3'       => 'Title'
             ),
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
                 'label'     => 'Creator',
-                'id3'       => 'Artist'
+                #'id3'       => 'Artist'
             ),
             array(
                 'element'   => 'dc:source',
                 'type'      => 'text',
                 'label'     => 'Album',
-                'id3'       => 'Album'
+                'id3'       => array('Album')
             ),
-            /*
-            array(
-                'element'   => 'ls:year',
-                'type'      => 'date',
-                'label'     => 'Year',
-                'options'   => array(
-                                'language'      => 'en',
-                                'format'        => 'dMY',
-                                'addEmptyOption'=> TRUE,
-                                'minYear'       => 1900
-                               ),
-                'id3'       => 'Year'
-            ),
-            */
             array(
                 'element'   => 'ls:year',
                 'type'      => 'select',
                 'label'     => 'Year',
                 'options'   => _getNumArr(1900, date('Y')+5),
-                'id3'       => 'Year'
+                'id3'       => array('Year')
             ),
             array(
                 'element'   => 'dc:type',
                 'type'      => 'text',
                 'label'     => 'Genre',
-                'id3'       => 'Genre'
+                #'id3'       => 'Genre'
             ),
             array(
                 'element'   => 'dc:description',
                 'type'      => 'textarea',
                 'label'     => 'Description',
-                'id3'       => 'Comment'
+                'id3'       => array('Comment', 'Comments')
             ),
             array(
                 'element'   => 'dc:format',
@@ -173,14 +159,14 @@ $mask = array(
                 'type'      => 'text',
                 'label'     => 'BPM',
                 'rule'      => 'numeric',
-                'id3'       => 'BPM'
+                'id3'       => array('BPM')
             ),
             array(
                 'element'   => 'ls:rating',
                 'type'      => 'text',
                 'label'     => 'Rating',
                 'rule'      => 'numeric',
-                'id3'       => 'Rating'
+                'id3'       => array('Rating')
             ),
             array(
                 'element'   => 'dcterms:extent',
@@ -193,46 +179,46 @@ $mask = array(
                 'element'   => 'ls:encoded_by',
                 'type'      => 'text',
                 'label'     => 'Encoded by',
-                'id3'       => 'Encoded by'
+                'id3'       => array('Encoded by')
             ),
             array(
                 'element'   => 'ls:track_num',
                 'type'      => 'select',
                 'label'     => 'Track number',
                 'options'   => _getNumArr(0, 99),
-                'id3'       => 'Track'
+                'id3'       => array('Track')
             ),
             array(
                 'element'   => 'ls:disc_num',
                 'type'      => 'select',
                 'label'     => 'Disc number',
                 'options'   => _getNumArr(0, 20),
-                'id3'       => 'Disk'
+                'id3'       => array('Disk')
             ),
             array(
                 'element'   => 'ls:mood',
                 'type'      => 'text',
                 'label'     => 'Mood',
-                'id3'       => 'Mood'
+                'id3'       => array('Mood')
             ),
             array(
                 'element'   => 'dc:publisher',
                 'type'      => 'text',
                 'label'     => 'Label',
-                'id3'       => 'Label'
+                'id3'       => array('Label')
             ),
             array(
                 'element'   => 'ls:composer',
                 'type'      => 'text',
                 'label'     => 'Composer',
-                'id3'       => 'Composer'
+                'id3'       => array('Composer')
             ),
             array(
                 'element'   => 'ls:bitrate',
                 'type'      => 'text',
                 'label'     => 'Bitrate',
                 'rule'      => 'numeric',
-                'id3'       => 'Bitrate'
+                'id3'       => array('Bitrate')
             ),
             array(
                 'element'   => 'ls:channels',
@@ -244,69 +230,69 @@ $mask = array(
                                 2   => 'Stereo',
                                 6   => '5.1'
                                ),
-                'id3'       => 'Channels'
+                'id3'       => array('Channels')
             ),
             array(
                 'element'   => 'ls:samplerate',
                 'type'      => 'text',
                 'label'     => 'Sample rate',
                 'rule'      => 'numeric',
-                'id3'       => 'Samplerate'
+                'id3'       => array('Samplerate')
             ),
             array(
                 'element'   => 'ls:encoder',
                 'type'      => 'text',
                 'label'     => 'Encoder software used',
-                'id3'       => 'Encoder'
+                'id3'       => array('Encoder')
             ),
             array(
                 'element'   => 'ls:crc',
                 'type'      => 'text',
                 'label'     => 'Checksum',
                 'rule'      => 'numeric',
-                'id3'       => 'CRC'
+                'id3'       => array('CRC')
             ),
             array(
                 'element'   => 'ls:lyrics',
                 'type'      => 'textarea',
                 'label'     => 'Lyrics',
-                'id3'       => 'Lyrics'
+                'id3'       => array('Lyrics')
             ),
             array(
                 'element'   => 'ls:orchestra',
                 'type'      => 'text',
                 'label'     => 'Orchestra or band',
-                'id3'       => 'Orchestra or band'
+                'id3'       => array('Orchestra or band')
             ),
             array(
                 'element'   => 'ls:conductor',
                 'type'      => 'text',
                 'label'     => 'Conductor',
-                'id3'       => 'Conductor'
+                'id3'       => array('Conductor')
             ),
             array(
                 'element'   => 'ls:lyricist',
                 'type'      => 'text',
                 'label'     => 'Lyricist',
-                'id3'       => 'Lyricist'
+                'id3'       => array('Lyricist')
             ),
             array(
                 'element'   => 'ls:originallyricist',
                 'type'      => 'text',
                 'label'     => 'Original lyricist',
-                'id3'       => 'Original lyricist'
+                'id3'       => array('Original lyricist')
             ),
             array(
                 'element'   => 'ls:radiostationname',
                 'type'      => 'text',
                 'label'     => 'Radio station name',
-                'id3'       => 'Radio station name'
+                'id3'       => array('Radio station name')
             ),
             array(
                 'element'   => 'ls:audiofileinfourl',
                 'type'      => 'text',
                 'label'     => 'Audio file information web page',
-                'id3'       => 'Audio file information web page',
+                'id3'       => array('Audio file information web page'),
                 'attributes'=> array('maxlength' => 256)
             ),
             array(
@@ -319,7 +305,7 @@ $mask = array(
                 'element'   => 'ls:artisturl',
                 'type'      => 'text',
                 'label'     => 'Artist web page',
-                'id3'       => 'Artist web page',
+                'id3'       => array('Artist web page'),
                 'attributes'=> array('maxlength' => 256)
             ),
             array(
@@ -332,7 +318,7 @@ $mask = array(
                 'element'   => 'ls:audiosourceurl',
                 'type'      => 'text',
                 'label'     => 'Audio source web page',
-                'id3'       => 'Audio source web page',
+                'id3'       => array('Audio source web page'),
                 'attributes'=> array('maxlength' => 256)
             ),
             array(
@@ -345,7 +331,7 @@ $mask = array(
                 'element'   => 'ls:radiostationurl',
                 'type'      => 'text',
                 'label'     => 'Radio station web page',
-                'id3'       => 'Radio station web page',
+                'id3'       => array('Radio station web page'),
                 'attributes'=> array('maxlength' => 256)
             ),
             array(
@@ -358,7 +344,7 @@ $mask = array(
                 'element'   => 'ls:buycdurl',
                 'type'      => 'text',
                 'label'     => 'Buy CD web page',
-                'id3'       => 'Buy CD webpage',
+                'id3'       => array('Buy CD webpage'),
                 'attributes'=> array('maxlength' => 256)
             ),
             array(
@@ -372,26 +358,26 @@ $mask = array(
                 'type'      => 'text',
                 'label'     => 'ISRC number',
                 'rule'      => 'numeric',
-                'id3'       => 'ISRC'
+                'id3'       => array('ISRC')
             ),
             array(
                 'element'   => 'ls:catalognumber',
                 'type'      => 'text',
                 'label'     => 'Catalog number',
                 'rule'      => 'numeric',
-                'id3'       => 'Catalog'
+                'id3'       => array('Catalog')
             ),
             array(
                 'element'   => 'ls:originalartist',
                 'type'      => 'text',
                 'label'     => 'Original artist',
-                'id3'       => 'Original Artist'
+                'id3'       => array('Original Artist')
             ),
             array(
                 'element'   => 'dc:rights',           ## ???
                 'type'      => 'text',
                 'label'     => 'Copyright',
-                'id3'       => 'Copyright'
+                'id3'       => array('Copyright')
             ),
         ),
         'Talk'   => array(
@@ -467,28 +453,24 @@ $mask = array(
                 'element'   => 'dc:title',
                 'type'      => 'text',
                 'label'     => 'Title',
-                'required'  => TRUE,
-                'id3'       => 'Title'
+                'required'  => TRUE
             ),
             array(
                 'element'   => 'dc:creator',
                 'type'      => 'text',
                 'label'     => 'Creator',
-                'required'  => TRUE,
-                'id3'       => 'Artist'
+                'required'  => TRUE
             ),
             array(
                 'element'   => 'dcterms:extent',
                 'type'      => 'text',
                 'label'     => 'Length',
-                'attributes'=> array('disabled' => 'on'),
-                'id3'       => FALSE
+                'attributes'=> array('disabled' => 'on')
             ),
             array(
                 'element'   => 'dc:description',
                 'type'      => 'textarea',
-                'label'     => 'Description',
-                'id3'       => 'Comment'
+                'label'     => 'Description'
             ),
     )
 );
