@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.64 $
+    Version  : $Revision: 1.65 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.64 $
+ *  @version $Revision: 1.65 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -648,6 +648,8 @@ class GreenBox extends BasicStor{
      *  @param plid string, playlist global unique id
      *  @param offset string, current playtime (hh:mm:ss.ssssss)
      *  @param distance int, 0=current clip; 1=next clip ...
+     *  @param lang string, optional xml:lang value for select language version
+     *  @param deflang string, optional xml:lang for default language
      *  @return array of matching clip info:
      *   <ul>
      *      <li>gunid string, global unique id of clip</li>
@@ -656,7 +658,8 @@ class GreenBox extends BasicStor{
      *      <li>duration string, total playlength of clip </li>
      *   </ul>
      */
-    function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0)
+    function displayPlaylistClipAtOffset($sessid, $plid, $offset, $distance=0,
+        $lang=NULL, $deflang=NULL)
     {
         require_once"Playlist.php";
         $pl =& Playlist::recallByGunid($this, $plid);
@@ -667,7 +670,7 @@ class GreenBox extends BasicStor{
         $id = $this->_idFromGunid($res['gunid']);
         if(PEAR::isError($id)) return $id;
         if(!is_null($id)){
-            $md = $this->bsGetMetadataValue($id, "dc:title"/*, $lang, $deflang*/);
+            $md = $this->bsGetMetadataValue($id, "dc:title", $lang, $deflang);
             if(PEAR::isError($md)) return $md;
             if(isset($md[0]['value'])){ $res['title'] = $md[0]['value']; }
         }
