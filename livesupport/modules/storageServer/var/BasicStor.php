@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.55 $
+    Version  : $Revision: 1.56 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.55 $
+ *  @version $Revision: 1.56 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -680,6 +680,9 @@ class BasicStor extends Alib{
             );
         }
         */
+        if($category == 'dcterms:extent'){
+            $value = $this->normalizeExtent($value);
+        }
         $res = $ac->md->setMetadataValue(
             $category, $value, $lang, $mid, $container);
         if($this->dbc->isError($res)) return $res;
@@ -690,6 +693,23 @@ class BasicStor extends Alib{
         return $res;
     }
 
+    /**
+     *  Normalize time value to hh:mm:ss:dddddd format
+     *
+     *  @param v mixed, value to normalize
+     *  @return string
+     */
+    function normalizeExtent($v)
+    {
+        if(!preg_match("|^\d{2}:\d{2}:\d{2}.\d{6}$|", $v)){
+            require_once"Playlist.php";
+            $s = Playlist::_plTimeToSecs($v);
+            $t = Playlist::_secsToPlTime($s);
+            return $t;
+        }
+        return $v;
+    }
+    
     /**
      *  Set metadata values in 'batch' mode
      *
@@ -921,7 +941,7 @@ class BasicStor extends Alib{
      *
      *  @param login string
      *  @param pass string OPT
-     *  <span style="color:red">@param realname string OPT</span>
+     *  @param realname string OPT
      *  @return int/err
      */
     function addSubj($login, $pass=NULL, $realname='')
@@ -986,6 +1006,11 @@ class BasicStor extends Alib{
     function _authorize($acts, $pars, $sessid='')
     {
         $userid = $this->getSessUserId($sessid);
+        if($this->dbc->isError($userid)) return $userid;
+        if(is_null($userid)){
+            return PEAR::raiseError(
+                "BasicStor::_authorize: invalid session", GBERR_DENY);
+        }
         if(!is_array($pars)) $pars = array($pars);
         if(!is_array($acts)) $acts = array($acts);
         $perm = true;
@@ -1540,9 +1565,11 @@ class BasicStor extends Alib{
             ON {$this->accessTable} (token)");
         $this->dbc->query("CREATE INDEX {$this->accessTable}_gunid_idx
             ON {$this->accessTable} (gunid)");
+        if(!file_exists($this->storageDir)){
+            mkdir($this->storageDir, 02775);
+        }
         if(!file_exists($this->bufferDir)){
             mkdir($this->bufferDir, 02775);
-            chmod($this->bufferDir, 02775); // may be obsolete
         }
         $this->initData();
     }
