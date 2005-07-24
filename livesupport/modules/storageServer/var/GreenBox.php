@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.63 $
+    Version  : $Revision: 1.64 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.63 $
+ *  @version $Revision: 1.64 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -663,6 +663,14 @@ class GreenBox extends BasicStor{
         if(PEAR::isError($pl)) return $pl;
         $res = $pl->displayPlaylistClipAtOffset($offset, $distance);
         if(PEAR::isError($res)) return $res;
+        $res['title'] = NULL;
+        $id = $this->_idFromGunid($res['gunid']);
+        if(PEAR::isError($id)) return $id;
+        if(!is_null($id)){
+            $md = $this->bsGetMetadataValue($id, "dc:title"/*, $lang, $deflang*/);
+            if(PEAR::isError($md)) return $md;
+            if(isset($md[0]['value'])){ $res['title'] = $md[0]['value']; }
+        }
         return $res;
     }
     
