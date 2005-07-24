@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.13 $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/Attic/Makefile,v $
 #
 #   @configure_input@
@@ -70,6 +70,9 @@ TRANS_DIR	= ${PHP_DIR}/trans
 BUFF_DIR	= ${STOR_DIR}/buffer
 TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 
+PEAR_INSTALLER = ${BASE_DIR}/../../tools/pear/bin/install.sh
+ROOT_PATH = ${BASE_DIR}/../..
+
 #-------------------------------------------------------------------------------
 #  	Configuration parameters
 #-------------------------------------------------------------------------------
@@ -90,15 +93,18 @@ TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean dist \
-  db_init db_clean testonly transtest local reset
+  db_init db_clean testonly transtest local reset pear_setup
 
 all: local
 	$(MAKE) -C ../archiveServer all
 
-local: dir_setup db_init
+local: pear_setup dir_setup db_init
 
 dir_setup: ${DOXYGEN_DIR}
 	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
+
+pear_setup:
+	${PEAR_INSTALLER} -d ${ROOT_PATH}
 
 doc:
 	${DOXYGEN} ${DOXYGEN_CONFIG}
