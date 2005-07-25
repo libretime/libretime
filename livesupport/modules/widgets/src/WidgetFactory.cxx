@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/WidgetFactory.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -202,13 +202,13 @@ static const std::string    cueStopButtonRollName
  *  The name of the passive image for the master panel play button.
  */
 static const std::string    masterPlayButtonPassiveName 
-                            = "imageButton/masterPlay.gif";
+                            = "imageButton/masterPlay.png";
 
 /**
  *  The name of the rollover image for the master panel play button.
  */
 static const std::string    masterPlayButtonRollName 
-                            = "imageButton/masterPlayRoll.gif";
+                            = "imageButton/masterPlayRoll.png";
 
 /**
  *  The name of the passive image for the master panel pause button.
@@ -226,13 +226,13 @@ static const std::string    masterPauseButtonRollName
  *  The name of the passive image for the master panel stop button.
  */
 static const std::string    masterStopButtonPassiveName 
-                            = "imageButton/masterStop.gif";
+                            = "imageButton/masterStop.png";
 
 /**
  *  The name of the rollover image for the master panel stop button.
  */
 static const std::string    masterStopButtonRollName 
-                            = "imageButton/masterStopRoll.gif";
+                            = "imageButton/masterStopRoll.png";
 
 /**
  *  The name of the combo box left image.
@@ -281,12 +281,12 @@ static const std::string    playlistsWindowTitleImageName
 /**
  *  The name of the image for the audio clip icon.
  */
-static const std::string    audioClipIconImageName = "icons/audioClipIcon.gif";
+static const std::string    audioClipIconImageName = "icons/audioClipIcon.png";
 
 /**
  *  The name of the image for the playlist icon.
  */
-static const std::string    playlistIconImageName = "icons/playlistIcon.gif";
+static const std::string    playlistIconImageName = "icons/playlistIcon.png";
 
 /**
  *  The name of the image for the title of the scheduler window.
