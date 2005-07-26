@@ -364,6 +364,8 @@ class uiScheduler extends uiCalendar
 
     function getNowNextClip($distance=0)
     {
+        ## just use methods which work without valid authentification
+
         $datetime    = strftime('%Y-%m-%dT%H:%M:%S');
         $xmldatetime = str_replace('-', '', $datetime);
         $pl = $this->displayScheduleMethod($xmldatetime, $xmldatetime);
@@ -373,16 +375,19 @@ class uiScheduler extends uiCalendar
         $pl = current($pl);
         $offset = strftime('%H:%M:%S', time() - $this->_datetime2timestamp($pl['start']) - 3600 * strftime('%H', 0));   ##  subtract difference to UTC
 
-        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance);
+        $clip = $this->Base->gb->displayPlaylistClipAtOffset($this->Base->sessid, $pl['playlistId'], $offset, $distance, $_SESSION['langid'], UI_DEFAULT_LANGID);
 
         if (!$clip['gunid']) return FALSE;
 
         list($duration['h'],  $duration['m'],  $duration['s'])  = explode(':', $this->Base->gb->_secsToPlTime($this->Base->gb->_plTimeToSecs($clip['elapsed']) + $this->Base->gb->_plTimeToSecs($clip['remaining'])));
         list($elapsed['h'],   $elapsed['m'],   $elapsed['s'])   = explode(':', $clip['elapsed']);
         list($remaining['h'], $remaining['m'], $remaining['s']) = explode(':', $clip['remaining']);
+        $duration  = array_map('round', $duration);
+        $elapsed   = array_map('round', $elapsed);
+        $remaining = array_map('round', $remaining);
 
         return array(
-                'title'     => $this->Base->_getMDataValue($this->Base->gb->_idFromGunid($clip['gunid']), UI_MDATA_KEY_TITLE),
+                'title'     => $clip['title'],
                 'duration'  => $duration,
                 'elapsed'   => $elapsed,
                 'remaining' => $remaining,
@@ -394,16 +399,18 @@ class uiScheduler extends uiCalendar
 
     function getNowNextClip4jscom()
     {
+        ## just use methods which work without valid authentification
+
         if ($curr = $this->getNowNextClip()) {
             $next = $this->getNowNextClip(1);
             return array(
                     'title'         => $curr['title'],
-                    'elapsed.h'     => sprintf('%d', $curr['elapsed']['h']),
-                    'elapsed.m'     => sprintf('%d', $curr['elapsed']['m']),
-                    'elapsed.s'     => sprintf('%d', $curr['elapsed']['s']),
-                    'duration.h'    => sprintf('%d', $curr['duration']['h']),
-                    'duration.m'    => sprintf('%d', $curr['duration']['m']),
-                    'duration.s'    => sprintf('%d', $curr['duration']['s']),
+                    'elapsed.h'     => $curr['elapsed']['h'],
+                    'elapsed.m'     => $curr['elapsed']['m'],
+                    'elapsed.s'     => $curr['elapsed']['s'],
+                    'duration.h'    => $curr['duration']['h'],
+                    'duration.m'    => $curr['duration']['m'],
+                    'duration.s'    => $curr['duration']['s'],
                     'next'          => $next ? 1 : 0,
                     'nexttitle'     => $next ? $next['title'] : "",
                     'nextduration'  => $next ? $next['duration']['h'].':'.$next['duration']['m'].':'.sprintf('%d', $next['duration']['s']) : "",
