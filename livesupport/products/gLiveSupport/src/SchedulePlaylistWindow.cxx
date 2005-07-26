@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SchedulePlaylistWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -142,18 +142,18 @@ SchedulePlaylistWindow :: onScheduleButtonClicked (void)              throw ()
 
     // get the hour and minute from the entries
     // and construct an HH:MM:00.00 string from it
-    Glib::ustring   timeStr = hourEntry->get_text();
-    timeStr += ":";
-    timeStr += minuteEntry->get_text();
-    timeStr += ":00.00";
+    Ptr<std::string>::Ref   timeStr(new std::string(hourEntry->get_text()));
+    *timeStr += ":";
+    *timeStr += minuteEntry->get_text();
+    *timeStr += ":00.00";
 
     Ptr<posix_time::ptime>::Ref selectedTime;
 
     try {
-        gregorian::date             date(year, month+1, day);
-        posix_time::time_duration   time(duration_from_string(timeStr.raw()));
-
-        selectedTime.reset(new posix_time::ptime(date, time));
+        gregorian::date     date(year, month+1, day);
+        Ptr<posix_time::time_duration>::Ref 
+                            time = TimeConversion::parseTimeDuration(timeStr);
+        selectedTime.reset(new posix_time::ptime(date, *time));
     } catch (std::exception &e) {
         // most probably duration_from_string failed
         // TODO: notify user

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/src/MessageWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -56,25 +56,29 @@ using namespace LiveSupport::Widgets;
  *----------------------------------------------------------------------------*/
 MessageWindow :: MessageWindow (Ptr<Glib::ustring>::Ref message)
                                                                     throw ()
-          : WhiteWindow(*message,
+          : WhiteWindow("",
                         Colors::White,
                         WidgetFactory::getInstance()->getWhiteWindowCorners(),
-                        0)
+                        WhiteWindow::isModal)
 {
     Ptr<WidgetFactory>::Ref  widgetFactory = WidgetFactory::getInstance();
 
     messageLabel = Gtk::manage(new Gtk::Label(*message));
+    Gtk::Box *          messageLabelBox(new Gtk::HBox);
+    messageLabelBox->pack_start(*messageLabel, false, false, 5);
 
     // init the okButton
     // TODO: localize the OK text on the button
     okButton = Gtk::manage(widgetFactory->createButton("OK"));
     okButton->signal_clicked().connect(sigc::mem_fun(*this,
                                             &MessageWindow::onOkButtonClicked));
+    Gtk::ButtonBox *    okButtonBox = Gtk::manage(new Gtk::HButtonBox);
+    okButtonBox->pack_start(*okButton, 5, 5);
 
     layout = Gtk::manage(new Gtk::VBox());
 
-    layout->pack_start(*messageLabel, true, true);
-    layout->pack_start(*okButton);
+    layout->pack_start(*messageLabelBox, true, true, 5);
+    layout->pack_start(*okButtonBox, false, false, 5);
 
     add(*layout);
     show_all();

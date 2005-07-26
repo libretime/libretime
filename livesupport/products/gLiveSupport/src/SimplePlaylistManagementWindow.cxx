@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -453,7 +453,8 @@ SimplePlaylistManagementWindow :: onFadeInfoEdited(
     
     Ptr<time_duration>::Ref     newTime;
     try {
-        newTime.reset(new time_duration(duration_from_string(newText)));
+        Ptr<std::string>::Ref   newTextPtr(new std::string(newText));
+        newTime = TimeConversion::parseTimeDuration(newTextPtr);
     } catch (boost::bad_lexical_cast &e) {
         showContents();         // bad time format; restore previous state
         return;

@@ -1,29 +1,30 @@
 root:table
 {
-    windowTitle:string       { "LiveSupport Master Panel" }
-    notLoggedInMsg:string    { "Not logged in" }
-    loggedInMsg:string       { "Logged in as {0}" }
-    loginButtonLabel:string  { "log in" }
-    logoutButtonLabel:string { "log out" }
-    liveModeButtonLabel:string              { "live mode" }
-    uploadFileButtonLabel:string            { "upload file" }
-    scratchpadButtonLabel:string            { "scratchpad" }
-    simplePlaylistMgmtButtonLabel:string    { "edit playlist" }
-    schedulerButtonLabel:string             { "scheduler" }
-    searchButtonLabel:string                { "search" }
+    windowTitle:string              { "LiveSupport Master Panel" }
+    notLoggedInMsg:string           { "Not logged in" }
+    loggedInMsg:string              { "Logged in as {0}" }
+    loginButtonLabel:string         { "log in" }
+    logoutButtonLabel:string        { "log out" }
+    liveModeButtonLabel:string      { "live mode" }
+    uploadFileButtonLabel:string    { "upload file" }
+    scratchpadButtonLabel:string    { "scratchpad" }
+    simplePlaylistMgmtButtonLabel:string
+                                    { "edit playlist" }
+    schedulerButtonLabel:string     { "scheduler" }
+    searchButtonLabel:string        { "search" }
 
     cancelButtonLabel:string        { "Cancel" }
     noButtonLabel:string            { "No" }
     yesButtonLabel:string           { "Yes" }
     okButtonLabel:string            { "OK" }
 
-    localeNotAvailableMsg:string        { "Locale {0} not available" }
-    schedulerNotReachableMsg:string     { "Scheduler server not available" }
-    storageNotReachableMsg:string       { "Storage server not available" }
+    localeNotAvailableMsg:string    { "Locale {0} not available" }
+    schedulerNotReachableMsg:string { "Scheduler server not available" }
+    storageNotReachableMsg:string   { "Storage server not available" }
     authenticationNotReachableMsg:string
-                                        { "Authentication server not available" }
-    audioErrorMsg                       { "Audio player error: " }
-    sureToExitMsg:string                { "Are you sure you want to exit?" }
+                                    { "Authentication server not available" }
+    audioErrorMsg                   { "Audio player error: " }
+    sureToExitMsg:string            { "Are you sure you want to exit?" }
 
     loginWindow:table
     {
@@ -37,161 +38,176 @@ root:table
 
     audioClipListWindow:table
     {
-        windowTitle:string            { "LiveSupport Audio Clip Window" }
+        windowTitle:string          { "LiveSupport Audio Clip Window" }
 
-        idColumnLabel:string          { "id" }
-        lengthColumnLabel:string      { "length" }
-        uriColumnLabel:string         { "URI" }
-        tokenColumnLabel:string       { "token" }
+        idColumnLabel:string        { "id" }
+        lengthColumnLabel:string    { "length" }
+        uriColumnLabel:string       { "URI" }
+        tokenColumnLabel:string     { "token" }
 
-        closeButtonLabel:string       { "close" }
+        closeButtonLabel:string     { "close" }
     }
 
     scratchpadWindow:table
     {
-        windowTitle:string                  { "LiveSupport Scratchpad" }
+        windowTitle:string          { "LiveSupport Scratchpad" }
 
-        typeColumnLabel:string              { "Type" }
-        titleColumnLabel:string             { "Title" }
-        addToPlaylistButtonLabel:string     { "Add to playlist" }
-        clearListButtonLabel:string         { "Clear list" }
-        removeButtonLabel:string            { "Remove item(s)" }
+        typeColumnLabel:string      { "Type" }
+        titleColumnLabel:string     { "Title" }
+        addToPlaylistButtonLabel:string
+                                    { "Add to playlist" }
+        clearListButtonLabel:string { "Clear list" }
+        removeButtonLabel:string    { "Remove item(s)" }
 
-        upMenuItem:string                   { "Move _Up" }
-        downMenuItem:string                 { "Move D_own" }
-        removeMenuItem:string               { "_Remove" }
-        editPlaylistMenuItem:string         { "_Edit" }
-        addToPlaylistMenuItem:string        { "_Add To Playlist" }
-        schedulePlaylistMenuItem:string     { "_Schedule" }
-        cueMenuItem:string                  { "Pre_view" }
-        addToLiveModeMenuItem:string        { "Add To _Live Mode" }
+        upMenuItem:string           { "Move _Up" }
+        downMenuItem:string         { "Move D_own" }
+        removeMenuItem:string       { "_Remove" }
+        editPlaylistMenuItem:string { "_Edit" }
+        addToPlaylistMenuItem:string
+                                    { "_Add To Playlist" }
+        schedulePlaylistMenuItem:string
+                                    { "_Schedule" }
+        cueMenuItem:string          { "Pre_view" }
+        addToLiveModeMenuItem:string
+                                    { "Add To _Live Mode" }
+        
+        cannotEditPlaylistMsg:string
+                                    { "Could not open playlist for editing." }
     }
 
     playlistListWindow:table
     {
-        windowTitle:string            { "LiveSupport Playlist Window" }
+        windowTitle:string          { "LiveSupport Playlist Window" }
 
-        listBoxLabel                  { "Playlists" }
-        detailBoxLabel                { "Playlist details" }
+        listBoxLabel                { "Playlists" }
+        detailBoxLabel              { "Playlist details" }
 
-        idColumnLabel:string          { "id" }
-        lengthColumnLabel:string      { "length" }
-        uriColumnLabel:string         { "URI" }
-        tokenColumnLabel:string       { "token" }
+        idColumnLabel:string        { "id" }
+        lengthColumnLabel:string    { "length" }
+        uriColumnLabel:string       { "URI" }
+        tokenColumnLabel:string     { "token" }
 
-        closeButtonLabel:string       { "close" }
+        closeButtonLabel:string     { "close" }
     }
 
     uploadFileWindow:table
     {
-        windowTitle:string            { "Upload File" }
+        windowTitle:string          { "Upload File" }
 
-        chooseFileLabel:string        { "Filename" }
-        chooseFileButtonLabel:string  { "Browse" }
+        chooseFileLabel:string      { "Filename" }
+        chooseFileButtonLabel:string
+                                    { "Browse" }
 
-        mainSectionLabel:string       { "Main" }
-        titleLabel:string             { "Title" }
-        creatorLabel:string           { "Creator" }
-        genreLabel:string             { "Genre" }
-        fileFormatLabel:string        { "File Type" }
-        lengthLabel:string            { "Duration" }
+        mainSectionLabel:string     { "Main" }
+        titleLabel:string           { "Title" }
+        creatorLabel:string         { "Creator" }
+        genreLabel:string           { "Genre" }
+        fileFormatLabel:string      { "File Type" }
+        lengthLabel:string          { "Duration" }
 
-        uploadButtonLabel:string      { "Upload" }
-        closeButtonLabel:string       { "Cancel" }
+        uploadButtonLabel:string    { "Upload" }
+        closeButtonLabel:string     { "Cancel" }
 
-        fileChooserDialogTitle:string { "Choose a File" }
-        clipUploadedMsg:string        { "Uploaded clip ''{0}''." }
-        couldNotOpenFileMsg:string    { "The file could not be opened." }
-        missingTitleMsg:string        { "Please enter a title." }
+        fileChooserDialogTitle:string
+                                    { "Choose a File" }
+        clipUploadedMsg:string      { "Uploaded clip ''{0}''." }
+        couldNotOpenFileMsg:string  { "The file could not be opened." }
+        missingTitleMsg:string      { "Please enter a title." }
     }
 
     simplePlaylistManagementWindow:table
     {
-        windowTitle:string            { "LiveSupport Simple Playlist Management Window" }
+        windowTitle:string          { "LiveSupport Simple Playlist Management"
+                                      " Window" }
 
-        startColumnLabel:string       { "Start" }
-        titleColumnLabel:string       { "Title" }
-        lengthColumnLabel:string      { "Length" }
-        fadeInColumnLabel:string      { "Fade in" }
-        fadeOutColumnLabel:string     { "Fade out" }
-        nameLabel:string              { "Name" }
-        saveButtonLabel:string        { "Save" }
-        closeButtonLabel:string       { "Close" }
+        startColumnLabel:string     { "Start" }
+        titleColumnLabel:string     { "Title" }
+        lengthColumnLabel:string    { "Length" }
+        fadeInColumnLabel:string    { "Fade in" }
+        fadeOutColumnLabel:string   { "Fade out" }
+        nameLabel:string            { "Name" }
+        saveButtonLabel:string      { "Save" }
+        closeButtonLabel:string     { "Close" }
         lockFadesCheckButtonLabel:string    
-                                      { "Lock fade-out to following fade-in" }
-        statusBar:string              { "status bar" }
+                                    { "Lock fade-out to following fade-in" }
+        statusBar:string            { "status bar" }
         
-        upMenuItem:string             { "Move _Up" }
-        downMenuItem:string           { "Move D_own" }
-        removeMenuItem:string         { "_Remove" }
+        upMenuItem:string           { "Move _Up" }
+        downMenuItem:string         { "Move D_own" }
+        removeMenuItem:string       { "_Remove" }
 
-        playlistSavedMsg:string       { "Saved playlist ''{0}''." }
-        savePlaylistDialogMsg:string  { "Do you want to save the playlist?" }
-        emptyTitleErrorMsg:string     { "Please enter a title." }
+        playlistSavedMsg:string     { "Saved playlist ''{0}''." }
+        savePlaylistDialogMsg:string
+                                    { "Do you want to save the playlist?" }
+        emptyTitleErrorMsg:string   { "Please enter a title." }
     }
 
     schedulerWindow:table
     {
-        windowTitle:string            { "LiveSupport Scheduler Window" }
+        windowTitle:string          { "LiveSupport Scheduler Window" }
 
-        startColumnLabel:string       { "start" }
-        titleColumnLabel:string       { "title" }
-        endColumnLabel:string         { "end" }
-        deleteMenuItem:string         { "_Delete" }
+        startColumnLabel:string     { "start" }
+        titleColumnLabel:string     { "title" }
+        endColumnLabel:string       { "end" }
+        deleteMenuItem:string       { "_Delete" }
 
-        closeButtonLabel:string       { "close" }
+        closeButtonLabel:string     { "close" }
 
     }
 
     schedulePlaylistWindow:table
     {
-        windowTitle:string            { "LiveSupport Schedule Playlist Window" }
+        windowTitle:string          { "LiveSupport Schedule Playlist Window" }
 
-        hourLabel:string              { "hour: " }
-        minuteLabel:string            { "minute: " }
-        scheduleButtonLabel:string    { "schedule" }
-        closeButtonLabel:string       { "close" }
+        hourLabel:string            { "hour: " }
+        minuteLabel:string          { "minute: " }
+        scheduleButtonLabel:string  { "schedule" }
+        closeButtonLabel:string     { "close" }
     }
 
     searchWindow:table
     {
-        windowTitle:string            { "LiveSupport Search/Browse Window" }
+        windowTitle:string          { "LiveSupport Search/Browse Window" }
 
-        simpleSearchTab:string        { "Search" }
-        advancedSearchTab:string      { "Advanced Search" }
-        browseTab:string              { "Browse" }
+        simpleSearchTab:string      { "Search" }
+        advancedSearchTab:string    { "Advanced Search" }
+        browseTab:string            { "Browse" }
         
-        searchByTextLabel:string      { "Search by" }
-        searchButtonLabel:string      { "Search" }
+        searchByTextLabel:string    { "Search by" }
+        searchButtonLabel:string    { "Search" }
         
-        typeColumnLabel:string        { "Type" }
-        titleColumnLabel:string       { "Title" }
-        creatorColumnLabel:string     { "Creator" }
-        lengthColumnLabel:string      { "Length" }
+        typeColumnLabel:string      { "Type" }
+        titleColumnLabel:string     { "Title" }
+        creatorColumnLabel:string   { "Creator" }
+        lengthColumnLabel:string    { "Length" }
         
-        partialOperatorDisplay:string     { "contains" }
-        prefixOperatorDisplay:string      { "starts with" }
-        =OperatorDisplay:string           { "equals" }
-        <=OperatorDisplay:string          { "<=" }
-        >=OperatorDisplay:string          { ">=" }
+        partialOperatorDisplay:string
+                                    { "contains" }
+        prefixOperatorDisplay:string
+                                    { "starts with" }
+        =OperatorDisplay:string     { "equals" }
+        <=OperatorDisplay:string    { "<=" }
+        >=OperatorDisplay:string    { ">=" }
         
-        allStringForBrowse                { "--- all ---" }
+        allStringForBrowse          { "--- all ---" }
         
-        addToScratchpadMenuItem:string    { "_Add To Scratchpad" }
-        addToLiveModeMenuItem:string      { "Add To _Live Mode" }
+        addToScratchpadMenuItem:string
+                                    { "_Add To Scratchpad" }
+        addToLiveModeMenuItem:string
+                                    { "Add To _Live Mode" }
     }
 
     liveModeWindow:table
     {
-        windowTitle:string            { "LiveSupport Live Mode Window" }
+        windowTitle:string          { "LiveSupport Live Mode Window" }
         
-        cueMenuItem:string            { "Pre_view" }
-        upMenuItem:string             { "Move _Up" }
-        downMenuItem:string           { "Move D_own" }
-        removeMenuItem:string         { "_Remove" }
-        playMenuItem:string           { "_Play" }
+        cueMenuItem:string          { "Pre_view" }
+        upMenuItem:string           { "Move _Up" }
+        downMenuItem:string         { "Move D_own" }
+        removeMenuItem:string       { "_Remove" }
+        playMenuItem:string         { "_Play" }
         
-        cuePlayerLabel:string         { "Preview" }
+        cuePlayerLabel:string       { "Preview" }
     }
     
     metadataTypes:table

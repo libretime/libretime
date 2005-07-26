@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -507,7 +507,12 @@ void
 ScratchpadWindow :: onEditPlaylist(void)                        throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
-    gLiveSupport->openPlaylistForEditing(playable->getId());
+    try {
+        gLiveSupport->openPlaylistForEditing(playable->getId());
+    } catch (XmlRpcException &e) {
+        gLiveSupport->displayMessageWindow(getResourceUstring(
+                                                    "cannotEditPlaylistMsg" ));
+    }
 }
 
 
