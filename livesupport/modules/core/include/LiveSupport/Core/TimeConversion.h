@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class TimeConversion
 {
@@ -221,7 +221,7 @@ class TimeConversion
          *  @return                 the duration as a time_duration
          */
         static Ptr<time_duration>::Ref
-        parseTimeDuration(Ptr<std::string>::Ref     durationString)
+        parseTimeDuration(Ptr<const std::string>::Ref     durationString)
                                                                 throw ();
 
         /**

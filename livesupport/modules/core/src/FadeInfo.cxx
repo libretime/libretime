@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/FadeInfo.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <sstream>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/FadeInfo.h"
 
 using namespace boost::posix_time;
@@ -99,16 +100,18 @@ FadeInfo :: configure(const xmlpp::Element  & element)
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    fadeIn.reset(new time_duration(
-                            duration_from_string(attribute->get_value())));
+    Ptr<std::string>::Ref   fadeInString(new std::string(
+                                                    attribute->get_value() ));
+    fadeIn = TimeConversion::parseTimeDuration(fadeInString);
 
     if (!(attribute = element.get_attribute(fadeOutAttrName))) {
         std::string eMsg = "missing attribute ";
         eMsg += idAttrName;
         throw std::invalid_argument(eMsg);
     }
-    fadeOut.reset(new time_duration(
-                            duration_from_string(attribute->get_value())));
+    Ptr<std::string>::Ref   fadeOutString(new std::string(
+                                                    attribute->get_value() ));
+    fadeOut = TimeConversion::parseTimeDuration(fadeOutString);
 }
 
 

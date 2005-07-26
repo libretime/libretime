@@ -7,4 +7,4 @@
 <!ATTLIST fadeInfo fadeOut      NMTOKEN     #REQUIRED >
 ]>
 <fadeInfo id="0000000000009901" fadeIn="00:00:02.000000" 
-                                fadeOut="00:00:01.500"/>
+                                fadeOut="00:00:01.0005"/>

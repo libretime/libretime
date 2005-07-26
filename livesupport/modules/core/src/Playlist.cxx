@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <sstream>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/Playlist.h"
 
 using namespace boost::posix_time;
@@ -279,21 +280,14 @@ Playlist :: setPlaylength(Ptr<time_duration>::Ref playlength)
  *  Set the value of the playlength from a string (private).
  *----------------------------------------------------------------------------*/
 void
-Playlist :: setPlaylength(const std::string &   timeString)
+Playlist :: setPlaylength(Ptr<const std::string>::Ref     timeString)
                                                 throw (std::invalid_argument)
 {
     try {
-        playlength.reset(new time_duration(duration_from_string(timeString)));
-    } catch (boost::bad_lexical_cast &e) {
-        std::string     eMsg = "bad time format in playlength: ";
-        eMsg += e.what();
-        throw std::invalid_argument(eMsg);
+        playlength = TimeConversion::parseTimeDuration(timeString);
     } catch (std::exception &e) {
         std::string     eMsg = "bad time format in playlength: ";
         eMsg += e.what();
-        throw std::invalid_argument(eMsg);
-    } catch ( ... ) {
-        std::string     eMsg = "bad time format in playlength";
         throw std::invalid_argument(eMsg);
     }
 }
@@ -381,7 +375,10 @@ Playlist :: configure(const xmlpp::Element    & element)
             if (!playlength && prefix  == extentElementPrefix
                             && name    == extentElementName) {
                 if (dataElement->has_child_text()) {
-                    setPlaylength(dataElement->get_child_text()->get_content());
+                    Ptr<const std::string>::Ref   playlengthString(
+                                new std::string(dataElement->get_child_text()
+                                                           ->get_content() ));
+                    setPlaylength(playlengthString);
                 } else {              // or just leave blank?  bad either way
                     playlength.reset(new time_duration(0,0,0,0));
                 }
@@ -708,7 +705,9 @@ Playlist :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                                                 throw (std::invalid_argument)
 {
     if (prefix == extentElementPrefix && name == extentElementName) {
-        setPlaylength(*value);
+        Ptr<const std::string>::Ref     valueString(new const std::string(
+                                                                        *value));
+        setPlaylength(valueString);
     }
     
     if (prefix == titleElementPrefix && name == titleElementName) {

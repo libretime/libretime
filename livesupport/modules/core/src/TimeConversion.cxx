@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -218,7 +218,7 @@ TimeConversion :: timeDurationToHhMmSsString(
  *  Parse a string to a time_duration.
  *----------------------------------------------------------------------------*/
 Ptr<time_duration>::Ref
-TimeConversion :: parseTimeDuration(Ptr<std::string>::Ref     durationString)
+TimeConversion :: parseTimeDuration(Ptr<const std::string>::Ref durationString)
                                                                     throw ()
 {
     int     micros  = 0;

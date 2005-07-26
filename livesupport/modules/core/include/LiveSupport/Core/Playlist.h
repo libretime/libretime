@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.40 $
+ *  @version $Revision: 1.41 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -218,7 +218,7 @@ class Playlist : public Configurable,
          *                      a valid ISO-8601 time
          */
         void
-        setPlaylength(const std::string &   timeString)
+        setPlaylength(Ptr<const std::string>::Ref   timeString)
                                                 throw (std::invalid_argument);
 
         /**

@@ -22,7 +22,7 @@
  
 
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistElement.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <sstream>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/Playlist.h"
 #include "LiveSupport/Core/PlaylistElement.h"
 
@@ -112,8 +113,9 @@ PlaylistElement :: configure(const xmlpp::Element & element)
         eMsg += relativeOffsetAttrName;
         throw std::invalid_argument(eMsg);
     }
-    relativeOffset.reset(new time_duration(
-                            duration_from_string(attribute->get_value())));
+    Ptr<std::string>::Ref   relativeOffsetString(new std::string(
+                                                    attribute->get_value() ));
+    relativeOffset = TimeConversion::parseTimeDuration(relativeOffsetString);
 
     // set audio clip
     xmlpp::Node::NodeList       childNodes 

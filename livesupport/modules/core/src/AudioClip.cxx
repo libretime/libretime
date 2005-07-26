@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.30 $
+    Version  : $Revision: 1.31 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/AudioClip.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -40,6 +40,7 @@
 #include <id3v1tag.h>   // for TagLib
 #include <id3v2tag.h>   // for TagLib
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Core/AudioClip.h"
 
 using namespace boost::posix_time;
@@ -285,21 +286,14 @@ AudioClip :: setTitle(Ptr<const Glib::ustring>::Ref title)
  *  Set the value of the playlength from a string (private).
  *----------------------------------------------------------------------------*/
 void
-AudioClip :: setPlaylength(const std::string &   timeString)
+AudioClip :: setPlaylength(Ptr<const std::string>::Ref     timeString)
                                                 throw (std::invalid_argument)
 {
     try {
-        playlength.reset(new time_duration(duration_from_string(timeString)));
-    } catch (boost::bad_lexical_cast &e) {
-        std::string     eMsg = "bad time format in playlength: ";
-        eMsg += e.what();
-        throw std::invalid_argument(eMsg);
+        playlength = TimeConversion::parseTimeDuration(timeString);
     } catch (std::exception &e) {
         std::string     eMsg = "bad time format in playlength: ";
         eMsg += e.what();
-        throw std::invalid_argument(eMsg);
-    } catch ( ... ) {
-        std::string     eMsg = "bad time format in playlength";
         throw std::invalid_argument(eMsg);
     }
 }
@@ -380,7 +374,10 @@ AudioClip :: configure(const xmlpp::Element  & element)
             if (!playlength && prefix  == extentElementPrefix
                             && name    == extentElementName) {
                 if (dataElement->has_child_text()) {
-                    setPlaylength(dataElement->get_child_text()->get_content());
+                    Ptr<std::string>::Ref   playlengthString(new std::string(
+                                                dataElement->get_child_text()
+                                                           ->get_content() ));
+                    setPlaylength(playlengthString);
                 } else {              // or just leave blank?  bad either way
                     playlength.reset(new time_duration(0,0,0,0));
                 }
@@ -496,7 +493,9 @@ AudioClip :: setMetadata(Ptr<const Glib::ustring>::Ref value,
                                                 throw (std::invalid_argument)
 {
     if (prefix == extentElementPrefix && name == extentElementName) {
-        setPlaylength(*value);      // may throw invalid_argument
+        Ptr<const std::string>::Ref     valueString(new const std::string(
+                                                                        *value));
+        setPlaylength(valueString);             // may throw invalid_argument
     }
     
     if (prefix == titleElementPrefix && name == titleElementName) {
