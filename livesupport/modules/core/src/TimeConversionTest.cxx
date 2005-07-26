@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -237,5 +237,57 @@ TimeConversionTest :: durationToStringTest(void)
     duration.reset(new time_duration(duration_from_string("111:22:33")));
     hhMmSsString = TimeConversion::timeDurationToHhMmSsString(duration);
     CPPUNIT_ASSERT_EQUAL(std::string("111:22:33"), *hhMmSsString);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test the parseTimeDuration() function.
+ *----------------------------------------------------------------------------*/
+void
+TimeConversionTest :: parseTimeDurationTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // legal arguments
+    Ptr<std::string>::Ref   timeString(new std::string("01:02:03.503700"));
+    Ptr<time_duration>::Ref duration;
+    CPPUNIT_ASSERT_NO_THROW(
+        duration = TimeConversion::parseTimeDuration(timeString)
+    );
+    CPPUNIT_ASSERT(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("01:02:03.503700"),
+                         to_simple_string(*duration));
+
+    timeString.reset(new std::string("02:03.5"));
+    CPPUNIT_ASSERT_NO_THROW(
+        duration = TimeConversion::parseTimeDuration(timeString)
+    );
+    CPPUNIT_ASSERT(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("00:02:03.500000"),
+                         to_simple_string(*duration));
+
+    timeString.reset(new std::string("77"));
+    CPPUNIT_ASSERT_NO_THROW(
+        duration = TimeConversion::parseTimeDuration(timeString)
+    );
+    CPPUNIT_ASSERT(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("00:01:17"),
+                        to_simple_string(*duration));
+
+    // illegal arguments
+    timeString.reset(new std::string("5 minutes and 2 seconds"));
+    CPPUNIT_ASSERT_NO_THROW(
+        duration = TimeConversion::parseTimeDuration(timeString)
+    );
+    CPPUNIT_ASSERT(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("00:00:05"),               // bad!
+                        to_simple_string(*duration));
+
+    timeString.reset(new std::string("1.2.3"));
+    CPPUNIT_ASSERT_NO_THROW(
+        duration = TimeConversion::parseTimeDuration(timeString)
+    );
+    CPPUNIT_ASSERT(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("00:00:01.000002"),        // bad!
+                        to_simple_string(*duration));
 }
 

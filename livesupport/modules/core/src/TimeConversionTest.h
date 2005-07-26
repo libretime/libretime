@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the TimeConversion class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  *  @see TimeConversion
  */
 class TimeConversionTest : public CPPUNIT_NS::TestFixture
@@ -70,6 +70,7 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(nowTest);
     CPPUNIT_TEST(sleepTest);
     CPPUNIT_TEST(durationToStringTest);
+    CPPUNIT_TEST(parseTimeDurationTest);
     CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -122,6 +123,14 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
          */
         void
         durationToStringTest(void)              throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the parseTimeDuration() function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        parseTimeDurationTest(void)             throw (CPPUNIT_NS::Exception);
 
 
     public:

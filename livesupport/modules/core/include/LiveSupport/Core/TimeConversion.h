@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,15 +71,57 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class TimeConversion
 {
     private:
         /**
+         *  Parse a time string.
+         *
+         *  It cuts off the portion between the end of the string and the last
+         *  occurrence of the separator character.  For example, if called with
+         *  the parameters "00:01:02" and ':', the function returns "02" and 
+         *  truncates the original string to "00:01".
+         *
+         *  If the separator character is not found in <code>timeString</code>,
+         *  a copy of the whole <code>timeString</code> is returned, and the
+         *  original <code>timeString</code> is changed to the empty string.
+         *
+         *  @param timeString   the input argument; on return, the rest of the
+         *                          string, after the return value cut off
+         *  @param separator    a separator character, usually ':'
+         *  @return             the part of the string which was cut off
+         */
+        static Ptr<std::string>::Ref
+        nextNumberFromEnd(Ptr<std::string>::Ref timeString,
+                          char                  separator)      throw ();
+
+        /**
+         *  Parse a decimal string.
+         *
+         *  It cuts off the portion between the end of the string and the last
+         *  occurrence of the separator character.  For example, if called with
+         *  the parameters "1.23" and '.', the function returns "23" and 
+         *  truncates the original string to "1".
+         *
+         *  If the separator character is not found in <code>timeString</code>,
+         *  then an empty string is returned, and the
+         *  original <code>timeString</code> remains unchanged.
+         *
+         *  @param decimalString    the input argument; on return, the rest of
+         *                          the string, after the return value cut off
+         *  @param separator    a separator character, usually '.'
+         *  @return             the part of the string which was cut off
+         */
+        static Ptr<std::string>::Ref
+        nextNumberFromStart(Ptr<std::string>::Ref decimalString,
+                            char                  separator)      throw ();
+
+        /**
          *  The default constructor.
          */
-        TimeConversion(void)                            throw ()
+        TimeConversion(void)                                    throw ()
         {
         }
 
@@ -157,10 +199,38 @@ class TimeConversion
          *  more than two characters wide, e.g.: "8765:48:45".
          *
          *  @param duration the time duration to convert.
+         *  @return the time duration in string format
          */
         static Ptr<std::string>::Ref
         timeDurationToHhMmSsString(Ptr<time_duration>::Ref  duration)
                                                                 throw ();
+
+        /**
+         *  Parse a string to a time_duration.
+         *  Similar to boost::posix_time::duration_from_string(), only
+         *  not broken quite as badly.
+         *  
+         *  Parsing is right-to-left, starting with seconds: for example,
+         *  5 means 5 seconds; 01:02.03 means 1m 2.03s; 1:2:3 means 1h 2m 3s.
+         *
+         *  If the time format is invalid, no exception is thrown, but the
+         *  result is undefined (usually 00:00:00).
+         *  TODO: fix this, by adding a format check
+         *
+         *  @param durationString   the duration as string
+         *  @return                 the duration as a time_duration
+         */
+        static Ptr<time_duration>::Ref
+        parseTimeDuration(Ptr<std::string>::Ref     durationString)
+                                                                throw ();
+
+        /**
+         *  Get the number of digits used for fractional seconds 
+         *  in time durations.
+         *  Returns the constant 6, for microsecond precision.
+         */
+        static int
+        getNumberOfDigitsPrecision(void)                        throw ();
 };
 
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -32,6 +32,8 @@
 #ifdef HAVE_CONFIG_H
 #include "configure.h"
 #endif
+
+#include <iomanip>
 
 #include "LiveSupport/Core/TimeConversion.h"
 
@@ -46,6 +48,10 @@ using namespace LiveSupport::Core;
 
 /* ================================================  local constants & macros */
 
+/**
+ *  The number of digits used for fractional seconds in time durations.
+ */
+static const int   numberOfDigitsPrecision = 6;
 
 /* ===============================================  local function prototypes */
 
@@ -205,5 +211,118 @@ TimeConversion :: timeDurationToHhMmSsString(
 
     Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
     return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Parse a string to a time_duration.
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+TimeConversion :: parseTimeDuration(Ptr<std::string>::Ref     durationString)
+                                                                    throw ()
+{
+    int     micros  = 0;
+    int     seconds = 0;
+    int     minutes = 0;
+    int     hours   = 0;
+
+    Ptr<std::string>::Ref   temp(new std::string(*durationString));
+
+    if (temp->length() > 0) {
+        Ptr<std::string>::Ref   secondsString   = nextNumberFromEnd(temp, ':');
+        Ptr<std::string>::Ref   fractionsString = nextNumberFromStart(
+                                                           secondsString, '.');
+        if (fractionsString->length() > 0) {
+            std::stringstream       fractionsStream;
+            fractionsStream << std::left 
+                            << std::setw(
+                                TimeConversion::getNumberOfDigitsPrecision() )
+                            << std::setfill('0') 
+                            << *fractionsString;
+            fractionsStream >> micros;
+        }
+        if (secondsString->length() > 0) {
+            std::stringstream       secondsStream(*secondsString);
+            secondsStream >> seconds;
+        }
+    }
+
+    if (temp->length() > 0) {
+        Ptr<std::string>::Ref   minutesString = nextNumberFromEnd(temp, ':');
+        std::stringstream       minutesStream(*minutesString);
+        minutesStream >> minutes;
+    }
+    
+    if (temp->length() > 0) {
+        std::stringstream       hoursStream(*temp);
+        hoursStream >> hours;
+    }
+
+    Ptr<time_duration>::Ref result(new time_duration(
+                                            hours, minutes, seconds, micros ));
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Parse a time string.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TimeConversion :: nextNumberFromEnd(Ptr<std::string>::Ref timeString,
+                                    char                  separator)
+                                                                    throw ()
+{
+    Ptr<std::string>::Ref   result;
+    unsigned int            pos = timeString->find_last_of(separator);
+    
+    if (pos != std::string::npos) {
+        if (pos != timeString->length()-1) {
+            result.reset(new std::string(*timeString, pos+1));
+        } else {
+            result.reset(new std::string);
+        }
+        *timeString = timeString->substr(0, pos);
+    } else {
+        result.reset(new std::string(*timeString));
+        *timeString = std::string("");
+    }
+    
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Parse a decimal string.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TimeConversion :: nextNumberFromStart(Ptr<std::string>::Ref timeString,
+                                      char                  separator)
+                                                                    throw ()
+{
+    Ptr<std::string>::Ref   result;
+    unsigned int            pos = timeString->find(separator);
+    
+    if (pos != std::string::npos) {
+        if (pos != timeString->length()-1) {
+            result.reset(new std::string(*timeString, pos+1));
+        } else {
+            result.reset(new std::string);
+        }
+        *timeString = timeString->substr(0, pos);
+    } else {
+        result.reset(new std::string(""));
+    }
+    
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the number of digits used for fractional seconds in time durations.
+ *----------------------------------------------------------------------------*/
+int
+TimeConversion :: getNumberOfDigitsPrecision(void)                  throw ()
+{
+    return numberOfDigitsPrecision;
 }
 
