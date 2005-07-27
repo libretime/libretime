@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversion.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -208,6 +208,51 @@ TimeConversion :: timeDurationToHhMmSsString(
                  << std::setw(2) 
                  << std::setfill('0')
                  << seconds;
+
+    Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
+    return result;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Convert a time_duration to a format used for fade info.
+ *----------------------------------------------------------------------------*/
+Ptr<std::string>::Ref
+TimeConversion :: timeDurationToShortString(
+                                Ptr<time_duration>::Ref  duration)
+                                                                    throw ()
+{
+    std::stringstream   stringStream;
+    
+    if (duration->hours()) {
+        stringStream << duration->hours()
+                     << ":" 
+                     << std::setw(2) 
+                     << std::setfill('0')
+                     << duration->minutes()
+                     << ":"
+                     << std::setw(2) 
+                     << std::setfill('0');
+    
+    } else if (duration->minutes()) {
+        stringStream << duration->minutes()
+                     << ":"
+                     << std::setw(2) 
+                     << std::setfill('0');
+    }
+
+    stringStream << duration->seconds();
+    
+    std::stringstream   fractionsStream;
+    fractionsStream  << std::setw(getNumberOfDigitsPrecision()) 
+                     << std::setfill('0')
+                     << duration->fractional_seconds();
+    std::string         fractionsString(fractionsStream.str());
+    unsigned int lastNonZero = fractionsString.find_last_not_of('0');
+    if (lastNonZero != std::string::npos) {
+        stringStream << "."
+                     << fractionsString.substr(0, lastNonZero+1);
+    }
 
     Ptr<std::string>::Ref   result(new std::string(stringStream.str()));
     return result;

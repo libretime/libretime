@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/TimeConversion.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ using namespace LiveSupport;
  *  A helper object holding static time conversion functions.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class TimeConversion
 {
@@ -194,7 +194,9 @@ class TimeConversion
 
         /**
          *  Convert a time_duration to a rounded format used on the screen.
+         *
          *  This means a hh:mm:ss format, rounded to the nearest second.
+         *
          *  For example: "01:02:03" or "00:10:00".  The hours field can be
          *  more than two characters wide, e.g.: "8765:48:45".
          *
@@ -203,6 +205,22 @@ class TimeConversion
          */
         static Ptr<std::string>::Ref
         timeDurationToHhMmSsString(Ptr<time_duration>::Ref  duration)
+                                                                throw ();
+
+        /**
+         *  Convert a time_duration to a format used for fade info.
+         *
+         *  This means a hh:mm:ss.ffffff format, with hours, minutes and
+         *  fractions left off when zero.
+         *
+         *  For example: 01:02:03.004, 1:02 (meaning 1m 2s), 3 (meaning 3s),
+         *  0.002 (meaning 2ms).  Zero is represented as 0.
+         *
+         *  @param duration the time duration to convert.
+         *  @return the time duration in string format
+         */
+        static Ptr<std::string>::Ref
+        timeDurationToShortString(Ptr<time_duration>::Ref  duration)
                                                                 throw ();
 
         /**

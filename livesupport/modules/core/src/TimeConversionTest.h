@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the TimeConversion class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see TimeConversion
  */
 class TimeConversionTest : public CPPUNIT_NS::TestFixture
@@ -116,7 +116,7 @@ class TimeConversionTest : public CPPUNIT_NS::TestFixture
         sleepTest(void)                         throw (CPPUNIT_NS::Exception);
 
         /**
-         *  Test the timeDurationToSmilString() and timeDurationToHhMmSs()
+         *  Test the time_duration to string conversions
          *  functions.
          *
          *  @exception CPPUNIT_NS::Exception on test failures.

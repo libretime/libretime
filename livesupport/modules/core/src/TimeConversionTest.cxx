@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/TimeConversionTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -215,28 +215,41 @@ TimeConversionTest :: sleepTest(void)
 
 
 /*------------------------------------------------------------------------------
- *  Test the timeDurationToSmilString() and timeDurationToHhMmSs() functions
+ *  Test the time_duration to string conversions
  *----------------------------------------------------------------------------*/
 void
 TimeConversionTest :: durationToStringTest(void)
                                                 throw (CPPUNIT_NS::Exception)
 {
-    Ptr<time_duration>::Ref duration(new time_duration(duration_from_string(
-                                                        "01:02:03.503700" )));
-
-    Ptr<std::string>::Ref   smilString
-                            = TimeConversion::timeDurationToSmilString(
-                                                                    duration);
+    Ptr<time_duration>::Ref duration;
+    Ptr<std::string>::Ref   smilString;
+    Ptr<std::string>::Ref   hhMmSsString;
+    Ptr<std::string>::Ref   shortString;
+    
+    
+    duration.reset(new time_duration(duration_from_string("01:02:03.503700")));
+    smilString      = TimeConversion::timeDurationToSmilString(duration);
     CPPUNIT_ASSERT_EQUAL(std::string("3723.504s"), *smilString);
 
-    Ptr<std::string>::Ref   hhMmSsString
-                            = TimeConversion::timeDurationToHhMmSsString(
-                                                                    duration);
+    hhMmSsString    = TimeConversion::timeDurationToHhMmSsString(duration);
     CPPUNIT_ASSERT_EQUAL(std::string("01:02:04"), *hhMmSsString);
 
+    shortString     = TimeConversion::timeDurationToShortString(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("1:02:03.5037"), *shortString);
+
     duration.reset(new time_duration(duration_from_string("111:22:33")));
-    hhMmSsString = TimeConversion::timeDurationToHhMmSsString(duration);
+    hhMmSsString    = TimeConversion::timeDurationToHhMmSsString(duration);
     CPPUNIT_ASSERT_EQUAL(std::string("111:22:33"), *hhMmSsString);
+    shortString     = TimeConversion::timeDurationToShortString(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("111:22:33"), *shortString);
+
+    duration.reset(new time_duration(duration_from_string("00:01:02.500000")));
+    shortString     = TimeConversion::timeDurationToShortString(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("1:02.5"), *shortString);
+
+    duration.reset(new time_duration(duration_from_string("00:00:02.001000")));
+    shortString     = TimeConversion::timeDurationToShortString(duration);
+    CPPUNIT_ASSERT_EQUAL(std::string("2.001"), *shortString);
 }
 
 
