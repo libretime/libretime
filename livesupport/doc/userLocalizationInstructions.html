@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>LiveSupport user localization instructions</title>
+  <meta content="$Author: fgerlits $" name="author">
+</head>
+<body>
+<h1>Preface</h1>
+This document is part of the <a href="http://livesupport.campware.org/">LiveSupport</a>
+project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
+Development Loan Fund</a>, under the GNU <a
+ href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
+<ul>
+  <li>Author: $Author: fgerlits $</li>
+  <li>Version: $Revision: 1.1 $</li>
+  <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/userLocalizationInstructions.html,v $</li>
+</ul>
+
+<h1>Scope</h1>
+This document is written to help non-developers translate the LiveSupport 
+software into new languages.<br>
+
+<h1>Introduction</h1>
+LiveSupport has two user interfaces: a web interface, intended mainly for
+radio station administrators (Station), and a stand-alone graphical user
+interface, for disk jockeys and such (Studio).<br>
+
+<h1>Localization of LiveSupport Station</h1>
+Please do the localization at
+<p><a href="http://ls-dev.campware.org/~sebastian/htmlUI/var/localizer/"><code>http://ls-dev.campware.org/~sebastian/htmlUI/var/localizer/</code></a></p>
+<p>(user name is "root", and the password is "q").  When done, send a notice to
+the <a href="http://sympa.mdlf.org/wws/info/livesupport-dev">developers' mailing
+list</a>.</p>
+
+<font size="-1">
+<p>If you must do the localization offline for some reason, please 
+<ul>
+    <li>check out the latest files from CVS</li>
+    <li>log on to the local localizer at
+        <code>http://YOURSERVER/livesupport/localizer</code></li>
+    <li>send the changed <code>locals.??_??.xml</code> file(s) from the folders
+        <ul>
+            <li><code><livesupport-cvs>/modules/htmlUI/var/</code> and</li>
+            <li><code><livesupport-cvs>/modules/htmlUI/var/localizer/</code></li>
+        </ul>
+        to the <a href="http://sympa.mdlf.org/wws/info/livesupport-dev">developers'
+        mailing list</a>.</li>
+</ul>
+</p>
+</font>
+        
+<h1>Localization of LiveSupport Studio</h1>
+<ul>
+    <li>If editing an existing language: download the latest version of the
+        <a href="http://netfinity-5.mdlf.org/cgi-bin/viewcvs.cgi/livesupport/products/gLiveSupport/var/">language file</a>
+        (click on the revision number, not the file name);
+        <p>if adding a new language: download <a href="http://netfinity-5.mdlf.org/cgi-bin/viewcvs.cgi/*checkout*/livesupport/products/gLiveSupport/var/root.txt">the latest version of root.txt</a>;</li>
+    <li>edit the texts between the "..."s;</li>
+    <li>save it as a plain text file in UTF-8 encoding.
+        Please do not send Word documents or files in other encodings.</li>
+    <li>Finally, send it to the <a href="http://sympa.mdlf.org/wws/info/livesupport-dev">developers' mailing list</a>.</li>
+</ul>
+
+</body>
+</html>
