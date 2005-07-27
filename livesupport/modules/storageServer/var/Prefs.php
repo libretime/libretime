@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/Prefs.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -265,6 +265,23 @@ class Prefs{
         if(PEAR::isError($val)) return $val;
         if(is_null($val)) return FALSE;
         return $val;
+    }
+
+    /**
+     *  Read all keys of subject's preferences
+     *
+     *  @param subjid int, local user/group id
+     *  @return array, preference keys
+     */
+    function readKeys($subjid)
+    {
+        $res = $this->dbc->getAll("
+            SELECT keystr FROM {$this->prefTable}
+            WHERE subjid=$subjid
+        ");
+        if(PEAR::isError($res)) return $res;
+        if(is_null($res)) return FALSE;
+        return $res;
     }
 
     /**
