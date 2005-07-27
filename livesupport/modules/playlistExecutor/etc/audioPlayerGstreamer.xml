@@ -7,5 +7,5 @@
 <!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
 ]>
 <audioPlayer>
-    <gstreamerPlayer audioDevice = "plughw:0,0" />
+    <gstreamerPlayer audioDevice = "default" />
 </audioPlayer>

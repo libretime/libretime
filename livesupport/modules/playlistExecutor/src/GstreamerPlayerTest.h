@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace PlaylistExecutor {
  *  Unit test for the GstreamerPlayer class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  *  @see GstreamerPlayer
  */
 class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
@@ -76,6 +76,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
     CPPUNIT_TEST(eventListenerTest);
     CPPUNIT_TEST(eventListenerOnStopTest);
     CPPUNIT_TEST(openTimeTest);
+    CPPUNIT_TEST(pauseResumeTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -190,6 +191,14 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
          */
         void
         openTimeTest(void)                      throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test pausing and resuming.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        pauseResumeTest(void)                   throw (CPPUNIT_NS::Exception);
 
 
     public:

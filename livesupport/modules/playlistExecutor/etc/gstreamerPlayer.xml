@@ -4,5 +4,5 @@
 <!ELEMENT gstreamerPlayer   EMPTY >
 <!ATTLIST gstreamerPlayer   audioDevice  CDATA   #IMPLIED  >
 ]>
-<gstreamerPlayer audioDevice = "plughw:0,0"
+<gstreamerPlayer audioDevice = "default"
 />

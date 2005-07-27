@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -639,3 +639,46 @@ GstreamerPlayerTest :: openTimeTest(void)
 
     player->deInitialize();
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Test pausing and resuming.
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: pauseResumeTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT;
+
+    player->initialize();
+    try {
+        player->open("file:var/test10001.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    
+    sleepT.reset(new time_duration(seconds(3)));
+    TimeConversion::sleep(sleepT);
+    player->pause();
+    CPPUNIT_ASSERT(!player->isPlaying());
+    
+    sleepT.reset(new time_duration(seconds(10)));
+    TimeConversion::sleep(sleepT);
+    CPPUNIT_ASSERT(!player->isPlaying());
+
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    
+    sleepT.reset(new time_duration(microseconds(10)));
+    while (player->isPlaying()) {
+        TimeConversion::sleep(sleepT);
+    }
+    
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+    player->deInitialize();
+}
+
