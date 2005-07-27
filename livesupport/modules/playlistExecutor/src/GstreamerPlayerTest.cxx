@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -657,10 +657,11 @@ GstreamerPlayerTest :: pauseResumeTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!player->isPlaying());
+    
     player->start();
     CPPUNIT_ASSERT(player->isPlaying());
     
-    sleepT.reset(new time_duration(seconds(3)));
+    sleepT.reset(new time_duration(seconds(2)));
     TimeConversion::sleep(sleepT);
     player->pause();
     CPPUNIT_ASSERT(!player->isPlaying());
@@ -670,6 +671,10 @@ GstreamerPlayerTest :: pauseResumeTest(void)
     CPPUNIT_ASSERT(!player->isPlaying());
 
     player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    
+    sleepT.reset(new time_duration(seconds(1)));
+    TimeConversion::sleep(sleepT);
     CPPUNIT_ASSERT(player->isPlaying());
     
     sleepT.reset(new time_duration(microseconds(10)));
