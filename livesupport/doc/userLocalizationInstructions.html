@@ -13,7 +13,7 @@ Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
   <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.1 $</li>
+  <li>Version: $Revision: 1.2 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/userLocalizationInstructions.html,v $</li>
 </ul>
 
@@ -51,6 +51,7 @@ list</a>.</p>
 </font>
         
 <h1>Localization of LiveSupport Studio</h1>
+<p>
 <ul>
     <li>If editing an existing language: download the latest version of the
         <a href="http://netfinity-5.mdlf.org/cgi-bin/viewcvs.cgi/livesupport/products/gLiveSupport/var/">language file</a>
@@ -61,6 +62,14 @@ list</a>.</p>
         Please do not send Word documents or files in other encodings.</li>
     <li>Finally, send it to the <a href="http://sympa.mdlf.org/wws/info/livesupport-dev">developers' mailing list</a>.</li>
 </ul>
+</p>
+
+<p>Notes on the file format:
+<ul>
+    <li>The symbol <code>{0}</code> means that some variable data (usually audio clip or playlist title) goes there.  For example: <code>"I could not find ''{0}''."</code> becomes <code>"Ich habe ''{0}'' nicht gefunden."</code> in German.</li>
+    <li>The underscore characters show hotkeys: e.g., <code>"_Open"</code> means that Alt-O is a hotkey for the Open menu item.  These need to be unique within each group, i.e., you can't have <code>"M_ove"</code> in the same menu.</li>
+</ul>
+</p>
 
 </body>
 </html>
