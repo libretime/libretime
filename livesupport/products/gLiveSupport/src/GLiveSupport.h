@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.45 $
+    Version  : $Revision: 1.46 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.45 $
+ *  @version $Revision: 1.46 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -213,19 +213,9 @@ class GLiveSupport : public LocalizedConfigurable,
         bool                            outputPlayerIsPaused;
 
         /**
-         *  Set to prevent onStop() from being fired by pausing.
-         */
-        bool                            outputAudioPauseFlag;
-
-        /**
          *  True if the cue audio player has been paused.
          */
         bool                            cuePlayerIsPaused;
-
-        /**
-         *  Set to prevent onStop() from being fired by pausing.
-         */
-        bool                            cueAudioPauseFlag;
 
         /**
          *  The raw image containing the station logo.
@@ -653,30 +643,6 @@ class GLiveSupport : public LocalizedConfigurable,
                                                 throw (std::logic_error);
 
         /**
-         *  Set the output audio pause flag.  This is set to true before
-         *  a call to pauseOutputAudio() and to false afterwards, in
-         *  order to prevent the onStop() method from executing on pause.
-         *
-         *  @param value    the new value of the flag.
-         */
-        virtual void
-        setOutputAudioPauseFlag(bool  value)    throw ()
-        {
-            outputAudioPauseFlag = value;
-        }
-
-        /**
-         *  Get the output audio pause flag.
-         *
-         *  @see setOutputAudioPauseFlag()
-         */
-        virtual bool
-        getOutputAudioPauseFlag(void)           throw ()
-        {
-            return outputAudioPauseFlag;
-        }
-
-        /**
          *  Play a Playable object using the cue audio player.
          *
          *  @param playable the Playable object to play.
@@ -707,30 +673,6 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual void
         pauseCueAudio(void)
                                                 throw (std::logic_error);
-
-        /**
-         *  Set the cue audio pause flag.  This is set to true before
-         *  a call to pauseCueAudio() and to false afterwards, in
-         *  order to prevent the onStop() method from executing on pause.
-         *
-         *  @param value    the new value of the flag.
-         */
-        virtual void
-        setCueAudioPauseFlag(bool  value)    throw ()
-        {
-            cueAudioPauseFlag = value;
-        }
-
-        /**
-         *  Get the cue audio pause flag.
-         *
-         *  @see setOutputAudioPauseFlag()
-         */
-        virtual bool
-        getCueAudioPauseFlag(void)           throw ()
-        {
-            return cueAudioPauseFlag;
-        }
 
         /**
          *  Attach a listener for the cue audio player (the listener
