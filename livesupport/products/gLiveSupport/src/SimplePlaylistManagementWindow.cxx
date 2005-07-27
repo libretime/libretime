@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -405,11 +405,11 @@ SimplePlaylistManagementWindow :: showContents(void)                throw ()
             }
             row[modelColumns.fadeInColumn]
                         = (fadeIn && fadeIn->total_microseconds() != 0)
-                          ? *TimeConversion::timeDurationToHhMmSsString(fadeIn)
+                          ? *TimeConversion::timeDurationToShortString(fadeIn)
                           : "-   ";
             row[modelColumns.fadeOutColumn]
                         = (fadeOut && fadeOut->total_microseconds() != 0)
-                          ? *TimeConversion::timeDurationToHhMmSsString(fadeOut)
+                          ? *TimeConversion::timeDurationToShortString(fadeOut)
                           : "-   ";
         }
     }
