@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.22 $
+    Version  : $Revision: 1.23 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -1102,6 +1102,8 @@ class XR_LocStor extends LocStor{
      *  On success, returns a XML-RPC struct with single field:
      *  <ul>
      *      <li> available : boolean</li>
+     *      <li> ownerid : int - local user id</li>
+     *      <li> ownerlogin : string - local username</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -1122,14 +1124,20 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->playlistIsAvailable($r['sessid'], $r['plid']);
+        $res = $this->playlistIsAvailable($r['sessid'], $r['plid'], TRUE);
+        $ownerId = ($res === TRUE ? NULL : $res);
+        $ownerLogin = (is_null($ownerId) ? NULL : $this->getSubjName($ownerId));
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_playlistIsAvailable: ".$res->getMessage().
                 " ".$res->getUserInfo()
             );
         }
-        return new XML_RPC_Response(XML_RPC_encode(array('available'=>$res)));
+        return new XML_RPC_Response(XML_RPC_encode(array(
+            'available' => ($res === TRUE),
+            'ownerid'   => $ownerId,
+            'ownerlogin'   => $ownerLogin,
+        )));
     }
 
     /* --------------------------------------------------------- info methods */

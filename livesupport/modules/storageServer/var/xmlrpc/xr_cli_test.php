@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ $infos = array(
     "existsPlaylist"    => array('m'=>"locstor.existsPlaylist",
         'p'=>array('sessid', 'plid'), 'r'=>'exists'),
     "playlistIsAvailable"   => array('m'=>"locstor.playlistIsAvailable",
-        'p'=>array('sessid', 'plid'), 'r'=>'available'),
+        'p'=>array('sessid', 'plid'), 'r'=>array('available', 'ownerid', 'ownerlogin')),
 
     "loadPref"      => array('m'=>"locstor.loadPref",
         'p'=>array('sessid', 'key'), 'r'=>'value'),
