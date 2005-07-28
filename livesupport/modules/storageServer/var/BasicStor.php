@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.56 $
+    Version  : $Revision: 1.57 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.56 $
+ *  @version $Revision: 1.57 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1364,6 +1364,39 @@ class BasicStor extends Alib{
         $this->initData();
     }
     /**
+     *  Create BasicStor object with temporarily changed configuration
+     *  to prevent data changes in tests
+     *
+     */
+    function createTestSpace(&$dbc, $config){
+        $configBckp = $config;
+        $config['tblNamePrefix'] .= '_test_';
+        mkdir($config['storageDir'].'/tmp');
+        $config['storageDir']    .=  '/tmp/stor';
+        $config['bufferDir']      =  $config['storageDir'].'/buffer';
+        $config['transDir']      .=  '/tmp/trans';
+        $config['accessDir']     .=  '/tmp/access';
+        mkdir($config['storageDir']);
+        mkdir($config['bufferDir']);
+        $bs =& new BasicStor($dbc, $config);
+        $bs->configBckp = $configBckp;
+        $r = $bs->install();
+        if(PEAR::isError($r)){ return $r; }
+        return $bs;
+    }
+    /**
+     *  Clean up test space
+     *
+     */
+    function releaseTestSpace(){
+        $r = $this->uninstall();
+        if(PEAR::isError($r)){ return $r; }
+        #rmdir($this->config['bufferDir']);
+        rmdir($this->config['storageDir']);
+        $this->config = $this->configBckp;
+        rmdir($this->config['storageDir'].'/tmp');
+    }
+    /**
      *  testData
      *
      */
@@ -1441,7 +1474,9 @@ class BasicStor extends Alib{
         test4{$trash}
 ";
         }
-        $this->test_dump = $this->dumpTree($this->storId, '    ', '    ', '{name}');
+        $r = $this->dumpTree($this->storId, '    ', '    ', '{name}');
+        if($this->dbc->isError($r)) return $r;
+        $this->test_dump = $r;
         if($this->test_dump==$this->test_correct)
             { $this->test_log.="# BasicStor::test: OK\n"; return true; }
         else return PEAR::raiseError(
@@ -1600,16 +1635,17 @@ class BasicStor extends Alib{
         $this->dbc->query("DROP TABLE {$this->accessTable}");
         $d = @dir($this->storageDir);
         while (is_object($d) && (false !== ($entry = $d->read()))){
-            if(filetype("{$this->storageDir}/$entry")=='dir' &&
-                    $entry!='CVS' && strlen($entry)==3)
-            {
-                $dd = dir("{$this->storageDir}/$entry");
-                while (false !== ($ee = $dd->read())){
-                    if(substr($ee, 0, 1)!=='.')
-                        unlink("{$this->storageDir}/$entry/$ee");
+            if(filetype("{$this->storageDir}/$entry")=='dir'){
+                if($entry!='CVS' && $entry!='tmp' && strlen($entry)==3)
+                {
+                    $dd = dir("{$this->storageDir}/$entry");
+                    while (false !== ($ee = $dd->read())){
+                        if(substr($ee, 0, 1)!=='.')
+                            unlink("{$this->storageDir}/$entry/$ee");
+                    }
+                    $dd->close();
+                    rmdir("{$this->storageDir}/$entry");
                 }
-                $dd->close();
-                rmdir("{$this->storageDir}/$entry");
             }
         }
         if(is_object($d)) $d->close();
