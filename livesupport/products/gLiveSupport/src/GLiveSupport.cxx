@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.62 $
+    Version  : $Revision: 1.63 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -109,6 +109,11 @@ static const std::string stationLogoConfigElementName = "stationLogo";
  *  The name of the user preference for storing Scratchpad contents
  *----------------------------------------------------------------------------*/
 static const std::string scratchpadContentsKey = "scratchpadContents";
+
+/*------------------------------------------------------------------------------
+ *  The name of the user preference for storing the token of the edited p.l.
+ *----------------------------------------------------------------------------*/
+static const std::string editedPlaylistTokenKey = "editedPlaylistToken";
 
 /*------------------------------------------------------------------------------
  *  Static constant for the key of the scheduler not available key
@@ -427,11 +432,32 @@ GLiveSupport :: login(const std::string & login,
 {
     try {
         sessionId = authentication->login(login, password);
-        loadScratchpadContents();
-        return true;
     } catch (XmlRpcException &e) {
         return false;
     }
+
+    try {
+        Ptr<const Glib::ustring>::Ref   editedPlaylistToken;
+        editedPlaylistToken = authentication->loadPreferencesItem(
+                                                    sessionId,
+                                                    editedPlaylistTokenKey);
+        Ptr<const std::string>::Ref     editedPlaylistTokenString(
+                                            new const std::string(
+                                                *editedPlaylistToken ));
+        storage->revertPlaylist(editedPlaylistTokenString);
+    } catch (std::invalid_argument &e) {
+        // no stuck playlist token found; that's OK
+    } catch (XmlRpcException &e) {
+        std::cerr << "Problem loading "
+                  << editedPlaylistTokenKey
+                  << " user preference item:"
+                  << std::endl
+                  << e.what();
+    }
+
+    loadScratchpadContents();
+    
+    return true;
 }
 
 
@@ -643,6 +669,21 @@ GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
     }
 
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);
+
+    try {
+        Ptr<const Glib::ustring>::Ref   token(new const Glib::ustring(
+                                                *editedPlaylist->getToken() ));
+        authentication->savePreferencesItem(sessionId,
+                                            editedPlaylistTokenKey,
+                                            token);
+    } catch (XmlRpcException &e) {
+        std::cerr << "Problem saving "
+                  << editedPlaylistTokenKey
+                  << " user preference item:"
+                  << std::endl
+                  << e.what();
+    }
+        
     editedPlaylist->createSavedCopy();
 
     masterPanel->updateSimplePlaylistMgmtWindow();
@@ -663,6 +704,16 @@ GLiveSupport :: cancelEditedPlaylist(void)
         if (editedPlaylist->isLocked()) {
             editedPlaylist->revertToSavedCopy();
             storage->savePlaylist(sessionId, editedPlaylist);
+            try {
+                authentication->deletePreferencesItem(sessionId,
+                                                      editedPlaylistTokenKey);
+            } catch (XmlRpcException &e) {
+                std::cerr << "Problem deleting "
+                            << editedPlaylistTokenKey
+                            << " user preference item:"
+                            << std::endl
+                            << e.what();
+            }
         }
         editedPlaylist.reset();
     }
@@ -711,6 +762,16 @@ GLiveSupport :: savePlaylist(void)
         if (editedPlaylist->isLocked()) {
             editedPlaylist->deleteSavedCopy();
             storage->savePlaylist(sessionId, editedPlaylist);
+            try {
+                authentication->deletePreferencesItem(sessionId,
+                                                      editedPlaylistTokenKey);
+            } catch (XmlRpcException &e) {
+                std::cerr << "Problem deleting "
+                            << editedPlaylistTokenKey
+                            << " user preference item:"
+                            << std::endl
+                            << e.what();
+            }
             addToScratchpad(editedPlaylist);    // update with new version
         }
         editedPlaylist.reset();

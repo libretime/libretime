@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.45 $
+    Version  : $Revision: 1.46 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -461,6 +461,30 @@ static const std::string    savePlaylistNewPlaylistParamName = "newPlaylist";
  *  The name of the result parameter returned by the method
  *----------------------------------------------------------------------------*/
 static const std::string    savePlaylistResultParamName = "plid";
+
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  storage server constants: revertPlaylist */
+
+/*------------------------------------------------------------------------------
+ *  The name of the 'revert playlist' method on the storage server
+ *----------------------------------------------------------------------------*/
+static const std::string    revertPlaylistMethodName 
+                            = "locstor.revertEditedPlaylist";
+
+/*------------------------------------------------------------------------------
+ *  The name of the session ID parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    revertPlaylistSessionIdParamName = "sessid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the token parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    revertPlaylistTokenParamName = "token";
+
+/*------------------------------------------------------------------------------
+ *  The name of the result parameter returned by the method
+ *----------------------------------------------------------------------------*/
+static const std::string    revertPlaylistResultParamName = "plid";
 
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ audio clip methods */
@@ -1173,6 +1197,62 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
 
     Ptr<const std::string>::Ref     nullpointer;
     playlist->setToken(nullpointer);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Revert a playlist to its pre-editing state.
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClient :: revertPlaylist(Ptr<const Glib::ustring>::Ref playlistToken)
+                                                throw (XmlRpcException)
+{
+    if (!playlistToken) {
+        throw XmlRpcInvalidArgumentException("null pointer in argument");
+    }
+    
+    XmlRpcValue     parameters;
+    XmlRpcValue     result;
+
+    XmlRpcClient xmlRpcClient(storageServerName.c_str(), storageServerPort,
+                              storageServerPath.c_str(), false);
+
+    parameters.clear();
+    parameters[revertPlaylistSessionIdParamName]        // dummy parameter
+            = "";
+    parameters[revertPlaylistTokenParamName] 
+            = *playlistToken;
+
+    result.clear();
+    if (!xmlRpcClient.execute(revertPlaylistMethodName.c_str(),
+                              parameters, result)) {
+        xmlRpcClient.close();
+        std::string eMsg = "cannot execute XML-RPC method '";
+        eMsg += revertPlaylistMethodName;
+        eMsg += "'";
+        throw XmlRpcCommunicationException(eMsg);
+    }
+    xmlRpcClient.close();
+
+    if (xmlRpcClient.isFault()) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << revertPlaylistMethodName
+             << "' returned error message:\n"
+             << result;
+        throw Core::XmlRpcMethodFaultException(eMsg.str());
+    }
+    
+    if (! result.hasMember(revertPlaylistResultParamName)
+            || result[revertPlaylistResultParamName].getType() 
+                                        != XmlRpcValue::TypeString) {
+        std::stringstream eMsg;
+        eMsg << "XML-RPC method '" 
+             << revertPlaylistMethodName
+             << "' returned unexpected value:\n"
+             << result;
+        throw XmlRpcMethodResponseException(eMsg.str());
+    }
 }
 
 

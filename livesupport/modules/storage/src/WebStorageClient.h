@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.31 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.32 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -95,8 +95,8 @@ using namespace LiveSupport::Core;
  *  &lt;!ATTLIST location path          CDATA       #REQUIRED &gt;
  *  </code></pre>
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.31 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.32 $
  */
 class WebStorageClient :
                     virtual public Configurable,
@@ -306,6 +306,22 @@ class WebStorageClient :
         virtual void
         savePlaylist(Ptr<SessionId>::Ref sessionId,
                      Ptr<Playlist>::Ref  playlist)
+                                                throw (XmlRpcException);
+
+        /**
+         *  Revert a playlist to its pre-editing state.
+         *  This is only used for clean-up after crashes.  If the GUI
+         *  crashed while editing a playlist, it can release the lock on
+         *  the playlist (and lose all changes) at the next login using
+         *  this method.
+         *
+         *  @param playlistToken the token of the edited playlist
+         *  @exception XmlRpcException if there is a problem with the XML-RPC
+         *                             call or no playlist with the specified
+         *                             token exists.
+         */
+        virtual void
+        revertPlaylist(Ptr<const std::string>::Ref    playlistToken)
                                                 throw (XmlRpcException);
 
 

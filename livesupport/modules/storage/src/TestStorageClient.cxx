@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/TestStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -427,6 +427,18 @@ TestStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
     storeIt->second = playlist;
 
     editedPlaylists.erase(editIt);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Revert a playlist to its pre-editing state.
+ *----------------------------------------------------------------------------*/
+void
+TestStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
+                                                throw (XmlRpcException)
+{
+    std::cerr << "TestStorageClient :: revertPlaylist"
+              << " is NOT IMPLEMENTED." << std::endl;
 }
 
 
