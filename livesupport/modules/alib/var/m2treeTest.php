@@ -2,7 +2,7 @@
 require_once"m2tree.php";
 
 class M2treeTest extends M2tree{
-    function _test_addObj()
+    function _test_init()
     {
         for($i=1; $i<=3; $i++){
             $r = $this->addObj("Publication$i", "Publication");
@@ -27,7 +27,7 @@ class M2treeTest extends M2tree{
     }
     function _test_check($title, $expected, $returned)
     {
-        if($expected != $returned){
+        if($expected !== $returned){
             return $this->dbc->raiseError(
                 "m2tree::$title FAILED:\n".
                 " ###expected:\n$expected\n ---\n".
@@ -41,7 +41,7 @@ class M2treeTest extends M2tree{
         echo "# M2tree test:\n";
 
         // addObj/dumpTree test:
-        $r = $this->_test_addObj();
+        $r = $this->_test_init();
         if($this->dbc->isError($r)) return $r;
         $expected = "RootNode
     Publication1
@@ -202,7 +202,7 @@ class M2treeTest extends M2tree{
         $r = $this->_test_check('reset', $expected, $returned);
         if($this->dbc->isError($r)) return $r; else echo $r;
 
-        echo "# OK\n";
+        echo "# M2tree OK\n";
         return TRUE;
     }
 

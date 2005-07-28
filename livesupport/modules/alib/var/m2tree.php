@@ -22,7 +22,7 @@ define('ALIBERR_MTREE', 10);
  *    );
  *   </code></pre>
  *  @author  $Author: tomas $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  *  @see ObjClasses
  *  Original author Tom Hlava
  */
@@ -397,6 +397,7 @@ class M2tree{
             LEFT JOIN {$this->structTable} s ON id=objid AND parid=$rootId
             WHERE id=$oid
         ");
+        if($this->dbc->isError($re)) return $re;
         $re['level'] = intval($re['level']);
         return $re;
     }
