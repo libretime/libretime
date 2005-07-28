@@ -23,7 +23,7 @@
 
 
     Author   : $Author: tomas $
-    Version  : $Revision: 1.65 $
+    Version  : $Revision: 1.66 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/GreenBox.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@ require_once "BasicStor.php";
  *  LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.65 $
+ *  @version $Revision: 1.66 $
  *  @see BasicStor
  */
 class GreenBox extends BasicStor{
@@ -611,19 +611,11 @@ class GreenBox extends BasicStor{
      *  @param sessid string, session ID
      *  @return string gunid of playlist
      */
-    function revertEditedPlaylist($token, $sessid)
+    function revertEditedPlaylist($token, $sessid='')
     {
-        $gunid = $this->bsCloseDownload($token, 'metadata');
-        if(PEAR::isError($gunid)) return $gunid;
-        $ac =& StoredFile::recallByGunid($this, $gunid);
-        if(PEAR::isError($ac)){ return $ac; }
-        $id = $ac->getId();
-        $mdata = $ac->getMetaData();
-        if(PEAR::isError($mdata)){ return $mdata; }
-        $res = $ac->replaceMetaData($mdata, 'string');
-        if(PEAR::isError($res)){ return $res; }
-        $this->_setEditFlag($gunid, FALSE, $sessid);
-        return $gunid;
+        require_once"LocStor.php";
+        $lc =& new LocStor($this->dbc, $this->config);
+        return $lc->revertEditedPlaylist($token, $sessid);
     }
 
     /**

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.39 $
+    Version  : $Revision: 1.40 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -560,6 +560,28 @@ class LocStor extends BasicStor{
         $r = $this->_setEditFlag($playlistId, FALSE, $sessid);
         if(PEAR::isError($r)){ return $r; }
         return $playlistId;
+    }
+
+    /**
+     *  RollBack playlist changes to the locked state
+     *
+     *  @param token string, playlist access token
+     *  @param sessid string, session ID
+     *  @return string gunid of playlist
+     */
+    function revertEditedPlaylist($playlistToken, $sessid='')
+    {
+        $gunid = $this->bsCloseDownload($playlistToken, 'metadata');
+        if(PEAR::isError($gunid)) return $gunid;
+        $ac =& StoredFile::recallByGunid($this, $gunid);
+        if(PEAR::isError($ac)){ return $ac; }
+        $id = $ac->getId();
+        $mdata = $ac->getMetaData();
+        if(PEAR::isError($mdata)){ return $mdata; }
+        $res = $ac->replaceMetaData($mdata, 'string');
+        if(PEAR::isError($res)){ return $res; }
+        $this->_setEditFlag($gunid, FALSE, $sessid);
+        return $gunid;
     }
 
     /**
