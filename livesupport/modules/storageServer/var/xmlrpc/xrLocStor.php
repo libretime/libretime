@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.25 $
+    Version  : $Revision: 1.26 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -111,6 +111,7 @@ $methods = array(
     'createPlaylist'          => 'Create a new Playlist metafile.',
     'editPlaylist'            => 'Open a Playlist metafile for editing.',
     'savePlaylist'            => 'Save a Playlist metafile.',
+    'revertEditedPlaylist'    => 'RollBack playlist changes to the locked state.',
     'deletePlaylist'          => 'Delete a Playlist metafile.',
     'accessPlaylist'          => 'Open readable URL to a Playlist metafile.',
     'releasePlaylist'         => 'Release readable URL from accessPlaylist.',

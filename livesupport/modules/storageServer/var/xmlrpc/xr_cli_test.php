@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,6 +117,8 @@ $infos = array(
         'p'=>array('sessid', 'plid'), 'r'=>array('url', 'token')),
     "savePlaylist"      => array('m'=>"locstor.savePlaylist",
         'p'=>array('sessid', 'token', 'newPlaylist'), 'r'=>'plid'),
+    "revertEditedPlaylist"      => array('m'=>"locstor.revertEditedPlaylist",
+        'p'=>array('sessid', 'token'), 'r'=>'plid'),
     "deletePlaylist"    => array('m'=>"locstor.deletePlaylist",
         'p'=>array('sessid', 'plid'), 'r'=>'status'),
     "accessPlaylist"    => array('m'=>"locstor.accessPlaylist",
