@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.19 $
+    Version  : $Revision: 1.20 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -248,6 +248,13 @@ LiveModeWindow :: popTop(void)                                      throw ()
         treeModel->erase(iter);
     }
 
+    for (iter = treeModel->children().begin(); 
+                            iter != treeModel->children().end(); ++iter) {
+        Gtk::TreeRow    row = *iter;
+        int     rowNumber = row[modelColumns.rowNumberColumn];
+        row[modelColumns.rowNumberColumn] = --rowNumber;
+    }
+    
     return playable;
 }
 
