@@ -68,13 +68,14 @@
     {
         var width  = 160;
         var height = 120;
-        var name = Math.random();
+        var name = Math.round(Math.random()*100000);
         var screenX;
         var screenY;
         var Xpos;
         var Ypos;
         var Pwidth;
         var Pheight;
+        var popupwin;
 
         if (ie5) {
             Xpos     = window.screenLeft;

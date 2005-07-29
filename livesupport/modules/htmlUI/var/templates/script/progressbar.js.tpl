@@ -3,12 +3,14 @@
 {literal}
 // play-progress-bar object
 
-function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, ndur){
+function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, nh, ni, ns){
     this.tit        = tit;
     this.next       = next;
     this.interval   = 333;
     this.ntit       = ntit;
-    this.ndur       = ndur;
+    this.nh         = nh;
+    this.ni         = ni;
+    this.ns         = ns;
 
     // inits:
     this.elapsed    = new Date();
@@ -16,7 +18,7 @@ function plPrBar(tit, eh, ei, es, dh, di, ds, next, ntit, ndur){
     this.remaining  = new Date();
     this.elapsed.setTime (Date.UTC(1970, 0, 1, eh, ei, es));
     this.duration.setTime(Date.UTC(1970, 0, 1, dh, di, ds));
-              //alert("elapsed:" + this.elapsed.getUTCSeconds() + "   duration:" + this.duration.getUTCSeconds());
+
     // methods:
     this.init   = plPrBar_init;
     this.tick   = plPrBar_tick;
@@ -35,7 +37,7 @@ function plPrBar_init() {
         document.getElementById("next_clip").innerHTML          = '';
     } else {
         document.getElementById("next_title").innerHTML         = this.ntit;
-        document.getElementById("next_duration").innerHTML      = this.ndur;
+        document.getElementById("next_duration").innerHTML      = '(' + twoDigit(this.nh) + ':' + twoDigit(this.ni) + ':' + twoDigit(this.ns) + ')';
     }
 
     this.show();
@@ -78,7 +80,7 @@ function plPrBar_create(jscomRes) {
             ppb = new plPrBar(parms[0],
                               parms[1], parms[2], parms[3],
                               parms[4], parms[5], parms[6],
-                              parms[7], parms[8], parms[9]
+                              parms[7], parms[8], parms[9], parms[10], parms[11] 
                              );
             ppb.init();
         } else {
@@ -102,9 +104,9 @@ function plPrBar_hide() {
                         {$_nowplaying.elapsed.h|string_format:"%d"}, {$_nowplaying.elapsed.m|string_format:"%d"}, {$_nowplaying.elapsed.s|string_format:"%d"},
                         {$_nowplaying.duration.h|string_format:"%d"}, {$_nowplaying.duration.m|string_format:"%d"}, {$_nowplaying.duration.s|string_format:"%d"},
                         {if is_array($_nextplaying)}
-                            1, "{$_nextplaying.title|truncate:22}", "{$_nextplaying.duration.h}:{$_nextplaying.duration.m}:{$_nextplaying.duration.s|truncate:2:""}"
+                            1, "{$_nextplaying.title|truncate:22}", {$_nextplaying.duration.h|string_format:'%d'}, {$_nextplaying.duration.m|string_format:'%2d'}, {$_nextplaying.duration.s|string_format:'%2d'}
                         {else}
-                            0, "", ""
+                            0, "", 0, 0, 0
                         {/if}
                        );
     ppb.init();

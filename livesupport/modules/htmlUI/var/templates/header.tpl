@@ -5,22 +5,7 @@
 <head>
     <title>LIVESUPPORT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    {literal}
-    <script type='text/javascript'><!--//--><![CDATA[//><!--
-    sfHover = function() {
-        var sfEls = document.getElementById("nav").getElementsByTagName("LI");
-        for (var i=0; i<sfEls.length; i++) {
-            sfEls[i].onmouseover=function() {
-                this.className+=" sfhover";
-            }
-            sfEls[i].onmouseout=function() {
-                this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
-            }
-        }
-    }
-    if (window.attachEvent) window.attachEvent("onload", sfHover);
-    //--><!]]></script>
-    {/literal}
+
     <link rel="stylesheet" href="styles.css">
     <link href="styles_livesupport.css" rel="stylesheet" type="text/css" />
 

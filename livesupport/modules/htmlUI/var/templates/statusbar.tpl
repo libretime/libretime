@@ -50,7 +50,7 @@
                 <div class="clearer"></div>
                 <div id="next_clip">
                 {if $_nextplaying}
-                    <p>##Playing Next##: <span id="next_title"></span> <span id="next_duration"></span></p>
+                    <p>##Playing Next##: <span id="next_title"></span> &nbsp;<span id="next_duration"></span></p>
                 {/if}
                 </div>
             </div>

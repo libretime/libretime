@@ -1,6 +1,6 @@
 <div class="content">
 {if $_REQUEST.act == addFileMData || $_REQUEST.act == addWebstreamMData || $_REQUEST.act == editItem}
-    {include file="file/tabswitch.tpl"}
+    {include file="file/tabswitch.js.tpl"}
 {/if}
     <div class="container_elements" style="width: 607px;">
         <h1>
@@ -15,7 +15,6 @@
     {if $editItem.type == 'audioclip' || $editItem.type == 'file'}
         <div id="div_Data">
         {if $_REQUEST.act == 'addFileData'}
-
                 {UIBROWSER->fileForm id=$editItem.id folderId=$editItem.folderId assign="dynform"}
                 {include file="sub/dynForm_plain.tpl}
                 {assign var="_uploadform" value=null}

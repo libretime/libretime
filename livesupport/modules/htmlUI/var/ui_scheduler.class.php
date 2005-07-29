@@ -27,7 +27,7 @@ class uiScheduler extends uiCalendar
         $this->uiCalendar();
         $this->initXmlRpc();
 
-        $this->startDaemon();
+        //$this->startDaemon();
     }
 
 
@@ -412,8 +412,10 @@ class uiScheduler extends uiCalendar
                     'duration.m'    => $curr['duration']['m'],
                     'duration.s'    => $curr['duration']['s'],
                     'next'          => $next ? 1 : 0,
-                    'nexttitle'     => $next ? $next['title'] : "",
-                    'nextduration'  => $next ? $next['duration']['h'].':'.$next['duration']['m'].':'.sprintf('%d', $next['duration']['s']) : "",
+                    'next.title'    => $next ? $next['title'] : "",
+                    'next.dur.h'    => $next ? $next['duration']['h'] : 0,
+                    'next.dur.m'    => $next ? $next['duration']['m'] : 0,
+                    'next.dur.s'    => $next ? $next['duration']['s'] : 0,
                    );
         } else {
             return FALSE;

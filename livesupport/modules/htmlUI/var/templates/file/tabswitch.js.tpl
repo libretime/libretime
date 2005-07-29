@@ -1,9 +1,9 @@
-<script>
+<script language="javascript">
 {literal}
 function showMain()
 {
     document.getElementById('div_Data').style.display   = 'none';
-    document.getElementById('div_MData').style.display  = 'inherit';
+    document.getElementById('div_MData').style.display  = 'block';
     document.getElementById('div_Main').style.display   = 'inline';
     document.getElementById('div_Music').style.display  = 'none';
     document.getElementById('div_Talk').style.display   = 'none';
@@ -15,7 +15,7 @@ function showMain()
 function showMusic()
 {
     document.getElementById('div_Data').style.display   = 'none';
-    document.getElementById('div_MData').style.display  = 'inherit';
+    document.getElementById('div_MData').style.display  = 'block';
     document.getElementById('div_Main').style.display   = 'none';
     document.getElementById('div_Music').style.display  = 'inline';
     document.getElementById('div_Talk').style.display   = 'none';
@@ -27,7 +27,7 @@ function showMusic()
 function showTalk()
 {
     document.getElementById('div_Data').style.display   = 'none';
-    document.getElementById('div_MData').style.display  = 'inherit';
+    document.getElementById('div_MData').style.display  = 'block';
     document.getElementById('div_Main').style.display   = 'none';
     document.getElementById('div_Music').style.display  = 'none';
     document.getElementById('div_Talk').style.display   = 'inline';
@@ -40,7 +40,7 @@ function showTalk()
 
 function showData()
 {
-    document.getElementById('div_Data').style.display   = 'inherit';
+    document.getElementById('div_Data').style.display   = 'block';
     document.getElementById('div_MData').style.display  = 'none';
     document.getElementById('switch_Main').className    = '';
     document.getElementById('switch_Music').className   = '';
@@ -50,7 +50,7 @@ function showData()
 
 function showMData()
 {
-    document.getElementById('div_MData').style.display  = 'inherit';
+    document.getElementById('div_MData').style.display  = 'block';
     document.getElementById('div_Data').style.display   = 'none';
 }
 {/literal}

@@ -7,30 +7,26 @@
 
 {if $USER.userid}    {* somebody logged in? *}
 
-    {*
-    {if $structure}
-        {include file="file/path.tpl"}
-    {/if}
-    *}
-
     {if $showScheduler}
-    <table  style="margin:0px;padding:0px;" border="0">
-        <tr>
-            <td valign="top" style="margin:0px;padding:0px;border:0">
-                {include file="scheduler/main.tpl"}
-            </td>
-            <td valign="top" style="margin:0px;padding:0px;border:0">
-                <div class="content">
-                {include file="scheduler/calendar.tpl"}
-                {if $SCRATCHPAD}
-                    {include file="scratchpad/main.tpl"}
-                {/if}
-                </div>
-            </td>
+
+        <table  style="margin:0px;padding:0px;" border="0">
+         <tr>
+             <td valign="top" style="margin:0px;padding:0px;border:0">
+                 {include file="scheduler/main.tpl"}
+             </td>
+             <td valign="top" style="margin:0px;padding:0px;border:0">
+                 <div class="content">
+                 {include file="scheduler/calendar.tpl"}
+                 {if $SCRATCHPAD}
+                     {include file="scratchpad/main.tpl"}
+                 {/if}
+                 </div>
+             </td>
 
 
-        </tr>
-    </table>
+         </tr>
+        </table>
+
     {else}
 
         {if $fileList}
