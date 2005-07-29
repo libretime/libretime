@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/install/install.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,35 +73,22 @@ $gb =& new GreenBox($dbc, $config);
 $tr =& new Transport($dbc, $gb, $config);
 $pr =& new Prefs($gb);
 
-echo "#StorageServer step 2:\n# trying uninstall ...\n";
-$dbc->setErrorHandling(PEAR_ERROR_RETURN);
-$pr->uninstall();
-$tr->uninstall();
-$gb->uninstall();
+//------------------------------------------------------------------------------
+// install
+//------------------------------------------------------------------------------
 
+echo "#StorageServer install:\n";
 echo "# Install ...\n";
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "%s<hr>\n");
 PEAR::setErrorHandling(PEAR_ERROR_DIE, "%s<hr>\n");
+#$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 $r = $gb->install();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
+if(PEAR::isError($r)){ echo $r->getMessage()."\n"; echo $r->getUserInfo()."\n"; exit(1); }
+#if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
 
-echo "# Testing ...\n";
-$r = $gb->test();
-if(PEAR::isError($r)){ echo $r->getMessage()."\n"; exit(1); }
-$log = $gb->test_log;
-if($log) echo "# testlog:\n{$log}";
-
-#echo "#  Reinstall + testdata insert ...\n";
-#$gb->reinstall();
-#$gb->sessid = $gb->login('root', $gb->config['tmpRootPass']);
-#$gb->testData();
-#$gb->logout($gb->sessid); unset($gb->sessid);
-
-#echo "#  TREE DUMP:\n";
-#echo $gb->dumpTree();
-
-echo "# Delete test data ...\n";
-$gb->deleteData();
+//------------------------------------------------------------------------------
+// Storage directory writability test
+//------------------------------------------------------------------------------
 
 if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))){
     echo "\n<b>make {$config['storageDir']} dir webdaemon-writeable</b>".
@@ -112,9 +99,14 @@ if(!($fp = @fopen($config['storageDir']."/_writeTest", 'w'))){
     echo "#storageServer main: OK\n";
 }
 
+//------------------------------------------------------------------------------
+// Submodules
+//------------------------------------------------------------------------------
+
+$dbc->setErrorHandling(PEAR_ERROR_RETURN);
 echo "# Install Transport submodule ...";
 $r = $tr->install();
-if(PEAR::isError($r)){ echo $r->getUserInfo()."\n"; exit(1); }
+if(PEAR::isError($r)){ echo $r->getMessage()."\n"; echo $r->getUserInfo()."\n"; exit(1); }
 echo "\n";
 
 echo "# Install Prefs submodule ...";
