@@ -146,13 +146,12 @@ class uiSubjects
             $this->Base->redirUrl = $_SERVER['HTTP_REFERER'];
             return FALSE;
         }
-        if (UI_VERBOSE)
-            $this->Base->_retMsg('Password changed.');
-        if (PEAR::isError($ret = $this->Base->gb->passwd($request['login'], $request['oldpass'], $request['pass']))) {
+        if (PEAR::isError($ret = $this->Base->gb->passwd($request['login'], $request['oldpass'], $request['pass'], $this->Base->sessid))) { 
             $this->Base->_retMsg($ret->getMessage());
             return FALSE;
         }
-
+        if (UI_VERBOSE)
+            $this->Base->_retMsg('Password changed.');
         return TRUE;
     }
 
