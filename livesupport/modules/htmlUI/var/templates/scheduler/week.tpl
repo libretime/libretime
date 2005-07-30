@@ -50,7 +50,7 @@
                 <td class="day_full">
                 {foreach from=$_entrys[$_day.day][$_hour] item="i"}
                     <div {include file="scheduler/removeitem.tpl"}>
-                        <img src="img/playlist.gif" border="0" {include file="sub/mouseover.tpl"}>
+                        <img src="img/playlist.png" border="0" {include file="sub/mouseover.tpl"}>
                         &nbsp;
                         <h2>{$i.title|truncate:12}</h2>
                         <p>{$i.start|truncate:8:""} - {$i.end|truncate:8:""}</p>

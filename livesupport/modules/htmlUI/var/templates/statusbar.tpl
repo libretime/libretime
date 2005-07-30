@@ -4,7 +4,7 @@
     <!-- start header -->
         <!-- start header left -->
         <div class="headLeft">
-            <img src="img/logo_livesupport.gif" alt="Livesupport Logo" />
+            <img src="img/logo_livesupport.png" alt="Livesupport Logo" />
             <div class="container">
                 {include file="userinfo.tpl"}
             </div>
@@ -21,9 +21,9 @@
             <!-- start onair information -->
             <div class="onair" id="statusbar_indicator">
                 {if $_nowplaying}
-                    <img src="img/el_onair.gif" alt="on air" />
+                    <img src="img/el_onair.png" alt="on air" />
                 {else}
-                    <img src="img/el_offair.gif" alt="off air">
+                    <img src="img/el_offair.png" alt="off air">
                 {/if}
             </div>
             <!-- end onair information -->

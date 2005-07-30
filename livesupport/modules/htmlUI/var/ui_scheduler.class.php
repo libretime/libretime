@@ -525,7 +525,7 @@ class uiScheduler extends uiCalendar
     ## XML-RPC wrapper methods ############################################################################################
     function initXmlRpc()
     {
-        include_once dirname(__FILE__).'/SchedulerPhpClient.class.php';
+        include_once dirname(__FILE__).'/ui_schedulerPhpClient.class.php';
         $this->spc =& SchedulerPhpClient::factory($this->Base->dbc, $mdefs, $this->Base->config, FALSE, FALSE);
     }
 

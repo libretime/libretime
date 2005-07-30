@@ -40,10 +40,10 @@
                     <td {include file="scratchpad/actionhandler.tpl"} style="text-align: right; cursor: pointer">{niceTime in=$_duration}</td>
                     <td {include file="scratchpad/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
                         {if $PL->isAvailable($i.id) == false}
-                            <div align="left"><img src="img/ico_lock.gif">
-                            <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /></div>
+                            <div align="left"><img src="img/ico_lock.png">
+                            <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /></div>
                         {else}
-                        <img src="img/{$i.type}.gif" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /> {/if}
+                        <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /> {/if}
                     </td>
                 </tr>
                 <!-- end item -->

@@ -27,9 +27,9 @@
                                 <td style="border: 0; text-align: center"
                                     onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
                                     {if $i.type|lower == 'u'}
-                                        <img src="img/user.gif" border="0" alt="User" />
+                                        <img src="img/user.png" border="0" alt="User" />
                                     {else}
-                                        <img src="img/group.gif" border="0" alt="Group" />
+                                        <img src="img/group.png" border="0" alt="Group" />
                                     {/if}
                                 </td>
                             </tr>
@@ -74,9 +74,9 @@
                                 <td style="border: 0; text-align: center"
                                     onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
                                     {if $i.type|lower == 'u'}
-                                        <img src="img/user.gif" border="0" alt="User" />
+                                        <img src="img/user.png" border="0" alt="User" />
                                     {else}
-                                        <img src="img/group.gif" border="0" alt="Group" />
+                                        <img src="img/group.png" border="0" alt="Group" />
                                     {/if}
                                 </td>
                             </tr>

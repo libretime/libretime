@@ -141,7 +141,7 @@ require_once dirname(__FILE__).'/formmask/generic.inc.php';
 require_once dirname(__FILE__).'/ui_calendar.class.php';
 require_once dirname(__FILE__).'/ui_scheduler.class.php';
 require_once dirname(__FILE__).'/ui_subjects.class.php';
-require_once dirname(__FILE__).'/jscom.php';
+require_once dirname(__FILE__).'/ui_jscom.php';
 
 ## well known classes
 require_once 'DB.php';

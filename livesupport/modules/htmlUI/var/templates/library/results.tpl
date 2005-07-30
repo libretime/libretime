@@ -27,7 +27,7 @@
                     <td {include file="library/actionhandler.tpl"} style="cursor: pointer">{$i.creator}</td>
                     <td {include file="library/actionhandler.tpl"} style="text-align: right; cursor: pointer">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                     <td {include file="library/actionhandler.tpl"} style="border: 0; text-align: center; cursor: pointer">
-                        <img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/mouseover.tpl"} />
+                        <img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/mouseover.tpl"} />
                     </td>
                 </tr>
             <!-- end item -->

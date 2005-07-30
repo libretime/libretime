@@ -80,7 +80,7 @@ DIV.blockquote
  <div class="container">
 <div class="content">
 <div class="container_elements">
-<img src="img/logo_livesupport.gif" border="0" />
+<img src="img/logo_livesupport.png" border="0" />
 
 <h1>Quick Start - {$UI_VERSION_FULLNAME}</h1>
 <div class="copyright">{$UI_VERSION} &copy;2005 <a href="http://www.mdlf.org" target="_blank">MDLF</a> - maintained and distributed under GNU/GPL by <a href="http://www.campware.org" target="_blank">CAMPWARE</a></div>

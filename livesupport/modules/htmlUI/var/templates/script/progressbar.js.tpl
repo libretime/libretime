@@ -89,12 +89,12 @@ function plPrBar_create(jscomRes) {
 }
 
 function plPrBar_show() {
-    document.getElementById("statusbar_indicator").innerHTML      = '<img src="img/el_onair.gif" alt="on air">';
+    document.getElementById("statusbar_indicator").innerHTML      = '<img src="img/el_onair.png" alt="on air">';
     document.getElementById("statusbar_whatsplaying").className   = 'whatplaying';
 }
 
 function plPrBar_hide() {
-    document.getElementById("statusbar_indicator").innerHTML    = '<img src="img/el_offair.gif" alt="off air">';
+    document.getElementById("statusbar_indicator").innerHTML    = '<img src="img/el_offair.png" alt="off air">';
     document.getElementById("statusbar_whatsplaying").innerHTML = "";
 }
 {/literal}

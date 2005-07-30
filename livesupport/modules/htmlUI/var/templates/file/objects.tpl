@@ -35,7 +35,7 @@
                     {/if}
                 </span>
               </td>
-              <td><img src="img/{$i.type|lower}.gif" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/mouseover.tpl"} /></td>
+              <td><img src="img/{$i.type|lower}.png" border="0" alt="{$i.type|lower|capitalize}" {include file="sub/mouseover.tpl"} /></td>
               <td style="border: 0">
                   {* &nbsp;<a href="javascript:frename('{$i.name}', '{$i.id}')">[rename]</a> *}
                   &nbsp;<a href="javascript:fmove('{$i.id}', '.')">##move##</a>

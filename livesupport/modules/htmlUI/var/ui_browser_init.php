@@ -20,7 +20,7 @@ $jscom->handler();
 
 
 ## load Smarty+filters ##############################################
-require_once  dirname(__FILE__).'/SmartyExtensions.inc.php';
+require_once  dirname(__FILE__).'/ui_smartyExtensions.inc.php';
 #$Smarty->load_filter('output', 'trimwhitespace');
 #$Smarty->load_filter('post', 'template_marker');
 $Smarty->load_filter('output', 'localizer');

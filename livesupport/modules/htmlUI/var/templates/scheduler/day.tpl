@@ -38,7 +38,7 @@
 
                     {foreach from=$_entrys[$_hour] item="i"}    {* hier werden die Einträge welche in der jeweil. h beginnen durchlaufen *}
                         <div {include file="scheduler/removeitem.tpl"}>
-                            <img src="img/playlist.gif" border="0" {include file="sub/mouseover.tpl"}>
+                            <img src="img/playlist.png" border="0" {include file="sub/mouseover.tpl"}>
                             &nbsp;
                             <b>{$i.title}</b>
                             {$i.start}-{$i.end}
