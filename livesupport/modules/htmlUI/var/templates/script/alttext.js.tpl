@@ -1,10 +1,6 @@
 {literal}
 <script type="text/javascript">
-
     document.write('<div id="alttextContainer"></div>');
-    alttextWidth    = 200;
-    alttextHeight   = 0;
-    alttextduration = 0;
 
     function showalttext(param) {
         var alttextHeader  = "<div class='alttext' id='alttext' style='position: absolute; top: -1000; left: 0; z-index: 99'>";
@@ -26,21 +22,30 @@
     }
 
     function showalttextthan(e) {
+        var spacer         = 15;
+        var alttextWidth   = document.getElementById('alttext').clientWidth;
+        var alttextHeight  = document.getElementById('alttext').clientHeight;
+
         if (ie5) {
-            if (event.clientX + contextmenuWidth  > document.body.clientWidth)  xPos = event.clientX - contextmenuWidth + document.body.scrollLeft;
-            else                                                                xPos = event.clientX + document.body.scrollLeft;
-            if (event.clientY + contextmenuHeight > document.body.clientWidth)  yPos = event.clientY - contextmenuHeight + document.body.scrollTop;
-            else                                                                yPos = event.clientY + document.body.scrollTop;
-        }
-        else {
-            if (e.pageX + contextmenuWidth + 20 > window.innerWidth)            xPos = e.pageX - alttextWidth/2;
-            else                                                                xPos = e.pageX - alttextWidth/2;
-            if (e.pageY + contextmenuHeight +20 > window.innerHeight)           yPos = e.pageY - alttextHeight/2 + 15;
-            else                                                                yPos = e.pageY - alttextHeight/2 + 15;
+           var clickX  = event.clientX;
+           var clickY  = event.clientY + document.body.scrollTop;
+           var winY    = document.body.clientHeight;
+           var scrollY = document.body.scrollTop;
+        } else {
+           var clickX  = e.pageX;
+           var clickY  = e.pageY;
+           var winY    = window.innerHeight;
+           var scrollY = window.scrollY;
         }
 
+        if (clickX < alttextWidth)                      var xPos = clickX + spacer;
+        else                                            var xPos = clickX - alttextWidth - spacer;
+
+        if (clickY + alttextHeight > winY  + scrollY)   var yPos = winY - alttextHeight + scrollY;
+        else                                            var yPos = clickY;
+
         alttexthide = false;
-        setTimeout("showalttextnow("+xPos+", "+yPos+")", alttextduration);
+        setTimeout("showalttextnow("+xPos+", "+yPos+")");
         document.onmouseover = null;
 
     }
@@ -48,13 +53,14 @@
     function showalttextnow(xPos, yPos) {
         if (!alttexthide) {
             document.getElementById('alttext').style.left = xPos;
-            document.getElementById('alttext').style.top = yPos;
+            document.getElementById('alttext').style.top  = yPos;
         }
     }
 
     function hidealttext() {
+        var delay = 0;
         alttexthide = true;
-        setTimeout("hidealttextnow()", alttextduration);
+        setTimeout("hidealttextnow()", delay);
     }
 
     function hidealttextnow() {

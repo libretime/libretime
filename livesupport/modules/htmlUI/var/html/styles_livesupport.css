@@ -3,7 +3,7 @@ body { font-size: 12px;
     font-size: 12px;
     color: #2C2C2C;
     margin: 0px;
-    background: #FFF url("css_img/bg_head.gif") no-repeat;
+    background: #FFF url("css_img/bg_head.png") no-repeat;
 }
 
 img { font-size: 12px;
@@ -199,7 +199,7 @@ input, select { font-size: 12px;
 }
 
 .whatplaying .scala .scala_in { font-size: 12px;
-    background: #DADADA url("css_img/bg_scala_in.gif") repeat-x top left;
+    background: #DADADA url("css_img/bg_scala_in.png") repeat-x top left;
     font-size:1px;
     height: 8px;
 }
@@ -214,7 +214,7 @@ input, select { font-size: 12px;
     width: 125px;
 }
 
-.whatplaying .time .right { 
+.whatplaying .time .right {
     width: 125px;
     float: left;
     text-align: right;
@@ -231,7 +231,7 @@ input, select { font-size: 12px;
 .container_nav { font-size: 12px;
     height: 26px;
     clear: both;
-    background: url("css_img/bg_navigation.gif") repeat-x top left;
+    background: url("css_img/bg_navigation.png") repeat-x top left;
     margin-bottom: 38px;
 }
 
@@ -310,7 +310,7 @@ input, select { font-size: 12px;
 .contenttabnav {
     height: 26px;
     clear: both;
-    /*background: url("css_img/bg_navigation.gif") repeat-x top left;*/
+    /*background: url("css_img/bg_navigation.png") repeat-x top left;*/
     margin-bottom: 12px;
     margin-top: 12px;
 }
@@ -348,7 +348,7 @@ input, select { font-size: 12px;
 }
 
 #tabnav a {
-    background: url("css_img/bt_tab_off.gif");
+    background: url("css_img/bt_tab_off.png");
     display: block;
     color: #666;
     font-size: 11px;
@@ -360,12 +360,12 @@ input, select { font-size: 12px;
 }
 
 #tabnav a:hover {
-    background: url("css_img/bt_tab_on.gif");
+    background: url("css_img/bt_tab_on.png");
     color: #FFF;
 }
 
 #tabnav a.active {
-    background: url("css_img/bt_tab_on.gif");
+    background: url("css_img/bt_tab_on.png");
     color: #FFF;
 }
 
@@ -391,7 +391,7 @@ input, select { font-size: 12px;
 }
 
 #tabnavsmall a {
-    background: url("css_img/bt_tabsm_off.gif");
+    background: url("css_img/bt_tabsm_off.png");
     display: block;
     color: #666;
     font-size: 11px;
@@ -403,12 +403,12 @@ input, select { font-size: 12px;
 }
 
 #tabnavsmall a:hover {
-    background: url("css_img/bt_tabsm_on.gif");
+    background: url("css_img/bt_tabsm_on.png");
     color: #FFF;
 }
 
 #tabnavsmall a.active {
-    background: url("css_img/bt_tabsm_on.gif");
+    background: url("css_img/bt_tabsm_on.png");
     color: #FFF;
 }
 
@@ -857,7 +857,7 @@ table.scheduler_month .scala {
 }
 
 table.scheduler_month .scala .scala_in {
-    background: #DADADA url("css_img/bg_scala_in_scheduler.gif") repeat-x top left;
+    background: #DADADA url("css_img/bg_scala_in_scheduler.png") repeat-x top left;
     font-size:1px;
     height: 12px;
 }

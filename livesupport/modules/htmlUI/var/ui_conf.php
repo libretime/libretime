@@ -1,6 +1,6 @@
 <?php
-define('UI_VERSION',                    'LiveSupport 1.0 rc1');
-define('UI_VERSION_FULLNAME',           'LiveSupport 1.0 release canditate 1');
+define('UI_VERSION',                    'LiveSupport 1.0');
+define('UI_VERSION_FULLNAME',           'LiveSupport 1.0 stable');
 define('UI_TESTSTREAM_MU3_TMP',         'img/test.m3u');
 
 ## Scheduler

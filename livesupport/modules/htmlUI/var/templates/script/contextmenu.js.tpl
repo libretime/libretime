@@ -8,8 +8,6 @@
 
     document.write('<div id="contextmenucontainer"></div>');
     contextmenuStatus = 0;
-    contextmenuWidth  = 200,
-    contextmenuHeight = 0;
     document.onclick  = hidecontextmenu;
 
 
@@ -133,20 +131,28 @@
 
 
     function showcontextmenu(e) {
+        var contextmenuWidth   = document.getElementById('contextmenu').clientWidth;
+        var contextmenuHeight  = document.getElementById('contextmenu').clientHeight;
+
         if (ie5) {
-            if (event.clientX + contextmenuWidth  > document.body.clientWidth)  xPos = event.clientX - contextmenuWidth + document.body.scrollLeft;
-            else                                                                xPos = event.clientX + document.body.scrollLeft;
-            if (event.clientY + contextmenuHeight > document.body.clientWidth)  yPos = event.clientY - contextmenuHeight + document.body.scrollTop;
-            else                                                                yPos = event.clientY + document.body.scrollTop;
-        }
-        else {
-            if (e.pageX + contextmenuWidth + 20 > window.innerWidth)            xPos = e.pageX - contextmenuWidth;
-            else                                                                xPos = e.pageX;
-            if (e.pageY + contextmenuHeight +20 > window.innerHeight)           yPos = e.pageY - contextmenuHeight;
-            else                                                                yPos = e.pageY;
+           var clickX  = event.clientX;
+           var clickY  = event.clientY + document.body.scrollTop;
+           var winY    = document.body.clientHeight;
+           var scrollY = document.body.scrollTop;
+        } else {
+           var clickX  = e.pageX;
+           var clickY  = e.pageY;
+           var winY    = window.innerHeight;
+           var scrollY = window.scrollY;
         }
 
-        setTimeout("document.getElementById('contextmenu').style.left = xPos; document.getElementById('contextmenu').style.top = yPos;", 10);
+        if (clickX < contextmenuWidth)                      var xPos = clickX;
+        else                                                var xPos = clickX - contextmenuWidth;
+
+        if (clickY + contextmenuHeight > winY + scrollY)    var yPos = clickY - contextmenuHeight;
+        else                                                var yPos = clickY;
+
+        setTimeout("document.getElementById('contextmenu').style.left = "+xPos+"; document.getElementById('contextmenu').style.top = "+yPos+";", 10);
         contextmenuStatus = 1;
         document.onclick  = hidecontextmenu;
     }
