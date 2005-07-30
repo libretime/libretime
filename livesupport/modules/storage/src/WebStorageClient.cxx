@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.46 $
+    Version  : $Revision: 1.47 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1204,7 +1204,7 @@ WebStorageClient :: savePlaylist(Ptr<SessionId>::Ref sessionId,
  *  Revert a playlist to its pre-editing state.
  *----------------------------------------------------------------------------*/
 void
-WebStorageClient :: revertPlaylist(Ptr<const Glib::ustring>::Ref playlistToken)
+WebStorageClient :: revertPlaylist(Ptr<const std::string>::Ref playlistToken)
                                                 throw (XmlRpcException)
 {
     if (!playlistToken) {
