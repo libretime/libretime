@@ -152,6 +152,9 @@
         if (clickY + contextmenuHeight > winY + scrollY)    var yPos = clickY - contextmenuHeight;
         else                                                var yPos = clickY;
 
+        if (yPos < scrollY) yPos = scrollY;
+
+
         setTimeout("document.getElementById('contextmenu').style.left = "+xPos+"; document.getElementById('contextmenu').style.top = "+yPos+";", 10);
         contextmenuStatus = 1;
         document.onclick  = hidecontextmenu;

@@ -44,6 +44,8 @@
         if (clickY + alttextHeight > winY  + scrollY)   var yPos = winY - alttextHeight + scrollY;
         else                                            var yPos = clickY;
 
+        if (yPos < scrollY) yPos = scrollY;
+
         alttexthide = false;
         setTimeout("showalttextnow("+xPos+", "+yPos+")");
         document.onmouseover = null;
