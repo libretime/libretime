@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.65 $
+    Version  : $Revision: 1.66 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1019,6 +1019,7 @@ GLiveSupport :: stopCueAudio(void)
                                                     throw (std::logic_error)
 {
     if (cueItemPlayingNow) {
+        cuePlayer->close();
         releaseCueAudio();
         cuePlayerIsPaused = false;
     }
@@ -1033,7 +1034,6 @@ GLiveSupport :: releaseCueAudio(void)
                                                     throw (std::logic_error)
 {
     if (cueItemPlayingNow) {
-        cuePlayer->close();
         try {
             switch (cueItemPlayingNow->getType()) {
                 case Playable::AudioClipType:
