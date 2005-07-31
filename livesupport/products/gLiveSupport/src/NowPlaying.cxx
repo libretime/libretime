@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -123,7 +123,6 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             infoString->append("</span>");
         }
         label->set_markup(*infoString);
-        this->playable = playable;
     } else {
         label->set_text("");
         if (isActive) {
@@ -135,7 +134,6 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             }
             isActive = false;
         }
-        this->playable.reset();
     }
 }
 

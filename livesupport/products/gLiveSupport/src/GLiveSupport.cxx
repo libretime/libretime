@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.63 $
+    Version  : $Revision: 1.64 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -881,7 +881,6 @@ GLiveSupport :: stopOutputAudio(void)
                                                     throw (std::logic_error)
 {
     if (outputItemPlayingNow) {
-        outputPlayer->close();
         outputPlayerIsPaused = false;
         onStop();
     }
@@ -895,6 +894,7 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: onStop(void)                                throw ()
 {
+    outputPlayer->close();
     releaseOutputAudio();
     
     Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();

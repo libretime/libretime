@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Widgets;
  *  The box displaying "now playing" in the master panel.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 class NowPlaying : public Gtk::HBox,
                    public LocalizedObject
@@ -82,11 +82,6 @@ class NowPlaying : public Gtk::HBox,
          *  Whether the pause button has been clicked.
          */
         bool                    isPaused;
-
-        /**
-         *  The playable which is shown in the widget.
-         */
-        Ptr<Playable>::Ref      playable;
 
         /**
          *  The label holding the title etc. of the now playing item.
