@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.42 $
+    Version  : $Revision: 1.43 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -601,12 +601,12 @@ resizeImage(Gtk::Image* image, int width, int height)               throw ()
         // image is wide: squash horizontally
         image->set(pixbuf->scale_simple(width,
                                         (imageHeight * width)/imageWidth,
-                                        Gdk::INTERP_BILINEAR ));
+                                        Gdk::INTERP_HYPER ));
     } else {
         // image is tall: squash vertically
         image->set(pixbuf->scale_simple((imageWidth * height)/imageHeight,
                                         height,
-                                        Gdk::INTERP_BILINEAR ));
+                                        Gdk::INTERP_HYPER ));
     }
 }
 
