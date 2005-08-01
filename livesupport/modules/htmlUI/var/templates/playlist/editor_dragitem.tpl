@@ -23,7 +23,7 @@
                    <script type="text/javascript">
                        document.forms['PL'].elements['all'].checked = false;
                    </script>
-               <td>##Name##</td>
+               <td>##Title##</td>
                <td style="width: 50px;">##Duration##</td>
                <td style="width: 200px">##Artist##</td>
                <td style="width: 35px;">##Type##</td>

@@ -87,6 +87,10 @@ if (is_array($_REQUEST['popup'])){
                 $Smarty->display('popup/PLAYLIST.confirmRelease.tpl');
             break;
 
+            case "PL.arrangeItems":
+                $Smarty->display('popup/PLAYLIST.arrangeItems.tpl');
+            break;
+
             case "SCHEDULER.addItem":
                 $Smarty->display('popup/SCHEDULER.addItem.tpl');
             break;

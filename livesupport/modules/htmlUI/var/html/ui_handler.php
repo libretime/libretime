@@ -231,6 +231,11 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReturn();
     break;
 
+    case "PL.reArrange":
+        $uiHandler->PLAYLIST->reOrder($_REQUEST['pl_items']);
+        $uiHandler->PLAYLIST->setReload();
+    break;
+
     case "PL.editMetaData":
         $uiHandler->PLAYLIST->editMetaData($_REQUEST);
         $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
