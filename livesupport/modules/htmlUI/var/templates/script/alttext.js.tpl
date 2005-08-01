@@ -1,5 +1,9 @@
 {literal}
 <script type="text/javascript">
+    //  Browser detection
+    ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
+    nn6 = (document.getElementById && !document.all) ? 1 : 0;
+    
     document.write('<div id="alttextContainer"></div>');
 
     function showalttext(param) {

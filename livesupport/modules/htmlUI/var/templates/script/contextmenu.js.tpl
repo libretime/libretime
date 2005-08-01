@@ -2,7 +2,7 @@
 <script type="text/javascript">
     // www.jjam.de - Kontextmenü mit JavaScript - Version 15.12.2002
 
-    // Nur für IE 5+ und NN 6+
+    //  Browser detection
     ie5 = (document.getElementById && document.all && document.styleSheets) ? 1 : 0;
     nn6 = (document.getElementById && !document.all) ? 1 : 0;
 
@@ -67,7 +67,7 @@
                 break;
 
                 case "listen":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[++i]+"' "+oF+">&nbsp;##Listen ## "+contextmenu.arguments[++i]+"&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[++i]+"' "+oF+">&nbsp;##Listen to ## "+contextmenu.arguments[++i]+"&nbsp;</a></li>";
                 break;
 
                 case "edit":
