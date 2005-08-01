@@ -10,6 +10,7 @@ class uiPlaylist
         $this->token     =& $_SESSION[UI_PLAYLIST_SESSNAME]['token'];
         $this->reloadUrl   = UI_BROWSER.'?popup[]=_reload_parent&popup[]=_close';
         $this->redirectUrl = UI_BROWSER.'?popup[]=_2PL.simpleManagement&popup[]=_close';
+        $this->returnUrl   = UI_BROWSER.'?act=PL.simpleManagement';
     }
 
     function setReload()
@@ -23,6 +24,11 @@ class uiPlaylist
             $this->Base->redirUrl = UI_BROWSER."?popup[]=$target&popup[]=_close";
         else
             $this->Base->redirUrl = $this->redirectUrl;
+    }
+
+    function setReturn()
+    {
+        $this->Base->redirUrl = $this->returnUrl;
     }
 
     function getPLArray($id)
@@ -332,6 +338,22 @@ class uiPlaylist
         return TRUE;
     }
 
+
+    function reOrder($items)
+    {
+        asort($items);      # just to be sure items are in right order
+        $pos = 0;
+        foreach($items as $id=>$v) { 
+            $pos++;
+            $r = $this->Base->gb->moveAudioClipInPlaylist($this->token, $id, $pos, $this->Base->sessid);
+            if (PEAR::isError($r)) {
+                if (UI_VERBOSE) print_r($r);
+                $this->Base->_retMsg('Cannot move item');
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
 
     function getCurrElement($id)
     {

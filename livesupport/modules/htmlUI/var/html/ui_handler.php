@@ -226,6 +226,11 @@ switch($_REQUEST['act']){
         $uiHandler->PLAYLIST->setReload();
     break;
 
+    case "PL.reOrder":
+        $uiHandler->PLAYLIST->reOrder($_REQUEST['pl_items']);
+        $uiHandler->PLAYLIST->setReturn();
+    break;
+
     case "PL.editMetaData":
         $uiHandler->PLAYLIST->editMetaData($_REQUEST);
         $uiHandler->SCRATCHPAD->addItem($_REQUEST['id']);
@@ -268,8 +273,10 @@ switch($_REQUEST['act']){
         if ($_REQUEST['is_popup'])
              $uiHandler->redirUrl .= '?popup[]=_reload_parent&popup[]=_close';
 }
-if ($uiHandler->alertMsg) $_SESSION['alertMsg'] = $uiHandler->alertMsg;
-#header('Location: '.$uiHandler->redirUrl);
+
+if ($uiHandler->alertMsg) {
+    $_SESSION['alertMsg'] = $uiHandler->alertMsg;
+}
 if (ob_get_contents()) {
     $ui_wait = 10;
 }
