@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.66 $
+    Version  : $Revision: 1.67 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -898,10 +898,10 @@ GLiveSupport :: onStop(void)                                throw ()
     releaseOutputAudio();
     
     Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();
+    setNowPlaying(playable);
     if (playable) {
         playOutputAudio(playable);
     }
-    setNowPlaying(playable);
 }
 
 
