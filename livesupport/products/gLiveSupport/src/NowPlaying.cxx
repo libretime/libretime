@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -84,7 +84,9 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     isPaused = false;
 
     label = Gtk::manage(new Gtk::Label);
+    label->set_use_markup(true);
     label->set_ellipsize(Pango::ELLIPSIZE_END);
+    label->set_markup("");
     pack_end(*label, Gtk::PACK_EXPAND_WIDGET, 5);
 }
 
@@ -124,7 +126,7 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         }
         label->set_markup(*infoString);
     } else {
-        label->set_text("");
+        label->set_markup("");
         if (isActive) {
             remove(*stopButton);
             if (isPaused) {
