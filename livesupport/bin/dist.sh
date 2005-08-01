@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/dist.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -229,6 +229,14 @@ cp -pPR README INSTALL configure $ls_tmpdir
 #  Get rid of the remnants of the CVS system
 #-------------------------------------------------------------------------------
 rm -rf `find $ls_tmpdir -name CVS -type d`
+
+
+#-------------------------------------------------------------------------------
+#  Create the main configure script
+#-------------------------------------------------------------------------------
+cd $tmpdir/livesupport-$version
+./bin/autogen.sh
+cd $basedir
 
 
 #-------------------------------------------------------------------------------

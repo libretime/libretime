@@ -1,0 +1,90 @@
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#   http://livesupport.campware.org/
+#   To report bugs, send an e-mail to bugs@campware.org
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/taglib/taglib-1.3.1/etc/Makefile.in,v $
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR      = mkdir -p
+RM         = rm -f
+RMDIR      = rm -rf
+DOXYGEN    = doxygen
+DOXYTAG    = doxytag
+XSLTPROC   = xsltproc
+ECHO       = @echo
+FLAWFINDER = flawfinder
+
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+BASE_DIR     = .
+BIN_DIR      = ${BASE_DIR}/bin
+DOC_DIR      = ${BASE_DIR}/doc
+DOXYGEN_DIR  = ${DOC_DIR}/doxygen
+COVERAGE_DIR = ${DOC_DIR}/coverage
+ETC_DIR      = ${BASE_DIR}/etc
+TMP_DIR      = ${BASE_DIR}/tmp
+
+TAGLIB_VERSION    = taglib-1.3.1
+TAGLIB_DIR        = ${TMP_DIR}/${TAGLIB_VERSION}
+
+prefix = @prefix@
+# datadir will be defiend as ${prefix}/share, so we need to define ${prefix}
+# above
+docdir = @datadir@/doc/${TAGLIB_VERSION}
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+all: ${TMP_DIR}/all.stamp
+${TMP_DIR}/all.stamp:
+	${MAKE} -C ${TAGLIB_DIR}
+	# make the reference documentation and install that as well, as the
+	# autoconf thing doesn't :(
+	cd ${TAGLIB_DIR}/taglib-api && ${DOXYGEN} taglib.doxygen
+	touch ${TMP_DIR}/all.stamp
+
+install: all ${TMP_DIR}/install.stamp
+${TMP_DIR}/install.stamp:
+	${MAKE} -C ${TAGLIB_DIR} install
+	# make the reference documentation and install that as well, as the
+	# autoconf thing doesn't :(
+	${MKDIR} ${docdir}
+	cp -pPR ${TAGLIB_DIR}/taglib-api/* ${docdir}
+	touch ${TMP_DIR}/install.stamp
+
+clean:
+	${MAKE} -C ${TAGLIB_DIR} clean
+	${RM} ${TMP_DIR}/*.stamp
+
+distclean:
+	${RM} ${TMP_DIR}/*.stamp
+	${RMDIR} ${TAGLIB_DIR}
+	${RMDIR} ${TMP_DIR}/auto* ${TMP_DIR}/config* ${TMP_DIR}/install-sh
+
+

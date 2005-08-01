@@ -22,11 +22,11 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/var/conf.php.template,v $
 
 ------------------------------------------------------------------------------*/
 
-$storageServerPath = 'ls_install_dir/var/storageServer';
+$storageServerPath = 'ls_var_dir/LiveSupport/storageServer';
 ?>

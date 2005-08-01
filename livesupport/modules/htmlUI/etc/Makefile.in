@@ -1,0 +1,228 @@
+#-------------------------------------------------------------------------------
+#   htmlUI - remote access user interface
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/etc/Makefile.in,v $
+#
+#   @configure_input@
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR   = mkdir -p
+RM      = rm -f
+RMDIR   = rm -rf
+DOXYGEN = doxygen
+CP      = cp -f
+
+
+#-------------------------------------------------------------------------------
+#   Misc
+#-------------------------------------------------------------------------------
+
+MODULE_NAME = htmlUI
+TAR_C       = tar -cj --exclude CVS --exclude '*~' -C ${BASE_DIR} -f
+DIST_EXT    = .tgz
+DATE        = `date +%y%m%d`
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+#BASE_DIR    = @builddir@
+BASE_DIR    = .
+BIN_DIR     = ${BASE_DIR}/bin
+DOC_DIR     = ${BASE_DIR}/doc
+DOXYGEN_DIR = ${DOC_DIR}/doxygen
+ETC_DIR     = ${BASE_DIR}/etc
+INCLUDE_DIR = ${BASE_DIR}/include
+LIB_DIR     = ${BASE_DIR}/lib
+SRC_DIR     = ${BASE_DIR}/src
+TMP_DIR     = ${BASE_DIR}/tmp
+VAR_DIR     = ${BASE_DIR}/var
+
+USR_DIR         = @prefix@
+USR_INCLUDE_DIR = ${USR_DIR}/include
+USR_VAR_DIR     = ${USR_DIR}/var
+
+DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
+
+PHP_DIR         = ${VAR_DIR}
+#TEST_RUNNER     = ${PHP_DIR}/tests/index.php
+
+APACHE_GROUP = @APACHE_GROUP@
+WWW_DOCROOT  = @WWW_DOCROOT@
+
+
+#-------------------------------------------------------------------------------
+#   Configuration parameters
+#-------------------------------------------------------------------------------
+#CPPFLAGS = @CPPFLAGS@
+#CXXFLAGS = @CXXFLAGS@ @DEFS@ -I${USR_INCLUDE_DIR} -I${INCLUDE_DIR} -I${TMP_DIR}\
+#                             -pedantic -Wall
+#LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${LIB_DIR}
+
+
+#-------------------------------------------------------------------------------
+#   Dependencies
+#-------------------------------------------------------------------------------
+#HELLO_LIB_OBJS = ${TMP_DIR}/Hello.o
+#TEST_RUNNER_OBJS = ${TMP_DIR}/HelloTest.o ${TMP_DIR}/TestRunner.o
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+.PHONY: all dir_setup doc clean docclean depclean distclean dist install
+
+all: dir_setup
+
+#dir_setup: ${TMP_DIR} ${DOXYGEN_DIR}
+dir_setup: ${DOXYGEN_DIR}
+
+doc:
+	${DOXYGEN} ${DOXYGEN_CONFIG}
+
+clean:
+#	${RM} ...
+
+docclean:
+	${RMDIR} ${DOXYGEN_DIR}/html
+
+depclean: clean
+
+dist: all
+	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
+
+distclean: clean docclean
+#	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te*
+
+#check: all ${TEST_RUNNER}
+#	${TEST_RUNNER}
+check: all
+
+install: configure_apache
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/plugins
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/internals
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/formmask
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/.icons
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/sub
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/file
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/popup
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/library
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scheduler
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scratchpad
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/loader
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/script
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/system
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/playlist
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/subjects
+
+	${CP} ${VAR_DIR}/*.xml ${VAR_DIR}/*.php \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var
+	${CP} ${VAR_DIR}/html/*.php ${VAR_DIR}/html/*.css \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html
+	${CP} ${VAR_DIR}/html/img/*.png ${VAR_DIR}/html/img/*.gif \
+	      ${VAR_DIR}/html/img/*.swf ${VAR_DIR}/html/img/*.image \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+	${CP} ${VAR_DIR}/html/css_img/*.png \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/css_img
+	${CP} ${VAR_DIR}/formmask/*.php \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/formmask
+	${CP} ${VAR_DIR}/localizer/*.php ${VAR_DIR}/localizer/*.xml\
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer
+	${CP} ${VAR_DIR}/localizer/.icons/*.jpg ${VAR_DIR}/localizer/.icons/*.gif \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/localizer/.icons
+	${CP} ${VAR_DIR}/Smarty/libs/*.php \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/
+	${CP} ${VAR_DIR}/Smarty/libs/internals/*.php \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/internals/
+	${CP} ${VAR_DIR}/Smarty/libs/plugins/*.php \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/Smarty/libs/plugins/
+	${CP} ${VAR_DIR}/templates/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates
+	${CP} ${VAR_DIR}/templates/sub/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/sub
+	${CP} ${VAR_DIR}/templates/file/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/file
+	${CP} ${VAR_DIR}/templates/popup/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/popup
+	${CP} ${VAR_DIR}/templates/library/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/library
+	${CP} ${VAR_DIR}/templates/scheduler/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scheduler
+	${CP} ${VAR_DIR}/templates/scratchpad/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/scratchpad
+	${CP} ${VAR_DIR}/templates/loader/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/loader
+	${CP} ${VAR_DIR}/templates/script/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/script
+	${CP} ${VAR_DIR}/templates/system/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/system
+	${CP} ${VAR_DIR}/templates/playlist/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/playlist
+	${CP} ${VAR_DIR}/templates/subjects/*.tpl \
+	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/subjects
+
+	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
+
+	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
+	chgrp ${APACHE_GROUP} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+
+	chmod g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates_c
+	chmod g+sw ${USR_VAR_DIR}/LiveSupport/htmlUI/var/html/img
+
+	${RM} ${WWW_DOCROOT}/livesupport
+	ln -sf ${USR_VAR_DIR}/LiveSupport ${WWW_DOCROOT}/livesupport
+	${CP} ${VAR_DIR}/redirect.php ${USR_VAR_DIR}/LiveSupport/index.php
+
+configure_apache:
+ifeq (@CONFIGURE_APACHE@,yes)
+	${BIN_DIR}/configureApache.sh
+endif
+
+
+#-------------------------------------------------------------------------------
+#   Specific targets
+#-------------------------------------------------------------------------------
+${DOXYGEN_DIR}:
+	${MKDIR} ${DOXYGEN_DIR}
+
+#${TEST_RUNNER}:
+
+#-------------------------------------------------------------------------------
+#   Pattern rules
+#-------------------------------------------------------------------------------
+#${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx
+#	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $<
+

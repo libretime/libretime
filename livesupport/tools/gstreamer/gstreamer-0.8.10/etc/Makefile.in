@@ -1,0 +1,106 @@
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#   http://livesupport.campware.org/
+#   To report bugs, send an e-mail to bugs@campware.org
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/etc/Makefile.in,v $
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR      = mkdir -p
+RM         = rm -f
+RMDIR      = rm -rf
+DOXYGEN    = doxygen
+DOXYTAG    = doxytag
+XSLTPROC   = xsltproc
+ECHO       = @echo
+FLAWFINDER = flawfinder
+
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+BASE_DIR     = .
+BIN_DIR      = ${BASE_DIR}/bin
+DOC_DIR      = ${BASE_DIR}/doc
+DOXYGEN_DIR  = ${DOC_DIR}/doxygen
+COVERAGE_DIR = ${DOC_DIR}/coverage
+ETC_DIR      = ${BASE_DIR}/etc
+TMP_DIR      = ${BASE_DIR}/tmp
+
+GSTREAMER_VERSION   = gstreamer-0.8.10
+GSTREAMER_DIR       = ${TMP_DIR}/${GSTREAMER_VERSION}
+GST_PLUGINS_VERSION = gst-plugins-0.8.9
+GST_PLUGINS_DIR     = ${TMP_DIR}/${GST_PLUGINS_VERSION}
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+# libdir will look literally like ${exec_prefix}/lib
+# thus we need exec_prefix defined as well above
+libdir=@libdir@
+pkg_config_path=${libdir}/pkgconfig
+
+
+USR_DIR=${prefix}
+USR_BIN_DIR=${USR_DIR}/bin
+USR_LIB_DIR=${libdir}
+
+export PATH:=${USR_BIN_DIR}:${PATH}
+export CPPFLAGS=-I${USR_DIR}/include
+export LDFLAGS=-L${USR_LIB_DIR}
+export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
+export PKG_CONFIG_PATH=${USR_LIB_DIR}/pkgconfig
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+all: ${TMP_DIR}/all.stamp
+${TMP_DIR}/all.stamp:
+	cd ${GSTREAMER_DIR} && \
+        ./configure --prefix=${prefix} --with-pkg-config-path=${pkg_config_path}
+	${MAKE} -C ${GSTREAMER_DIR}
+	${MAKE} -C ${GSTREAMER_DIR} install
+	cd ${GST_PLUGINS_DIR} && \
+		./configure --prefix=${prefix} \
+                    --with-pkg-config-path=${pkg_config_path} \
+					--disable-spc \
+					--disable-gconf --disable-gconftool \
+					--disable-opengl 
+	${MAKE} -C ${GST_PLUGINS_DIR}
+	${MAKE} -C ${GST_PLUGINS_DIR} install
+
+install: all
+
+clean:
+	${MAKE} -C ${GSTREAMER_DIR} clean
+	${MAKE} -C ${GST_PLUGINS_DIR} clean
+	rm ${TMP_DIR}/all.stamp
+
+distclean:
+	${RMDIR} ${GSTREAMER_DIR}
+	${RMDIR} ${GST_PLUGINS_DIR}
+	${RMDIR} ${TMP_DIR}/auto* ${TMP_DIR}/config* ${TMP_DIR}/install-sh
+
+

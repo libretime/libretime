@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -53,6 +53,14 @@ DIE=0
     DIE=1
 }
 
+(automake --version) < /dev/null > /dev/null 2>&1 || {
+    echo
+    echo "You must have automake installed to compile $package."
+    echo "Download the appropriate package for your distribution,"
+    echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
+    DIE=1
+}
+
 if test "$DIE" -eq 1; then
     exit 1
 fi
@@ -68,13 +76,21 @@ configure_ac=${etcdir}/configure.ac
 configure=${tmpdir}/configure
 aclocal_m4=${tmpdir}/aclocal.m4
 
-if [ -f ${etcdir}/acinclude.m4 ]; then
-# run aclocal in etc, as it's blind, only sees files in the current directory
-    ACLOCAL_FLAGS="--output=${aclocal_m4}"
-    echo "  aclocal $ACLOCAL_FLAGS"
-    cd ${etcdir} && aclocal $ACLOCAL_FLAGS ; cd ${tmpdir}
-fi
+# copy over install-sh, as it's going to be missed by autoconf
+cp -f ${bindir}/install-sh ${tmpdir}
+
+# copy over configure.ac and acinlclude.m4 from etc to tmp,
+# as aclocal >= 1.8 is sooo unbelivably stupid that it will simply try to
+# look for configure.ac in the current directory, and include acinclude.m4
+# in aclocal.m4 it without a directory path in front
+ACLOCAL_FLAGS="-I ${tmpdir} --acdir=${tmpdir} --output=${aclocal_m4}"
+echo "  aclocal $ACLOCAL_FLAGS"
+cp -f ${configure_ac} ${tmpdir}
+cp -f ${etcdir}/acinclude.m4 ${tmpdir}
+aclocal $ACLOCAL_FLAGS
+
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 
-${configure} "$@" && echo
+#${configure} "$@" && echo
+

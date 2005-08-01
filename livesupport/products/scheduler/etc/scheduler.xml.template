@@ -96,7 +96,7 @@
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <webStorage tempFiles="file://ls_install_dir/tmp/webStorageClient" >
+        <webStorage tempFiles="file://ls_tmp_dir/webStorageClient" >
             <location server="ls_php_host" port="ls_php_port"
                       path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
         </webStorage>
@@ -111,12 +111,12 @@
     </playLogFactory>
 
     <audioPlayer>
-        <gstreamerPlayer audioDevice = "ls_output_alsa_device" />
+        <gstreamerPlayer audioDevice = "ls_audio_output_device" />
     </audioPlayer>
 
     <xmlRpcDaemon xmlRpcHost  = "ls_scheduler_host"
                   xmlRpcPort  = "ls_scheduler_port"
-                  pidFileName = "ls_install_dir/tmp/scheduler.pid"
+                  pidFileName = "ls_tmp_dir/scheduler.pid"
     />
 </scheduler>
 

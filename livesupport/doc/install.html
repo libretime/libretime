@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>LiveSupport installation documentation</title>
-  <meta content="$Author: fgerlits $" name="author">
+  <meta content="$Author: maroy $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.10 $</li>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.11 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -36,9 +36,9 @@ Those who think they know everything, the quick steps to install
 LiveSupport are (make sure to run at least the <code>./bin/install.sh</code>
 script as root):<br>
 <br>
-<pre><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>./configure<br>make setup &amp;&amp; make compile<br>./bin/install.sh -d /usr/local/livesupport -g apache -r /var/www<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
+<pre><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-&lt;version&gt;.tar.bz2<br></code><code>wget </code><code></code><code>http://livesupport.campware.org/look/campware</code><code>/download/livesupport-libraries-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>./configure </code><code>--with-prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www</code><code><br>make<br>make install<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
 <br>
-Then try the URL <code>http://localhost/livesupport/htmlUI/var/html/ </code>,
+Then try the URL <code>http://localhost/livesupport/ </code>,
 and log in using username: <code>root</code>, password: <code>q</code>.<br>
 <br>
 Everyone else, please read the lines below carefully.<br>
@@ -145,7 +145,7 @@ on in this document, this group will be referred to as <code>&lt;apache-group&gt
 Also note the document root directory for your apache installation
 (usually <code>/var/www</code> or <code>/var/www/htdocs</code>
 or <code>/var/www/&lt;yourhost&gt;/htdocs</code>). Later on in this
-document, this directory will be reffered to as <code>&lt;www-root&gt;</code>.<br>
+document, this directory will be referred to as <code>&lt;www-root&gt;</code>.<br>
 <h1>Obtaining LiveSupport sources</h1>
 LiveSupport sources come in two different tarballs:<br>
 <ul>
@@ -156,8 +156,10 @@ LiveSupport source files<code><br>
 external libraries used by LiveSupport<code><br>
     </code></li>
 </ul>
-Both files can be downloaded from <a href="http://sourceforge.net/projects/livesupport/"><code>http://sourceforge.net/projects/livesupport/</code></a>.
-<br><br>
+Both files can be downloaded from <a
+ href="http://sourceforge.net/projects/livesupport/"><code>http://sourceforge.net/projects/livesupport/</code></a>.
+<br>
+<br>
 After downloading the files, untar them in the same directory:<br>
 <br>
 <pre><code>tar xfj livesupport-&lt;version&gt;.tar.bz2<br>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br></code></pre>
@@ -169,61 +171,49 @@ LiveSupport.<br>
 To compile LiveSupport, enter the LiveSupport directory, and execute
 the following commands:<br>
 <br>
-<pre><code>cd livesupport-&lt;version&gt;<br>./configure<br>make setup &amp;&amp; make compile<br></code></pre>
+<pre><code>cd livesupport-&lt;version&gt;<br>./configure </code><code>--with-prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
 <br>
-This will take quite a while, so go have a tea, watch a movie, relax,
-etc.<br>
-<h1>Installing LiveSupport<br>
-</h1>
-After a successful compilation, to install LiveSupport, you have to
-decide which directory you want LiveSupport installed into. This
-directory will be referred to as <code>&lt;ls-installdir&gt;</code>
-later on in this document.<br>
+The configure options used above are the options most probably used:<br>
 <br>
-The installation is done using the <code>bin/install.sh</code> script
-found in the LiveSupport base directory. This script has to be run as <code>root</code>.
-To see the possible options to the script, invoke it with the <code>--help</code>
-parameter. A brief overview of the most frequently used parameters:<br>
-<br>
-<pre><code>  -d, --directory     The installation directory, required.<br><br></code></pre>
-The installation directory, a required parameter. Supply the previously
+<pre><code>&nbsp; --prefix=PREFIX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; install architecture-independent files in PREFIX<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [/usr/local]</code></pre>
+The installation directory. Supply the previously
 decided LiveSupport installation directory here, <code>&lt;ls-installdir&gt;</code>
 (as mentioned above). A sensible value to use here is <code>/usr/local/livesupport</code>.<br>
-<pre><code><br>  -g, --apache-group  The group the apache daemon runs as.<br>                      [default: apache]<br><br></code></pre>
+<pre><code><br>  --with-apache-group     use apache running in the specified group (apache)<br><br></code></pre>
 The user group the apache web server daemon runs at (see the section
 above on installing apache). Supply the <code>&lt;apache-group&gt;</code>
 value here, as mentioned above, which is usually either <code>apache</code>
 or <code>www-data</code>.<br>
 <br>
-<pre>  -r, --www-root      The root directory for web documents served<br>                      by apache [default: /var/www]<br><br></pre>
+<pre>  --with-www-docroot      deploy LiveSupport under the specified docroot<br>                          (/var/www)<br><br></pre>
 The document root of your apache installation (see the section above on
 installing apache). Supply the <code>&lt;www-root&gt;</code>
 value here, as mentioned above, which is usually <code>/var/www</code>
 or <code>/var/www/htdocs</code>
 or <code>/var/www/&lt;yourhost&gt;/htdocs.</code>
-<pre><code><br>  -H, --host          The fully qualified host name of the system<br>                      [default: guess].<br></code><br></pre>
-The fully qualified domain name of your system. If the install script
-cannot determine your host name correctly, please supply the FQDN via
-this parameter.<br>
+<span style="font-family: monospace;"><br>
 <br>
-Thus a typical invocation of the install script is the following:<br>
+</span>Compilation will take quite a while, so go have a tea, watch a
+movie, relax,
+etc.<br>
 <br>
-<pre><code>./bin/install.sh -d &lt;ls-installdir&gt; -g &lt;apache-group&gt; -r &lt;www-root&gt;</code><br></pre>
+If you want the installation script to create the database tables used
+by LiveSupport, consider using the following configure options:<br>
 <br>
-The install script has more options, which enable you to customize your
-installation of LiveSupport. Note that the defaults are usually quite
-sensible values, which will create the following setup:<br>
+<pre>  --with-create-database  specify whether the LiveSupport database and database<br>                          user should be created (no)<br>  --with-create-odbc-data-source<br>                          specify whether the ODBC data source for LiveSupport<br>                          should be created (no)<br>  --with-init-database    specify whether the LiveSupport database tables<br>                          should be initialized (no)<br>  --with-configure-apache specify whether apache should be configured for<br>                          LiveSupport through its conf.d directory (no)<br><br><br></pre>
+For a full list of options, see <code>./configure --help</code><br>
+<h1>Installing LiveSupport<br>
+</h1>
+After a successful compilation, to install LiveSupport, you can install
+LiveSupport by typing:<br>
 <br>
-<ul>
-  <li>a PostgreSQL database user named <code>livesupport</code>, with
-password <code>livesupport</code>.</li>
-  <li>a PostgreSQL database named <code>LiveSupport</code>.</li>
-  <li>an ODBC data source named <code>LiveSupport</code>, connecting
-to the database of the same name.</li>
-  <li>initialize the database with appropriate tables</li>
-  <li>create a symlink into your apache root to point to <code>&lt;ls-installdir&gt;/var</code>.<br>
-  </li>
-</ul>
+<pre><code>make install</code><br></pre>
+<br>
+This will install LiveSupport into the directory specified to the
+configure script. It will also create necessary database tables,
+depending on the invocation of the configure script. Most probably you
+will have to run make install as root.<br>
+<br>
 <h1>Try it out</h1>
 After a successful installation, the LiveSupport scheduler has to be
 started. The scheduler has a System V runlevel-style startup script,
@@ -235,7 +225,7 @@ simply invoke:<br>
 The only thing left to do is to try out the LiveSupport web interface
 or the GUI application.<br>
 <br>
-For the web interface, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/htmlUI/var/html/</code>
+For the web interface, point your browser to the following URL: <code>http://&lt;yourhost&gt;/livesupport/</code>
 .<br>
 <br>
 The GUI application can be started by issuing the following command:<br>

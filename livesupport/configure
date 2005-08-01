@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/configure,v $
 #-------------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@
 #   This script in effect calls the real automake / autoconf configure script
 #-------------------------------------------------------------------------------
 
-# assume we're in $basedir/bin
+# assume we're in $basedir
 reldir=`dirname $0`
 basedir=`cd $reldir; pwd;`
 test -z "$basedir" && basedir=.
@@ -45,8 +45,8 @@ autogen=$bindir/autogen.sh
 configure=$tmpdir/configure
 
 if [ -x $configure ]; then
-    (cd $tmpdir && $configure "$*")
+    (cd $tmpdir && $configure $*)
 else
-    (cd $basedir && $autogen "$*")
+    (cd $basedir && $autogen $*)
 fi
 

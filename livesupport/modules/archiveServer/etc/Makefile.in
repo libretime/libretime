@@ -1,0 +1,195 @@
+#-------------------------------------------------------------------------------
+#   ArchiveServer - central archive component
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/archiveServer/etc/Makefile.in,v $
+#
+#   @configure_input@
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR   = mkdir -p
+RM      = rm -f
+RMDIR   = rm -rf
+DOXYGEN = doxygen
+CP      = cp -f
+SED     = sed
+ECHO    = echo
+CAT     = cat
+
+
+#-------------------------------------------------------------------------------
+#   Misc
+#-------------------------------------------------------------------------------
+
+MODULE_NAME = archiveServer
+TAR_C       = tar -cj --exclude CVS --exclude '*~' -C ${BASE_DIR} -f
+DIST_EXT    = .tgz
+DATE        = `date +%y%m%d`
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+#BASE_DIR    = @builddir@
+BASE_DIR    = .
+DOC_DIR     = ${BASE_DIR}/doc
+DOXYGEN_DIR = ${DOC_DIR}/doxygen
+ETC_DIR     = ${BASE_DIR}/etc
+INCLUDE_DIR = ${BASE_DIR}/include
+LIB_DIR     = ${BASE_DIR}/lib
+SRC_DIR     = ${BASE_DIR}/src
+TMP_DIR     = ${BASE_DIR}/tmp
+VAR_DIR     = ${BASE_DIR}/var
+
+USR_DIR         = @prefix@
+USR_INCLUDE_DIR = ${USR_DIR}/include
+USR_LIB_DIR     = ${USR_DIR}/lib
+USR_VAR_DIR     = ${USR_DIR}/var
+
+DOXYGEN_CONFIG  = ${ETC_DIR}/doxygen.config
+
+PHP_DIR		= ${VAR_DIR}
+INSTALL_DIR	= ${PHP_DIR}/install
+STOR_DIR	= ${PHP_DIR}/stor
+ACCESS_DIR	= ${PHP_DIR}/access
+TRANS_DIR	= ${PHP_DIR}/trans
+BUFF_DIR	= ${STOR_DIR}/buffer
+TEST_RUNNER	= ${PHP_DIR}/xmlrpc/testRunner.sh
+
+DEST_DIR   = ${USR_VAR_DIR}/LiveSupport/archiveServer/var
+
+HOSTNAME       = @HOSTNAME@
+WWW_PORT       = @WWW_PORT@
+DB_SERVER      = @DB_SERVER@
+DATABASE       = @DATABASE@
+DB_USER        = @DB_USER@
+DB_PASSWORD    = @DB_PASSWORD@
+
+PHP_URL_PREFIX=livesupport
+
+USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
+PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
+
+REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
+              s/ls_dbuser/${DB_USER}/; \
+              s/ls_dbpassword/${DB_PASSWORD}/; \
+              s/ls_dbserver/${DB_SERVER}/; \
+              s/ls_database/${DATABASE}/; \
+              s/ls_storageUrlPath/\/${PHP_URL_PREFIX_S}\/storageServer\/var/; \
+              s/ls_php_host/${HOSTNAME}/; \
+              s/ls_php_port/${WWW_PORT}/; \
+              s/ls_archiveUrlPath/\/${PHP_URL_PREFIX_S}\/archiveServer\/var/;"
+
+
+#-------------------------------------------------------------------------------
+#  	Configuration parameters
+#-------------------------------------------------------------------------------
+#CPPFLAGS = @CPPFLAGS@
+#CXXFLAGS = @CXXFLAGS@ @DEFS@ -I${USR_INCLUDE_DIR} -I${INCLUDE_DIR} -I${TMP_DIR}\
+#                             -pedantic -Wall
+#LDFLAGS  = @LDFLAGS@ -L${USR_LIB_DIR} -L${LIB_DIR}
+
+
+#-------------------------------------------------------------------------------
+#	Dependencies
+#-------------------------------------------------------------------------------
+#HELLO_LIB_OBJS = ${TMP_DIR}/Hello.o
+#TEST_RUNNER_OBJS = ${TMP_DIR}/HelloTest.o ${TMP_DIR}/TestRunner.o
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+.PHONY: all dir_setup doc clean docclean depclean distclean dist install
+.PHONY: db_init db_clean testonly
+
+all:
+
+doc:
+	${DOXYGEN} ${DOXYGEN_CONFIG}
+
+clean: db_clean
+	${RMDIR} ${STOR_DIR}
+	${RMDIR} ${ACCESS_DIR}
+	${RMDIR} ${TRANS_DIR}
+
+docclean:
+	${RMDIR} ${DOXYGEN_DIR}/html
+
+depclean: clean
+
+dist:
+	${TAR_C} ${MODULE_NAME}${DATE}${DIST_EXT} *
+
+distclean: clean docclean
+
+testonly: ${TEST_RUNNER}
+	${TEST_RUNNER}
+
+check: all
+#testonly
+
+recheck: clean check
+
+install:
+	${MKDIR} ${DEST_DIR}
+	${MKDIR} ${DEST_DIR}/access
+	${MKDIR} ${DEST_DIR}/install
+	${MKDIR} ${DEST_DIR}/stor
+	${MKDIR} ${DEST_DIR}/stor/buffer
+	${MKDIR} ${DEST_DIR}/trans
+	${MKDIR} ${DEST_DIR}/xmlrpc
+	${CP} ${VAR_DIR}/*.{php,template} ${DEST_DIR}
+	${CP} ${VAR_DIR}/install/*.php ${DEST_DIR}/install
+	${CP} ${VAR_DIR}/xmlrpc/*.php ${DEST_DIR}/xmlrpc
+	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
+	       > ${DEST_DIR}/conf.php
+
+	
+#-------------------------------------------------------------------------------
+#   Specific targets
+#-------------------------------------------------------------------------------
+dir_setup: ${DOXYGEN_DIR}
+	bin/setupDirs.sh ${STOR_DIR} ${ACCESS_DIR} ${TRANS_DIR} ${BUFF_DIR}
+
+db_init:
+	cd var/install; php -q install.php
+
+db_clean:
+	cd var/install; php -q uninstall.php
+
+${TMP_DIR}:
+	${MKDIR} ${TMP_DIR}
+
+${DOXYGEN_DIR}:
+	${MKDIR} ${DOXYGEN_DIR}
+
+${TEST_RUNNER}:
+
+#-------------------------------------------------------------------------------
+#   Pattern rules
+#-------------------------------------------------------------------------------
+#${TMP_DIR}/%.o : ${SRC_DIR}/%.cxx
+#	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -o $@ $<
+

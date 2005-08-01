@@ -1,0 +1,121 @@
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#   http://livesupport.campware.org/
+#   To report bugs, send an e-mail to bugs@campware.org
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gtk+/gtk+-2.6.1/etc/Makefile.in,v $
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR      = mkdir -p
+RM         = rm -f
+RMDIR      = rm -rf
+DOXYGEN    = doxygen
+DOXYTAG    = doxytag
+XSLTPROC   = xsltproc
+ECHO       = @echo
+FLAWFINDER = flawfinder
+
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+BASE_DIR     = .
+BIN_DIR      = ${BASE_DIR}/bin
+DOC_DIR      = ${BASE_DIR}/doc
+DOXYGEN_DIR  = ${DOC_DIR}/doxygen
+COVERAGE_DIR = ${DOC_DIR}/coverage
+ETC_DIR      = ${BASE_DIR}/etc
+TMP_DIR      = ${BASE_DIR}/tmp
+
+TIFF_VERSION  = tiff-3.7.1
+TIFF_DIR      = ${TMP_DIR}/${TIFF_VERSION}
+
+GLIB_VERSION  = glib-2.6.1
+GLIB_DIR      = ${TMP_DIR}/${GLIB_VERSION}
+
+PANGO_VERSION = pango-1.8.0
+PANGO_DIR     = ${TMP_DIR}/${PANGO_VERSION}
+
+ATK_VERSION   = atk-1.9.0
+ATK_DIR       = ${TMP_DIR}/${ATK_VERSION}
+
+GTK_VERSION   = gtk+-2.6.1
+GTK_DIR       = ${TMP_DIR}/${GTK_VERSION}
+
+prefix=@prefix@
+
+USR_DIR=${prefix}
+USR_BIN_DIR=${USR_DIR}/bin
+USR_LIB_DIR=${USR_DIR}/lib
+
+export PATH:=${USR_BIN_DIR}:${PATH}
+export CPPFLAGS=-I${USR_DIR}/include
+export LDFLAGS=-L${USR_LIB_DIR}
+export LD_LIBRARY_PATH:=${USR_LIB_DIR}:${LD_LIBRARY_PATH}
+export PKG_CONFIG_PATH=${USR_LIB_DIR}/pkgconfig
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+all: ${TMP_DIR}/all.stamp
+${TMP_DIR}/all.stamp:
+	cd ${TIFF_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${TIFF_DIR}
+	${MAKE} -C ${TIFF_DIR} install
+	cd ${GLIB_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${GLIB_DIR}
+	${MAKE} -C ${GLIB_DIR} install
+	cd ${PANGO_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${PANGO_DIR}
+	${MAKE} -C ${PANGO_DIR} install
+	cd ${ATK_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${ATK_DIR}
+	${MAKE} -C ${ATK_DIR} install
+	cd ${GTK_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${GTK_DIR}
+	${MAKE} -C ${GTK_DIR} install
+	touch ${TMP_DIR}/all.stamp
+
+install: all
+
+clean:
+	${MAKE} -C ${TIFF_DIR} clean
+	${MAKE} -C ${GLIB_DIR} clean
+	${MAKE} -C ${PANGO_DIR} clean
+	${MAKE} -C ${ATK_DIR} clean
+	${MAKE} -C ${GTK_DIR} clean
+	${RM} ${TMP_DIR}/*.stamp
+
+distclean:
+	${RM} ${TMP_DIR}/*.stamp
+	${RMDIR} ${TIFF_DIR}
+	${RMDIR} ${GLIB_DIR}
+	${RMDIR} ${PANGO_DIR}
+	${RMDIR} ${ATK_DIR}
+	${RMDIR} ${GTK_DIR}
+	${RMDIR} ${TMP_DIR}/auto* ${TMP_DIR}/config* ${TMP_DIR}/install-sh
+
+

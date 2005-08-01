@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.9 $
+dnl Version  : $Revision: 1.10 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(PlaylistExecutor, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.9 $)
+AC_REVISION($Revision: 1.10 $)
 
 AC_CONFIG_SRCDIR(../src/AudioPlayerFactory.cxx)
 
@@ -44,13 +44,28 @@ AC_PROG_CXX()
 
 AC_CHECK_HEADERS(getopt.h sys/time.h)
 
-PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.6.0])
+dnl-----------------------------------------------------------------------------
+dnl  specify the pkg-config path
+dnl-----------------------------------------------------------------------------
+AC_ARG_WITH([pkg-config-path],
+            AC_HELP_STRING([--with-pkg-config-path],
+                           [use the pkg-config path (prefix/lib/pkgconfig)]),
+            [PKG_CONFIG_PATH=${withval}],
+            [PKG_CONFIG_PATH=${prefix}/lib/pkgconfig])
+
+AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
+
+export PKG_CONFIG_PATH
+
+
+PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1])
 AC_SUBST(LIBXMLPP_CFLAGS)
 AC_SUBST(LIBXMLPP_LIBS)
 
 PKG_CHECK_MODULES(GSTREAMER,[gstreamer-0.8 >= 0.8])
 AC_SUBST(GSTREAMER_CFLAGS)
 AC_SUBST(GSTREAMER_LIBS)
+
 
 dnl-----------------------------------------------------------------------------
 dnl enable compilaton for code coverage data

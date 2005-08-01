@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/bin/gLiveSupport.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -49,10 +49,6 @@ tmpdir=$basedir/tmp
 gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
 
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
-export GDK_PIXBUF_MODULE_FILE=$etcdir/gtk-2.0/gdk-pixbuf.loaders
-export PANGO_RC_FILE=$etcdir/pango/pango.rc
-export GST_REGISTRY=$etcdir/gst-registry.xml
-export GST_PLUGIN_PATH=$gstreamer_dir
 gLiveSupport_exe=$bindir/gLiveSupport
 config_file=$etcdir/gLiveSupport.xml
 

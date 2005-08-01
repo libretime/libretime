@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>Getting started with the LiveSupport development environment</title>
-  <meta content="$Author: sebastian $" name="author">
+  <meta content="$Author: maroy $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: sebastian $</li>
-  <li>Version: $Revision: 1.18 $</li>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.19 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/gettingStarted.html,v $</li>
 </ul>
@@ -103,32 +103,16 @@ This will check out and create the LiveSupport development <a
  href="developmentEnvironment/directoryStructure.html">directory
 structure</a>.<br>
 <h2>Configure the environment</h2>
+The development environment is most easily set up by running the
+following script:<br>
+<br>
 The development environment as to be configured with an autoconf-style
 configure script. To do this, simply type:<br>
-<pre><code><br></code><code>cd livesupport<br></code><code>./configure<br></code></pre>
-after checking out the sources.<br>
-<h2>Set up tools</h2>
-LiveSupport uses widely available tools for development, like the GNU
-C++ compiler, but also uses more specific tools. As these tools, or the
-exact versions of these tools are not expected to be installed on the
-development system, the LiveSupport development environment contains
-them. The tools are installed into the <code>livesupport/usr</code>
-directory, as described in the directory structure document.<br>
+<pre><code><br></code><code>cd livesupport<br></code><code>./bin/setupDeveopmentEnvironment.sh<br></code></pre>
 <br>
-Moreover, some components in livesupport have to be set up prior to
-compilation, for example running autoconf or similar configuration
-programs. This ensures that the components compile fine on the
-development system.<br>
-<br>
-To achieve all these goals, invoke the target <code>setup</code> in
-the main <code>Makefile</code>, at the root of the LiveSupport
-directory structure, by issuing the following command in the
-livesupport directory:<br>
-<pre><code><br>make setup<br><br></code></pre>
-The execution of this command will take a while, as all the supporting
-libraries and tools are compiled and installed to the <code>livesupport/usr</code>
-directory. Please note that nothing is installed outside of the
-LiveSupport directory structure.<br>
+This script will set up the libraries used by LiveSupport (by compiling
+and installing them under livesupport/usr), and set up the development
+environment for all LiveSupport modules.<br>
 <h2>Personalize your LiveSupport development environment</h2>
 The LiveSupport development environment can be run in two ways: either
 only one developer actively doing LiveSupport development on the

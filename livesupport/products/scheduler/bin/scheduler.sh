@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/scheduler.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -46,8 +46,6 @@ libdir=$basedir/lib
 gstreamer_dir=`find $libdir -type d -name "gstreamer-*"`
 
 export LD_LIBRARY_PATH=$libdir:$LD_LIBRARY_PATH
-export GST_REGISTRY=$etcdir/gst-registry.xml
-export GST_PLUGIN_PATH=$gstreamer_dir
 scheduler_exe=$bindir/scheduler
 config_file=$etcdir/scheduler.xml
 

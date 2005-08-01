@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.63 $
+#   Version  : $Revision: 1.64 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -35,6 +35,11 @@ RM      = rm -f
 RMDIR   = rm -rf
 DOXYGEN = doxygen
 KILLALL = killall
+CP      = cp -f
+SED     = sed
+ECHO    = echo
+CAT     = cat
+
 
 #-------------------------------------------------------------------------------
 #   Basic directory and file definitions
@@ -51,11 +56,47 @@ TMP_DIR      = ${BASE_DIR}/tmp
 REAL_BASE_DIR=$(shell cd ${BASE_DIR}; pwd)
 
 
-USR_DIR         = ${BASE_DIR}/../../usr
+USR_DIR         = @prefix@
+USR_BIN_DIR     = ${USR_DIR}/bin
+USR_ETC_DIR     = ${USR_DIR}/etc
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
+USR_TMP_DIR     = ${USR_DIR}/tmp
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
 
+HOSTNAME       = @HOSTNAME@
+WWW_PORT       = @WWW_PORT@
+SCHEDULER_PORT = @SCHEDULER_PORT@
+DB_SERVER      = @DB_SERVER@
+DATABASE       = @DATABASE@
+DB_USER        = @DB_USER@
+DB_PASSWORD    = @DB_PASSWORD@
+AUDIO_OUT      = "@AUDIO_OUT@"
+
+PHP_URL_PREFIX=livesupport
+ALIB_XML_RPC_PREFIX=xmlrpc/xrLocStor.php
+POSTGRES_USER=postgres
+
+USR_LIB_DIR_S=$(shell ${ECHO} ${USR_LIB_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
+USR_TMP_DIR_S=$(shell ${ECHO} ${USR_TMP_DIR} | ${SED} -e "s/\//\\\\\\\\\//g")
+PHP_URL_PREFIX_S=$(shell ${ECHO} ${PHP_URL_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
+ALIB_XML_RPC_PREFIX_S=$(shell ${ECHO} ${ALIB_XML_RPC_PREFIX} | ${SED} -e "s/\//\\\\\\\\\//g")
+AUDIO_OUT_S=$(shell ${ECHO} ${AUDIO_OUT} | ${SED} -e "s/\//\\\\\\\\\//g")
+
+
+REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
+              s/ls_dbuser/${DB_USER}/; \
+              s/ls_dbpassword/${DB_PASSWORD}/; \
+              s/ls_dbserver/${DB_SERVER}/; \
+              s/ls_database/${DATABASE}/; \
+              s/ls_php_urlPrefix/\/${PHP_URL_PREFIX_S}/; \
+              s/ls_php_host/${HOSTNAME}/; \
+              s/ls_php_port/${WWW_PORT}/; \
+			  s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
+			  s/ls_tmp_dir/${USR_TMP_DIR_S}/; \
+              s/ls_audio_output_device/${AUDIO_OUT_S}/; \
+              s/ls_scheduler_host/${HOSTNAME}/; \
+              s/ls_scheduler_port/${SCHEDULER_PORT}/;"
 
 VPATH    = ${SRC_DIR}
 
@@ -274,10 +315,11 @@ TEST_RUNNER_LIBS = ${SCHEDULER_EXE_LIBS} -lcppunit -ldl
 #-------------------------------------------------------------------------------
 #   Targets
 #-------------------------------------------------------------------------------
-.PHONY: all dir_setup doc clean docclean depclean distclean
-.PHONY: install start status run_tests stop uninstall
-.PHONY: install_local start_local status_local run_local stop_local
-.PHONY: uninstall_local check check_local
+.PHONY: all dir_setup doc clean docclean depclean distclean check install
+.PHONY: init start status run_tests stop deinit
+.PHONY: init_local start_local status_local run_local stop_local
+.PHONY: deinit_local check check_local
+.PHONY: copy_files create_database create_odbc_datasource init_database
 
 all: dir_setup ${SCHEDULER_EXE}
 
@@ -309,12 +351,48 @@ distclean: clean docclean
 
 check: all ${TEST_RUNNER} storage_server_init start run_tests stop
 
+install: all copy_files create_database create_odbc_datasource init_database
+
+copy_files:
+	${MAKE} -C ${CORE_DIR} install
+	${MAKE} -C ${AUTHENTICATION_DIR} install
+	${MAKE} -C ${DB_DIR} install
+	${MAKE} -C ${STORAGE_DIR} install
+	${MAKE} -C ${PLAYLIST_EXECUTOR_DIR} install
+	${MAKE} -C ${EVENT_SCHEDULER_DIR} install
+	${MKDIR} ${USR_BIN_DIR}
+	${MKDIR} ${USR_ETC_DIR}
+	${CP} ${BIN_DIR}/scheduler.sh ${USR_BIN_DIR}
+	${CP} ${SCHEDULER_EXE} ${USR_BIN_DIR}
+	${CAT} ${ETC_DIR}/scheduler.xml.template | ${SED} -e ${REPLACE_SED_STRING} \
+	       > ${USR_ETC_DIR}/scheduler.xml
+
+create_database:
+ifeq (@CREATE_LS_DATABASE@,yes)
+	${BIN_DIR}/createDatabase.sh --database=${DATABASE} \
+	                             --dbserver=${DB_SERVER} \
+								 --dbuser=${DB_USER} \
+								 --dbpassword=${DB_PASSWORD}
+endif
+
+create_odbc_datasource:
+ifeq (@CREATE_ODBC_DATA_SOURCE@,yes)
+	${BIN_DIR}/createOdbcDataSource.sh --database=${DATABASE} \
+	                                   --dbserver=${DB_SERVER}
+endif
+
+init_database:
+ifeq (@INIT_LS_DATABASE@,yes)
+	${USR_BIN_DIR}/scheduler.sh install
+endif
+
+
 check_local: all ${TEST_RUNNER} start_local run_tests stop_local
 
 run_tests: ${TEST_RUNNER}
 	${TEST_RUNNER_SH} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
-install: ${SCHEDULER_EXE}
+init: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} install
 
 start: ${SCHEDULER_EXE}
@@ -331,10 +409,10 @@ stop: ${SCHEDULER_EXE}
 status: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} status
 
-uninstall: ${SCHEDULER_EXE}
+deinit: ${SCHEDULER_EXE}
 	${SCHEDULER_SH} uninstall
 
-install_local: ${SCHEDULER_EXE}
+init_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} install
 
 start_local: ${SCHEDULER_EXE}
@@ -352,7 +430,7 @@ run_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} --debug start
 	sleep 2
 
-uninstall_local: ${SCHEDULER_EXE}
+deinit_local: ${SCHEDULER_EXE}
 	${SCHEDULER_EXE} -c ${SCHEDULER_LOCAL_CFG} uninstall
 
 storage_server_init:

@@ -161,8 +161,8 @@ diff -Naur xmlrpc++/autogen.sh xmlrpc++-automake/autogen.sh
 +autoheader
 +echo "  libtoolize --automake"
 +libtoolize --automake
-+echo "  automake --add-missing $AUTOMAKE_FLAGS"
-+automake --add-missing $AUTOMAKE_FLAGS 
++echo "  automake --add-missing --foreign $AUTOMAKE_FLAGS"
++automake --add-missing --foreign $AUTOMAKE_FLAGS 
 +echo "  autoconf"
 +autoconf
 +

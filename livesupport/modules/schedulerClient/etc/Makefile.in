@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -34,6 +34,7 @@ MKDIR   = mkdir -p
 RM      = rm -f
 RMDIR   = rm -rf
 DOXYGEN = doxygen
+CP      = cp -f
 
 
 #-------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ LIB_DIR      = ${BASE_DIR}/lib
 SRC_DIR      = ${BASE_DIR}/src
 TMP_DIR      = ${BASE_DIR}/tmp
 
-USR_DIR         = ${BASE_DIR}/../../usr
+USR_DIR         = @prefix@
 USR_INCLUDE_DIR = ${USR_DIR}/include
 USR_LIB_DIR     = ${USR_DIR}/lib
 BOOST_INCLUDE_DIR    = ${USR_INCLUDE_DIR}/boost-1_31
@@ -140,7 +141,7 @@ TEST_RUNNER_LIBS = -l${SCHEDULER_CLIENT_LIB} \
 #   Targets
 #-------------------------------------------------------------------------------
 .PHONY: all dir_setup doc clean docclean depclean distclean
-.PHONY: install start run_tests stop uninstall
+.PHONY: check install init start run_tests stop deinit
 
 all: dir_setup ${SCHEDULER_CLIENT_LIB_FILE}
 
@@ -166,13 +167,13 @@ depclean: clean
 distclean: clean docclean
 	${RMDIR} ${TMP_DIR}/config* ${TMP_DIR}/autom4te* ${TMP_DIR}/ac*.m4
 
-check: all ${TEST_RUNNER} install start run_tests stop uninstall
+check: all ${TEST_RUNNER} init start run_tests stop deinit
 
 run_tests: ${TEST_RUNNER}
 	-${TEST_RUNNER} -o ${TEST_RESULTS} -s ${TEST_XSLT}
 
-install: ${SCHEDULER_EXE} storage_server_init
-	${MAKE} -C ${SCHEDULER_DIR} install
+init: ${SCHEDULER_EXE} storage_server_init
+	${MAKE} -C ${SCHEDULER_DIR} init
 
 start: ${SCHEDULER_EXE}
 	${MAKE} -C ${SCHEDULER_DIR} start
@@ -180,8 +181,14 @@ start: ${SCHEDULER_EXE}
 stop: ${SCHEDULER_EXE}
 	${MAKE} -C ${SCHEDULER_DIR} stop
 
-uninstall: ${SCHEDULER_EXE}
-	${MAKE} -C ${SCHEDULER_DIR} uninstall
+deinit: ${SCHEDULER_EXE}
+	${MAKE} -C ${SCHEDULER_DIR} deinit
+
+install: all
+	${MKDIR} ${USR_INCLUDE_DIR}/LiveSupport/SchedulerClient
+	${CP} ${INCLUDE_DIR}/LiveSupport/SchedulerClient/*.h \
+          ${USR_INCLUDE_DIR}/LiveSupport/SchedulerClient
+	${CP} ${SCHEDULER_CLIENT_LIB_FILE} ${USR_LIB_DIR}
 
 
 #-------------------------------------------------------------------------------

@@ -1,0 +1,95 @@
+#-------------------------------------------------------------------------------
+#   Copyright (c) 2004 Media Development Loan Fund
+#
+#   This file is part of the LiveSupport project.
+#   http://livesupport.campware.org/
+#   To report bugs, send an e-mail to bugs@campware.org
+#
+#   LiveSupport is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   LiveSupport is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with LiveSupport; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.2 $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gtkmm/gtkmm-2.5.5/etc/Makefile.in,v $
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+#   General command definitions
+#-------------------------------------------------------------------------------
+MKDIR      = mkdir -p
+RM         = rm -f
+RMDIR      = rm -rf
+DOXYGEN    = doxygen
+DOXYTAG    = doxytag
+XSLTPROC   = xsltproc
+ECHO       = @echo
+FLAWFINDER = flawfinder
+
+
+#-------------------------------------------------------------------------------
+#   Basic directory and file definitions
+#-------------------------------------------------------------------------------
+BASE_DIR     = .
+BIN_DIR      = ${BASE_DIR}/bin
+DOC_DIR      = ${BASE_DIR}/doc
+DOXYGEN_DIR  = ${DOC_DIR}/doxygen
+COVERAGE_DIR = ${DOC_DIR}/coverage
+ETC_DIR      = ${BASE_DIR}/etc
+TMP_DIR      = ${BASE_DIR}/tmp
+
+SIGC_VERSION    = libsigc++-2.0.6
+SIGC_DIR        = ${TMP_DIR}/${SIGC_VERSION}
+
+GLIBMM_VERSION  = glibmm-2.5.4
+GLIBMM_DIR      = ${TMP_DIR}/${GLIBMM_VERSION}
+
+GTKMM_VERSION   = gtkmm-2.5.5
+GTKMM_DIR       = ${TMP_DIR}/${GTKMM_VERSION}
+
+prefix=@prefix@
+
+
+#-------------------------------------------------------------------------------
+#   Targets
+#-------------------------------------------------------------------------------
+all: ${TMP_DIR}/all.stamp
+${TMP_DIR}/all.stamp:
+	cd ${SIGC_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${SIGC_DIR}
+	${MAKE} -C ${SIGC_DIR} install
+	cd ${GLIBMM_DIR} && ./configure --prefix=${prefix}
+	${MAKE} -C ${GLIBMM_DIR}
+	${MAKE} -C ${GLIBMM_DIR} install
+	cd ${GTKMM_DIR} && ./configure --prefix=${prefix} --disable-examples
+	${MAKE} -C ${GTKMM_DIR}
+	${MAKE} -C ${GTKMM_DIR} install
+	touch ${TMP_DIR}/all.stamp
+
+install: all
+
+clean:
+	${MAKE} -C ${SIGC_DIR} clean
+	${MAKE} -C ${GLIBMM_DIR} clean
+	${MAKE} -C ${GTKMM_DIR} clean
+	${RM} ${TMP_DIR}/*.stamp
+
+distclean:
+	${RM} ${TMP_DIR}/*.stamp
+	${RMDIR} ${SIGC_DIR}
+	${RMDIR} ${GLIBMM_DIR}
+	${RMDIR} ${GTKMM_DIR}
+	${RMDIR} ${TMP_DIR}/auto* ${TMP_DIR}/config* ${TMP_DIR}/install-sh
+
+
