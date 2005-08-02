@@ -1,3 +1,4 @@
-/opt/livesupport/var/storageServer/var/conf.php
-/opt/livesupport/var/archiveServer/var/conf.php
+/opt/livesupport/var/LiveSupport/storageServer/var/conf.php
+/opt/livesupport/var/LiveSupport/archiveServer/var/conf.php
 /opt/livesupport/etc/scheduler.xml
+/etc/apache/conf.d/90_php_livesupport.conf

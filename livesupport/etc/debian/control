@@ -31,7 +31,6 @@ Build-Depends: debhelper (>= 4.0.0),
                libogg-dev,
                libvorbis-dev,
                libboost-dev (>= 1.31), libboost-date-time-dev (>= 1.31),
-               libgtk2.0-dev (>= 2.6.1)
 Standards-Version: 3.6.1
 
 Package: livesupport-libs
@@ -51,7 +50,6 @@ Depends: ${shlibs:Depends},
          libogg0,
          libvorbis0a,
          libboost-date-time1.32.0 (>= 1.31),
-         libgtk2.0-0 (>= 2.6.1)
 Description: A radio program automation and support tool.
  This package contains the libraries used by LiveSupport.
 

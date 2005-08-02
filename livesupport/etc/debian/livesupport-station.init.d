@@ -45,6 +45,11 @@ case "$1" in
     $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml start > /dev/null
 	echo "$NAME."
 	;;
+  start)
+	echo -n "Killing $DESC: "
+    $DAEMON -c $LIVESUPPORT_ETC/scheduler.xml kill > /dev/null
+	echo "$NAME."
+	;;
   *)
 	N=/etc/init.d/$NAME
 	echo "Usage: $N {start|stop|restart|force-reload|kill}" >&2

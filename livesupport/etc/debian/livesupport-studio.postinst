@@ -23,8 +23,7 @@ apache_docroot=/var/www
 
 case "$1" in
     configure)
-        # do post-installation configuration
-        $installdir/bin/postInstallGLiveSupport.sh --directory $installdir
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

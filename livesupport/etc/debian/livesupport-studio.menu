@@ -1,4 +1,4 @@
 ?package(livesupport-studio):needs="X11" section="Apps/Sound" \
   title="LiveSupport-Studio" command="/opt/livesupport/bin/gLiveSupport.sh" \
-  icon="/opt/livesupport/var/livesupport.png" \
+  icon="/opt/livesupport/var/LiveSupport/livesupport.png" \
 
