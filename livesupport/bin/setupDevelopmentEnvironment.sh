@@ -23,7 +23,7 @@
 #
 #   Author   : $Author: maroy $
 #   Version  : $Revision: 1.1 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/setupDeveopmentEnvironment.sh,v $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/setupDevelopmentEnvironment.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  A script to set up the development environment for LiveSupport
