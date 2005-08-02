@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.1 $
+dnl Version  : $Revision: 1.2 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/widgets/etc/acinclude.m4,v $
 dnl-----------------------------------------------------------------------------
 
@@ -89,4 +89,73 @@ AC_DEFUN([PKG_CHECK_MODULES], [
 ])
 
 
+
+dnl-----------------------------------------------------------------------------
+dnl Macro to check for C++ namespaces
+dnl for more information on this macro, see
+dnl http://autoconf-archive.cryp.to/ac_cxx_namespaces.html
+dnl
+dnl usage:
+dnl  If the compiler can prevent names clashes using namespaces,
+dnl  define HAVE_NAMESPACES.
+dnl-----------------------------------------------------------------------------
+AC_DEFUN([AC_CXX_NAMESPACES],
+[AC_CACHE_CHECK(whether the compiler implements namespaces,
+ac_cv_cxx_namespaces,
+[AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_TRY_COMPILE([namespace Outer { namespace Inner { int i = 0; }}],
+                [using namespace Outer::Inner; return i;],
+ ac_cv_cxx_namespaces=yes, ac_cv_cxx_namespaces=no)
+ AC_LANG_RESTORE
+])
+if test "$ac_cv_cxx_namespaces" = yes; then
+  AC_DEFINE(HAVE_NAMESPACES,,[define if the compiler implements namespaces])
+fi
+])
+
+
+dnl-----------------------------------------------------------------------------
+dnl Macro to check for the boost datetime library.
+dnl for more information on boost, see http://www.boost.org/
+dnl for more information on this macro, see
+dnl http://autoconf-archive.cryp.to/ax_boost_date-time.html
+dnl
+dnl usage:
+dnl This macro checks to see if the Boost.DateTime library is installed.
+dnl It also attempts to guess the currect library name using several attempts.
+dnl It tries to build the library name using a user supplied name or suffix
+dnl and then just the raw library.
+dnl 
+dnl If the library is found, HAVE_BOOST_DATE_TIME is defined and
+dnl BOOST_DATE_TIME_LIB is set to the name of the library.
+dnl 
+dnl This macro calls AC_SUBST(BOOST_DATE_TIME_LIB).
+dnl-----------------------------------------------------------------------------
+AC_DEFUN([AX_BOOST_DATE_TIME],
+[AC_REQUIRE([AC_CXX_NAMESPACES])dnl
+AC_CACHE_CHECK(whether the Boost::DateTime library is available,
+ax_cv_boost_date_time,
+[AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[#include <boost/date_time/gregorian/gregorian_types.hpp>]],
+                                   [[using namespace boost::gregorian; date d(2002,Jan,10); return 0;]]),
+                   ax_cv_boost_date_time=yes, ax_cv_boost_date_time=no)
+ AC_LANG_RESTORE
+])
+if test "$ax_cv_boost_date_time" = yes; then
+  AC_DEFINE(HAVE_BOOST_DATE_TIME,,[define if the Boost::DateTime library is available])
+  dnl Now determine the appropriate file names
+  AC_ARG_WITH([boost-date-time],AS_HELP_STRING([--with-boost-date-time],
+  [specify the boost date-time library or suffix to use]),
+  [if test "x$with_boost_date_time" != "xno"; then
+    ax_date_time_lib=$with_boost_date_time
+    ax_boost_date_time_lib=boost_date_time-$with_boost_date_time
+  fi])
+  for ax_lib in $ax_date_time_lib $ax_boost_date_time_lib boost_date_time; do
+    AC_CHECK_LIB($ax_lib, main, [BOOST_DATE_TIME_LIB=$ax_lib break])
+  done
+  AC_SUBST(BOOST_DATE_TIME_LIB)
+fi
+])dnl
 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -75,6 +75,8 @@ GSTREAMER_ELEMENTS_LIB_FILE    = ${GSTREAMER_ELEMENTS_LIB_DIR}/lib${GSTREAMER_EL
 GST_REAL_LIB_DIR=${REAL_BASE_DIR}/modules/gstreamerElements/lib
 
 VPATH    = ${SRC_DIR}
+
+BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
@@ -137,7 +139,7 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
 TEST_RUNNER_LIBS = -l${PLAYLIST_EXECUTOR_LIB} -l${CORE_LIB} \
                    -l${GSTREAMER_ELEMENTS_LIB} \
                    ${TAGLIB_LIBS} \
-                   -lboost_date_time-gcc -lcppunit -ldl -lm -lxmlrpc++
+                   -l${BOOST_DATE_TIME_LIB} -lcppunit -ldl -lm -lxmlrpc++
 
 TWOTEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
                       ${TMP_DIR}/TwoGstreamerPlayersTest.o

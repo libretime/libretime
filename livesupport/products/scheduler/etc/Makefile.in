@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.64 $
+#   Version  : $Revision: 1.65 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -100,10 +100,14 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
 
 VPATH    = ${SRC_DIR}
 
+BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
+
 LIBODBCXX_CFLAGS=@LIBODBCXX_CFLAGS@
 LIBODBCXX_LIBS=@LIBODBCXX_LIBS@
+
 GSTREAMER_CFLAGS=@GSTREAMER_CFLAGS@
 GSTREAMER_LIBS=@GSTREAMER_LIBS@
 
@@ -259,7 +263,7 @@ SCHEDULER_EXE_LIBS = -l${EVENT_SCHEDULER_LIB} -l${PLAYLIST_EXECUTOR_LIB} \
                      -l${GSTREAMER_ELEMENTS_LIB} \
                      -l${STORAGE_LIB} -l${DB_LIB} -l${AUTHENTICATION_LIB} \
                      -l${CORE_LIB} \
-                     -lboost_date_time-gcc \
+                     -l${BOOST_DATE_TIME_LIB} \
                      -lxmlrpc++ -lssl
 
 TEST_RUNNER_OBJS = ${SCHEDULER_OBJS} \

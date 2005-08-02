@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.11 $
+dnl Version  : $Revision: 1.12 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(Scheduler, 0.1, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.11 $)
+AC_REVISION($Revision: 1.12 $)
 
 AC_CONFIG_SRCDIR(../src/main.cxx)
 
@@ -59,6 +59,14 @@ AC_MSG_RESULT([using pkg-config path: ${PKG_CONFIG_PATH}])
 export PKG_CONFIG_PATH
 
 
+AX_BOOST_DATE_TIME()
+
+if test "$BOOST_DATE_TIME_LIB" = "" ; then
+    BOOST_DATE_TIME_LIB=boost_date_time-gcc
+    AC_SUBST(BOOST_DATE_TIME_LIB)
+fi
+
+
 PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1])
 AC_SUBST(LIBXMLPP_CFLAGS)
 AC_SUBST(LIBXMLPP_LIBS)
@@ -68,6 +76,7 @@ PKG_CHECK_MODULES(LIBODBCXX,[libodbc++])
 PKG_CHECK_MODULES(GSTREAMER,[gstreamer-0.8 >= 0.8])
 AC_SUBST(GSTREAMER_CFLAGS)
 AC_SUBST(GSTREAMER_LIBS)
+
 
 dnl-----------------------------------------------------------------------------
 dnl enable compilaton for code coverage data

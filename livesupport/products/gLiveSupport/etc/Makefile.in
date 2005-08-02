@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.48 $
+#   Version  : $Revision: 1.49 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -165,6 +165,8 @@ WIDGETS_LIB_DIR     = ${WIDGETS_DIR}/lib
 WIDGETS_LIB         = livesupport_widgets
 WIDGETS_LIB_FILE    = ${WIDGETS_LIB_DIR}/lib${WIDGETS_LIB}.a
 
+BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
 
@@ -277,7 +279,7 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -l${WIDGETS_LIB} \
                          -l${SCHEDULER_CLIENT_LIB} \
                          -l${CORE_LIB} \
-                         -lboost_date_time-gcc \
+                         -l${BOOST_DATE_TIME_LIB} \
                          -lxmlrpc++ -lssl
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \

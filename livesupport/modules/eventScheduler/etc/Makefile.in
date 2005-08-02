@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/eventScheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -64,6 +64,8 @@ CORE_LIB         = livesupport_core
 CORE_LIB_FILE    = ${CORE_LIB_DIR}/lib${CORE_LIB}.a
 
 VPATH    = ${SRC_DIR}
+
+BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
@@ -110,7 +112,7 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestScheduledEvent.o \
                    ${TMP_DIR}/EventSchedulerTest.o \
                    ${TMP_DIR}/TestRunner.o
 TEST_RUNNER_LIBS = -l${EVENT_SCHEDULER_LIB} -l${CORE_LIB} \
-                   -lboost_date_time-gcc \
+                   -l${BOOST_DATE_TIME_LIB} \
                    -lcppunit -ldl
 
 

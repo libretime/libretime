@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.32 $
+#   Version  : $Revision: 1.33 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -66,6 +66,8 @@ GENRBOPTS = --destdir ${TMP_DIR} \
             --strict
 
 VPATH    = ${SRC_DIR}
+
+BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
@@ -155,7 +157,7 @@ TEST_RUNNER_RES = ${TMP_DIR}/${PACKAGE_NAME}_root.res \
                   ${TMP_DIR}/${PACKAGE_NAME}_jp.res
 
 TEST_RUNNER_LIBS = -l${CORE_LIB} ${ICU_LIBS} \
-                   -lboost_date_time-gcc -lcppunit -ldl -lxmlrpc++
+                   -l${BOOST_DATE_TIME_LIB} -lcppunit -ldl -lxmlrpc++
 
 
 #-------------------------------------------------------------------------------
