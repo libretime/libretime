@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/libxml++/libxml++-2.8.1/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -93,4 +93,3 @@ aclocal_m4=${tmpdir}/aclocal.m4
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 
-${configure} "$@" && echo

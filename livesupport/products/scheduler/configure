@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/configure,v $
 #-------------------------------------------------------------------------------
 
@@ -44,9 +44,9 @@ tmpdir=$basedir/tmp
 autogen=$bindir/autogen.sh
 configure=$tmpdir/configure
 
-if [ -x $configure ]; then
-    (cd $tmpdir && $configure "$@")
-else
-    (cd $basedir && $autogen "$@")
+if [ ! -x $configure ]; then
+    (cd $basedir && $autogen $*)
 fi
+
+(cd $tmpdir && $configure $*)
 

@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/alib/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -93,9 +93,3 @@ aclocal_m4=${tmpdir}/aclocal.m4
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 
-export CPPFLAGS="-I$usrdir/include"
-export LDFLAGS="-L$usrdir/lib"
-export PKG_CONFIG_PATH="$usrdir/lib/pkgconfig"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$usrdir/lib"
-
-${configure} "$@" && echo

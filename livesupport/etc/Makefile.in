@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.11 $
+#   Version  : $Revision: 1.12 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -199,55 +199,53 @@ recompile: distclean modules_setup products_setup compile
 
 tools_setup: ${TMP_DIR}/tools_setup.stamp
 ${TMP_DIR}/tools_setup.stamp:
-	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} install
 
 ifeq ("@BOOST_DATE_TIME_LIB@","")
-	cd ${BOOST_DIR}/${BOOST_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${BOOST_DIR}/${BOOST_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${BOOST_DIR}/${BOOST_VERSION} install
 endif
 
-	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${CXXUNIT_DIR}/${CXXUNIT_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${CXXUNIT_DIR}/${CXXUNIT_VERSION} install
 
-	cd ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} && \
-	    bin/autogen.sh --prefix=${prefix}
+	cd ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LIBODBCXX_DIR}/${LIBODBCXX_VERSION} install
 
-	cd ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${XMLRPCXX_DIR}/${XMLRPCXX_VERSION} install
 
-	cd ${LCOV_DIR}/${LCOV_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${LCOV_DIR}/${LCOV_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LCOV_DIR}/${LCOV_VERSION} install
 
 ifeq ("@GTK_CFLAGS@","")
-	cd ${GTK_DIR}/${GTK_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${GTK_DIR}/${GTK_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${GTK_DIR}/${GTK_VERSION} install
 endif
 
 ifeq ("@GTKMM_CFLAGS@","")
-	cd ${GTKMM_DIR}/${GTKMM_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${GTKMM_DIR}/${GTKMM_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${GTKMM_DIR}/${GTKMM_VERSION} install
 endif
 
-	cd ${GSTREAMER_DIR}/${GSTREAMER_VERSION} && \
-	    bin/autogen.sh --prefix=${prefix}
+	cd ${GSTREAMER_DIR}/${GSTREAMER_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${GSTREAMER_DIR}/${GSTREAMER_VERSION} install
 
 ifeq ("@LIBXMLPP_CFLAGS@","")
-	cd ${LIBXMLXX_DIR}/${LIBXMLXX_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${LIBXMLXX_DIR}/${LIBXMLXX_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${LIBXMLXX_DIR}/${LIBXMLXX_VERSION} install
 endif
 
 ifeq ("@ICU_CFLAGS@","")
-	cd ${ICU_DIR}/${ICU_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${ICU_DIR}/${ICU_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${ICU_DIR}/${ICU_VERSION} install
 endif
 
-	cd ${CURL_DIR}/${CURL_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${CURL_DIR}/${CURL_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${CURL_DIR}/${CURL_VERSION} install
 
-	cd ${TAGLIB_DIR}/${TAGLIB_VERSION} && bin/autogen.sh --prefix=${prefix}
+	cd ${TAGLIB_DIR}/${TAGLIB_VERSION} && ./configure --prefix=${prefix}
 	${MAKE} -C ${TAGLIB_DIR}/${TAGLIB_VERSION} install
 
 	touch ${TMP_DIR}/tools_setup.stamp

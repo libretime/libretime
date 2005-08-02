@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/autogen.sh,v $
 #-------------------------------------------------------------------------------
 
@@ -92,5 +92,4 @@ aclocal $ACLOCAL_FLAGS
 echo "  autoconf -I ${tmpdir} -o ${configure} ${configure_ac}"
 autoconf -I ${tmpdir} -o ${configure} ${configure_ac}
 
-#${configure} "$@" && echo
 
