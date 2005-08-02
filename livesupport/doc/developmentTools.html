@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>LiveSupport developer tools</title>
-  <meta content="$Author: fgerlits $" name="author">
+  <meta content="$Author: maroy $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.10 $</li>
+  <li>Author: $Author: maroy $</li>
+  <li>Version: $Revision: 1.11 $</li>
   <li>Location: $Source:
 /home/cvs/livesupport/doc/developmentTools.html,v $</li>
 </ul>
@@ -55,6 +55,8 @@ environment variable WANT_AUTOCONF_2_5="1" before compiling the tools.)</li>
   </li>
 </ul>
 <h1>Libraries</h1>
+<h2>Required libraries<br>
+</h2>
 The following development libraries are expected on the development
 system:<br>
 <ul>
@@ -79,6 +81,20 @@ system:<br>
     <br>
   </li>
 </ul>
-<br>
+<h2>Recommended libraries</h2>
+The following libraries are used by LiveSupport. If they are not found
+on the system, LiveSupport will compile them from sources on its own.
+While having these libraries is not necessary, Compiling takes longer
+without them, and the generated LiveSupport directory will be larger as
+well.<br>
+<ul>
+  <li><a href="http://www.boost.org/">boost</a> &gt;= 1.31</li>
+  <li><a href="http://www.gtk.org/">gtk+</a> &gt;= 2.6.1</li>
+  <li><a href="http://www.gtkmm.org/">gtk--</a> &gt;= 2.5.5</li>
+  <li><a href="http://www.ibm.com/software/globalization/icu/">icu</a>
+&gt;= 3.0</li>
+  <li><a href="http://libxmlplusplus.sourceforge.net/">libxml++</a>
+&gt;= 2.8.1</li>
+</ul>
 </body>
 </html>
