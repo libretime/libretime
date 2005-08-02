@@ -292,7 +292,7 @@ class uiBrowser extends uiBase {
         }
 
         ksort($arr);
-
+        #print_r($arr);
         return array('metadata' => $arr);
     }
 

@@ -37,7 +37,7 @@
                       <td>{$i.title}</td>
                       <td style="width: 50px;">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                       <td style="width: 150px">{$i.creator}</td>
-                      <td style="width: 35px; border:0"><img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} /></td>
+                      <td style="width: 35px; border:0"><img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/alttext.tpl"} /></td>
                    </tr>
                    <!-- end clip information -->
                </table>

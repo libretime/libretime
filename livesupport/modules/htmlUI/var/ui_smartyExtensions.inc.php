@@ -10,9 +10,6 @@ $Smarty->assign_by_ref  ('JSCOM',      $jscom);
 
 
 $Smarty->register_function('str_repeat',        'S_str_repeat');
-$Smarty->register_function('urlencode',         'S_urlencode');
-$Smarty->register_function('htmlspecialchars',  'S_htmlspecialchars');
-$Smarty->register_function('system',            'S_system');
 $Smarty->register_function('tra',               'S_tra');
 $Smarty->register_function('getHour',           'S_getHour');
 $Smarty->register_function('getMinute',         'S_getMinute');
@@ -36,37 +33,6 @@ function S_str_repeat($param)
 
 }
 
-
- /**
- *  urlencode
- *
- *  Encode given string to use in URL.
- *
- *  @param str string, string to encode
- *  @return string, encoded string
- */
-function S_urlencode($param)
-{
-    extract($param);
-    return urlencode($str);
-}
-
-
-/**
- *  htmlspecialchars
- *
- *  convert special chars in given string to html-entitys.
- *
- *  @param str string, string to convert
- *  @return string, converted string
- */
-function S_htmlspecialchars($param)
-{
-    extract($param);
-    return htmlspecialchars($str);
-}
-
-
 /**
  *  tra
  *
@@ -81,7 +47,6 @@ function S_tra($in)
 
     echo tra($param[0], $param[1], $param[2], $param[3], $param[4], $param[5], $param[6], $param[7], $param[8], $param[9]);
 }
-
 
 function S_getHour($param)
 {
@@ -115,8 +80,6 @@ function S_getSecond($param)
 
     return strftime("%S", $curr);
 }
-
-
 
 function S_niceTime($param)
 {

@@ -23,9 +23,9 @@
                         {foreach from=$_member item="i"}
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                                <td onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">{$i.login}</td>
+                                <td onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">{$i.login}</td>
                                 <td style="border: 0; text-align: center"
-                                    onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
+                                    onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">
                                     {if $i.type|lower == 'u'}
                                         <img src="img/user.png" border="0" alt="User" />
                                     {else}
@@ -41,7 +41,7 @@
                 </table>
             </div>
             <div class="footer" style="width:250px;">
-                <a href="" onClick="collector_submit('GRP', 'SUBJECTS.removeSubjFromGr&gname={urlencode str=$_gname}')" id="blue_head">##Remove selected##</a>
+                <a href="" onClick="collector_submit('GRP', 'SUBJECTS.removeSubjFromGr&gname={$_gname|escape:'url'}')" id="blue_head">##Remove selected##</a>
             </div>
         </div>
         <!-- end current group member -->
@@ -70,9 +70,9 @@
                             <!-- start item -->
                             <tr class="{cycle values='blue1, blue2'}">
                                 <td><input type="checkbox" class="checkbox" name="{$i.id}"/></td>
-                                <td onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.addSubj2Gr')">{$i.login}</td>
+                                <td onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.addSubj2Gr')">{$i.login}</td>
                                 <td style="border: 0; text-align: center"
-                                    onClick="return contextmenu('login={urlencode str=$i.login}&gname={urlencode str=$_gname}', 'SUBJECTS.removeSubjFromGr')">
+                                    onClick="return contextmenu('login={$i.login|escape:'url'}&gname={$_gname|escape:'url'}', 'SUBJECTS.removeSubjFromGr')">
                                     {if $i.type|lower == 'u'}
                                         <img src="img/user.png" border="0" alt="User" />
                                     {else}
@@ -91,7 +91,7 @@
                 </table>
             </div>
             <div class="footer" style="width:250px;">
-                <a href="" onClick="collector_submit('NOGRP', 'SUBJECTS.addSubj2Gr&gname={urlencode str=$_gname}')" id="blue_head">##Add selected##</a>
+                <a href="" onClick="collector_submit('NOGRP', 'SUBJECTS.addSubj2Gr&gname={$_gname|escape:'url'}')" id="blue_head">##Add selected##</a>
             </div>
         </div>
         <!-- end add group member -->

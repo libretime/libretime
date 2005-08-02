@@ -13,7 +13,8 @@
         {foreach from=$SUBJECTS->getSubjectsWCnt() item=i}
             {if $i.type|lower == 'g'}{assign var="_type" value="group"}{else}{assign var="_type" value="user"}{/if}
             <tr class="{cycle values='blue1, blue2'}"
-                onClick="return contextmenu('id={$i.id}&login={urlencode str=$i.login}', {if $i.type|lower eq 'g'}'SUBJECTS.manageGroupMember', {else}'SUBJECTS.chgPasswd', {/if} 'SUBJECTS.removeSubj')"
+                style="cursor: pointer"
+                onClick="return contextmenu('id={$i.id}&login={$i.login|escape:'url'}', {if $i.type|lower eq 'g'}'SUBJECTS.manageGroupMember', {else}'SUBJECTS.chgPasswd', {/if} 'SUBJECTS.removeSubj')"
             >
                 <td>{$i.login}</td>
                 <td style="width: 30px; text-align: center;">

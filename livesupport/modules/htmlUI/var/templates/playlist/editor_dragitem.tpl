@@ -57,7 +57,7 @@
                       </td>
                       <td style="width: 200px" {include file="playlist/actionhandler.tpl"}>{$i.creator}</td>
                       <td  style="width: 35px" {include file="playlist/actionhandler.tpl"}>
-                          <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/mouseover.tpl"} />
+                          <img src="img/{$i.type}.png" border="0" alt="{$i.type|capitalize}" {include file="sub/alttext.tpl"} />
                       </td>
                       <td  style="width: 35px; border: 0">
                           <a href="#" onClick="hpopup('{$UI_HANDLER}?act=PL.moveItem&id={$i.attrs.id}&pos={$pos-1}')"><img src="img/bt_top_xsm.png"    alt="##move up##" vspace=1 hspace=1/></a>

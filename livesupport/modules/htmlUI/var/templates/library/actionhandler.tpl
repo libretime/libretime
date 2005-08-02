@@ -6,7 +6,7 @@ onClick="return contextmenu('{$i.id}'
         {if $_PL_activeId}
             , 'PL.addItem'
         {else}
-            , 'PL.create', '{$i.title|truncate:20}'
+            , 'PL.create', '{$i.title|truncate:20|escape:'html'}'
         {/if}
         , 'edit',   '##audioclip##'
         , 'delete', '##audioclip##'

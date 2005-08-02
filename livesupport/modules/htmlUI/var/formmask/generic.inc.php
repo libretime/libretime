@@ -79,8 +79,10 @@ $ui_fmask = array(
             'options'   => array(
                             5   => 5,
                             10  => 10,
-                            25  => 25
+                            25  => 25,
+                            50  => 50
                            ),
+            'default'   => 10,
             'required'  => TRUE
         ),
         array(
