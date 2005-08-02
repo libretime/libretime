@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/xmlrpc++/xmlrpc++-20040713/bin/prepare.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -44,6 +44,8 @@ mkdir -p ${tmpdir}
 
 # copy over install-sh, as AC_CONFIG_SUBDIRS will be looking for it
 cp -r $bindir/install-sh $tmpdir
+# copy over mkinstalldir, as some automakes will refer to it there :(
+cp -r $bindir/mkinstalldir $tmpdir
 
 cd ${tmpdir}
 if [ ! -d xmlrpc++ ]; then
