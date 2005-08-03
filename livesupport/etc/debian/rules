@@ -29,8 +29,14 @@ endif
 
 config.status: configure
 	dh_testdir
-	rm -rf /opt/livesupport/*
-	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/opt/livesupport
+	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) \
+                                   --build=$(DEB_BUILD_GNU_TYPE) \
+								   --prefix=/opt/livesupport \
+								   --with-www-docroot=/var/www \
+								   --with-apache-group=www-data \
+								   --with-station-audio-out=plughw:0 \
+								   --with-studio-audio-out=plughw:1 \
+								   --with-studio-audio-cue=plughw:2
 
 
 build: build-arch
@@ -72,7 +78,7 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/tmp
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/lib \
 	      $(CURDIR)/debian/livesupport-libs/opt/livesupport
-	cp -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gst-* \
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gst-* \
 		  $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
 
 	# now separate the station (server) files into debian/livesupport-station
@@ -96,11 +102,8 @@ install-arch:
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/htmlUI \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageServer \
           $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/lib/pear \
-          $(CURDIR)/debian/livesupport-station/opt/livesupport/usr/lib
-	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/bin \
-          $(CURDIR)/debian/livesupport/opt/livesupport/usr/var \
-          $(CURDIR)/debian/livesupport-station/opt/livesupport/usr
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/cache \
+          $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \
           $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 
@@ -113,14 +116,13 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallGLiveSupport.sh \
 		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml* \
           $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/Widgets \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/gLiveSupport*.res \
 		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/livesupport.png \
-		$(CURDIR)/debian/livesupport-studio/opt/livesupport/var
+		$(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
 	mkdir -p $(CURDIR)/debian/livesupport-studio/usr/share/applications
 	cp -a $(CURDIR)/debian/livesupport-studio.desktop \
 		$(CURDIR)/debian/livesupport-studio/usr/share/applications/

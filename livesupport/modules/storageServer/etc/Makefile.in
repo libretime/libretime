@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -90,6 +90,7 @@ DATABASE       = @DATABASE@
 DB_USER        = @DB_USER@
 DB_PASSWORD    = @DB_PASSWORD@
 SCHEDULER_PORT = @SCHEDULER_PORT@
+WWW_DOCROOT    = @WWW_DOCROOT@
 
 PHP_URL_PREFIX=livesupport
 SCHEDULER_URL_PREFIX = 

@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.65 $
+#   Version  : $Revision: 1.66 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -368,6 +368,8 @@ copy_files:
 	${MKDIR} ${USR_ETC_DIR}
 	${CP} ${BIN_DIR}/scheduler.sh ${USR_BIN_DIR}
 	${CP} ${SCHEDULER_EXE} ${USR_BIN_DIR}
+	${CP} ${ETC_DIR}/odbc_template ${ETC_DIR}/odbcinst_debian_template \
+	      ${ETC_DIR}/odbcinst_template ${USR_ETC_DIR}
 	${CAT} ${ETC_DIR}/scheduler.xml.template | ${SED} -e ${REPLACE_SED_STRING} \
 	       > ${USR_ETC_DIR}/scheduler.xml
 

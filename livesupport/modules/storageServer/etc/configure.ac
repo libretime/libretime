@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.2 $
+dnl Version  : $Revision: 1.3 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(StorageServer, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.2 $)
+AC_REVISION($Revision: 1.3 $)
 
 AC_CONFIG_SRCDIR(../var/BasicStor.php)
 
@@ -160,6 +160,19 @@ AC_ARG_WITH([database-password],
 AC_MSG_RESULT([using database server user password: ${DB_PASSWORD}])
 
 
+dnl-----------------------------------------------------------------------------
+dnl  specify web document root
+dnl-----------------------------------------------------------------------------
+AC_SUBST(WWW_DOCROOT)
+
+AC_ARG_WITH([www-docroot],
+            AC_HELP_STRING([--with-www-docroot],
+                   [deploy LiveSupport under the specified docroot (/var/www)]),
+            [WWW_DOCROOT=${withval}], [WWW_DOCROOT=/var/www])
+
+AC_MSG_RESULT([using www document root: ${WWW_DOCROOT}])
+
+
 dnl display status info on what libraries will get compiled
 
 AC_MSG_NOTICE(
@@ -174,6 +187,7 @@ AC_MSG_NOTICE(
     database user password:          ${DB_PASSWORD}
     creating LiveSupport database:   ${CREATE_LS_DATABASE}
     initialize LiveSupport database: ${INIT_LS_DATABASE}
+    www document root:               ${WWW_DOCROOT}
 
 ])
 
