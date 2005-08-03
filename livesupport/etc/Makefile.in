@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.13 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.14 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -295,8 +295,8 @@ ${TMP_DIR}/doxytag_setup.stamp:
 
 modules_setup: ${TMP_DIR}/modules_setup.stamp
 ${TMP_DIR}/modules_setup.stamp:
-	cd ${ALIB_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${ARCHIVE_SERVER_DIR}/tmp && \
+	cd ${ALIB_DIR} && ./configure --prefix=${prefix}
+	cd ${ARCHIVE_SERVER_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
@@ -304,13 +304,13 @@ ${TMP_DIR}/modules_setup.stamp:
 					--with-database=${DATABASE} \
 					--with-database-user=${DB_USER} \
 					--with-database-password=${DB_PASSWORD}
-	cd ${GETID3_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${HTML_UI_DIR}/tmp && ./configure --prefix=${prefix} \
+	cd ${GETID3_DIR} && ./configure --prefix=${prefix}
+	cd ${HTML_UI_DIR} && ./configure --prefix=${prefix} \
                                          --with-apache-group=${APACHE_GROUP} \
 										 --with-www-docroot=${WWW_DOCROOT} \
 								 --with-configure-apache=${CONFIGURE_APACHE}
-	cd ${STORAGE_ADMIN_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${STORAGE_SERVER_DIR}/tmp && \
+	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix}
+	cd ${STORAGE_SERVER_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
@@ -320,20 +320,20 @@ ${TMP_DIR}/modules_setup.stamp:
 					--with-database-user=${DB_USER} \
 					--with-database-password=${DB_PASSWORD} \
 					--with-init-database=${INIT_LS_DATABASE}
-	cd ${CORE_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${AUTHENTICATION_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${DB_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${STORAGE_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${GSTREAMER_ELEMENTS_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${PLAYLIST_EXECUTOR_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${EVENT_SCHEDULER_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${SCHEDULER_CLIENT_DIR}/tmp && ./configure --prefix=${prefix}
-	cd ${WIDGETS_DIR}/tmp && ./configure --prefix=${prefix}
+	cd ${CORE_DIR} && ./configure --prefix=${prefix}
+	cd ${AUTHENTICATION_DIR} && ./configure --prefix=${prefix}
+	cd ${DB_DIR} && ./configure --prefix=${prefix}
+	cd ${STORAGE_DIR} && ./configure --prefix=${prefix}
+	cd ${GSTREAMER_ELEMENTS_DIR} && ./configure --prefix=${prefix}
+	cd ${PLAYLIST_EXECUTOR_DIR} && ./configure --prefix=${prefix}
+	cd ${EVENT_SCHEDULER_DIR} && ./configure --prefix=${prefix}
+	cd ${SCHEDULER_CLIENT_DIR} && ./configure --prefix=${prefix}
+	cd ${WIDGETS_DIR} && ./configure --prefix=${prefix}
 	touch ${TMP_DIR}/modules_setup.stamp
 
 products_setup: ${TMP_DIR}/products_setup.stamp
 ${TMP_DIR}/products_setup.stamp:
-	cd ${SCHEDULER_DIR}/tmp && \
+	cd ${SCHEDULER_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
@@ -345,7 +345,7 @@ ${TMP_DIR}/products_setup.stamp:
 					--with-audio-out=${STATION_AUDIO_OUT} \
 					--with-create-odbc-data-source=${CREATE_ODBC_DATA_SOURCE} \
 					--with-init-database=${INIT_LS_DATABASE}
-	cd ${GLIVESUPPORT_DIR}/tmp && \
+	cd ${GLIVESUPPORT_DIR} && \
 		./configure --prefix=${prefix} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
