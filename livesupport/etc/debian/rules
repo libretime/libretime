@@ -91,6 +91,8 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/usr/lib
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createDatabase.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createOdbcDataSource.sh \
 		  $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \

@@ -27,10 +27,8 @@ case "$1" in
         cp -f $installdir/etc/odbcinst_debian_template \
               $installdir/etc/odbcinst_template
         # do post-installation configuration
-# TODO: update this as postInstallScheduler.sh does not exist any more
-#        $installdir/bin/postInstallScheduler.sh --directory $installdir \
-#                                                --apache-group $apache_group \
-#                                                --www-root $apache_docroot
+        $installdir/bin/createDatabase.sh
+        $installdir/bin/createOdbcDataSource.sh
         # register and start the livesupport scheduler deamon
         update-rc.d livesupport-station defaults 92 || true
         if command -v invoke-rc.d >/dev/null 2>&1 ; then
