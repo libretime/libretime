@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.66 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.67 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -89,11 +89,11 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
               s/ls_dbpassword/${DB_PASSWORD}/; \
               s/ls_dbserver/${DB_SERVER}/; \
               s/ls_database/${DATABASE}/; \
-              s/ls_php_urlPrefix/\/${PHP_URL_PREFIX_S}/; \
+              s/ls_php_urlPrefix/${PHP_URL_PREFIX_S}/; \
               s/ls_php_host/${HOSTNAME}/; \
               s/ls_php_port/${WWW_PORT}/; \
-			  s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
-			  s/ls_tmp_dir/${USR_TMP_DIR_S}/; \
+              s/ls_alib_xmlRpcPrefix/${ALIB_XML_RPC_PREFIX_S}/; \
+              s/ls_tmp_dir/${USR_TMP_DIR_S}/; \
               s/ls_audio_output_device/${AUDIO_OUT_S}/; \
               s/ls_scheduler_host/${HOSTNAME}/; \
               s/ls_scheduler_port/${SCHEDULER_PORT}/;"
