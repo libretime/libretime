@@ -91,10 +91,10 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/usr/lib
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallScheduler.sh \
 		  $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/gtk* \
 		  $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/alib \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/archiveServer \
