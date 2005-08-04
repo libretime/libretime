@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.14 $
+#   Version  : $Revision: 1.15 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -426,7 +426,6 @@ check:
 .PHONY: install create_database install_modules install_products
 
 install: setup compile create_database install_modules install_products
-	${CP} ${BIN_DIR}/postInstallScheduler.sh ${USR_BIN_DIR}
 	${MKDIR} ${USR_ETC_DIR}/apache
 	${CP} ${ETC_DIR}/apache/*.conf ${USR_ETC_DIR}/apache
 
