@@ -187,7 +187,7 @@ class uiHandler extends uiBase {
                     foreach ($v['id3'] as $name) {                 ## loop throught list of equivalent id3-tags
                         $key = strtolower($name);
                         if ($ia['comments'][$key][0]) {
-                            $this->_setMdataValue($id, $v['element'], $ia['comments'][$key][0], $langid);
+                            $this->_setMdataValue($id, $v['element'], str_replace("'", "\\'", utf8_encode($ia['comments'][$key][0])), $langid);
                         }
                     }
                 }
@@ -258,7 +258,7 @@ class uiHandler extends uiBase {
 
 
     function editMetaData(&$formdata)
-    {
+    {                        
         include dirname(__FILE__).'/formmask/metadata.inc.php';
         $id             = $formdata['id'];
         $curr_langid    = $formdata['curr_langid'];
