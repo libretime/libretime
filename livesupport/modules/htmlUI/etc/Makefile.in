@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: sebastian $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -148,7 +148,7 @@ install: configure_apache
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/playlist
 	${MKDIR} ${USR_VAR_DIR}/LiveSupport/htmlUI/var/templates/subjects
 
-   ${CP} ${BASE_DIR}/index.php ${USR_VAR_DIR}/LiveSupport/htmlUI
+	${CP} ${BASE_DIR}/index.php ${USR_VAR_DIR}/LiveSupport/htmlUI
 	${CP} ${VAR_DIR}/*.xml ${VAR_DIR}/*.php \
 	      ${USR_VAR_DIR}/LiveSupport/htmlUI/var
 	${CP} ${VAR_DIR}/html/*.php ${VAR_DIR}/html/*.css \
