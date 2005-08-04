@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>LiveSupport installation documentation</title>
-  <meta content="$Author: maroy $" name="author">
+  <meta content="$Author: fgerlits $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: maroy $</li>
-  <li>Version: $Revision: 1.12 $</li>
+  <li>Author: $Author: fgerlits $</li>
+  <li>Version: $Revision: 1.13 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -33,11 +33,10 @@ steps:<br>
 </ul>
 <h2>For the impatient</h2>
 Those who think they know everything, the quick steps to install
-LiveSupport are (make sure to run at least the <code>./bin/install.sh</code>
-script as root):<br>
+LiveSupport are the following.  (To run <code>make</code>, you need write permissions in the <code>prefix</code> directory; to run <code>make install</code>, you need to be root.)
 <br>
-<pre><code>wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-&lt;version&gt;.tar.bz2</code><code><br></code><code>wget </code><code>http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-libraries-&lt;version&gt;.tar.bz2</code><code><br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>./configure </code><code>--with-prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www</code><code><br>make<br>make install<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
-<br>
+<pre><code>wget http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-&lt;version&gt;.tar.bz2</code><code><br></code><code>wget </code><code>http://switch.dl.sourceforge.net/sourceforge/livesupport/livesupport-libraries-&lt;version&gt;.tar.bz2</code><code><br>tar xfj livesupport-&lt;version&gt;.tar.bz2<br></code><code>tar xfj livesupport-libraries-&lt;version&gt;.tar.bz2<br>cd livesupport-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www</code><code><br>make<br>make install<br>/usr/local/livesupport/bin/scheduler.sh start<br></code></pre>
+
 Then try the URL <code>http://localhost/livesupport/ </code>,
 and log in using username: <code>root</code>, password: <code>q</code>.<br>
 <br>
@@ -188,8 +187,10 @@ LiveSupport.<br>
 To compile LiveSupport, enter the LiveSupport directory, and execute
 the following commands:<br>
 <br>
-<pre><code>cd livesupport-&lt;version&gt;<br>./configure </code><code>--with-prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
+<pre><code>cd livesupport-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
 <br>
+Note that you need to have write permissions in the <code>prefix</code> directory 
+when you run <code>make</code>.
 The configure options used above are the options most probably used:<br>
 <br>
 <pre><code>&nbsp; --prefix=PREFIX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; install architecture-independent files in PREFIX<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [/usr/local]</code></pre>
@@ -227,9 +228,9 @@ LiveSupport by typing:<br>
 <pre><code>make install</code><br></pre>
 <br>
 This will install LiveSupport into the directory specified to the
-configure script. It will also create necessary database tables,
-depending on the invocation of the configure script. Most probably you
-will have to run make install as root.<br>
+configure script. It will also create necessary database tables, 
+depending on the invocation of the configure script. You need to run 
+<code>make install</code> as root.<br>
 <br>
 <h1>Try it out</h1>
 After a successful installation, the LiveSupport scheduler has to be
