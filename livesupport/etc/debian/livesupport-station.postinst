@@ -30,6 +30,7 @@ case "$1" in
         $installdir/bin/createDatabase.sh
         $installdir/bin/createOdbcDataSource.sh
         $installdir/bin/createGstreamerRegistry.sh  --directory=$installdir
+        $installdir/usr/lib/pear/bin/install.sh -d $installdir
         # register and start the livesupport scheduler deamon
         update-rc.d livesupport-station defaults 92 || true
         if command -v invoke-rc.d >/dev/null 2>&1 ; then
