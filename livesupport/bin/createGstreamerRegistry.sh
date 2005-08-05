@@ -23,13 +23,13 @@
 #
 #   Author   : $Author: fgerlits $
 #   Version  : $Revision: 1.1 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/createOdbcDataSource.sh,v $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/Attic/createGstreamerRegistry.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
-#  This script creates the ODBC data source needed for LiveSupport scheduler
+#  This script registers Gstremer plugins.
 #
 #  Invoke as:
-#  ./bin/createOdbcDataSource.sh
+#  ./bin/createGstreamerRegistry.sh
 #
 #  To get usage help, try the -h option
 #-------------------------------------------------------------------------------
@@ -51,13 +51,10 @@ usrdir=$basedir/usr
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport scheduler ODBC DataSource creating script.";
+    echo "LiveSupport scheduler Gstreamer registry creating script.";
     echo "parameters";
     echo "";
-    echo "  -D, --database      The name of the LiveSupport database.";
-    echo "                      [default: LiveSupport]";
-    echo "  -s, --dbserver      The name of the database server host.";
-    echo "                      [default: localhost]";
+    echo "  -d, --directory     The installation directory, required.";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -68,16 +65,16 @@ printUsage()
 #-------------------------------------------------------------------------------
 CMD=${0##*/}
 
-opts=$(getopt -o D:hs: -l database:,dbserver:,help -n $CMD -- "$@") || exit 1
+opts=$(getopt -o D:h -l directory:,help -n $CMD -- "$@") || exit 1
 eval set -- "$opts"
 while true; do
     case "$1" in
-        -D|--database)
-            database=$2;
+        -d|--directory)
+            installdir=$2;
             shift; shift;;
-        -s|--dbserver)
-            dbserver=$2;
-            shift; shift;;
+        -h|--help)
+            printUsage;
+            exit 0;;
         --)
             shift;
             break;;
@@ -88,32 +85,26 @@ while true; do
     esac
 done
 
-if [ "x$dbserver" == "x" ]; then
-    dbserver=localhost;
+if [ "x$installdir" == "x" ]; then
+    echo "Required parameter install directory not specified.";
+    printUsage;
+    exit 1;
 fi
 
-if [ "x$database" == "x" ]; then
-    database=LiveSupport;
-fi
-
-
-echo "Creating ODBC data source for LiveSupport scheduler.";
+echo "Registering Gstreamer plugins for LiveSupport station.";
 echo "";
 echo "Using the following installation parameters:";
 echo "";
-echo "  database server:        $dbserver";
-echo "  database:               $database";
+echo "  installation directory:    $installdir";
 echo ""
+
 
 #-------------------------------------------------------------------------------
 #  The details of installation
 #-------------------------------------------------------------------------------
-ls_dbserver=$dbserver
-ls_database=$database
-
-
-replace_sed_string="s/ls_dbserver/$ls_dbserver/; \
-                    s/ls_database/$ls_database/;"
+install_lib=$installdir/lib
+install_etc=$installdir/etc
+install_bin=$installdir/bin
 
 
 #-------------------------------------------------------------------------------
@@ -147,40 +138,17 @@ fi
 #-------------------------------------------------------------------------------
 echo "Checking for required tools..."
 
-check_exe "sed" || exit 1;
-check_exe "grep" || exit 1;
-check_exe "odbcinst" || exit 1;
+check_exe "find" || exit 1;
 
 
 #-------------------------------------------------------------------------------
 #  Create the ODBC data source and driver
 #-------------------------------------------------------------------------------
-echo "Creating ODBC data source and driver...";
-
-# check where the odbc dirvers are for PostgreSQL
-if [ -f /usr/lib/libodbcpsql.so ]; then
-    odbcinst_template=$etcdir/odbcinst_template
-elif [ -f /usr/lib/odbc/psqlodbc.so ]; then
-    odbcinst_template=$etcdir/odbcinst_debian_template
-else
-    echo "can't find ODBC driver for PostgreSQL neither at /usr/lib";
-    echo "nor at /usr/lib/odbc. please install proper ODBC drivers";
-    exit 1;
-fi
-odbc_template=$etcdir/odbc_template
-odbc_template_tmp=/tmp/odbc_template.$$
-
-# check for an existing PostgreSQL ODBC driver, and only install if necessary
-odbcinst_res=`odbcinst -q -d | grep "\[PostgreSQL\]"`
-if [ "x$odbcinst_res" == "x" ]; then
-    echo "Registering ODBC PostgreSQL driver...";
-    odbcinst -i -d -v -f $odbcinst_template || exit 1;
-fi
-
-echo "Registering LiveSupport ODBC data source...";
-cat $odbc_template | sed -e "$replace_sed_string" > $odbc_template_tmp
-odbcinst -i -s -l -f $odbc_template_tmp || exit 1;
-rm -f $odbc_template_tmp
+gstreamer_dir=`find $install_lib -type d -name "gstreamer-*"`
+export LD_LIBRARY_PATH=$install_lib
+export GST_REGISTRY=$install_etc/gst-registry.xml
+export GST_PLUGIN_PATH=$gstreamer_dir
+$install_bin/gst-register > /dev/null 2>&1
 
 
 #-------------------------------------------------------------------------------
