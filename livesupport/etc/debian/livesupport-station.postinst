@@ -29,6 +29,7 @@ case "$1" in
         # do post-installation configuration
         $installdir/bin/createDatabase.sh
         $installdir/bin/createOdbcDataSource.sh
+        $installdir/bin/createGstreamerRegistry.sh  --directory=$installdir
         # register and start the livesupport scheduler deamon
         update-rc.d livesupport-station defaults 92 || true
         if command -v invoke-rc.d >/dev/null 2>&1 ; then

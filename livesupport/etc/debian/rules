@@ -77,9 +77,9 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/tmp
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/lib \
-	      $(CURDIR)/debian/livesupport-libs/opt/livesupport
+	          $(CURDIR)/debian/livesupport-libs/opt/livesupport
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gst-* \
-		  $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
+		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
 
 	# now separate the station (server) files into debian/livesupport-station
 	mkdir -p $(CURDIR)/debian/livesupport-station
@@ -93,21 +93,22 @@ install-arch:
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createDatabase.sh \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createOdbcDataSource.sh \
-		  $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createGstreamerRegistry.sh \
+		      $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/gtk* \
-		  $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
+		      $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/alib \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/archiveServer \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/getid3 \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/htmlUI \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageServer \
-          $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
+              $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/cache \
-          $(CURDIR)/debian/livesupport-station/opt/livesupport/var
+              $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \
-          $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
+              $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 
 	# now separate the studio (client) files into debian/livesupport-studio
 	mkdir -p $(CURDIR)/debian/livesupport-studio
@@ -118,16 +119,16 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/gLiveSupport.sh \
-		  $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
+		      $(CURDIR)/debian/livesupport-studio/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/gLiveSupport.xml* \
-          $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
+              $(CURDIR)/debian/livesupport-studio/opt/livesupport/etc
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/Widgets \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/gLiveSupport*.res \
 		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/livesupport.png \
-		$(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
+		      $(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
 	mkdir -p $(CURDIR)/debian/livesupport-studio/usr/share/applications
 	cp -a $(CURDIR)/debian/livesupport-studio.desktop \
-		$(CURDIR)/debian/livesupport-studio/usr/share/applications/
+		      $(CURDIR)/debian/livesupport-studio/usr/share/applications/
 	dh_desktop -plivesupport-studio    
 	dh_installmenu 
 
