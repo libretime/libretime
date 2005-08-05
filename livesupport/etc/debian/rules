@@ -36,8 +36,8 @@ config.status: configure
 								   --with-apache-group=www-data \
 								   --with-station-audio-out=plughw:0 \
 								   --with-studio-audio-out=plughw:1 \
-								   --with-studio-audio-cue=plughw:2
-
+								   --with-studio-audio-cue=plughw:2 \
+								   --with-hostname=localhost
 
 build: build-arch
 
@@ -91,9 +91,7 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-station/opt/livesupport/usr/lib
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createDatabase.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createOdbcDataSource.sh \
-	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/createGstreamerRegistry.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallStation.sh \
 		      $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \

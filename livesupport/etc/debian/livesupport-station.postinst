@@ -27,11 +27,10 @@ case "$1" in
         cp -f $installdir/etc/odbcinst_debian_template \
               $installdir/etc/odbcinst_template
         # do post-installation configuration
-        $installdir/bin/createDatabase.sh
-        $installdir/bin/createOdbcDataSource.sh
-        $installdir/bin/createGstreamerRegistry.sh  --directory=$installdir
-        $installdir/usr/lib/pear/bin/install.sh -d $installdir
-        # register and start the livesupport scheduler deamon
+        $installdir/bin/postInstallStation.sh --directory $installdir \
+                                              --apache-group $apache_group \
+                                              --www-root $apache_docroot
+        # register and start the livesupport scheduler daemon
         update-rc.d livesupport-station defaults 92 || true
         if command -v invoke-rc.d >/dev/null 2>&1 ; then
             invoke-rc.d livesupport-station start || true
