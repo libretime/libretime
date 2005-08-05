@@ -23,7 +23,7 @@
 #
 #   Author   : $Author: fgerlits $
 #   Version  : $Revision: 1.1 $
-#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/bin/Attic/createGstreamerRegistry.sh,v $
+#   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/Attic/createGstreamerRegistry.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
 #  This script registers Gstremer plugins.
