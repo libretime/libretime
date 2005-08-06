@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.1 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -230,6 +230,7 @@ install_lib=$installdir/lib
 install_tmp=$installdir/tmp
 install_usr=$installdir/usr
 install_var=$installdir/var
+install_varls=$install_var/LiveSupport
 
 
 #-------------------------------------------------------------------------------
@@ -368,25 +369,25 @@ $install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
 
-chgrp $apache_group $install_var/archiveServer/var/stor
-chgrp $apache_group $install_var/archiveServer/var/access
-chgrp $apache_group $install_var/archiveServer/var/trans
-chgrp $apache_group $install_var/archiveServer/var/stor/buffer
+chgrp $apache_group $install_varls/archiveServer/var/stor
+chgrp $apache_group $install_varls/archiveServer/var/access
+chgrp $apache_group $install_varls/archiveServer/var/trans
+chgrp $apache_group $install_varls/archiveServer/var/stor/buffer
 
-chmod g+sw $install_var/archiveServer/var/stor
-chmod g+sw $install_var/archiveServer/var/access
-chmod g+sw $install_var/archiveServer/var/trans
-chmod g+sw $install_var/archiveServer/var/stor/buffer
+chmod g+sw $install_varls/archiveServer/var/stor
+chmod g+sw $install_varls/archiveServer/var/access
+chmod g+sw $install_varls/archiveServer/var/trans
+chmod g+sw $install_varls/archiveServer/var/stor/buffer
 
-chgrp $apache_group $install_var/storageServer/var/stor
-chgrp $apache_group $install_var/storageServer/var/access
-chgrp $apache_group $install_var/storageServer/var/trans
-chgrp $apache_group $install_var/storageServer/var/stor/buffer
+chgrp $apache_group $install_varls/storageServer/var/stor
+chgrp $apache_group $install_varls/storageServer/var/access
+chgrp $apache_group $install_varls/storageServer/var/trans
+chgrp $apache_group $install_varls/storageServer/var/stor/buffer
 
-chmod g+sw $install_var/storageServer/var/stor
-chmod g+sw $install_var/storageServer/var/access
-chmod g+sw $install_var/storageServer/var/trans
-chmod g+sw $install_var/storageServer/var/stor/buffer
+chmod g+sw $install_varls/storageServer/var/stor
+chmod g+sw $install_varls/storageServer/var/access
+chmod g+sw $install_varls/storageServer/var/trans
+chmod g+sw $install_varls/storageServer/var/stor/buffer
 
 
 #-------------------------------------------------------------------------------
@@ -444,7 +445,7 @@ echo "Creating symlinks...";
 
 # create symlink for the PHP pages in apache's document root
 rm -f $www_root/livesupport
-ln -s $install_var $www_root/livesupport
+ln -s $install_varls $www_root/livesupport
 
 
 #-------------------------------------------------------------------------------
@@ -453,7 +454,7 @@ ln -s $install_var $www_root/livesupport
 echo "Initializing database...";
 
 # create PHP-related database tables
-cd $install_var/storageServer/var/install
+cd $install_varls/storageServer/var/install
 php -q install.php || exit 1;
 cd -
 
