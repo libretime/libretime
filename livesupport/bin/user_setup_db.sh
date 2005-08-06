@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup_db.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -201,12 +201,12 @@ echo "Creating database and database user...";
 su - $postgres_user -c "echo \"CREATE USER $ls_dbuser \
                                ENCRYPTED PASSWORD '$ls_dbpassword' \
                                CREATEDB NOCREATEUSER;\" \
-                        | psql -h $ls_dbserver template1" \
+                        | psql template1" \
     || echo "Couldn't create database user $ls_dbuser.";
 
 su - $postgres_user -c "echo \"CREATE DATABASE \\\"$ls_database\\\" \
                                 OWNER $ls_dbuser ENCODING 'utf-8';\" \
-                        | psql -h $ls_dbserver template1" \
+                        | psql template1" \
     || echo "Couldn't create database $ls_database.";
 
 

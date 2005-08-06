@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: fgerlits $
-dnl Version  : $Revision: 1.4 $
+dnl Version  : $Revision: 1.5 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(LiveSupport, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.4 $)
+AC_REVISION($Revision: 1.5 $)
 
 AC_CONFIG_SRCDIR(../products/scheduler/src/main.cxx)
 
@@ -269,7 +269,7 @@ dnl fancy variables to avoid duplication of hard-coded values :(
 
 
 dnl check for the boost library
-AX_BOOST_DATE_TIME()
+AC_BOOST_DATE_TIME()
 
 if test "$BOOST_DATE_TIME_LIB" = "" ; then
     AC_MSG_RESULT([not found boost library of sufficient version, will compile from our own])
@@ -304,7 +304,7 @@ PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.5.5],
 
 
 dnl check for ICU 3.0 or more recent
-AC_CHECK_ICU(ICU,[icu >= 3.0],
+PKG_CHECK_MODULES(ICU,[icu >= 3.0],
 [
     AC_MSG_RESULT([using ICU found on the system])
     COMPILE_ICU="no"
