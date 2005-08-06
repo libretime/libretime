@@ -20,8 +20,8 @@ dnl along with LiveSupport; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
-dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.3 $
+dnl Author   : $Author: fgerlits $
+dnl Version  : $Revision: 1.4 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(LiveSupport, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.3 $)
+AC_REVISION($Revision: 1.4 $)
 
 AC_CONFIG_SRCDIR(../products/scheduler/src/main.cxx)
 
@@ -304,7 +304,7 @@ PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.5.5],
 
 
 dnl check for ICU 3.0 or more recent
-AC_CHECK_ICU(3.0,
+AC_CHECK_ICU(ICU,[icu >= 3.0],
 [
     AC_MSG_RESULT([using ICU found on the system])
     COMPILE_ICU="no"
