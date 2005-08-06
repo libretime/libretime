@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.15 $
+#   Version  : $Revision: 1.16 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -428,6 +428,8 @@ check:
 install: setup compile create_database install_modules install_products
 	${MKDIR} ${USR_ETC_DIR}/apache
 	${CP} ${ETC_DIR}/apache/*.conf ${USR_ETC_DIR}/apache
+	${MKDIR} ${USR_BIN_DIR}
+	${CP} ${BIN_DIR}/postInstallStation.sh ${USR_BIN_DIR}
 
 create_database:
 ifeq (@CREATE_LS_DATABASE@,yes)
