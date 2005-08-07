@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -389,6 +389,11 @@ chmod g+sw $install_varls/storageServer/var/access
 chmod g+sw $install_varls/storageServer/var/trans
 chmod g+sw $install_varls/storageServer/var/stor/buffer
 
+chgrp $apache_group $install_varls/htmlUI/var/templates_c
+chgrp $apache_group $install_varls/htmlUI/var/html/img
+
+chmod g+sw $install_varls/htmlUI/var/templates_c
+chmod g+sw $install_varls/htmlUI/var/html/img
 
 #-------------------------------------------------------------------------------
 #  Configuring Apache
