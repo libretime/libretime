@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.50 $
+#   Version  : $Revision: 1.51 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -165,7 +165,8 @@ WIDGETS_LIB_DIR     = ${WIDGETS_DIR}/lib
 WIDGETS_LIB         = livesupport_widgets
 WIDGETS_LIB_FILE    = ${WIDGETS_LIB_DIR}/lib${WIDGETS_LIB}.a
 
-BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+# BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+BOOST_DATE_TIME_LIB = boost_date_time-gcc
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@

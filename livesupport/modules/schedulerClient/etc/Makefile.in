@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.9 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/schedulerClient/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -76,6 +76,9 @@ SCHEDULER_EXE    = ${SCHEDULER_DIR}/tmp/scheduler
 
 
 VPATH    = ${SRC_DIR}
+
+# BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+BOOST_DATE_TIME_LIB = boost_date_time-gcc
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
@@ -133,7 +136,7 @@ TEST_RUNNER_OBJS = ${TMP_DIR}/TestRunner.o \
 TEST_RUNNER_LIBS = -l${SCHEDULER_CLIENT_LIB} \
                    -l${CORE_LIB} \
                    -l${AUTHENTICATION_LIB} \
-                   -lboost_date_time-gcc \
+                   -l${BOOST_DATE_TIME_LIB} \
                    -lcppunit -ldl -lxmlrpc++ -lssl
 
 

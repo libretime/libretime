@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.67 $
+#   Version  : $Revision: 1.68 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/scheduler/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -100,7 +100,8 @@ REPLACE_SED_STRING="s/ls_lib_dir/${USR_LIB_DIR_S}/; \
 
 VPATH    = ${SRC_DIR}
 
-BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+# BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+BOOST_DATE_TIME_LIB = boost_date_time-gcc
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@

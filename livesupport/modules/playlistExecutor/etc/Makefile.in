@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.20 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.21 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -76,7 +76,8 @@ GST_REAL_LIB_DIR=${REAL_BASE_DIR}/modules/gstreamerElements/lib
 
 VPATH    = ${SRC_DIR}
 
-BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+# BOOST_DATE_TIME_LIB=@BOOST_DATE_TIME_LIB@
+BOOST_DATE_TIME_LIB = boost_date_time-gcc
 
 LIBXMLPP_CFLAGS=@LIBXMLPP_CFLAGS@
 LIBXMLPP_LIBS=@LIBXMLPP_LIBS@
