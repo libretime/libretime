@@ -30,7 +30,10 @@ Build-Depends: debhelper (>= 4.0.0),
                libmad0-dev,
                libogg-dev,
                libvorbis-dev,
-               libboost-dev (>= 1.31), libboost-date-time-dev (>= 1.31),
+               libboost-dev (>= 1.31),
+               libboost-date-time-dev (>= 1.31),
+               bison (>= 1.35),
+               flex
 Standards-Version: 3.6.1
 
 Package: livesupport-libs
