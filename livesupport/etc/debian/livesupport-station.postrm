@@ -46,13 +46,6 @@ check_exe() {
 
 case "$1" in
         remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
-            # remove the init script by hand
-            # this is an ugly hack, dpkg should remove it!
-            rm -f /etc/init.d/livesupport-station
-
-            # remove the livesupport scheduler daemon as a service
-            update-rc.d livesupport-station remove
-
             # remove the symlink to the livesupport web pages
             rm -f $apache_docroot/livesupport
 
