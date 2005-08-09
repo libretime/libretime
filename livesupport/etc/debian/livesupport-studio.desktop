@@ -9,6 +9,6 @@ Icon=/opt/livesupport/var/LiveSupport/livesupport.png
 Type=Application
 Categories=Application;AudioVideo;Audio;
 
-Exec=/opt/livesupport/bin/LiveSupport/gLiveSupport.sh
+Exec=/opt/livesupport/bin/gLiveSupport.sh
 Terminal=false
 
