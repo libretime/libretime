@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: fgerlits $
-dnl Version  : $Revision: 1.7 $
+dnl Version  : $Revision: 1.8 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(LiveSupport, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.7 $)
+AC_REVISION($Revision: 1.8 $)
 
 AC_CONFIG_SRCDIR(../products/scheduler/src/main.cxx)
 
@@ -279,6 +279,7 @@ dnl    COMPILE_BOOST="no"
 dnl force compilation of boost, as recognizing a pre-existing version
 dnl does not seem to work -- fgerlits, 2005-08-08
     AC_MSG_RESULT([found boost library, but recompiling anyway])
+    BOOST_DATE_TIME_LIB=""
     COMPILE_BOOST="yes"
 fi
 
