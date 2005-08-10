@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: maroy $
-#   Version  : $Revision: 1.8 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.9 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -43,38 +43,6 @@ installdir=$basedir/../../..
 
 package="PEAR packages needed by LiveSupport"
 
-packages4install="
-Archive_Tar-1.3.1
-Console_Getopt-1.2
-XML_RPC-1.3.0RC1
-PEAR-1.3.5
-Calendar-0.5.2
-DB-1.7.6
-File-1.2.0
-File_Find-0.3.1
-HTML_Common-1.2.1
-HTML_QuickForm-3.2.4pl1
-XML_Util-1.1.1
-XML_Parser-1.2.6
-XML_Beautifier-1.1
-XML_Serializer-0.15.0
-"
-
-VERSION_Archive_Tar=Archive_Tar-1.3.1
-VERSION_Console_Getopt=Console_Getopt-1.2
-VERSION_XML_RPC=XML_RPC-1.3.0RC1
-VERSION_PEAR=PEAR-1.3.5
-VERSION_Calendar=Calendar-0.5.2
-VERSION_DB=DB-1.7.6
-VERSION_File=File-1.2.0
-VERSION_File_Find=File_Find-0.3.1
-VERSION_HTML_Common=HTML_Common-1.2.1
-VERSION_HTML_QuickForm=HTML_QuickForm-3.2.4pl1
-VERSION_XML_Util=XML_Util-1.1.1
-VERSION_XML_Parser=XML_Parser-1.2.6
-VERSION_XML_Beautifier=XML_Beautifier-1.1
-VERSION_XML_Serializer=XML_Serializer-0.15.0
-
 packages_required="
 Archive_Tar
 Console_Getopt
@@ -91,6 +59,21 @@ XML_Parser
 XML_Beautifier
 XML_Serializer
 "
+
+VERSION_Archive_Tar=Archive_Tar-1.3.1
+VERSION_Console_Getopt=Console_Getopt-1.2
+VERSION_XML_RPC=XML_RPC-1.3.0RC1
+VERSION_PEAR=PEAR-1.3.5
+VERSION_Calendar=Calendar-0.5.2
+VERSION_DB=DB-1.7.6
+VERSION_File=File-1.2.0
+VERSION_File_Find=File_Find-0.3.1
+VERSION_HTML_Common=HTML_Common-1.2.1
+VERSION_HTML_QuickForm=HTML_QuickForm-3.2.4pl1
+VERSION_XML_Util=XML_Util-1.1.1
+VERSION_XML_Parser=XML_Parser-1.2.6
+VERSION_XML_Beautifier=XML_Beautifier-1.1
+VERSION_XML_Serializer=XML_Serializer-0.15.0
 
 #-------------------------------------------------------------------------------
 #  Print the usage information for this script.
@@ -192,22 +175,6 @@ do echo -n " "
         $pearcmd install $pkgv.tgz
         check_pear_module $pkg || exit 1;
     }
-done
-exit
-
-for i in $packages4install
-do echo -n " "
-    $pearcmd install $i.tgz
-done
-
-#-------------------------------------------------------------------------------
-#  Check PEAR packages
-#  (because pear install returns exicode 1 even if package already exists)
-#-------------------------------------------------------------------------------
-
-for i in $packages_required
-do echo -n " checking PEAR module $i: "
-    check_pear_module $i || exit 1;
 done
 
 #-------------------------------------------------------------------------------
