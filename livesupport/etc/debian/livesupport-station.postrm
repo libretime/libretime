@@ -61,17 +61,22 @@ case "$1" in
             echo "Deleting data files...";
 
             rm -rf $installdir/etc/scheduler.xml
-            rm -rf $installdir/var/htmlUI/var/html/img/*
-            rm -rf $installdir/var/htmlUI/var/templates_c/*
-            rm -rf $installdir/var/storageServer/var/stor/*
-            rm -rf $installdir/var/storageServer/var/access/*
-            rm -rf $installdir/var/storageServer/var/trans/*
-            rm -rf $installdir/var/archiveServer/var/stor/*
-            rm -rf $installdir/var/archiveServer/var/access/*
-            rm -rf $installdir/var/archiveServer/var/trans/*
+            rm -rf $installdir/etc/gst-registry.xml
+            rm -rf $installdir/etc/pear.conf
+            rm -rf $installdir/var/LiveSupport/htmlUI/var/html/img/*
+            rm -rf $installdir/var/LiveSupport/htmlUI/var/templates_c/*
+            rm -rf $installdir/var/LiveSupport/storageServer/var/stor/*
+            rm -rf $installdir/var/LiveSupport/storageServer/var/access/*
+            rm -rf $installdir/var/LiveSupport/storageServer/var/trans/*
+            rm -rf $installdir/var/LiveSupport/archiveServer/var/stor/*
+            rm -rf $installdir/var/LiveSupport/archiveServer/var/access/*
+            rm -rf $installdir/var/LiveSupport/archiveServer/var/trans/*
 
 
             echo "Removing ODBC data source and driver...";
+            
+            # kill active connections to LiveSuport database
+            invoke-rc.d postgresql restart
 
             echo "Removing LiveSupport ODBC data source...";
             odbcinst -u -s -l -n $ls_database || exit 1;

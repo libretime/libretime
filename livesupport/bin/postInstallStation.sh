@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.3 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -348,20 +348,6 @@ odbcinst -i -s -l -f $odbc_template || exit 1;
 #   Install PEAR packages (locally in the LiveSupport)
 #-------------------------------------------------------------------------------
 $install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
-
-
-#-------------------------------------------------------------------------------
-#  Setup working directories   # I think it's not needed -- fgerlits
-#-------------------------------------------------------------------------------
-#echo "Setting up working directories..."
-#
-#mkdir -p $install_var/storageServer/var/stor/buffer
-#mkdir -p $install_var/storageServer/var/access
-#mkdir -p $install_var/storageServer/var/trans
-#
-#mkdir -p $install_var/archiveServer/var/stor/buffer
-#mkdir -p $install_var/archiveServer/var/access
-#mkdir -p $install_var/archiveServer/var/trans
 
 
 #-------------------------------------------------------------------------------
