@@ -19,8 +19,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: sebastian $
-#   Version  : $Revision: 1.4 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -85,6 +85,7 @@ PEAR_INSTALLER = ${PEAR_TOOL_DIR}/bin/install.sh
 DEST_DIR   = ${USR_VAR_DIR}/LiveSupport/storageServer/var
 
 HOSTNAME       = @HOSTNAME@
+APACHE_GROUP   = @APACHE_GROUP@
 WWW_PORT       = @WWW_PORT@
 DB_SERVER      = @DB_SERVER@
 DATABASE       = @DATABASE@
@@ -188,6 +189,15 @@ copy_files:
 	      ${DEST_DIR}/xmlrpc/XML/RPC
 	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
 	       > ${DEST_DIR}/conf.php
+
+	chgrp ${APACHE_GROUP} ${DEST_DIR}/access
+	chgrp ${APACHE_GROUP} ${DEST_DIR}/stor
+	chgrp ${APACHE_GROUP} ${DEST_DIR}/stor/buffer
+	chgrp ${APACHE_GROUP} ${DEST_DIR}/trans
+	chmod g+sw ${DEST_DIR}/access
+	chmod g+sw ${DEST_DIR}/stor
+	chmod g+sw ${DEST_DIR}/stor/buffer
+	chmod g+sw ${DEST_DIR}/trans
 
 	${RM} ${WWW_DOCROOT}/livesupport
 	ln -sf ${USR_VAR_DIR}/LiveSupport ${WWW_DOCROOT}/livesupport

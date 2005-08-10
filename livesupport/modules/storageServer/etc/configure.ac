@@ -20,8 +20,8 @@ dnl along with LiveSupport; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
-dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.3 $
+dnl Author   : $Author: tomas $
+dnl Version  : $Revision: 1.4 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(StorageServer, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.3 $)
+AC_REVISION($Revision: 1.4 $)
 
 AC_CONFIG_SRCDIR(../var/BasicStor.php)
 
@@ -80,6 +80,19 @@ AC_ARG_WITH([hostname],
             [HOSTNAME=${withval}], [HOSTNAME=`hostname -f`])
 
 AC_MSG_RESULT([using hostname: ${HOSTNAME}])
+
+
+dnl-----------------------------------------------------------------------------
+dnl  specify group in which apache is running
+dnl-----------------------------------------------------------------------------
+AC_SUBST(APACHE_GROUP)
+
+AC_ARG_WITH([apache-group],
+            AC_HELP_STRING([--with-apache-group],
+                          [use apache running in the specified group (apache)]),
+            [APACHE_GROUP=${withval}], [APACHE_GROUP=apache])
+
+AC_MSG_RESULT([using apache group: ${APACHE_GROUP}])
 
 
 dnl-----------------------------------------------------------------------------

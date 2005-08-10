@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.16 $
+#   Author   : $Author: tomas $
+#   Version  : $Revision: 1.17 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -312,6 +312,7 @@ ${TMP_DIR}/modules_setup.stamp:
 	cd ${STORAGE_ADMIN_DIR} && ./configure --prefix=${prefix}
 	cd ${STORAGE_SERVER_DIR} && \
 		./configure --prefix=${prefix} \
+	                --with-apache-group=${APACHE_GROUP} \
 	                --with-hostname=${HOSTNAME} \
 					--with-www-port=${WWW_PORT} \
 					--with-scheduler-port=${SCHEDULER_PORT} \
