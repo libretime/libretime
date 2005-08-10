@@ -21,7 +21,7 @@
 #
 #
 #   Author   : Author$
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -129,6 +129,7 @@ distclean: clean docclean
 check: all
 
 install:
+	${MKDIR} ${DEST_DIR}/bin
 	${CP} ${BIN_DIR}/*.sh ${DEST_DIR}/bin
 	${RM} ${DEST_DIR}/bin/autogen.sh
 	${MKDIR} ${DEST_DIR}/var
