@@ -107,6 +107,9 @@ install-arch:
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/htmlUI \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageServer \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/bin \
+           $(CURDIR)/debian/livesupport/opt/livesupport/usr/var \
+           $(CURDIR)/debian/livesupport-station/opt/livesupport/usr
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/cache \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \
