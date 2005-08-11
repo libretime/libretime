@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.68 $
+    Version  : $Revision: 1.69 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -151,7 +151,6 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
                                                 throw (std::invalid_argument,
                                                        std::logic_error)
 {
-std::cerr << "GLiveSupport configure started\n";
     if (element.get_name() != configElementNameStr) {
         std::string eMsg = "Bad configuration element ";
         eMsg += element.get_name();
@@ -160,7 +159,6 @@ std::cerr << "GLiveSupport configure started\n";
 
     xmlpp::Node::NodeList   nodes;
 
-std::cerr << "GLiveSupport configure before supported langs\n";
     // read the list of supported languages
     nodes = element.get_children(supportedLanguagesElementName);
     if (nodes.size() < 1) {
@@ -168,7 +166,6 @@ std::cerr << "GLiveSupport configure before supported langs\n";
     }
     configSupportedLanguages(*((const xmlpp::Element*) *(nodes.begin())) );
 
-std::cerr << "GLiveSupport configure before resource bundle\n";
     // configure the resource bundle
     nodes = element.get_children(LocalizedObject::getConfigElementName());
     if (nodes.size() < 1) {
@@ -177,7 +174,6 @@ std::cerr << "GLiveSupport configure before resource bundle\n";
     LocalizedConfigurable::configure(
                                   *((const xmlpp::Element*) *(nodes.begin())));
 
-std::cerr << "GLiveSupport configure before auth client\n";
     // configure the AuthenticationClientFactory
     nodes = element.get_children(
                         AuthenticationClientFactory::getConfigElementName());
@@ -190,7 +186,6 @@ std::cerr << "GLiveSupport configure before auth client\n";
 
     authentication = acf->getAuthenticationClient();
 
-std::cerr << "GLiveSupport configure before storage client\n";
     // configure the StorageClientFactory
     nodes = element.get_children(StorageClientFactory::getConfigElementName());
     if (nodes.size() < 1) {
@@ -201,7 +196,6 @@ std::cerr << "GLiveSupport configure before storage client\n";
 
     storage = stcf->getStorageClient();
 
-std::cerr << "GLiveSupport configure before widget factory\n";
     // configure the WidgetFactory
     nodes = element.get_children(WidgetFactory::getConfigElementName());
     if (nodes.size() < 1) {
@@ -210,7 +204,6 @@ std::cerr << "GLiveSupport configure before widget factory\n";
     widgetFactory = WidgetFactory::getInstance();
     widgetFactory->configure( *((const xmlpp::Element*) *(nodes.begin())) );
 
-std::cerr << "GLiveSupport configure before scheduler client\n";
     // configure the SchedulerClientFactory
     nodes = element.get_children(
                                 SchedulerClientFactory::getConfigElementName());
@@ -223,7 +216,6 @@ std::cerr << "GLiveSupport configure before scheduler client\n";
 
     scheduler = schcf->getSchedulerClient();
 
-std::cerr << "GLiveSupport configure before output audio player\n";
     Ptr<AudioPlayerFactory>::Ref    apf;
     xmlpp::Element                * elem;
     // configure the outputPlayer AudioPlayerFactory
@@ -243,7 +235,6 @@ std::cerr << "GLiveSupport configure before output audio player\n";
     outputPlayer->initialize();
     outputPlayer->attachListener(this);
 
-std::cerr << "GLiveSupport configure before cue audio player\n";
     // configure the cuePlayer AudioPlayerFactory
     nodes = element.get_children(cuePlayerElementName);
     if (nodes.size() < 1) {
@@ -260,7 +251,6 @@ std::cerr << "GLiveSupport configure before cue audio player\n";
     cuePlayer = apf->getAudioPlayer();
     cuePlayer->initialize();
 
-std::cerr << "GLiveSupport configure before station logo elt\n";
     // configure the station logo image
     nodes = element.get_children(stationLogoConfigElementName);
     if (nodes.size() < 1) {
@@ -271,9 +261,12 @@ std::cerr << "GLiveSupport configure before station logo elt\n";
     const Glib::ustring    stationLogoFileName
                            = stationLogoElement->get_attribute("path")
                                                ->get_value();
-    stationLogoPixbuf = Gdk::Pixbuf::create_from_file(stationLogoFileName);
+    try {
+        stationLogoPixbuf = Gdk::Pixbuf::create_from_file(stationLogoFileName);
+    } catch (Gdk::PixBufError &e) {
+        throw std::invalid_argument("could not open station logo image file");
+    }
 
-std::cerr << "GLiveSupport configure before metadata type container\n";
     // configure the MetadataTypeContainer
     nodes = element.get_children(MetadataTypeContainer::getConfigElementName());
     if (nodes.size() < 1) {
@@ -288,7 +281,6 @@ std::cerr << "GLiveSupport configure before metadata type container\n";
     metadataTypeContainer.reset(new MetadataTypeContainer(metadataBundle));
     metadataTypeContainer->configure( 
                                 *((const xmlpp::Element*) *(nodes.begin())) );
-std::cerr << "GLiveSupport configure finished\n";
 }
 
 
@@ -407,13 +399,10 @@ void
 LiveSupport :: GLiveSupport ::
 GLiveSupport :: show(void)                              throw ()
 {
-std::cerr << "GLiveSupport show started\n";
     masterPanel.reset(new MasterPanelWindow(shared_from_this(), getBundle()));
 
-std::cerr << "GLiveSupport show before run()\n";
     // Shows the window and returns when it is closed.
     Gtk::Main::run(*masterPanel);
-std::cerr << "GLiveSupport show after run()\n";
 
     masterPanel.reset();
 }
