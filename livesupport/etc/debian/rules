@@ -130,6 +130,7 @@ install-arch:
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/Widgets \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/gLiveSupport*.res \
 		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/livesupport.png \
+		  $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/stationLogo.png \
 		      $(CURDIR)/debian/livesupport-studio/opt/livesupport/var/LiveSupport
 	mkdir -p $(CURDIR)/debian/livesupport-studio/usr/share/applications
 	cp -a $(CURDIR)/debian/livesupport-studio.desktop \
