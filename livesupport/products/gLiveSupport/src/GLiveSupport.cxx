@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.69 $
+    Version  : $Revision: 1.70 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -263,7 +263,7 @@ GLiveSupport :: configure(const xmlpp::Element    & element)
                                                ->get_value();
     try {
         stationLogoPixbuf = Gdk::Pixbuf::create_from_file(stationLogoFileName);
-    } catch (Gdk::PixBufError &e) {
+    } catch (Gdk::PixbufError &e) {
         throw std::invalid_argument("could not open station logo image file");
     }
 
