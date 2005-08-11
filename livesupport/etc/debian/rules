@@ -75,8 +75,8 @@ install-arch:
 	mkdir -p $(CURDIR)/debian/livesupport-libs
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
+	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/etc/pango
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/tmp
-	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/usr
 	mkdir -p $(CURDIR)/debian/livesupport-libs/opt/livesupport/usr/lib
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/lib \
 	          $(CURDIR)/debian/livesupport-libs/opt/livesupport
@@ -84,6 +84,8 @@ install-arch:
 		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/lib/pear \
 		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/usr/lib
+	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/usr/etc/pango/* \
+		      $(CURDIR)/debian/livesupport-libs/opt/livesupport/etc/pango
 
 	# now separate the station (server) files into debian/livesupport-station
 	mkdir -p $(CURDIR)/debian/livesupport-station
