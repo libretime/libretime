@@ -21,7 +21,7 @@
 #
 #
 #   Author   : Author$
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageAdmin/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -135,7 +135,7 @@ install:
 	${MKDIR} ${DEST_DIR}/var
 	${CP} ${VAR_DIR}/*.php ${DEST_DIR}/var
 	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
-	       > ${DEST_DIR}/conf.php
+	       > ${DEST_DIR}/var/conf.php
 
 
 #-------------------------------------------------------------------------------
