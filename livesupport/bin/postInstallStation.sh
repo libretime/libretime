@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.4 $
+#   Version  : $Revision: 1.5 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -284,6 +284,21 @@ if [ $? != 0 ]; then
     exit 1;
 fi
 rm -f $group_tmp_file;
+
+
+#-------------------------------------------------------------------------------
+#  Install the new pg_hba.conf file
+#-------------------------------------------------------------------------------
+echo "Modifying postgresql access permissions...";
+
+pg_config_dir=/etc/postgresql
+pg_config_file=pg_hba.conf
+pg_config_file_saved=pg_hba.conf.before-livesupport
+
+if [ -f $pg_config_dir/$pg_config_file ] ; then
+    mf -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
+fi
+cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
 
 
 #-------------------------------------------------------------------------------

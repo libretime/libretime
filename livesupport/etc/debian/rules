@@ -116,6 +116,7 @@ install-arch:
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/cache \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/var
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/apache \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/pg_hba.conf \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/etc
 
 	# now separate the studio (client) files into debian/livesupport-studio
