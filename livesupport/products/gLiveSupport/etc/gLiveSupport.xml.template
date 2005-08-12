@@ -118,7 +118,7 @@
     </authenticationClientFactory>
 
     <storageClientFactory>
-        <webStorage tempFiles="file://ls_tmp_dir/webStorageClient" >
+        <webStorage tempFiles="file:///tmp/gLiveSupportStorageClient" >
             <location server="ls_php_host" port="ls_php_port"
                       path="/ls_php_urlPrefix/storageServer/var/ls_alib_xmlRpcPrefix"/>
         </webStorage>
