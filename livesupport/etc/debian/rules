@@ -34,9 +34,9 @@ config.status: configure
 								   --prefix=/opt/livesupport \
 								   --with-www-docroot=/var/www \
 								   --with-apache-group=www-data \
-								   --with-station-audio-out=plughw:0 \
-								   --with-studio-audio-out=plughw:1 \
-								   --with-studio-audio-cue=plughw:2 \
+								   --with-station-audio-out=/dev/dsp \
+								   --with-studio-audio-out=/dev/dsp1 \
+								   --with-studio-audio-cue=/dev/dsp2 \
 								   --with-hostname=localhost
 
 build: build-arch
