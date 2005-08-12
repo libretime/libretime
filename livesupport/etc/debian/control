@@ -59,7 +59,7 @@ Description: A radio program automation and support tool.
 Package: livesupport-station
 Architecture: any
 Depends: ${shlibs:Depends},
-         livesupport-libs (${dpkg:Version}),
+         livesupport-libs (>= ${dpkg:Version}),
          sed,
          odbc-postgresql,
          apache | apache2,
@@ -77,7 +77,7 @@ Description: A radio program automation and support tool.
 Package: livesupport-studio
 Architecture: any
 Depends: ${shlibs:Depends},
-         livesupport-libs (${dpkg:Version}),
+         livesupport-station (>= ${dpkg:Version}),
          sed
 Description: A radio program automation and support tool.
  This package contains the GUI client components of LiveSupport.
