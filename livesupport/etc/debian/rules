@@ -106,6 +106,7 @@ install-arch:
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/alib \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/archiveServer \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/getid3 \
+          $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/index.php \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/htmlUI \
           $(CURDIR)/debian/livesupport/opt/livesupport/var/LiveSupport/storageServer \
               $(CURDIR)/debian/livesupport-station/opt/livesupport/var/LiveSupport
