@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -296,9 +296,12 @@ pg_config_file=pg_hba.conf
 pg_config_file_saved=pg_hba.conf.before-livesupport
 
 if [ -f $pg_config_dir/$pg_config_file ] ; then
-    mf -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
+    mv -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
 fi
 cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
+chown root:postgres $pg_config_dir/$pg_config_file
+
+/etc/init.d/postgresql restart
 
 
 #-------------------------------------------------------------------------------

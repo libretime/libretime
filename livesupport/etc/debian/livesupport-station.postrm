@@ -48,7 +48,15 @@ case "$1" in
         remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
             # remove the symlink to the livesupport web pages
             rm -f $apache_docroot/livesupport
-
+            
+            # restore the old pg_hba.conf file
+            if [ -f /etc/postgresql/pg_hba.conf ] \
+               && [ -f /etc/postgresql/pg_hba.conf.before-livesupport ] ; then
+                mv -f /etc/postgresql/pg_hba.conf \
+                      /etc/postgresql/pg_hba.conf.livesupport ;
+                mv -f /etc/postgresql/pg_hba.conf.before-livesupport \
+                      /etc/postgresql/pg_hba.conf ;
+            fi
         ;;
 
         purge|disappear)
@@ -76,7 +84,7 @@ case "$1" in
             echo "Removing ODBC data source and driver...";
             
             # kill active connections to LiveSuport database
-            invoke-rc.d postgresql restart
+            /etc/init.d/postgresql restart
 
             echo "Removing LiveSupport ODBC data source...";
             odbcinst -u -s -l -n $ls_database || exit 1;
@@ -109,8 +117,6 @@ case "$1" in
                 echo "DROP DATABASE \"$ls_database\";";
                 echo "DROP USER $ls_dbuser;";
             fi
-
-
         ;;
 
     *)
