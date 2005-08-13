@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.70 $
+    Version  : $Revision: 1.71 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -440,15 +440,14 @@ GLiveSupport :: login(const std::string & login,
         return false;
     }
 
+    Ptr<const Glib::ustring>::Ref   editedPlaylistToken;
+    Ptr<const std::string>::Ref     editedPlaylistTokenString;
     try {
-        Ptr<const Glib::ustring>::Ref   editedPlaylistToken;
         editedPlaylistToken = authentication->loadPreferencesItem(
                                                     sessionId,
                                                     editedPlaylistTokenKey);
-        Ptr<const std::string>::Ref     editedPlaylistTokenString(
-                                            new const std::string(
+        editedPlaylistTokenString.reset(new const std::string(
                                                 *editedPlaylistToken ));
-        storage->revertPlaylist(editedPlaylistTokenString);
     } catch (std::invalid_argument &e) {
         // no stuck playlist token found; that's OK
     } catch (XmlRpcException &e) {
@@ -457,6 +456,25 @@ GLiveSupport :: login(const std::string & login,
                   << " user preference item:"
                   << std::endl
                   << e.what();
+    }
+
+    if (editedPlaylistTokenString) {
+        try {
+            storage->revertPlaylist(editedPlaylistTokenString);
+        } catch (XmlRpcException &e) {
+            // sometimes this throws; we don't care
+        }
+
+        try {
+            authentication->deletePreferencesItem(sessionId,
+                                                    editedPlaylistTokenKey);
+        } catch (XmlRpcException &e) {
+            std::cerr << "Problem deleting "
+                      << editedPlaylistTokenKey
+                      << " user preference item at login:"
+                      << std::endl
+                      << e.what();
+        }
     }
 
     loadScratchpadContents();
@@ -714,7 +732,7 @@ GLiveSupport :: cancelEditedPlaylist(void)
             } catch (XmlRpcException &e) {
                 std::cerr << "Problem deleting "
                             << editedPlaylistTokenKey
-                            << " user preference item:"
+                            << " user preference item at cancel:"
                             << std::endl
                             << e.what();
             }
@@ -772,7 +790,7 @@ GLiveSupport :: savePlaylist(void)
             } catch (XmlRpcException &e) {
                 std::cerr << "Problem deleting "
                             << editedPlaylistTokenKey
-                            << " user preference item:"
+                            << " user preference item at save:"
                             << std::endl
                             << e.what();
             }
