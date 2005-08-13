@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.6 $
+#   Version  : $Revision: 1.7 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -33,8 +33,6 @@
 #
 #  To get usage help, try the -h option
 #
-#  TODO: Most of the command line options and variables are unnecessary;
-#  figure out which ones, and remove them.
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -43,10 +41,6 @@
 reldir=`dirname $0`/..
 basedir=`cd $reldir; pwd;`
 bindir=$basedir/bin
-etcdir=$basedir/etc
-docdir=$basedir/doc
-tmpdir=$basedir/tmp
-usrdir=$basedir/usr
 
 
 #-------------------------------------------------------------------------------
@@ -61,12 +55,7 @@ printUsage()
     echo "  -D, --database      The name of the LiveSupport database.";
     echo "                      [default: LiveSupport]";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
-    echo "                      [default: apache]";
-    echo "  -H, --host          The fully qualified host name of the system";
-    echo "                      [default: guess].";
-    echo "  -p, --port          The port of the apache web server [default: 80]"
-    echo "  -P, --scheduler-port    The port of the scheduler daemon to install"
-    echo "                          [default: 3344]";
+    echo "                      [default: www-data]";
     echo "  -r, --www-root      The root directory for web documents served";
     echo "                      by apache [default: /var/www]";
     echo "  -s, --dbserver      The name of the database server host.";
@@ -75,8 +64,6 @@ printUsage()
     echo "                      database. [default: livesupport]";
     echo "  -w, --dbpassword    The database user password.";
     echo "                      [default: livesupport]";
-    echo "  -o, --output-device The audio device of broadcast";
-    echo "                      [default: plughw:0,0]";
     echo "  -h, --help          Print this message and exit.";
     echo "";
 }
@@ -100,18 +87,9 @@ while true; do
         -g|--apache-group)
             apache_group=$2;
             shift; shift;;
-        -H|--host)
-            hostname=$2;
-            shift; shift;;
         -h|--help)
             printUsage;
             exit 0;;
-        -p|--port)
-            http_port=$2;
-            shift; shift;;
-        -P|--scheduler-port)
-            scheduler_port=$2;
-            shift; shift;;
         -r|--www-root)
             www_root=$2;
             shift; shift;;
@@ -123,9 +101,6 @@ while true; do
             shift; shift;;
         -w|--dbpassword)
             dbpassword=$2;
-            shift; shift;;
-        -o|--output-device)
-            output_alsa_device=$2;
             shift; shift;;
         --)
             shift;
@@ -141,18 +116,6 @@ if [ "x$installdir" == "x" ]; then
     echo "Required parameter install directory not specified.";
     printUsage;
     exit 1;
-fi
-
-if [ "x$hostname" == "x" ]; then
-    hostname=`hostname -f`;
-fi
-
-if [ "x$http_port" == "x" ]; then
-    http_port=80;
-fi
-
-if [ "x$scheduler_port" == "x" ]; then
-    scheduler_port=3344;
 fi
 
 if [ "x$dbserver" == "x" ]; then
@@ -172,15 +135,11 @@ if [ "x$dbpassword" == "x" ]; then
 fi
 
 if [ "x$apache_group" == "x" ]; then
-    apache_group=apache;
+    apache_group=www-data;
 fi
 
 if [ "x$www_root" == "x" ]; then
-    www_root=/var/www
-fi
-
-if [ "x$output_alsa_device" == "x" ]; then
-    output_alsa_device="plughw:0,0";
+    www_root=/var/www;
 fi
 
 echo "Making post-install steps for the LiveSupport scheduler.";
@@ -188,49 +147,29 @@ echo "";
 echo "Using the following installation parameters:";
 echo "";
 echo "  installation directory: $installdir";
-echo "  host name:              $hostname";
-echo "  web server port:        $http_port";
-echo "  scheduler port:         $scheduler_port";
 echo "  database server:        $dbserver";
 echo "  database:               $database";
 echo "  database user:          $dbuser";
 echo "  database user password: $dbpassword";
 echo "  apache daemon group:    $apache_group";
 echo "  apache document root:   $www_root";
-echo "  broadcast device:       $output_alsa_device";
 echo ""
 
 #-------------------------------------------------------------------------------
 #  The details of installation
 #-------------------------------------------------------------------------------
-ls_php_host=$hostname
-ls_php_port=$http_port
-ls_php_urlPrefix=livesupport
-
-ls_alib_xmlRpcPrefix="xmlrpc/xrLocStor.php"
-ls_storage_xmlRpcPrefix="xmlrpc/xrLocStor.php"
-
 ls_dbserver=$dbserver
 ls_dbuser=$dbuser
 ls_dbpassword=$dbpassword
 ls_database=$database
-
-ls_scheduler_host=$hostname
-ls_scheduler_port=$scheduler_port
-ls_scheduler_urlPrefix=
-ls_scheduler_xmlRpcPrefix=RC2
-ls_output_alsa_device=$output_alsa_device
-
 
 postgres_user=postgres
 
 install_bin=$installdir/bin
 install_etc=$installdir/etc
 install_lib=$installdir/lib
-install_tmp=$installdir/tmp
 install_usr=$installdir/usr
-install_var=$installdir/var
-install_varls=$install_var/LiveSupport
+install_var_ls=$install_var/LiveSupport
 
 
 #-------------------------------------------------------------------------------
@@ -299,7 +238,7 @@ if [ -f $pg_config_dir/$pg_config_file ] ; then
     mv -f $pg_config_dir/$pg_config_file $pg_config_dir/$pg_config_file_saved ;
 fi
 cp $install_etc/$pg_config_file $pg_config_dir/$pg_config_file
-chown root:postgres $pg_config_dir/$pg_config_file
+chown root:$postgres_user $pg_config_dir/$pg_config_file
 
 /etc/init.d/postgresql restart
 
@@ -327,7 +266,7 @@ else
     echo "remote database $ls_dbserver.";
     echo "Make sure to create database user $ls_dbuser with password";
     echo "$ls_dbpassword on database server at $ls_dbserver.";
-    echo "Also create a database called $ld_database, owned by this user.";
+    echo "Also create a database called $ls_database, owned by this user.";
     echo "";
     echo "The easiest way to achieve this is by issuing the following SQL";
     echo "commands to PostgreSQL:";
@@ -373,31 +312,31 @@ $install_usr/lib/pear/bin/install.sh -d $installdir || exit 1;
 #-------------------------------------------------------------------------------
 echo "Setting up directory permissions..."
 
-chgrp $apache_group $install_varls/archiveServer/var/stor
-chgrp $apache_group $install_varls/archiveServer/var/access
-chgrp $apache_group $install_varls/archiveServer/var/trans
-chgrp $apache_group $install_varls/archiveServer/var/stor/buffer
+chgrp $apache_group $install_var_ls/archiveServer/var/stor
+chgrp $apache_group $install_var_ls/archiveServer/var/access
+chgrp $apache_group $install_var_ls/archiveServer/var/trans
+chgrp $apache_group $install_var_ls/archiveServer/var/stor/buffer
 
-chmod g+sw $install_varls/archiveServer/var/stor
-chmod g+sw $install_varls/archiveServer/var/access
-chmod g+sw $install_varls/archiveServer/var/trans
-chmod g+sw $install_varls/archiveServer/var/stor/buffer
+chmod g+sw $install_var_ls/archiveServer/var/stor
+chmod g+sw $install_var_ls/archiveServer/var/access
+chmod g+sw $install_var_ls/archiveServer/var/trans
+chmod g+sw $install_var_ls/archiveServer/var/stor/buffer
 
-chgrp $apache_group $install_varls/storageServer/var/stor
-chgrp $apache_group $install_varls/storageServer/var/access
-chgrp $apache_group $install_varls/storageServer/var/trans
-chgrp $apache_group $install_varls/storageServer/var/stor/buffer
+chgrp $apache_group $install_var_ls/storageServer/var/stor
+chgrp $apache_group $install_var_ls/storageServer/var/access
+chgrp $apache_group $install_var_ls/storageServer/var/trans
+chgrp $apache_group $install_var_ls/storageServer/var/stor/buffer
 
-chmod g+sw $install_varls/storageServer/var/stor
-chmod g+sw $install_varls/storageServer/var/access
-chmod g+sw $install_varls/storageServer/var/trans
-chmod g+sw $install_varls/storageServer/var/stor/buffer
+chmod g+sw $install_var_ls/storageServer/var/stor
+chmod g+sw $install_var_ls/storageServer/var/access
+chmod g+sw $install_var_ls/storageServer/var/trans
+chmod g+sw $install_var_ls/storageServer/var/stor/buffer
 
-chgrp $apache_group $install_varls/htmlUI/var/templates_c
-chgrp $apache_group $install_varls/htmlUI/var/html/img
+chgrp $apache_group $install_var_ls/htmlUI/var/templates_c
+chgrp $apache_group $install_var_ls/htmlUI/var/html/img
 
-chmod g+sw $install_varls/htmlUI/var/templates_c
-chmod g+sw $install_varls/htmlUI/var/html/img
+chmod g+sw $install_var_ls/htmlUI/var/templates_c
+chmod g+sw $install_var_ls/htmlUI/var/html/img
 
 #-------------------------------------------------------------------------------
 #  Configuring Apache
@@ -454,7 +393,7 @@ echo "Creating symlinks...";
 
 # create symlink for the PHP pages in apache's document root
 rm -f $www_root/livesupport
-ln -s $install_varls $www_root/livesupport
+ln -s $install_var_ls $www_root/livesupport
 
 
 #-------------------------------------------------------------------------------
@@ -463,7 +402,7 @@ ln -s $install_varls $www_root/livesupport
 echo "Initializing database...";
 
 # create PHP-related database tables
-cd $install_varls/storageServer/var/install
+cd $install_var_ls/storageServer/var/install
 php -q install.php || exit 1;
 cd -
 
