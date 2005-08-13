@@ -46,6 +46,10 @@ check_exe() {
 
 case "$1" in
         remove|upgrade|failed-upgrade|abort-install|abort-upgrade)
+            # remove the init script
+            rm -f /etc/init.d/livesupport-station
+            update-rc.d livesupport-station remove
+            
             # remove the symlink to the livesupport web pages
             rm -f $apache_docroot/livesupport
             

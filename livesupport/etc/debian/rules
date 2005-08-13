@@ -98,6 +98,7 @@ install-arch:
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/scheduler.sh \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/postInstallStation.sh \
+	      $(CURDIR)/debian/livesupport/opt/livesupport/bin/livesupport-station \
 		      $(CURDIR)/debian/livesupport-station/opt/livesupport/bin
 	mv -f $(CURDIR)/debian/livesupport/opt/livesupport/etc/scheduler.xml* \
 	      $(CURDIR)/debian/livesupport/opt/livesupport/etc/odbc* \
@@ -156,7 +157,10 @@ binary-common:
 #	dh_installemacsen
 #	dh_installpam
 #	dh_installmime
-	dh_installinit --update-rcd-params="defaults 92"
+#       Replaced dh_installinit with manual init script installation
+#       because invoke.rc-d is linked to /bin/true in the knoppix hdd install.
+#       Should be changed back when/if knoppix is fixed.
+#	dh_installinit --update-rcd-params="defaults 92"
 #	dh_installcron
 #	dh_installinfo
 #	dh_installman

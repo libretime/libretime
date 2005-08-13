@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.18 $
+#   Version  : $Revision: 1.19 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -431,6 +431,7 @@ install: setup compile create_database install_modules install_products
 	${CP} ${ETC_DIR}/apache/*.conf ${USR_ETC_DIR}/apache
 	${MKDIR} ${USR_BIN_DIR}
 	${CP} ${BIN_DIR}/postInstallStation.sh ${USR_BIN_DIR}
+	${CP} ${BIN_DIR}/livesupport-station ${USR_BIN_DIR}
 	${CP} ${ETC_DIR}/pg_hba.conf ${USR_ETC_DIR}
 
 create_database:
