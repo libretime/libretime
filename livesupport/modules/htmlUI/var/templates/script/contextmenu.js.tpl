@@ -137,16 +137,20 @@
         if (ie5) {
            var clickX  = event.clientX;
            var clickY  = event.clientY + document.body.scrollTop;
+           var winX    = document.body.clientWidth;
            var winY    = document.body.clientHeight;
+           var scrollX = document.body.scrollLeft;
            var scrollY = document.body.scrollTop;
         } else {
            var clickX  = e.pageX;
            var clickY  = e.pageY;
+           var winX    = window.innerWidth;
            var winY    = window.innerHeight;
+           var scrollX = window.scrollX;
            var scrollY = window.scrollY;
         }
 
-        if (clickX < contextmenuWidth)                      var xPos = clickX;
+        if (clickX + contextmenuWidth < winX)               var xPos = clickX;
         else                                                var xPos = clickX - contextmenuWidth;
 
         if (clickY + contextmenuHeight > winY + scrollY)    var yPos = clickY - contextmenuHeight;

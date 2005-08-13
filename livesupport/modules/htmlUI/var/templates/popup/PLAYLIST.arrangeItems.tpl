@@ -33,7 +33,7 @@
                <table style="width: 500px;">
                    <!-- clip information -->
                    <tr><td style="border:0" colspan="5"></tr>
-                   <tr class="blue1">
+                   <tr class="blue1" style="cursor: move;">
                       <td>{$i.title}</td>
                       <td style="width: 50px;">{assign var="_duration" value=$i.duration}{niceTime in=$_duration}</td>
                       <td style="width: 150px">{$i.creator}</td>
