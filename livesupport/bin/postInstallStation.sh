@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.7 $
+#   Version  : $Revision: 1.8 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/postInstallStation.sh,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -169,7 +169,7 @@ install_bin=$installdir/bin
 install_etc=$installdir/etc
 install_lib=$installdir/lib
 install_usr=$installdir/usr
-install_var_ls=$install_var/LiveSupport
+install_var_ls=$installdir/var/LiveSupport
 
 
 #-------------------------------------------------------------------------------
