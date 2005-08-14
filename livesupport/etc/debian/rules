@@ -151,7 +151,7 @@ binary-common:
 #	dh_installchangelogs 
 #	dh_installdocs
 #	dh_installexamples
-#	dh_installmenu
+	dh_installmenu
 #	dh_installdebconf	
 #	dh_installlogrotate	
 #	dh_installemacsen
