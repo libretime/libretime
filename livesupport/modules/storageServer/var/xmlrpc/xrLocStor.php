@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.26 $
+    Version  : $Revision: 1.27 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xrLocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -133,14 +133,15 @@ $methods = array(
 $defs = array();
 foreach($methods as $method=>$description){
     $defs["locstor.$method"] = array(
-#            "function" => array(&$locStor, "xr_$method"),
-            "function" => "\$GLOBALS['locStor']->xr_$method",
+            "function" => array(&$locStor, "xr_$method"),
+#            "function" => "\$GLOBALS['locStor']->xr_$method",
             "signature" => array(
                 array($GLOBALS['XML_RPC_Struct'], $GLOBALS['XML_RPC_Struct'])
             ),
             "docstring" => $description
     );
 }
+
 $s=new XML_RPC_Server( $defs );
 
 ?>

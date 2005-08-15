@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.9 $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/pear/bin/install.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -62,7 +62,8 @@ XML_Serializer
 
 VERSION_Archive_Tar=Archive_Tar-1.3.1
 VERSION_Console_Getopt=Console_Getopt-1.2
-VERSION_XML_RPC=XML_RPC-1.3.0RC1
+#VERSION_XML_RPC=XML_RPC-1.3.0RC1
+VERSION_XML_RPC=XML_RPC-1.4.0
 VERSION_PEAR=PEAR-1.3.5
 VERSION_Calendar=Calendar-0.5.2
 VERSION_DB=DB-1.7.6
@@ -149,10 +150,10 @@ $pearcmd config-set test_dir $peardir/tests || exit 1
 check_pear_module() {
     test_result=`$pearcmd info $1`
     if [ $? = 0 ]; then
-        echo "OK"
+        #echo "OK"
         return 0;
     else
-        echo "NOT found ...";
+        #echo "NOT installed";
         return 1;
     fi
 }
@@ -166,15 +167,15 @@ cd $srcdir
 
 for pkg in $packages_required
 do echo -n " "
-    echo -n "$pkg "
+    echo -n "$pkg: "
     eval "pkgv=\$VERSION_$pkg"
-    echo -n "($pkgv) "
-    check_pear_module $pkg || \
-    {
-        echo -n "installing: $pkgv "
-        $pearcmd install $pkgv.tgz
-        check_pear_module $pkg || exit 1;
-    }
+    check_pear_module $pkg && (
+        $pearcmd upgrade $pkgv.tgz >/dev/null && echo -n "upgrading to $pkgv"
+        #|| echo -n "code: $?"
+    ) || (
+        $pearcmd install $pkgv.tgz >/dev/null && echo -n "installing $pkgv" || exit 1
+    )
+    check_pear_module $pkg && echo " OK" || exit 1
 done
 
 #-------------------------------------------------------------------------------
