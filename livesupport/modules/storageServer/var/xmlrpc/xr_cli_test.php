@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/xr_cli_test.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -192,7 +192,7 @@ default:
         $parr = $pars[0];
         #echo "pinfo not null and not array.\n"; exit;
     }elseif(count($pinfo) == 0){
-        $parr = array();
+        $parr = (object)array();
     }else{
         $parr = array(); $i=0;
         foreach($pinfo as $it){
