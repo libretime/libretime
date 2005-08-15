@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.57 $
+    Version  : $Revision: 1.58 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.57 $
+ *  @version $Revision: 1.58 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -1286,7 +1286,10 @@ class BasicStor extends Alib{
             $tr->resetData();
         }
         $rootHD = $this->getObjId('root', $this->storId);
-        include dirname(__FILE__)."/tests/sampleData.php";
+        $samples = dirname(__FILE__)."/tests/sampleData.php";
+        if(file_exists($samples)){
+            include $samples;
+        }else $sampleData = array();
         $res = array(
             'audioclips'=>array(), 'playlists'=>array(), 'webstreams'=>array()
         );
