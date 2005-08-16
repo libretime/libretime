@@ -21,8 +21,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: tomas $
-#   Version  : $Revision: 1.9 $
+#   Author   : $Author: fgerlits $
+#   Version  : $Revision: 1.10 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ homedir=$HOME
 configdir=$homedir/.livesupport
 htmldir=$homedir/public_html
 output_device=plughw:0,0
-
+cue_device=plughw:0,0
 
 
 echo "Configuring LiveSupport development environment for user $user.";
@@ -167,8 +167,8 @@ ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
 
-ls_output_alsa_device=$output_device
-
+ls_audio_output_device=$output_device
+ls_audio_cue_device=$cue_device
 
 # replace / characters with a \/ sequence, for sed below
 # the sed statement is really "s/\//\\\\\//g", but needs escaping because of
@@ -199,7 +199,8 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_scheduler_xmlRpcPrefix/$ls_scheduler_xmlRpcPrefix_s/; \
               s/ls_scheduler_host/$ls_scheduler_host/; \
               s/ls_scheduler_port/$ls_scheduler_port/; \
-              s/ls_output_alsa_device/$ls_output_alsa_device/;"
+              s/ls_audio_output_device/$ls_audio_output_device/; \
+              s/ls_audio_cue_device/$ls_audio_cue_device/;"
 
 
 

@@ -133,13 +133,13 @@
 
     <outputPlayer>
         <audioPlayer>
-            <gstreamerPlayer audioDevice = "plughw:0,0" />
+            <gstreamerPlayer audioDevice = "ls_audio_output_device" />
         </audioPlayer>
     </outputPlayer>
 
     <cuePlayer>
         <audioPlayer>
-            <gstreamerPlayer audioDevice = "plughw:0,0" />
+            <gstreamerPlayer audioDevice = "ls_audio_cue_device" />
         </audioPlayer>
     </cuePlayer>
 
