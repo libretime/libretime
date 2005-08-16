@@ -20,7 +20,7 @@
 #
 #
 #   Author   : $Author: tomas $
-#   Version  : $Revision: 1.5 $
+#   Version  : $Revision: 1.6 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -175,18 +175,12 @@ copy_files:
 	${MKDIR} ${DEST_DIR}/stor/buffer
 	${MKDIR} ${DEST_DIR}/trans
 	${MKDIR} ${DEST_DIR}/xmlrpc
-	${MKDIR} ${DEST_DIR}/xmlrpc/XML
-	${MKDIR} ${DEST_DIR}/xmlrpc/XML/RPC
 	${CP} ${VAR_DIR}/*.{php,xml} ${DEST_DIR}
 	${CP} ${VAR_DIR}/cron/*.php ${DEST_DIR}/cron
 	${CP} ${VAR_DIR}/install/*.php \
 	      ${DEST_DIR}/install
 	${CP} ${VAR_DIR}/xmlrpc/*.php \
 	      ${DEST_DIR}/xmlrpc
-	${CP} ${VAR_DIR}/xmlrpc/XML/*.php \
-	      ${DEST_DIR}/xmlrpc/XML
-	${CP} ${VAR_DIR}/xmlrpc/XML/RPC/*.php \
-	      ${DEST_DIR}/xmlrpc/XML/RPC
 	${CAT} ${VAR_DIR}/conf.php.template | ${SED} -e ${REPLACE_SED_STRING} \
 	       > ${DEST_DIR}/conf.php
 
