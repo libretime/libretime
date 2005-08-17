@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -664,17 +664,36 @@ SimplePlaylistManagementWindow :: swapPlaylistElements(
     firstElement->setRelativeOffset(secondStart);
     secondElement->setRelativeOffset(firstStart);
 
-    // move fades around if they seem to be simple crossfades    
-    Ptr<time_duration>::Ref     beginFade = firstElement->getFadeInfo()
-                                                        ->getFadeIn();
-    Ptr<time_duration>::Ref     midFade1  = firstElement->getFadeInfo()
-                                                        ->getFadeOut();
-    Ptr<time_duration>::Ref     midFade2  = secondElement->getFadeInfo()
-                                                         ->getFadeIn();
-    Ptr<time_duration>::Ref     endFade   = secondElement->getFadeInfo()
-                                                         ->getFadeOut();
+    // read the fade infos
+    bool hasFadeInfo = false;
+    Ptr<FadeInfo>::Ref          firstFadeInfo  = firstElement->getFadeInfo();
+    Ptr<FadeInfo>::Ref          secondFadeInfo = secondElement->getFadeInfo();
+    Ptr<time_duration>::Ref     beginFade,
+                                midFade1,
+                                midFade2,
+                                endFade;
 
-    if (*midFade1 == *midFade2) {
+    if (firstFadeInfo) {
+        hasFadeInfo = true;
+        beginFade = firstFadeInfo->getFadeIn();
+        midFade1  = firstFadeInfo->getFadeOut();
+    } else {
+        beginFade.reset(new time_duration(0,0,0,0));
+        midFade1 .reset(new time_duration(0,0,0,0));
+    }
+    
+    if (secondFadeInfo) {
+        hasFadeInfo = true;
+        midFade2  = secondFadeInfo->getFadeIn();
+        endFade   = secondFadeInfo->getFadeOut();
+    } else if (hasFadeInfo) {
+        midFade2.reset(new time_duration(0,0,0,0));
+        endFade .reset(new time_duration(0,0,0,0));
+    }    
+
+    // move fades around if they seem to be simple crossfades
+    // otherwise, just leave them as they are
+    if (hasFadeInfo && *midFade1 == *midFade2) {
         Ptr<FadeInfo>::Ref  firstFadeInfo (new FadeInfo(beginFade, midFade1));
         Ptr<FadeInfo>::Ref  secondFadeInfo(new FadeInfo(midFade1,  endFade ));
 
