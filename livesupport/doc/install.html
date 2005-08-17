@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <title>LiveSupport installation documentation</title>
-  <meta content="$Author: fgerlits $" name="author">
+  <meta content="$Author: sebastian $" name="author">
 </head>
 <body>
 <h1>Preface</h1>
@@ -12,8 +12,8 @@ project, Copyright © 2004 <a href="http://www.mdlf.org/">Media
 Development Loan Fund</a>, under the GNU <a
  href="http://www.gnu.org/licenses/gpl.html">GPL</a>.<br>
 <ul>
-  <li>Author: $Author: fgerlits $</li>
-  <li>Version: $Revision: 1.15 $</li>
+  <li>Author: $Author: sebastian $</li>
+  <li>Version: $Revision: 1.16 $</li>
   <li>Location: $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/doc/install.html,v $</li>
 </ul>
 <h1>Scope</h1>
@@ -154,6 +154,10 @@ XMLv2 module for PHP<br>
   <li><a href="http://www.postgresql.org/">PostgreSQL</a> support in PHP</li>
   <li><a href="http://pear.php.net/">PEAR</a></li>
 </ul>
+
+Check php.ini file if "upload_max_filesize" fits the needs of an radio-station. On our experience, soundfiles can be up to 100MB.
+If you changed this setting, increase "post_max_size" to something bigger than "upload_max_filesize".
+<br><br>
 Please note the user group your apache daemon is running as (usually <code>apache</code>
 or <code>www-data</code>), you will need this information later. Later
 on in this document, this group will be referred to as <code>&lt;apache-group&gt;</code>.
@@ -161,6 +165,19 @@ Also note the document root directory for your apache installation
 (usually <code>/var/www</code> or <code>/var/www/htdocs</code>
 or <code>/var/www/&lt;yourhost&gt;/htdocs</code>). Later on in this
 document, this directory will be referred to as <code>&lt;www-root&gt;</code>.<br>
+
+<h2>Alsa</h2>
+Please check if alsa is installed and configured properly.
+<br><code>cat /proc/asound/cards</code><br> should show entry for your soundcard.
+<br>
+If not, maybee you do not have suitable alsa module for your soundcard on the system. Try to
+<br><code>apt-get install alsa-modules-2.4.27-2-386</code><br>
+or one other from <a href="http://packages.debian.org/cgi-bin/search_packages.pl?version=stable&subword=1&exact=&arch=any&releases=all&case=insensitive&keywords=alsa-modules&searchon=names" target="_blank">http://packages.debian.org/cgi-bin/search_packages.pl...</a>.
+<br>
+Then run <br><code>alsaconf</code><br> and check
+<br><code>cat /proc/asound/cards</code><br> again.
+
+
 <h1>Obtaining LiveSupport sources</h1>
 LiveSupport sources come in two different tarballs:<br>
 <ul>
@@ -188,7 +205,7 @@ the following commands:<br>
 <br>
 <pre><code>cd livesupport-&lt;version&gt;<br>./configure </code><code>--prefix=/usr/local/livesupport --with-apache-group=apache --with-www-docroot=/var/www<br></code><code>make<br></code></pre>
 <br>
-Note that you need to have write permissions in the <code>prefix</code> directory 
+Note that you need to have write permissions in the <code>prefix</code> directory
 when you run <code>make</code>.
 The configure options used above are the options most probably used:<br>
 <br>
@@ -227,8 +244,8 @@ LiveSupport by typing:<br>
 <pre><code>make install</code><br></pre>
 <br>
 This will install LiveSupport into the directory specified to the
-configure script. It will also create necessary database tables, 
-depending on the invocation of the configure script. You need to run 
+configure script. It will also create necessary database tables,
+depending on the invocation of the configure script. You need to run
 <code>make install</code> as root.<br>
 <br>
 <h1>Try it out</h1>
