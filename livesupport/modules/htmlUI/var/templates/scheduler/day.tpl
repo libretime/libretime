@@ -21,7 +21,8 @@
 
         <tr class="blue_head">
 
-            {*  Multi-action checkboxen, die brauchen wir aber höchstens bei den Einträgen um mehere auf einmal zu löschen ?
+            {*
+            Multi-action checkboxen, die brauchen wir aber höchstens bei den Einträgen um mehere auf einmal zu löschen ?
             <td style="width: 30px"><input type="checkbox" name="all" onClick="collector_switchAll('SCHEDULER')"></td>
             *}
 
@@ -70,4 +71,3 @@
 
 </div>
 </div>
-

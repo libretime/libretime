@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: sebastian $
-#   Version  : $Revision: 1.1 $
+#   Version  : $Revision: 1.2 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/htmlUI/bin/configurePHP.php,v $
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -51,9 +51,10 @@ if (PEAR::isError($root)) {
 	echo "Read php settings from $path\n";
 }
 
-$php  = &$root->getItem(NULL, 'PHP');
+
+$php  = &$root->getItem('section', 'PHP');
 if (!is_object($php)) {
-	die("$path seems not containing valid PHP section\n");
+	die("$path seems not to be valid PHP ini file\n");
 }
 if (PEAR::isError($php)) {
    die($php->getMessage());
@@ -79,6 +80,9 @@ if (copy($path, $path.'.bak')) {
 } else {
    die ("Could not create backup of $path\n");
 }
+
+die("Changing php.ini temporarly disabled");
+
 
 $status = $conf->writeConfig();
 if (PEAR::isError($status)) {
