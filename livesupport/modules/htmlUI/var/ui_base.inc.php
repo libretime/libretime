@@ -115,7 +115,7 @@ class uiBase
 
     function uiBase(&$config)
     {
-        $this->dbc = DB::connect("pgsql://test:test@127.0.0.1/LiveSupport-test");
+        $this->dbc = DB::connect($config['dsn'], TRUE);
         if (DB::isError($this->dbc)) {
             die($this->dbc->getMessage());
         }
