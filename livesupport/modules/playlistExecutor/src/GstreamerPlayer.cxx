@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -267,7 +267,20 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     gst_element_set_state(pipe, GST_STATE_PLAYING);
 
     position = 0LL;
-    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
+//    while (position == 0LL && gst_bin_iterate(GST_BIN(pipe))) {
+    while (position == 0LL) {
+        bool ok;
+        try {
+//            std::cerr << "before\n";
+            ok = gst_bin_iterate(GST_BIN(pipe));
+//            std::cerr << "after: " << ok << "\n";
+        } catch (...) {
+            std::cerr << "exception thrown by gst_bin_iterate()\n";
+            std::exit(1);
+        }
+        if (!ok) {
+            break;
+        }
         GstFormat   format = GST_FORMAT_DEFAULT;
         gst_element_query(fakesink, GST_QUERY_POSITION, &format, &position);
     }
