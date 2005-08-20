@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.10 $
+#   Version  : $Revision: 1.11 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/bin/user_setup.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ usrdir=`cd $basedir/usr; pwd;`
 #-------------------------------------------------------------------------------
 printUsage()
 {
-    echo "LiveSupport install script.";
+    echo "LiveSupport local user settings setup script.";
     echo "parameters";
     echo "";
     echo "  -g, --apache-group  The group the apache daemon runs as.";
@@ -166,6 +166,7 @@ ls_scheduler_host=$hostname
 ls_scheduler_port=$scheduler_port
 ls_scheduler_urlPrefix=
 ls_scheduler_xmlRpcPrefix=RC2
+ls_tmp_dir=$tmpdir
 
 ls_audio_output_device=$output_device
 ls_audio_cue_device=$cue_device
@@ -182,6 +183,7 @@ ls_scheduler_urlPrefix_s=`echo $ls_scheduler_urlPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
 ls_scheduler_xmlRpcPrefix_s=`echo $ls_scheduler_xmlRpcPrefix | \
                                 sed -e "s/\//\\\\\\\\\//g"`
+ls_tmp_dir_s=`echo $ls_tmp_dir | sed -e "s/\//\\\\\\\\\//g"`
 
 replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_dbuser/$ls_dbuser/; \
@@ -200,8 +202,11 @@ replace_sed_string="s/ls_install_dir/$installdir_s/; \
               s/ls_scheduler_host/$ls_scheduler_host/; \
               s/ls_scheduler_port/$ls_scheduler_port/; \
               s/ls_audio_output_device/$ls_audio_output_device/; \
-              s/ls_audio_cue_device/$ls_audio_cue_device/;"
-
+              s/ls_audio_cue_device/$ls_audio_cue_device/; \
+              s/ls_tmp_dir/$ls_tmp_dir_s/;"
+echo
+echo $replace_sed_string
+echo
 
 
 #-------------------------------------------------------------------------------
