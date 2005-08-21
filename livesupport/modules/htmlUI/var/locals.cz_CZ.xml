@@ -187,10 +187,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value />
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value />
 	</item>
@@ -491,10 +487,6 @@
 		<value>Přístup</value>
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
-		<value>Aktivovat tento playlist</value>
-	</item>
-	<item>
 		<key>Add Audio</key>
 		<value>Přidat audio</value>
 	</item>
@@ -513,10 +505,6 @@
 	<item>
 		<key>Add to ScratchPad</key>
 		<value>Přidat na pracovní plochu</value>
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
-		<value>Přidat do aktivního playlistu</value>
 	</item>
 	<item>
 		<key>Album</key>
@@ -651,10 +639,6 @@
 		<value>Editovat</value>
 	</item>
 	<item>
-		<key>Edit Metadata</key>
-		<value>Editovat metadata</value>
-	</item>
-	<item>
 		<key>Edit Playlist</key>
 		<value />
 	</item>
@@ -761,10 +745,6 @@
 	<item>
 		<key>List Folder</key>
 		<value>Zobrazit složku</value>
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value>Poslouchat soubor</value>
 	</item>
 	<item>
 		<key>Local Time</key>
@@ -923,7 +903,7 @@
 		<value>Analyzovat soubor</value>
 	</item>
 	<item>
-		<key>Remove File from Playlist</key>
+		<key>Remove from Playlist</key>
 		<value>Odstranit soubor z playlistu</value>
 	</item>
 	<item>

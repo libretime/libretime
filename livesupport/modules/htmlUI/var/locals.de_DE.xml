@@ -187,10 +187,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value />
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value />
 	</item>
@@ -491,10 +487,6 @@
 		<value>Zugriff</value>
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
-		<value>Aktive Liste</value>
-	</item>
-	<item>
 		<key>Add Audio</key>
 		<value>Medien hinzufügen</value>
 	</item>
@@ -513,10 +505,6 @@
 	<item>
 		<key>Add to ScratchPad</key>
 		<value>In den Notizblock eintragen</value>
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
-		<value>Zur aktiven Liste hinzufügen</value>
 	</item>
 	<item>
 		<key>Album</key>
@@ -651,10 +639,6 @@
 		<value>Bearbeiten</value>
 	</item>
 	<item>
-		<key>Edit Metadata</key>
-		<value>Metadaten bearbeiten</value>
-	</item>
-	<item>
 		<key>Edit Playlist</key>
 		<value />
 	</item>
@@ -761,10 +745,6 @@
 	<item>
 		<key>List Folder</key>
 		<value>Ordner anzeigen</value>
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value>Anhören</value>
 	</item>
 	<item>
 		<key>Local Time</key>
@@ -923,7 +903,7 @@
 		<value />
 	</item>
 	<item>
-		<key>Remove File from Playlist</key>
+		<key>Remove from Playlist</key>
 		<value />
 	</item>
 	<item>

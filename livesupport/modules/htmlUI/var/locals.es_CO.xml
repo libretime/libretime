@@ -187,10 +187,6 @@
 		<value>Cambiar clave de acceso</value>
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value>Cerrar Lista de Reproducción</value>
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value>Miembros actuales</value>
 	</item>
@@ -491,10 +487,6 @@
 		<value>Ya hay una lista de reproducción activa. Primero debe cerrarla.</value>
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
-		<value>Acceso</value>
-	</item>
-	<item>
 		<key>Add Audio</key>
 		<value>Activar esta lista de reproducción</value>
 	</item>
@@ -513,10 +505,6 @@
 	<item>
 		<key>Add to ScratchPad</key>
 		<value>Añadir archivo(s) a la lista de reproducción activa</value>
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
-		<value>Añadir al ScratchPad</value>
 	</item>
 	<item>
 		<key>Album</key>
@@ -651,10 +639,6 @@
 		<value>Duración</value>
 	</item>
 	<item>
-		<key>Edit Playlist</key>
-		<value>Editar archivo</value>
-	</item>
-	<item>
 		<key>Edit Metadata</key>
 		<value>Editar lista de reproducción</value>
 	</item>
@@ -761,10 +745,6 @@
 	<item>
 		<key>List Folder</key>
 		<value>Búsqueda en audioteca</value>
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value>Listar carpetas</value>
 	</item>
 	<item>
 		<key>Local Time</key>

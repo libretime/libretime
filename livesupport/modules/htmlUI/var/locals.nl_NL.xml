@@ -187,10 +187,6 @@
 		<value>Wijzig wachtwoord</value>
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value>Sluit Playlist</value>
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value>Huidige leden</value>
 	</item>
@@ -491,10 +487,6 @@
 		<value>Toegang</value>
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
-		<value>Deze Playlist activeren</value>
-	</item>
-	<item>
 		<key>Add Audio</key>
 		<value>Audio toevoegen</value>
 	</item>
@@ -513,10 +505,6 @@
 	<item>
 		<key>Add to ScratchPad</key>
 		<value>Aan ScratchPad toevoegen</value>
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
-		<value>Aan open Playlist toevoegen</value>
 	</item>
 	<item>
 		<key>Album</key>
@@ -651,10 +639,6 @@
 		<value>Bestand aanpassen</value>
 	</item>
 	<item>
-		<key>Edit Playlist</key>
-		<value>Playlist bewerken</value>
-	</item>
-	<item>
 		<key>Edit Metadata</key>
 		<value>Meta-gegevens aanpassen</value>
 	</item>
@@ -761,10 +745,6 @@
 	<item>
 		<key>List Folder</key>
 		<value>Laat Map zien</value>
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value>Naar bestand luisteren</value>
 	</item>
 	<item>
 		<key>Local Time</key>

@@ -187,10 +187,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value />
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value />
 	</item>
@@ -491,10 +487,6 @@
 		<value>You have already an open Playlist, first close it.</value>
 	</item>
 	<item>
-		<key>Access</key>
-		<value>Access</value>
-	</item>
-	<item>
 		<key>Activate this Playlist</key>
 		<value>Activate this Playlist</value>
 	</item>
@@ -513,10 +505,6 @@
 	<item>
 		<key>Add file(s) to active Playlist</key>
 		<value>Add files to open Playlist</value>
-	</item>
-	<item>
-		<key>Add to ScratchPad</key>
-		<value>Add to ScratchPad</value>
 	</item>
 	<item>
 		<key>Add to active Playlist</key>
@@ -651,10 +639,6 @@
 		<value>Duration</value>
 	</item>
 	<item>
-		<key>Edit File</key>
-		<value>Edit file</value>
-	</item>
-	<item>
 		<key>Edit Playlist</key>
 		<value>Edit playlist</value>
 	</item>
@@ -761,10 +745,6 @@
 	<item>
 		<key>Library Search</key>
 		<value>Library search</value>
-	</item>
-	<item>
-		<key>List Folder</key>
-		<value>List folder</value>
 	</item>
 	<item>
 		<key>Listen to File</key>
@@ -927,8 +907,8 @@
 		<value>RawAnalyze</value>
 	</item>
 	<item>
-		<key>Remove File from Playlist</key>
-		<value>Remove file from playlist</value>
+		<key>Remove from Playlist</key>
+		<value>Remove from playlist</value>
 	</item>
 	<item>
 		<key>Remove Playlist</key>

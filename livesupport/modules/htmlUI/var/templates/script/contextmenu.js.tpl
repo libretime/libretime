@@ -27,23 +27,23 @@
             switch (contextmenu.arguments[i]) {
                 {/literal}
                 case "PL.release":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)\" "+oF+">&nbsp;##Close Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=PL.confirmRelease', 'PL.confirmRelease', 400, 50)\" "+oF+">&nbsp;##Close##&nbsp;</a></li>";
                 break;
 
                 case "PL.addItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to active Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.addItem&id="+param+"')\" "+oF+">&nbsp;##Add to playlist##&nbsp;</a></li>";
                 break;
 
                 case "PL.removeItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;##Remove File from Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.removeItem&id="+param+"')\" "+oF+">&nbsp;##Remove from playlist##&nbsp;</a></li>";
                 break;
 
                 case "PL.activate":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;##Edit Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.activate&id="+param+"')\" "+oF+">&nbsp;##Edit##&nbsp;</a></li>";
                 break;
 
                 case "PL.create":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##New Playlist including &quot;##"+contextmenu.arguments[++i]+"&quot;&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=PL.create&id="+param+"')\" "+oF+">&nbsp;##Use to create playlist##&nbsp;</a></li>";
                 break;
 
                 case "PL.changeFadeIn":
@@ -67,17 +67,17 @@
                 break;
 
                 case "listen":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[++i]+"' "+oF+">&nbsp;##Listen to ## "+contextmenu.arguments[++i]+"&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$CONFIG.accessRawAudioUrl}?sessid={$START.sessid}&id="+contextmenu.arguments[++i]+"' "+oF+">&nbsp;##Listen##&nbsp;</a></li>";
                 break;
 
                 case "edit":
                     i++;
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"' "+oF+">&nbsp;##Edit## "+contextmenu.arguments[i]+"&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href='{$UI_BROWSER}?act=editItem&id="+param+"' "+oF+">&nbsp;##Edit##&nbsp;</a></li>";
                 break;
 
                 case "delete":
                     i++;
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 50)\" "+oF+">&nbsp;##Delete## "+contextmenu.arguments[i]+"&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=deleteItem&id="+param+"', 'deleteItem', 400, 50)\" "+oF+">&nbsp;##Delete##&nbsp;</a></li>";
                 break;
 
                 case "fileList":
@@ -85,11 +85,11 @@
                 break;
 
                 case "SCHEDULER.addItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert Playlist here##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&"+param+"'); popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem', 'Schedule', 420, 200)\" "+oF+">&nbsp;##Insert playlist here##&nbsp;</a></li>";
                 break;
 
                 case "SCHEDULER.removeItem":
-                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 50)\" "+oF+">&nbsp;##Remove Playlist##&nbsp;</a></li>";
+                    contextmenuHtml = contextmenuHtml + "<li><a class='contextmenu' href=\"javascript: popup('{$UI_BROWSER}?popup[]=SCHEDULER.removeItem&"+param+"', 'Schedule', 400, 50)\" "+oF+">&nbsp;##Remove playlist##&nbsp;</a></li>";
                 break;
 
                 case "SCHEDULER.addPL":
@@ -97,7 +97,7 @@
                                                                                                       "hpopup('{$UI_HANDLER}?act=SCHEDULER.setScheduleAtTime&today=1&hour=0&minute=0');"+
                                                                                                       "location.href='ui_browser.php?act=SCHEDULER';"+
                                                                                                       "popup('{$UI_BROWSER}?popup[]=SCHEDULER.addItem&playlistId="+param+"', 'Schedule', 420, 200)\" "+oF+
-                                                                                                      ">&nbsp;##Schedule Playlist##&nbsp;</a></li>";
+                                                                                                      ">&nbsp;##Schedule##&nbsp;</a></li>";
                 break;
 
                 case "SUBJECTS.chgPasswd":

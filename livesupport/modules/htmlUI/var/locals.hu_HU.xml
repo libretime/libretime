@@ -187,10 +187,6 @@
 		<value>Jelszóváltoztatás</value>
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value>Műsor bezárása</value>
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value>Jelenlegi tagok</value>
 	</item>
@@ -491,10 +487,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
-		<value />
-	</item>
-	<item>
 		<key>Add Audio</key>
 		<value />
 	</item>
@@ -512,10 +504,6 @@
 	</item>
 	<item>
 		<key>Add to ScratchPad</key>
-		<value />
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
 		<value />
 	</item>
 	<item>
@@ -651,10 +639,6 @@
 		<value />
 	</item>
 	<item>
-		<key>Edit Playlist</key>
-		<value />
-	</item>
-	<item>
 		<key>Edit Metadata</key>
 		<value />
 	</item>
@@ -760,10 +744,6 @@
 	</item>
 	<item>
 		<key>List Folder</key>
-		<value />
-	</item>
-	<item>
-		<key>Listen to File</key>
 		<value />
 	</item>
 	<item>

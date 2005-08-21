@@ -186,10 +186,6 @@
 		<value>Promeni lozinku</value>
 	</item>
 	<item>
-		<key>Close Playlist</key>
-		<value>Zatvori Plej  listu</value>
-	</item>
-	<item>
 		<key>Current Members</key>
 		<value>Trenutni Članovi</value>
 	</item>
@@ -490,10 +486,6 @@
 		<value>Pristup</value>
 	</item>
 	<item>
-		<key>Activate this Playlist</key>
-		<value>Aktiviraj plej listu</value>
-	</item>
-	<item>
 		<key>Add Audio</key>
 		<value>Dodaj audio</value>
 	</item>
@@ -512,10 +504,6 @@
 	<item>
 		<key>Add to ScratchPad</key>
 		<value>Dodaj u Pripremu</value>
-	</item>
-	<item>
-		<key>Add to active Playlist</key>
-		<value>Dodaj na aktivnu plej listu</value>
 	</item>
 	<item>
 		<key>Album</key>
@@ -650,10 +638,6 @@
 		<value>Obradi fajl</value>
 	</item>
 	<item>
-		<key>Edit Playlist</key>
-		<value>Obradi plej listu</value>
-	</item>
-	<item>
 		<key>Edit Metadata</key>
 		<value>Promeni metadatu</value>
 	</item>
@@ -760,10 +744,6 @@
 	<item>
 		<key>List Folder</key>
 		<value>Izlistaj folder</value>
-	</item>
-	<item>
-		<key>Listen to File</key>
-		<value>Preslušaj fajl</value>
 	</item>
 	<item>
 		<key>Local Time</key>
