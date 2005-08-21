@@ -1,6 +1,7 @@
 {$SCHEDULER->buildDay()}
-{assign var="_scale"  value=$SCHEDULER->getDayTimingScale()}
-{assign var="_entrys" value=$SCHEDULER->getDayEntrys()}
+{assign var="_scale"  value=$SCHEDULER->getDayTimingScale()}   {* get the 24h scale *}
+{assign var="_entrys" value=$SCHEDULER->getDayEntrys()}        {* get all entrys on given day from scheduler *}
+{assign var="_day"    value=$SCHEDULER->curr}  				{* to have year, month, day in between_additem.tpl *}
 
 <div class="content">
 <div class="container_elements">
