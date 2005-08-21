@@ -20,8 +20,8 @@ dnl along with LiveSupport; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
-dnl Author   : $Author: fgerlits $
-dnl Version  : $Revision: 1.8 $
+dnl Author   : $Author: maroy $
+dnl Version  : $Revision: 1.9 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(LiveSupport, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.8 $)
+AC_REVISION($Revision: 1.9 $)
 
 AC_CONFIG_SRCDIR(../products/scheduler/src/main.cxx)
 
@@ -268,72 +268,152 @@ dnl directories have to be literally included, so we can't use any
 dnl fancy variables to avoid duplication of hard-coded values :(
 
 
+dnl-----------------------------------------------------------------------------
+dnl  specify if boost library should be looked for on the system
+dnl-----------------------------------------------------------------------------
+
+AC_ARG_WITH([check-boost],
+            AC_HELP_STRING([--with-check-boost],
+               [check for the availability of the boost library on the
+                system, and use it if available (yes)]),
+            [CHECK_BOOST_LIB=${withval}], [CHECK_BOOST_LIB=yes])
+
+AC_MSG_RESULT([checking for boost library on system: ${CHECK_BOOST_LIB}])
+
+dnl-----------------------------------------------------------------------------
+dnl  specify if gtk+ library should be looked for on the system
+dnl-----------------------------------------------------------------------------
+AC_ARG_WITH([check-gtk],
+            AC_HELP_STRING([--with-check-gtk],
+               [check for the availability of the gtk+ library on the
+                system, and use it if available (yes)]),
+            [CHECK_GTK_LIB=${withval}], [CHECK_GTK_LIB=yes])
+
+AC_MSG_RESULT([checking for gtk+ library on system: ${CHECK_GTK_LIB}])
+
+
+dnl-----------------------------------------------------------------------------
+dnl  specify if gtk-- library should be looked for on the system
+dnl-----------------------------------------------------------------------------
+AC_ARG_WITH([check-gtkmm],
+            AC_HELP_STRING([--with-check-gtkmm],
+               [check for the availability of the gtk-- library on the
+                system, and use it if available (yes)]),
+            [CHECK_GTKMM_LIB=${withval}], [CHECK_GTKMM_LIB=yes])
+
+AC_MSG_RESULT([checking for gtk-- library on system: ${CHECK_GTKMM_LIB}])
+
+
+dnl-----------------------------------------------------------------------------
+dnl  specify if icu library should be looked for on the system
+dnl-----------------------------------------------------------------------------
+AC_ARG_WITH([check-icu],
+            AC_HELP_STRING([--with-check-icu],
+               [check for the availability of the icu library on the
+                system, and use it if available (yes)]),
+            [CHECK_ICU_LIB=${withval}], [CHECK_ICU_LIB=yes])
+
+AC_MSG_RESULT([checking for icu library on system: ${CHECK_ICU_LIB}])
+
+
+dnl-----------------------------------------------------------------------------
+dnl  specify if libxml++ library should be looked for on the system
+dnl-----------------------------------------------------------------------------
+AC_ARG_WITH([check-libxmlpp],
+            AC_HELP_STRING([--with-check-libxmlpp],
+               [check for the availability of the xml++ library on the
+                system, and use it if available (yes)]),
+            [CHECK_XMLPP_LIB=${withval}], [CHECK_XMLPP_LIB=yes])
+
+AC_MSG_RESULT([checking for xml++ library on system: ${CHECK_XMLPP_LIB}])
+
+
 dnl check for the boost library
 AX_BOOST_DATE_TIME()
 
-if test "$BOOST_DATE_TIME_LIB" = "" ; then
-    AC_MSG_RESULT([not found boost library of sufficient version, will compile from our own])
-    COMPILE_BOOST="yes"
-else
-dnl    COMPILE_BOOST="no"
+if test "$CHECK_BOOST_LIB" = "yes" ; then
+    if test "$BOOST_DATE_TIME_LIB" = "" ; then
+        AC_MSG_RESULT([not found boost library of sufficient version, will compile from our own])
+        COMPILE_BOOST="yes"
+    else
+dnl     COMPILE_BOOST="no"
 dnl force compilation of boost, as recognizing a pre-existing version
 dnl does not seem to work -- fgerlits, 2005-08-08
-    AC_MSG_RESULT([found boost library, but recompiling anyway])
-    BOOST_DATE_TIME_LIB=""
+        AC_MSG_RESULT([found boost library, but recompiling anyway])
+        BOOST_DATE_TIME_LIB=""
+        COMPILE_BOOST="yes"
+    fi
+else
     COMPILE_BOOST="yes"
 fi
 
 
-dnl check for gtk+ 2.6.1 or more recent
-PKG_CHECK_MODULES(GTK,[gtk+-2.0 >= 2.6.1],
-[
-    AC_MSG_RESULT([using gtk+ found on the system])
-    COMPILE_GTK="no"
-],
-[
-    AC_MSG_RESULT([not found gtk+ of sufficient version, will compile from our own])
+if test "$CHECK_GTK_LIB" = "yes" ; then
+    dnl check for gtk+ 2.6.1 or more recent
+    PKG_CHECK_MODULES(GTK,[gtk+-2.0 >= 2.6.1],
+    [
+        AC_MSG_RESULT([using gtk+ found on the system])
+        COMPILE_GTK="no"
+    ],
+    [
+        AC_MSG_RESULT([not found gtk+ of sufficient version, will compile from our own])
+        COMPILE_GTK="yes"
+    ])
+else
     COMPILE_GTK="yes"
-])
+fi
 
 
-dnl check for gtk-- 2.5.5 or more recent
-PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.5.5],
-[
-    AC_MSG_RESULT([using gtk-- found on the system])
-    COMPILE_GTKMM="no"
-],
-[
-    AC_MSG_RESULT([not found gtk-- of sufficient version, will compile from our own])
+if test "$CHECK_GTKMM_LIB" = "yes" ; then
+    dnl check for gtk-- 2.5.5 or more recent
+    PKG_CHECK_MODULES(GTKMM,[gtkmm-2.4 >= 2.5.5],
+    [
+        AC_MSG_RESULT([using gtk-- found on the system])
+        COMPILE_GTKMM="no"
+    ],
+    [
+        AC_MSG_RESULT([not found gtk-- of sufficient version, will compile from our own])
+        COMPILE_GTKMM="yes"
+    ])
+else
     COMPILE_GTKMM="yes"
-])
+fi
 
 
-dnl check for ICU 3.0 or more recent
-AC_CHECK_ICU(3.0,
-[
-dnl    AC_MSG_RESULT([using ICU found on the system])
-dnl    COMPILE_ICU="no"
+if test "$CHECK_ICU_LIB" = "yes" ; then
+    dnl check for ICU 3.0 or more recent
+    AC_CHECK_ICU(3.0,
+    [
+dnl     AC_MSG_RESULT([using ICU found on the system])
+dnl     COMPILE_ICU="no"
 dnl force compilation of ICU, as recognizing a pre-existing version
 dnl does not seem to work -- fgerlits, 2005-08-08
     AC_MSG_RESULT([found ICU on the system, but recompiling anyway])
     COMPILE_ICU="yes"
-],
-[
-    AC_MSG_RESULT([not found ICU of sufficient version, will compile from our own])
+    ],
+    [
+        AC_MSG_RESULT([not found ICU of sufficient version, will compile from our own])
+        COMPILE_ICU="yes"
+    ])
+else
     COMPILE_ICU="yes"
-])
+fi
 
 
-dnl check for libxml++ 2.8.1 or more recent
-PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1],
-[
-    AC_MSG_RESULT([using libxml++ found on the system])
-    COMPILE_LIBXMLPP="no"
-],
-[
-    AC_MSG_RESULT([not found libxml++ of sufficient version, will compile from our own])
+if test "$CHECK_XMLPP_LIB" = "yes" ; then
+    dnl check for libxml++ 2.8.1 or more recent
+    PKG_CHECK_MODULES(LIBXMLPP,[libxml++-2.6 >= 2.8.1],
+    [
+        AC_MSG_RESULT([using libxml++ found on the system])
+        COMPILE_LIBXMLPP="no"
+    ],
+    [
+        AC_MSG_RESULT([not found libxml++ of sufficient version, will compile from our own])
+        COMPILE_LIBXMLPP="yes"
+    ])
+else
     COMPILE_LIBXMLPP="yes"
-])
+fi
 
 
 dnl set up the alib module
