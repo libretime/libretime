@@ -10,7 +10,7 @@
 <script language="javascript">
 {literal}
 
-var MData_confirmChangeVisited = false;
+var MData_confirmChangeVisited = true;
 
 function MData_confirmChange(element)
 {
