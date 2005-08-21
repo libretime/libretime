@@ -115,7 +115,7 @@ class uiBase
 
     function uiBase(&$config)
     {
-        $this->dbc = DB::connect($config['dsn'], TRUE);
+        $this->dbc = DB::connect($config['dsn'], TRUE); 
         if (DB::isError($this->dbc)) {
             die($this->dbc->getMessage());
         }
