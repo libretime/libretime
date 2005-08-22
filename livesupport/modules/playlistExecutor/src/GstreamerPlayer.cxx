@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -108,6 +108,15 @@ GstreamerPlayer :: initialize(void)                 throw (std::exception)
 
     g_signal_connect(pipeline, "error", G_CALLBACK(errorHandler), this);
 
+    // TODO: read the caps from the config file
+    sinkCaps = gst_caps_new_simple("audio/x-raw-int",
+                                   "width", G_TYPE_INT, 16,
+                                   "depth", G_TYPE_INT, 16,
+                                   "endiannes", G_TYPE_INT, G_BYTE_ORDER,
+                                   "channels", G_TYPE_INT, 2,
+                                   "rate", G_TYPE_INT, 44100,
+                                   NULL);
+
     setAudioDevice(audioDevice);
 
     // set up other variables
@@ -147,6 +156,7 @@ GstreamerPlayer :: deInitialize(void)                       throw ()
             gst_object_unref(GST_OBJECT(audiosink));
         }
         gst_object_unref(GST_OBJECT(pipeline));
+        gst_caps_free(sinkCaps);
 
         audiosink   = 0;
         initialized = false;
@@ -248,7 +258,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     filesrc    = gst_element_factory_make("filesrc", "file-source");
     g_object_set(G_OBJECT(filesrc), "location", filePath.c_str(), NULL);
 
-    decoder = ls_gst_autoplug_plug_source(filesrc, "decoder");
+    decoder = ls_gst_autoplug_plug_source(filesrc, "decoder", sinkCaps);
 
     if (!decoder) {
         throw std::invalid_argument(std::string("can't open URL ") + fileUrl);
@@ -472,7 +482,7 @@ GstreamerPlayer :: setAudioDevice(const std::string &deviceName)
 
     if (relink) {
         if (decoder) {
-            gst_element_link(decoder, audiosink);
+            gst_element_link_filtered(decoder, audiosink, sinkCaps);
         }
         gst_bin_add(GST_BIN(pipeline), audiosink);
     }

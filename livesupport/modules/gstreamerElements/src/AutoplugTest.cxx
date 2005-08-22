@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -116,11 +116,20 @@ AutoplugTest :: playFile(const char   * audioFile)
     GstElement    * source;
     GstElement    * decoder;
     GstElement    * sink;
+    GstCaps       * caps;
     GstFormat       format;
     gint64          timePlayed;
 
     /* initialize GStreamer */
     gst_init(0, 0);
+
+    caps = gst_caps_new_simple("audio/x-raw-int",
+                               "width", G_TYPE_INT, 16,
+                               "depth", G_TYPE_INT, 16,
+                               "endiannes", G_TYPE_INT, G_BYTE_ORDER,
+                               "channels", G_TYPE_INT, 2,
+                               "rate", G_TYPE_INT, 44100,
+                               NULL);
 
     /* create elements */
     pipeline = gst_pipeline_new("audio-player");
@@ -129,7 +138,7 @@ AutoplugTest :: playFile(const char   * audioFile)
 
     g_object_set(G_OBJECT(source), "location", audioFile, NULL);
 
-    decoder = ls_gst_autoplug_plug_source(source, "decoder");
+    decoder = ls_gst_autoplug_plug_source(source, "decoder", caps);
 
     if (!decoder) {
         gst_object_unref(GST_OBJECT(sink));
@@ -139,7 +148,7 @@ AutoplugTest :: playFile(const char   * audioFile)
         return 0LL;
     }
 
-    gst_element_link(decoder, sink);
+    gst_element_link_filtered(decoder, sink, caps);
     gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
 
     gst_element_set_state(source, GST_STATE_PAUSED);
@@ -147,7 +156,6 @@ AutoplugTest :: playFile(const char   * audioFile)
     gst_element_set_state(sink, GST_STATE_PAUSED);
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
-    // iterate until playTo is reached
     while (gst_bin_iterate(GST_BIN(pipeline)));
 
     /* FIXME: query the decoder, as for some reason, the sink will return

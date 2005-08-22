@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/include/LiveSupport/GstreamerElements/autoplug.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,7 +34,7 @@
  *  Functions for autoplugging gstreamer elements based on their MIME types.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 
 #ifdef __cplusplus
@@ -65,13 +65,16 @@ extern "C" {
  *
  *  @param source the source to autoplug.
  *  @param name the name of the new element.
+ *  @param caps the capabilities expected from the returned element,
+ *         on its src pad.
  *  @return a gstreamer element already linked to source, that produces
  *          the audio provided by source in audio/x-raw-int or
  *          audio/x-raw-float format, as needed.
  */
 GstElement *
-ls_gst_autoplug_plug_source(GstElement    * source,
-                            const gchar   * name);
+ls_gst_autoplug_plug_source(GstElement        * source,
+                            const gchar       * name,
+                            const GstCaps     * caps);
 
 
 #ifdef __cplusplus

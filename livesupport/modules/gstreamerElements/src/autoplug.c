@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,18 +47,20 @@ typedef struct _Typefind Typefind;
  *  Data structure to hold information related to typefindinf.
  */
 struct _Typefind {
-    GList         * factories;
+    GList             * factories;
 
-    GstElement    * pipeline;
-    GstElement    * bin;
-    GstElement    * source;
-    GstElement    * typefind;
-    GstElement    * audiosink;
-    GstElement    * sink;
+    GstElement        * pipeline;
+    GstElement        * bin;
+    GstElement        * source;
+    GstElement        * typefind;
+    GstElement        * audiosink;
+    GstElement        * sink;
 
-    gulong          typefindSignal;
+    const GstCaps     * caps;
 
-    gboolean        done;
+    gulong              typefindSignal;
+
+    gboolean            done;
 };
 
 
@@ -104,10 +106,13 @@ autoplug_typefound_handler(GstElement * typefind,
  *  @param typefind the Typefind structure to init.
  *  @param name the name of the topmost bin element, that will
  *         be returned at the end of autoplugging.
+ *  @param caps the capabilities expected from the returned element,
+ *         on its src pad.
  */
 static void
-autoplug_init(Typefind      * typefind,
-              const gchar   * name);
+autoplug_init(Typefind        * typefind,
+              const gchar     * name,
+              const GstCaps   * caps);
 
 /**
  *  De-initialize a typefind object.
@@ -250,8 +255,9 @@ autoplug_compare_ranks(GstPluginFeature   * feature1,
  *  Initialize a Typefind object, like the factories that we care about.
  *----------------------------------------------------------------------------*/
 static void
-autoplug_init(Typefind      * typefind,
-              const gchar   * name)
+autoplug_init(Typefind        * typefind,
+              const gchar     * name,
+              const GstCaps   * caps)
 {
     /* first filter out the interesting element factories */
     typefind->factories = gst_registry_pool_feature_filter(
@@ -267,6 +273,8 @@ autoplug_init(Typefind      * typefind,
     typefind->typefind  = gst_element_factory_make("typefind", "tf");
     typefind->audiosink = gst_element_factory_make("audioconvert", "audiosink");
     typefind->sink      = gst_element_factory_make("fakesink", "fakesink");
+
+    typefind->caps      = caps;
 
     gst_element_add_ghost_pad(typefind->bin,
                               gst_element_get_pad(typefind->typefind, "sink"),
@@ -364,7 +372,15 @@ autoplug_close_link(Typefind      * typefind,
     /* add the element to the pipeline and set correct state */
     gst_bin_add(GST_BIN(typefind->bin), sinkelement);
     pad = gst_element_get_pad(sinkelement, padname);
-    gst_pad_link(srcpad, pad);
+
+    if (g_strrstr(gst_object_get_name(GST_OBJECT(sinkelement)), "audiosink")) {
+        if (!gst_pad_link_filtered(srcpad, pad, typefind->caps)) {
+            gst_pad_link(srcpad, pad);
+        }
+    } else {
+        gst_pad_link(srcpad, pad);
+    }
+
     /* FIXME: this is a nasty workaround for lack of time
      *        the minimalaudiosmil will try to read the input immediately
      *        from it sink pad as its set to PLAYING state,
@@ -442,7 +458,7 @@ autoplug_try_to_plug(Typefind         * typefind,
     /* don't plug if we're already plugged */
     if (GST_PAD_IS_LINKED(gst_element_get_pad(typefind->audiosink, "sink"))) {
         GST_DEBUG("Omitting link for pad %s:%s because we're already linked",
-	              gst_object_get_name (parent), gst_pad_get_name (pad));
+	              gst_object_get_name(parent), gst_pad_get_name(pad));
         return;
     }
 
@@ -451,7 +467,7 @@ autoplug_try_to_plug(Typefind         * typefind,
     if (g_strrstr(mime, "video")) {
         GST_DEBUG("Omitting link for pad %s:%s because "
                   "mimetype %s is non-audio\n",
-	              gst_object_get_name (parent), gst_pad_get_name (pad), mime);
+	              gst_object_get_name(parent), gst_pad_get_name(pad), mime);
         return;
     }
 
@@ -468,16 +484,17 @@ autoplug_try_to_plug(Typefind         * typefind,
         gst_element_add_ghost_pad(typefind->bin,
                                 gst_element_get_pad(typefind->audiosink, "src"),
                                 "src");
-        gst_element_link(typefind->bin, typefind->sink);
+        gst_element_link_filtered(typefind->bin, typefind->sink,
+                                  typefind->caps);
         gst_bin_add(GST_BIN(typefind->pipeline), typefind->sink);
         gst_bin_sync_children_state(GST_BIN(typefind->pipeline));
 
-        gst_caps_free (audiocaps);
-        gst_caps_free (res);
+        gst_caps_free(audiocaps);
+        gst_caps_free(res);
         return;
     }
-    gst_caps_free (audiocaps);
-    gst_caps_free (res);
+    gst_caps_free(audiocaps);
+    gst_caps_free(res);
 
     /* try to plug from our list */
     for (item = typefind->factories; item != NULL; item = item->next) {
@@ -659,8 +676,9 @@ autoplug_remove_typefind_elements(Typefind    * typefind,
  *  Filter the features that we're interested in.
  *----------------------------------------------------------------------------*/
 GstElement *
-ls_gst_autoplug_plug_source(GstElement    * source,
-                            const gchar   * name)
+ls_gst_autoplug_plug_source(GstElement        * source,
+                            const gchar       * name,
+                            const GstCaps     * caps)
 {
     Typefind        typefind;
     GstElement    * bin;
@@ -670,7 +688,7 @@ ls_gst_autoplug_plug_source(GstElement    * source,
     g_object_ref(source);
 
     typefind.source = source;
-    autoplug_init(&typefind, name);
+    autoplug_init(&typefind, name, caps);
 
     gst_element_set_state(typefind.audiosink, GST_STATE_PAUSED);
     gst_element_set_state(typefind.sink, GST_STATE_PAUSED);

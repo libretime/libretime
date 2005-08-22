@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SwitcherTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -112,12 +112,21 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
     GstElement    * pipeline;
     GstElement    * switcher;
     GstElement    * sink;
+    GstCaps       * caps;
     unsigned int    i;
     GstFormat       format;
     gint64          timePlayed;
 
     /* initialize GStreamer */
     gst_init(0, 0);
+
+    caps = gst_caps_new_simple("audio/x-raw-int",
+                               "width", G_TYPE_INT, 16,
+                               "depth", G_TYPE_INT, 16,
+                               "endiannes", G_TYPE_INT, G_BYTE_ORDER,
+                               "channels", G_TYPE_INT, 2,
+                               "rate", G_TYPE_INT, 44100,
+                               NULL);
 
     /* create elements */
     pipeline = gst_pipeline_new("audio-player");
@@ -136,7 +145,7 @@ SwitcherTest :: playFiles(const char     ** audioFiles,
         g_object_set(G_OBJECT(source), "location", audioFiles[i], NULL);
 
         g_snprintf(str, 256, "decoder_%d", i);
-        decoder = ls_gst_autoplug_plug_source(source, str);
+        decoder = ls_gst_autoplug_plug_source(source, str, caps);
         CPPUNIT_ASSERT(decoder);
 
         ret = gst_element_link(decoder, switcher);

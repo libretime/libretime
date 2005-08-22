@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -161,6 +161,7 @@ livesupport_seek_pack_new(const gchar    * uniqueName)
 void
 livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
                            GstElement             * source,
+                           const GstCaps          * caps,
                            gint64                   silenceDuration,
                            gint64                   startTime,
                            gint64                   endTime)
@@ -193,7 +194,8 @@ livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
 
     g_snprintf(name, len, "%s_seekPackDecoder", seekPack->name);
     seekPack->decoder = ls_gst_autoplug_plug_source(seekPack->source,
-                                                    name);
+                                                    name,
+                                                    caps);
     g_snprintf(name, len, "%s_seekPackDecoderConvert", seekPack->name);
     seekPack->decoderConvert = gst_element_factory_make("audioconvert", name);
     g_snprintf(name, len, "%s_seekPackDecoderScale", seekPack->name);

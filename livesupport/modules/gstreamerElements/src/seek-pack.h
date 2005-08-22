@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/seek-pack.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@
  *  some silence and then some specified part of the source.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 
 #ifdef __cplusplus
@@ -108,6 +108,7 @@ livesupport_seek_pack_new(const gchar    * uniqueName);
  *
  *  @param seekPack the SeekPack to initialize.
  *  @param source the source the SeekPack will play.
+ *  @param caps the desired capabilites on the src of the SeekPack
  *  @param silenceDuration the number of nanoseconds the SeekPack will
  *         play only silence in the beginning.
  *  @param startTime the offset at which source will start to play after
@@ -117,6 +118,7 @@ livesupport_seek_pack_new(const gchar    * uniqueName);
 void
 livesupport_seek_pack_init(LivesupportSeekPack    * seekPack,
                            GstElement             * source,
+                           const GstCaps          * caps,
                            gint64                   silenceDuration,
                            gint64                   startTime,
                            gint64                   endTime);

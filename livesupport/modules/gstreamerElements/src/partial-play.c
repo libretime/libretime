@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ GST_PLUGIN_DEFINE (
     "partialplay",
     "Partial play",
     plugin_init,
-    "$Revision: 1.4 $",
+    "$Revision: 1.5 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -241,6 +241,9 @@ livesupport_partial_play_change_state(GstElement * element)
 
         case GST_STATE_PAUSED_TO_PLAYING:
             if (!pplay->seekPackInited) {
+                GstPad               * srcPad;
+                const GstCaps        * caps;
+
                 pplay->seekPackInited = TRUE;
                 if (pplay->source) {
                     g_object_unref(pplay->source);
@@ -251,8 +254,12 @@ livesupport_partial_play_change_state(GstElement * element)
                              "location",
                              pplay->location,
                              NULL);
+                srcPad = gst_element_get_pad((GstElement *) pplay, "src");
+                caps   = gst_pad_get_caps(srcPad);
+
                 livesupport_seek_pack_init(pplay->seekPack,
                                            pplay->source,
+                                           caps,
                                            pplay->silenceDuration,
                                            pplay->playFrom,
                                            pplay->playTo);

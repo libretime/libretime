@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,11 +71,20 @@ main(int        argc,
     GstElement    * source;
     GstElement    * decoder;
     GstElement    * sink;
+    GstCaps       * caps;
     GstFormat       format;
     gint64          timePlayed;
 
     /* initialize GStreamer */
     gst_init(&argc, &argv);
+
+    caps = gst_caps_new_simple("audio/x-raw-int",
+                               "width", G_TYPE_INT, 16,
+                               "depth", G_TYPE_INT, 16,
+                               "endiannes", G_TYPE_INT, G_BYTE_ORDER,
+                               "channels", G_TYPE_INT, 2,
+                               "rate", G_TYPE_INT, 44100,
+                               NULL);
 
     if (argc != 2) {
         g_print("Usage: %s <audio filename>\n", argv[0]);
@@ -89,7 +98,7 @@ main(int        argc,
 
     g_object_set(G_OBJECT(source), "location", argv[1], NULL);
 
-    decoder = ls_gst_autoplug_plug_source(source, "decoder");
+    decoder = ls_gst_autoplug_plug_source(source, "decoder", caps);
 
     if (!decoder) {
         gst_object_unref(GST_OBJECT(sink));
