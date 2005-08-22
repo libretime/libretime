@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.19 $
+#   Version  : $Revision: 1.20 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -436,10 +436,10 @@ install: setup compile create_database install_modules install_products
 
 create_database:
 ifeq (@CREATE_LS_DATABASE@,yes)
-	${BIN_DIR}/createDatabase.sh --database=${DATABASE} \
-	                             --dbserver=${DB_SERVER} \
-								 --dbuser=${DB_USER} \
-								 --dbpassword=${DB_PASSWORD}
+	${SCHEDULER_DIR}/bin/createDatabase.sh --database=${DATABASE} \
+                                           --dbserver=${DB_SERVER} \
+                                           --dbuser=${DB_USER} \
+                                           --dbpassword=${DB_PASSWORD}
 endif
 
 install_modules:
