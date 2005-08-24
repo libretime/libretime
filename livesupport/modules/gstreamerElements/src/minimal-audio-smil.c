@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,7 +114,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.6 $",
+                  "$Revision: 1.7 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -654,7 +654,6 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
     for (index = 0, node = par->children; node; node = node->next, ++index) {
         if (node->type == XML_ELEMENT_NODE) {
             GstElement    * element = 0;
-            GstCaps       * caps;
 
             if (!strcmp(node->name, "audio")) {
                 element = handle_audio_element(smil,

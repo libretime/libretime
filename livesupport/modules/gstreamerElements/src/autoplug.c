@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -697,6 +697,11 @@ ls_gst_autoplug_plug_source(GstElement        * source,
 
     /* run */
     while (!typefind.done && gst_bin_iterate(GST_BIN(typefind.pipeline)));
+
+    /* do an extra iteration, otherwise some gstreamer elements don't get
+     * properly initialized, like the vorbis element.
+     * see http://bugs.campware.org/view.php?id=1421 for details */
+    gst_bin_iterate(GST_BIN(typefind.pipeline));
 
     if (!typefind.done) {
         autoplug_deinit(&typefind);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,13 +58,14 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class AutoplugTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(AutoplugTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(oggVorbisTest);
+    CPPUNIT_TEST(oggVorbis160kbpsTest);
     CPPUNIT_TEST(smilTest);
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST(shortTest);
@@ -102,6 +103,15 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
          */
         void
         oggVorbisTest(void)                     throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test a 160 kb/s Ogg Vorbis file.
+         *  See http://bugs.campware.org/view.php?id=1421 for details.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        oggVorbis160kbpsTest(void)              throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test a SMIL file.

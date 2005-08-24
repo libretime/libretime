@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -60,6 +60,11 @@ static const char *         mp3TestFile = "var/5seccounter.mp3";
  *  An ogg vorbis test file.
  */
 static const char *         oggTestFile = "var/5seccounter.ogg";
+
+/**
+ *  A 160kb/s ogg vorbis test file.
+ */
+static const char *         ogg160kbpsTestFile = "var/d160.ogg";
 
 /**
  *  A SMIL test file.
@@ -202,6 +207,23 @@ AutoplugTest :: oggVorbisTest(void)
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  An ogg vorbis test.
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: oggVorbis160kbpsTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(ogg160kbpsTestFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 2.1 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.4 * GST_SECOND);
 }
 
 
