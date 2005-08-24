@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Widgets;
  *  The box displaying "now playing" in the master panel.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class NowPlaying : public Gtk::HBox,
                    public LocalizedObject
@@ -84,9 +84,29 @@ class NowPlaying : public Gtk::HBox,
         bool                    isPaused;
 
         /**
+         *  The length of the item currently playing.
+         */
+        Ptr<time_duration>::Ref audioLength;
+
+        /**
+         *  The time the item started playing.
+         */
+        Ptr<ptime>::Ref         audioStart;
+
+        /**
          *  The label holding the title etc. of the now playing item.
          */
         Gtk::Label *            label;
+
+        /**
+         *  The label holding the elapsed time.
+         */
+        Gtk::Label *            elapsedTime;
+
+        /**
+         *  The label holding the remaining time.
+         */
+        Gtk::Label *            remainsTime;
 
         /**
          *  The play button.
@@ -131,6 +151,16 @@ class NowPlaying : public Gtk::HBox,
         void
         onStopButtonClicked(void)                       throw ();
 
+        /**
+         *  Return a Gtk::manage'd Gtk::Label*, with the Bitstream Vera
+         *  font attributes set.
+         *
+         *  @param  fontSize    the size of the text in the label, in points
+         *  @return the new label
+         */
+        Gtk::Label *
+        createFormattedLabel(int    fontSize)           throw ();
+
     
     public:
     
@@ -160,6 +190,14 @@ class NowPlaying : public Gtk::HBox,
          */
         void
         setPlayable(Ptr<Playable>::Ref  playable)       throw ();
+
+        /**
+         *  Function that updates the elapsed and remaining time displays.
+         *  This is called by the MasterPanelWindow every second.
+         */
+        void
+        onUpdateTime(void)                              throw ();
+
 };
 
 

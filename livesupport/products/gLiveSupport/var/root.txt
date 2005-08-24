@@ -18,6 +18,9 @@ root:table
     yesButtonLabel:string           { "Yes" }
     okButtonLabel:string            { "OK" }
 
+    elapsedTimeLabel:string         { "elapsed" }
+    remainingTimeLabel:string       { "remaining" }
+    
     localeNotAvailableMsg:string    { "Locale {0} not available" }
     schedulerNotReachableMsg:string { "Scheduler server not available" }
     storageNotReachableMsg:string   { "Storage server not available" }

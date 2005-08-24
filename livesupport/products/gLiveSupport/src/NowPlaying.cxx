@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,6 +35,7 @@
 
 #include <iostream>
 
+#include "LiveSupport/Core/TimeConversion.h"
 #include "LiveSupport/Widgets/WidgetFactory.h"
 
 #include "NowPlaying.h"
@@ -87,7 +88,37 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     label->set_use_markup(true);
     label->set_ellipsize(Pango::ELLIPSIZE_END);
     label->set_markup("");
-    pack_end(*label, Gtk::PACK_EXPAND_WIDGET, 5);
+    
+    Gtk::Label *    elapsedLabel = createFormattedLabel(8);
+    Gtk::Label *    remainsLabel = createFormattedLabel(8);
+    elapsedTime = createFormattedLabel(12);
+    remainsTime = createFormattedLabel(12);
+
+    try {
+        elapsedLabel->set_text(*getResourceUstring("elapsedTimeLabel"));
+        remainsLabel->set_text(*getResourceUstring("remainingTimeLabel"));
+    } catch (std::invalid_argument &e) {
+        std::cerr << e.what() << std::endl;
+        std::exit(1);
+    }
+    
+    Gtk::Box *      elapsedBox = Gtk::manage(new Gtk::VBox);
+    elapsedBox->pack_start(*elapsedLabel, Gtk::PACK_EXPAND_WIDGET, 2);
+    elapsedBox->pack_start(*elapsedTime,  Gtk::PACK_EXPAND_WIDGET, 2);
+    
+    Gtk::Box *      remainsBox = Gtk::manage(new Gtk::VBox);
+    remainsBox->pack_start(*remainsLabel, Gtk::PACK_EXPAND_WIDGET, 2);
+    remainsBox->pack_start(*remainsTime,  Gtk::PACK_EXPAND_WIDGET, 2);
+    
+    Gtk::Box *      timeBox = Gtk::manage(new Gtk::HBox);
+    timeBox->pack_start(*elapsedBox, Gtk::PACK_EXPAND_WIDGET, 2);
+    timeBox->pack_start(*remainsBox, Gtk::PACK_EXPAND_WIDGET, 2);
+    
+    Gtk::Box *      textBox = Gtk::manage(new Gtk::VBox);
+    textBox->pack_start(*label,   Gtk::PACK_EXPAND_PADDING, 2);
+    textBox->pack_start(*timeBox, Gtk::PACK_EXPAND_PADDING, 2);
+    
+    pack_end(*textBox, Gtk::PACK_EXPAND_WIDGET, 5);
 }
 
 
@@ -125,8 +156,11 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             infoString->append("</span>");
         }
         label->set_markup(*infoString);
+        
+        audioLength = playable->getPlaylength();
+        audioStart  = TimeConversion::now(); 
+        
     } else {
-        label->set_markup("");
         if (isActive) {
             remove(*stopButton);
             if (isPaused) {
@@ -136,6 +170,11 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
             }
             isActive = false;
         }
+        label->set_markup("");
+        elapsedTime->set_text("");
+        remainsTime->set_text("");
+        audioLength.reset();
+        audioStart.reset();
     }
 }
 
@@ -179,5 +218,52 @@ void
 NowPlaying :: onStopButtonClicked(void)                             throw ()
 {
     gLiveSupport->stopOutputAudio();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Construct a label with the font attribute already set.
+ *----------------------------------------------------------------------------*/
+Gtk::Label *
+NowPlaying :: createFormattedLabel(int    fontSize)                 throw ()
+{
+    Gtk::Label *    label = Gtk::manage(new Gtk::Label);
+    
+    Pango::FontDescription  fontDescription;
+    fontDescription.set_family("Bitstream Vera Sans");
+    fontDescription.set_weight(Pango::WEIGHT_BOLD);
+    fontDescription.set_size(fontSize * Pango::SCALE);
+    
+    Pango::Attribute        fontDescriptionAttribute = 
+                                Pango::Attribute::create_attr_font_desc(
+                                    fontDescription);
+    fontDescriptionAttribute.set_start_index(0);
+    fontDescriptionAttribute.set_end_index(100);
+    
+    Pango::AttrList         attributeList;
+    attributeList.insert(fontDescriptionAttribute);
+    label->set_attributes(attributeList);
+    
+    return label;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Update the timer displays. This is called every second by the master panel.
+ *----------------------------------------------------------------------------*/
+void
+NowPlaying :: onUpdateTime(void)                             throw ()
+{
+    if (isActive) {
+        Ptr<ptime>::Ref             now = TimeConversion::now();
+        Ptr<time_duration>::Ref     elapsed(new time_duration(
+                                                    *now - *audioStart ));
+        Ptr<time_duration>::Ref     remains(new time_duration(
+                                                    *audioLength - *elapsed ));
+        elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
+                                                    elapsed ));
+        remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
+                                                    remains ));
+    }
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.43 $
+    Version  : $Revision: 1.44 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/MasterPanelWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -337,6 +337,8 @@ MasterPanelWindow :: onUpdateTime(int   dummy)                       throw ()
 
         timeWidget->set_text(to_simple_string(dayTimeSec));
     }
+
+    nowPlayingWidget->onUpdateTime();
 
     return true;
 }
