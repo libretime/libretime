@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,6 +119,8 @@ NowPlaying :: NowPlaying(Ptr<GLiveSupport>::Ref     gLiveSupport,
     textBox->pack_start(*timeBox, Gtk::PACK_EXPAND_PADDING, 2);
     
     pack_end(*textBox, Gtk::PACK_EXPAND_WIDGET, 5);
+    pack_end(*stopButton, Gtk::PACK_SHRINK, 0);
+    pack_end(*playButton, Gtk::PACK_SHRINK, 2);
 }
 
 
@@ -129,14 +131,13 @@ void
 NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
 {
     if (playable) {
-        if (!isActive) {
-            pack_end(*stopButton,  Gtk::PACK_SHRINK, 0);
+        if (!isActive || isPaused) {
+            remove(*playButton);
             pack_end(*pauseButton, Gtk::PACK_SHRINK, 2);
-            stopButton->show();
             pauseButton->show();
-            isActive = true;
-            isPaused = false;
         }
+        isActive = true;
+        isPaused = false;
     
         Ptr<Glib::ustring>::Ref     infoString(new Glib::ustring);
     
@@ -161,13 +162,10 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         audioStart  = TimeConversion::now(); 
         
     } else {
-        if (isActive) {
-            remove(*stopButton);
-            if (isPaused) {
-                remove(*playButton);
-            } else {
-                remove(*pauseButton);
-            }
+        if (isActive && !isPaused) {
+            remove(*pauseButton);
+            pack_end(*playButton, Gtk::PACK_SHRINK, 2);
+            playButton->show();
             isActive = false;
         }
         label->set_markup("");
@@ -185,13 +183,15 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
 void
 NowPlaying :: onPlayButtonClicked(void)                             throw ()
 {
-    gLiveSupport->pauseOutputAudio();       // i.e., restart
+    if (isActive) {
+        gLiveSupport->pauseOutputAudio();       // i.e., restart
 
-    remove(*playButton);
-    pack_end(*pauseButton, Gtk::PACK_SHRINK, 2);
-    pauseButton->show();
-    
-    isPaused = false;
+        remove(*playButton);
+        pack_end(*pauseButton, Gtk::PACK_SHRINK, 2);
+        pauseButton->show();
+        
+        isPaused = false;
+    }
 }
 
 
@@ -201,13 +201,15 @@ NowPlaying :: onPlayButtonClicked(void)                             throw ()
 void
 NowPlaying :: onPauseButtonClicked(void)                            throw ()
 {
-    gLiveSupport->pauseOutputAudio();
-
-    remove(*pauseButton);
-    pack_end(*playButton, Gtk::PACK_SHRINK, 2);
-    playButton->show();   
+    if (isActive) {
+        gLiveSupport->pauseOutputAudio();
+        
+        remove(*pauseButton);
+        pack_end(*playButton, Gtk::PACK_SHRINK, 2);
+        playButton->show();   
     
-    isPaused = true;
+        isPaused = true;
+    }
 }
 
 
@@ -217,8 +219,10 @@ NowPlaying :: onPauseButtonClicked(void)                            throw ()
 void
 NowPlaying :: onStopButtonClicked(void)                             throw ()
 {
-    gLiveSupport->stopOutputAudio();
-}
+    if (isActive) {
+        gLiveSupport->stopOutputAudio();    // triggers a call to GLiveSupport::
+    }                                       // onStop(), which in turn calls
+}                                           // setPlayable() with a 0 argument
 
 
 /*------------------------------------------------------------------------------
