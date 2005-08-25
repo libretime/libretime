@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -682,6 +682,7 @@ ls_gst_autoplug_plug_source(GstElement        * source,
 {
     Typefind        typefind;
     GstElement    * bin;
+    GValue          gvalue = { 0 };
 
     /* add an additional ref on the source, as we'll put it in a bin
      * and remove it from the bin later, which will decrease the ref by one */
@@ -701,7 +702,11 @@ ls_gst_autoplug_plug_source(GstElement        * source,
     /* do an extra iteration, otherwise some gstreamer elements don't get
      * properly initialized, like the vorbis element.
      * see http://bugs.campware.org/view.php?id=1421 for details */
-    gst_bin_iterate(GST_BIN(typefind.pipeline));
+    g_value_init(&gvalue, G_TYPE_STRING);
+    gst_element_get_property(typefind.typefind, "caps", &gvalue);
+    if (g_strrstr("application/ogg", g_value_get_string(&gvalue))) {
+        gst_bin_iterate(GST_BIN(typefind.pipeline));
+    }
 
     if (!typefind.done) {
         autoplug_deinit(&typefind);
