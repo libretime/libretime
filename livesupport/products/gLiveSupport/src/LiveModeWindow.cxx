@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.20 $
+    Version  : $Revision: 1.21 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/LiveModeWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -104,6 +104,8 @@ LiveModeWindow :: LiveModeWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
                                             &LiveModeWindow::onEntryClicked));
+    treeView->signal_row_activated().connect(sigc::mem_fun(*this,
+                                            &LiveModeWindow::onDoubleClick));
 
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
     scrolledWindow.add(*treeView);
@@ -279,7 +281,7 @@ LiveModeWindow :: onOutputPlay(void)                                throw ()
 
 
 /*------------------------------------------------------------------------------
- *  Event handler for an entry being clicked in the list
+ *  Event handler for an entry being clicked in the list.
  *----------------------------------------------------------------------------*/
 void
 LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
@@ -307,5 +309,17 @@ LiveModeWindow :: onEntryClicked (GdkEventButton     * event)       throw ()
             contextMenu->popup(event->button, event->time);
         }
     }
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the user double-clicking or pressing Enter.
+ *----------------------------------------------------------------------------*/
+void
+LiveModeWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
+                                const Gtk::TreeViewColumn *     column)
+                                                                    throw ()
+{
+    onOutputPlay();
 }
 

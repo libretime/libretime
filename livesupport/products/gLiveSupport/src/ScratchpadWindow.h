@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  playlists.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class ScratchpadWindow : public WhiteWindow,
                          public LocalizedObject
@@ -87,7 +87,7 @@ class ScratchpadWindow : public WhiteWindow,
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.11 $
+         *  @version $Revision: 1.12 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {
@@ -222,6 +222,17 @@ class ScratchpadWindow : public WhiteWindow,
          */
         virtual void
         onEntryClicked(GdkEventButton     * event)              throw ();
+
+        /**
+         *  Signal handler for the user double-clicking, or pressing Enter
+         *  on one of the entries.
+         *
+         *  @param event the button event recieved
+         */
+        void
+        onDoubleClick(const Gtk::TreeModel::Path &      path,
+                      const Gtk::TreeViewColumn *       column)
+                                                                throw ();
 
         /**
          *  Signal handler for the "up" menu item selected from

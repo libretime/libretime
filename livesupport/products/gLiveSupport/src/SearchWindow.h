@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ using namespace LiveSupport::Widgets;
  *  The Search/Browse window.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class SearchWindow : public WhiteWindow, public LocalizedObject
 {
@@ -165,6 +165,17 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
         onEntryClicked(GdkEventButton *     event)              throw ();
 
         /**
+         *  Signal handler for the user double-clicking, or pressing Enter
+         *  on one of the entries.
+         *
+         *  @param event the button event recieved
+         */
+        void
+        onDoubleClick(const Gtk::TreeModel::Path &      path,
+                      const Gtk::TreeViewColumn *       column)
+                                                                throw ();
+
+        /**
          *  Add a playable to the scratchpad.
          */
         void
@@ -181,7 +192,7 @@ class SearchWindow : public WhiteWindow, public LocalizedObject
          *  Lists one clip per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.14 $
+         *  @version $Revision: 1.15 $
          */
         class ModelColumns : public PlayableTreeModelColumnRecord
         {

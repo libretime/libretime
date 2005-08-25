@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.21 $
+    Version  : $Revision: 1.22 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SearchWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -247,6 +247,8 @@ SearchWindow :: constructSearchResultsView(void)                throw ()
     // register the signal handler for treeview entries being clicked
     searchResults->signal_button_press_event().connect_notify(sigc::mem_fun(
                                     *this, &SearchWindow::onEntryClicked));
+    searchResults->signal_row_activated().connect(sigc::mem_fun(
+                                    *this, &SearchWindow::onDoubleClick));
 
     // create the right-click entry context menu
     contextMenu = Gtk::manage(new Gtk::Menu());
@@ -451,4 +453,17 @@ SearchWindow :: onAddToLiveMode(void)                           throw ()
         gLiveSupport->addToScratchpad(playable);
     }
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the user double-clicking or pressing Enter.
+ *----------------------------------------------------------------------------*/
+void
+SearchWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
+                              const Gtk::TreeViewColumn *     column)
+                                                                throw ()
+{
+    onAddToScratchpad();
+}
+
 

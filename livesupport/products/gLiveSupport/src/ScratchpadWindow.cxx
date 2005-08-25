@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -119,6 +119,8 @@ ScratchpadWindow :: ScratchpadWindow (Ptr<GLiveSupport>::Ref      gLiveSupport,
     // register the signal handler for treeview entries being clicked
     treeView->signal_button_press_event().connect_notify(sigc::mem_fun(*this,
                                             &ScratchpadWindow::onEntryClicked));
+    treeView->signal_row_activated().connect(sigc::mem_fun(*this,
+                                            &ScratchpadWindow::onDoubleClick));
 
     // Add the TreeView, inside a ScrolledWindow, with the button underneath:
     scrolledWindow.add(*treeView);
@@ -575,5 +577,21 @@ ScratchpadWindow :: onAddToLiveMode(void)                       throw ()
 {
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     gLiveSupport->addToLiveMode(playable);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Signal handler for the user double-clicking or pressing Enter.
+ *----------------------------------------------------------------------------*/
+void
+ScratchpadWindow :: onDoubleClick(const Gtk::TreeModel::Path &    path,
+                                  const Gtk::TreeViewColumn *     column)
+                                                                throw ()
+{
+    Gtk::TreeIter   iter = treeModel->get_iter(path);
+    if (iter) {
+        currentRow = *iter;
+        onAddToLiveMode();
+    }
 }
 
