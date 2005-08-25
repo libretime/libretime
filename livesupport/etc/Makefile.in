@@ -21,7 +21,7 @@
 #
 #
 #   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.20 $
+#   Version  : $Revision: 1.21 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/etc/Makefile.in,v $
 #-------------------------------------------------------------------------------
 
@@ -204,7 +204,7 @@ setup: ${TMP_DIR}/setup.stamp
 ${TMP_DIR}/setup.stamp: tools_setup doxytag_setup modules_setup products_setup
 	touch ${TMP_DIR}/setup.stamp
 
-recompile: distclean modules_setup products_setup compile
+recompile: modprod_distclean modules_setup products_setup compile
 
 tools_setup: ${TMP_DIR}/tools_setup.stamp
 ${TMP_DIR}/tools_setup.stamp:
@@ -359,7 +359,9 @@ ${TMP_DIR}/products_setup.stamp:
 					--with-audio-cue=${STUDIO_AUDIO_CUE}
 	touch ${TMP_DIR}/products_setup.stamp
 
-distclean: clean tools_distclean
+distclean: clean tools_distclean modprod_distclean
+
+modprod_distclean:
 	${MAKE} -C ${CORE_DIR} distclean
 	${MAKE} -C ${AUTHENTICATION_DIR} distclean
 	${MAKE} -C ${DB_DIR} distclean
