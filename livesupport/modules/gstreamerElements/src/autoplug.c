@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -373,13 +373,7 @@ autoplug_close_link(Typefind      * typefind,
     gst_bin_add(GST_BIN(typefind->bin), sinkelement);
     pad = gst_element_get_pad(sinkelement, padname);
 
-    if (g_strrstr(gst_object_get_name(GST_OBJECT(sinkelement)), "audiosink")) {
-        if (!gst_pad_link_filtered(srcpad, pad, typefind->caps)) {
-            gst_pad_link(srcpad, pad);
-        }
-    } else {
-        gst_pad_link(srcpad, pad);
-    }
+    gst_pad_link(srcpad, pad);
 
     /* FIXME: this is a nasty workaround for lack of time
      *        the minimalaudiosmil will try to read the input immediately
