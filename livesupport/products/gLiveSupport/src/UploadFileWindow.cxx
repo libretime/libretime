@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.15 $
+    Version  : $Revision: 1.16 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,15 +106,16 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         genreEntryBin = Gtk::manage(wf->createEntryBin());
         genreEntry    = genreEntryBin->getEntry();
 
-        fileFormatLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("fileFormatLabel"),
-                                Gtk::ALIGN_RIGHT));
-        fileFormatComboBox = Gtk::manage(wf->createComboBoxText());
+//        fileFormatLabel = Gtk::manage(new Gtk::Label(
+//                                *getResourceUstring("fileFormatLabel"),
+//                                Gtk::ALIGN_RIGHT));
+//        fileFormatComboBox = Gtk::manage(wf->createComboBoxText());
 
         lengthLabel = Gtk::manage(new Gtk::Label(
                                 *getResourceUstring("lengthLabel"),
                                 Gtk::ALIGN_RIGHT));
         lengthValueLabel = Gtk::manage(new Gtk::Label());
+        lengthValueLabel->set_width_chars(8);
 
         // build up the notepad for the different metadata sections
         mainSection = Gtk::manage(new Gtk::Alignment());
@@ -128,6 +129,7 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         closeButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("closeButtonLabel")));
         statusBar = Gtk::manage(new Gtk::Label(""));
+        statusBar->set_ellipsize(Pango::ELLIPSIZE_END);
     } catch (std::invalid_argument &e) {
         // TODO: signal error
         std::cerr << e.what() << std::endl;
@@ -136,17 +138,19 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
 
     // build up the main section
     // TODO: don't hard-code supported file format types
-    fileFormatComboBox->append_text("mp3");
-    fileFormatComboBox->set_active_text("mp3");
+//    fileFormatComboBox->append_text("mp3");
+//    fileFormatComboBox->set_active_text("mp3");
     mainLayout  = Gtk::manage(new Gtk::Table());
+    mainLayout->set_row_spacings(2);
+    mainLayout->set_col_spacings(5);
     mainLayout->attach(*titleLabel,         0, 1, 0, 1);
     mainLayout->attach(*titleEntryBin,      1, 2, 0, 1);
     mainLayout->attach(*creatorLabel,       0, 1, 1, 2);
     mainLayout->attach(*creatorEntryBin,    1, 2, 1, 2);
     mainLayout->attach(*genreLabel,         0, 1, 2, 3);
     mainLayout->attach(*genreEntryBin,      1, 2, 2, 3);
-    mainLayout->attach(*fileFormatLabel,    2, 3, 0, 1);
-    mainLayout->attach(*fileFormatComboBox, 3, 4, 0, 1);
+//    mainLayout->attach(*fileFormatLabel,    2, 3, 0, 1);
+//    mainLayout->attach(*fileFormatComboBox, 3, 4, 0, 1);
     mainLayout->attach(*lengthLabel,        2, 3, 1, 2);
     mainLayout->attach(*lengthValueLabel,   3, 4, 1, 2);
     mainSection->add(*mainLayout);
@@ -175,9 +179,9 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     fileNameEntry->signal_focus_out_event().connect(sigc::mem_fun(*this,
                                 &UploadFileWindow::onFileNameEntryLeave));
     uploadButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &UploadFileWindow::onUploadButtonClicked));
+                                &UploadFileWindow::onUploadButtonClicked));
     closeButton->signal_clicked().connect(sigc::mem_fun(*this,
-                                    &UploadFileWindow::onCloseButtonClicked));
+                                &UploadFileWindow::onCloseButtonClicked));
 
     // show everything
     show_all();
@@ -313,10 +317,11 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
     audioClip->setMetadata(ustrValue, "dc:creator");
     ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
     audioClip->setMetadata(ustrValue, "dc:type");
-    ustrValue.reset(new Glib::ustring(
-                                fileFormatComboBox->get_active_text()));
-    audioClip->setMetadata(ustrValue, "dc:format");
+//    ustrValue.reset(new Glib::ustring(
+//                                fileFormatComboBox->get_active_text()));
+//    audioClip->setMetadata(ustrValue, "dc:format");
     // TODO: is this really what we mean by dc:format?
+    // TODO: do file type autodetection based on mime-type (gnomevfs?)
 
     try {
         gLiveSupport->uploadFile(audioClip);

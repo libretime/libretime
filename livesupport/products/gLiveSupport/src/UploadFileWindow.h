@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
@@ -180,12 +180,12 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         /**
          *  The file format label.
          */
-        Gtk::Label                * fileFormatLabel;
+//        Gtk::Label                * fileFormatLabel;
 
         /**
          *  The file format combo box.
          */
-        ComboBoxText              * fileFormatComboBox;
+//        ComboBoxText              * fileFormatComboBox;
 
         /**
          *  The length label.
