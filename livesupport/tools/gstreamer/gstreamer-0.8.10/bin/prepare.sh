@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.2 $
+#   Version  : $Revision: 1.3 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/prepare.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -30,7 +30,7 @@
 # To read more about gstreamer, see http://gstreamer.freedesktop.org/
 #-------------------------------------------------------------------------------
 product=gstreamer-0.8.10
-plugins=gst-plugins-0.8.9
+plugins=gst-plugins-0.8.10
 
 reldir=`dirname $0`/..
 basedir=`cd ${reldir}; pwd;`
@@ -65,9 +65,9 @@ cd ${tmpdir}
 if [ ! -d $plugins ]; then
     tar xfj ${plugins_tar}
     cd ${plugins}
-    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=305658
+    # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=314146
     # for details on the following patch
-    patch -p1 < ${etcdir}/adder-fix.patch
+    #patch -p1 < ${etcdir}/adder-caps-property.patch
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=309218
     # for details on the following patch
     patch -p1 < ${etcdir}/adder-duration-fix.patch
