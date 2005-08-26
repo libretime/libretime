@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -183,7 +183,12 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
 void
 NowPlaying :: onPlayButtonClicked(void)                             throw ()
 {
-    if (isActive) {
+    if (isActive && isPaused) {
+        Ptr<ptime>::Ref     now = TimeConversion::now();
+        time_duration       pauseLength = *now - *pausedAtTime;
+        audioStart.reset(new ptime(*audioStart + pauseLength));
+        pausedAtTime.reset();
+        
         gLiveSupport->pauseOutputAudio();       // i.e., restart
 
         remove(*playButton);
@@ -201,7 +206,9 @@ NowPlaying :: onPlayButtonClicked(void)                             throw ()
 void
 NowPlaying :: onPauseButtonClicked(void)                            throw ()
 {
-    if (isActive) {
+    if (isActive && !isPaused) {
+        pausedAtTime = TimeConversion::now();
+        
         gLiveSupport->pauseOutputAudio();
         
         remove(*pauseButton);
@@ -259,7 +266,8 @@ void
 NowPlaying :: onUpdateTime(void)                             throw ()
 {
     if (isActive) {
-        Ptr<ptime>::Ref             now = TimeConversion::now();
+        Ptr<ptime>::Ref             now = isPaused ? pausedAtTime
+                                                   : TimeConversion::now();
         Ptr<time_duration>::Ref     elapsed(new time_duration(
                                                     *now - *audioStart ));
         Ptr<time_duration>::Ref     remains(new time_duration(
