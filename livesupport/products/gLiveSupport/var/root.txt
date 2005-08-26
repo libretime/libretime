@@ -115,6 +115,10 @@ root:table
                                     { "Choose a File" }
         clipUploadedMsg:string      { "Uploaded clip ''{0}''." }
         couldNotOpenFileMsg:string  { "The file could not be opened." }
+        couldNotReadLengthMsg:string 
+                                    { "Could not determine audio clip length." }
+        unsupportedFileTypeMsg:string
+                                    { "Unsupported file type." }
         missingTitleMsg:string      { "Please enter a title." }
     }
 

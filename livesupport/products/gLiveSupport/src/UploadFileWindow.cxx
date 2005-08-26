@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.16 $
+    Version  : $Revision: 1.17 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -244,7 +244,11 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
     try {
         playlength = readPlaylength(fileName);
     } catch (std::invalid_argument &e) {
-        statusBar->set_text(e.what());
+        statusBar->set_text(*getResourceUstring("unsupportedFileTypeMsg"));
+        return;
+    }
+    if (!playlength) {
+        statusBar->set_text(*getResourceUstring("couldNotReadLengthMsg"));
         playlength.reset(new time_duration(0,0,0,0));
     }
 
@@ -369,15 +373,17 @@ UploadFileWindow :: readPlaylength(const std::string &   fileName)
                                                 throw (std::invalid_argument)
 {
     TagLib::FileRef             fileRef(fileName.c_str());
+    if (fileRef.isNull()) {
+        throw std::invalid_argument("unsupported file type");
+    }
+    
     TagLib::AudioProperties *   audioProperties = fileRef.audioProperties();
-
+    Ptr<time_duration>::Ref     length;
     if (audioProperties) {
-        Ptr<time_duration>::Ref length(new time_duration(
+        length.reset(new time_duration(
                       seconds(     audioProperties->length()             )
                     + microseconds(audioProperties->length_microseconds()) ));
-        return length;
-    } else {
-        throw std::invalid_argument("could not read file length");
     }
+    return length;
 }
 

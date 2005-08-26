@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
@@ -273,9 +273,10 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
          *  Determine the length of an audio file on disk.
          *
          *  @param fileName     a binary audio file (e.g., /tmp/some_clip.mp3)
-         *  @return             the length of the file
+         *  @return             the length of the file; a null pointer if the
+         *                      length could not be read (see bug #1426)
          *  @exception std::invalid_argument if the file is not found, or its
-         *                                   length could not be determined
+         *                                   format is not supported by TagLib
          */
         Ptr<time_duration>::Ref
         readPlaylength(const std::string &  fileName)
