@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -88,7 +88,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 class SimplePlaylistManagementWindow : public WhiteWindow,
                                        public LocalizedObject
@@ -245,10 +245,12 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
         /**
          *  Save the edited playlist.
          *
+         *  @param  reopen  true if the playlist needs to be opened for
+         *                  editing again after saving it.
          *  @return true if the playlist was saved successully.
          */
         virtual bool
-        savePlaylist(void)                                      throw ();
+        savePlaylist(bool   reopen)                             throw ();
 
 
     protected:
@@ -258,7 +260,7 @@ class SimplePlaylistManagementWindow : public WhiteWindow,
          *  Lists one playlist entry per row.
          *
          *  @author $Author: fgerlits $
-         *  @version $Revision: 1.13 $
+         *  @version $Revision: 1.14 $
          */
         class ModelColumns : public ZebraTreeModelColumnRecord
         {

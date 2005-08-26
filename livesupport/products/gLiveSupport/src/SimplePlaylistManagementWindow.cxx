@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.28 $
+    Version  : $Revision: 1.29 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -249,7 +249,7 @@ SimplePlaylistManagementWindow :: ~SimplePlaylistManagementWindow (void)
  *  Save the edited playlist.
  *----------------------------------------------------------------------------*/
 bool
-SimplePlaylistManagementWindow :: savePlaylist (void)               throw ()
+SimplePlaylistManagementWindow :: savePlaylist(bool reopen)         throw ()
 {
     try {
         Ptr<Playlist>::Ref              playlist
@@ -267,7 +267,9 @@ SimplePlaylistManagementWindow :: savePlaylist (void)               throw ()
         
         playlist->setTitle(title);
         gLiveSupport->savePlaylist();
-        gLiveSupport->openPlaylistForEditing(playlist->getId());
+        if (reopen) {
+            gLiveSupport->openPlaylistForEditing(playlist->getId());
+        }
         isPlaylistModified = false;
 
         Ptr<Glib::ustring>::Ref statusText = formatMessage(
@@ -289,7 +291,7 @@ SimplePlaylistManagementWindow :: savePlaylist (void)               throw ()
 void
 SimplePlaylistManagementWindow :: onSaveButtonClicked(void)         throw ()
 {
-    savePlaylist();
+    savePlaylist(true);
 }
 
 
@@ -319,7 +321,7 @@ SimplePlaylistManagementWindow :: onCloseButtonClicked(void)        throw ()
                 case DialogWindow::noButton:        cancelPlaylist();
                                                     break;
 
-                case DialogWindow::yesButton:       if (savePlaylist()) {
+                case DialogWindow::yesButton:       if (savePlaylist(false)) {
                                                         closeWindow();
                                                     }
                                                     break;
