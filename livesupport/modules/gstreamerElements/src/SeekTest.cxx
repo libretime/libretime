@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -117,7 +117,8 @@ SeekTest :: playFile(const char   * audioFile,
     caps = gst_caps_new_simple("audio/x-raw-int",
                                "width", G_TYPE_INT, 16,
                                "depth", G_TYPE_INT, 16,
-                               "endiannes", G_TYPE_INT, G_BYTE_ORDER,
+                               "endianness", G_TYPE_INT, G_BYTE_ORDER,
+                               "signed", G_TYPE_BOOLEAN, TRUE,
                                "channels", G_TYPE_INT, 2,
                                "rate", G_TYPE_INT, 44100,
                                NULL);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -35,7 +35,7 @@
  *  Only a small subset of SMIL is supported.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  *  @see http://www.w3.org/TR/SMIL2/
  */
 
@@ -84,6 +84,8 @@ struct _LivesupportMinimalAudioSmil {
 
     GstPad        * sinkpad;
     GstPad        * srcpad;
+
+    GstCaps       * caps;
 
     GstElement    * oneshotReader;
     gboolean        fileProcessed;

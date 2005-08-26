@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -55,6 +55,11 @@ CPPUNIT_TEST_SUITE_REGISTRATION(AutoplugTest);
  *  An mp3 test file.
  */
 static const char *         mp3TestFile = "var/5seccounter.mp3";
+
+/**
+ *  A 48 kHz mp3 test file.
+ */
+static const char *         mp3_48kHzTestFile = "var/48kHz.mp3";
 
 /**
  *  An ogg vorbis test file.
@@ -131,7 +136,8 @@ AutoplugTest :: playFile(const char   * audioFile)
     caps = gst_caps_new_simple("audio/x-raw-int",
                                "width", G_TYPE_INT, 16,
                                "depth", G_TYPE_INT, 16,
-                               "endiannes", G_TYPE_INT, G_BYTE_ORDER,
+                               "endianness", G_TYPE_INT, G_BYTE_ORDER,
+                               "signed", G_TYPE_BOOLEAN, TRUE,
                                "channels", G_TYPE_INT, 2,
                                "rate", G_TYPE_INT, 44100,
                                NULL);
@@ -153,7 +159,7 @@ AutoplugTest :: playFile(const char   * audioFile)
         return 0LL;
     }
 
-    gst_element_link_filtered(decoder, sink, caps);
+    gst_element_link(decoder, sink);
     gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
 
     gst_element_set_state(source, GST_STATE_PAUSED);
@@ -190,6 +196,23 @@ AutoplugTest :: firstTest(void)
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 4.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 5.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test a 48kHz mp3 file
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: mp3_48kHzTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64  timePlayed;
+    char    str[256];
+
+    timePlayed = playFile(mp3_48kHzTestFile);
+    g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 12.1 * GST_SECOND);
+    CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 12.3 * GST_SECOND);
 }
 
 

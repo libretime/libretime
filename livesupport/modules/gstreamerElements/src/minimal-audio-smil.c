@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/minimal-audio-smil.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,7 +114,7 @@ GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
                   "minimalaudiosmil",
                   "Minimal Audio-only SMIL",
                   plugin_init,
-                  "$Revision: 1.7 $",
+                  "$Revision: 1.8 $",
                   "GPL",
                   "LiveSupport",
                   "http://livesupport.campware.org/")
@@ -646,9 +646,16 @@ handle_par_element(LivesupportMinimalAudioSmil    * smil,
 
         return 0;
     }
+
     g_value_init(&gvalue, G_TYPE_BOOLEAN);
     g_value_set_boolean(&gvalue, TRUE);
     gst_element_set_property(adder, "eos", &gvalue);
+    g_value_unset(&gvalue);
+
+    g_value_init(&gvalue, G_TYPE_POINTER);
+    g_value_set_pointer(&gvalue, smil->caps);
+    gst_element_set_property(adder, "caps", &gvalue);
+    g_value_unset(&gvalue);
 
 
     for (index = 0, node = par->children; node; node = node->next, ++index) {
@@ -819,6 +826,7 @@ livesupport_minimal_audio_smil_dispose(GObject * object)
     LivesupportMinimalAudioSmil * smil = LIVESUPPORT_MINIMAL_AUDIO_SMIL(object);
 
     g_return_if_fail(LIVESUPPORT_IS_MINIMAL_AUDIO_SMIL(smil));
+    gst_caps_free(smil->caps);
     xmlCleanupParser();
     G_OBJECT_CLASS(parent_class)->dispose(object);
 }
@@ -835,10 +843,28 @@ livesupport_minimal_audio_smil_init(LivesupportMinimalAudioSmil * smil)
 
     smil->bin    = GST_BIN(gst_bin_new("smilbin"));
 
+    /* TODO: don't hardcode capability values */
+    smil->caps = gst_caps_new_simple("audio/x-raw-int",
+                                     "width", G_TYPE_INT, 16,
+                                     "depth", G_TYPE_INT, 16,
+                                     "endianness", G_TYPE_INT, G_BYTE_ORDER,
+                                     "signed", G_TYPE_BOOLEAN, TRUE,
+                                     "channels", G_TYPE_INT, 2,
+                                     "rate", G_TYPE_INT, 44100,
+                                     NULL);
+
     smil->finalAdder = gst_element_factory_make("adder", "finalAdder");
+
     g_value_init(&gvalue, G_TYPE_BOOLEAN);
     g_value_set_boolean(&gvalue, TRUE);
     gst_element_set_property(smil->finalAdder, "eos", &gvalue);
+    g_value_unset(&gvalue);
+
+    g_value_init(&gvalue, G_TYPE_POINTER);
+    g_value_set_pointer(&gvalue, smil->caps);
+    gst_element_set_property(smil->finalAdder, "caps", &gvalue);
+    g_value_unset(&gvalue);
+
 
     gst_bin_add(smil->bin, smil->finalAdder);
     /* create and attach an adder to the src pad, so that the bin

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.4 $
+    Version  : $Revision: 1.5 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,12 +58,13 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class AutoplugTest : public CPPUNIT_NS::TestFixture
 {
     CPPUNIT_TEST_SUITE(AutoplugTest);
     CPPUNIT_TEST(firstTest);
+    CPPUNIT_TEST(mp3_48kHzTest);
     CPPUNIT_TEST(oggVorbisTest);
     CPPUNIT_TEST(oggVorbis160kbpsTest);
     CPPUNIT_TEST(smilTest);
@@ -95,6 +96,14 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
          */
         void
         firstTest(void)                         throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test a 48kHz mp3 file
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        mp3_48kHzTest(void)                     throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test an Ogg Vorbis file.
