@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -140,6 +140,48 @@ GstreamerPlayerTest :: simplePlayTest(void)
     CPPUNIT_ASSERT(player->isPlaying());
     while (player->isPlaying()) {
         TimeConversion::sleep(sleepT);
+    }
+
+    Ptr<time_duration>::Ref     playlength = player->getPlaylength();
+    CPPUNIT_ASSERT(playlength.get());
+    CPPUNIT_ASSERT(playlength->seconds() == 14);
+    CPPUNIT_ASSERT(playlength->fractional_seconds() == 785187);
+
+    CPPUNIT_ASSERT(!player->isPlaying());
+    player->close();
+    player->deInitialize();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Check the getPosition() function
+ *----------------------------------------------------------------------------*/
+void
+GstreamerPlayerTest :: getPositionTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     sleepT(new time_duration(microseconds(100)));
+    Ptr<ptime>::Ref             start;
+
+    player->initialize();
+    try {
+        player->open("file:var/test.mp3");
+    } catch (std::invalid_argument &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!player->isPlaying());
+    start = TimeConversion::now();
+    player->start();
+    CPPUNIT_ASSERT(player->isPlaying());
+    while (player->isPlaying()) {
+        Ptr<ptime>::Ref         now = TimeConversion::now();
+        Ptr<time_duration>::Ref offset(new time_duration(*now - *start));
+        Ptr<time_duration>::Ref position = player->getPosition();
+
+        TimeConversion::sleep(sleepT);
+        // TODO: check here for abs(position - offset) < epsilon
+        //       but unforunately seeking / position reporting with the mad
+        //       plugin is quite off the scale
     }
 
     Ptr<time_duration>::Ref     playlength = player->getPlaylength();

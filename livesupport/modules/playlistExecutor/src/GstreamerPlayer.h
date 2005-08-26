@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
@@ -366,11 +366,20 @@ class GstreamerPlayer : virtual public Configurable,
          *  Get the length of the currently opened audio clip.
          *  This function waits as long as necessary to get the length.
          *
-         *  @return the length of the currently playing audio clip, or 0,
-         *          if nothing is openned.
+         *  @return the length of the currently playing audio clip
+         *  @exception std::logic_error if there is no audio file open.
          */
         virtual Ptr<posix_time::time_duration>::Ref
-        getPlaylength(void)                                 throw ();
+        getPlaylength(void)                     throw (std::logic_error);
+
+        /**
+         *  Return the current time position in the audio file.
+         *
+         *  @return the current time position in the currently open audio file.
+         *  @exception std::logic_error if there is no audio file open.
+         */
+        virtual Ptr<posix_time::time_duration>::Ref
+        getPosition(void)                       throw (std::logic_error);
 
         /**
          *  Get the volume of the player.

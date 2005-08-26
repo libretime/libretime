@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -68,8 +68,8 @@ using namespace LiveSupport::Core;
 /**
  *  A generic interface for playing audio files.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.13 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.14 $
  */
 class AudioPlayerInterface
 {
@@ -161,11 +161,20 @@ class AudioPlayerInterface
          *  Get the length of the currently opened audio clip.
          *  This function waits as long as necessary to get the length.
          *
-         *  @return the length of the currently playing audio clip, or 0,
-         *          if nothing is openned.
+         *  @return the length of the currently playing audio clip
+         *  @exception std::logic_error if there is no audio file open.
          */
         virtual Ptr<posix_time::time_duration>::Ref
-        getPlaylength(void)                                 throw () = 0;
+        getPlaylength(void)                     throw (std::logic_error) = 0;
+
+        /**
+         *  Return the current time position in the audio file.
+         *
+         *  @return the current time position in the currently open audio file.
+         *  @exception std::logic_error if there is no audio file open.
+         */
+        virtual Ptr<posix_time::time_duration>::Ref
+        getPosition(void)                       throw (std::logic_error) = 0;
 
         /**
          *  Start playing.

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -326,14 +326,44 @@ GstreamerPlayer :: isOpened(void)                               throw ()
  *  Get the length of the current audio clip.
  *----------------------------------------------------------------------------*/
 Ptr<time_duration>::Ref
-GstreamerPlayer :: getPlaylength(void)                      throw ()
+GstreamerPlayer :: getPlaylength(void)              throw (std::logic_error)
 {
     Ptr<time_duration>::Ref   length;
     gint64                    ns;
     GstFormat                 format = GST_FORMAT_TIME;
 
+    if (!isOpened()) {
+        throw std::logic_error("player not open");
+    }
+
     if (decoder
      && gst_element_query(decoder, GST_QUERY_TOTAL, &format, &ns)
+     && format == GST_FORMAT_TIME) {
+
+        // use microsec, as nanosec() is not found by the compiler (?)
+        length.reset(new time_duration(microsec(ns / 1000LL)));
+    }
+    
+    return length;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Get the current position of the current audio clip.
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
+{
+    Ptr<time_duration>::Ref   length;
+    gint64                    ns;
+    GstFormat                 format = GST_FORMAT_TIME;
+
+    if (!isOpened()) {
+        throw std::logic_error("player not open");
+    }
+
+    if (decoder
+     && gst_element_query(decoder, GST_QUERY_POSITION, &format, &ns)
      && format == GST_FORMAT_TIME) {
 
         // use microsec, as nanosec() is not found by the compiler (?)

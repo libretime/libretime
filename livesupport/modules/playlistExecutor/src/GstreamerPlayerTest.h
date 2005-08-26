@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.9 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayerTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -57,8 +57,8 @@ namespace PlaylistExecutor {
 /**
  *  Unit test for the GstreamerPlayer class.
  *
- *  @author  $Author: fgerlits $
- *  @version $Revision: 1.9 $
+ *  @author  $Author: maroy $
+ *  @version $Revision: 1.10 $
  *  @see GstreamerPlayer
  */
 class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
@@ -67,6 +67,7 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
     CPPUNIT_TEST_SUITE(GstreamerPlayerTest);
     CPPUNIT_TEST(firstTest);
     CPPUNIT_TEST(simplePlayTest);
+    CPPUNIT_TEST(getPositionTest);
     CPPUNIT_TEST(setDeviceTest);
     CPPUNIT_TEST(simpleSmilTest);
     CPPUNIT_TEST(secondSmilTest);
@@ -119,6 +120,14 @@ class GstreamerPlayerTest : public CPPUNIT_NS::TestFixture,
          */
         void
         simplePlayTest(void)                    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Test the getPosition() function.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        getPositionTest(void)                   throw (CPPUNIT_NS::Exception);
 
         /**
          *  Test the setDevice() function, with ALSA and OSS devices.
