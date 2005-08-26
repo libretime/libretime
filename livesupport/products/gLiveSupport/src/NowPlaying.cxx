@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -159,7 +159,6 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         label->set_markup(*infoString);
         
         audioLength = playable->getPlaylength();
-        audioStart  = TimeConversion::now(); 
         
     } else {
         if (isActive && !isPaused) {
@@ -172,7 +171,6 @@ NowPlaying :: setPlayable(Ptr<Playable>::Ref  playable)             throw ()
         elapsedTime->set_text("");
         remainsTime->set_text("");
         audioLength.reset();
-        audioStart.reset();
     }
 }
 
@@ -184,11 +182,6 @@ void
 NowPlaying :: onPlayButtonClicked(void)                             throw ()
 {
     if (isActive && isPaused) {
-        Ptr<ptime>::Ref     now = TimeConversion::now();
-        time_duration       pauseLength = *now - *pausedAtTime;
-        audioStart.reset(new ptime(*audioStart + pauseLength));
-        pausedAtTime.reset();
-        
         gLiveSupport->pauseOutputAudio();       // i.e., restart
 
         remove(*playButton);
@@ -207,8 +200,6 @@ void
 NowPlaying :: onPauseButtonClicked(void)                            throw ()
 {
     if (isActive && !isPaused) {
-        pausedAtTime = TimeConversion::now();
-        
         gLiveSupport->pauseOutputAudio();
         
         remove(*pauseButton);
@@ -263,13 +254,12 @@ NowPlaying :: createFormattedLabel(int    fontSize)                 throw ()
  *  Update the timer displays. This is called every second by the master panel.
  *----------------------------------------------------------------------------*/
 void
-NowPlaying :: onUpdateTime(void)                             throw ()
+NowPlaying :: onUpdateTime(void)
+                                                                    throw ()
 {
     if (isActive) {
-        Ptr<ptime>::Ref             now = isPaused ? pausedAtTime
-                                                   : TimeConversion::now();
-        Ptr<time_duration>::Ref     elapsed(new time_duration(
-                                                    *now - *audioStart ));
+        Ptr<time_duration>::Ref     elapsed = gLiveSupport->
+                                                    getOutputAudioPosition();
         Ptr<time_duration>::Ref     remains(new time_duration(
                                                     *audioLength - *elapsed ));
         elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(

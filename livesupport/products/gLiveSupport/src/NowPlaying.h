@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,7 +66,7 @@ using namespace LiveSupport::Widgets;
  *  The box displaying "now playing" in the master panel.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class NowPlaying : public Gtk::HBox,
                    public LocalizedObject
@@ -87,17 +87,6 @@ class NowPlaying : public Gtk::HBox,
          *  The length of the item currently playing.
          */
         Ptr<time_duration>::Ref audioLength;
-
-        /**
-         *  The time the item started playing.
-         */
-        Ptr<ptime>::Ref         audioStart;
-
-        /**
-         *  The time the pause button was pressed.
-         *  Non-null if isPaused is true (which implies isActive).
-         */
-        Ptr<ptime>::Ref         pausedAtTime;
 
         /**
          *  The label holding the title etc. of the now playing item.

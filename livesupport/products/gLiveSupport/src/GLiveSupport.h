@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.46 $
+    Version  : $Revision: 1.47 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -102,7 +102,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.46 $
+ *  @version $Revision: 1.47 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -641,6 +641,21 @@ class GLiveSupport : public LocalizedConfigurable,
         virtual void
         pauseOutputAudio(void)
                                                 throw (std::logic_error);
+
+        /**
+         *  Determine the time elapsed in the current Playable object
+         *  played by the output audio player.
+         *
+         *  @return     the current time position in the currently open
+         *                  Playable object.
+         *  @exception  std::logic_error if there is no Playable object open.
+         */
+        virtual Ptr<time_duration>::Ref
+        getOutputAudioPosition(void)
+                                                throw (std::logic_error)
+        {
+            return outputPlayer->getPosition();
+        }
 
         /**
          *  Play a Playable object using the cue audio player.
