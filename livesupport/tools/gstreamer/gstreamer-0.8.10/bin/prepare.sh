@@ -22,7 +22,7 @@
 #
 #
 #   Author   : $Author: maroy $
-#   Version  : $Revision: 1.3 $
+#   Version  : $Revision: 1.4 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/tools/gstreamer/gstreamer-0.8.10/bin/prepare.sh,v $
 #-------------------------------------------------------------------------------                                                                                
 #-------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ if [ ! -d $plugins ]; then
     cd ${plugins}
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=314146
     # for details on the following patch
-    #patch -p1 < ${etcdir}/adder-caps-property.patch
+    patch -p1 < ${etcdir}/adder-caps-property.patch
     # see bug report at http://bugzilla.gnome.org/show_bug.cgi?id=309218
     # for details on the following patch
     patch -p1 < ${etcdir}/adder-duration-fix.patch
