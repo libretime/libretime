@@ -21,7 +21,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 dnl
 dnl
 dnl Author   : $Author: maroy $
-dnl Version  : $Revision: 1.2 $
+dnl Version  : $Revision: 1.3 $
 dnl Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/etc/configure.ac,v $
 dnl-----------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ dnl-----------------------------------------------------------------------------
 AC_INIT(GstreamerElements, 1.0, bugs@campware.org)
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2004 Media Development Loan Fund under the GNU GPL])
-AC_REVISION($Revision: 1.2 $)
+AC_REVISION($Revision: 1.3 $)
 
 AC_CONFIG_SRCDIR(../src/oneshot-reader.c)
 
@@ -43,7 +43,7 @@ AC_CONFIG_HEADERS(configure.h)
 AC_PROG_CC()
 AC_PROG_CXX()
 
-AC_CHECK_HEADERS(string.h getopt.h)
+AC_CHECK_HEADERS(string.h getopt.h sys/time.h)
 
 dnl-----------------------------------------------------------------------------
 dnl  specify the pkg-config path

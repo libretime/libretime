@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -52,7 +52,8 @@
  */
 enum {
     ARG_0,
-    ARG_SOURCE_CONFIG
+    ARG_SOURCE_CONFIG,
+    ARG_CAPS
 };
 
 /**
@@ -64,7 +65,7 @@ GST_PLUGIN_DEFINE (
     "switcher",
     "A filter that connects to a swtich, and changes its source",
     plugin_init,
-    "$Revision: 1.9 $",
+    "$Revision: 1.10 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -130,6 +131,25 @@ livesupport_switcher_init(LivesupportSwitcher * switcher);
  */
 static void
 livesupport_switcher_dispose(GObject * object);
+
+/**
+ *  Return the capabilities of a pad.
+ *
+ *  @pad the pad to return the capabilities for.
+ *  @return the capabilities of pad.
+ */
+static GstCaps *
+livesupport_switcher_get_caps(GstPad      * pad);
+
+/**
+ *  Set the capabilities for this switcher element.
+ *
+ *  @param switcher the switcher to set the capabilities for.
+ *  @param caps the capabilities to set.
+ */
+static void
+livesupport_switcher_set_caps(LivesupportSwitcher     * switcher,
+                              const GstCaps           * caps);
 
 /**
  *  Set a property on a Switcher object.
@@ -276,6 +296,13 @@ livesupport_switcher_class_init(LivesupportSwitcherClass  * klass)
                                                         "",
                                                         G_PARAM_READWRITE));
 
+    g_object_class_install_property(gobject_class,
+                                    ARG_CAPS,
+                                    g_param_spec_pointer("caps",
+                                                         "pad capabilites",
+                             "fix all switcher capabilities to supplied value",
+                                                        G_PARAM_READWRITE));
+
     gobject_class->dispose      = livesupport_switcher_dispose;
     gobject_class->set_property = livesupport_switcher_set_property;
     gobject_class->get_property = livesupport_switcher_get_property;
@@ -307,7 +334,7 @@ request_new_pad(GstElement        * element,
 
     pad = gst_pad_new_from_template(template, name);
     gst_pad_set_link_function(pad, gst_pad_proxy_pad_link);
-    gst_pad_set_getcaps_function(pad, gst_pad_proxy_getcaps);
+    gst_pad_set_getcaps_function(pad, livesupport_switcher_get_caps);
 
     gst_element_add_pad(element, pad);
     /* TODO: catch the pad remove event, and remove the pad from this
@@ -334,12 +361,14 @@ livesupport_switcher_init(LivesupportSwitcher * switcher)
 	                        gst_element_class_get_pad_template(klass, "src"),
                             "src");
     gst_pad_set_link_function(switcher->srcpad, gst_pad_proxy_pad_link);
-    gst_pad_set_getcaps_function(switcher->srcpad, gst_pad_proxy_getcaps);
+    gst_pad_set_getcaps_function(switcher->srcpad,
+                                 livesupport_switcher_get_caps);
 
     gst_element_add_pad(GST_ELEMENT(switcher), switcher->srcpad);
     gst_element_set_loop_function(GST_ELEMENT(switcher),
                                   livesupport_switcher_loop);
 
+    switcher->caps             = NULL;
     switcher->sinkpadList      = NULL;
     switcher->elapsedTime      = 0LL;
     switcher->offset           = 0LL;
@@ -378,7 +407,26 @@ livesupport_switcher_dispose(GObject * object)
         g_list_free(switcher->sourceConfigList);
     }
 
+    if (switcher->caps) {
+        gst_caps_free(switcher->caps);
+    }
+
     G_OBJECT_CLASS(parent_class)->dispose(object);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the capabilities of the switcher element.
+ *----------------------------------------------------------------------------*/
+static GstCaps *
+livesupport_switcher_get_caps(GstPad      * pad)
+{
+    LivesupportSwitcher   * switcher =
+                                  LIVESUPPORT_SWITCHER(gst_pad_get_parent(pad));
+
+    return switcher->caps != NULL
+         ? gst_caps_copy(switcher->caps)
+         : gst_pad_proxy_getcaps(pad);
 }
 
 
@@ -630,6 +678,27 @@ update_source_config(LivesupportSwitcher   * switcher)
 
 
 /*------------------------------------------------------------------------------
+ *  Set the capabilities of this switcher element.
+ *----------------------------------------------------------------------------*/
+static void
+livesupport_switcher_set_caps(LivesupportSwitcher     * switcher,
+                              const GstCaps           * caps)
+{
+    if (!switcher || !LIVESUPPORT_IS_SWITCHER(switcher)
+     || !caps || !GST_IS_CAPS(caps)) {
+
+        return;
+    }
+
+    if (switcher->caps) {
+        gst_caps_free(switcher->caps);
+    }
+
+    switcher->caps = gst_caps_copy(caps);
+}
+
+
+/*------------------------------------------------------------------------------
  *  Set a property.
  *----------------------------------------------------------------------------*/
 static void
@@ -650,6 +719,10 @@ livesupport_switcher_set_property(GObject         * object,
             }
             switcher->sourceConfig = g_value_dup_string(value);
             update_source_config(switcher);
+            break;
+
+        case ARG_CAPS:
+            livesupport_switcher_set_caps(switcher, g_value_get_pointer(value));
             break;
 
         default:
@@ -676,6 +749,10 @@ livesupport_switcher_get_property(GObject     * object,
     switch (prop_id) {
         case ARG_SOURCE_CONFIG:
             g_value_set_string(value, switcher->sourceConfig);
+            break;
+
+        case ARG_CAPS:
+            g_value_set_pointer(value, switcher->caps);
             break;
 
         default:

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/switcher.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,7 +36,7 @@
  *  switcher according to the time positions it is configured with.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 
 
@@ -100,6 +100,8 @@ struct _LivesupportSwitcher
 
     GstPad        * srcpad;
     GList         * sinkpadList;
+
+    GstCaps       * caps;
 
     gint64          elapsedTime;
     gint64          offset;

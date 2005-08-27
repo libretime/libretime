@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,9 +42,16 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <LiveSupport/Core/Ptr.h>
+#include <LiveSupport/Core/TimeConversion.h>
+
 
 namespace LiveSupport {
 namespace GstreamerElements {
+
+using namespace LiveSupport::Core;
+using namespace boost::posix_time;
+
 
 /* ================================================================ constants */
 
@@ -58,7 +65,7 @@ namespace GstreamerElements {
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class AutoplugTest : public CPPUNIT_NS::TestFixture
 {
@@ -71,12 +78,13 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(negativeTest);
     CPPUNIT_TEST(shortTest);
     CPPUNIT_TEST(shortSmilTest);
+    CPPUNIT_TEST(playlistOpenTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
 
         /**
-         *  Play a specific file, from and until a specific timepoint.
+         *  Play a specific file.
          *
          *  @param audioFile the audio file to play.
          *  @return the number of milliseconds played.
@@ -84,6 +92,18 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
          */
         gint64
         playFile(const char   * audioFile)
+                                                throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Open a specific file. Used to measure the time it takes to
+         *  open files.
+         *
+         *  @param audioFile the audio file to play.
+         *  @return the amount of time it took to open the file.
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        Ptr<time_duration>::Ref
+        openFile(const char   * audioFile)
                                                 throw (CPPUNIT_NS::Exception);
 
 
@@ -153,6 +173,15 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
          */
         void
         shortSmilTest(void)                    throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to open playlists, for seeing how long it takes to open
+         *  them.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        playlistOpenTest(void)                 throw (CPPUNIT_NS::Exception);
 
 
     public:

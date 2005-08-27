@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -42,7 +42,10 @@
 #include "AutoplugTest.h"
 
 
+using namespace boost::posix_time;
+using namespace LiveSupport::Core;
 using namespace LiveSupport::GstreamerElements;
+
 
 /* ===================================================  local data structures */
 
@@ -50,6 +53,12 @@ using namespace LiveSupport::GstreamerElements;
 /* ================================================  local constants & macros */
 
 CPPUNIT_TEST_SUITE_REGISTRATION(AutoplugTest);
+
+/**
+ *  Define this is time statistics should be printed while running tests.
+ */
+#undef PRINT_TIMES
+
 
 /**
  *  An mp3 test file.
@@ -77,6 +86,11 @@ static const char *         ogg160kbpsTestFile = "var/d160.ogg";
 static const char *         smilTestFile = "var/simple.smil";
 
 /**
+ *  A SMIL test file, containing an ogg vorbis file.
+ */
+static const char *         oggSmilFile = "var/simple-ogg.smil";
+
+/**
  *  A file we can't plug.
  */
 static const char *         badFile = "src/AutoplugTest.cxx";
@@ -90,6 +104,16 @@ static const char *         shortFile = "var/test-short.mp3";
  *  A SMIL file referring to a very short file.
  */
 static const char *         shortSmilFile = "var/short.smil";
+
+/**
+ *  An embedded SMIL file.
+ */
+static const char *         embeddedSmilFile = "var/embedded.smil";
+
+/**
+ *  A sequentially looking SMIL file.
+ */
+static const char *         sequentialSmilFile = "var/sequentialSmil.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -179,6 +203,75 @@ AutoplugTest :: playFile(const char   * audioFile)
     gst_object_unref(GST_OBJECT(pipeline));
 
     return timePlayed;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Open an audio file
+ *----------------------------------------------------------------------------*/
+Ptr<time_duration>::Ref
+AutoplugTest :: openFile(const char   * audioFile)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    GstElement                * pipeline;
+    GstElement                * source;
+    GstElement                * decoder;
+    GstElement                * sink;
+    GstCaps                   * caps;
+    Ptr<ptime>::Ref             start;
+    Ptr<ptime>::Ref             end;
+    Ptr<time_duration>::Ref     duration;
+
+    /* initialize GStreamer */
+    gst_init(0, 0);
+
+    caps = gst_caps_new_simple("audio/x-raw-int",
+                               "width", G_TYPE_INT, 16,
+                               "depth", G_TYPE_INT, 16,
+                               "endianness", G_TYPE_INT, G_BYTE_ORDER,
+                               "signed", G_TYPE_BOOLEAN, TRUE,
+                               "channels", G_TYPE_INT, 2,
+                               "rate", G_TYPE_INT, 44100,
+                               NULL);
+
+    start = TimeConversion::now();
+
+    /* create elements */
+    pipeline = gst_pipeline_new("audio-player");
+    source   = gst_element_factory_make("filesrc", "source");
+    sink     = gst_element_factory_make("alsasink", "alsa-output");
+
+    g_object_set(G_OBJECT(source), "location", audioFile, NULL);
+
+    decoder = ls_gst_autoplug_plug_source(source, "decoder", caps);
+
+    if (!decoder) {
+        gst_object_unref(GST_OBJECT(sink));
+        gst_object_unref(GST_OBJECT(source));
+        gst_object_unref(GST_OBJECT(pipeline));
+
+        return duration;
+    }
+
+    gst_element_link(decoder, sink);
+    gst_bin_add_many(GST_BIN(pipeline), source, decoder, sink, NULL);
+
+    gst_element_set_state(source, GST_STATE_PAUSED);
+    gst_element_set_state(decoder, GST_STATE_PAUSED);
+    gst_element_set_state(sink, GST_STATE_PAUSED);
+    gst_element_set_state(pipeline, GST_STATE_PLAYING);
+
+    gst_bin_iterate(GST_BIN(pipeline));
+
+    end = TimeConversion::now();
+
+    /* clean up nicely */
+    gst_element_set_state(pipeline, GST_STATE_NULL);
+    gst_object_unref(GST_OBJECT(pipeline));
+
+    duration.reset(new time_duration(*end - *start));
+
+    return duration;
 }
 
 
@@ -314,5 +407,58 @@ AutoplugTest :: shortSmilTest(void)
     g_snprintf(str, 256, "time played: %" G_GINT64_FORMAT, timePlayed);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed > 1.9 * GST_SECOND);
     CPPUNIT_ASSERT_MESSAGE(str, timePlayed < 2.1 * GST_SECOND);
+}
+
+
+/*------------------------------------------------------------------------------
+ *  See how long it takes to open some playlists
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: playlistOpenTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    Ptr<time_duration>::Ref     duration;
+
+    duration = openFile(mp3TestFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << mp3TestFile << ": "
+              << *duration << std::endl;
+#endif
+
+    duration = openFile(oggTestFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << oggTestFile << ": "
+              << *duration << std::endl;
+#endif
+
+    duration = openFile(smilTestFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << smilTestFile << ": "
+              << *duration << std::endl;
+#endif
+
+    duration = openFile(oggSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << oggSmilFile << ": "
+              << *duration << std::endl;
+#endif
+
+    duration = openFile(shortSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << shortSmilFile << ": "
+              << *duration << std::endl;
+#endif
+
+    duration = openFile(embeddedSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << embeddedSmilFile << ": "
+              << *duration << std::endl;
+#endif
+
+    duration = openFile(sequentialSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << sequentialSmilFile << ": "
+              << *duration << std::endl;
+#endif
 }
 

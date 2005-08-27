@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ GST_PLUGIN_DEFINE (
     "partialplay",
     "Partial play",
     plugin_init,
-    "$Revision: 1.5 $",
+    "$Revision: 1.6 $",
     "GPL",
     "LiveSupport",
     "http://livesupport.campware.org/"
@@ -131,6 +131,14 @@ seek_pack_eos_signal_handler(GstElement     * element,
  */
 static void
 livesupport_partial_play_init(LivesupportPartialPlay      * pplay);
+
+/**
+ *  Destroy a PartialPlay object.
+ *
+ *  @param object the PartialPlay object to destroy.
+ */
+static void
+livesupport_partial_play_dispose(GObject * object);
 
 /**
  *  Set a property for a PartialPlay object.
@@ -241,9 +249,6 @@ livesupport_partial_play_change_state(GstElement * element)
 
         case GST_STATE_PAUSED_TO_PLAYING:
             if (!pplay->seekPackInited) {
-                GstPad               * srcPad;
-                const GstCaps        * caps;
-
                 pplay->seekPackInited = TRUE;
                 if (pplay->source) {
                     g_object_unref(pplay->source);
@@ -254,12 +259,9 @@ livesupport_partial_play_change_state(GstElement * element)
                              "location",
                              pplay->location,
                              NULL);
-                srcPad = gst_element_get_pad((GstElement *) pplay, "src");
-                caps   = gst_pad_get_caps(srcPad);
 
                 livesupport_seek_pack_init(pplay->seekPack,
                                            pplay->source,
-                                           caps,
                                            pplay->silenceDuration,
                                            pplay->playFrom,
                                            pplay->playTo);
@@ -326,6 +328,8 @@ livesupport_partial_play_class_init(LivesupportPartialPlayClass   * klass)
 
     parent_class     = g_type_class_ref(GST_TYPE_BIN);
 
+    gobject_class->dispose         = livesupport_partial_play_dispose;
+
     g_object_class_install_property(gobject_class,
                                     ARG_LOCATION,
                                     g_param_spec_string("location",
@@ -374,7 +378,16 @@ seek_pack_eos_signal_handler(GstElement     * element,
 static void
 livesupport_partial_play_init(LivesupportPartialPlay  * pplay)
 {
-    pplay->seekPack       = livesupport_seek_pack_new("seekPack");
+    pplay->caps = gst_caps_new_simple("audio/x-raw-int",
+                                       "width", G_TYPE_INT, 16,
+                                       "depth", G_TYPE_INT, 16,
+                                       "endianness", G_TYPE_INT, G_BYTE_ORDER,
+                                       "signed", G_TYPE_BOOLEAN, TRUE,
+                                       "channels", G_TYPE_INT, 2,
+                                       "rate", G_TYPE_INT, 44100,
+                                       NULL);
+
+    pplay->seekPack       = livesupport_seek_pack_new("seekPack", pplay->caps);
     pplay->seekPackInited = FALSE;
 
     livesupport_seek_pack_add_to_bin(pplay->seekPack, GST_BIN(pplay));
@@ -387,12 +400,29 @@ livesupport_partial_play_init(LivesupportPartialPlay  * pplay)
                      G_CALLBACK(seek_pack_eos_signal_handler),
                      pplay);
 
-    /* TODO: free these strings when disposing of the object */
     pplay->location        = g_strdup("");
     pplay->config          = g_strdup("");
     pplay->silenceDuration = 0LL;
     pplay->playFrom        = 0LL;
     pplay->playTo          = 0LL;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Destroy a PartialPlay object.
+ *----------------------------------------------------------------------------*/
+static void
+livesupport_partial_play_dispose(GObject * object)
+{
+    LivesupportPartialPlay    * pplay;
+
+    g_return_if_fail(LIVESUPPORT_IS_PARTIAL_PLAY(object));
+    pplay = LIVESUPPORT_PARTIAL_PLAY(object);
+
+    gst_caps_free(pplay->caps);
+    g_free(pplay->location);
+    g_free(pplay->config);
+    G_OBJECT_CLASS(parent_class)->dispose(object);
 }
 
 

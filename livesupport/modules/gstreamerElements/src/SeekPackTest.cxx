@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.5 $
+    Version  : $Revision: 1.6 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/SeekPackTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -133,7 +133,7 @@ SeekPackTest :: playFile(const char   * audioFile,
     /* create elements */
     pipeline = gst_pipeline_new("audio-player");
     source   = gst_element_factory_make("filesrc", "filesource");
-    seekPack = livesupport_seek_pack_new("seekPack");
+    seekPack = livesupport_seek_pack_new("seekPack", caps);
     sink     = gst_element_factory_make("alsasink", "alsaoutput");
 
     /* set filename property on the file source */
@@ -141,7 +141,6 @@ SeekPackTest :: playFile(const char   * audioFile,
 
     livesupport_seek_pack_init(seekPack,
                                source,
-                               caps,
                                silenceDuration,
                                playFrom,
                                playTo);

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/partial-play.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -36,7 +36,7 @@
  *  offset until a specified offset.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 
 
@@ -85,6 +85,8 @@ typedef struct _LivesupportPartialPlayClass LivesupportPartialPlayClass;
 struct _LivesupportPartialPlay
 {
     GstBin                  parent;
+
+    GstCaps               * caps;
 
     GstPad                * srcpad;
     GstElement            * source;

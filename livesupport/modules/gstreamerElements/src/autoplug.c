@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.8 $
+    Version  : $Revision: 1.9 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,8 +47,6 @@ typedef struct _Typefind Typefind;
  *  Data structure to hold information related to typefindinf.
  */
 struct _Typefind {
-    GList             * factories;
-
     GstElement        * pipeline;
     GstElement        * bin;
     GstElement        * source;
@@ -62,6 +60,17 @@ struct _Typefind {
 
     gboolean            done;
 };
+
+/**
+ *  The list of factories this autoplugger is interested in.
+ */
+static GList             * factories = 0;
+
+/**
+ *  The reference count for the autoplugger, used to determine if static
+ *  (shared) resources should be freed.
+ */
+static unsigned int         refCount = 0;
 
 
 /* ================================================  local constants & macros */
@@ -212,20 +221,64 @@ static gboolean
 autoplug_feature_filter(GstPluginFeature      * feature,
                         gpointer                userData)
 {
-    const gchar   * klass;
-    guint           rank;
+    GstElementFactory * factory;
+    const gchar       * klass;
+    guint               rank;
+    const GList       * pads;
+    gboolean            good;
 
     /* we only care about element factories */
     if (!GST_IS_ELEMENT_FACTORY(feature)) {
         return FALSE;
     }
+    factory = GST_ELEMENT_FACTORY(feature);
 
     /* only parsers, demuxers and decoders */
-    klass = gst_element_factory_get_klass(GST_ELEMENT_FACTORY(feature));
+    klass = gst_element_factory_get_klass(factory);
     if (g_strrstr(klass, "Demux") == NULL &&
         g_strrstr(klass, "Decoder") == NULL &&
         g_strrstr(klass, "Parse") == NULL) {
 
+        return FALSE;
+    }
+
+    /* select only the factories we care about, which are enough to
+     * open and plug mp3, ogg vorbis and SMIL */
+    good = FALSE;
+    for (pads = gst_element_factory_get_pad_templates(factory);
+         pads != NULL;
+         pads = pads->next) {
+
+        GstPadTemplate * templ = GST_PAD_TEMPLATE(pads->data);
+        const char     * mime;
+
+        if (!GST_IS_PAD_TEMPLATE(templ)) {
+            continue;
+        }
+        /* find the sink template - need an always pad*/
+        if (templ->direction != GST_PAD_SINK ||
+            templ->presence != GST_PAD_ALWAYS) {
+            continue;
+        }
+
+        if (gst_caps_get_size(templ->caps) <= 0) {
+            continue;
+        }
+
+        mime = gst_structure_get_name(gst_caps_get_structure(templ->caps, 0));
+
+        if (g_strrstr(mime, "application/x-id3")
+         || g_strrstr(mime, "audio/mpeg")
+         || g_strrstr(mime, "application/ogg")
+         || g_strrstr(mime, "audio/x-vorbis")
+         || g_strrstr(mime, "application/smil")) {
+
+            good = TRUE;
+            break;
+        }
+    }
+
+    if (!good) {
         return FALSE;
     }
 
@@ -260,13 +313,19 @@ autoplug_init(Typefind        * typefind,
               const GstCaps   * caps)
 {
     /* first filter out the interesting element factories */
-    typefind->factories = gst_registry_pool_feature_filter(
-                             (GstPluginFeatureFilter) autoplug_feature_filter,
-                             FALSE, NULL);
+    if (!factories) {
+        /* FIXME: this is not thread safe!
+         *        but set factoires to non-zero ASAP to avoid race conditions */
+        factories = (GList *) -1;
 
-    /* sort them according to their ranks */
-    typefind->factories = g_list_sort(typefind->factories,
-                                      (GCompareFunc) autoplug_compare_ranks);
+        factories = gst_registry_pool_feature_filter(
+                               (GstPluginFeatureFilter) autoplug_feature_filter,
+                               FALSE, NULL);
+
+        /* sort them according to their ranks */
+        factories = g_list_sort(factories,
+                                (GCompareFunc) autoplug_compare_ranks);
+    }
 
     typefind->pipeline  = gst_pipeline_new("pipeline");
     typefind->bin       = gst_bin_new(name);
@@ -299,6 +358,8 @@ autoplug_init(Typefind        * typefind,
                      NULL);
 
     typefind->done = FALSE;
+
+    ++refCount;
 }
 
 /*------------------------------------------------------------------------------
@@ -307,7 +368,12 @@ autoplug_init(Typefind        * typefind,
 static void
 autoplug_deinit(Typefind      * typefind)
 {
-    g_list_free(typefind->factories);
+    --refCount;
+
+    if (refCount == 0) {
+        g_list_free(factories);
+        factories = 0;
+    }
 
     gst_element_set_state(typefind->pipeline, GST_STATE_NULL);
     if (typefind->typefind) {
@@ -444,8 +510,6 @@ autoplug_try_to_plug(Typefind         * typefind,
     GstObject     * parent = GST_OBJECT(gst_pad_get_parent(pad));
     const gchar   * mime;
     const GList   * item;
-    GstCaps       * res;
-    GstCaps       * audiocaps;
 
     g_return_if_fail(typefind != NULL);
 
@@ -466,10 +530,13 @@ autoplug_try_to_plug(Typefind         * typefind,
     }
 
     /* can it link to the audiopad? */
-    audiocaps = gst_pad_get_caps(gst_element_get_pad(typefind->audiosink,
-                                                     "sink"));
-    res = gst_caps_intersect(caps, audiocaps);
-    if (res && !gst_caps_is_empty(res)) {
+    /* instead of doing a gst_caps_intersect between caps and the sink
+     * pad caps of typefind->audiosink, just look at the mime type of caps.
+     * this is sufficient, as we know that we're linking to an audioconvert
+     * element, that accepts audio/x-raw-int and audio/x-raw-float */
+    if (g_strrstr(mime, "audio/x-raw-int")
+     || g_strrstr(mime, "audio/x-raw-float")) {
+
         GST_DEBUG("Found pad to link to audiosink - plugging is now done");
         typefind->done = TRUE;
 
@@ -483,22 +550,20 @@ autoplug_try_to_plug(Typefind         * typefind,
         gst_bin_add(GST_BIN(typefind->pipeline), typefind->sink);
         gst_bin_sync_children_state(GST_BIN(typefind->pipeline));
 
-        gst_caps_free(audiocaps);
-        gst_caps_free(res);
         return;
     }
-    gst_caps_free(audiocaps);
-    gst_caps_free(res);
 
     /* try to plug from our list */
-    for (item = typefind->factories; item != NULL; item = item->next) {
+    for (item = factories; item != NULL; item = item->next) {
         GstElementFactory * factory = GST_ELEMENT_FACTORY(item->data);
         const GList       * pads;
+        GstCaps           * res;
 
         for (pads = gst_element_factory_get_pad_templates(factory);
              pads != NULL;
              pads = pads->next) {
             GstPadTemplate * templ = GST_PAD_TEMPLATE(pads->data);
+            const gchar    * templMime;
 
             if (!GST_IS_PAD_TEMPLATE(templ)) {
                 continue;
@@ -509,6 +574,12 @@ autoplug_try_to_plug(Typefind         * typefind,
                 continue;
             }
 
+            /* first check if mime types match */
+            templMime = gst_structure_get_name(
+                                        gst_caps_get_structure(templ->caps, 0));
+            if (!g_strrstr(mime, templMime)) {
+                continue;
+            }
             /* can it link? */
             res = gst_caps_intersect(caps, templ->caps);
             if (res && !gst_caps_is_empty(res)) {
