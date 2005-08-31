@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.27 $
+    Version  : $Revision: 1.28 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/StoredFile.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -281,13 +281,14 @@ class StoredFile{
      *  Increase access counter, create access token, insert access record,
      *  call access method of RawMediaData
      *
+     *  @param parent int parent token
      *  @return array with: access URL, access token
      */
-    function accessRawMediaData()
+    function accessRawMediaData($parent='0')
     {
         $realFname  = $this->_getRealRADFname();
         $ext        = $this->_getExt();
-        $res = $this->gb->bsAccess($realFname, $ext, $this->gunid);
+        $res = $this->gb->bsAccess($realFname, $ext, $this->gunid, 'access', $parent);
         if(PEAR::isError($res)){ return $res; }
         $resultArray =
             array('url'=>"file://{$res['fname']}", 'token'=>$res['token']);

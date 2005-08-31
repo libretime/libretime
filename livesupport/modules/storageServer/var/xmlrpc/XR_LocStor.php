@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.23 $
+    Version  : $Revision: 1.24 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -954,6 +954,8 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
+     *      <li> recursive : boolean - flag for recursive access files
+     *                  inside playlist (default: false)</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
@@ -983,7 +985,9 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->accessPlaylist($r['sessid'], $r['plid']);
+        if(is_null($r['recursive'])) $r['recursive']=FALSE;
+        $res = $this->accessPlaylist($r['sessid'], $r['plid'],
+            (boolean)$r['recursive']);
         if(PEAR::isError($res)){
             $ec0 = intval($res->getCode());
             $ec  = ($ec0 == GBERR_NOTF ? 800+$ec0 : 805 );
@@ -1005,6 +1009,8 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> token   :  string  -  playlist token
      *              returned by locstor.accessPlaylist</li>
+     *      <li> recursive : boolean - flag for recursive release files
+     *              accessed by recursive accessPlaylist (default: false)</li>
      *  </ul>
      *
      *  On success, returns a XML-RPC struct with single field:
@@ -1030,7 +1036,9 @@ class XR_LocStor extends LocStor{
     {
         list($ok, $r) = $this->_xr_getPars($input);
         if(!$ok) return $r;
-        $res = $this->releasePlaylist(NULL, $r['token']);
+        if(is_null($r['recursive'])) $r['recursive']=FALSE;
+        $res = $this->releasePlaylist(NULL, $r['token'],
+            (boolean)$r['recursive']);
         if(PEAR::isError($res)){
             return new XML_RPC_Response(0, 805,
                 "xr_releasePlaylist: ".$res->getMessage().

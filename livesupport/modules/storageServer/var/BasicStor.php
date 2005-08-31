@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.58 $
+    Version  : $Revision: 1.59 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/BasicStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ require_once "Transport.php";
  *  Core of LiveSupport file storage module
  *
  *  @author  $Author: tomas $
- *  @version $Revision: 1.58 $
+ *  @version $Revision: 1.59 $
  *  @see Alib
  */
 class BasicStor extends Alib{
@@ -309,9 +309,10 @@ class BasicStor extends Alib{
      *  @param ext string, useful filename extension for accessed file
      *  @param gunid int, global unique id
      *  @param type string 'access'|'download'
+     *  @param parent int parent token
      *  @return array with: seekable filehandle, access token
      */
-    function bsAccess($realFname, $ext, $gunid, $type='access')
+    function bsAccess($realFname, $ext, $gunid, $type='access', $parent='0')
     {
         $token  = StoredFile::_createGunid();
         if(!is_null($realFname)){
@@ -330,10 +331,10 @@ class BasicStor extends Alib{
         $this->dbc->query("BEGIN");
         $res = $this->dbc->query("
             INSERT INTO {$this->accessTable}
-                (gunid, token, ext, type, ts)
+                (gunid, token, ext, type, parent, ts)
             VALUES
                 (x'{$gunid}'::bigint, x'$token'::bigint,
-                '$ext', '$type', now())
+                '$ext', '$type', x'{$parent}'::bigint, now())
         ");
         if($this->dbc->isError($res)){
             $this->dbc->query("ROLLBACK"); return $res; }
@@ -399,10 +400,11 @@ class BasicStor extends Alib{
      *
      *  @param id int, virt.file's local id
      *  @param part string, 'media'|'metadata'
+     *  @param parent int parent token
      *  @return array with strings:
      *      downloadable URL, download token, chsum, size, filename
      */
-    function bsOpenDownload($id, $part='media')
+    function bsOpenDownload($id, $part='media', $parent='0')
     {
         $ac =& StoredFile::recall($this, $id);
         if($this->dbc->isError($ac)) return $ac;
@@ -423,7 +425,7 @@ class BasicStor extends Alib{
                  "BasicStor::bsOpenDownload: unknown part ($part)"
                 );
         }
-        $acc = $this->bsAccess($realfile, $ext, $gunid, 'download');
+        $acc = $this->bsAccess($realfile, $ext, $gunid, 'download', $parent);
         if($this->dbc->isError($acc)){ return $acc; }
         $url = $this->getUrlPart()."access/".basename($acc['fname']);
         $chsum = md5_file($realfile);
@@ -1536,12 +1538,16 @@ class BasicStor extends Alib{
      *      <li>edited</li>
      *      <li>deleted</li>
      *  </ul>
-
      *  file types:
      *  <ul>
      *      <li>audioclip</li>
      *      <li>playlist</li>
      *      <li>webstream</li>
+     *  </ul>
+     *  access types:
+     *  <ul>
+     *      <li>access</li>
+     *      <li>download</li>
      *  </ul>
      */
     function install()
@@ -1591,11 +1597,12 @@ class BasicStor extends Alib{
 
         #echo "{$this->accessTable}\n";
         $r = $this->dbc->query("CREATE TABLE {$this->accessTable} (
-            gunid bigint,
-            token bigint,
-            chsum char(32) not null default'',
-            ext varchar(128) not null default'',
-            type varchar(20) not null default'',
+            gunid bigint,                               -- global unique id
+            token bigint,                               -- access token
+            chsum char(32) not null default'',          -- md5 checksum
+            ext varchar(128) not null default'',        -- extension
+            type varchar(20) not null default'',        -- access type
+            parent bigint,                              -- parent token
             ts timestamp
         )");
         if($this->dbc->isError($r)) return $r;
@@ -1603,6 +1610,8 @@ class BasicStor extends Alib{
             ON {$this->accessTable} (token)");
         $this->dbc->query("CREATE INDEX {$this->accessTable}_gunid_idx
             ON {$this->accessTable} (gunid)");
+        $this->dbc->query("CREATE INDEX {$this->accessTable}_parent_idx
+            ON {$this->accessTable} (parent)");
         if(!file_exists($this->storageDir)){
             mkdir($this->storageDir, 02775);
         }

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -169,15 +169,16 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string
      *  @param gunid string
+     *  @param parent int parent token
      *  @return array with: seekable filehandle, access token
      */
-    function accessRawAudioData($sessid, $gunid)
+    function accessRawAudioData($sessid, $gunid, $parent='0')
     {
         $ac =& StoredFile::recallByGunid($this, $gunid);
         if(PEAR::isError($ac)) return $ac;
         if(($res = $this->_authorize('read', $ac->getId(), $sessid)) !== TRUE)
             return $res;
-        return $ac->accessRawMediaData();
+        return $ac->accessRawMediaData($parent);
     }
 
     /**
@@ -565,7 +566,7 @@ class LocStor extends BasicStor{
     /**
      *  RollBack playlist changes to the locked state
      *
-     *  @param token string, playlist access token
+     *  @param playlistToken string, playlist access token
      *  @param sessid string, session ID
      *  @return string gunid of playlist
      */
@@ -614,11 +615,20 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
+     *  @param recursive boolean, flag for recursive access files
+     *                  inside playlist (optional, default: false)
+     *  @param parent int parent token
      *  @return struct
      *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
      */
-    function accessPlaylist($sessid, $playlistId)
+    function accessPlaylist($sessid, $playlistId, $recursive=FALSE, $parent='0')
     {
+        if($recursive){
+            require_once"AccessRecur.php";
+            $r = AccessRecur::accessPlaylist($this, $sessid, $playlistId);
+            if(PEAR::isError($r)){ return $r; }
+            return $r;
+        }
         $ex = $this->existsPlaylist($sessid, $playlistId);
         if(PEAR::isError($ex)){ return $ex; }
         if(!$ex){
@@ -630,7 +640,7 @@ class LocStor extends BasicStor{
         $id = $this->_idFromGunid($playlistId);
         if(($res = $this->_authorize('read', $id, $sessid)) !== TRUE)
             return $res;
-        $res = $this->bsOpenDownload($id, 'metadata');
+        $res = $this->bsOpenDownload($id, 'metadata', $parent);
         unset($res['filename']);
         return $res;
     }
@@ -640,10 +650,18 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistToken string, playlist access token
+     *  @param recursive boolean, flag for recursive access files
+     *                  inside playlist (optional, default: false)
      *  @return string, playlist ID
      */
-    function releasePlaylist($sessid, $playlistToken)
+    function releasePlaylist($sessid, $playlistToken, $recursive=FALSE)
     {
+        if($recursive){
+            require_once"AccessRecur.php";
+            $r = AccessRecur::releasePlaylist($this, $sessid, $playlistToken);
+            if(PEAR::isError($r)){ return $r; }
+            return $r;
+        }
         return $this->bsCloseDownload($playlistToken, 'metadata');
     }
 
