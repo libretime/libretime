@@ -46,6 +46,11 @@
                 'gunid' => '0000000000000002'
             ),
             array(
+                'type'  => 'playlist',
+                'xml'   => '../tests/plistEmbedded.xml',
+                'gunid' => '0000000000000003'
+            ),
+            array(
                 'type'  => 'webstream',
                 'xml'   => '../tests/wstream1.xml',
                 'gunid' => 'f000000000000001'
