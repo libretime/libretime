@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -86,7 +86,7 @@ using namespace LiveSupport::Core;
  *  </code></pre>
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class GstreamerPlayer : virtual public Configurable,
                         virtual public AudioPlayerInterface
@@ -184,15 +184,6 @@ class GstreamerPlayer : virtual public Configurable,
          */
         virtual void
         fireOnStopEvent(void)                           throw ();
-
-        /**
-         *  Tell if the object is currently opened (has a file source to
-         *  read.)
-         *
-         *  @return true if the object is currently opened, false otherwise.
-         */
-        bool
-        isOpened(void)                                  throw ();
 
 
     public:
@@ -309,6 +300,15 @@ class GstreamerPlayer : virtual public Configurable,
          */
         virtual void
         open(const std::string  fileUrl)        throw (std::invalid_argument);
+
+        /**
+         *  Tell if the object is currently opened (has a file source to
+         *  read.)
+         *
+         *  @return true if the object is currently opened, false otherwise.
+         */
+        virtual bool
+        isOpen(void)                                    throw ();
 
         /**
          *  Close an audio source that was opened.

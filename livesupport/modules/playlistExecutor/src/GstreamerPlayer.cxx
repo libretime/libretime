@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -240,7 +240,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
     GstElement    * fakesink;
     gint64          position;
 
-    if (isOpened()) {
+    if (isOpen()) {
         close();
     }
 
@@ -316,7 +316,7 @@ GstreamerPlayer :: open(const std::string   fileUrl)
  *  Tell if we've been opened.
  *----------------------------------------------------------------------------*/
 bool
-GstreamerPlayer :: isOpened(void)                               throw ()
+GstreamerPlayer :: isOpen(void)                                 throw ()
 {
     return decoder != 0;
 }
@@ -332,7 +332,7 @@ GstreamerPlayer :: getPlaylength(void)              throw (std::logic_error)
     gint64                    ns;
     GstFormat                 format = GST_FORMAT_TIME;
 
-    if (!isOpened()) {
+    if (!isOpen()) {
         throw std::logic_error("player not open");
     }
 
@@ -358,7 +358,7 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
     gint64                    ns;
     GstFormat                 format = GST_FORMAT_TIME;
 
-    if (!isOpened()) {
+    if (!isOpen()) {
         throw std::logic_error("player not open");
     }
 
@@ -380,7 +380,7 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
 void
 GstreamerPlayer :: start(void)                      throw (std::logic_error)
 {
-    if (!isOpened()) {
+    if (!isOpen()) {
         throw std::logic_error("GstreamerPlayer not opened yet");
     }
 
@@ -419,7 +419,7 @@ GstreamerPlayer :: isPlaying(void)                  throw ()
 void
 GstreamerPlayer :: stop(void)                       throw (std::logic_error)
 {
-    if (!isOpened()) {
+    if (!isOpen()) {
         throw std::logic_error("GstreamerPlayer not opened yet");
     }
 

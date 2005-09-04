@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.14 $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/include/LiveSupport/PlaylistExecutor/AudioPlayerInterface.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -69,7 +69,7 @@ using namespace LiveSupport::Core;
  *  A generic interface for playing audio files.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class AudioPlayerInterface
 {
@@ -148,6 +148,15 @@ class AudioPlayerInterface
         virtual void
         open(const std::string  fileUrl)        throw (std::invalid_argument)
                                                                         = 0;
+
+        /**
+         *  Tell if the audio player has been openned.
+         *
+         *  @return true if the audio player is openned, false otherwise.
+         *  @see #open
+         */
+        virtual bool
+        isOpen(void)                            throw ()                = 0;
 
         /**
          *  Close an audio source that was opened.
