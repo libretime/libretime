@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.47 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.48 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClient.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -393,6 +393,11 @@ static const std::string    getPlaylistSessionIdParamName = "sessid";
  *  The name of the playlist unique ID parameter in the input structure
  *----------------------------------------------------------------------------*/
 static const std::string    getPlaylistPlaylistIdParamName = "plid";
+
+/*------------------------------------------------------------------------------
+ *  The name of the recursive parameter in the input structure
+ *----------------------------------------------------------------------------*/
+static const std::string    getPlaylistRecursiveParamName = "recursive";
 
 /*------------------------------------------------------------------------------
  *  The name of the result URL parameter returned by the method
@@ -931,7 +936,9 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
             = sessionId->getId();
     parameters[getPlaylistPlaylistIdParamName] 
             = std::string(*id);
-    
+    parameters[getPlaylistRecursiveParamName] 
+            = false;
+
     result.clear();
     if (!xmlRpcClient.execute(getPlaylistOpenMethodName.c_str(),
                               parameters, result)) {
@@ -950,7 +957,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
              << result;
         throw Core::XmlRpcMethodFaultException(eMsg.str());
     }
-    
+
     if (! result.hasMember(getPlaylistUrlParamName)
             || result[getPlaylistUrlParamName].getType() 
                                                 != XmlRpcValue::TypeString
@@ -1000,7 +1007,7 @@ WebStorageClient :: getPlaylist(Ptr<SessionId>::Ref sessionId,
         throw XmlRpcCommunicationException(eMsg);
     }
     xmlRpcClient.close();
-    
+
     if (xmlRpcClient.isFault()) {
         std::stringstream eMsg;
         eMsg << "XML-RPC method '" 
@@ -1267,8 +1274,12 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
     Ptr<Playlist>::Ref      oldPlaylist = getPlaylist(sessionId, id);
     
     Ptr<time_duration>::Ref playlength = oldPlaylist->getPlaylength();
-    Ptr<Playlist>::Ref      newPlaylist(new Playlist(UniqueId::generateId(),
+    Ptr<Playlist>::Ref      newPlaylist(new Playlist(oldPlaylist->getId(),
                                                      playlength));
+    newPlaylist->setTitle(oldPlaylist->getTitle());
+    newPlaylist->setToken(oldPlaylist->getToken());
+    // TODO: copy over all metadata as well
+
     Ptr<xmlpp::Document>::Ref
                         smilDocument(new xmlpp::Document(xmlVersion));
     xmlpp::Element    * smilRootNode 
@@ -1399,6 +1410,7 @@ WebStorageClient :: acquirePlaylist(Ptr<SessionId>::Ref sessionId,
    
     Ptr<std::string>::Ref   playlistUri(new std::string(fileName.str()));
     newPlaylist->setUri(playlistUri);
+
     return newPlaylist;
 }
 

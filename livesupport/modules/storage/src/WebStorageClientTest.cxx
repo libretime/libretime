@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.44 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.45 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storage/src/WebStorageClientTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -355,6 +355,57 @@ WebStorageClientTest :: playlistTest(void)
         CPPUNIT_FAIL(e.what());
     }
     CPPUNIT_ASSERT(!newPlaylist->getUri());
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Test on an embedded playlist
+ *----------------------------------------------------------------------------*/
+void
+WebStorageClientTest :: embeddedPlaylistTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    try {
+        wsc->reset();
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(wsc->getPlaylistIds()->size() >= 3);
+    Ptr<UniqueId>::Ref  playlistId = wsc->getPlaylistIds()->at(2);
+
+    Ptr<SessionId>::Ref sessionId;
+    try {
+        sessionId = authentication->login("root", "q");
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(sessionId);
+
+
+    // test acquirePlaylist()
+    Ptr<Playlist>::Ref      playlist;
+    try {
+        playlist = wsc->acquirePlaylist(sessionId, playlistId);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(playlist);
+    CPPUNIT_ASSERT(playlist->getUri());
+
+    std::ifstream ifs(playlist->getUri()->substr(7).c_str());
+    if (!ifs) {                                            // cut off "file://"
+        ifs.close();
+        CPPUNIT_FAIL("playlist temp file not found");
+    }
+    ifs.close();
+
+    // test releasePlaylist()
+    try {
+        wsc->releasePlaylist(playlist);
+    } catch (XmlRpcException &e) {
+        CPPUNIT_FAIL(e.what());
+    }
+    CPPUNIT_ASSERT(!playlist->getUri());
 }
 
 
