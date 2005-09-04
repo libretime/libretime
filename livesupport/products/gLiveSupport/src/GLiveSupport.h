@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.47 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.48 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,6 +65,7 @@ using namespace LiveSupport::Storage;
 using namespace LiveSupport::PlaylistExecutor;
 using namespace LiveSupport::Widgets;
 
+
 /* ================================================================ constants */
 
 
@@ -101,8 +102,8 @@ class MasterPanelWindow;
  *  <code>schedulerClientFactory</code> elements see their
  *  respective documentation.
  *
- *  @author $Author: fgerlits $
- *  @version $Revision: 1.47 $
+ *  @author $Author: maroy $
+ *  @version $Revision: 1.48 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -127,6 +128,20 @@ class GLiveSupport : public LocalizedConfigurable,
          *  This is a list holding Ptr<Playable>::Ref references.
          */
         typedef std::list<Ptr<Playable>::Ref>       PlayableList;
+
+        /**
+         *  A type for having a map of AudioClip objects, with using
+         *  the ids of the objects as keys.
+         */
+        typedef std::map<UniqueId::IdType,
+                         Ptr<AudioClip>::Ref>       AudioClipMap;
+
+        /**
+         *  A type for having a map of Playlist objects, with using
+         *  the ids of the objects as keys.
+         */
+        typedef std::map<UniqueId::IdType,
+                         Ptr<Playlist>::Ref>        PlaylistMap;
 
 
     private:
@@ -184,6 +199,18 @@ class GLiveSupport : public LocalizedConfigurable,
          *  The master panel window.
          */
         Ptr<MasterPanelWindow>::Ref     masterPanel;
+
+        /**
+         *  A map, holding references to all AudioClip objects that are
+         *  openned.
+         */
+        Ptr<AudioClipMap>::Ref          opennedAudioClips;
+
+        /**
+         *  A map, holding references to all Playlist objects that are
+         *  openned.
+         */
+        Ptr<PlaylistMap>::Ref           opennedPlaylists;
 
         /**
          *  The contents of a Scratchpad, stored as a list.
@@ -247,22 +274,6 @@ class GLiveSupport : public LocalizedConfigurable,
         loadScratchpadContents(void)                            throw ();
 
         /**
-         *  Release the resources used by the output audio player.
-         *
-         *  @exception std::logic_error in case of audio player errors.
-         */
-        virtual void
-        releaseOutputAudio(void)                throw (std::logic_error);
-
-        /**
-         *  Release the resources used by the cue audio player.
-         *
-         *  @exception std::logic_error in case of audio player errors.
-         */
-        virtual void
-        releaseCueAudio(void)                   throw (std::logic_error);
-
-        /**
          *  Emit the "edited playlist has been modified" signal.
          */
         void
@@ -288,6 +299,8 @@ class GLiveSupport : public LocalizedConfigurable,
                   cuePlayerIsPaused(false)
         {
             scratchpadContents.reset(new PlayableList());
+            opennedAudioClips.reset(new AudioClipMap());
+            opennedPlaylists.reset(new PlaylistMap());
         }
 
         /**
@@ -302,6 +315,8 @@ class GLiveSupport : public LocalizedConfigurable,
             if (cuePlayer.get()) {
                 cuePlayer->deInitialize();
             }
+            releaseOpennedAudioClips();
+            releaseOpennedPlaylists();
         }
 
         /**
@@ -422,17 +437,6 @@ class GLiveSupport : public LocalizedConfigurable,
         }
 
         /**
-         *  Accessor function to the storage client held by this object.
-         *
-         *  @return the storage client held by this object.
-         */
-        Ptr<StorageClientInterface>::Ref
-        getStorage(void)                                        throw ()
-        {
-            return storage;
-        }
-
-        /**
          *  Get the map of supported languages.
          *
          *  @return the map of supported languages.
@@ -497,13 +501,151 @@ class GLiveSupport : public LocalizedConfigurable,
         }
 
         /**
+         *  Reset the storage behind GLiveSupport.
+         *  Used for testing only.
+         *
+         *  @exception XmlRpcException on communication problems.
+         */
+        void
+        resetStorage(void)                              throw (XmlRpcException)
+        {
+            storage->reset();
+        }
+
+        /**
+         *  Return the full range of audio clip ids in the storage.
+         *  Mostly used for testing.
+         *
+         *  @return a vector of UniqueId object references.
+         */
+         Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+         getAudioClipIds(void)                                  throw ()
+         {
+             return storage->getAudioClipIds();
+         }
+
+        /**
+         *  Tell if an audio clip specified by an id exists.
+         *
+         *  @param id the id of the audio clip to check for.
+         *  @return true if the audio clip by the specified id exists,
+         *          false otherwise.
+         *  @exception XmlRpcException on communication problems.
+         */
+        bool
+        existsAudioClip(Ptr<UniqueId>::Ref   id)     throw (XmlRpcException)
+        {
+            return storage->existsAudioClip(sessionId, id);
+        }
+
+        /**
+         *  Open an audio clip, for reading only.
+         *  The audio clip will be put into the internal cache of the
+         *  GLiveSupport object.
+         *
+         *  @param id the audio clip id.
+         *  @return the audio clip openned.
+         *  @exception XmlRpcException if no audio clip with the specified
+         *             id exists, or there was a communication problem.
+         */
+        Ptr<AudioClip>::Ref
+        getAudioClip(Ptr<UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Acquire an audio clip, for random file access.
+         *  The audio clip will be put into the internal cache of the
+         *  GLiveSupport object.
+         *
+         *  @param id the audio clip id.
+         *  @return the AudioClip acquired.
+         *          note that the returned AudioClip does not have to be
+         *          released, this will be done by the caching system
+         *          automatically.
+         *  @exception XmlRpcException if no audio clip with the specified
+         *             id exists, or there was a communication problem.
+         */
+        Ptr<AudioClip>::Ref
+        acquireAudioClip(Ptr<UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Return the full range of playlist ids in the storage.
+         *  Mostly used for testing.
+         *
+         *  @return a vector of UniqueId object references.
+         */
+         Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
+         getPlaylistIds(void)                                   throw ()
+         {
+             return storage->getPlaylistIds();
+         }
+
+        /**
+         *  Tell if a playlist specified by an id exists.
+         *
+         *  @param id the id of the playlist to check for.
+         *  @return true if the playlist by the specified id exists,
+         *          false otherwise.
+         *  @exception XmlRpcException on communication problems.
+         */
+        bool
+        existsPlaylist(Ptr<UniqueId>::Ref   id)     throw (XmlRpcException)
+        {
+            return storage->existsPlaylist(sessionId, id);
+        }
+
+        /**
+         *  Open a playlist, for reading only.
+         *  The playlist will be put into the internal cache of the
+         *  GLiveSupport object.
+         *
+         *  @param id the playlist id.
+         *  @return the playlist openned.
+         *  @exception XmlRpcException if no playlist with the specified
+         *             id exists, or there was a communication problem.
+         */
+        Ptr<Playlist>::Ref
+        getPlaylist(Ptr<UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Acquire a playlist, for random file access.
+         *  The playlist will be put into the internal cache of the
+         *  GLiveSupport object.
+         *
+         *  @param id the playlist id.
+         *  @return the playlist acquired.
+         *          note that the returned Playlist does not have to be
+         *          released, this will be done by the caching system
+         *          automatically.
+         *  @exception XmlRpcException if no playlist with the specified
+         *             id exists, or there was a communication problem.
+         */
+        Ptr<Playlist>::Ref
+        acquirePlaylist(Ptr<UniqueId>::Ref  id)
+                                                    throw (XmlRpcException);
+
+        /**
+         *  Release all openned audio clips.
+         */
+        void
+        releaseOpennedAudioClips(void)                          throw ();
+
+        /**
+         *  Release all openned playlists.
+         */
+        void
+        releaseOpennedPlaylists(void)                           throw ();
+
+        /**
          *  Add a file to the Live Mode, and update it.
          *
          *  @param playable the audio clip or playlist to be added
          */
         void
         addToLiveMode(Ptr<Playable>::Ref  playable)             throw ();
-        
+
         /**
          *  Return the currently edited playlist.
          *

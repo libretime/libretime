@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.71 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.72 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -573,11 +573,11 @@ GLiveSupport :: loadScratchpadContents(void)                throw ()
 
         // now we have the id, get the corresponding playlist or audio clip from
         // the storage
-        if (storage->existsPlaylist(sessionId, id)) {
-            Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, id);
+        if (existsPlaylist(id)) {
+            Ptr<Playlist>::Ref  playlist = acquirePlaylist(id);
             scratchpadContents->push_back(playlist);
-        } else if (storage->existsAudioClip(sessionId, id)) {
-            Ptr<AudioClip>::Ref clip = storage->getAudioClip(sessionId, id);
+        } else if (existsAudioClip(id)) {
+            Ptr<AudioClip>::Ref clip = acquireAudioClip(id);
             scratchpadContents->push_back(clip);
         }
     }
@@ -611,6 +611,138 @@ GLiveSupport :: showLoggedInUI(void)                        throw ()
 
 
 /*------------------------------------------------------------------------------
+ *  Open an audio clip, and put it into the internal cache of the GLiveSupport
+ *  object.
+ *----------------------------------------------------------------------------*/
+Ptr<AudioClip>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getAudioClip(Ptr<UniqueId>::Ref  id)
+                                                        throw (XmlRpcException)
+{
+    Ptr<AudioClip>::Ref     clip;
+
+    clip = (*opennedAudioClips)[id->getId()];
+    if (!clip.get()) {
+        clip = storage->getAudioClip(sessionId, id);
+        (*opennedAudioClips)[id->getId()] = clip;
+    }
+
+    return clip;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Acquire an audio clip, and put it into the internal cache of
+ *  the GLiveSupport object.
+ *----------------------------------------------------------------------------*/
+Ptr<AudioClip>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: acquireAudioClip(Ptr<UniqueId>::Ref  id)
+                                                        throw (XmlRpcException)
+{
+    Ptr<AudioClip>::Ref     clip;
+
+    clip = (*opennedAudioClips)[id->getId()];
+    if (!clip.get() || !clip->getToken().get()) {
+        clip = storage->acquireAudioClip(sessionId, id);
+        (*opennedAudioClips)[id->getId()] = clip;
+    }
+
+    return clip;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Open an playlist, and put it into the internal cache of the GLiveSupport
+ *  object.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: getPlaylist(Ptr<UniqueId>::Ref  id)
+                                                        throw (XmlRpcException)
+{
+    Ptr<Playlist>::Ref      playlist;
+
+    playlist = (*opennedPlaylists)[id->getId()];
+    if (!playlist.get()) {
+        playlist = storage->getPlaylist(sessionId, id);
+        (*opennedPlaylists)[id->getId()] = playlist;
+    }
+
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Acquire an playlist, and put it into the internal cache of
+ *  the GLiveSupport object.
+ *----------------------------------------------------------------------------*/
+Ptr<Playlist>::Ref
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: acquirePlaylist(Ptr<UniqueId>::Ref  id)
+                                                        throw (XmlRpcException)
+{
+    Ptr<Playlist>::Ref      playlist;
+
+    playlist = (*opennedPlaylists)[id->getId()];
+    if (!playlist.get() || !playlist->getUri().get()) {
+        playlist = storage->acquirePlaylist(sessionId, id);
+        (*opennedPlaylists)[id->getId()] = playlist;
+    }
+
+    return playlist;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Release all openned audio clips.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: releaseOpennedAudioClips(void)              throw ()
+{
+    AudioClipMap::iterator   it  = opennedAudioClips->begin();
+    AudioClipMap::iterator   end = opennedAudioClips->end();
+
+    while (it != end) {
+        Ptr<AudioClip>::Ref clip = (*it).second;
+
+        if (clip->getToken().get()) {
+            storage->releaseAudioClip(clip);
+        }
+
+        ++it;
+    }
+
+    opennedAudioClips->clear();
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Release all openned playlists.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
+GLiveSupport :: releaseOpennedPlaylists(void)               throw ()
+{
+    PlaylistMap::iterator   it  = opennedPlaylists->begin();
+    PlaylistMap::iterator   end = opennedPlaylists->end();
+
+    while (it != end) {
+        Ptr<Playlist>::Ref playlist = (*it).second;
+
+        if (playlist->getUri().get()) {
+            storage->releasePlaylist(playlist);
+        }
+
+        ++it;
+    }
+
+    opennedPlaylists->clear();
+}
+
+
+/*------------------------------------------------------------------------------
  *  Upload a file to the server.
  *----------------------------------------------------------------------------*/
 void
@@ -620,6 +752,7 @@ GLiveSupport :: uploadFile(Ptr<AudioClip>::Ref  audioClip)
 {
     storage->storeAudioClip(sessionId, audioClip);
 
+    // this will also add it to the local cache
     addToScratchpad(audioClip);
 }
 
@@ -632,6 +765,13 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
+    // make sure playable is in the appropriate cache as well
+    if (playable->getType() == Playable::AudioClipType) {
+        acquireAudioClip(playable->getId());
+    } else if (playable->getType() == Playable::PlaylistType) {
+        acquirePlaylist(playable->getId());
+    }
+
     PlayableList::iterator  it;
     for (it = scratchpadContents->begin(); it != scratchpadContents->end();
                                                                      ++it) {
@@ -759,11 +899,11 @@ GLiveSupport :: addToPlaylist(Ptr<const UniqueId>::Ref  id)
     Ptr<UniqueId>::Ref  uid(new UniqueId(id->getId()));
 
     // append the appropriate playable object to the end of the playlist
-    if (storage->existsPlaylist(sessionId, uid)) {
-        Ptr<Playlist>::Ref      playlist = storage->getPlaylist(sessionId, uid);
+    if (existsPlaylist(uid)) {
+        Ptr<Playlist>::Ref      playlist = getPlaylist(uid);
         editedPlaylist->addPlaylist(playlist, editedPlaylist->getPlaylength());
-    } else if (storage->existsAudioClip(sessionId, uid)) {
-        Ptr<AudioClip>::Ref clip = storage->getAudioClip(sessionId, uid);
+    } else if (existsAudioClip(uid)) {
+        Ptr<AudioClip>::Ref clip = getAudioClip(uid);
         editedPlaylist->addAudioClip(clip, editedPlaylist->getPlaylength());
     }
 
@@ -794,7 +934,9 @@ GLiveSupport :: savePlaylist(void)
                             << std::endl
                             << e.what();
             }
-            addToScratchpad(editedPlaylist);    // update with new version
+            // update with new version
+            // this will also add it to the local cache
+            addToScratchpad(editedPlaylist);
         }
         editedPlaylist.reset();
     }
@@ -838,15 +980,13 @@ GLiveSupport :: playOutputAudio(Ptr<Playable>::Ref playable)
     try {        
         switch (playable->getType()) {
             case Playable::AudioClipType:
-                outputItemPlayingNow = storage->acquireAudioClip(sessionId, 
-                                                        playable->getId());
+                outputItemPlayingNow = acquireAudioClip(playable->getId());
                 outputPlayer->open(*outputItemPlayingNow->getUri());
                 outputPlayer->start();
                 break;
     
             case Playable::PlaylistType:
-                outputItemPlayingNow = storage->acquirePlaylist(sessionId, 
-                                                        playable->getId());
+                outputItemPlayingNow = acquirePlaylist(playable->getId());
                 outputPlayer->open(*outputItemPlayingNow->getUri());
                 outputPlayer->start();
                 break;
@@ -905,6 +1045,7 @@ GLiveSupport :: stopOutputAudio(void)
     if (outputItemPlayingNow) {
         outputPlayerIsPaused = false;
         onStop();
+        outputItemPlayingNow.reset();
     }
 }
 
@@ -917,46 +1058,11 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: onStop(void)                                throw ()
 {
     outputPlayer->close();
-    releaseOutputAudio();
     
     Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();
     setNowPlaying(playable);
     if (playable) {
         playOutputAudio(playable);
-    }
-}
-
-
-/*------------------------------------------------------------------------------
- *  Release the resources used by the output audio player.
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseOutputAudio(void)
-                                                    throw (std::logic_error)
-{
-    if (outputItemPlayingNow) {
-        try {
-            switch (outputItemPlayingNow->getType()) {
-                case Playable::AudioClipType:
-                    storage->releaseAudioClip(
-                                        outputItemPlayingNow->getAudioClip());
-                    outputItemPlayingNow.reset();
-                    break;
-                case Playable::PlaylistType:
-                    storage->releasePlaylist(
-                                        outputItemPlayingNow->getPlaylist());
-                    outputItemPlayingNow.reset();
-                    break;
-                default:    // this never happens
-                    break;
-            }
-        } catch (XmlRpcException &e) {
-            Ptr<Glib::ustring>::Ref     eMsg 
-                                        = getResourceUstring("audioErrorMsg");
-            eMsg->append(e.what());
-            displayMessageWindow(eMsg);
-        }
     }
 }
 
@@ -976,15 +1082,13 @@ GLiveSupport :: playCueAudio(Ptr<Playable>::Ref playable)
     try {        
         switch (playable->getType()) {
             case Playable::AudioClipType:
-                cueItemPlayingNow = storage->acquireAudioClip(sessionId, 
-                                                              playable->getId());
+                cueItemPlayingNow = acquireAudioClip(playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri());
                 cuePlayer->start();
                 break;
     
             case Playable::PlaylistType:
-                cueItemPlayingNow = storage->acquirePlaylist(sessionId, 
-                                                             playable->getId());
+                cueItemPlayingNow = acquirePlaylist(playable->getId());
                 cuePlayer->open(*cueItemPlayingNow->getUri());
                 cuePlayer->start();
                 break;
@@ -1042,39 +1146,8 @@ GLiveSupport :: stopCueAudio(void)
 {
     if (cueItemPlayingNow) {
         cuePlayer->close();
-        releaseCueAudio();
         cuePlayerIsPaused = false;
-    }
-}
-
-/*------------------------------------------------------------------------------
- *  Release the resources used by the cue audio player.
- *----------------------------------------------------------------------------*/
-void
-LiveSupport :: GLiveSupport ::
-GLiveSupport :: releaseCueAudio(void)
-                                                    throw (std::logic_error)
-{
-    if (cueItemPlayingNow) {
-        try {
-            switch (cueItemPlayingNow->getType()) {
-                case Playable::AudioClipType:
-                    storage->releaseAudioClip(cueItemPlayingNow->getAudioClip());
-                    cueItemPlayingNow.reset();
-                    break;
-                case Playable::PlaylistType:
-                    storage->releasePlaylist(cueItemPlayingNow->getPlaylist());
-                    cueItemPlayingNow.reset();
-                    break;
-                default:    // this never happens
-                    break;
-            }
-        } catch (XmlRpcException &e) {
-            Ptr<Glib::ustring>::Ref     eMsg 
-                                        = getResourceUstring("audioErrorMsg");
-            eMsg->append(e.what());
-            displayMessageWindow(eMsg);
-        }
+        cueItemPlayingNow.reset();
     }
 }
 
@@ -1116,13 +1189,11 @@ GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
     
     storage->search(sessionId, criteria);
 
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-            audioClipIds = storage->getAudioClipIds();
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref audioClipIds = getAudioClipIds();
     std::vector<Ptr<UniqueId>::Ref>::const_iterator it;
     for (it = audioClipIds->begin(); it != audioClipIds->end(); ++it) {
         try {
-            Ptr<AudioClip>::Ref     audioClip
-                                    = storage->getAudioClip(sessionId, *it);
+            Ptr<AudioClip>::Ref     audioClip = getAudioClip(*it);
             results->push_back(audioClip);
         } catch (XmlRpcInvalidDataException &e) {
             std::cerr << "invalid audio clip in search(): " << e.what()
@@ -1130,12 +1201,10 @@ GLiveSupport :: search(Ptr<SearchCriteria>::Ref     criteria)
         }
     }
     
-    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref
-            playlistIds = storage->getPlaylistIds();
+    Ptr<std::vector<Ptr<UniqueId>::Ref> >::Ref playlistIds = getPlaylistIds();
     for (it = playlistIds->begin(); it != playlistIds->end(); ++it) {
         try {
-            Ptr<Playlist>::Ref     playlist
-                                    = storage->getPlaylist(sessionId, *it);
+            Ptr<Playlist>::Ref     playlist = getPlaylist(*it);
             results->push_back(playlist);
         } catch (XmlRpcInvalidDataException &e) {
             std::cerr << "invalid playlist in search(): " << e.what()

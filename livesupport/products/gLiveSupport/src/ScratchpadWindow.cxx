@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/ScratchpadWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -540,16 +540,11 @@ ScratchpadWindow :: onSchedulePlaylist(void)                    throw ()
     Ptr<Playable>::Ref  playable = currentRow[modelColumns.playableColumn];
     Ptr<UniqueId>::Ref  uid      = playable->getId();
 
-    Ptr<SessionId>::Ref                 sessionId = 
-                                            gLiveSupport->getSessionId();
-    Ptr<StorageClientInterface>::Ref    storage =
-                                            gLiveSupport->getStorage();
-
-    if (!storage->existsPlaylist(sessionId, uid)) {
+    if (!gLiveSupport->existsPlaylist(uid)) {
         return;
     }
 
-    Ptr<Playlist>::Ref  playlist = storage->getPlaylist(sessionId, uid);
+    Ptr<Playlist>::Ref  playlist = gLiveSupport->getPlaylist(uid);
 
     Ptr<ResourceBundle>::Ref    bundle;
     try {

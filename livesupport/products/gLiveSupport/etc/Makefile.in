@@ -20,8 +20,8 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 #
-#   Author   : $Author: fgerlits $
-#   Version  : $Revision: 1.52 $
+#   Author   : $Author: maroy $
+#   Version  : $Revision: 1.53 $
 #   Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/etc/Makefile.in,v $
 #
 #   @configure_input@
@@ -243,8 +243,6 @@ G_LIVESUPPORT_OBJS = ${TMP_DIR}/GLiveSupport.o \
                      ${TMP_DIR}/NowPlaying.o \
                      ${TMP_DIR}/MasterPanelUserInfoWidget.o \
                      ${TMP_DIR}/LoginWindow.o \
-                     ${TMP_DIR}/AudioClipListWindow.o \
-                     ${TMP_DIR}/PlaylistListWindow.o \
                      ${TMP_DIR}/UploadFileWindow.o \
                      ${TMP_DIR}/ScratchpadWindow.o \
                      ${TMP_DIR}/SimplePlaylistManagementWindow.o \
@@ -281,8 +279,9 @@ G_LIVESUPPORT_EXE_LIBS = -l${PLAYLIST_EXECUTOR_LIB} \
                          -lxmlrpc++ -lssl
 
 TEST_RUNNER_OBJS = ${G_LIVESUPPORT_OBJS} \
+                   ${TMP_DIR}/TestRunner.o \
                    ${TMP_DIR}/AudioPlayerTest.o \
-                   ${TMP_DIR}/TestRunner.o 
+                   ${TMP_DIR}/GLiveSupportTest.o
 TEST_RUNNER_LIBS = ${G_LIVESUPPORT_EXE_LIBS} -lcppunit -ldl
 
 
