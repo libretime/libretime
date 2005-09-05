@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/MetadataTypeContainer.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -66,15 +66,15 @@ namespace Core {
  *  Container holding MetadataType objects.
  *
  *  This object has to be configured with an XML configuration element
- *  called playlist. This may look like the following:
+ *  called metadataTypeContainer. This may look like the following:
  *
  *  <pre><code>
- *  <metadataTypeContainer>
- *      <metadataType ... />
- *      <metadataType ... />
+ *  &lt;metadataTypeContainer&gt;
+ *      &lt;metadataType ... /&gt;
+ *      &lt;metadataType ... /&gt;
  *      ...
- *      <metadataType ... />
- *  </metadataTypeContainer>
+ *      &lt;metadataType ... /&gt;
+ *  &lt;/metadataTypeContainer&gt;
  *  </code></pre>
  *
  *  The DTD for the expected XML element is the following:
@@ -86,8 +86,8 @@ namespace Core {
  *  For a description of the metadataType XML element, see the documentation
  *  for the MetadataType class.
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.1 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.2 $
  *  @see MetadataType
  */
 class MetadataTypeContainer : public Configurable,

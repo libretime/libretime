@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/MetadataType.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ class MetadataTypeContainer;
  *  A class for representing a metadata type.
  *
  *  This object has to be configured with an XML configuration element
- *  called playlist. This may look like the following:
+ *  called metadataType. This may look like the following:
  *
  *  <pre><code>
  *  <metadataType dcName          = "dc:creator"
@@ -77,15 +77,15 @@ class MetadataTypeContainer;
  *  The DTD for the expected XML element looks like the following:
  *
  *  <pre><code>
- *  <!ELEMENT metadataType EMPTY >
+ *  <!ELEMENT metadataType  EMPTY >
  *  <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
  *  <!ATTLIST metadataType  id3Tag            NMTOKEN     #IMPLIED  >
  *  <!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
  *  </code></pre>
  *
  *
- *  @author  $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @author  $Author: fgerlits $
+ *  @version $Revision: 1.3 $
  *  @see MetadataTypeContainer
  */
 class MetadataType : public Configurable
