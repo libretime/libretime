@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/MetadataType.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -71,8 +71,15 @@ class MetadataTypeContainer;
  *  <metadataType dcName          = "dc:creator"
  *                id3Tag          = "TPE2"
  *                localizationKey = "dc_creator"
+ *                tab             = "main"
  *  />
  *  </code></pre>
+ *
+ *  The tab attribute (if present) must be one of "main", "music" or "talk"
+ *  (all lowercase, case sensitive).
+ *  This determines whether, at file upload, the metadata field appears in
+ *  the Main, Music, or Talk tab.  If the attribute is omitted, the metadata
+ *  field will appear in none of the tabs.
  *
  *  The DTD for the expected XML element looks like the following:
  *
@@ -81,16 +88,27 @@ class MetadataTypeContainer;
  *  <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
  *  <!ATTLIST metadataType  id3Tag            NMTOKEN     #IMPLIED  >
  *  <!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
+ *  <!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
  *  </code></pre>
  *
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *  @see MetadataTypeContainer
  */
 class MetadataType : public Configurable
 {
     friend class MetadataTypeContainer;
+    
+    public:
+        /**
+         *  An enumeration of all possible metadata categories.
+         */
+        typedef enum { noTab,
+                       mainTab,
+                       musicTab,
+                       talkTab }    TabType;
+
 
     private:
         /**
@@ -118,6 +136,11 @@ class MetadataType : public Configurable
          */
         Ptr<Glib::ustring>::Ref     localizationKey;
 
+        /**
+         *  The localization key for this metadata type.
+         */
+        TabType                     tab;
+
 
     protected:
         /**
@@ -140,7 +163,8 @@ class MetadataType : public Configurable
         MetadataType(Ptr<MetadataTypeContainer>::Ref    container,
                      Glib::ustring                      dcName,
                      Glib::ustring                      id3Tag,
-                     Glib::ustring                      localizationKey)
+                     Glib::ustring                      localizationKey,
+                     TabType                            tab = noTab)
                                                                     throw ();
 
         /**
@@ -219,6 +243,18 @@ class MetadataType : public Configurable
          */
         Ptr<const Glib::ustring>::Ref
         getLocalizedName(void) const            throw (std::invalid_argument);
+
+        /**
+         *  Return the tab that this metadata type should appear in,
+         *  when an audio clip is uploaded in the Studio client.
+         *
+         *  @return the name of the tab for the metadata type.
+         */
+        TabType
+        getTab(void) const                      throw ()
+        {
+            return tab;
+        }
 };
 
 

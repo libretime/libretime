@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.3 $
+    Version  : $Revision: 1.4 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/MetadataTypeContainerTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -203,6 +203,15 @@ MetadataTypeContainerTest :: firstTest(void)
         gotException = true;
     }
     CPPUNIT_ASSERT(gotException);
+
+    // two simple positive checks on the tab attribute
+    CPPUNIT_ASSERT(container->existsByDcName("dc:title"));
+    metadataType = container->getByDcName("dc:title");
+    CPPUNIT_ASSERT(metadataType->getTab() == MetadataType::mainTab);
+
+    CPPUNIT_ASSERT(container->existsByDcName("ls:buycdurl"));
+    metadataType = container->getByDcName("ls:buycdurl");
+    CPPUNIT_ASSERT(metadataType->getTab() == MetadataType::noTab);
 }
 
 

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
 
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.1 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/MetadataType.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,6 +65,11 @@ static const std::string    id3TagAttrName = "id3Tag";
  */
 static const std::string    localizationKeyAttrName = "localizationKey";
 
+/**
+ *  The name of the attribute of the tab name in the metadataType element
+ */
+static const std::string    tabAttrName = "tab";
+
 
 /* ===============================================  local function prototypes */
 
@@ -76,8 +81,9 @@ static const std::string    localizationKeyAttrName = "localizationKey";
  *----------------------------------------------------------------------------*/
 MetadataType :: MetadataType(Ptr<MetadataTypeContainer>::Ref    container)
                                                                     throw ()
+        : container(container),
+          tab(noTab)
 {
-    this->container = container;
 }
 
 
@@ -87,10 +93,12 @@ MetadataType :: MetadataType(Ptr<MetadataTypeContainer>::Ref    container)
 MetadataType :: MetadataType(Ptr<MetadataTypeContainer>::Ref    container,
                              Glib::ustring                      dcName,
                              Glib::ustring                      id3Tag,
-                             Glib::ustring                      localizationKey)
+                             Glib::ustring                      localizationKey,
+                             TabType                            tab)
                                                                     throw ()
+        : container(container),
+          tab(tab)
 {
-    this->container = container;
     this->dcName.reset(new Glib::ustring(dcName));
     this->id3Tag.reset(new Glib::ustring(id3Tag));
     this->localizationKey.reset(new Glib::ustring(localizationKey));
@@ -128,6 +136,19 @@ MetadataType :: configure(const xmlpp::Element & element)
                                   + localizationKeyAttrName);
     }
     localizationKey.reset(new Glib::ustring(attribute->get_value()));
+
+    // get the tab, optional
+    tab = noTab;
+    if ((attribute = element.get_attribute(tabAttrName))) {
+        Glib::ustring   tabString = attribute->get_value();
+        if (tabString == "main") {
+            tab = mainTab;
+        } else if (tabString == "music") {
+            tab = musicTab;
+        } else if (tabString == "talk") {
+            tab = talkTab;
+        }
+    }
 }
 
 
