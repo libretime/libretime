@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.6 $
+    Version  : $Revision: 1.7 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ using namespace boost::posix_time;
  *  Unit test for the partialplay gstreamer element.
  *
  *  @author  $Author: maroy $
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 class AutoplugTest : public CPPUNIT_NS::TestFixture
 {
@@ -79,6 +79,7 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(shortTest);
     CPPUNIT_TEST(shortSmilTest);
     CPPUNIT_TEST(playlistOpenTest);
+    CPPUNIT_TEST(playDurationTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -182,6 +183,14 @@ class AutoplugTest : public CPPUNIT_NS::TestFixture
          */
         void
         playlistOpenTest(void)                 throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  A test to see if play duration is reported properly.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        playDurationTest(void)                 throw (CPPUNIT_NS::Exception);
 
 
     public:

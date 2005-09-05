@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.10 $
+    Version  : $Revision: 1.11 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/AutoplugTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -114,6 +114,11 @@ static const char *         embeddedSmilFile = "var/embedded.smil";
  *  A sequentially looking SMIL file.
  */
 static const char *         sequentialSmilFile = "var/sequentialSmil.smil";
+
+/**
+ *  A long (in time) playlist
+ */
+static const char *         longSmilFile = "var/bach.smil";
 
 
 /* ===============================================  local function prototypes */
@@ -459,6 +464,35 @@ AutoplugTest :: playlistOpenTest(void)
 #ifdef PRINT_TIMES
     std::cerr << "duration for " << sequentialSmilFile << ": "
               << *duration << std::endl;
+#endif
+
+    duration = openFile(longSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << longSmilFile << ": "
+              << *duration << std::endl;
+#endif
+}
+
+
+/*------------------------------------------------------------------------------
+ *  A test to see if play duration is reported properly.
+ *----------------------------------------------------------------------------*/
+void
+AutoplugTest :: playDurationTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    gint64      duration;
+
+    duration = playFile(mp3TestFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << mp3TestFile << ": "
+              << duration << std::endl;
+#endif
+
+    duration = playFile(sequentialSmilFile);
+#ifdef PRINT_TIMES
+    std::cerr << "duration for " << sequentialSmilFile << ": "
+              << duration << std::endl;
 #endif
 }
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.2 $
+    Version  : $Revision: 1.3 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/include/LiveSupport/GstreamerElements/autoplug.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -34,7 +34,7 @@
  *  Functions for autoplugging gstreamer elements based on their MIME types.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 
 #ifdef __cplusplus
@@ -75,6 +75,19 @@ GstElement *
 ls_gst_autoplug_plug_source(GstElement        * source,
                             const gchar       * name,
                             const GstCaps     * caps);
+
+/**
+ *  Return the current position in a previously autoplugged element.
+ *  This is a workaround function, as querying the element returned by
+ *  ls_gst_autoplug_plug_source() with the standard gstreamer calls
+ *  will not give satisfactory results.
+ *
+ *  @param element a GstElement that was returned by a previous call to
+ *         ls_gst_autoplug_plug_source()
+ *  @return the current position, in nanoseconds
+ */
+gint64
+ls_gst_autoplug_get_position(GstElement       * element);
 
 
 #ifdef __cplusplus

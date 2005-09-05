@@ -27,7 +27,7 @@
 
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.9 $
+    Version  : $Revision: 1.10 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/gstreamerElements/src/autoplug.c,v $
 
 ------------------------------------------------------------------------------*/
@@ -799,5 +799,32 @@ ls_gst_autoplug_plug_source(GstElement        * source,
     gst_bin_sync_children_state(GST_BIN(bin));
 
     return bin;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Return the current position of an autoplugged element
+ *----------------------------------------------------------------------------*/
+gint64
+ls_gst_autoplug_get_position(GstElement       * element)
+{
+    GstFormat       format;
+    gint64          position;
+    GstElement    * sink;
+
+    if (!element || !GST_IS_BIN(element)) {
+        return 0LL;
+    }
+    if (!(sink = gst_bin_get_by_name(GST_BIN(element), "audiosink"))) {
+        return 0LL;
+    }
+
+    format = GST_FORMAT_TIME;
+    if (!gst_element_query(sink, GST_QUERY_POSITION, &format, &position)
+     || format != GST_FORMAT_TIME) {
+        return 0LL;
+    }
+
+    return position;
 }
 
