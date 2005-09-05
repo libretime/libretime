@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.11 $
+    Version  : $Revision: 1.12 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -342,8 +342,10 @@ GstreamerPlayer :: getPlaylength(void)              throw (std::logic_error)
 
         // use microsec, as nanosec() is not found by the compiler (?)
         length.reset(new time_duration(microsec(ns / 1000LL)));
+    } else {
+        length.reset(new time_duration(microsec(0LL)));
     }
-    
+
     return length;
 }
 
@@ -368,6 +370,8 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
 
         // use microsec, as nanosec() is not found by the compiler (?)
         length.reset(new time_duration(microsec(ns / 1000LL)));
+    } else {
+        length.reset(new time_duration(microsec(0LL)));
     }
     
     return length;
