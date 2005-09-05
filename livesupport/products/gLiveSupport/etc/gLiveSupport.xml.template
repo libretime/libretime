@@ -149,26 +149,32 @@
         <metadataType dcName          = "dc:title"
                       id3Tag          = "TIT2"
                       localizationKey = "title"
+                      tab             = "main"
         />
         <metadataType dcName          = "dc:creator"
                       id3Tag          = "TPE1"
                       localizationKey = "creator"
+                      tab             = "main"
         />
         <metadataType dcName          = "dc:source"
                       id3Tag          = "TALB"
                       localizationKey = "album"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:year"
                       id3Tag          = "TYER"
                       localizationKey = "year"
+                      tab             = "music"
         />
         <metadataType dcName          = "dc:type"
                       id3Tag          = "TCON"
                       localizationKey = "genre"
+                      tab             = "main"
         />
         <metadataType dcName          = "dc:description"
                       id3Tag          = "COMM"
                       localizationKey = "description"
+                      tab             = "main"
         />
         <metadataType dcName          = "dc:format"
                       localizationKey = "format"
@@ -176,10 +182,12 @@
         <metadataType dcName          = "ls:bpm"
                       id3Tag          = "TBPM"
                       localizationKey = "bpm"
+                      tab             = "music"
         />
         <metadataType dcName          = "ls:rating"
                       id3Tag          = "POPM"
                       localizationKey = "rating"
+                      tab             = "music"
         />
         <metadataType dcName          = "dcterms:extent"
                       localizationKey = "length"
@@ -281,6 +289,22 @@
         <metadataType dcName          = "dc:rights"
                       id3Tag          = "TCOP"
                       localizationKey = "copyright"
+        />
+        <metadataType dcName          = "dcterms:temporal"
+                      localizationKey = "report_date_time"
+                      tab             = "talk"
+        />
+        <metadataType dcName          = "dcterms:spatial"
+                      localizationKey = "report_location"
+                      tab             = "talk"
+        />
+        <metadataType dcName          = "dcterms:entity"
+                      localizationKey = "report_organizations"
+                      tab             = "talk"
+        />
+        <metadataType dcName          = "dc:subject"
+                      localizationKey = "subject"
+                      tab             = "talk"
         />
     </metadataTypeContainer>
 </gLiveSupport>

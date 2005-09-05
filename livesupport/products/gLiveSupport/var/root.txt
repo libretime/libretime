@@ -255,6 +255,10 @@ root:table
         catalog_number:string       { "Catalog number" }
         original_artist:string      { "Original artist" }
         copyright:string            { "Copyright" }
+        report_date_time:string     { "Report date/time" }
+        report_location:string      { "Report location" }
+        report_organizations:string { "Report organizations" }
+        subject                     { "Subject" }
     }
 }
 
