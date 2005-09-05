@@ -92,6 +92,7 @@
 <!ATTLIST metadataType  dcName            NMTOKEN     #REQUIRED >
 <!ATTLIST metadataType  id3Tag            CDATA       #IMPLIED  >
 <!ATTLIST metadataType  localizationKey   NMTOKEN     #REQUIRED >
+<!ATTLIST metadataType  tab               NMTOKEN     #IMPLIED  >
 ]>
 
 <gLiveSupport>
