@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -444,10 +444,18 @@ GstreamerPlayer :: close(void)                       throw ()
     }
 
     gst_element_set_state(pipeline, GST_STATE_NULL);
-    gst_element_unlink(filesrc, decoder);
-    gst_element_unlink(decoder, audiosink);
-    gst_bin_remove(GST_BIN(pipeline), decoder);
-    gst_bin_remove(GST_BIN(pipeline), filesrc);
+    if (filesrc && decoder) {
+        gst_element_unlink(filesrc, decoder);
+    }
+    if (decoder && audiosink) {
+        gst_element_unlink(decoder, audiosink);
+    }
+    if (decoder) {
+        gst_bin_remove(GST_BIN(pipeline), decoder);
+    }
+    if (filesrc) {
+        gst_bin_remove(GST_BIN(pipeline), filesrc);
+    }
     filesrc = 0;
     decoder = 0;
 }
