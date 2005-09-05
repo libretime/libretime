@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.72 $
+    Version  : $Revision: 1.73 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1058,7 +1058,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: onStop(void)                                throw ()
 {
     outputPlayer->close();
-    
+
     Ptr<Playable>::Ref  playable = masterPanel->getNextItemToPlay();
     setNowPlaying(playable);
     if (playable) {

@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.13 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.14 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/NowPlaying.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -258,14 +258,18 @@ NowPlaying :: onUpdateTime(void)
                                                                     throw ()
 {
     if (isActive) {
-        Ptr<time_duration>::Ref     elapsed = gLiveSupport->
-                                                    getOutputAudioPosition();
-        Ptr<time_duration>::Ref     remains(new time_duration(
+        try {
+            Ptr<time_duration>::Ref     elapsed = gLiveSupport->
+                                                      getOutputAudioPosition();
+            Ptr<time_duration>::Ref     remains(new time_duration(
                                                     *audioLength - *elapsed ));
-        elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
-                                                    elapsed ));
-        remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
-                                                    remains ));
+            elapsedTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
+                                                        elapsed ));
+            remainsTime->set_text(*TimeConversion::timeDurationToHhMmSsString(
+                                                        remains ));
+        } catch (std::logic_error &e) {
+            // just act as if nothing has happened
+        }
     }
 }
 
