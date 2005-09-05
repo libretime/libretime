@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.17 $
+    Version  : $Revision: 1.18 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -106,11 +106,6 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         genreEntryBin = Gtk::manage(wf->createEntryBin());
         genreEntry    = genreEntryBin->getEntry();
 
-//        fileFormatLabel = Gtk::manage(new Gtk::Label(
-//                                *getResourceUstring("fileFormatLabel"),
-//                                Gtk::ALIGN_RIGHT));
-//        fileFormatComboBox = Gtk::manage(wf->createComboBoxText());
-
         lengthLabel = Gtk::manage(new Gtk::Label(
                                 *getResourceUstring("lengthLabel"),
                                 Gtk::ALIGN_RIGHT));
@@ -137,9 +132,6 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     }
 
     // build up the main section
-    // TODO: don't hard-code supported file format types
-//    fileFormatComboBox->append_text("mp3");
-//    fileFormatComboBox->set_active_text("mp3");
     mainLayout  = Gtk::manage(new Gtk::Table());
     mainLayout->set_row_spacings(2);
     mainLayout->set_col_spacings(5);
@@ -149,8 +141,6 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
     mainLayout->attach(*creatorEntryBin,    1, 2, 1, 2);
     mainLayout->attach(*genreLabel,         0, 1, 2, 3);
     mainLayout->attach(*genreEntryBin,      1, 2, 2, 3);
-//    mainLayout->attach(*fileFormatLabel,    2, 3, 0, 1);
-//    mainLayout->attach(*fileFormatComboBox, 3, 4, 0, 1);
     mainLayout->attach(*lengthLabel,        2, 3, 1, 2);
     mainLayout->attach(*lengthValueLabel,   3, 4, 1, 2);
     mainSection->add(*mainLayout);
@@ -321,11 +311,6 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
     audioClip->setMetadata(ustrValue, "dc:creator");
     ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
     audioClip->setMetadata(ustrValue, "dc:type");
-//    ustrValue.reset(new Glib::ustring(
-//                                fileFormatComboBox->get_active_text()));
-//    audioClip->setMetadata(ustrValue, "dc:format");
-    // TODO: is this really what we mean by dc:format?
-    // TODO: do file type autodetection based on mime-type (gnomevfs?)
 
     try {
         gLiveSupport->uploadFile(audioClip);
@@ -372,6 +357,8 @@ Ptr<time_duration>::Ref
 UploadFileWindow :: readPlaylength(const std::string &   fileName)
                                                 throw (std::invalid_argument)
 {
+    // TODO: replace this with mime-type detection (gnomevfs?) and
+    // the appropriate TagLib::X::File subclass constructors
     TagLib::FileRef             fileRef(fileName.c_str());
     if (fileRef.isNull()) {
         throw std::invalid_argument("unsupported file type");
