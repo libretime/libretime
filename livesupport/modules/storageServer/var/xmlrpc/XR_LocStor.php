@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/xmlrpc/XR_LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -954,7 +954,7 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> sessid  :  string  -  session id </li>
      *      <li> plid : string  -  global unique id of Playlist</li>
-     *      <li> recursive : boolean - flag for recursive access files
+     *      <li> recursive : boolean - flag for recursive access content
      *                  inside playlist (default: false)</li>
      *  </ul>
      *
@@ -964,6 +964,7 @@ class XR_LocStor extends LocStor{
      *          XML format</li>
      *      <li> token : string - playlist token</li>
      *      <li> chsum : string - md5 checksum</li>
+     *      <li> content: array of structs - recursive access (optional)</li>
      *  </ul>
      *
      *  On errors, returns an XML-RPC error response.
@@ -1009,7 +1010,7 @@ class XR_LocStor extends LocStor{
      *  <ul>
      *      <li> token   :  string  -  playlist token
      *              returned by locstor.accessPlaylist</li>
-     *      <li> recursive : boolean - flag for recursive release files
+     *      <li> recursive : boolean - flag for recursive release content
      *              accessed by recursive accessPlaylist (default: false)</li>
      *  </ul>
      *

@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/LocStor.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -615,11 +615,15 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistId string, playlist global unique ID
-     *  @param recursive boolean, flag for recursive access files
+     *  @param recursive boolean, flag for recursive access content
      *                  inside playlist (optional, default: false)
      *  @param parent int parent token
-     *  @return struct
-     *      {url:readable URL for HTTP GET, token:access token, chsum:checksum}
+     *  @return struct {
+     *      url: readable URL for HTTP GET,
+     *      token: access token,
+     *      chsum: checksum,
+     *      content: array of structs - recursive access (optional)
+     *  }
      */
     function accessPlaylist($sessid, $playlistId, $recursive=FALSE, $parent='0')
     {
@@ -650,7 +654,7 @@ class LocStor extends BasicStor{
      *
      *  @param sessid string, session ID
      *  @param playlistToken string, playlist access token
-     *  @param recursive boolean, flag for recursive access files
+     *  @param recursive boolean, flag for recursive access content
      *                  inside playlist (optional, default: false)
      *  @return string, playlist ID
      */

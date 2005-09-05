@@ -23,7 +23,7 @@
  
  
     Author   : $Author: tomas $
-    Version  : $Revision: 1.1 $
+    Version  : $Revision: 1.2 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/storageServer/var/AccessRecur.php,v $
 
 ------------------------------------------------------------------------------*/
@@ -47,9 +47,15 @@ class AccessRecur{
         $r = $ls->accessPlaylist($sessid, $plid, FALSE, $parent);
         if(PEAR::isError($r)) return $r;
         $plRes = $r;
-        $r = $ppa->processPlaylist($plid, $plRes['token']);
+        $r =& StoredFile::recallByGunid($ppa->ls, $plid);
         if(PEAR::isError($r)) return $r;
-        $plRes['files'] = $r;
+        $ac = $r;
+        $r = $ac->md->genPhpArray();
+        if(PEAR::isError($r)) return $r;
+        $pla = $r;
+        $r = $ppa->processPlaylist($pla, $plRes['token']);
+        if(PEAR::isError($r)) return $r;
+        $plRes['content'] = $r;
         return $plRes;
     }
     function releasePlaylist(&$ls, $sessid, $token){
@@ -85,20 +91,15 @@ class AccessRecur{
         if($ppa->dbc->isError($r)){ return $r; }
         return TRUE;
     }
-    function processPlaylist($plid, $parent){
-        $r =& StoredFile::recallByGunid($this->ls, $plid);
-        if(PEAR::isError($r)) return $r;
-        $ac = $r;
-        $r = $ac->md->genPhpArray();
-        if(PEAR::isError($r)) return $r;
-        $pla = $r;
+    function processPlaylist($pla, $parent){
         $res = array();
         foreach($pla['children'] as $ple){
             switch($ple['elementname']){
                 case"playlistElement":
                     $r = $this->processPlEl($ple, $parent);
                     if(PEAR::isError($r)) return $r;
-                    $res = array_merge($res, $r);
+                    // $res = array_merge($res, $r);
+                    $res[] = $r;
                 break;
                 default:
             }
@@ -108,8 +109,7 @@ class AccessRecur{
     function processAc($gunid, $parent){
         $r = $this->ls->accessRawAudioData($this->sessid, $gunid, $parent);
         if(PEAR::isError($r)) return $r;
-        $res = $r['url'];
-        return $res;
+        return $r;
     }
     function processPlEl($ple, $parent='0'){
         foreach($ple['children'] as $ac){
@@ -120,10 +120,40 @@ class AccessRecur{
                     return $r;
                 break;
                 case"playlist":
-                    $r = $this->accessPlaylist($this->ls, $this->sessid,
-                        $ac['attrs']['id'], $parent);
-                    if(PEAR::isError($r)) return $r;
-                    return $r['files'];
+#                    if(empty($ac['children'])){
+                        $r = $this->accessPlaylist($this->ls, $this->sessid,
+                            $ac['attrs']['id'], $parent);
+                        if(PEAR::isError($r)){
+                            if($r->getCode() != GBERR_NOTF) return $r;
+                            else{
+                                $r = $this->processPlaylist($ac, $parent);
+                                if(PEAR::isError($r)) return $r;
+                                $r = array(
+                                    'content'   => $r,
+                                    'url'       => NULL,
+                                    'token'     => NULL,
+                                    'chsum'     => NULL,
+                                    'size'      => NULL,
+                                    'warning'    => 'inline playlist?',
+                                );
+                            }
+                        }
+                        return $r;
+/*
+                    }else{
+                        $r = $this->processPlaylist($ac, $parent);
+                        if(PEAR::isError($r)) return $r;
+                        $res = array(
+                            'content'   => $r,
+                            'url'       => NULL,
+                            'token'     => NULL,
+                            'chsum'     => NULL,
+                            'size'      => NULL,
+                            'warning'    => 'inline playlist',
+                        );
+                        return $res;
+                    }
+*/
                 break;
                 default:
             }
