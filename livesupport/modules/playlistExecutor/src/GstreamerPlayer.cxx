@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.14 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.15 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/playlistExecutor/src/GstreamerPlayer.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -345,22 +345,14 @@ GstreamerPlayer :: getPosition(void)                throw (std::logic_error)
 {
     Ptr<time_duration>::Ref   length;
     gint64                    ns;
-    GstFormat                 format = GST_FORMAT_TIME;
 
     if (!isOpen()) {
         throw std::logic_error("player not open");
     }
 
-    if (decoder
-     && gst_element_query(decoder, GST_QUERY_POSITION, &format, &ns)
-     && format == GST_FORMAT_TIME) {
+    ns = ls_gst_autoplug_get_position(decoder);
+    length.reset(new time_duration(microsec(ns / 1000LL)));
 
-        // use microsec, as nanosec() is not found by the compiler (?)
-        length.reset(new time_duration(microsec(ns / 1000LL)));
-    } else {
-        length.reset(new time_duration(microsec(0LL)));
-    }
-    
     return length;
 }
 
