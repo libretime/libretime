@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.76 $
+    Version  : $Revision: 1.77 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -1065,7 +1065,12 @@ GLiveSupport :: stopOutputAudio(void)
 {
     if (outputItemPlayingNow) {
         outputPlayerIsPaused = false;
-        onStop();
+        outputItemPlayingNow.reset();
+        
+        Ptr<Playable>::Ref  nullPointer;
+        setNowPlaying(nullPointer);
+        
+        outputPlayer->close();
     }
 }
 
