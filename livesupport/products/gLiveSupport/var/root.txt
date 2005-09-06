@@ -102,10 +102,9 @@ root:table
                                     { "Browse" }
 
         mainSectionLabel:string     { "Main" }
-        titleLabel:string           { "Title" }
-        creatorLabel:string         { "Creator" }
-        genreLabel:string           { "Genre" }
-        fileFormatLabel:string      { "File Type" }
+        musicSectionLabel:string    { "Music" }
+        talkSectionLabel:string     { "Talk" }
+        
         lengthLabel:string          { "Duration" }
 
         uploadButtonLabel:string    { "Upload" }

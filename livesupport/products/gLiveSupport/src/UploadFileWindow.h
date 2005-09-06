@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.7 $
+    Version  : $Revision: 1.8 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,7 +87,7 @@ using namespace LiveSupport::Widgets;
  *  </code></pre>
  *
  *  @author $Author: fgerlits $
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class UploadFileWindow : public WhiteWindow, public LocalizedObject
 {
@@ -133,62 +133,37 @@ class UploadFileWindow : public WhiteWindow, public LocalizedObject
         Gtk::Table                * mainLayout;
 
         /**
-         *  The title label
+         *  The music input section.
          */
-        Gtk::Label                * titleLabel;
+        Gtk::Alignment            * musicSection;
 
         /**
-         *  A container holding the title entry field.
+         *  The layout of the music section.
          */
-        EntryBin                  * titleEntryBin;
+        Gtk::Table                * musicLayout;
 
         /**
-         *  The text input for the title.
+         *  The talk input section.
          */
-        Gtk::Entry                * titleEntry;
+        Gtk::Alignment            * talkSection;
 
         /**
-         *  The creator label
+         *  The layout of the talk section.
          */
-        Gtk::Label                * creatorLabel;
+        Gtk::Table                * talkLayout;
 
         /**
-         *  A container holding the creator entry field.
+         *  A list of the Dublin Core names of the metadata fields.
          */
-        EntryBin                  * creatorEntryBin;
+        std::vector<Ptr<const Glib::ustring>::Ref>  metadataKeys;
+        
+        /**
+         *  A list of the metadata entry fields.
+         */
+        std::vector<Gtk::Entry *>                   metadataEntries;
 
         /**
-         *  The text input for the creator.
-         */
-        Gtk::Entry                * creatorEntry;
-
-        /**
-         *  The genre label
-         */
-        Gtk::Label                * genreLabel;
-
-        /**
-         *  A container holding the genre entry field.
-         */
-        EntryBin                  * genreEntryBin;
-
-        /**
-         *  The text input for the genre.
-         */
-        Gtk::Entry                * genreEntry;
-
-        /**
-         *  The file format label.
-         */
-//        Gtk::Label                * fileFormatLabel;
-
-        /**
-         *  The file format combo box.
-         */
-//        ComboBoxText              * fileFormatComboBox;
-
-        /**
-         *  The length label.
+         *  The label containing the "Length: " text.
          */
         Gtk::Label                * lengthLabel;
 

@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.18 $
+    Version  : $Revision: 1.19 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/UploadFileWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -87,37 +87,98 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         chooseFileButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("chooseFileButtonLabel")));
 
-        // main section resources
-        titleLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("titleLabel"),
-                                Gtk::ALIGN_RIGHT));
-        titleEntryBin = Gtk::manage(wf->createEntryBin());
-        titleEntry    = titleEntryBin->getEntry();
+        // build up the notepad for the different metadata sections
+        metadataNotebook = Gtk::manage(new Notebook());
+        
+        mainSection  = Gtk::manage(new Gtk::Alignment());
+        musicSection = Gtk::manage(new Gtk::Alignment());
+        talkSection  = Gtk::manage(new Gtk::Alignment());
+        
+        mainLayout   = Gtk::manage(new Gtk::Table());
+        musicLayout  = Gtk::manage(new Gtk::Table());
+        talkLayout   = Gtk::manage(new Gtk::Table());
+        
+        mainLayout->set_row_spacings(2);
+        mainLayout->set_col_spacings(5);
+        musicLayout->set_row_spacings(2);
+        musicLayout->set_col_spacings(5);
+        talkLayout->set_row_spacings(2);
+        talkLayout->set_col_spacings(5);
+        
+        mainSection->add(*mainLayout);
+        musicSection->add(*musicLayout);
+        talkSection->add(*talkLayout);
+        
+        metadataNotebook->appendPage(*mainSection,
+                                *getResourceUstring("mainSectionLabel"));
+        metadataNotebook->appendPage(*musicSection,
+                                *getResourceUstring("musicSectionLabel"));
+        metadataNotebook->appendPage(*talkSection,
+                                *getResourceUstring("talkSectionLabel"));
+        
+        // add the metadata entry fields
+        Ptr<MetadataTypeContainer>::Ref
+                    metadataTypes = gLiveSupport->getMetadataTypeContainer();
+        MetadataTypeContainer::Vector::const_iterator   it;
+        int     mainCounter  = 0;
+        int     musicCounter = 0;
+        int     talkCounter  = 0;
+        for (it = metadataTypes->begin(); it != metadataTypes->end(); ++it) {
+            Ptr<const MetadataType>::Ref    metadata = *it;
+            
+            MetadataType::TabType           tab = metadata->getTab();
+            if (tab == MetadataType::noTab) {
+                continue;
+            }
+            
+            Gtk::Label *    metadataName = Gtk::manage(new Gtk::Label(
+                                            *metadata->getLocalizedName() ));
+            EntryBin *      metadataEntryBin = Gtk::manage(
+                                            wf->createEntryBin() );
+            
+            metadataKeys.push_back(metadata->getDcName());
+            metadataEntries.push_back(metadataEntryBin->getEntry());
+            
+            switch (tab) {
+                case MetadataType::mainTab :
+                        mainLayout->attach(*metadataName, 0, 1,
+                                           mainCounter, mainCounter + 1);
+                        mainLayout->attach(*metadataEntryBin, 1, 2,
+                                           mainCounter, mainCounter + 1);
+                        ++mainCounter;
+                        break;
+                        
+                case MetadataType::musicTab :
+                        musicLayout->attach(*metadataName, 0, 1,
+                                           musicCounter, musicCounter + 1);
+                        musicLayout->attach(*metadataEntryBin, 1, 2,
+                                           musicCounter, musicCounter + 1);
+                        ++musicCounter;
+                        break;
+                        
+                case MetadataType::talkTab :
+                        talkLayout->attach(*metadataName, 0, 1,
+                                           talkCounter, talkCounter + 1);
+                        talkLayout->attach(*metadataEntryBin, 1, 2,
+                                           talkCounter, talkCounter + 1);
+                        ++talkCounter;
+                        break;
+                        
+                case MetadataType::noTab :      // added to prevent compiler
+                        break;                  // warning about missing case
+            }
+        }
 
-        creatorLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("creatorLabel"),
-                                Gtk::ALIGN_RIGHT));
-        creatorEntryBin = Gtk::manage(wf->createEntryBin());
-        creatorEntry    = creatorEntryBin->getEntry();
-
-        genreLabel = Gtk::manage(new Gtk::Label(
-                                *getResourceUstring("genreLabel"),
-                                Gtk::ALIGN_RIGHT));
-        genreEntryBin = Gtk::manage(wf->createEntryBin());
-        genreEntry    = genreEntryBin->getEntry();
-
+        // set up the length label, and add it to the main tab
         lengthLabel = Gtk::manage(new Gtk::Label(
                                 *getResourceUstring("lengthLabel"),
                                 Gtk::ALIGN_RIGHT));
         lengthValueLabel = Gtk::manage(new Gtk::Label());
         lengthValueLabel->set_width_chars(8);
 
-        // build up the notepad for the different metadata sections
-        mainSection = Gtk::manage(new Gtk::Alignment());
-        metadataNotebook = Gtk::manage(new Notebook());
-        metadataNotebook->appendPage(*mainSection,
-                                *getResourceUstring("mainSectionLabel"));
-
+        mainLayout->attach(*lengthLabel,      0, 1, mainCounter, mainCounter+1);
+        mainLayout->attach(*lengthValueLabel, 1, 2, mainCounter, mainCounter+1);
+        
         // buttons, etc.
         uploadButton = Gtk::manage(wf->createButton(
                                 *getResourceUstring("uploadButtonLabel")));
@@ -130,20 +191,6 @@ UploadFileWindow :: UploadFileWindow (Ptr<GLiveSupport>::Ref    gLiveSupport,
         std::cerr << e.what() << std::endl;
         std::exit(1);
     }
-
-    // build up the main section
-    mainLayout  = Gtk::manage(new Gtk::Table());
-    mainLayout->set_row_spacings(2);
-    mainLayout->set_col_spacings(5);
-    mainLayout->attach(*titleLabel,         0, 1, 0, 1);
-    mainLayout->attach(*titleEntryBin,      1, 2, 0, 1);
-    mainLayout->attach(*creatorLabel,       0, 1, 1, 2);
-    mainLayout->attach(*creatorEntryBin,    1, 2, 1, 2);
-    mainLayout->attach(*genreLabel,         0, 1, 2, 3);
-    mainLayout->attach(*genreEntryBin,      1, 2, 2, 3);
-    mainLayout->attach(*lengthLabel,        2, 3, 1, 2);
-    mainLayout->attach(*lengthValueLabel,   3, 4, 1, 2);
-    mainSection->add(*mainLayout);
 
     // build up the button bar
     buttonBar   = Gtk::manage(new Gtk::HBox());
@@ -242,27 +289,6 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
         playlength.reset(new time_duration(0,0,0,0));
     }
 
-    Ptr<const Glib::ustring>::Ref   tempTitle(new const Glib::ustring);
-    audioClip.reset(new AudioClip(tempTitle, playlength, newUri));
-
-    // read the id3 tags
-    try {
-        audioClip->readTag(gLiveSupport->getMetadataTypeContainer());
-    } catch (std::invalid_argument &e) {
-        statusBar->set_text(e.what());
-        isAudioClipValid = false;
-        return;
-    }
-
-    titleEntry->set_text(*audioClip->getTitle());
-    Ptr<const Glib::ustring>::Ref   creator 
-                                    = audioClip->getMetadata("dc:creator");
-    creatorEntry->set_text(creator ? *creator : "");
-
-    Ptr<const Glib::ustring>::Ref   genre
-                                    = audioClip->getMetadata("dc:type");
-    genreEntry->set_text(genre ? *genre : "");
-
     // display the new play length
     std::ostringstream  lengthStr;
     lengthStr << std::setfill('0')
@@ -272,6 +298,29 @@ UploadFileWindow :: updateFileInfo(void)                        throw ()
                                                 ? playlength->seconds() 
                                                 : playlength->seconds() + 1);
     lengthValueLabel->set_text(lengthStr.str());
+
+    // read the id3 tags
+    Ptr<const Glib::ustring>::Ref   tempTitle(new const Glib::ustring);
+    audioClip.reset(new AudioClip(tempTitle, playlength, newUri));
+
+    try {
+        audioClip->readTag(gLiveSupport->getMetadataTypeContainer());
+    } catch (std::invalid_argument &e) {
+        statusBar->set_text(e.what());
+        isAudioClipValid = false;
+        return;
+    }
+
+    for (unsigned int i=0; i < metadataKeys.size(); ++i) {
+        Ptr<const Glib::ustring>::Ref   metadataKey   = metadataKeys[i];
+        Gtk::Entry *                    metadataEntry = metadataEntries[i];
+        
+        Ptr<const Glib::ustring>::Ref   metadataValue
+                                        = audioClip->getMetadata(*metadataKey);
+        if (metadataValue) {
+            metadataEntry->set_text(*metadataValue);
+        }
+    }
 
     statusBar->set_text("");
     isAudioClipValid = true;
@@ -300,17 +349,22 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
         return;
     }
 
-    Ptr<const Glib::ustring>::Ref   ustrValue(new Glib::ustring(
-                                                titleEntry->get_text() ));
-    if (*ustrValue == "") {
+    for (unsigned int i=0; i < metadataKeys.size(); ++i) {
+        Ptr<const Glib::ustring>::Ref   metadataKey   = metadataKeys[i];
+        Gtk::Entry *                    metadataEntry = metadataEntries[i];
+        
+        Ptr<const Glib::ustring>::Ref   metadataValue(new Glib::ustring(
+                                            metadataEntry->get_text() ));
+        if (*metadataValue != "") {
+            audioClip->setMetadata(metadataValue, *metadataKey);
+        }
+    }
+    
+    Ptr<const Glib::ustring>::Ref   title = audioClip->getTitle();
+    if (!title || *title == "") {
         statusBar->set_text(*getResourceUstring("missingTitleMsg"));
         return;
     }
-    audioClip->setTitle(ustrValue);
-    ustrValue.reset(new Glib::ustring(creatorEntry->get_text()));
-    audioClip->setMetadata(ustrValue, "dc:creator");
-    ustrValue.reset(new Glib::ustring(genreEntry->get_text()));
-    audioClip->setMetadata(ustrValue, "dc:type");
 
     try {
         gLiveSupport->uploadFile(audioClip);
@@ -323,9 +377,10 @@ UploadFileWindow :: onUploadButtonClicked(void)                 throw ()
                                        *audioClip->getTitle() ));
 
     fileNameEntry->set_text("");
-    titleEntry->set_text("");
-    creatorEntry->set_text("");
-    genreEntry->set_text("");
+    for (unsigned int i=0; i < metadataEntries.size(); ++i) {
+        Gtk::Entry *    metadataEntry = metadataEntries[i];
+        metadataEntry->set_text("");
+    }
 
     isAudioClipValid = false;
 }
@@ -338,9 +393,10 @@ void
 UploadFileWindow :: onCloseButtonClicked(void)                 throw ()
 {
     fileNameEntry->set_text("");
-    titleEntry->set_text("");
-    creatorEntry->set_text("");
-    genreEntry->set_text("");
+    for (unsigned int i=0; i < metadataEntries.size(); ++i) {
+        Gtk::Entry *    metadataEntry = metadataEntries[i];
+        metadataEntry->set_text("");
+    }
 
     statusBar->set_text("");
 
