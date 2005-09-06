@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: maroy $
-    Version  : $Revision: 1.75 $
+    Author   : $Author: fgerlits $
+    Version  : $Revision: 1.76 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -819,12 +819,7 @@ LiveSupport :: GLiveSupport ::
 GLiveSupport :: addToLiveMode(Ptr<Playable>::Ref  playable)
                                                             throw ()
 {
-    if (outputItemPlayingNow) {
-        masterPanel->updateLiveModeWindow(playable);
-    } else {
-        playOutputAudio(playable);
-        setNowPlaying(playable);
-    }
+    masterPanel->updateLiveModeWindow(playable);
 }
 
 
