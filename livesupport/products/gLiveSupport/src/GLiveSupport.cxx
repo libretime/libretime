@@ -21,8 +21,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
  
-    Author   : $Author: fgerlits $
-    Version  : $Revision: 1.74 $
+    Author   : $Author: maroy $
+    Version  : $Revision: 1.75 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -699,6 +699,28 @@ GLiveSupport :: acquirePlaylist(Ptr<UniqueId>::Ref  id)
  *----------------------------------------------------------------------------*/
 void
 LiveSupport :: GLiveSupport ::
+GLiveSupport :: uncachePlaylist(Ptr<UniqueId>::Ref  id)     throw ()
+{
+    Ptr<Playlist>::Ref      playlist;
+    PlaylistMap::iterator   it;
+    PlaylistMap::iterator   end = opennedPlaylists->end();
+
+    if ((it = opennedPlaylists->find(id->getId())) != end) {
+        playlist = (*opennedPlaylists)[id->getId()];
+        if (playlist->getUri().get()) {
+            storage->releasePlaylist(playlist);
+        }
+
+        opennedPlaylists->erase(it);
+    }
+}
+
+
+/*-----------------------------------------------------------------------------
+ *  Release all openned audio clips.
+ *----------------------------------------------------------------------------*/
+void
+LiveSupport :: GLiveSupport ::
 GLiveSupport :: releaseOpennedAudioClips(void)              throw ()
 {
     AudioClipMap::iterator   it  = opennedAudioClips->begin();
@@ -772,6 +794,7 @@ GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
         acquirePlaylist(playable->getId());
     }
 
+    // erase previous reference from list, if it's still in there
     PlayableList::iterator  it;
     for (it = scratchpadContents->begin(); it != scratchpadContents->end();
                                                                      ++it) {
@@ -781,7 +804,8 @@ GLiveSupport :: addToScratchpad(Ptr<Playable>::Ref  playable)
             break;
         }
     }
-    
+
+    // add to list
     scratchpadContents->push_front(playable);
     masterPanel->updateScratchpadWindow();   
 }
@@ -828,6 +852,8 @@ GLiveSupport :: openPlaylistForEditing(Ptr<UniqueId>::Ref  playlistId)
 
     if (!playlistId.get()) {
         playlistId     = storage->createPlaylist(sessionId);
+    } else {
+        uncachePlaylist(playlistId);
     }
 
     editedPlaylist = storage->editPlaylist(sessionId, playlistId);

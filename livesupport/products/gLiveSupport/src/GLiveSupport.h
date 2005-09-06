@@ -22,7 +22,7 @@
  
  
     Author   : $Author: maroy $
-    Version  : $Revision: 1.48 $
+    Version  : $Revision: 1.49 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/GLiveSupport.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -103,7 +103,7 @@ class MasterPanelWindow;
  *  respective documentation.
  *
  *  @author $Author: maroy $
- *  @version $Revision: 1.48 $
+ *  @version $Revision: 1.49 $
  *  @see LocalizedObject#getBundle(const xmlpp::Element &)
  *  @see AuthenticationClientFactory
  *  @see StorageClientFactory
@@ -281,6 +281,16 @@ class GLiveSupport : public LocalizedConfigurable,
         {
             signalEditedPlaylistModified().emit();
         }
+
+        /**
+         *  Remove a playlist from the playlist cache.
+         *  The playlist will be released, if it has been acquired earlier.
+         *  If the playlist wasn't in the cache, nothing happens.
+         *
+         *  @param id the id of the playlist to remove.
+         */
+        void
+        uncachePlaylist(Ptr<UniqueId>::Ref  id)                 throw ();
 
 
     protected:
