@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.24 $
+    Version  : $Revision: 1.25 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -436,4 +436,36 @@ PlaylistTest :: addPlayableTest(void)
     CPPUNIT_ASSERT(*newPlaylist->getPlaylength() == *secondOffset
                                                   + *playlist->getPlaylength());
 }
+
+
+/*------------------------------------------------------------------------------
+ *  Testing the eliminateGaps() method
+ *----------------------------------------------------------------------------*/
+void
+PlaylistTest :: eliminateGapsTest(void)
+                                                throw (CPPUNIT_NS::Exception)
+{
+    // a simple negative test
+    bool    result = playlist->eliminateGaps();
+    CPPUNIT_ASSERT(result == false);
+
+    // a simple positive test
+    Ptr<UniqueId>::Ref       secondElement(new UniqueId("101"));
+    try {
+        playlist->removePlaylistElement(secondElement);
+    } catch (std::invalid_argument &e) {
+        string eMsg = "removePlaylistElement() returned with error: ";
+        eMsg += e.what(); 
+        CPPUNIT_FAIL(eMsg);
+    }
+    CPPUNIT_ASSERT(!playlist->valid());         // big gap in playlist
+    CPPUNIT_ASSERT(playlist->getPlaylength());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() == seconds(34));
+
+    result = playlist->eliminateGaps();
+    CPPUNIT_ASSERT(result == true);
+    CPPUNIT_ASSERT(playlist->valid());          // the gap is gone
+    CPPUNIT_ASSERT(playlist->getPlaylength());
+    CPPUNIT_ASSERT(*playlist->getPlaylength() == seconds(23));
+}   
 

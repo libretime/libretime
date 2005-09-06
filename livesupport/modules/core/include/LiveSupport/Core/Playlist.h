@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.41 $
+    Version  : $Revision: 1.42 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/include/LiveSupport/Core/Playlist.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -128,7 +128,7 @@ using namespace boost::posix_time;
  *  </code></pre>
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.41 $
+ *  @version $Revision: 1.42 $
  */
 class Playlist : public Configurable,
                  public Playable
@@ -758,6 +758,19 @@ class Playlist : public Configurable,
          */
         virtual Ptr<Glib::ustring>::Ref
         getXmlDocumentString(void) const         throw ();
+
+
+        /**
+         *  Eliminate the gaps in the playlist.
+         *  If there is a 2s gap between elements 2 and 3, then elements 3,
+         *  4, etc. are moved to 2s earlier.  Elements 2 and 3 will not
+         *  overlap, even if the first has a fade-out and the second has a
+         *  fade-in.
+         *
+         *  @return true if some gaps have been found and eliminated
+         */
+        virtual bool
+        eliminateGaps(void)                      throw ();
 };
 
 

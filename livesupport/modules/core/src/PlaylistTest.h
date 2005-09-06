@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.12 $
+    Version  : $Revision: 1.13 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/PlaylistTest.h,v $
 
 ------------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ namespace Core {
  *  Unit test for the UploadPlaylistMetohd class.
  *
  *  @author  $Author: fgerlits $
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  *  @see Playlist
  */
 class PlaylistTest : public CPPUNIT_NS::TestFixture
@@ -71,6 +71,7 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(conversionTest);
     CPPUNIT_TEST(marshallingTest);
     CPPUNIT_TEST(addPlayableTest);
+    CPPUNIT_TEST(eliminateGapsTest);
     CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -137,6 +138,14 @@ class PlaylistTest : public CPPUNIT_NS::TestFixture
          */
         void
         addPlayableTest(void)                   throw (CPPUNIT_NS::Exception);
+
+        /**
+         *  Testing the eliminateGaps() method.
+         *
+         *  @exception CPPUNIT_NS::Exception on test failures.
+         */
+        void
+        eliminateGapsTest(void)                 throw (CPPUNIT_NS::Exception);
 
 
     public:

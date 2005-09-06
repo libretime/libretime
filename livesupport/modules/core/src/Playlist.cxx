@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.40 $
+    Version  : $Revision: 1.41 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/modules/core/src/Playlist.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -851,5 +851,62 @@ Playlist :: getXmlDocumentString() const        throw ()
     metadataString->insert(insertPosition, playlistElementsXmlString);
 
     return metadataString;
+}
+
+
+/*------------------------------------------------------------------------------
+ *  Eliminate the gaps in the playlist.
+ *----------------------------------------------------------------------------*/
+bool
+Playlist :: eliminateGaps(void)                 throw ()
+{
+    bool    didSomething = false;
+
+    Playlist::const_iterator    it = this->begin();
+    while (it != this->end()) {
+        Ptr<PlaylistElement>::Ref   playlistElement = it->second;
+        if (playlistElement->getType() == PlaylistElement::PlaylistType) {
+            Ptr<Playlist>::Ref      playlist = playlistElement->getPlaylist();
+            didSomething |= playlist->eliminateGaps();
+        }
+        ++it;
+    }
+    
+    time_duration   position(0,0,0,0);
+    time_duration   gapsFound(0,0,0,0);
+    
+    it = this->begin();
+    while (it != this->end()) {
+        Ptr<PlaylistElement>::Ref   playlistElement = it->second;
+        Ptr<time_duration>::Ref     startTime 
+                                        = playlistElement->getRelativeOffset();
+        Ptr<time_duration>::Ref     newStartTime;
+        
+        if (*startTime - gapsFound > position) {
+            newStartTime.reset(new time_duration(position));
+            playlistElement->setRelativeOffset(newStartTime);
+            gapsFound = *startTime - position;
+            didSomething = true;
+            
+        } else if (gapsFound.total_microseconds() != 0) {
+            newStartTime.reset(new time_duration(*startTime - gapsFound));
+            playlistElement->setRelativeOffset(newStartTime);
+            
+        } else {
+            newStartTime = startTime;
+        }
+        
+        position = *newStartTime + *playlistElement->getPlayable()
+                                                   ->getPlaylength();
+        ++it;
+    }
+    
+    if (didSomething) {
+        Ptr<time_duration>::Ref     newPlaylength(new time_duration(position));
+        setPlaylength(newPlaylength);
+        return true;
+    } else {
+        return false;
+    }
 }
 

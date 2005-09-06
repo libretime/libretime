@@ -22,7 +22,7 @@
  
  
     Author   : $Author: fgerlits $
-    Version  : $Revision: 1.29 $
+    Version  : $Revision: 1.30 $
     Location : $Source: /home/paul/cvs2svn-livesupport/newcvsrepo/livesupport/products/gLiveSupport/src/SimplePlaylistManagementWindow.cxx,v $
 
 ------------------------------------------------------------------------------*/
@@ -724,6 +724,7 @@ SimplePlaylistManagementWindow :: onRemoveItem(void)                throw()
                         = (*currentItem)[modelColumns.playlistElementColumn];
     
     playlist->removePlaylistElement(playlistElement->getId());
+    playlist->eliminateGaps();
 
     isPlaylistModified = true;
     showContents();
